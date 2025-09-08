@@ -20,20 +20,16 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'inline-edit-placeholder-example',
     template: `
         <kbq-inline-edit (saved)="update()">
-            <ng-container *kbqInlineEditViewMode>
-                <div class="example-inline-text">
-                    @if (!!value) {
-                        <span class="t">{{ value }}</span>
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
-                </kbq-form-field>
-            </ng-container>
+            <div class="example-inline-text" kbqInlineEditViewMode>
+                @if (!!value) {
+                    <span class="t">{{ value }}</span>
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
+            </kbq-form-field>
         </kbq-inline-edit>
     `,
     styles: `

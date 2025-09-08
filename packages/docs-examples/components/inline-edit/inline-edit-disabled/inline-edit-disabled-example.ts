@@ -36,18 +36,16 @@ import { KbqInputModule } from '@koobiq/components/input';
                 [kbqDropdownTriggerFor]="dropdown"
                 [color]="'contrast-fade'"
             ></i>
-            <ng-container *kbqInlineEditViewMode>
+            <div kbqInlineEditViewMode>
                 @if (value) {
                     <span>{{ value }}</span>
                 } @else {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 }
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
-                </kbq-form-field>
-            </ng-container>
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
+            </kbq-form-field>
         </kbq-inline-edit>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -24,20 +24,16 @@ import { KbqInputModule } from '@koobiq/components/input';
             <kbq-dt>Label</kbq-dt>
             <kbq-dd>
                 <kbq-inline-edit (saved)="onSave()">
-                    <ng-container *kbqInlineEditViewMode>
-                        <div class="example-inline-text">
-                            @if (!control.control.value) {
-                                <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                            } @else {
-                                <span>{{ control.control.value }}</span>
-                            }
-                        </div>
-                    </ng-container>
-                    <ng-container *kbqInlineEditEditMode>
-                        <kbq-form-field>
-                            <input kbqInput [placeholder]="placeholder" [formControl]="control.control" />
-                        </kbq-form-field>
-                    </ng-container>
+                    <div class="example-inline-text" kbqInlineEditViewMode>
+                        @if (!control.control.value) {
+                            <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                        } @else {
+                            <span>{{ control.control.value }}</span>
+                        }
+                    </div>
+                    <kbq-form-field kbqInlineEditEditMode>
+                        <input kbqInput [placeholder]="placeholder" [formControl]="control.control" />
+                    </kbq-form-field>
                 </kbq-inline-edit>
             </kbq-dd>
         </kbq-dl>

@@ -362,20 +362,16 @@ export class BaseTestComponent {
                 <kbq-label>Label</kbq-label>
             }
 
-            <ng-container *kbqInlineEditViewMode>
-                <div>
-                    @if (displayValue().length) {
-                        {{ displayValue() }}
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
-                </kbq-form-field>
-            </ng-container>
+            <div kbqInlineEditViewMode>
+                @if (displayValue().length) {
+                    {{ displayValue() }}
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
+            </kbq-form-field>
         </kbq-inline-edit>
     `
 })
@@ -435,19 +431,17 @@ export class TestComponent extends BaseTestComponent {
                 [kbqDropdownTriggerFor]="dropdown"
                 [color]="'contrast-fade'"
             ></i>
-            <ng-container *kbqInlineEditViewMode>
+            <div kbqInlineEditViewMode>
                 @let viewValue = displayValue();
                 @if (viewValue) {
                     <span>{{ viewValue }}</span>
                 } @else {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 }
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
-                </kbq-form-field>
-            </ng-container>
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
+            </kbq-form-field>
         </kbq-inline-edit>
     `
 })
@@ -499,20 +493,16 @@ export class TestWithMenu extends BaseTestComponent {
                 <kbq-label>Label</kbq-label>
             }
 
-            <ng-container *kbqInlineEditViewMode>
-                <div>
-                    @if (displayValue().length) {
-                        {{ displayValue() }}
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
-                </kbq-form-field>
-            </ng-container>
+            <div kbqInlineEditViewMode>
+                @if (displayValue().length) {
+                    {{ displayValue() }}
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
+            </kbq-form-field>
         </kbq-inline-edit>
     `
 })
@@ -565,20 +555,16 @@ export class TestWithTextareaControl extends BaseTestComponent {
                 <kbq-label>Label</kbq-label>
             }
 
-            <ng-container *kbqInlineEditViewMode>
-                <div>
-                    @if (displayValue()) {
-                        {{ displayValue() }}
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <textarea kbqTextarea [placeholder]="placeholder" [formControl]="control"></textarea>
-                </kbq-form-field>
-            </ng-container>
+            <div kbqInlineEditViewMode>
+                @if (displayValue()) {
+                    {{ displayValue() }}
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <textarea kbqTextarea [placeholder]="placeholder" [formControl]="control"></textarea>
+            </kbq-form-field>
         </kbq-inline-edit>
     `,
     providers: [

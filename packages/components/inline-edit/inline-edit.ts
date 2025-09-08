@@ -49,34 +49,6 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 
 const baseClass = 'kbq-inline-edit';
 
-/**
- * Directive for template with view representation of control value
- * that is projected when inline edit switched to view mode.
- */
-@Directive({
-    standalone: true,
-    selector: '[kbqInlineEditViewMode]',
-    exportAs: 'kbqInlineEditViewMode'
-})
-export class KbqInlineEditViewMode {
-    /** @docs-private */
-    readonly templateRef = inject(TemplateRef);
-}
-
-/**
- * Directive for template with control that is projected when inline edit switched to edit mode.
- * Projected inside `cdkOverlay`.
- */
-@Directive({
-    standalone: true,
-    selector: '[kbqInlineEditEditMode]',
-    exportAs: 'kbqInlineEditEditMode'
-})
-export class KbqInlineEditEditMode {
-    /** @docs-private */
-    readonly templateRef = inject(TemplateRef);
-}
-
 /** Directive for easy using styles of inline edit placeholder publicly. */
 @Directive({
     standalone: true,
@@ -169,6 +141,8 @@ export class KbqInlineEdit {
     readonly editModeWidth = input(undefined, { transform: numberAttribute });
     /** User-defined tooltip placement */
     readonly tooltipPlacement = input<PopUpPlacements>();
+    /** User-defined placeholder */
+    readonly placeholder = input<string>();
     /** Handler function to retrieve the current value */
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */
@@ -181,10 +155,6 @@ export class KbqInlineEdit {
     /** Emitted when mode switched to edit/view */
     protected readonly modeChange = output<'view' | 'edit'>();
 
-    /** @docs-private */
-    protected readonly viewModeTemplateRef = contentChild.required(KbqInlineEditViewMode);
-    /** @docs-private */
-    protected readonly editModeTemplateRef = contentChild.required(KbqInlineEditEditMode);
     /** @docs-private */
     protected readonly menu = contentChild(KbqInlineEditMenu);
     /** @docs-private */

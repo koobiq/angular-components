@@ -26,6 +26,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     selector: 'inline-edit-menu-example',
     template: `
         <div class="layout-flex layout-column layout-gap-s">
+            @let viewValue = displayValue();
+
             <kbq-inline-edit showActions (saved)="update()">
                 <kbq-dropdown #dropdown="kbqDropdown">
                     <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
@@ -36,19 +38,16 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     [kbqDropdownTriggerFor]="dropdown"
                     [color]="'contrast-fade'"
                 ></i>
-                <ng-container *kbqInlineEditViewMode>
-                    @let viewValue = displayValue();
+                <div kbqInlineEditViewMode>
                     @if (viewValue) {
                         <span>{{ viewValue }}</span>
                     } @else {
                         <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                     }
-                </ng-container>
-                <ng-container *kbqInlineEditEditMode>
-                    <kbq-form-field>
-                        <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
-                    </kbq-form-field>
-                </ng-container>
+                </div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
+                </kbq-form-field>
             </kbq-inline-edit>
 
             <kbq-inline-edit showActions (saved)="update()">
@@ -62,19 +61,16 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     [kbqDropdownTriggerFor]="dropdown"
                     [color]="'contrast-fade'"
                 ></i>
-                <ng-container *kbqInlineEditViewMode>
-                    @let viewValue = displayValue();
+                <div kbqInlineEditViewMode>
                     @if (viewValue) {
                         <span>{{ viewValue }}</span>
                     } @else {
                         <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                     }
-                </ng-container>
-                <ng-container *kbqInlineEditEditMode>
-                    <kbq-form-field>
-                        <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
-                    </kbq-form-field>
-                </ng-container>
+                </div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
+                </kbq-form-field>
             </kbq-inline-edit>
         </div>
     `,

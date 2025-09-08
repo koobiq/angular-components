@@ -44,45 +44,41 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 
             <ng-template #edit let-control>
                 <kbq-inline-edit [showActions]="!!control?.withActions">
-                    <ng-container *kbqInlineEditViewMode>
-                        <div class="example-inline-text">
-                            @if (!control.control.value) {
-                                <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                    <div class="example-inline-text" kbqInlineEditViewMode>
+                        @if (!control.control.value) {
+                            <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                        } @else {
+                            @if (control.type === 'date') {
+                                {{ control.control.value | absoluteShortDate }}
                             } @else {
-                                @if (control.type === 'date') {
-                                    {{ control.control.value | absoluteShortDate }}
-                                } @else {
-                                    {{ control.control.value }}
-                                }
+                                {{ control.control.value }}
                             }
-                        </div>
-                    </ng-container>
-                    <ng-container *kbqInlineEditEditMode>
-                        <kbq-form-field>
-                            @switch (control.type) {
-                                @case ('text') {
-                                    <ng-container>
-                                        <input kbqInput [placeholder]="placeholder" [formControl]="control.control" />
-                                    </ng-container>
-                                }
-                                @case ('comment') {
-                                    <ng-container>
-                                        <textarea
-                                            kbqTextarea
-                                            [placeholder]="placeholder"
-                                            [formControl]="control.control"
-                                        ></textarea>
-                                    </ng-container>
-                                }
-                                @case ('date') {
-                                    <ng-container>
-                                        <input [kbqDatepicker]="datepicker" [formControl]="control.control" />
-                                        <kbq-datepicker #datepicker />
-                                    </ng-container>
-                                }
+                        }
+                    </div>
+                    <kbq-form-field kbqInlineEditEditMode>
+                        @switch (control.type) {
+                            @case ('text') {
+                                <ng-container>
+                                    <input kbqInput [placeholder]="placeholder" [formControl]="control.control" />
+                                </ng-container>
                             }
-                        </kbq-form-field>
-                    </ng-container>
+                            @case ('comment') {
+                                <ng-container>
+                                    <textarea
+                                        kbqTextarea
+                                        [placeholder]="placeholder"
+                                        [formControl]="control.control"
+                                    ></textarea>
+                                </ng-container>
+                            }
+                            @case ('date') {
+                                <ng-container>
+                                    <input [kbqDatepicker]="datepicker" [formControl]="control.control" />
+                                    <kbq-datepicker #datepicker />
+                                </ng-container>
+                            }
+                        }
+                    </kbq-form-field>
                 </kbq-inline-edit>
             </ng-template>
         </div>

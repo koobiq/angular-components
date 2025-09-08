@@ -29,58 +29,43 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         <kbq-inline-edit showActions [validationTooltip]="'Value required'">
             <kbq-label>Label</kbq-label>
 
-            <ng-container *kbqInlineEditViewMode>
-                <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;">
-                    @if (control.value.length > 0) {
-                        @for (badge of control.value; track badge) {
-                            <kbq-badge>{{ badge }}</kbq-badge>
-                        }
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+            <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
+                @if (control.value.length > 0) {
+                    @for (badge of control.value; track badge) {
+                        <kbq-badge>{{ badge }}</kbq-badge>
                     }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <kbq-select multiple multiline [placeholder]="placeholder" [formControl]="control">
-                        @for (option of options; track option) {
-                            <kbq-option [value]="option">{{ option }}</kbq-option>
-                        }
-                        <kbq-cleaner #kbqSelectCleaner />
-                    </kbq-select>
-                </kbq-form-field>
-            </ng-container>
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <kbq-select multiple multiline [placeholder]="placeholder" [formControl]="control">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-cleaner #kbqSelectCleaner />
+                </kbq-select>
+            </kbq-form-field>
         </kbq-inline-edit>
 
         <kbq-inline-edit showActions [validationTooltip]="'Value required'" (saved)="update()">
             <kbq-label>Label</kbq-label>
 
-            <ng-container *kbqInlineEditViewMode>
-                <div style="flex-wrap: wrap;">
-                    @if (displayValue().length > 0) {
-                        {{ displayValue() }}
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <textarea kbqTextarea placeholder="Placeholder" [formControl]="textareaControl"></textarea>
-                </kbq-form-field>
-            </ng-container>
+            <div style="flex-wrap: wrap;" kbqInlineEditViewMode>
+                @if (displayValue().length > 0) {
+                    {{ displayValue() }}
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <textarea kbqTextarea placeholder="Placeholder" [formControl]="textareaControl"></textarea>
+            </kbq-form-field>
         </kbq-inline-edit>
     `,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
     ],
-    styles: `
-        :host {
-            .kbq-inline-edit {
-                --kbq-inline-edit-pop-up-height: var(--kbq-size-xxl);
-            }
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditValidationExample {
