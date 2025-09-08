@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
 
@@ -9,11 +8,13 @@ import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
 @Component({
     standalone: true,
     selector: 'tag-list-selectable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule],
+    imports: [KbqTagsModule, KbqIconModule],
     template: `
-        <kbq-tag-list selectable [multiple]="true" [(ngModel)]="tags">
-            @for (tag of tags(); track $index) {
-                <kbq-tag [value]="tag" (selectionChange)="selectionChange($event)">{{ tag }}</kbq-tag>
+        <kbq-tag-list selectable [multiple]="true">
+            @for (tag of tags(); track tag) {
+                <kbq-tag [selected]="$index > 0" [value]="tag" (selectionChange)="selectionChange($event)">
+                    {{ tag }}
+                </kbq-tag>
             }
         </kbq-tag-list>
     `,

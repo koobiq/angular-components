@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { TagAutocompleteOptionOperationsExample } from './tag-autocomplete-option-operations/tag-autocomplete-option-operations-example';
+import { TagAutocompleteRemovableExample } from './tag-autocomplete-removable/tag-autocomplete-removable-example';
+import { TagAutocompleteSelectableExample } from './tag-autocomplete-selectable/tag-autocomplete-selectable-example';
 import { TagAutocompleteExample } from './tag-autocomplete/tag-autocomplete-example';
 import { TagDisabledExample } from './tag-disabled/tag-disabled-example';
 import { TagEditableWithValidationExample } from './tag-editable-with-validation/tag-editable-with-validation-example';
 import { TagEditableExample } from './tag-editable/tag-editable-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
 import { TagInputEditableExample } from './tag-input-editable/tag-input-editable-example';
+import { TagInputRemovableExample } from './tag-input-removable/tag-input-removable-example';
+import { TagInputSelectableExample } from './tag-input-selectable/tag-input-selectable-example';
 import { TagInputWithFormControlValidatorsExample } from './tag-input-with-form-control-validators/tag-input-with-form-control-validators-example';
 import { TagInputExample } from './tag-input/tag-input-example';
 import { TagListEditableExample } from './tag-list-editable/tag-list-editable-example';
@@ -23,12 +27,16 @@ import { TagsInputOnpasteOffExample } from './tags-input-onpaste-off/tags-input-
 export {
     TagAutocompleteExample,
     TagAutocompleteOptionOperationsExample,
+    TagAutocompleteRemovableExample,
+    TagAutocompleteSelectableExample,
     TagDisabledExample,
     TagEditableExample,
     TagEditableWithValidationExample,
     TagFillAndStyleExample,
     TagInputEditableExample,
     TagInputExample,
+    TagInputRemovableExample,
+    TagInputSelectableExample,
     TagInputWithFormControlValidatorsExample,
     TagListEditableExample,
     TagListExample,
@@ -63,7 +71,11 @@ const EXAMPLES = [
     TagEditableExample,
     TagListEditableExample,
     TagInputEditableExample,
-    TagEditableWithValidationExample
+    TagEditableWithValidationExample,
+    TagInputRemovableExample,
+    TagInputSelectableExample,
+    TagAutocompleteRemovableExample,
+    TagAutocompleteSelectableExample
 ];
 
 @NgModule({

@@ -1,6 +1,5 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -13,9 +12,9 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
 @Component({
     standalone: true,
     selector: 'tag-list-removable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule, JsonPipe],
+    imports: [KbqTagsModule, KbqIconModule, JsonPipe],
     template: `
-        <kbq-tag-list removable [multiple]="true" [(ngModel)]="tags">
+        <kbq-tag-list removable [multiple]="true">
             @for (tag of tags(); track tag) {
                 <kbq-tag [value]="tag" (removed)="remove($event)">
                     {{ tag }}
