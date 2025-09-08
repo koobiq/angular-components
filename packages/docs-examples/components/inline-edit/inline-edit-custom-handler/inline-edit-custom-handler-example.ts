@@ -34,21 +34,19 @@ import { KbqSelectModule } from '@koobiq/components/select';
         >
             <kbq-label>Label</kbq-label>
 
-            <ng-container *kbqInlineEditViewMode>
-                <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;">
-                    @let value = displayValue();
-                    @if (value && value.file) {
-                        {{ value.file.name }}
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
+            <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
+                @let value = displayValue();
+                @if (value && value.file) {
+                    {{ value.file.name }}
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <div kbqInlineEditEditMode>
                 <kbq-file-upload class="kbq-form__control flex-80" [formControl]="control">
                     <i kbq-icon="kbq-file-o_16"></i>
                 </kbq-file-upload>
-            </ng-container>
+            </div>
         </kbq-inline-edit>
     `,
     providers: [

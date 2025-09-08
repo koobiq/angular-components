@@ -26,27 +26,23 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <kbq-inline-edit showActions (saved)="update()">
             <kbq-label>Label</kbq-label>
 
-            <ng-container *kbqInlineEditViewMode>
-                <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;">
-                    @if (displayValue().length > 0) {
-                        @for (badge of displayValue(); track badge) {
-                            <kbq-badge>{{ badge }}</kbq-badge>
-                        }
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+            <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
+                @if (displayValue().length > 0) {
+                    @for (badge of displayValue(); track badge) {
+                        <kbq-badge>{{ badge }}</kbq-badge>
                     }
-                </div>
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <kbq-select multiple multiline [placeholder]="placeholder" [(ngModel)]="value">
-                        @for (option of options; track option) {
-                            <kbq-option [value]="option">{{ option }}</kbq-option>
-                        }
-                        <kbq-cleaner #kbqSelectCleaner />
-                    </kbq-select>
-                </kbq-form-field>
-            </ng-container>
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <kbq-select multiple [placeholder]="placeholder" [(ngModel)]="value">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-cleaner #kbqSelectCleaner />
+                </kbq-select>
+            </kbq-form-field>
         </kbq-inline-edit>
     `,
     providers: [
