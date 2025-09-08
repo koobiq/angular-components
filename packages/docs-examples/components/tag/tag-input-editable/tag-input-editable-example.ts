@@ -14,6 +14,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
  * @title Tag input editable
@@ -26,8 +27,8 @@ import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList editable [(ngModel)]="tags">
-                @for (tag of tags(); track $index) {
-                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($index)">
+                @for (tag of tags(); track tag) {
+                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                         {{ tag }}
                         <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
                         <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
@@ -109,7 +110,9 @@ export class TagInputEditableExample {
         }
     }
 
-    protected remove(index: number): void {
+    protected remove(event: KbqTagEvent): void {
+        const index = this.tags().indexOf(event.tag.value);
+
         this.tags.update((tags) => {
             tags.splice(index, 1);
 
@@ -118,7 +121,7 @@ export class TagInputEditableExample {
 
         this.changeDetectorRef.detectChanges();
 
-        console.info(`Tag #${index} edit was removed.`);
+        console.info(`Tag #${index} was removed.`);
     }
 
     protected create({ input, value }: KbqTagInputEvent): void {

@@ -164,8 +164,6 @@ export class KbqTagEditInput {
                 @if (editing()) {
                     <ng-content select="[kbqTagEditInput]" />
                 } @else {
-                    {{ selected ? 'S ' : '' }}
-                    {{ hasFocus ? 'F ' : '' }}
                     <ng-content />
                 }
             </span>
@@ -225,22 +223,18 @@ export class KbqTag
     /** Whether the tag has focus. */
     hasFocus: boolean = false;
 
-    /** Whether the tag list is selectable */
-    tagListSelectable: boolean = true;
-
     /**
-     * Whether the tag list is editable.
+     * Whether the tag list is selectable
      *
      * @docs-private
+     *
      */
-    private get tagListEditable(): boolean {
-        return !!this.tagList?.editable;
-    }
+    tagListSelectable: boolean = true;
 
     /** Whether the tag is editable. */
     @Input({ transform: booleanAttribute })
     get editable(): boolean {
-        return isUndefined(this._editable) ? this.tagListEditable : this._editable;
+        return isUndefined(this._editable) ? !!this.tagList?.editable : this._editable;
     }
 
     set editable(value: boolean) {
@@ -337,15 +331,15 @@ export class KbqTag
     private _selectable: boolean = true;
 
     /**
-     * Determines whether or not the tag displays the remove styling and emits (removed) events.
+     * Determines whether the tag is removable.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get removable(): boolean {
-        return this._removable;
+        return this._removable && (this.tagList?.removable ?? true);
     }
 
     set removable(value: boolean) {
-        this._removable = coerceBooleanProperty(value);
+        this._removable = value;
     }
 
     private _removable: boolean = true;
@@ -497,7 +491,6 @@ export class KbqTag
 
     /** @docs-private */
     handleMousedown(event: MouseEvent): void {
-        console.log('handleMousedown', event);
         const unclickable = this.disabled || !this.selectable || this.editing();
 
         if (unclickable) return event.preventDefault();

@@ -50,8 +50,6 @@ export class KbqTagListChange {
     exportAs: 'kbqTagList',
     template: `
         <div class="kbq-tags-list__list-container">
-            {{ multiple ? 'M ' : '' }}
-            {{ selectable ? 'S ' : '' }}
             <ng-content />
         </div>
 
@@ -69,6 +67,7 @@ export class KbqTagListChange {
         '[class.kbq-tag-list_multiple]': 'multiple',
         '[class.kbq-tag-list_selectable]': 'selectable',
         '[class.kbq-tag-list_editable]': 'editable',
+        '[class.kbq-tag-list_removable]': 'removable',
 
         '[attr.tabindex]': 'disabled ? null : tabIndex',
         '[id]': 'uid',
@@ -268,8 +267,22 @@ export class KbqTagList
 
     private _selectable: boolean = true;
 
-    /** Whether the tag list is editable. */
+    /** Whether the tags in the list are editable. */
     @Input({ transform: booleanAttribute }) editable = false;
+
+    /** Whether the tags in the list are removable. */
+    @Input({ transform: booleanAttribute })
+    get removable(): boolean {
+        return this._removable;
+    }
+
+    set removable(value: boolean) {
+        this._removable = value;
+
+        this.tags?.forEach((tag) => tag.changeDetectorRef.markForCheck());
+    }
+
+    private _removable = true;
 
     @Input()
     get tabIndex(): number {
@@ -695,6 +708,7 @@ export class KbqTagList
         this.tags.forEach((tag) => {
             if (tag.selectable) tag.select();
         });
+        this.stateChanges.next();
     }
 
     /**
@@ -842,7 +856,10 @@ export class KbqTagList
                 });
             }
 
-            if (event.isUserInput) {
+            // @TODO Should be fixed!
+            const skip = true;
+
+            if (event.isUserInput && !skip) {
                 this.propagateChanges();
             }
         });

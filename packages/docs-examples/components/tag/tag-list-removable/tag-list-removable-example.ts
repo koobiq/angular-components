@@ -1,11 +1,11 @@
+import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
-import { KbqToggleModule } from '@koobiq/components/toggle';
 
-const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Tag removable ${i}`);
+const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
 
 /**
  * @title Tag list removable
@@ -13,13 +13,11 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Tag removable ${i}`);
 @Component({
     standalone: true,
     selector: 'tag-list-removable-example',
-    imports: [KbqTagsModule, KbqIconModule, KbqToggleModule, FormsModule],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, JsonPipe],
     template: `
-        <kbq-toggle [(ngModel)]="removable">Removable</kbq-toggle>
-
-        <kbq-tag-list [multiple]="true">
-            @for (tag of tags; track $index) {
-                <kbq-tag [value]="tag" [removable]="removable()" (removed)="remove($event, $index)">
+        <kbq-tag-list removable [multiple]="true" [(ngModel)]="tags">
+            @for (tag of tags(); track tag) {
+                <kbq-tag [value]="tag" (removed)="remove($event)">
                     {{ tag }}
                     <kbq-icon-button kbqTagRemove kbq-icon-button="kbq-xmark-s_16" />
                 </kbq-tag>
@@ -27,31 +25,44 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Tag removable ${i}`);
                 <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="colors.ContrastFade" (click)="restart()"></i>
             }
         </kbq-tag-list>
+
+        <small>
+            <code>{{ tags() | json }}</code>
+        </small>
     `,
     styles: `
         :host {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: var(--kbq-size-m);
             min-height: var(--kbq-size-7xl);
+            margin: var(--kbq-size-5xl);
+        }
+
+        small {
+            color: var(--kbq-foreground-contrast-secondary);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagListRemovableExample {
     protected readonly colors = KbqComponentColors;
-    protected readonly removable = model(true);
-    protected readonly tags = INITIAL_TAGS.slice();
+    protected readonly tags = model(INITIAL_TAGS.slice());
 
-    protected remove(event: KbqTagEvent, index: number): void {
-        console.log('Tag was removed:', event);
+    protected remove(event: KbqTagEvent): void {
+        this.tags.update((tags) => {
+            const index = tags.indexOf(event.tag.value);
 
-        this.tags.splice(index, 1);
+            tags.splice(index, 1);
+
+            console.log(`Tag #${index} was removed:`, event);
+
+            return tags;
+        });
     }
 
     protected restart(): void {
-        this.tags.push(...INITIAL_TAGS.slice());
+        this.tags.update(() => INITIAL_TAGS.slice());
     }
 }
