@@ -29,7 +29,6 @@ export class KbqInlineEdit {
     protected readonly className: Signal<string>;
     protected readonly colors: typeof KbqComponentColors;
     readonly disabled: InputSignalWithTransform<boolean, unknown>;
-    protected readonly editModeTemplateRef: Signal<KbqInlineEditEditMode>;
     readonly editModeWidth: InputSignalWithTransform<number | undefined, unknown>;
     protected readonly formFieldRef: Signal<KbqFormField | undefined>;
     readonly getValueHandler: InputSignal<(() => unknown) | undefined>;
@@ -44,6 +43,7 @@ export class KbqInlineEdit {
     protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
     protected readonly overlayOrigin: Signal<CdkOverlayOrigin | undefined>;
     protected readonly overlayWidth: WritableSignal<string | number>;
+    readonly placeholder: InputSignal<string | undefined>;
     protected readonly placements: typeof PopUpPlacements;
     protected save($event?: Event): void;
     protected readonly saved: OutputEmitterRef<void>;
@@ -55,20 +55,10 @@ export class KbqInlineEdit {
     readonly tooltipPlacement: InputSignal<PopUpPlacements | undefined>;
     protected readonly tooltipTrigger: Signal<KbqTooltipTrigger>;
     readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
-    protected readonly viewModeTemplateRef: Signal<KbqInlineEditViewMode>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["viewModeTemplateRef", "editModeTemplateRef", "menu", "label", "formFieldRef"], ["kbq-label", "[kbqInlineEditMenu]"], true, [{ directive: typeof i1.KbqFocusMonitor; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRef"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.KbqFocusMonitor; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
-}
-
-// @public
-export class KbqInlineEditEditMode {
-    readonly templateRef: TemplateRef<any>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditEditMode, "[kbqInlineEditEditMode]", ["kbqInlineEditEditMode"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditEditMode, never>;
 }
 
 // @public
@@ -89,7 +79,7 @@ export class KbqInlineEditModule {
     // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditViewMode, typeof i1_2.KbqInlineEditEditMode, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu], [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditViewMode, typeof i1_2.KbqInlineEditEditMode, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu], [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu]>;
 }
 
 // @public
@@ -98,15 +88,6 @@ export class KbqInlineEditPlaceholder {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditPlaceholder, "[kbqInlineEditPlaceholder]", ["kbqInlineEditPlaceholder"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditPlaceholder, never>;
-}
-
-// @public
-export class KbqInlineEditViewMode {
-    readonly templateRef: TemplateRef<any>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditViewMode, "[kbqInlineEditViewMode]", ["kbqInlineEditViewMode"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditViewMode, never>;
 }
 
 // (No @packageDocumentation comment for this package)
