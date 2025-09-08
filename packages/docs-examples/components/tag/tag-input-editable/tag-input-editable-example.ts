@@ -26,7 +26,7 @@ import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsMo
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList editable [(ngModel)]="tags">
+            <kbq-tag-list #tagList="kbqTagList" editable [(ngModel)]="tags">
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                         {{ tag }}
@@ -111,17 +111,17 @@ export class TagInputEditableExample {
     }
 
     protected remove(event: KbqTagEvent): void {
-        const index = this.tags().indexOf(event.tag.value);
-
         this.tags.update((tags) => {
+            const index = tags.indexOf(event.tag.value);
+
             tags.splice(index, 1);
+
+            console.info(`Tag #${index} was removed.`);
 
             return tags;
         });
 
         this.changeDetectorRef.detectChanges();
-
-        console.info(`Tag #${index} was removed.`);
     }
 
     protected create({ input, value }: KbqTagInputEvent): void {

@@ -511,8 +511,7 @@ export class KbqTag
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE:
-                // If we are removable, remove the focused tag
-                this.remove();
+                if (isNull(this.tagList)) this.remove();
                 // Always prevent so page navigation does not occur
                 event.preventDefault();
                 break;

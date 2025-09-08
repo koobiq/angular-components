@@ -36,11 +36,17 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
         <hr />
         <tag-list-selectable-example />
         <hr />
+        <tag-input-selectable-example />
+        <hr />
+        <tag-autocomplete-selectable-example />
+        <hr />
         <tag-removable-example />
         <hr />
         <tag-list-removable-example />
         <hr />
         <tag-input-removable-example />
+        <hr />
+        <tag-autocomplete-removable-example />
         <hr />
         <tag-editable-example />
         <hr />
