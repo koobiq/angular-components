@@ -27,6 +27,7 @@ import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
+    KbqFocusMonitor,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -35,7 +36,6 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { KbqFocusMonitor } from './focus-monitor';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
     transition(':enter', [
@@ -59,6 +59,7 @@ const baseClass = 'kbq-inline-edit';
     exportAs: 'kbqInlineEditViewMode'
 })
 export class KbqInlineEditViewMode {
+    /** @docs-private */
     readonly templateRef = inject(TemplateRef);
 }
 
@@ -72,6 +73,7 @@ export class KbqInlineEditViewMode {
     exportAs: 'kbqInlineEditEditMode'
 })
 export class KbqInlineEditEditMode {
+    /** @docs-private */
     readonly templateRef = inject(TemplateRef);
 }
 
@@ -105,7 +107,8 @@ export class KbqInlineEditPlaceholder {}
     }
 })
 export class KbqInlineEditMenu {
-    dropdownTrigger = inject(KbqDropdownTrigger, { optional: true });
+    /** @docs-private */
+    protected readonly dropdownTrigger = inject(KbqDropdownTrigger, { optional: true });
 }
 
 /**
@@ -312,7 +315,7 @@ export class KbqInlineEdit {
 
         if (!formFieldRef) return false;
 
-        return formFieldRef.control.errorState;
+        return formFieldRef.invalid;
     }
 
     private getValue() {

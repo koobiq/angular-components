@@ -1,5 +1,42 @@
+@use 'sass:map';
+
 @use '../core/styles/common/tokens';
-@use './mask';
+
+@mixin _mask($config) {
+    & {
+        position: relative;
+    }
+
+    .kbq-mask {
+        display: flex;
+        position: absolute;
+
+        @if (map.get($config, 'top')) {
+            top: map.get($config, 'top');
+        }
+
+        @if (map.get($config, 'right')) {
+            right: map.get($config, 'right');
+        }
+
+        @if (map.get($config, 'bottom')) {
+            bottom: map.get($config, 'bottom');
+        }
+
+        @if (map.get($config, 'left')) {
+            left: map.get($config, 'left');
+        }
+
+        .kbq-mask__fade {
+            background: var(--kbq-mask-background, transparent);
+            mask-image: linear-gradient(90deg, transparent, var(--kbq-black-default));
+        }
+
+        .kbq-mask__container {
+            background: var(--kbq-mask-background, transparent);
+        }
+    }
+}
 
 @mixin _inline-edit-theme {
     background: var(--kbq-inline-edit-background);
@@ -12,7 +49,7 @@
         &:not(.kbq-inline-edit_disabled) {
             &:hover {
                 --kbq-inline-edit-background: var(--kbq-states-background-transparent-hover);
-                --mask-background: var(--kbq-states-background-contrast-less-hover);
+                --kbq-mask-background: var(--kbq-states-background-contrast-less-hover);
 
                 cursor: pointer;
             }
@@ -20,7 +57,7 @@
             &:active,
             &:has(.kbq-inline-edit__menu.kbq-active) {
                 --kbq-inline-edit-background: var(--kbq-states-background-transparent-active);
-                --mask-background: var(--kbq-states-background-contrast-less-active);
+                --kbq-mask-background: var(--kbq-states-background-contrast-less-active);
             }
         }
 
@@ -89,7 +126,7 @@
         color: var(--kbq-foreground-contrast-secondary);
     }
 
-    @include mask.mask(
+    @include _mask(
         (
             'top': calc(-1 * var(--kbq-size-border-width)),
             'right': calc(-1 * var(--kbq-size-border-width))
