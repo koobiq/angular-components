@@ -4,10 +4,10 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -15,24 +15,11 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqLabel } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
-
-// @public
-export class KbqFocusMonitor implements AfterContentInit, OnDestroy {
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusMonitor, "[kbqFocusMonitor]", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusMonitor, never>;
-}
 
 // @public
 export class KbqInlineEdit {
@@ -77,7 +64,6 @@ export class KbqInlineEdit {
 
 // @public
 export class KbqInlineEditEditMode {
-    // (undocumented)
     readonly templateRef: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditEditMode, "[kbqInlineEditEditMode]", ["kbqInlineEditEditMode"], {}, {}, never, never, true, never>;
@@ -87,8 +73,7 @@ export class KbqInlineEditEditMode {
 
 // @public
 export class KbqInlineEditMenu {
-    // (undocumented)
-    dropdownTrigger: KbqDropdownTrigger | null;
+    protected readonly dropdownTrigger: KbqDropdownTrigger | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditMenu, "[kbqInlineEditMenu]", ["kbqInlineEditMenu"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -117,17 +102,12 @@ export class KbqInlineEditPlaceholder {
 
 // @public
 export class KbqInlineEditViewMode {
-    // (undocumented)
     readonly templateRef: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditViewMode, "[kbqInlineEditViewMode]", ["kbqInlineEditViewMode"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditViewMode, never>;
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/components/inline-edit/inline-edit.d.ts:131:1003 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

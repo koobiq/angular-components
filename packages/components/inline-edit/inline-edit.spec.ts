@@ -76,6 +76,11 @@ describe('KbqInlineEdit', () => {
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
         const spyFn = jest.spyOn(componentInstance, 'onModeChange');
 
+        const resetToInitialMode = () => {
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+        };
+
         [
             () => inlineEditDebugElement.nativeElement.click(),
             () =>
@@ -94,8 +99,7 @@ describe('KbqInlineEdit', () => {
 
             expect(spyFn).toHaveBeenNthCalledWith(index * 2 + 1, 'edit');
 
-            inlineEditDebugElement.nativeElement.click();
-            fixture.detectChanges();
+            resetToInitialMode();
         });
     });
 

@@ -507,7 +507,8 @@ const structure: DocsStructure = makeStructure({
                     },
                     hasApi: true,
                     apiId: 'inline-edit',
-                    hasExamples: true
+                    hasExamples: true,
+                    isNew: expiresAt('2025-09-30')
                 },
                 {
                     id: DocsStructureItemId.Input,
