@@ -36,6 +36,7 @@
     &.kbq-disabled {
         color: var(--kbq-#{$base-path}-states-disabled-foreground);
         background: var(--kbq-#{$base-path}-states-disabled-background);
+        border-color: var(--kbq-#{$base-path}-states-disabled-border);
 
         @include _icon(
             var(--kbq-#{$base-path}-states-disabled-left-icon),
