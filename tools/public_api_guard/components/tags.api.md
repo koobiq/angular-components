@@ -107,8 +107,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     get tabindex(): any;
     set tabindex(value: any);
     tagListSelectable: boolean;
-    // (undocumented)
-    textElement: ElementRef;
+    readonly textElement: ElementRef<HTMLSpanElement>;
     // (undocumented)
     toggleSelected(isUserInput?: boolean): boolean;
     trailingIcon: KbqTagTrailingIcon;

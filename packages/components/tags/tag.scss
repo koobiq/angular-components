@@ -55,6 +55,7 @@
         @include input.kbq-reset-input();
 
         min-width: var(--kbq-size-xs);
+        max-width: 100%;
 
         &.kbq-input {
             min-height: unset;

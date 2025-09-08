@@ -72,6 +72,22 @@ export class KbqFieldSizingContent {
         afterNextRender(() => this.emulate());
     }
 
+    private emulate(): void {
+        if (CSS.supports('field-sizing', 'content')) {
+            return this.renderer.setStyle(this.inputElement, 'fieldSizing', 'content');
+        }
+
+        merge(...FIELD_RESIZE_EVENTS.map((event) => fromEvent(this.inputElement, event)))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.calculateWidth());
+
+        this.calculateWidth();
+
+        if (this.inputElement.style.width === '0px') this.inputElement.style.width = '100%';
+
+        console.log('emulate', this.inputElement.style.width);
+    }
+
     private calculateWidth(): void {
         const computedStyle = this.window.getComputedStyle(this.inputElement);
         const ruler: HTMLSpanElement = this.renderer.createElement('span');
@@ -92,17 +108,5 @@ export class KbqFieldSizingContent {
 
         this.renderer.setStyle(this.inputElement, 'width', coerceCssPixelValue(width));
         this.renderer.removeChild(this.document.body, ruler);
-    }
-
-    private emulate(): void {
-        if (CSS.supports('field-sizing', 'content')) {
-            return this.renderer.setStyle(this.inputElement, 'fieldSizing', 'content');
-        }
-
-        merge(...FIELD_RESIZE_EVENTS.map((event) => fromEvent(this.inputElement, event)))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.calculateWidth());
-
-        this.calculateWidth();
     }
 }

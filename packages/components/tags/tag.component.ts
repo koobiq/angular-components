@@ -259,7 +259,10 @@ export class KbqTag
      */
     protected readonly editing = signal(false);
 
-    @ViewChild('kbqTitleText') textElement: ElementRef;
+    /**
+     * @docs-private
+     */
+    @ViewChild('kbqTitleText') readonly textElement: ElementRef<HTMLSpanElement>;
 
     @ContentChildren(KbqIcon) contentChildren: QueryList<KbqIcon>;
 
@@ -575,6 +578,7 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'cancel', reason });
+        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
     }
 
     /** @docs-private */
@@ -583,6 +587,7 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });
+        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
     }
 
     private dispatchSelectionChange(isUserInput = false) {
