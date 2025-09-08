@@ -33,6 +33,7 @@
         "loader-overlay",
         "modal",
         "navbar",
+        "navbar-ic",
         "overflow-items",
         "popover",
         "progress-bar",

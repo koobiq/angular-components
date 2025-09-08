@@ -1,0 +1,81 @@
+@use '../core/styles/common/tokens';
+
+@mixin kbq-navbar-ic-item($state-name) {
+    & .kbq-navbar-ic-item__inner,
+    & .kbq-navbar-ic-header__inner {
+        background: var(--kbq-navbar-ic-item-#{$state-name}-content-background);
+    }
+
+    .kbq-navbar-ic-title {
+        color: var(--kbq-navbar-ic-item-#{$state-name}-content-text);
+    }
+
+    & > .kbq-icon.kbq-empty {
+        color: var(--kbq-navbar-ic-item-#{$state-name}-content-icon-left);
+    }
+
+    .kbq-navbar-ic-item__arrow-icon {
+        color: var(--kbq-navbar-ic-item-#{$state-name}-content-icon-right);
+    }
+}
+
+@mixin kbq-navbar-ic-theme() {
+    .kbq-navbar-ic .kbq-navbar-ic__top-layer {
+        background-color: var(--kbq-navbar-ic-background);
+        box-shadow: var(--kbq-navbar-ic-border);
+    }
+
+    .kbq-navbar-ic-item,
+    .kbq-navbar-ic-header.kbq-navbar-ic-header_interactive,
+    .kbq-navbar-ic-toggle {
+        cursor: pointer;
+
+        @include kbq-navbar-ic-item(default);
+
+        &:not(.kbq-disabled) {
+            &:hover {
+                @include kbq-navbar-ic-item(states-hover);
+            }
+
+            &.cdk-keyboard-focused {
+                outline: none;
+
+                & .kbq-navbar-ic-item__inner,
+                & .kbq-navbar-ic-header__inner {
+                    box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+                }
+            }
+
+            &.kbq-active,
+            &:active {
+                @include kbq-navbar-ic-item(states-selected);
+            }
+        }
+
+        &.kbq-disabled {
+            @include kbq-navbar-ic-item(states-disabled);
+
+            pointer-events: none;
+            cursor: default;
+        }
+    }
+
+    .kbq-navbar-ic-divider {
+        background: var(--kbq-line-contrast-less);
+    }
+}
+
+@mixin kbq-navbar-ic-typography() {
+    .kbq-navbar-ic-title {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+    }
+
+    .kbq-navbar-ic-header .kbq-navbar-ic-title {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+
+        &.kbq-navbar-ic-title_text-overflown {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact-strong);
+            line-height: 12px;
+        }
+    }
+}

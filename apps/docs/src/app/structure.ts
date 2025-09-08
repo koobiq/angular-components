@@ -45,6 +45,7 @@ export enum DocsStructureItemId {
     Markdown = 'markdown',
     Modal = 'modal',
     Navbar = 'navbar',
+    NavbarIc = 'navbar-ic',
     OverflowItems = 'overflow-items',
     Popover = 'popover',
     ProgressBar = 'progress-bar',
@@ -617,6 +618,18 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'navbar',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.NavbarIc,
+                    name: {
+                        ru: 'Infosec Navbar',
+                        en: 'Infosec Navbar'
+                    },
+                    svgPreview: 'navbar-ic',
+                    hasApi: true,
+                    apiId: 'navbar-ic',
+                    hasExamples: false,
+                    isNew: expiresAt('2025-09-20')
                 },
                 {
                     id: DocsStructureItemId.OverflowItems,

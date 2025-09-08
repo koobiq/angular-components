@@ -95,5 +95,11 @@ export const enUSLocaleData = {
     clampedText: {
         openText: 'Expand',
         closeText: 'Collapse'
-    } satisfies KbqClampedTextLocaleConfig
+    } satisfies KbqClampedTextLocaleConfig,
+    navbarIc: {
+        toggle: {
+            pinButton: 'Leave expanded',
+            collapseButton: 'Collapse'
+        }
+    }
 };
