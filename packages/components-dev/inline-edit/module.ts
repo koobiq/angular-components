@@ -7,23 +7,25 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [InlineEditExamplesModule],
     selector: 'dev-examples',
     template: `
-        <inline-edit-overview-example />
-        <inline-edit-unfilled-example />
-        <inline-edit-menu-example />
-        <inline-edit-disabled-example />
-        <inline-edit-horizontal-list-example />
-        <inline-edit-on-clean-example />
-        <inline-edit-validation-example />
-        <inline-edit-custom-handler-example />
-        <inline-edit-vertical-list-example />
-        <inline-edit-without-label-example />
+        <!--        <inline-edit-overview-example />-->
+        <!--        <inline-edit-unfilled-example />-->
+        <!--        <inline-edit-menu-example />-->
+        <!--        <inline-edit-disabled-example />-->
+        <!--        <inline-edit-horizontal-list-example />-->
+        <!--        <inline-edit-on-clean-example />-->
+        <!--        <inline-edit-validation-example />-->
+        <!--        <inline-edit-custom-handler-example />-->
+        <!--        <inline-edit-vertical-list-example />-->
+        <!--        <inline-edit-without-label-example />-->
+        <!--        <inline-edit-controls-example />-->
+        <inline-edit-editable-header-example />
     `,
     styles: `
         :host {
             display: flex;
             gap: var(--kbq-size-l);
             flex-wrap: wrap;
-            padding-bottom: 64px;
+            padding-bottom: 100px;
         }
         :host > * {
             display: flex;
