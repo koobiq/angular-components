@@ -5,8 +5,10 @@ import { InlineEditHorizontalListExample } from './inline-edit-horizontal-list/i
 import { InlineEditMenuExample } from './inline-edit-menu/inline-edit-menu-example';
 import { InlineEditOnCleanExample } from './inline-edit-on-clean/inline-edit-on-clean-example';
 import { InlineEditOverviewExample } from './inline-edit-overview/inline-edit-overview-example';
-import { InlineEditPlaceholderExample } from './inline-edit-placeholder/inline-edit-placeholder-example';
+import { InlineEditUnfilledExample } from './inline-edit-unfilled/inline-edit-unfilled-example';
 import { InlineEditValidationExample } from './inline-edit-validation/inline-edit-validation-example';
+import { InlineEditVerticalListExample } from './inline-edit-vertical-list/inline-edit-vertical-list-example';
+import { InlineEditWithoutLabelExample } from './inline-edit-without-label/inline-edit-without-label-example';
 
 export {
     InlineEditCustomHandlerExample,
@@ -15,19 +17,23 @@ export {
     InlineEditMenuExample,
     InlineEditOnCleanExample,
     InlineEditOverviewExample,
-    InlineEditPlaceholderExample,
-    InlineEditValidationExample
+    InlineEditUnfilledExample,
+    InlineEditValidationExample,
+    InlineEditVerticalListExample,
+    InlineEditWithoutLabelExample
 };
 
 const EXAMPLES = [
     InlineEditOverviewExample,
-    InlineEditPlaceholderExample,
+    InlineEditUnfilledExample,
     InlineEditMenuExample,
     InlineEditDisabledExample,
     InlineEditHorizontalListExample,
     InlineEditOnCleanExample,
     InlineEditValidationExample,
-    InlineEditCustomHandlerExample
+    InlineEditCustomHandlerExample,
+    InlineEditVerticalListExample,
+    InlineEditWithoutLabelExample
 ];
 
 @NgModule({
