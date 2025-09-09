@@ -1,6 +1,8 @@
 import { Clipboard } from '@angular/cdk/clipboard';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconButton } from '@koobiq/components/icon';
@@ -21,69 +23,152 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqInputModule,
         KbqIconButton,
         KbqDropdownModule,
-        KbqTextareaModule
+        KbqTextareaModule,
+        KbqDlModule,
+        NgTemplateOutlet
     ],
     selector: 'inline-edit-menu-example',
     template: `
-        <div class="layout-flex layout-column layout-gap-s">
-            @let viewValue = displayValue();
+        @let viewValue = displayValue();
+        <div role="group" class="layout-flex layout-column" aria-label="vertical list">
+            <span class="kbq-text-normal-strong">Vertical list</span>
 
-            <kbq-inline-edit showActions (saved)="update()">
-                <kbq-dropdown #dropdown="kbqDropdown">
-                    <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
-                </kbq-dropdown>
-                <i
-                    kbqInlineEditMenu
-                    kbq-icon-button="kbq-ellipsis-vertical_16"
-                    [kbqDropdownTriggerFor]="dropdown"
-                    [color]="'contrast-fade'"
-                ></i>
-                <div kbqInlineEditViewMode>
-                    @if (viewValue) {
-                        <span>{{ viewValue }}</span>
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-                <kbq-form-field kbqInlineEditEditMode>
-                    <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
-                </kbq-form-field>
-            </kbq-inline-edit>
+            <div class="layout-flex layout-column layout-gap-xs example-content__container">
+                <kbq-inline-edit showActions (saved)="update()">
+                    <kbq-label>Style</kbq-label>
+                    <i
+                        kbqInlineEditMenu
+                        kbq-icon-button="kbq-ellipsis-vertical_16"
+                        [kbqDropdownTriggerFor]="dropdown"
+                        [color]="'contrast-fade'"
+                    ></i>
+                    <div kbqInlineEditViewMode>
+                        <ng-container *ngTemplateOutlet="view; context: { $implicit: viewValue }" />
+                    </div>
+                    <kbq-form-field kbqInlineEditEditMode>
+                        <textarea
+                            kbqTextarea
+                            [placeholder]="placeholder"
+                            [formControl]="form.controls.style"
+                        ></textarea>
+                    </kbq-form-field>
+                </kbq-inline-edit>
 
-            <kbq-inline-edit showActions (saved)="update()">
-                <kbq-label>Label</kbq-label>
-                <kbq-dropdown #dropdown="kbqDropdown">
-                    <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
-                </kbq-dropdown>
-                <i
-                    kbqInlineEditMenu
-                    kbq-icon-button="kbq-ellipsis-vertical_16"
-                    [kbqDropdownTriggerFor]="dropdown"
-                    [color]="'contrast-fade'"
-                ></i>
-                <div kbqInlineEditViewMode>
-                    @if (viewValue) {
-                        <span>{{ viewValue }}</span>
-                    } @else {
-                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                    }
-                </div>
-                <kbq-form-field kbqInlineEditEditMode>
-                    <textarea kbqTextarea [placeholder]="placeholder" [(ngModel)]="value"></textarea>
-                </kbq-form-field>
-            </kbq-inline-edit>
+                <kbq-inline-edit>
+                    <kbq-label>Founded</kbq-label>
+                    <div class="example-inline-text" kbqInlineEditViewMode>
+                        <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.foundDate.value }" />
+                    </div>
+                    <kbq-form-field kbqInlineEditEditMode>
+                        <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.foundDate" />
+                    </kbq-form-field>
+                </kbq-inline-edit>
+            </div>
         </div>
+
+        <div role="group" class="layout-flex layout-column layout-gap-xs" aria-label="horizontal list">
+            <span class="kbq-text-normal-strong">Horizontal list</span>
+
+            <kbq-dl [vertical]="false">
+                <kbq-dt class="example-multiline-text__header">Style</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit>
+                        <i
+                            kbqInlineEditMenu
+                            kbq-icon-button="kbq-ellipsis-vertical_16"
+                            [kbqDropdownTriggerFor]="dropdown"
+                            [color]="'contrast-fade'"
+                        ></i>
+                        <div kbqInlineEditViewMode>
+                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.style.value }" />
+                        </div>
+                        <kbq-form-field kbqInlineEditEditMode>
+                            <textarea
+                                kbqTextarea
+                                [placeholder]="placeholder"
+                                [formControl]="form.controls.style"
+                            ></textarea>
+                        </kbq-form-field>
+                    </kbq-inline-edit>
+                </kbq-dd>
+
+                <kbq-dt>Founded</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit>
+                        <div class="example-inline-text" kbqInlineEditViewMode>
+                            <ng-container
+                                *ngTemplateOutlet="view; context: { $implicit: form.controls.foundDate.value }"
+                            />
+                        </div>
+
+                        <kbq-form-field kbqInlineEditEditMode>
+                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.foundDate" />
+                        </kbq-form-field>
+                    </kbq-inline-edit>
+                </kbq-dd>
+            </kbq-dl>
+        </div>
+
+        <ng-template #view let-value>
+            @if (!value) {
+                <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+            } @else {
+                {{ value }}
+            }
+        </ng-template>
+
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item (click)="clipboard.copy(form.controls.style.value)">Copy text</button>
+            <button kbq-dropdown-item (click)="clipboard.copy(form.controls.style.value)">Acti</button>
+        </kbq-dropdown>
     `,
+    styles: `
+        .kbq-dl {
+            grid-template-columns: unset;
+            --kbq-description-list-size-horizontal-content-gap-horizontal: var(--kbq-size-xxs);
+            --kbq-description-list-size-horizontal-gap-vertical: var(--kbq-size-3xs);
+        }
+
+        .kbq-dt {
+            width: 68px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .example-inline-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .example-multiline-text__header {
+            padding-top: var(--kbq-size-xs);
+            align-items: flex-start;
+        }
+
+        .example-content__container {
+            margin-left: -8px;
+        }
+    `,
+    host: {
+        class: 'layout-flex layout-column layout-gap-m'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditMenuExample {
     protected readonly clipboard = inject(Clipboard);
     protected readonly placeholder = 'Placeholder';
-    protected value =
-        'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access';
-    protected readonly displayValue = signal(this.value);
+
+    protected readonly form = new FormGroup({
+        style: new FormControl(
+            'Spanish football is characterized by technical skill, tactical innovation, and fierce regional rivalries.',
+            { nonNullable: true }
+        ),
+        foundDate: new FormControl('1929')
+    });
+    protected readonly displayValue = signal(this.form.controls.style.value);
 
     protected update(): void {
-        this.displayValue.set(this.value);
+        this.displayValue.set(this.form.controls.style.value);
     }
 }

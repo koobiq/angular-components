@@ -61,6 +61,13 @@
             }
         }
 
+        &.kbq-inline-edit_disabled {
+            &:hover,
+            &:has(.kbq-inline-edit__menu.kbq-active) {
+                --kbq-mask-background: var(--kbq-background-bg);
+            }
+        }
+
         &.cdk-keyboard-focused {
             $focused-color: var(--kbq-states-line-focus-theme);
             outline: 1px solid $focused-color;

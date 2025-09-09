@@ -8,13 +8,15 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     template: `
         <inline-edit-overview-example />
-        <inline-edit-placeholder-example />
+        <inline-edit-unfilled-example />
         <inline-edit-menu-example />
         <inline-edit-disabled-example />
         <inline-edit-horizontal-list-example />
         <inline-edit-on-clean-example />
         <inline-edit-validation-example />
         <inline-edit-custom-handler-example />
+        <inline-edit-vertical-list-example />
+        <inline-edit-without-label-example />
     `,
     styles: `
         :host {

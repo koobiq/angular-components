@@ -1,26 +1,27 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Inline edit horizontal list
+ * @title Inline edit unfilled
  */
 @Component({
     standalone: true,
     imports: [
-        NgTemplateOutlet,
         ReactiveFormsModule,
         KbqInlineEditModule,
-        KbqDlModule,
         KbqFormFieldModule,
-        KbqInputModule
+        KbqSelectModule,
+        KbqInputModule,
+        KbqDlModule,
+        NgTemplateOutlet
     ],
-    selector: 'inline-edit-horizontal-list-example',
+    selector: 'inline-edit-unfilled-example',
     template: `
         <div class="flex">
             <form [formGroup]="form">
@@ -86,17 +87,14 @@ import { KbqInputModule } from '@koobiq/components/input';
             white-space: nowrap;
         }
     `,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditHorizontalListExample {
-    protected readonly placeholder = 'Placeholder';
+export class InlineEditUnfilledExample {
+    protected readonly placeholder = 'Empty';
 
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),
-        capital: new FormControl('Madrid'),
+        capital: new FormControl(''),
         currency: new FormControl('Euro')
     });
 }

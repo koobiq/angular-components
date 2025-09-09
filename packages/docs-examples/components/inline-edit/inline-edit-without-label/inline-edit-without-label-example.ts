@@ -1,34 +1,34 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Inline edit placeholder
+ * @title Inline edit without label
  */
 @Component({
     standalone: true,
     imports: [
-        FormsModule,
+        ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
         KbqSelectModule,
         KbqInputModule
     ],
-    selector: 'inline-edit-placeholder-example',
+    selector: 'inline-edit-without-label-example',
     template: `
-        <kbq-inline-edit (saved)="update()">
+        <kbq-inline-edit>
             <div class="example-inline-text" kbqInlineEditViewMode>
-                @if (!!value) {
-                    <span class="t">{{ value }}</span>
+                @if (!!control.value) {
+                    <span>{{ control.value }}</span>
                 } @else {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
-                <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
+                <input kbqInput [placeholder]="placeholder" [formControl]="control" />
             </kbq-form-field>
         </kbq-inline-edit>
     `,
@@ -41,12 +41,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditPlaceholderExample {
-    protected readonly placeholder = 'Placeholder';
-    protected value = '';
-    protected readonly displayValue = signal(this.value);
-
-    protected update(): void {
-        this.displayValue.set(this.value);
-    }
+export class InlineEditWithoutLabelExample {
+    protected readonly placeholder = 'Country';
+    protected control = new FormControl('Spain');
 }
