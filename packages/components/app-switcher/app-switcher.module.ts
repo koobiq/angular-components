@@ -20,17 +20,15 @@ import {
     KbqAppSwitcherTrigger
 } from './app-switcher';
 import { KbqAppSwitcherTree } from './app-switcher-tree';
+import { KbqAppSwitcherTreeNodePadding, KbqAppSwitcherTreeOption } from './app-switcher-tree-option';
 
 @NgModule({
-    declarations: [
-        KbqAppSwitcherTrigger
-    ],
-    exports: [
-        KbqAppSwitcherTrigger
-    ],
     imports: [
         KbqAppSwitcher,
+        KbqAppSwitcherTrigger,
         KbqAppSwitcherTree,
+        KbqAppSwitcherTreeOption,
+        KbqAppSwitcherTreeNodePadding,
         OverlayModule,
         KbqButtonModule,
         A11yModule,
@@ -41,6 +39,13 @@ import { KbqAppSwitcherTree } from './app-switcher-tree';
         KbqFormField,
         KbqInputModule,
         FormsModule
+    ],
+    exports: [
+        KbqAppSwitcher,
+        KbqAppSwitcherTrigger,
+        KbqAppSwitcherTree,
+        KbqAppSwitcherTreeOption,
+        KbqAppSwitcherTreeNodePadding
     ],
     providers: [
         KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER,

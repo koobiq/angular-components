@@ -1,0 +1,71 @@
+@use '../core/styles/common/tokens' as *;
+
+.kbq-app-switcher-tree-option {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+
+    height: 38px;
+
+    padding: var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-xs) var(--kbq-size-m);
+
+    gap: var(--kbq-size-m);
+
+    &:hover {
+        & .kbq-tree-node-toggle {
+            display: flex;
+        }
+    }
+
+    & .kbq-tree-node-toggle {
+        position: absolute;
+
+        top: 11px;
+        left: var(--kbq-size-m);
+
+        width: var(--kbq-size-xxl);
+        height: var(--kbq-size-xxl);
+
+        border-radius: var(--kbq-size-xxs);
+
+        background: #4dc3ff;
+
+        display: none;
+    }
+}
+
+.kbq-app-switch-option__container {
+    display: flex;
+    flex-direction: column;
+}
+
+.kbq-app-switcher-tree-option__icon {
+    display: flex;
+    align-items: center;
+
+    height: 38px;
+}
+
+
+@mixin kbq-app-switcher-tree-option-theme() {
+    .kbq-app-switch-tree-option__text {
+    }
+
+    .kbq-app-switch-tree-option__alias {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+}
+
+@mixin kbq-app-switcher-tree-option-typography() {
+    .kbq-app-switch-tree-option__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+    }
+
+    .kbq-app-switch-tree-option__alias {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+    }
+}
+
+@include kbq-app-switcher-tree-option-theme();
+@include kbq-app-switcher-tree-option-typography();
