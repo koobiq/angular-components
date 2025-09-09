@@ -48,13 +48,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
     ],
-    styles: `
-        :host {
-            .kbq-inline-edit {
-                --kbq-inline-edit-pop-up-height: var(--kbq-size-xxl);
-            }
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditOverviewExample {

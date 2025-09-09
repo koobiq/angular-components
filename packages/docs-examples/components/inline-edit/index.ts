@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
+import { InlineEditControlsExample } from './inline-edit-controls/inline-edit-controls-example';
 import { InlineEditCustomHandlerExample } from './inline-edit-custom-handler/inline-edit-custom-handler-example';
 import { InlineEditDisabledExample } from './inline-edit-disabled/inline-edit-disabled-example';
+import { InlineEditEditableHeaderExample } from './inline-edit-editable-header/inline-edit-editable-header-example';
 import { InlineEditHorizontalListExample } from './inline-edit-horizontal-list/inline-edit-horizontal-list-example';
 import { InlineEditMenuExample } from './inline-edit-menu/inline-edit-menu-example';
 import { InlineEditOnCleanExample } from './inline-edit-on-clean/inline-edit-on-clean-example';
@@ -11,8 +13,10 @@ import { InlineEditVerticalListExample } from './inline-edit-vertical-list/inlin
 import { InlineEditWithoutLabelExample } from './inline-edit-without-label/inline-edit-without-label-example';
 
 export {
+    InlineEditControlsExample,
     InlineEditCustomHandlerExample,
     InlineEditDisabledExample,
+    InlineEditEditableHeaderExample,
     InlineEditHorizontalListExample,
     InlineEditMenuExample,
     InlineEditOnCleanExample,
@@ -33,7 +37,9 @@ const EXAMPLES = [
     InlineEditValidationExample,
     InlineEditCustomHandlerExample,
     InlineEditVerticalListExample,
-    InlineEditWithoutLabelExample
+    InlineEditWithoutLabelExample,
+    InlineEditControlsExample,
+    InlineEditEditableHeaderExample
 ];
 
 @NgModule({

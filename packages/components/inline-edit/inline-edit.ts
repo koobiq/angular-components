@@ -173,6 +173,8 @@ export class KbqInlineEdit {
     protected readonly mode = signal<'view' | 'edit'>('view');
     /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
+    /** @docs-private */
+    readonly modeAsReadonly = computed(() => this.mode());
 
     /** @docs-private */
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
