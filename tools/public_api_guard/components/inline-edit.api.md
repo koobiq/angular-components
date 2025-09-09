@@ -36,6 +36,7 @@ export class KbqInlineEdit {
     protected readonly label: Signal<KbqLabel | undefined>;
     protected readonly menu: Signal<KbqInlineEditMenu | undefined>;
     protected readonly mode: WritableSignal<"view" | "edit">;
+    readonly modeAsReadonly: Signal<"view" | "edit">;
     protected readonly modeChange: OutputEmitterRef<"view" | "edit">;
     protected onAttach(): void;
     protected onClick(event: Event): void;

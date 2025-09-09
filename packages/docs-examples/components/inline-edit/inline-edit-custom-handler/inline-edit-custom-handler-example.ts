@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
-import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -14,15 +14,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     standalone: true,
     imports: [
-        FormsModule,
+        ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
         KbqSelectModule,
-        KbqCleaner,
         KbqBadgeModule,
         KbqIconModule,
-        KbqFileUploadModule,
-        ReactiveFormsModule
+        KbqFileUploadModule
     ],
     selector: 'inline-edit-custom-handler-example',
     template: `

@@ -9,6 +9,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
  * @title Inline edit menu
@@ -25,6 +26,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqDropdownModule,
         KbqTextareaModule,
         KbqDlModule,
+        KbqToolTipModule,
         NgTemplateOutlet
     ],
     selector: 'inline-edit-menu-example',
@@ -55,6 +57,14 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 </kbq-inline-edit>
 
                 <kbq-inline-edit>
+                    <i
+                        kbqInlineEditMenu
+                        kbq-icon-button="kbq-undo_16"
+                        [kbqTooltip]="'Reset to default value: 1991'"
+                        [kbqTooltipArrow]="false"
+                        [color]="'contrast-fade'"
+                        (click)="form.controls.foundDate.setValue('1991')"
+                    ></i>
                     <kbq-label>Founded</kbq-label>
                     <div class="example-inline-text" kbqInlineEditViewMode>
                         <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.foundDate.value }" />
@@ -95,6 +105,14 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 <kbq-dt>Founded</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
+                        <i
+                            kbqInlineEditMenu
+                            kbq-icon-button="kbq-undo_16"
+                            [kbqTooltip]="'Reset to default value: 1991'"
+                            [kbqTooltipArrow]="false"
+                            [color]="'contrast-fade'"
+                            (click)="form.controls.foundDate.setValue('1991')"
+                        ></i>
                         <div class="example-inline-text" kbqInlineEditViewMode>
                             <ng-container
                                 *ngTemplateOutlet="view; context: { $implicit: form.controls.foundDate.value }"

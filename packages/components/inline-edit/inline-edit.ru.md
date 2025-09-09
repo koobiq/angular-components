@@ -58,7 +58,7 @@
 
 #### Пользовательский дизайн
 
-// @TODO
+<!-- example(inline-edit-customized-design) -->
 
 ### Рекомендации
 
