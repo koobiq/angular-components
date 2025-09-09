@@ -22,49 +22,45 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     selector: 'inline-edit-horizontal-list-example',
     template: `
-        <div class="flex">
-            <form [formGroup]="form">
-                <kbq-dl>
-                    <kbq-dt>Country</kbq-dt>
-                    <kbq-dd>
-                        <kbq-inline-edit>
-                            <div class="example-inline-text" kbqInlineEditViewMode>
-                                <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.country }" />
-                            </div>
-                            <kbq-form-field kbqInlineEditEditMode>
-                                <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.country" />
-                            </kbq-form-field>
-                        </kbq-inline-edit>
-                    </kbq-dd>
+        <form [formGroup]="form">
+            <kbq-dl [vertical]="false">
+                <kbq-dt>Country</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit>
+                        <div class="example-inline-text" kbqInlineEditViewMode>
+                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.country }" />
+                        </div>
+                        <kbq-form-field kbqInlineEditEditMode>
+                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.country" />
+                        </kbq-form-field>
+                    </kbq-inline-edit>
+                </kbq-dd>
 
-                    <kbq-dt>Capital</kbq-dt>
-                    <kbq-dd>
-                        <kbq-inline-edit>
-                            <div class="example-inline-text" kbqInlineEditViewMode>
-                                <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.capital }" />
-                            </div>
-                            <kbq-form-field kbqInlineEditEditMode>
-                                <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.capital" />
-                            </kbq-form-field>
-                        </kbq-inline-edit>
-                    </kbq-dd>
+                <kbq-dt>Capital</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit>
+                        <div class="example-inline-text" kbqInlineEditViewMode>
+                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.capital }" />
+                        </div>
+                        <kbq-form-field kbqInlineEditEditMode>
+                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.capital" />
+                        </kbq-form-field>
+                    </kbq-inline-edit>
+                </kbq-dd>
 
-                    <kbq-dt>Currency</kbq-dt>
-                    <kbq-dd>
-                        <kbq-inline-edit>
-                            <div class="example-inline-text" kbqInlineEditViewMode>
-                                <ng-container
-                                    *ngTemplateOutlet="view; context: { $implicit: form.controls.currency }"
-                                />
-                            </div>
-                            <kbq-form-field kbqInlineEditEditMode>
-                                <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.currency" />
-                            </kbq-form-field>
-                        </kbq-inline-edit>
-                    </kbq-dd>
-                </kbq-dl>
-            </form>
-        </div>
+                <kbq-dt>Currency</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit>
+                        <div class="example-inline-text" kbqInlineEditViewMode>
+                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.currency }" />
+                        </div>
+                        <kbq-form-field kbqInlineEditEditMode>
+                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.currency" />
+                        </kbq-form-field>
+                    </kbq-inline-edit>
+                </kbq-dd>
+            </kbq-dl>
+        </form>
 
         <ng-template #view let-control>
             @if (!control.value) {
@@ -75,6 +71,10 @@ import { KbqInputModule } from '@koobiq/components/input';
         </ng-template>
     `,
     styles: `
+        form {
+            width: 100%;
+        }
+
         .kbq-dt {
             display: inline-flex;
             align-items: center;

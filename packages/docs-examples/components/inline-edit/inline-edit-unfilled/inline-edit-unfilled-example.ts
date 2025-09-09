@@ -5,7 +5,6 @@ import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
  * @title Inline edit unfilled
@@ -16,7 +15,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
-        KbqSelectModule,
         KbqInputModule,
         KbqDlModule,
         NgTemplateOutlet

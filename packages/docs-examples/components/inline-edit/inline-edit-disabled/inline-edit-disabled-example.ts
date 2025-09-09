@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -15,7 +15,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     standalone: true,
     imports: [
         FormsModule,
-        ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
         KbqInputModule,

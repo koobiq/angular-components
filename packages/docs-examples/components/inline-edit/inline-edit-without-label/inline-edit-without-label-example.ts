@@ -3,7 +3,6 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
  * @title Inline edit without label
@@ -14,7 +13,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
-        KbqSelectModule,
         KbqInputModule
     ],
     selector: 'inline-edit-without-label-example',
@@ -43,5 +41,5 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class InlineEditWithoutLabelExample {
     protected readonly placeholder = 'Country';
-    protected control = new FormControl('Spain');
+    protected readonly control = new FormControl('Spain');
 }

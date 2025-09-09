@@ -47,6 +47,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     },
     styles: `
         :host .kbq-inline-edit {
+            width: calc(100% + 12px);
             margin-left: -12px;
         }
 

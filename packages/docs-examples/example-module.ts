@@ -2115,6 +2115,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon-item"
   },
+  "inline-edit-controls": {
+    "packagePath": "components/inline-edit/inline-edit-controls",
+    "title": "Inline edit controls",
+    "componentName": "InlineEditControlsExample",
+    "files": [
+      "inline-edit-controls-example.ts"
+    ],
+    "selector": "inline-edit-controls-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-controls-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-custom-handler": {
     "packagePath": "components/inline-edit/inline-edit-custom-handler",
     "title": "Inline edit custom handler",
@@ -2127,6 +2139,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-custom-handler-example.ts",
     "importPath": "components/inline-edit"
   },
+  "inline-edit-customized-design": {
+    "packagePath": "components/inline-edit/inline-edit-customized-design",
+    "title": "Inline edit customized design",
+    "componentName": "InlineEditCustomizedDesignExample",
+    "files": [
+      "inline-edit-customized-design-example.ts"
+    ],
+    "selector": "inline-edit-customized-design-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-customized-design-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-disabled": {
     "packagePath": "components/inline-edit/inline-edit-disabled",
     "title": "Inline edit disabled",
@@ -2137,6 +2161,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "inline-edit-disabled-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-disabled-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-editable-header": {
+    "packagePath": "components/inline-edit/inline-edit-editable-header",
+    "title": "Inline edit editable header",
+    "componentName": "InlineEditEditableHeaderExample",
+    "files": [
+      "inline-edit-editable-header-example.ts"
+    ],
+    "selector": "inline-edit-editable-header-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-editable-header-example.ts",
     "importPath": "components/inline-edit"
   },
   "inline-edit-horizontal-list": {
@@ -5467,9 +5503,15 @@ return import('@koobiq/docs-examples/components/icon-item');
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-variant':
 return import('@koobiq/docs-examples/components/icon-item');
+  case 'inline-edit-controls':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-custom-handler':
 return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-customized-design':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-disabled':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-editable-header':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-horizontal-list':
 return import('@koobiq/docs-examples/components/inline-edit');

@@ -1,12 +1,75 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KbqBadgeModule } from '@koobiq/components/badge';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Directive,
+    ElementRef,
+    inject,
+    Injectable,
+    viewChild
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    AbstractControl,
+    FormControl,
+    FormGroupDirective,
+    NgControl,
+    NgForm,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
+import {
+    ErrorStateMatcher,
+    KbqComponentColors,
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    PopUpPlacements
+} from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
-import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { fromEvent, switchMap } from 'rxjs';
+import { take } from 'rxjs/operators';
+
+const IP_PATTERN =
+    /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+
+const restSymbolsRegex = /[^0-9.]+/g;
+
+@Injectable()
+export class CustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return !!(control?.invalid && control.touched && (form?.submitted ?? true));
+    }
+}
+
+@Directive({
+    standalone: true,
+    selector: '[exampleResetTouchedOnFirstInput]',
+    exportAs: 'exampleResetTouchedOnFirstInput'
+})
+class ExampleResetTouchedOnFirstInput {
+    protected readonly elementRef = inject(ElementRef);
+    protected readonly control = inject(NgControl, { optional: true, host: true });
+    protected validators: ValidatorFn | null = null;
+
+    constructor() {
+        const inputEvent = fromEvent(this.elementRef.nativeElement, 'input').pipe(take(1));
+
+        fromEvent(this.elementRef.nativeElement, 'focus')
+            .pipe(
+                switchMap(() => inputEvent),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => {
+                if (this.control?.control) {
+                    this.control.control.markAsUntouched();
+                }
+            });
+    }
+}
 
 /**
  * @title Inline edit validation
@@ -14,75 +77,115 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 @Component({
     standalone: true,
     imports: [
-        FormsModule,
+        ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
-        KbqSelectModule,
-        KbqCleaner,
-        KbqBadgeModule,
+        KbqInputModule,
         KbqIconModule,
-        ReactiveFormsModule,
-        KbqTextareaModule
+        KbqToolTipModule,
+        ExampleResetTouchedOnFirstInput
     ],
     selector: 'inline-edit-validation-example',
     template: `
-        <kbq-inline-edit showActions [validationTooltip]="'Value required'">
-            <kbq-label>Label</kbq-label>
+        <kbq-inline-edit [validationTooltip]="'Error message'" [tooltipPlacement]="popupPlacements.BottomLeft">
+            <kbq-label>Not empty</kbq-label>
 
-            <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
-                @if (control.value.length > 0) {
-                    @for (badge of control.value; track badge) {
-                        <kbq-badge>{{ badge }}</kbq-badge>
-                    }
-                } @else {
+            <div class="example-inline-text" kbqInlineEditViewMode>
+                @if (!inputControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                } @else {
+                    <span>
+                        {{ inputControl.value }}
+                    </span>
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
-                <kbq-select multiple multiline [placeholder]="placeholder" [formControl]="control">
-                    @for (option of options; track option) {
-                        <kbq-option [value]="option">{{ option }}</kbq-option>
-                    }
-                    <kbq-cleaner #kbqSelectCleaner />
-                </kbq-select>
+                <input kbqInput placeholder="Placeholder" [formControl]="inputControl" />
             </kbq-form-field>
         </kbq-inline-edit>
 
-        <kbq-inline-edit showActions [validationTooltip]="'Value required'" (saved)="update()">
-            <kbq-label>Label</kbq-label>
+        <kbq-inline-edit
+            [validationTooltip]="'Invalid IP: RFC non-compliant'"
+            [tooltipPlacement]="popupPlacements.BottomLeft"
+        >
+            <kbq-label>IP-address</kbq-label>
 
-            <div style="flex-wrap: wrap;" kbqInlineEditViewMode>
-                @if (displayValue().length > 0) {
-                    {{ displayValue() }}
-                } @else {
+            <div class="example-inline-text" kbqInlineEditViewMode>
+                @if (!ipAddressControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                } @else {
+                    <span>
+                        {{ ipAddressControl.value }}
+                    </span>
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
-                <textarea kbqTextarea placeholder="Placeholder" [formControl]="textareaControl"></textarea>
+                <input
+                    kbqInput
+                    exampleResetTouchedOnFirstInput
+                    [formControl]="ipAddressControl"
+                    [kbqEnterDelay]="10"
+                    [kbqPlacement]="popUpPlacements.BottomLeft"
+                    [kbqTrigger]="'manual'"
+                    [kbqTooltip]="'Numbers and dots only'"
+                    [kbqTooltipColor]="colors.Warning"
+                    [kbqTooltipArrow]="false"
+                    (input)="onInput($event)"
+                />
             </kbq-form-field>
         </kbq-inline-edit>
     `,
+    styles: `
+        .example-inline-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    `,
+    host: {
+        class: 'layout-flex layout-column'
+    },
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ],
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditValidationExample {
+    protected readonly tooltip = viewChild(KbqTooltipTrigger);
+
     protected readonly placeholder = 'Placeholder';
-    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    protected readonly control = new FormControl<string[]>([], {
+    protected readonly ipAddressControl = new FormControl<string>('192.168.0.2', {
+        nonNullable: true,
+        validators: [Validators.pattern(IP_PATTERN)]
+    });
+    protected readonly inputControl = new FormControl<string>('Value', {
         nonNullable: true,
         validators: [Validators.required]
     });
-    protected readonly textareaControl = new FormControl<string>('', {
-        nonNullable: true,
-        validators: [Validators.required]
-    });
+    protected readonly popupPlacements = PopUpPlacements;
 
-    protected readonly displayValue = signal(this.textareaControl.value);
+    onInput(event: Event): void {
+        const allowedSymbolsRegex = /^[0-9.]+$/g;
 
-    protected update(): void {
-        this.displayValue.set(this.textareaControl.value);
+        if (
+            event.target instanceof HTMLInputElement &&
+            event.target.value &&
+            !allowedSymbolsRegex.test(event.target.value)
+        ) {
+            const newValue = event.target.value.replace(restSymbolsRegex, '');
+
+            this.ipAddressControl.setValue(newValue);
+
+            const tooltip = this.tooltip();
+
+            if (tooltip && !tooltip.isOpen) {
+                tooltip.show();
+
+                setTimeout(() => tooltip.hide(), 3000);
+            }
+        }
     }
+
+    protected readonly popUpPlacements = PopUpPlacements;
+    protected readonly colors = KbqComponentColors;
 }
