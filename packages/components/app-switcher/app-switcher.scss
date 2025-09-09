@@ -8,13 +8,25 @@
 
     width: 320px;
 
-    border-radius: var(--kbq-size-m);
+    border-radius: var(--kbq-size-xs);
 
     box-shadow: var(--kbq-shadow-popup);
 
     box-sizing: border-box;
 
     z-index: 1;
+}
+
+.kbq-app-switcher__search-container {
+    padding-top: var(--kbq-size-xxs);
+}
+
+.kbq-app-switcher-group-header {
+    padding: var(--kbq-size-s) var(--kbq-size-l);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 @include kbq-app-switcher-theme();

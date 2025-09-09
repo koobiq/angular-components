@@ -1,16 +1,40 @@
 @if (withSearch) {
-    <kbq-form-field noBorders>
-        <input kbqInput placeholder="Поиск" [(ngModel)]="searchValue" />
-
-        <kbq-cleaner />
-    </kbq-form-field>
+    <div class="kbq-app-switcher__search-container">
+        <kbq-form-field noBorders>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <input kbqInput placeholder="Поиск" [(ngModel)]="searchValue" />
+            <kbq-cleaner />
+        </kbq-form-field>
+    </div>
 
     <kbq-divider />
 }
-<div class="kbq-app-switcher__container">
-    <kbq-app-switcher-tree />
+
+<div class="kbq-app-switcher__app-container">
+    <div class="kbq-app-switcher-group-header">
+        <div class="kbq-app-switcher-group-header__text">Название площадки</div>
+        <kbq-badge class="kbq-app-switcher-group-header__badge" [compact]="true">Главная</kbq-badge>
+    </div>
+
+    <kbq-app-switcher-tree [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
+        <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node" kbqAppSwitcherTreeNodePadding>
+            <span [innerHTML]="treeControl.getViewValue(node)"></span>
+        </kbq-app-switcher-tree-option>
+
+        <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqAppSwitcherTreeNodePadding>
+            <kbq-tree-node-toggle [node]="node" />
+
+            <span [innerHTML]="treeControl.getViewValue(node)"></span>
+        </kbq-app-switcher-tree-option>
+    </kbq-app-switcher-tree>
 </div>
 
 @if (withSites) {
     <kbq-divider />
+
+    <div class="kbq-app-switcher__sites-container">
+        <div class="kbq-app-switcher-group-header">
+            <div class="kbq-app-switcher-group-header__text">Другие площадки</div>
+        </div>
+    </div>
 }

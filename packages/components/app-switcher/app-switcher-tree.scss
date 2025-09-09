@@ -1,21 +1,4 @@
-@use './app-switcher-theme' as *;
-
-.kbq-app-switcher {
-    position: relative;
-
-    margin-top: var(--kbq-size-xxs);
-    margin-bottom: var(--kbq-size-xxs);
-
-    width: 320px;
-
-    border-radius: var(--kbq-size-m);
-
-    box-shadow: var(--kbq-shadow-popup);
-
-    box-sizing: border-box;
-
-    z-index: 1;
+.kbq-app-switcher-tree {
+    display: flex;
+    flex-direction: column;
 }
-
-@include kbq-app-switcher-theme();
-@include kbq-app-switcher-typography();
