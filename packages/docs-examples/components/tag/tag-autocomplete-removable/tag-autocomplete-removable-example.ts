@@ -18,7 +18,7 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
         <h1>IN PROGRESS</h1>
 
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" removable [multiple]="true">
+            <kbq-tag-list #tagList="kbqTagList" removable multiple>
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
                         {{ tag }}

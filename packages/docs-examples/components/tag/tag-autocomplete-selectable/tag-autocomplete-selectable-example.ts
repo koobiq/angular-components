@@ -14,7 +14,7 @@ import { KbqTagInputEvent, KbqTagSelectionChange, KbqTagsModule } from '@koobiq/
         <h1>IN PROGRESS</h1>
 
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" selectable [multiple]="true">
+            <kbq-tag-list #tagList="kbqTagList" selectable multiple>
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (selectionChange)="selectionChange($event)">
                         {{ tag }}

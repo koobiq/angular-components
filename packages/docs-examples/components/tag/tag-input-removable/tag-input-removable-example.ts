@@ -16,7 +16,7 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" removable [multiple]="true">
+            <kbq-tag-list #tagList="kbqTagList" removable multiple>
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
                         {{ tag }}

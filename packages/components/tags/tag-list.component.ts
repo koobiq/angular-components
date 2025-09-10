@@ -133,17 +133,12 @@ export class KbqTagList
         return this.cleaner && this.tags.length > 0;
     }
 
-    /** Whether the user should be allowed to select multiple tags. */
-    @Input()
-    get multiple(): boolean {
-        return this._multiple;
-    }
-
-    set multiple(value: boolean) {
-        this._multiple = coerceBooleanProperty(value);
-    }
-
-    private _multiple: boolean = false;
+    /**
+     * Whether the user should be allowed to select multiple tags.
+     *
+     * NOTE! Component does not support dynamic multiple attribute changes.
+     */
+    @Input({ transform: booleanAttribute }) multiple: boolean = false;
 
     /**
      * A function to compare the option values with the selected values. The first argument
@@ -254,18 +249,7 @@ export class KbqTagList
      * Whether or not this tag list is selectable. When a tag list is not selectable,
      * the selected states for all the tags inside the tag list are always ignored.
      */
-    @Input()
-    get selectable(): boolean {
-        return this._selectable;
-    }
-
-    set selectable(value: boolean) {
-        this._selectable = coerceBooleanProperty(value);
-
-        this.propagateSelectableToChildren();
-    }
-
-    private _selectable: boolean = true;
+    @Input({ transform: booleanAttribute }) selectable = true;
 
     /** Whether the tags in the list are editable. */
     @Input({ transform: booleanAttribute }) editable = false;
@@ -389,7 +373,7 @@ export class KbqTagList
     }
 
     ngOnInit() {
-        this.selectionModel = new SelectionModel<KbqTag>(this.multiple, undefined, false);
+        this.selectionModel = new SelectionModel<KbqTag>(this.multiple, undefined, true);
         this.stateChanges.next();
     }
 
@@ -460,8 +444,6 @@ export class KbqTagList
                     }
                 });
             });
-
-        this.propagateSelectableToChildren();
     }
 
     ngOnDestroy() {
@@ -580,6 +562,7 @@ export class KbqTagList
                 event.preventDefault();
             } else if (event.keyCode === A && allowSelectAll) {
                 this.selectAll();
+                this.keyManager.setLastItemActive();
                 event.preventDefault();
             }
         } else if (this.isTagElement(target)) {
@@ -591,6 +574,7 @@ export class KbqTagList
                 event.preventDefault();
             } else if (event.keyCode === A && allowSelectAll) {
                 this.selectAll();
+                this.keyManager.setLastItemActive();
                 event.preventDefault();
             } else {
                 this.keyManager.onKeydown(event);
@@ -708,7 +692,13 @@ export class KbqTagList
         this.tags.forEach((tag) => {
             if (tag.selectable) tag.select();
         });
-        this.stateChanges.next();
+    }
+
+    /**
+     * @docs-private
+     */
+    removeSelected(): void {
+        Array.isArray(this.selected) ? this.selected.forEach((tag) => tag.remove()) : this.selected.remove();
     }
 
     /**
@@ -763,7 +753,7 @@ export class KbqTagList
      * order that they have in the panel.
      */
     private sortValues(): void {
-        if (this._multiple) {
+        if (this.multiple) {
             this.selectionModel.clear();
 
             this.tags.forEach((tag) => {
@@ -856,10 +846,7 @@ export class KbqTagList
                 });
             }
 
-            // @TODO Should be fixed!
-            const skip = true;
-
-            if (event.isUserInput && !skip) {
+            if (event.isUserInput) {
                 this.propagateChanges();
             }
         });
@@ -939,12 +926,6 @@ export class KbqTagList
 
             control.updateValueAndValidity({ emitEvent: false });
             (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
-    }
-
-    private propagateSelectableToChildren(): void {
-        if (this.tags) {
-            this.tags.forEach((tag) => (tag.tagListSelectable = this._selectable));
         }
     }
 }

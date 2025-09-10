@@ -14,7 +14,7 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
     selector: 'tag-list-editable-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, JsonPipe, KbqInputModule],
     template: `
-        <kbq-tag-list editable [(ngModel)]="tags">
+        <kbq-tag-list editable>
             @for (tag of tags(); track $index) {
                 <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($index)">
                     {{ tag }}

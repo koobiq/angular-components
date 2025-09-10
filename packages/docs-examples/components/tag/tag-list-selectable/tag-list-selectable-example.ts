@@ -10,7 +10,7 @@ import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
     selector: 'tag-list-selectable-example',
     imports: [KbqTagsModule, KbqIconModule],
     template: `
-        <kbq-tag-list selectable [multiple]="true">
+        <kbq-tag-list selectable multiple>
             @for (tag of tags(); track tag) {
                 <kbq-tag [selected]="$index > 0" [value]="tag" (selectionChange)="selectionChange($event)">
                     {{ tag }}

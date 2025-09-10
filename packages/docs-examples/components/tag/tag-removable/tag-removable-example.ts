@@ -18,7 +18,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         @if (display()) {
             <kbq-tag [removable]="removable()" (removed)="removed($event)">
                 {{ tag() }}
-                <kbq-icon-button kbqTagRemove kbq-icon-button="kbq-xmark-s_16" />
+                <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
             </kbq-tag>
         } @else {
             <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="colors.ContrastFade" (click)="restart()"></i>

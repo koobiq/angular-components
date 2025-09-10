@@ -1,5 +1,4 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
@@ -34,6 +33,7 @@ import {
     KbqComponentColors,
     KbqFieldSizingContent,
     kbqInjectElementRef,
+    KbqHovered,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -157,6 +157,7 @@ export class KbqTagEditInput {
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
+    hostDirectives: [KbqHovered],
     template: `
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
@@ -211,25 +212,29 @@ export class KbqTag
     /** @docs-private */
     readonly elementRef = kbqInjectElementRef();
 
-    /** Emits when the tag is focused. */
+    /**
+     * Emits when the tag is focused.
+     *
+     * @docs-private
+     */
     readonly onFocus = new Subject<KbqTagEvent>();
 
-    /** Emits when the tag is blurred. */
+    /**
+     * Emits when the tag is blurred.
+     *
+     * @docs-private
+     */
     readonly onBlur = new Subject<KbqTagEvent>();
 
     /** @docs-private */
     readonly nativeElement = this.elementRef.nativeElement;
 
-    /** Whether the tag has focus. */
-    hasFocus: boolean = false;
-
     /**
-     * Whether the tag list is selectable
+     * Whether the tag has focus.
      *
      * @docs-private
-     *
      */
-    tagListSelectable: boolean = true;
+    hasFocus: boolean = false;
 
     /** Whether the tag is editable. */
     @Input({ transform: booleanAttribute })
@@ -285,16 +290,14 @@ export class KbqTag
     @Output() readonly removed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
 
     /** Whether the tag is selected. */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get selected(): boolean {
         return this._selected;
     }
 
     set selected(value: boolean) {
-        const coercedValue = coerceBooleanProperty(value);
-
-        if (coercedValue !== this._selected) {
-            this._selected = coercedValue;
+        if (value !== this._selected) {
+            this._selected = value;
             this.dispatchSelectionChange();
         }
     }
@@ -319,13 +322,13 @@ export class KbqTag
      * selectable, and it becomes non-selectable if its parent tag list is
      * not selectable.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get selectable(): boolean {
-        return this._selectable && this.tagListSelectable;
+        return this._selectable && (this.tagList?.selectable ?? true);
     }
 
     set selectable(value: boolean) {
-        this._selectable = coerceBooleanProperty(value);
+        this._selectable = value;
     }
 
     private _selectable: boolean = true;
@@ -386,7 +389,7 @@ export class KbqTag
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
-            isNull(focusOrigin) ? this.blur() : this.focus();
+            return isNull(focusOrigin) ? this.blur() : this.focus();
         });
     }
 
@@ -504,14 +507,13 @@ export class KbqTag
 
     /** @docs-private */
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled || this.editing()) return;
 
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE:
-                if (isNull(this.tagList)) this.remove();
+                this.tagList?.multiple ? this.tagList.removeSelected() : this.remove();
+
                 // Always prevent so page navigation does not occur
                 event.preventDefault();
                 break;
@@ -534,8 +536,6 @@ export class KbqTag
 
     /** @docs-private */
     blur(): void {
-        this.cancelEditing('focusout');
-
         // When animations are enabled, Angular may end up removing the tag from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the tag list
         // that moves focus not the next item. To work around the issue, we defer marking the tag
@@ -547,6 +547,8 @@ export class KbqTag
                 this._ngZone.run(() => {
                     this.hasFocus = false;
                     this.onBlur.next({ tag: this });
+                    this.cancelEditing('blur');
+                    this.changeDetectorRef.markForCheck();
                 });
             });
     }
