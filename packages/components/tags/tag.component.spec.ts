@@ -1,15 +1,22 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
+import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { Subject } from 'rxjs';
 import { KbqTagList } from './tag-list.component';
-import { KbqTag, KbqTagEditInput, KbqTagEditSubmit, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
+import {
+    KbqTag,
+    KbqTagEditInput,
+    KbqTagEditSubmit,
+    KbqTagEvent,
+    KbqTagRemove,
+    KbqTagSelectionChange
+} from './tag.component';
 import { KbqTagsModule } from './tag.module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -36,6 +43,12 @@ const getTagEditSubmitElement = (debugElement: DebugElement): HTMLElement => {
     return debugElement.query(By.directive(KbqTagEditSubmit)).nativeElement;
 };
 
+const getFocusMonitor = () => TestBed.inject(FocusMonitor);
+
+const getTagRemoveElement = (debugElement: DebugElement): HTMLElement => {
+    return debugElement.query(By.directive(KbqTagRemove))?.nativeElement;
+};
+
 @Component({
     standalone: true,
     selector: 'test-editable-tag',
@@ -60,11 +73,9 @@ export class TestEditableTag {
 @Component({
     standalone: true,
     selector: 'test-selectable-tag',
-    imports: [KbqTagsModule, FormsModule],
+    imports: [KbqTagsModule],
     template: `
-        <kbq-tag [selectable]="selectable()" (selectionChange)="selectionChange($event)">
-            {{ tag() }}
-        </kbq-tag>
+        <kbq-tag [selectable]="selectable()" (selectionChange)="selectionChange($event)">{{ tag() }}</kbq-tag>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -73,6 +84,25 @@ export class TestSelectableTag {
     readonly selectable = model(true);
 
     readonly selectionChange = jest.fn();
+}
+
+@Component({
+    standalone: true,
+    selector: 'test-removable-tag',
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag [removable]="removable()" (removed)="removedChange($event)">
+            {{ tag() }}
+            <i kbqTagRemove></i>
+        </kbq-tag>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestRemovableTag {
+    readonly tag = model('Removable tag');
+    readonly removable = model(true);
+
+    readonly removedChange = jest.fn();
 }
 
 describe(KbqTag.name, () => {
@@ -494,7 +524,7 @@ describe(KbqTag.name, () => {
         getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
 
         expect(componentInstance.editChange).toHaveBeenCalledWith(
-            expect.objectContaining({ type: 'cancel', reason: 'focusout' })
+            expect.objectContaining({ type: 'cancel', reason: 'blur' })
         );
     });
 
@@ -555,7 +585,7 @@ describe(KbqTag.name, () => {
         );
     });
 
-    it('should stay editable when pressing BACKSPACE and SPACE keys', () => {
+    it('should stay editable when pressing BACKSPACE/SPACE/DELETE keys', () => {
         const { debugElement } = createComponent(TestEditableTag);
         const tag = getTagElement(debugElement);
 
@@ -565,8 +595,9 @@ describe(KbqTag.name, () => {
 
         const input = getTagEditInputElement(debugElement);
 
-        input.dispatchEvent(createKeyboardEvent('keydown', BACKSPACE));
-        input.dispatchEvent(createKeyboardEvent('keydown', SPACE));
+        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
 
         expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
     });
@@ -619,6 +650,112 @@ describe(KbqTag.name, () => {
         expect(componentInstance.selectionChange).toHaveBeenCalledWith(
             expect.objectContaining({ selected: true, isUserInput: true })
         );
+    });
+
+    it('should be focused by focus() method', () => {
+        const { debugElement } = createComponent(TestSelectableTag);
+        const tag = getTagElement(debugElement);
+
+        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+
+        tag.focus();
+
+        expect(tag.classList.contains('kbq-focused')).toBeTruthy();
+
+        tag.blur();
+
+        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+    });
+
+    it('should focus by mouse', () => {
+        const { debugElement } = createComponent(TestSelectableTag);
+        const tag = getTagElement(debugElement);
+
+        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+
+        getFocusMonitor().focusVia(tag, 'mouse');
+
+        expect(tag.classList.contains('kbq-focused')).toBeTruthy();
+
+        tag.blur();
+
+        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+    });
+
+    it('should focus by keyboard', () => {
+        const { debugElement } = createComponent(TestSelectableTag);
+        const tag = getTagElement(debugElement);
+
+        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+
+        getFocusMonitor().focusVia(tag, 'keyboard');
+
+        expect(tag.classList.contains('kbq-focused')).toBeTruthy();
+
+        tag.blur();
+
+        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+    });
+
+    it('should remove on DELETE keydown', () => {
+        const { debugElement, componentInstance } = createComponent(TestRemovableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('should remove on BACKSPACE keydown', () => {
+        const { debugElement, componentInstance } = createComponent(TestRemovableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('should NOT remove on DELETE/BACKSPACE keydown', () => {
+        const fixture = createComponent(TestRemovableTag);
+        const { debugElement, componentInstance } = fixture;
+        const tag = getTagElement(debugElement);
+
+        componentInstance.removable.set(false);
+        fixture.detectChanges();
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('should NOT remove unfocused on DELETE/BACKSPACE keydown', () => {
+        const { componentInstance } = createComponent(TestRemovableTag);
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+        document.dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('should remove on KbqTagRemove click', () => {
+        const { debugElement, componentInstance } = createComponent(TestRemovableTag);
+
+        getTagRemoveElement(debugElement).click();
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('should hide KbqTagRemove when removable attribute is false', () => {
+        const fixture = createComponent(TestRemovableTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(getTagRemoveElement(debugElement)).toBeInstanceOf(HTMLElement);
+
+        componentInstance.removable.set(false);
+        fixture.detectChanges();
+
+        expect(getTagRemoveElement(debugElement)).toBeUndefined();
     });
 });
 

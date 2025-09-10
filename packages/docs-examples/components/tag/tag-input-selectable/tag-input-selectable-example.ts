@@ -12,9 +12,9 @@ import { KbqTagInputEvent, KbqTagSelectionChange, KbqTagsModule } from '@koobiq/
     imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" selectable [multiple]="true">
+            <kbq-tag-list #tagList="kbqTagList" selectable multiple>
                 @for (tag of tags(); track tag) {
-                    <kbq-tag [value]="tag" (selectionChange)="selectionChange($event)">
+                    <kbq-tag [selected]="$index > 0" [value]="tag" (selectionChange)="selectionChange($event)">
                         {{ tag }}
                     </kbq-tag>
                 }

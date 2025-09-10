@@ -6,6 +6,7 @@ export { CanColor, CanColorCtor, KbqColorDirective, KbqComponentColors, mixinCol
 export { KBQ_SANITY_CHECKS, KbqCommonModule } from './common-module';
 export { CanDisable, CanDisableCtor, mixinDisabled } from './disabled';
 export { CanUpdateErrorState, CanUpdateErrorStateCtor, KbqErrorStateTracker, mixinErrorState } from './error-state';
+export * from './hovered';
 export { KbqDefaultSizes } from './size';
 export { HasTabIndex, HasTabIndexCtor, mixinTabIndex } from './tabindex';
 

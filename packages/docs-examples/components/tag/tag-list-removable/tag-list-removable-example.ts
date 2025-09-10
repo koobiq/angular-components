@@ -14,11 +14,11 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
     selector: 'tag-list-removable-example',
     imports: [KbqTagsModule, KbqIconModule, JsonPipe],
     template: `
-        <kbq-tag-list removable [multiple]="true">
+        <kbq-tag-list removable multiple>
             @for (tag of tags(); track tag) {
                 <kbq-tag [value]="tag" (removed)="remove($event)">
                     {{ tag }}
-                    <kbq-icon-button kbqTagRemove kbq-icon-button="kbq-xmark-s_16" />
+                    <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
             } @empty {
                 <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="colors.ContrastFade" (click)="restart()"></i>
