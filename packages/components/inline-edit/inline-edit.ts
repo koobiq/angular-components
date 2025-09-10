@@ -26,7 +26,6 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KBQ_PARENT_POPUP,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -164,7 +163,6 @@ export class KbqInlineEdit implements AfterContentInit {
     protected readonly label = contentChild(KbqLabel);
     /** @docs-private */
     protected readonly formFieldRef = contentChild(KbqFormField);
-    protected readonly parentPopup = contentChild(KBQ_PARENT_POPUP);
 
     /** @docs-private */
     protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
@@ -232,8 +230,6 @@ export class KbqInlineEdit implements AfterContentInit {
     protected onAttach(): void {
         this.setOverlayWidth();
         const formFieldRef = this.formFieldRef();
-
-        console.log(this.parentPopup());
 
         formFieldRef?.control.stateChanges
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
