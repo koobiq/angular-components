@@ -4,11 +4,13 @@ import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
+    AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
+    DestroyRef,
     Directive,
     ElementRef,
     inject,
@@ -24,6 +26,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    KBQ_PARENT_POPUP,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -34,8 +37,8 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { skip } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { pairwise, skip } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
     transition(':enter', [
@@ -119,7 +122,7 @@ export class KbqInlineEditMenu {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqInlineEdit {
+export class KbqInlineEdit implements AfterContentInit {
     /**
      * Whether to show save/cancel action buttons in edit mode.
      * @default false
@@ -161,9 +164,10 @@ export class KbqInlineEdit {
     protected readonly label = contentChild(KbqLabel);
     /** @docs-private */
     protected readonly formFieldRef = contentChild(KbqFormField);
+    protected readonly parentPopup = contentChild(KBQ_PARENT_POPUP);
 
     /** @docs-private */
-    protected readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
+    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
     /** @docs-private */
     protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
     /** @docs-private */
@@ -189,8 +193,9 @@ export class KbqInlineEdit {
     /** @docs-private */
     protected readonly colors = KbqComponentColors;
 
-    /** @docs-private */
     private readonly elementRef = inject(ElementRef);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly kbqFocusMonitor = inject(KbqFocusMonitor, { host: true });
 
     private initialValue: unknown;
 
@@ -198,6 +203,16 @@ export class KbqInlineEdit {
         toObservable(this.mode)
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe((currentMode) => this.modeChange.emit(currentMode));
+    }
+
+    ngAfterContentInit(): void {
+        this.kbqFocusMonitor.focusChange
+            ?.pipe(filter(Boolean), pairwise(), takeUntilDestroyed(this.destroyRef))
+            .subscribe(([prev, current]) => {
+                if (prev === 'mouse' && current === 'keyboard') {
+                    this.kbqFocusMonitor.focusVia(this.elementRef, 'program');
+                }
+            });
     }
 
     /** @docs-private */
@@ -218,13 +233,15 @@ export class KbqInlineEdit {
         this.setOverlayWidth();
         const formFieldRef = this.formFieldRef();
 
+        console.log(this.parentPopup());
+
         formFieldRef?.control.stateChanges
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
                     const tooltipTrigger = this.tooltipTrigger();
 
-                    tooltipTrigger.isOpen && tooltipTrigger.hide();
+                    tooltipTrigger?.isOpen && tooltipTrigger?.hide();
                 }
             });
 
@@ -271,7 +288,7 @@ export class KbqInlineEdit {
             }
             case 'Enter': {
                 if (hasModifierKey(event, 'ctrlKey', 'metaKey') || !(target instanceof HTMLTextAreaElement)) {
-                    this.save();
+                    this.save(event);
                 }
 
                 break;
