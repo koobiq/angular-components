@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import * as i0 from '@angular/core';
@@ -22,7 +23,7 @@ import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
-export class KbqInlineEdit {
+export class KbqInlineEdit implements AfterContentInit {
     constructor();
     protected cancel(): void;
     protected readonly canceled: OutputEmitterRef<void>;
@@ -38,6 +39,8 @@ export class KbqInlineEdit {
     protected readonly mode: WritableSignal<"view" | "edit">;
     readonly modeAsReadonly: Signal<"view" | "edit">;
     protected readonly modeChange: OutputEmitterRef<"view" | "edit">;
+    // (undocumented)
+    ngAfterContentInit(): void;
     protected onAttach(): void;
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;

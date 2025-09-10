@@ -1987,8 +1987,9 @@ export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExt
 
 // @public
 export class KbqFocusMonitor implements AfterContentInit, OnDestroy {
-    // (undocumented)
     readonly checkChildren: InputSignalWithTransform<boolean, unknown>;
+    focusChange: Observable<FocusOrigin> | null;
+    focusVia(element: HTMLElement | ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
