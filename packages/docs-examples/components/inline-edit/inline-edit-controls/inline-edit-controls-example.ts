@@ -31,69 +31,69 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     template: `
         <form style="width: 100%" [formGroup]="form">
             <kbq-dl>
-                <!--                <kbq-dt>Text Field</kbq-dt>-->
-                <!--                <kbq-dd>-->
-                <!--                    <kbq-inline-edit>-->
-                <!--                        <div class="example-inline-text" kbqInlineEditViewMode>-->
-                <!--                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.input }" />-->
-                <!--                        </div>-->
-                <!--                        <kbq-form-field kbqInlineEditEditMode>-->
-                <!--                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.input" />-->
-                <!--                        </kbq-form-field>-->
-                <!--                    </kbq-inline-edit>-->
-                <!--                </kbq-dd>-->
+                <kbq-dt>Text Field</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit>
+                        <div class="example-inline-text" kbqInlineEditViewMode>
+                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.input }" />
+                        </div>
+                        <kbq-form-field kbqInlineEditEditMode>
+                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.input" />
+                        </kbq-form-field>
+                    </kbq-inline-edit>
+                </kbq-dd>
 
-                <!--                <kbq-dt class="example-multiline-text__header">Textarea</kbq-dt>-->
-                <!--                <kbq-dd>-->
-                <!--                    <kbq-inline-edit #textareaInlineEdit showActions>-->
-                <!--                        <div kbqInlineEditViewMode>-->
-                <!--                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.textarea }" />-->
-                <!--                        </div>-->
-                <!--                        <div kbqInlineEditEditMode>-->
-                <!--                            @if (textareaInlineEdit.modeAsReadonly() === 'edit') {-->
-                <!--                                <kbq-form-field>-->
-                <!--                                    <textarea-->
-                <!--                                        kbqTextarea-->
-                <!--                                        [placeholder]="placeholder"-->
-                <!--                                        [formControl]="form.controls.textarea"-->
-                <!--                                    ></textarea>-->
-                <!--                                </kbq-form-field>-->
-                <!--                            }-->
-                <!--                        </div>-->
-                <!--                    </kbq-inline-edit>-->
-                <!--                </kbq-dd>-->
+                <kbq-dt class="example-multiline-text__header">Textarea</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit #textareaInlineEdit showActions>
+                        <div kbqInlineEditViewMode>
+                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.textarea }" />
+                        </div>
+                        <div kbqInlineEditEditMode>
+                            @if (textareaInlineEdit.modeAsReadonly() === 'edit') {
+                                <kbq-form-field>
+                                    <textarea
+                                        kbqTextarea
+                                        [placeholder]="placeholder"
+                                        [formControl]="form.controls.textarea"
+                                    ></textarea>
+                                </kbq-form-field>
+                            }
+                        </div>
+                    </kbq-inline-edit>
+                </kbq-dd>
 
-                <!--                <kbq-dt class="example-multiline-text__header">Select Multiple</kbq-dt>-->
-                <!--                <kbq-dd>-->
-                <!--                    <kbq-inline-edit>-->
-                <!--                        <div-->
-                <!--                            kbqInlineEditViewMode-->
-                <!--                            class="layout-flex layout-row layout-gap-xxs"-->
-                <!--                            style="flex-wrap: wrap"-->
-                <!--                        >-->
-                <!--                            @if (form.controls.selectMultiple.value!.length > 0) {-->
-                <!--                                @for (badge of form.controls.selectMultiple.value; track badge) {-->
-                <!--                                    <kbq-badge>{{ badge }}</kbq-badge>-->
-                <!--                                }-->
-                <!--                            } @else {-->
-                <!--                                <span kbqInlineEditPlaceholder>{{ placeholder }}</span>-->
-                <!--                            }-->
-                <!--                        </div>-->
-                <!--                        <kbq-form-field kbqInlineEditEditMode>-->
-                <!--                            <kbq-select-->
-                <!--                                multiple-->
-                <!--                                multiline-->
-                <!--                                [placeholder]="placeholder"-->
-                <!--                                [formControl]="form.controls.selectMultiple"-->
-                <!--                            >-->
-                <!--                                @for (option of options; track option) {-->
-                <!--                                    <kbq-option [value]="option">{{ option }}</kbq-option>-->
-                <!--                                }-->
-                <!--                                <kbq-cleaner #kbqSelectCleaner />-->
-                <!--                            </kbq-select>-->
-                <!--                        </kbq-form-field>-->
-                <!--                    </kbq-inline-edit>-->
-                <!--                </kbq-dd>-->
+                <kbq-dt class="example-multiline-text__header">Select Multiple</kbq-dt>
+                <kbq-dd>
+                    <kbq-inline-edit>
+                        <div
+                            kbqInlineEditViewMode
+                            class="layout-flex layout-row layout-gap-xxs"
+                            style="flex-wrap: wrap"
+                        >
+                            @if (form.controls.selectMultiple.value!.length > 0) {
+                                @for (badge of form.controls.selectMultiple.value; track badge) {
+                                    <kbq-badge>{{ badge }}</kbq-badge>
+                                }
+                            } @else {
+                                <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                            }
+                        </div>
+                        <kbq-form-field kbqInlineEditEditMode>
+                            <kbq-select
+                                multiple
+                                multiline
+                                [placeholder]="placeholder"
+                                [formControl]="form.controls.selectMultiple"
+                            >
+                                @for (option of options; track option) {
+                                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                                }
+                                <kbq-cleaner #kbqSelectCleaner />
+                            </kbq-select>
+                        </kbq-form-field>
+                    </kbq-inline-edit>
+                </kbq-dd>
 
                 <kbq-dt>Select Multiple</kbq-dt>
                 <kbq-dd>
