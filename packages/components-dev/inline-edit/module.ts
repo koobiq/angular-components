@@ -20,6 +20,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <inline-edit-controls-example />
         <inline-edit-editable-header-example />
         <inline-edit-customized-design-example />
+        <inline-edit-content-alignment-example />
     `,
     styles: `
         :host {

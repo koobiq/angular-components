@@ -80,7 +80,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 @if (!iconControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <span>
+                    <span class="example-inline-text__content">
                         <i kbq-icon="kbq-xmark-circle-s_16" [color]="'contrast-fade'"></i>
                         {{ iconControl.value }}
                     </span>
@@ -96,6 +96,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .example-inline-text__content {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--kbq-size-3xs);
         }
     `,
     host: {

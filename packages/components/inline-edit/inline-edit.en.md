@@ -62,7 +62,9 @@ These actions are visually separated from the main value and placed in the top-r
 
 #### Content alignment
 
-// @TODO
+Inline-editable elements should remain aligned with their appearance in view mode. Do not account for extra padding or spacing that may appear when the element is hovered, focused, or in edit mode.
+
+<!-- example(inline-edit-content-alignment) -->
 
 #### Custom design
 
