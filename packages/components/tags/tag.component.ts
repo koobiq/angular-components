@@ -304,7 +304,7 @@ export class KbqTag
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
     @Input()
     get value(): any {
-        return isUndefined(this._value) ? this.elementRef.nativeElement.textContent?.trim() : this._value;
+        return this._value ?? this.elementRef.nativeElement.textContent?.trim();
     }
 
     set value(value: any) {
