@@ -2,7 +2,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -109,7 +108,6 @@ export class KbqInlineEditMenu {
     },
     hostDirectives: [KbqFocusMonitor],
     imports: [
-        NgTemplateOutlet,
         CdkConnectedOverlay,
         CdkOverlayOrigin,
         CdkTrapFocus,
@@ -143,8 +141,6 @@ export class KbqInlineEdit implements AfterContentInit {
     readonly editModeWidth = input(undefined, { transform: numberAttribute });
     /** User-defined tooltip placement */
     readonly tooltipPlacement = input<PopUpPlacements>();
-    /** User-defined placeholder */
-    readonly placeholder = input<string>();
     /** Handler function to retrieve the current value */
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */
