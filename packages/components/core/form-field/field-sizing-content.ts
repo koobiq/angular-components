@@ -82,10 +82,6 @@ export class KbqFieldSizingContent {
             .subscribe(() => this.calculateWidth());
 
         this.calculateWidth();
-
-        if (this.inputElement.style.width === '0px') this.inputElement.style.width = '100%';
-
-        console.log('emulate', this.inputElement.style.width);
     }
 
     private calculateWidth(): void {
