@@ -36,7 +36,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <span class="kbq-text-normal-strong">Vertical list</span>
 
             <div class="layout-flex layout-column layout-gap-xs example-content__container">
-                <kbq-inline-edit showActions (saved)="update()">
+                <kbq-inline-edit #textareaInlineEditVertical showActions (saved)="update()">
                     <kbq-label>Style</kbq-label>
                     <i
                         kbqInlineEditMenu
@@ -47,13 +47,18 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <div kbqInlineEditViewMode>
                         <ng-container *ngTemplateOutlet="view; context: { $implicit: viewValue }" />
                     </div>
-                    <kbq-form-field kbqInlineEditEditMode>
-                        <textarea
-                            kbqTextarea
-                            [placeholder]="placeholder"
-                            [formControl]="form.controls.style"
-                        ></textarea>
-                    </kbq-form-field>
+
+                    <div kbqInlineEditEditMode>
+                        @if (textareaInlineEditVertical.modeAsReadonly() === 'edit') {
+                            <kbq-form-field>
+                                <textarea
+                                    kbqTextarea
+                                    [placeholder]="placeholder"
+                                    [formControl]="form.controls.style"
+                                ></textarea>
+                            </kbq-form-field>
+                        }
+                    </div>
                 </kbq-inline-edit>
 
                 <kbq-inline-edit>
@@ -82,7 +87,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <kbq-dl [vertical]="false">
                 <kbq-dt class="example-multiline-text__header">Style</kbq-dt>
                 <kbq-dd>
-                    <kbq-inline-edit>
+                    <kbq-inline-edit #textareaInlineEditHorizontal>
                         <i
                             kbqInlineEditMenu
                             kbq-icon-button="kbq-ellipsis-vertical_16"
@@ -92,13 +97,17 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         <div kbqInlineEditViewMode>
                             <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.style.value }" />
                         </div>
-                        <kbq-form-field kbqInlineEditEditMode>
-                            <textarea
-                                kbqTextarea
-                                [placeholder]="placeholder"
-                                [formControl]="form.controls.style"
-                            ></textarea>
-                        </kbq-form-field>
+                        <div kbqInlineEditEditMode>
+                            @if (textareaInlineEditHorizontal.modeAsReadonly() === 'edit') {
+                                <kbq-form-field>
+                                    <textarea
+                                        kbqTextarea
+                                        [placeholder]="placeholder"
+                                        [formControl]="form.controls.style"
+                                    ></textarea>
+                                </kbq-form-field>
+                            }
+                        </div>
                     </kbq-inline-edit>
                 </kbq-dd>
 
