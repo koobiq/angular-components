@@ -27,7 +27,6 @@ import {
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import {
     isNull,
-    isUndefined,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
@@ -239,7 +238,7 @@ export class KbqTag
     /** Whether the tag is editable. */
     @Input({ transform: booleanAttribute })
     get editable(): boolean {
-        return isUndefined(this._editable) ? !!this.tagList?.editable : this._editable;
+        return this._editable ?? !!this.tagList?.editable;
     }
 
     set editable(value: boolean) {
@@ -500,9 +499,7 @@ export class KbqTag
 
     /** @docs-private */
     handleMousedown(event: MouseEvent): void {
-        const unclickable = this.disabled || !this.selectable || this.editing();
-
-        if (unclickable) return event.preventDefault();
+        if (this.disabled || (!this.selectable && !this.editable) || this.editing()) return event.preventDefault();
 
         const hasMetaKey = event.metaKey || event.ctrlKey || event.shiftKey;
 

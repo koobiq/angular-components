@@ -373,7 +373,7 @@ export class KbqTagList
     }
 
     ngOnInit() {
-        this.selectionModel = new SelectionModel<KbqTag>(this.multiple, undefined, true);
+        this.selectionModel = new SelectionModel<KbqTag>(this.multiple, undefined, false);
         this.stateChanges.next();
     }
 
