@@ -1,7 +1,16 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    model,
+    Provider,
+    Type,
+    viewChild,
+    ViewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -33,6 +42,18 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
 
 const getTagElement = (debugElement: DebugElement): HTMLElement => {
     return debugElement.query(By.directive(KbqTag)).nativeElement;
+};
+
+const isTagSelected = (debugElement: DebugElement): boolean => {
+    return getTagElement(debugElement).classList.contains('kbq-selected');
+};
+
+const isTagFocused = (debugElement: DebugElement): boolean => {
+    return getTagElement(debugElement).classList.contains('kbq-focused');
+};
+
+const isTagEditing = (debugElement: DebugElement): boolean => {
+    return getTagElement(debugElement).classList.contains('kbq-tag_editing');
 };
 
 const getTagEditInputElement = (debugElement: DebugElement): HTMLInputElement => {
@@ -75,13 +96,24 @@ export class TestEditableTag {
     selector: 'test-selectable-tag',
     imports: [KbqTagsModule],
     template: `
-        <kbq-tag [selectable]="selectable()" (selectionChange)="selectionChange($event)">{{ tag() }}</kbq-tag>
+        <kbq-tag
+            [value]="value()"
+            [selectable]="selectable()"
+            [selected]="selected()"
+            [disabled]="disabled()"
+            (selectionChange)="selectionChange($event)"
+        >
+            {{ value() }}
+        </kbq-tag>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSelectableTag {
-    readonly tag = model('Selectable tag');
+    readonly tag = viewChild.required(KbqTag);
+    readonly value = model('Selectable tag');
     readonly selectable = model(true);
+    readonly disabled = model(false);
+    readonly selected = model(false);
 
     readonly selectionChange = jest.fn();
 }
@@ -448,35 +480,35 @@ describe(KbqTag.name, () => {
         const { debugElement } = createComponent(TestEditableTag);
         const tag = getTagElement(debugElement);
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
     it('should start editing on ENTER press', () => {
         const { debugElement } = createComponent(TestEditableTag);
         const tag = getTagElement(debugElement);
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
 
         tag.focus();
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
     it('should start editing on F2 press', () => {
         const { debugElement } = createComponent(TestEditableTag);
         const tag = getTagElement(debugElement);
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
 
         tag.focus();
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: F2 }));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
     it('should emit KbqTagEditChange event when editing starts', () => {
@@ -496,11 +528,11 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ESCAPE }));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
     it('should cancel editing on focusout', () => {
@@ -509,11 +541,11 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
     it('should emit KbqTagEditChange event when editing cancelled', () => {
@@ -534,11 +566,11 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
     it('should submit editing on kbqEditSubmit click', () => {
@@ -547,11 +579,11 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditSubmitElement(debugElement).dispatchEvent(new MouseEvent('click'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
     it('should prevent submit editing by preventEditSubmit property', () => {
@@ -559,18 +591,18 @@ describe(KbqTag.name, () => {
         const { debugElement, componentInstance } = fixture;
         const tag = getTagElement(debugElement);
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+        expect(isTagEditing(debugElement)).toBeFalsy();
 
         componentInstance.preventEditSubmit.set(true);
         fixture.detectChanges();
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
     it('should emit KbqTagEditChange event when editing submitted', () => {
@@ -591,7 +623,7 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
 
         const input = getTagEditInputElement(debugElement);
 
@@ -599,7 +631,7 @@ describe(KbqTag.name, () => {
         input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
         input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
 
-        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+        expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
     it('should select tag on Ctrl + click', () => {
@@ -608,7 +640,75 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
 
-        expect(tag.classList.contains('kbq-selected')).toBeTruthy();
+        expect(isTagSelected(debugElement)).toBeTruthy();
+    });
+
+    it('should select tag by selected attribute', () => {
+        const fixture = createComponent(TestSelectableTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        componentInstance.selected.set(true);
+        fixture.detectChanges();
+
+        expect(isTagSelected(debugElement)).toBeTruthy();
+    });
+
+    it('should NOT select tag when it is disabled', () => {
+        const fixture = createComponent(TestSelectableTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        componentInstance.tag().select();
+        fixture.detectChanges();
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+    });
+
+    it('should select tag by select() method', () => {
+        const fixture = createComponent(TestSelectableTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        componentInstance.tag().select();
+        fixture.detectChanges();
+
+        expect(isTagSelected(debugElement)).toBeTruthy();
+    });
+
+    it('should DEselect tag by deselect() method', () => {
+        const fixture = createComponent(TestSelectableTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        componentInstance.selected.set(true);
+        fixture.detectChanges();
+
+        expect(isTagSelected(debugElement)).toBeTruthy();
+
+        componentInstance.tag().deselect();
+        fixture.detectChanges();
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+    });
+
+    it('should toggle tag selection by toggleSelected() method', () => {
+        const fixture = createComponent(TestSelectableTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        componentInstance.tag().toggleSelected();
+        fixture.detectChanges();
+
+        expect(isTagSelected(debugElement)).toBeTruthy();
     });
 
     it('should select tag on Cmd + click', () => {
@@ -617,7 +717,7 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('mousedown', { metaKey: true }));
 
-        expect(tag.classList.contains('kbq-selected')).toBeTruthy();
+        expect(isTagSelected(debugElement)).toBeTruthy();
     });
 
     it('should select tag on Shift + click', () => {
@@ -626,7 +726,7 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true }));
 
-        expect(tag.classList.contains('kbq-selected')).toBeTruthy();
+        expect(isTagSelected(debugElement)).toBeTruthy();
     });
 
     it('should NOT select tag on Ctrl + click', () => {
@@ -639,7 +739,7 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
 
-        expect(tag.classList.contains('kbq-selected')).toBeFalsy();
+        expect(isTagSelected(debugElement)).toBeFalsy();
     });
 
     it('should emit KbqTagSelectionChange event on Ctrl + click', () => {
@@ -656,45 +756,45 @@ describe(KbqTag.name, () => {
         const { debugElement } = createComponent(TestSelectableTag);
         const tag = getTagElement(debugElement);
 
-        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+        expect(isTagFocused(debugElement)).toBeFalsy();
 
         tag.focus();
 
-        expect(tag.classList.contains('kbq-focused')).toBeTruthy();
+        expect(isTagFocused(debugElement)).toBeTruthy();
 
         tag.blur();
 
-        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+        expect(isTagFocused(debugElement)).toBeFalsy();
     });
 
     it('should focus by mouse', () => {
         const { debugElement } = createComponent(TestSelectableTag);
         const tag = getTagElement(debugElement);
 
-        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+        expect(isTagFocused(debugElement)).toBeFalsy();
 
         getFocusMonitor().focusVia(tag, 'mouse');
 
-        expect(tag.classList.contains('kbq-focused')).toBeTruthy();
+        expect(isTagFocused(debugElement)).toBeTruthy();
 
         tag.blur();
 
-        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+        expect(isTagFocused(debugElement)).toBeFalsy();
     });
 
     it('should focus by keyboard', () => {
         const { debugElement } = createComponent(TestSelectableTag);
         const tag = getTagElement(debugElement);
 
-        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+        expect(isTagFocused(debugElement)).toBeFalsy();
 
         getFocusMonitor().focusVia(tag, 'keyboard');
 
-        expect(tag.classList.contains('kbq-focused')).toBeTruthy();
+        expect(isTagFocused(debugElement)).toBeTruthy();
 
         tag.blur();
 
-        expect(tag.classList.contains('kbq-focused')).toBeFalsy();
+        expect(isTagFocused(debugElement)).toBeFalsy();
     });
 
     it('should remove on DELETE keydown', () => {

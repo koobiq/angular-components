@@ -358,12 +358,12 @@ export class KbqTag
 
     private _tabindex = -1;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     get disabled() {
         return this._disabled;
     }
 
-    set disabled(value: any) {
+    set disabled(value: boolean) {
         if (value !== this.disabled) {
             this._disabled = value;
         }
@@ -437,6 +437,8 @@ export class KbqTag
     }
 
     select(): void {
+        if (this.disabled) return;
+
         if (!this._selected) {
             this._selected = true;
             this.dispatchSelectionChange();
@@ -444,6 +446,8 @@ export class KbqTag
     }
 
     deselect(): void {
+        if (this.disabled) return;
+
         if (this._selected) {
             this._selected = false;
             this.dispatchSelectionChange();
@@ -451,6 +455,8 @@ export class KbqTag
     }
 
     selectViaInteraction(): void {
+        if (this.disabled) return;
+
         if (!this._selected) {
             this._selected = true;
             this.dispatchSelectionChange(true);
@@ -458,6 +464,8 @@ export class KbqTag
     }
 
     toggleSelected(isUserInput: boolean = false): boolean {
+        if (this.disabled) return this.selected;
+
         this._selected = !this.selected;
         this.dispatchSelectionChange(isUserInput);
 
