@@ -9,6 +9,7 @@ import {
     DocsComponentViewerComponent
 } from './components/component-viewer/component-viewer.component';
 import { DocsDesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
+import { DocsTokensColors } from './components/design-tokens-viewers/tokens-colors';
 import { DocsTokensOverview } from './components/design-tokens-viewers/tokens-overview';
 import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
 import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -53,7 +54,7 @@ export const DOCS_ROUTES: Routes = [
                 component: DocsDesignTokensViewer,
                 children: [
                     { path: '', redirectTo: 'colors', pathMatch: 'full' },
-                    { path: 'colors', component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: 'colors', component: DocsTokensColors, pathMatch: 'full' },
                     { path: 'shadows', component: DocsTokensOverview, pathMatch: 'full' },
                     { path: 'border-radius', component: DocsTokensOverview, pathMatch: 'full' },
                     { path: 'sizes', component: DocsTokensOverview, pathMatch: 'full' },

@@ -1,16 +1,6 @@
-const {
-    mapColors,
-    mapPalette,
-    mapTypography,
-    mapGlobals,
-    mapBorderRadius,
-    mapShadows,
-    outputTypographyTable,
-    outputTable,
-    outputPage
-} = require('./templates');
+const { simpleMapColors, simpleMapToken } = require('./templates');
 const { updateObject, sortSections } = require('./utils');
-const { DEFAULT_MARKDOWN_HEADER_LEVEL, LINE_SEP, NO_HEADER } = require('./config');
+const { NO_HEADER } = require('./config');
 
 module.exports = (StyleDictionary) => {
     StyleDictionary.registerTransform({
@@ -34,8 +24,9 @@ module.exports = (StyleDictionary) => {
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/colors',
+        name: 'docs/colors-ts',
         formatter: function ({ dictionary }) {
+            // filter duplicates (light/dark)
             // filter duplicates (light/dark)
             dictionary.allTokens = dictionary.allTokens.filter((token, pos, allTokens) => {
                 const foundIndex = allTokens.findIndex(({ name }) => name === token.name);
@@ -62,84 +53,63 @@ module.exports = (StyleDictionary) => {
                 return updateObject(res, section, currentToken);
             }, {});
 
-            const mappedTokens = Object.entries(groupedTokens).map(mapColors);
+            const mappedTokens = Object.entries(groupedTokens).map(simpleMapColors);
 
             // sort token tables, so those of them without the header
             // will be under the higher header
             mappedTokens.sort(sortSections);
             mappedTokens.forEach(({ sections }) => sections?.sort(sortSections));
 
-            return outputPage(DEFAULT_MARKDOWN_HEADER_LEVEL, mappedTokens).join(LINE_SEP);
+            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/palette',
+        name: 'docs/palette-ts',
         formatter: function ({ dictionary }) {
             dictionary.allTokens = dictionary.allTokens.filter(
                 (token, pos, allTokens) => allTokens.indexOf(token) === pos
             );
 
-            const mappedTokens = dictionary.allTokens.map(mapPalette);
+            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
 
-            return outputTable(mappedTokens);
+            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/typography',
+        name: 'docs/globals-ts',
         formatter: function ({ dictionary }) {
-            const filtered = [];
+            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
 
-            for (const token of dictionary.allTokens) {
-                const isTypographyTypeMissing =
-                    filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
-
-                if (isTypographyTypeMissing && token.attributes.item === 'font-size') {
-                    filtered.push(token);
-                }
-            }
-
-            // Sort by font-size
-            filtered.sort((a, b) => {
-                const aFontSize = parseInt(a.value);
-                const bFontSize = parseInt(b.value);
-
-                if (aFontSize < bFontSize) return 1;
-                if (aFontSize > bFontSize) return -1;
-
-                return 0;
-            });
-            const mappedTokens = filtered.map(mapTypography);
-
-            return outputTypographyTable(mappedTokens);
+            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/globals',
+        name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(mapGlobals);
+            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
 
-            return outputTable(mappedTokens);
+            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/border-radius',
+        name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(mapBorderRadius);
+            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
 
-            return outputTable(mappedTokens);
+            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/shadows',
+        name: 'docs/shadows-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(mapShadows);
+            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
 
-            return outputTable(mappedTokens);
+            return `export const data = ${JSON.stringify(mappedTokens)}`;
         }
     });
 };

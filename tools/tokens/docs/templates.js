@@ -59,6 +59,24 @@ const mapColors = ([type, tokens]) => {
     return output;
 };
 
+const simpleMapToken = ({ name }) => `--${name}`;
+
+const simpleMapColors = ([type, tokens]) => {
+    const output = {
+        type: capitalize(type)
+    };
+
+    if (Array.isArray(tokens)) {
+        output.tokens = tokens.map(simpleMapToken);
+
+        return output;
+    }
+
+    output.sections = Object.entries(tokens).map(simpleMapColors);
+
+    return output;
+};
+
 const outputPage = (headerLevel, pageInfo) =>
     pageInfo.map(({ type, tokens, sections }) => {
         // Create a markdown header level string (e.g., '##' for headerLevel 2).
@@ -85,6 +103,8 @@ module.exports = {
     mapColor,
     mapColors,
     outputPage,
+    simpleMapToken,
+    simpleMapColors,
 
     outputTypographyTable: (tokens) => {
         return `<table id="${TYPOGRAPHY_TABLE_ID}">

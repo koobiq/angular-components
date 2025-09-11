@@ -1,0 +1,16 @@
+export const docsData = [
+    '--kbq-size-3xs',
+    '--kbq-size-xxs',
+    '--kbq-size-xs',
+    '--kbq-size-s',
+    '--kbq-size-m',
+    '--kbq-size-l',
+    '--kbq-size-xl',
+    '--kbq-size-xxl',
+    '--kbq-size-3xl',
+    '--kbq-size-4xl',
+    '--kbq-size-5xl',
+    '--kbq-size-6xl',
+    '--kbq-size-7xl',
+    '--kbq-size-border-width'
+];

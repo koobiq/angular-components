@@ -17,7 +17,9 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     selector: 'docs-component-viewer',
     template: `
         <div class="docs-component-header">
-            <div class="docs-component-name" docsRegisterHeader>Дизайн-токены</div>
+            <div class="docs-component-name" docsRegisterHeader>
+                {{ isRuLocale() ? 'Дизайн-токены' : 'Design tokens' }}
+            </div>
             <div class="docs-component-navbar layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                     @for (link of links; track link) {
