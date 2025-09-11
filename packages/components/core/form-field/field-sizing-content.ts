@@ -19,6 +19,9 @@ const INITIAL_PROPERTIES = {
     pointerEvents: 'none'
 } as const satisfies Partial<CSSStyleDeclaration>;
 
+/**
+ * Properties that can affect element width and should be inherited from the parent.
+ */
 const WIDTH_INHERITED_PROPERTIES = [
     'font',
     'fontFamily',
@@ -38,6 +41,9 @@ const WIDTH_INHERITED_PROPERTIES = [
     'textTransform'
 ] as const satisfies Array<keyof CSSStyleDeclaration>;
 
+/**
+ * Properties that should be added to the width when `box-sizing: border-box` is applied.
+ */
 const BOX_SIZING_BORDER_BOX_WIDTH_PROPERTIES = [
     'paddingLeft',
     'paddingRight',
@@ -62,7 +68,7 @@ const FIELD_RESIZE_EVENTS = ['input', 'change', 'focus'] as const;
     }
 })
 export class KbqFieldSizingContent {
-    private readonly inputElement = kbqInjectNativeElement<HTMLInputElement>();
+    private readonly element = kbqInjectNativeElement<HTMLInputElement>();
     private readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
     private readonly document = inject(DOCUMENT);
@@ -74,35 +80,51 @@ export class KbqFieldSizingContent {
 
     private emulate(): void {
         if (CSS.supports('field-sizing', 'content')) {
-            return this.renderer.setStyle(this.inputElement, 'fieldSizing', 'content');
+            this.renderer.setStyle(this.element, 'fieldSizing', 'content');
+
+            return;
         }
 
-        merge(...FIELD_RESIZE_EVENTS.map((event) => fromEvent(this.inputElement, event)))
+        merge(...FIELD_RESIZE_EVENTS.map((event) => fromEvent(this.element, event)))
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.calculateWidth());
+            .subscribe(() => this.setupWidth());
 
-        this.calculateWidth();
+        this.setupWidth();
     }
 
-    private calculateWidth(): void {
-        const computedStyle = this.window.getComputedStyle(this.inputElement);
-        const ruler: HTMLSpanElement = this.renderer.createElement('span');
+    private setupWidth(): void {
+        const computedStyle = this.window.getComputedStyle(this.element);
+        const ruler = this.createRuler(computedStyle);
 
-        ruler.textContent =
-            this.inputElement.value.length > 0 ? this.inputElement.value : this.inputElement.placeholder;
-        Object.assign(ruler.style, INITIAL_PROPERTIES);
-        WIDTH_INHERITED_PROPERTIES.forEach((property) => (ruler.style[property] = computedStyle[property]));
+        ruler.textContent = this.element.value || this.element.placeholder || '';
+
         this.renderer.appendChild(this.document.body, ruler);
 
-        const width =
-            computedStyle.boxSizing === 'border-box'
-                ? BOX_SIZING_BORDER_BOX_WIDTH_PROPERTIES.reduce(
-                      (width, property) => width + parseFloat(computedStyle[property]) || 0,
-                      ruler.scrollWidth
-                  )
-                : ruler.scrollWidth;
+        const width = this.calculateWidth(ruler, computedStyle);
 
-        this.renderer.setStyle(this.inputElement, 'width', coerceCssPixelValue(width));
+        this.renderer.setStyle(this.element, 'width', coerceCssPixelValue(width));
         this.renderer.removeChild(this.document.body, ruler);
+    }
+
+    private createRuler(computedStyle: CSSStyleDeclaration): HTMLSpanElement {
+        const ruler: HTMLSpanElement = this.renderer.createElement('span');
+
+        Object.assign(ruler.style, INITIAL_PROPERTIES);
+        WIDTH_INHERITED_PROPERTIES.forEach((property) => {
+            ruler.style[property] = computedStyle[property];
+        });
+
+        return ruler;
+    }
+
+    private calculateWidth(ruler: HTMLSpanElement, computedStyle: CSSStyleDeclaration): number {
+        if (computedStyle.boxSizing === 'border-box') {
+            return BOX_SIZING_BORDER_BOX_WIDTH_PROPERTIES.reduce(
+                (width, property) => width + (parseFloat(computedStyle[property]) || 0),
+                ruler.scrollWidth
+            );
+        }
+
+        return ruler.scrollWidth;
     }
 }
