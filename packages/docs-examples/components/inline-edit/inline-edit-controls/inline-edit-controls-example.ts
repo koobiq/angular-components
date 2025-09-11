@@ -95,7 +95,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt>Select Multiple</kbq-dt>
+                <kbq-dt>Select</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
