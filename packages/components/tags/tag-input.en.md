@@ -6,7 +6,7 @@ Tags can be selected in several ways:
 
 - Click on a tag while holding `Ctrl` or `Shift`.
 - Press `Ctrl+A` key combination.
-- Programmatic selection through the component [API](/ru/components/tags/api).
+- Programmatic selection through the component [API](/ru/components/tag/api).
 
 The selection option is configured using the `selectable` attribute (enabled by default) and the `multiple` attribute (disabled by default).
 
@@ -18,7 +18,7 @@ Tags can be removed in several ways:
 
 - Click on the remove icon (`kbqTagRemove` directive).
 - Press `Delete` or `Backspace` key.
-- Programmatic removal through the component [API](/ru/components/tags/api).
+- Programmatic removal through the component [API](/ru/components/tag/api).
 
 The removal option is configured using the `removable` attribute (enabled by default).
 
