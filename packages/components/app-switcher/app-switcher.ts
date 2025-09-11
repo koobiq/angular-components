@@ -91,49 +91,32 @@ export function buildFileTree(value: any, level: number): FileNode[] {
 export const DATA_OBJECT = {
     docs: 'app',
     src: {
-        cdk: {
-            a11ly: {
-                'aria describer': {
-                    'aria-describer': 'ts',
-                    'aria-describer.spec': 'ts',
-                    'aria-reference': 'ts',
-                    'aria-reference.spec': 'ts'
-                },
-                'focus monitor': {
-                    'focus-monitor': 'ts',
-                    'focus-monitor.spec': 'ts'
-                }
-            }
-        },
-        documentation: {
-            source: '',
-            tools: ''
-        },
-        mosaic: {
-            autocomplete: '',
-            button: '',
-            'button-toggle': '',
-            index: 'ts',
-            package: 'json',
-            version: 'ts'
-        },
-        'components-dev': {
-            alert: '',
-            badge: ''
-        },
-        'docs-examples': '',
-        'angular-moment-adapter': '',
-        README: 'md',
-        'tsconfig.build': 'json'
+        'aria-describer': 'ts',
+        'aria-describer.spec': 'ts',
+        'aria-reference': 'ts',
+        'aria-reference.spec': 'ts'
+    },
+    documentation: {
+        source: '',
+        tools: ''
+    },
+    mosaic: {
+        autocomplete: '',
+        button: '',
+        'button-toggle': '',
+        index: 'ts',
+        package: 'json',
+        version: 'ts'
+    },
+    'components-dev': {
+        alert: '',
+        badge: ''
     },
     scripts: {
-        deploy: {
-            'cleanup-preview': 'ts',
-            'publish-artifacts': 'sh',
-            'publish-docs': 'sh',
-            'publish-docs-preview': 'ts'
-        },
-        'tsconfig.deploy': 'json'
+        'cleanup-preview': 'ts',
+        'publish-artifacts': 'sh',
+        'publish-docs': 'sh',
+        'publish-docs-preview': 'ts'
     },
     tests: ''
 };
