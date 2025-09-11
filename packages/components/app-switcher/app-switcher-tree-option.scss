@@ -12,16 +12,10 @@
 
     gap: var(--kbq-size-m);
 
-    &:hover {
-        & .kbq-tree-node-toggle {
-            display: flex;
-        }
-    }
-
     & .kbq-tree-node-toggle {
         position: absolute;
 
-        top: 11px;
+        top: var(--kbq-size-m);
         left: var(--kbq-size-m);
 
         width: var(--kbq-size-xxl);
@@ -29,9 +23,45 @@
 
         border-radius: var(--kbq-size-xxs);
 
-        background: #4dc3ff;
-
         display: none;
+
+        & .kbq-icon {
+            transform: rotate(0deg);
+        }
+
+        &.kbq-expanded {
+            & .kbq-icon {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    &.kbq-app-switcher-tree-option_nested {
+        &:after {
+            content: '';
+
+            position: absolute;
+            left: -1px;
+            top: 0;
+
+            height: 100%;
+
+            border-left-width: 1px;
+            border-left-style: solid;
+        }
+
+        &:has(+ :not(.kbq-app-switcher-tree-option_nested)) {
+            &:after {
+                top: 0;
+
+                width: var(--kbq-size-m);
+                height: var(--kbq-size-xxl);
+
+                border-bottom-left-radius: var(--kbq-size-s);
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
+            }
+        }
     }
 }
 
@@ -49,6 +79,48 @@
 
 
 @mixin kbq-app-switcher-tree-option-theme() {
+
+    .kbq-app-switcher-tree-option {
+        &:hover,
+        &.kbq-hover {
+            background: var(--kbq-states-background-transparent-hover);
+
+            &:has(.kbq-tree-node-toggle) .kbq-app-switcher-tree-option__icon {
+                visibility: hidden;
+            }
+
+            & .kbq-tree-node-toggle {
+                display: flex;
+
+                background: var(--kbq-states-background-transparent-hover);
+            }
+        }
+
+        &:active,
+        &.kbq-active {
+            background: var(--kbq-states-background-transparent-active);
+        }
+
+        &.kbq-selected {
+            background: var(--kbq-states-background-theme-less);
+
+            &:hover,
+            &.kbq-hover {
+                background: var(--kbq-states-background-theme-less-hover);
+            }
+
+            &:active,
+            &.kbq-active {
+                background: var(--kbq-states-background-theme-less-active);
+            }
+        }
+    }
+
+    .kbq-app-switcher-tree-option_nested:after {
+        border-left-color: var(--kbq-line-contrast-less);
+        border-bottom-color: var(--kbq-line-contrast-less);
+    }
+
     .kbq-app-switch-tree-option__text {
     }
 

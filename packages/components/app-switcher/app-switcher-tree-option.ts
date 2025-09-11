@@ -51,6 +51,7 @@ export class KbqAppSwitcherTreeNodePadding implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.setPadding();
+        this.addLevelClass();
     }
 
     paddingIndent(): string | null {
@@ -69,5 +70,16 @@ export class KbqAppSwitcherTreeNodePadding implements AfterViewInit {
         const paddingProp = this.dir?.value === 'rtl' ? 'marginRight' : 'marginLeft';
 
         this.renderer.setStyle(this.nativeElement, paddingProp, padding);
+    }
+
+    private addLevelClass() {
+        const nodeLevel =
+            this.treeNode.data && this.tree.treeControl.getLevel
+                ? this.tree.treeControl.getLevel(this.treeNode.data)
+                : 0;
+
+        const className = nodeLevel > 0 ? 'kbq-app-switcher-tree-option_nested' : 'kbq-app-switcher-tree-option_root'
+
+        this.renderer.addClass(this.nativeElement, className);
     }
 }

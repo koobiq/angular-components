@@ -8,13 +8,6 @@
             color: var(--kbq-foreground-contrast-secondary);
         }
     }
-
-    .kbq-app-switch-tree-option__text {
-    }
-
-    .kbq-app-switch-tree-option__alias {
-        color: var(--kbq-foreground-contrast-secondary);
-    }
 }
 
 @mixin kbq-app-switcher-typography() {
