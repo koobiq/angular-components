@@ -114,6 +114,9 @@ export type KbqSelectOptions = Partial<{
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
     panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+
+    /** @see minOptionsForSearch*/
+    useMinOptionsThreshold: boolean;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-select`. */
@@ -303,6 +306,10 @@ export class KbqSelect
      * Whether to use a multiline matcher or not. Default is false
      */
     @Input({ transform: booleanAttribute }) multiline: boolean = false;
+
+    @Input({ transform: numberAttribute }) minOptionsForSearch = this.defaultOptions?.useMinOptionsThreshold
+        ? 10
+        : null;
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {

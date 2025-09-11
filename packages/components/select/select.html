@@ -116,7 +116,7 @@
         (click)="handleClick($event)"
         (keydown)="handleKeydown($event)"
     >
-        @if (search) {
+        @if (search && (minOptionsForSearch === null || options.length >= minOptionsForSearch)) {
             <div class="kbq-select__search-container">
                 <ng-content select="[kbqSelectSearch]" />
             </div>

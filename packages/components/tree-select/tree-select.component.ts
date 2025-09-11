@@ -98,6 +98,9 @@ export type KbqTreeSelectOptions = Partial<{
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     panelWidth: KbqTreeSelectPanelWidth;
+
+    /** @see minOptionsForSearch*/
+    useMinOptionsThreshold: boolean;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-tree-select`. */
@@ -510,6 +513,10 @@ export class KbqTreeSelect
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     @Input() panelWidth: KbqTreeSelectPanelWidth = this.defaultOptions?.panelWidth || null;
+
+    @Input({ transform: numberAttribute }) minOptionsForSearch = this.defaultOptions?.useMinOptionsThreshold
+        ? 10
+        : null;
 
     get panelOpen(): boolean {
         return this._panelOpen;
