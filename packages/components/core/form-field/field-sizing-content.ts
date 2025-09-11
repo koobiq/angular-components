@@ -106,7 +106,7 @@ export class KbqFieldSizingContent {
         this.renderer.removeChild(this.document.body, ruler);
     }
 
-    private createRuler(computedStyle: CSSStyleDeclaration): HTMLSpanElement {
+    private createRuler(computedStyle: CSSStyleDeclaration): HTMLElement {
         const ruler: HTMLSpanElement = this.renderer.createElement('span');
 
         Object.assign(ruler.style, INITIAL_PROPERTIES);
@@ -117,7 +117,7 @@ export class KbqFieldSizingContent {
         return ruler;
     }
 
-    private calculateWidth(ruler: HTMLSpanElement, computedStyle: CSSStyleDeclaration): number {
+    private calculateWidth(ruler: HTMLElement, computedStyle: CSSStyleDeclaration): number {
         if (computedStyle.boxSizing === 'border-box') {
             return BOX_SIZING_BORDER_BOX_WIDTH_PROPERTIES.reduce(
                 (width, property) => width + (parseFloat(computedStyle[property]) || 0),
