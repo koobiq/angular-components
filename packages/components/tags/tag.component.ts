@@ -474,18 +474,16 @@ export class KbqTag
 
     /** Allows for programmatic focusing of the tag. */
     focus(): void {
-        if (!this.selectable && !this.editable) return;
+        if ((!this.selectable && !this.editable) || this.editing() || this.hasFocus) return;
 
-        if (!this.hasFocus) {
-            if (!this.editing()) this.elementRef.nativeElement.focus();
+        this.elementRef.nativeElement.focus();
 
-            this.onFocus.next({ tag: this });
+        this.onFocus.next({ tag: this });
 
-            Promise.resolve().then(() => {
-                this.hasFocus = true;
-                this.changeDetectorRef.markForCheck();
-            });
-        }
+        Promise.resolve().then(() => {
+            this.hasFocus = true;
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     /**

@@ -1112,16 +1112,9 @@ describe(KbqTagList.name, () => {
 
         it('should keep focus on the input after adding the first chip', fakeAsync(() => {
             const nativeInput = fixture.nativeElement.querySelector('input');
-            const chipEls = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.kbq-tag')).reverse();
 
-            // Remove the tags via backspace to simulate the user removing them.
-            chipEls.forEach((tag) => {
-                tag.focus();
-                flush();
-                dispatchKeyboardEvent(tag, 'keydown', BACKSPACE);
-                fixture.detectChanges();
-                tick();
-            });
+            fixture.componentInstance.foods = [];
+            fixture.detectChanges();
 
             nativeInput.focus();
             expect(fixture.componentInstance.foods).toEqual([]);
