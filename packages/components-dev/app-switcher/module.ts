@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import {
     buildFileTree,
     DATA_OBJECT,
-    FileFlatNode, FileNode,
+    FileFlatNode,
+    FileNode,
     KbqAppSwitcherModule
 } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -37,7 +38,8 @@ class DevExamples {}
         DevExamples,
         KbqAppSwitcherModule,
         KbqTreeModule,
-        KbqIconButton
+        KbqIconButton,
+        KbqIcon
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

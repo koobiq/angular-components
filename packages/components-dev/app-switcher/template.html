@@ -4,13 +4,17 @@
 <br />
 <br />
 
+{{ modelValue }}
+
 <kbq-app-switcher-tree [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
     <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node" kbqAppSwitcherTreeNodePadding>
         {{ treeControl.getViewValue(node) }}
     </kbq-app-switcher-tree-option>
 
     <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqAppSwitcherTreeNodePadding>
-        <kbq-tree-node-toggle [node]="node" />
+        <kbq-tree-node-toggle [node]="node">
+            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast-fade'"></i>
+        </kbq-tree-node-toggle>
 
         {{ treeControl.getViewValue(node) }}
     </kbq-app-switcher-tree-option>

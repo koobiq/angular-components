@@ -66,7 +66,9 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     selector: 'kbq-tree-node-toggle',
     exportAs: 'kbqTreeNodeToggle',
     template: `
-        <i kbq-icon="kbq-chevron-down-s_16"></i>
+        <ng-content>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </ng-content>
     `,
     styleUrls: ['./toggle.scss', './tree-tokens.scss'],
     host: {
