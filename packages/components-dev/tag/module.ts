@@ -26,6 +26,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TagExamplesModule } from '../../docs-examples/components/tag';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -88,7 +89,8 @@ export class DevExamples {}
         KbqIconModule,
         KbqTitleModule,
         DevExamples,
-        AsyncPipe
+        AsyncPipe,
+        DevThemeToggle
     ],
     providers: [
         {

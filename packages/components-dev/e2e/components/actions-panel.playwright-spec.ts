@@ -1,10 +1,8 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-
-const getThemeToggle = (page: Page) => page.getByTestId('e2eThemeToggle');
+import { devEnableDarkTheme, devGoToRootPage } from '../utils';
 
 test.describe('KbqActionsPanel', () => {
     test.describe('DevActionsPanelWithOverlayContainer', () => {
-        const goToPage = (page: Page) => page.goto('/');
         const getComponent = (page: Page) => page.getByTestId('e2eActionsPanelWithOverlayContainer');
         const getOpenButton = (locator: Locator) => locator.getByTestId('e2eActionsPanelOpenButton');
         const getOverlayContainer = (locator: Locator) => locator.getByTestId('e2eActionsPanelOverlayContainer');
@@ -13,7 +11,7 @@ test.describe('KbqActionsPanel', () => {
             page.getByTestId('e2eActionsPanelOverflowItemsResultButton');
 
         test('should display the actions panel inside custom overlay container', async ({ page }) => {
-            await goToPage(page);
+            await devGoToRootPage(page);
             const locator = getComponent(page);
 
             await getOpenButton(locator).click();
@@ -24,7 +22,7 @@ test.describe('KbqActionsPanel', () => {
         test('should update the actions panel container position/size when overlay container is resized', async ({
             page
         }) => {
-            await goToPage(page);
+            await devGoToRootPage(page);
             const locator = getComponent(page);
 
             await getOpenButton(locator).click();
@@ -34,10 +32,10 @@ test.describe('KbqActionsPanel', () => {
         });
 
         test('should show hidden actions when button is clicked', async ({ page }) => {
-            await goToPage(page);
+            await devGoToRootPage(page);
             const locator = getComponent(page);
 
-            await getThemeToggle(page).click();
+            await devEnableDarkTheme(page);
             await getOpenButton(locator).click();
             await getOverlayContainer(locator).evaluate(({ style }) => (style.width = '600px'));
             await getOverflowItemsResultButton(page).click();

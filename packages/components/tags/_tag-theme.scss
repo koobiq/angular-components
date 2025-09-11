@@ -1,8 +1,7 @@
 @use '../core/styles/common/tokens' as *;
-
 @use './tag-tokens';
 
-@mixin kbq-tag-state($type, $style-name) {
+@mixin _kbq-tag-state($type, $style-name) {
     $base: tag-#{$type}-#{$style-name};
 
     background: var(--kbq-#{$base}-background);
@@ -16,25 +15,31 @@
     }
 }
 
-@mixin kbq-tag-color($type) {
-    @include kbq-tag-state($type, default);
+@mixin _kbq-tag-color($type) {
+    @include _kbq-tag-state($type, default);
 
     &:hover,
     &.kbq-hovered {
-        @include kbq-tag-state($type, states-hover);
+        @include _kbq-tag-state($type, states-hover);
     }
 
     &.kbq-focused {
-        @include kbq-tag-state($type, states-focus);
+        @include _kbq-tag-state($type, states-focus);
 
-        box-shadow:
-            inset 0 0 0.1px 1px var(--kbq-tag-#{$type}-states-focus-outline),
-            0 0 0.1px 1px var(--kbq-tag-#{$type}-states-focus-outline);
+        outline: 2px solid var(--kbq-tag-#{$type}-states-focus-outline);
+    }
+
+    &.kbq-selected:not(.kbq-disabled) {
+        @include _kbq-tag-state($type, states-selected);
+
+        &.kbq-focused {
+            box-shadow: inset 0 0 0 var(--kbq-size-border-width) var(--kbq-background-bg);
+        }
     }
 
     // TODO: Combine disabled states for all colors (#DS-3778)
     &.kbq-disabled {
-        @include kbq-tag-state($type, states-disabled);
+        @include _kbq-tag-state($type, states-disabled);
     }
 
     &.kbq-tag_editing {
@@ -44,32 +49,24 @@
     .kbq-tag-edit-input {
         color: inherit;
     }
-
-    &.kbq-selected {
-        @include kbq-tag-state($type, states-selected);
-
-        box-shadow:
-            inset 0 0 0.1px 1px var(--kbq-tag-#{$type}-states-selected-outline),
-            0 0 0.1px 1px var(--kbq-tag-#{$type}-states-selected-outline);
-    }
 }
 
 @mixin kbq-tag-theme() {
     .kbq-tag {
         &.kbq-theme {
-            @include kbq-tag-color(theme-fade-on);
+            @include _kbq-tag-color(theme-fade-on);
         }
 
         &.kbq-contrast-fade {
-            @include kbq-tag-color(contrast-fade-on);
+            @include _kbq-tag-color(contrast-fade-on);
         }
 
         &.kbq-error {
-            @include kbq-tag-color(error-fade-on);
+            @include _kbq-tag-color(error-fade-on);
         }
 
         &.kbq-warning {
-            @include kbq-tag-color(warning-fade);
+            @include _kbq-tag-color(warning-fade);
         }
     }
 }
