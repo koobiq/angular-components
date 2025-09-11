@@ -58,9 +58,9 @@
         max-width: 100%;
 
         &.kbq-input {
-            min-height: unset;
-            border-radius: unset;
-            padding: unset;
+            min-height: unset !important;
+            border-radius: unset !important;
+            padding: unset !important;
         }
     }
 
