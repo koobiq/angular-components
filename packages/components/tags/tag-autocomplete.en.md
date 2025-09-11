@@ -28,8 +28,6 @@ Tags can be selected in several ways:
 
 Selection option is configured using the `selectable` attribute (enabled by default) and the `multiple` attribute (disabled by default).
 
-<!-- example(tag-autocomplete-selectable) -->
-
 ### Tag removal
 
 Tags can be removed in several ways:
@@ -39,5 +37,3 @@ Tags can be removed in several ways:
 - Programmatic removal through the component [API](/en/components/tags/api).
 
 Removal option is configured using the `removable` attribute (enabled by default).
-
-<!-- example(tag-autocomplete-removable) -->

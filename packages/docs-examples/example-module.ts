@@ -3801,30 +3801,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-option-operations-example.ts",
     "importPath": "components/tag"
   },
-  "tag-autocomplete-removable": {
-    "packagePath": "components/tag/tag-autocomplete-removable",
-    "title": "Tag autocomplete removable",
-    "componentName": "TagAutocompleteRemovableExample",
-    "files": [
-      "tag-autocomplete-removable-example.ts"
-    ],
-    "selector": "tag-autocomplete-removable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-autocomplete-removable-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-autocomplete-selectable": {
-    "packagePath": "components/tag/tag-autocomplete-selectable",
-    "title": "Tag autocomplete selectable",
-    "componentName": "TagAutocompleteSelectableExample",
-    "files": [
-      "tag-autocomplete-selectable-example.ts"
-    ],
-    "selector": "tag-autocomplete-selectable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-autocomplete-selectable-example.ts",
-    "importPath": "components/tag"
-  },
   "tag-autocomplete": {
     "packagePath": "components/tag/tag-autocomplete",
     "title": "Tag autocomplete",
@@ -5642,10 +5618,6 @@ return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-with-scroll':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tag-autocomplete-option-operations':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-autocomplete-removable':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-autocomplete-selectable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-autocomplete':
 return import('@koobiq/docs-examples/components/tag');
