@@ -403,10 +403,10 @@ export class KbqTag
 
             if (iconElement.classList.contains('kbq-tag-remove')) {
                 iconElement.classList.add('kbq-icon_right');
-                this.elementRef.nativeElement.classList.add('kbq-right-icon');
+                this.nativeElement.classList.add('kbq-right-icon');
             } else {
                 iconElement.classList.add('kbq-icon_left');
-                this.elementRef.nativeElement.classList.add('kbq-left-icon');
+                this.nativeElement.classList.add('kbq-left-icon');
             }
         } else if (icons.length > 1) {
             const firstIconElement = icons[0];
