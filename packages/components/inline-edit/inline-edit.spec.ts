@@ -57,7 +57,11 @@ describe('KbqInlineEdit', () => {
     it('should setup with default parameters', () => {
         const { debugElement } = setup(TestComponent);
 
-        expect(getInlineEditDebugElement(debugElement).classes).toMatchSnapshot();
+        expect(
+            Object.keys(getInlineEditDebugElement(debugElement).classes).filter(
+                (className) => !className.startsWith('ng-tns')
+            )
+        ).toMatchSnapshot();
     });
 
     it('should add css class when label provided', () => {
@@ -67,7 +71,11 @@ describe('KbqInlineEdit', () => {
         componentInstance.toggleLabelVisibility();
         fixture.detectChanges();
 
-        expect(getInlineEditDebugElement(debugElement).classes).toMatchSnapshot();
+        expect(
+            Object.keys(getInlineEditDebugElement(debugElement).classes).filter(
+                (className) => !className.startsWith('ng-tns')
+            )
+        ).toMatchSnapshot();
     });
 
     it('should toggle mode on click / space / enter', () => {
