@@ -38,7 +38,11 @@
     }
 
     &.kbq-tag_editing {
-        background: var(--kbq-background-bg);
+        background-color: var(--kbq-background-bg);
+    }
+
+    .kbq-tag-edit-input {
+        color: inherit;
     }
 }
 
