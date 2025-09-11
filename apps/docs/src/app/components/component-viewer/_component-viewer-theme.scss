@@ -18,6 +18,10 @@
         color: var(--kbq-line-success) !important;
     }
 
+    .docs-api__output-marker {
+        color: var(--kbq-foreground-theme) !important;
+    }
+
     .kbq-docs-table {
         & .kbq-markdown__code {
             background: transparent !important;
@@ -103,6 +107,7 @@
 
     .docs-api__class-selector-name,
     .docs-api__input-marker,
+    .docs-api__output-marker,
     .docs-api_property-name {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
     }
