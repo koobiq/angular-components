@@ -24,18 +24,6 @@ export interface LiveExample {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
-  "clamped-text-overview": {
-    "packagePath": "clamped-text/clamped-text-overview",
-    "title": "Clamped-text overview",
-    "componentName": "ClampedTextOverviewExample",
-    "files": [
-      "clamped-text-overview-example.ts"
-    ],
-    "selector": "clamped-text-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "clamped-text-overview-example.ts",
-    "importPath": "clamped-text"
-  },
   "accordion-content": {
     "packagePath": "components/accordion/accordion-content",
     "title": "Accordion content",
@@ -742,6 +730,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
+  },
+  "clamped-text-overview": {
+    "packagePath": "components/clamped-text/clamped-text-overview",
+    "title": "Clamped-text overview",
+    "componentName": "ClampedTextOverviewExample",
+    "files": [
+      "clamped-text-overview-example.ts"
+    ],
+    "selector": "clamped-text-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-text-overview-example.ts",
+    "importPath": "components/clamped-text"
   },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
@@ -1456,6 +1456,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "experimental-form-field-without-borders-example.ts",
     "importPath": "components/experimental-form-field"
   },
+  "file-upload-custom-text-via-input": {
+    "packagePath": "components/file-upload/file-upload-custom-text-via-input",
+    "title": "File-upload custom text via input example",
+    "componentName": "FileUploadCustomTextViaInputExample",
+    "files": [
+      "file-upload-custom-text-via-input-example.ts"
+    ],
+    "selector": "file-upload-custom-text-via-input-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-custom-text-via-input-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-cva-overview": {
     "packagePath": "components/file-upload/file-upload-cva-overview",
     "title": "File-upload with control value accessor",
@@ -1552,9 +1564,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-multiple-error-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-multiple-mixed-validation": {
+    "packagePath": "components/file-upload/file-upload-multiple-mixed-validation",
+    "title": "File upload multiple mixed validation example",
+    "componentName": "FileUploadMultipleMixedValidationExample",
+    "files": [
+      "file-upload-multiple-mixed-validation-example.ts"
+    ],
+    "selector": "file-upload-multiple-mixed-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-mixed-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-multiple-required-reactive-validation": {
     "packagePath": "components/file-upload/file-upload-multiple-required-reactive-validation",
-    "title": "File Upload Multiple Required Reactive Validation Example",
+    "title": "File upload multiple required reactive validation example",
     "componentName": "FileUploadMultipleRequiredReactiveValidationExample",
     "files": [
       "file-upload-multiple-required-reactive-validation-example.ts"
@@ -1588,6 +1612,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-single-error-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-single-mixed-validation": {
+    "packagePath": "components/file-upload/file-upload-single-mixed-validation",
+    "title": "File upload single mixed validation example",
+    "componentName": "FileUploadSingleMixedValidationExample",
+    "files": [
+      "file-upload-single-mixed-validation-example.ts"
+    ],
+    "selector": "file-upload-single-mixed-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-mixed-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-single-overview": {
     "packagePath": "components/file-upload/file-upload-single-overview",
     "title": "File-upload single",
@@ -1602,7 +1638,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-required-reactive-validation": {
     "packagePath": "components/file-upload/file-upload-single-required-reactive-validation",
-    "title": "File Upload Single Required Reactive Validation Example",
+    "title": "File upload single required reactive validation example",
     "componentName": "FileUploadSingleRequiredReactiveValidationExample",
     "files": [
       "file-upload-single-required-reactive-validation-example.ts"
@@ -2078,6 +2114,162 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon-item"
+  },
+  "inline-edit-controls": {
+    "packagePath": "components/inline-edit/inline-edit-controls",
+    "title": "Inline edit controls",
+    "componentName": "InlineEditControlsExample",
+    "files": [
+      "inline-edit-controls-example.ts"
+    ],
+    "selector": "inline-edit-controls-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-controls-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-custom-handler": {
+    "packagePath": "components/inline-edit/inline-edit-custom-handler",
+    "title": "Inline edit custom handler",
+    "componentName": "InlineEditCustomHandlerExample",
+    "files": [
+      "inline-edit-custom-handler-example.ts"
+    ],
+    "selector": "inline-edit-custom-handler-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-custom-handler-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-customized-design": {
+    "packagePath": "components/inline-edit/inline-edit-customized-design",
+    "title": "Inline edit customized design",
+    "componentName": "InlineEditCustomizedDesignExample",
+    "files": [
+      "inline-edit-customized-design-example.ts"
+    ],
+    "selector": "inline-edit-customized-design-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-customized-design-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-disabled": {
+    "packagePath": "components/inline-edit/inline-edit-disabled",
+    "title": "Inline edit disabled",
+    "componentName": "InlineEditDisabledExample",
+    "files": [
+      "inline-edit-disabled-example.ts"
+    ],
+    "selector": "inline-edit-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-disabled-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-editable-header": {
+    "packagePath": "components/inline-edit/inline-edit-editable-header",
+    "title": "Inline edit editable header",
+    "componentName": "InlineEditEditableHeaderExample",
+    "files": [
+      "inline-edit-editable-header-example.ts"
+    ],
+    "selector": "inline-edit-editable-header-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-editable-header-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-horizontal-list": {
+    "packagePath": "components/inline-edit/inline-edit-horizontal-list",
+    "title": "Inline edit horizontal list",
+    "componentName": "InlineEditHorizontalListExample",
+    "files": [
+      "inline-edit-horizontal-list-example.ts"
+    ],
+    "selector": "inline-edit-horizontal-list-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-horizontal-list-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-menu": {
+    "packagePath": "components/inline-edit/inline-edit-menu",
+    "title": "Inline edit menu",
+    "componentName": "InlineEditMenuExample",
+    "files": [
+      "inline-edit-menu-example.ts"
+    ],
+    "selector": "inline-edit-menu-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-menu-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-on-clean": {
+    "packagePath": "components/inline-edit/inline-edit-on-clean",
+    "title": "Inline edit on clean",
+    "componentName": "InlineEditOnCleanExample",
+    "files": [
+      "inline-edit-on-clean-example.ts"
+    ],
+    "selector": "inline-edit-on-clean-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-on-clean-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-overview": {
+    "packagePath": "components/inline-edit/inline-edit-overview",
+    "title": "Inline edit overview",
+    "componentName": "InlineEditOverviewExample",
+    "files": [
+      "inline-edit-overview-example.ts"
+    ],
+    "selector": "inline-edit-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-overview-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-unfilled": {
+    "packagePath": "components/inline-edit/inline-edit-unfilled",
+    "title": "Inline edit unfilled",
+    "componentName": "InlineEditUnfilledExample",
+    "files": [
+      "inline-edit-unfilled-example.ts"
+    ],
+    "selector": "inline-edit-unfilled-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-unfilled-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-validation": {
+    "packagePath": "components/inline-edit/inline-edit-validation",
+    "title": "Inline edit validation",
+    "componentName": "InlineEditValidationExample",
+    "files": [
+      "inline-edit-validation-example.ts"
+    ],
+    "selector": "inline-edit-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-validation-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-vertical-list": {
+    "packagePath": "components/inline-edit/inline-edit-vertical-list",
+    "title": "Inline edit vertical list",
+    "componentName": "InlineEditVerticalListExample",
+    "files": [
+      "inline-edit-vertical-list-example.ts"
+    ],
+    "selector": "inline-edit-vertical-list-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-vertical-list-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-without-label": {
+    "packagePath": "components/inline-edit/inline-edit-without-label",
+    "title": "Inline edit without label",
+    "componentName": "InlineEditWithoutLabelExample",
+    "files": [
+      "inline-edit-without-label-example.ts"
+    ],
+    "selector": "inline-edit-without-label-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-without-label-example.ts",
+    "importPath": "components/inline-edit"
   },
   "input-change-password": {
     "packagePath": "components/input/input-change-password",
@@ -4915,8 +5107,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
 };
 export async function loadExample(id: string): Promise<any> {
   switch (id) {
-  case 'clamped-text-overview':
-return import('@koobiq/docs-examples/clamped-text');
   case 'accordion-content':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-header':
@@ -5027,6 +5217,8 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'clamped-text-overview':
+return import('@koobiq/docs-examples/components/clamped-text');
   case 'code-block-with-custom-locale-configuration':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':
@@ -5143,6 +5335,8 @@ return import('@koobiq/docs-examples/components/experimental-form-field');
 return import('@koobiq/docs-examples/components/experimental-form-field');
   case 'experimental-form-field-without-borders':
 return import('@koobiq/docs-examples/components/experimental-form-field');
+  case 'file-upload-custom-text-via-input':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-cva-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-indeterminate-loading-overview':
@@ -5159,11 +5353,15 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-mixed-validation':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-required-reactive-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-error-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-mixed-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-overview':
 return import('@koobiq/docs-examples/components/file-upload');
@@ -5245,6 +5443,32 @@ return import('@koobiq/docs-examples/components/icon-item');
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-variant':
 return import('@koobiq/docs-examples/components/icon-item');
+  case 'inline-edit-controls':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-custom-handler':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-customized-design':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-disabled':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-editable-header':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-horizontal-list':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-menu':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-on-clean':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-overview':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-unfilled':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-validation':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-vertical-list':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-without-label':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'input-change-password':
 return import('@koobiq/docs-examples/components/input');
   case 'input-number-overview':
