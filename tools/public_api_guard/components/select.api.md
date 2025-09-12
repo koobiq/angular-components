@@ -63,7 +63,7 @@ import { TemplateRef } from '@angular/core';
 export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
     panelWidth: KbqSelectPanelWidth;
     panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
-    useMinOptionsThreshold: boolean;
+    minOptionsThreshold: "auto" | number;
 }>>;
 
 // @public (undocumented)
@@ -123,7 +123,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     protected readonly defaultOptions: Partial<{
         panelWidth: KbqSelectPanelWidth;
         panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
-        useMinOptionsThreshold: boolean;
+        minOptionsThreshold: "auto" | number;
     }> | null;
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
@@ -172,7 +172,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
     protected localeService?: KbqLocaleService | undefined;
-    minOptionsThreshold: number | null;
+    minOptionsThreshold: number | undefined;
     multiline: boolean;
     // (undocumented)
     get multiple(): boolean;
@@ -316,7 +316,7 @@ export class KbqSelectModule {
 export type KbqSelectOptions = Partial<{
     panelWidth: KbqSelectPanelWidth;
     panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
-    useMinOptionsThreshold: boolean;
+    minOptionsThreshold: 'auto' | number;
 }>;
 
 // @public

@@ -65,7 +65,7 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOULD,
+    KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
@@ -83,6 +83,7 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    isUndefined,
     kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -117,9 +118,12 @@ export type KbqSelectOptions = Partial<{
     panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
-     * @see minOptionsForSearch
+     *
+     * - `'auto'` uses `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` as min value.
+     * - number - will enables search hiding and uses value as min.
+     * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
      */
-    useMinOptionsThreshold: boolean;
+    minOptionsThreshold: 'auto' | number;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-select`. */
@@ -312,12 +316,13 @@ export class KbqSelect
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
-     * Automatically enables search hiding if value provided, even if `useMinOptionsThreshold` is disabled.
-     * @default 10 if `useMinOptionsThreshold` is enabled in default options, otherwise `null`
+     * Automatically enables search hiding if value provided, even if `defaultOptions.minOptionsThreshold` is provided.
+     * @default 10 or undefined
      */
-    @Input({ transform: numberAttribute }) minOptionsThreshold = this.defaultOptions?.useMinOptionsThreshold
-        ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOULD
-        : null;
+    @Input({ transform: numberAttribute }) minOptionsThreshold =
+        this.defaultOptions?.minOptionsThreshold === 'auto'
+            ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
+            : this.defaultOptions?.minOptionsThreshold;
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
@@ -1048,7 +1053,7 @@ export class KbqSelect
 
     /** @docs-private */
     protected shouldShowSearch(): boolean {
-        return this.minOptionsThreshold === null || this.options.length >= this.minOptionsThreshold;
+        return isUndefined(this.minOptionsThreshold) || this.options.length >= this.minOptionsThreshold;
     }
 
     private updateLocaleParams = () => {
