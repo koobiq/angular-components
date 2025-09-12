@@ -31,8 +31,8 @@ import {
     KbqColorDirective,
     KbqComponentColors,
     KbqFieldSizingContent,
-    kbqInjectElementRef,
     KbqHovered,
+    kbqInjectElementRef,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
