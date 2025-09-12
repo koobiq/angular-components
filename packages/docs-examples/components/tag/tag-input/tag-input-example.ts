@@ -31,6 +31,7 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
                 }
 
                 <input
+                    autocomplete="off"
                     kbqInput
                     placeholder="New tag..."
                     [formControl]="control"
