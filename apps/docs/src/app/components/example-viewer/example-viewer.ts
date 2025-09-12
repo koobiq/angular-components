@@ -62,6 +62,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
             return;
         }
 
+        this.clearLiveExamples();
         this.fetchDocument(url);
     }
 

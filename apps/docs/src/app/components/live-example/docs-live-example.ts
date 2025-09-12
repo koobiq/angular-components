@@ -67,6 +67,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
             return;
         }
 
+        this.clearLiveExamples();
         this.getDocument(url);
     }
 
