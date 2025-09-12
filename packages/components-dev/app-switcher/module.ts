@@ -10,6 +10,8 @@ import {
 } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
@@ -39,7 +41,9 @@ class DevExamples {}
         KbqAppSwitcherModule,
         KbqTreeModule,
         KbqIconButton,
-        KbqIcon
+        KbqIcon,
+        KbqDropdownModule,
+        KbqDividerModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
