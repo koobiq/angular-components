@@ -2,6 +2,12 @@ import { Overlay, RepositionScrollStrategy, ScrollStrategy } from '@angular/cdk/
 import { InjectionToken } from '@angular/core';
 
 /**
+ * Minimum option count threshold for displaying select search.
+ * Search is hidden when fewer options are available.
+ */
+export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOULD = 10;
+
+/**
  * The select panel will only "fit" inside the viewport if it is positioned at
  * this value or more away from the viewport boundary.
  */

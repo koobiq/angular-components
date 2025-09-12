@@ -61,7 +61,7 @@
         [style.transformOrigin]="transformOrigin"
         (keydown)="handleKeydown($event)"
     >
-        @if (search && (minOptionsForSearch === null || options.length >= minOptionsForSearch)) {
+        @if (search && shouldShowSearch()) {
             <div class="kbq-select__search-container">
                 <ng-content select="[kbqSelectSearch]" />
             </div>

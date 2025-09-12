@@ -123,7 +123,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     isEmptySearchResult: boolean;
     // (undocumented)
     isRtl(): boolean;
-    // (undocumented)
     minOptionsForSearch: number | null;
     multiline: boolean;
     // (undocumented)
@@ -207,6 +206,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly selectionChange: EventEmitter<KbqTreeSelectChange>;
     selectionModel: SelectionModel<any>;
     setDisabledState(isDisabled: boolean): void;
+    protected shouldShowSearch(): boolean;
     sortComparator: (a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number;
     readonly stateChanges: Subject<void>;
     // (undocumented)

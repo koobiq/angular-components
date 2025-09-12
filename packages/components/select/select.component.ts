@@ -65,6 +65,7 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOULD,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
@@ -114,8 +115,10 @@ export type KbqSelectOptions = Partial<{
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
     panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
-
-    /** @see minOptionsForSearch*/
+    /**
+     * Whether to enable hiding search by default if options is less than minimum.
+     * @see minOptionsForSearch
+     */
     useMinOptionsThreshold: boolean;
 }>;
 
@@ -306,9 +309,14 @@ export class KbqSelect
      * Whether to use a multiline matcher or not. Default is false
      */
     @Input({ transform: booleanAttribute }) multiline: boolean = false;
-
-    @Input({ transform: numberAttribute }) minOptionsForSearch = this.defaultOptions?.useMinOptionsThreshold
-        ? 10
+    /**
+     * Controls when the search functionality is displayed based on the number of available options.
+     *
+     * Automatically enables search hiding if value provided, even if `useMinOptionsThreshold` is disabled.
+     * @default 10 if `useMinOptionsThreshold` is enabled in default options, otherwise `null`
+     */
+    @Input({ transform: numberAttribute }) minOptionsThreshold = this.defaultOptions?.useMinOptionsThreshold
+        ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOULD
         : null;
 
     /** Combined stream of all of the child options' change events. */
@@ -1036,6 +1044,11 @@ export class KbqSelect
         if (this.footer?.nativeElement.contains($event.target)) {
             this.close();
         }
+    }
+
+    /** @docs-private */
+    protected shouldShowSearch(): boolean {
+        return this.minOptionsThreshold === null || this.options.length >= this.minOptionsThreshold;
     }
 
     private updateLocaleParams = () => {

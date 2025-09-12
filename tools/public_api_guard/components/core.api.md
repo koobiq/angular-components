@@ -1781,6 +1781,9 @@ export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
 };
 
 // @public
+export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOULD = 10;
+
+// @public
 export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 
 // @public (undocumented)
