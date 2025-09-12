@@ -193,7 +193,6 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'cancel');
 
         componentInstance.showActions.set(true);
         fixture.detectChanges();
@@ -207,14 +206,13 @@ describe('KbqInlineEdit', () => {
 
         cancelButtonHTMLElement?.click();
 
-        expect(spyFn).toHaveBeenCalled();
+        expect(componentInstance.cancel).toHaveBeenCalled();
     });
 
     it('should emit canceled event on ESCAPE keydown event', () => {
         const fixture = setup(TestWithTextareaControl);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'cancel');
 
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
@@ -223,7 +221,7 @@ describe('KbqInlineEdit', () => {
 
         dispatchEvent(overlayElement!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
 
-        expect(spyFn).toHaveBeenCalled();
+        expect(componentInstance.cancel).toHaveBeenCalled();
     });
 
     it('should return previous value for control canceled event', async () => {
@@ -231,7 +229,6 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'cancel');
 
         componentInstance.value = initialValue;
         componentInstance.showActions.set(true);
@@ -255,7 +252,7 @@ describe('KbqInlineEdit', () => {
 
         cancelButtonHTMLElement?.click();
 
-        expect(spyFn).toHaveBeenCalled();
+        expect(componentInstance.cancel).toHaveBeenCalled();
         expect(componentInstance.value).toEqual(initialValue);
     });
 
@@ -407,7 +404,7 @@ export class TestComponent extends BaseTestComponent {
         this.currentMode.set($event);
     }
 
-    cancel() {}
+    cancel = jest.fn();
 }
 @Component({
     standalone: true,
