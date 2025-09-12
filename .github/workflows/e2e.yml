@@ -5,6 +5,13 @@ on:
     branches:
       - main
   pull_request:
+  # Automatically trigger this workflow when 'E2E update screenshots' workflow completes.
+  # see: .github/workflows/e2e-update-screenshots.yml
+  workflow_run:
+    workflows:
+      - 'E2E update screenshots'
+    types:
+      - completed
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
