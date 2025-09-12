@@ -37,6 +37,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                 }
                 <input
                     #tagInput
+                    autocomplete="off"
                     placeholder="Placeholder"
                     [distinct]="true"
                     [formControl]="control"

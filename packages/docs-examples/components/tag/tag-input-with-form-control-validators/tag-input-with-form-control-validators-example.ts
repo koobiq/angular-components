@@ -46,6 +46,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
                 }
 
                 <input
+                    autocomplete="off"
                     kbqInput
                     placeholder="New keyword..."
                     [kbqTagInputFor]="tagList"

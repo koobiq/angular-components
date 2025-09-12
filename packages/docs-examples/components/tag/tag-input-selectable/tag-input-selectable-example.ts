@@ -20,6 +20,7 @@ import { KbqTagInputEvent, KbqTagSelectionChange, KbqTagsModule } from '@koobiq/
                 }
 
                 <input
+                    autocomplete="off"
                     kbqInput
                     placeholder="New tag"
                     [kbqTagInputFor]="tagList"

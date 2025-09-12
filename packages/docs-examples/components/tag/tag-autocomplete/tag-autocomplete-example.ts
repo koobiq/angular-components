@@ -39,6 +39,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                 }
                 <input
                     #tagInput
+                    autocomplete="off"
                     kbqInput
                     placeholder="Placeholder"
                     [distinct]="true"
