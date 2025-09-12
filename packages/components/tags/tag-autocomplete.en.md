@@ -32,7 +32,7 @@ Selection option is configured using the `selectable` attribute (enabled by defa
 
 Tags can be removed in several ways:
 
-- Click on the remove icon (`kbqTagRemove` directive).
+- Click on the remove icon (`kbqTagRemove` directive) inside the tag.
 - Press `Delete` or `Backspace` key.
 - Programmatic removal through the component [API](/en/components/tag/api).
 
