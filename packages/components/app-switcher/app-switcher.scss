@@ -1,0 +1,33 @@
+@use './app-switcher-theme' as *;
+
+.kbq-app-switcher {
+    position: relative;
+
+    margin-top: var(--kbq-size-xxs);
+    margin-bottom: var(--kbq-size-xxs);
+
+    width: 320px;
+
+    border-radius: var(--kbq-size-xs);
+
+    box-shadow: var(--kbq-shadow-popup);
+
+    box-sizing: border-box;
+
+    z-index: 1;
+}
+
+.kbq-app-switcher__search-container {
+    padding-top: var(--kbq-size-xxs);
+}
+
+.kbq-app-switcher-group-header {
+    padding: var(--kbq-size-s) var(--kbq-size-l);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@include kbq-app-switcher-theme();
+@include kbq-app-switcher-typography();
