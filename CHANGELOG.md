@@ -1,3 +1,19 @@
+# 18.35.0 (2025-09-12)
+
+### Koobiq
+
+ * bug fix  **button:** add border-color for disabled state ([#DS-4144](https://github.com/koobiq/angular-components/issues/issue/DS-4144)) ([#1011](https://github.com/koobiq/angular-components/issues/1011)) ([3279d77](https://github.com/koobiq/angular-components/commit/3279d7732a6d7d7b8914248ba5cfd85d55722d1a))
+ * bug fix  **datepicker:** console error when using DatePicker ([#DS-4100](https://github.com/koobiq/angular-components/issues/issue/DS-4100)) ([#994](https://github.com/koobiq/angular-components/issues/994)) ([34db865](https://github.com/koobiq/angular-components/commit/34db865718616515e6917eb58538587c89327ef8))
+ * bug fix  **filter-bar:** update pipe templates ([#DS-4157](https://github.com/koobiq/angular-components/issues/issue/DS-4157)) ([#1017](https://github.com/koobiq/angular-components/issues/1017)) ([d1a42ab](https://github.com/koobiq/angular-components/commit/d1a42ab11b31b254bb0092b1c70e2a8c849f4866))
+ * bug fix  **popover:** removed arrow overlap on trigger ([#DS-4125](https://github.com/koobiq/angular-components/issues/issue/DS-4125)) ([#1016](https://github.com/koobiq/angular-components/issues/1016)) ([12f8b5a](https://github.com/koobiq/angular-components/commit/12f8b5ad48932dbccebd33f63ab1b72bd448bf13))
+ * bug fix  **textarea:** aligned paddings with design ([#DS-4054](https://github.com/koobiq/angular-components/issues/issue/DS-4054)) ([#1014](https://github.com/koobiq/angular-components/issues/1014)) ([0963570](https://github.com/koobiq/angular-components/commit/09635709237f2ee5040c3cab751e83b18df91a88))
+ * feature  **file-upload:** provide locale info via input prop ([#DS-4135](https://github.com/koobiq/angular-components/issues/issue/DS-4135)) ([#995](https://github.com/koobiq/angular-components/issues/995)) ([1e73302](https://github.com/koobiq/angular-components/commit/1e7330255f259dc216b70247ca706525e2400ad0))
+ * feature  **filter-bar:** added progress state for saving filter ([#DS-4075](https://github.com/koobiq/angular-components/issues/issue/DS-4075)) ([#1009](https://github.com/koobiq/angular-components/issues/1009)) ([c54729a](https://github.com/koobiq/angular-components/commit/c54729ae36d91577877f488b64b416f1455396be))
+ * feature  **navbar-ic:** added navbar-ic ([#DS-4038](https://github.com/koobiq/angular-components/issues/issue/DS-4038)) ([#964](https://github.com/koobiq/angular-components/issues/964)) ([fe49fb4](https://github.com/koobiq/angular-components/commit/fe49fb426700947d2b0a1eedb1377b0a85728670))
+ * feature  **select:** added [viewValue] for option ([#DS-4116](https://github.com/koobiq/angular-components/issues/issue/DS-4116)) ([#996](https://github.com/koobiq/angular-components/issues/996)) ([cd7b9f3](https://github.com/koobiq/angular-components/commit/cd7b9f34074a6bd86b5babc8b2054d383c0682e7))
+ * feature  **tag:** implemented editable tags ([#DS-4091](https://github.com/koobiq/angular-components/issues/issue/DS-4091)) ([#987](https://github.com/koobiq/angular-components/issues/987)) ([7caac5b](https://github.com/koobiq/angular-components/commit/7caac5bc9a016519c86a0e06c8377aaf2909ae8e))
+ * feature  **tags,core:** added KbqFieldSizingContent directive ([#DS-4146](https://github.com/koobiq/angular-components/issues/issue/DS-4146)) ([#999](https://github.com/koobiq/angular-components/issues/999)) ([d6d45cb](https://github.com/koobiq/angular-components/commit/d6d45cb989a1fc6bfc0579487c1f5db42f7393b5))
+
 # 18.34.0 (2025-08-26)
 
 ### Koobiq
