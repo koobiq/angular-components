@@ -1,5 +1,5 @@
 <kbq-form-field>
-    <kbq-tag-list #tagList>
+    <kbq-tag-list #tagList="kbqTagList">
         @for (tag of selectedTags; track tag) {
             <kbq-tag [value]="tag" (removed)="onRemove(tag)">
                 {{ tag }}
@@ -10,6 +10,7 @@
         <!-- turn off tag add on paste with Input property -->
         <input
             #tagInput
+            autocomplete="off"
             placeholder="New tag..."
             [distinct]="true"
             [formControl]="control"

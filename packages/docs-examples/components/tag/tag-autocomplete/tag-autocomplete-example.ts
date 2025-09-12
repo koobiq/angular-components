@@ -30,7 +30,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
     ],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList>
+            <kbq-tag-list #tagList="kbqTagList">
                 @for (tag of selectedTags; track tag) {
                     <kbq-tag [value]="tag" (removed)="onRemove(tag)">
                         {{ tag }}
@@ -39,6 +39,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                 }
                 <input
                     #tagInput
+                    autocomplete="off"
                     kbqInput
                     placeholder="Placeholder"
                     [distinct]="true"
