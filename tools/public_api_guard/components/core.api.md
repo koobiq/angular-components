@@ -2094,12 +2094,6 @@ export class KbqHighlightPipe implements PipeTransform {
 }
 
 // @public
-<<<<<<< HEAD
-export const kbqInjectElementRef: <T = HTMLElement>() => ElementRef<T>;
-
-// @public
-export const kbqInjectNativeElement: <T = HTMLElement>() => T;
-=======
 export class KbqHovered {
     readonly hovered: Signal<boolean>;
     // (undocumented)
@@ -2107,7 +2101,12 @@ export class KbqHovered {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHovered, never>;
 }
->>>>>>> 7b3c63fe (refactor: e2e)
+
+// @public
+export const kbqInjectElementRef: <T = HTMLElement>() => ElementRef<T>;
+
+// @public
+export const kbqInjectNativeElement: <T = HTMLElement>() => T;
 
 // @public
 export class KbqLine {

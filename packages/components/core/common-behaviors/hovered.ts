@@ -1,6 +1,7 @@
-import { Directive, ElementRef, inject } from '@angular/core';
+import { Directive } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { fromEvent, map, merge } from 'rxjs';
+import { kbqInjectNativeElement } from '../utils';
 
 /**
  * Directive that adds a `kbq-hover` class to an element, based on its hover state.
@@ -14,7 +15,7 @@ import { fromEvent, map, merge } from 'rxjs';
     }
 })
 export class KbqHovered {
-    private readonly element = inject(ElementRef).nativeElement;
+    private readonly element = kbqInjectNativeElement();
 
     /**
      * Whether the element is hovered.
