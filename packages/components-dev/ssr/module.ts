@@ -1,17 +1,20 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
 import { ScrollbarExamplesModule } from 'packages/docs-examples/components/scrollbar';
+import { TagExamplesModule } from 'packages/docs-examples/components/tag';
 import { DevThemeToggle } from '../theme-toggle';
 import { DevBreadcrumbsHydration } from './components/breadcrumbs';
 
 @Component({
     standalone: true,
-    imports: [ScrollbarExamplesModule, DevBreadcrumbsHydration],
+    imports: [ScrollbarExamplesModule, DevBreadcrumbsHydration, TagExamplesModule],
     selector: 'dev-examples',
     template: `
         <dev-breadcrumbs-hydration />
         <hr />
         <scrollbar-with-options-example />
+        <hr />
+        <tag-editable-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

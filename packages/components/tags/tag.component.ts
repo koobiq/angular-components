@@ -32,6 +32,8 @@ import {
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
+    KbqFieldSizingContent,
+    kbqInjectElementRef,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -119,7 +121,8 @@ export class KbqTagEditSubmit {
         class: 'kbq-tag-edit-input',
 
         '(keydown)': 'handleKeydown($event)'
-    }
+    },
+    hostDirectives: [KbqFieldSizingContent]
 })
 export class KbqTagEditInput {
     private readonly tag = inject(KbqTag);
@@ -201,6 +204,8 @@ export class KbqTag
 {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
+    /** @docs-private */
+    readonly elementRef = kbqInjectElementRef();
 
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
@@ -208,7 +213,8 @@ export class KbqTag
     /** Emits when the tag is blurred. */
     readonly onBlur = new Subject<KbqTagEvent>();
 
-    nativeElement: HTMLElement;
+    /** @docs-private */
+    readonly nativeElement = this.elementRef.nativeElement;
 
     /** Whether the tag has focus. */
     hasFocus: boolean = false;
@@ -253,7 +259,10 @@ export class KbqTag
      */
     protected readonly editing = signal(false);
 
-    @ViewChild('kbqTitleText') textElement: ElementRef;
+    /**
+     * @docs-private
+     */
+    @ViewChild('kbqTitleText') readonly textElement: ElementRef<HTMLSpanElement>;
 
     @ContentChildren(KbqIcon) contentChildren: QueryList<KbqIcon>;
 
@@ -295,7 +304,7 @@ export class KbqTag
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
     @Input()
     get value(): any {
-        return this._value !== undefined ? this._value : this.elementRef.nativeElement.textContent;
+        return this._value ?? this.elementRef.nativeElement.textContent?.trim();
     }
 
     set value(value: any) {
@@ -360,7 +369,6 @@ export class KbqTag
     private _disabled: boolean = false;
 
     constructor(
-        public elementRef: ElementRef,
         public changeDetectorRef: ChangeDetectorRef,
         private _ngZone: NgZone
     ) {
@@ -370,8 +378,6 @@ export class KbqTag
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         this.addHostClassName();
-
-        this.nativeElement = elementRef.nativeElement;
     }
 
     ngAfterContentInit() {
@@ -572,6 +578,7 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'cancel', reason });
+        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
     }
 
     /** @docs-private */
@@ -580,6 +587,7 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });
+        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
     }
 
     private dispatchSelectionChange(isUserInput = false) {

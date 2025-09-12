@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
@@ -20,7 +21,7 @@ import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '
 @Component({
     standalone: true,
     selector: 'tag-input-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, JsonPipe, KbqFormFieldModule, FormsModule],
+    imports: [KbqTagsModule, KbqIconModule, JsonPipe, KbqFormFieldModule, FormsModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
@@ -28,13 +29,18 @@ import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '
                 @for (tag of tags(); track $index) {
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($index)">
                         {{ tag }}
-                        <input kbqTagEditInput [(ngModel)]="tags()[$index]" />
+                        <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
                         <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 }
 
-                <input placeholder="New tag" [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="create($event)" />
+                <input
+                    kbqInput
+                    placeholder="New tag"
+                    [kbqTagInputFor]="tagList"
+                    (kbqTagInputTokenEnd)="create($event)"
+                />
 
                 <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
             </kbq-tag-list>

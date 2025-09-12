@@ -1,5 +1,6 @@
 @use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/vendor-prefixes';
+@use '../core/styles/common/input';
 
 .kbq-tag {
     @include vendor-prefixes.user-select(none);
@@ -51,13 +52,16 @@
     }
 
     .kbq-tag-edit-input {
-        // @TODO should implement auto-sizing, because firefox and safari doesn't support this property (DS-4146)
-        field-sizing: content;
+        @include input.kbq-reset-input();
 
-        border: unset;
-        background: unset;
-        outline: unset;
-        padding: unset;
+        min-width: var(--kbq-size-xs);
+        max-width: 100%;
+
+        &.kbq-input {
+            min-height: unset !important;
+            border-radius: unset !important;
+            padding: unset !important;
+        }
     }
 
     .kbq-tag-edit-submit {
