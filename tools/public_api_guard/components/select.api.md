@@ -181,8 +181,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_minOptionsThreshold: unknown;
-    // (undocumented)
     static ngAcceptInputType_multiline: unknown;
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;

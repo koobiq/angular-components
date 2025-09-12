@@ -132,8 +132,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_minOptionsThreshold: unknown;
-    // (undocumented)
     static ngAcceptInputType_multiline: unknown;
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;

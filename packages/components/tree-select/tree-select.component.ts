@@ -526,7 +526,7 @@ export class KbqTreeSelect
      * Automatically enables search hiding if value provided, even if `defaultOptions.minOptionsThreshold` is provided.
      * @default 10 or undefined
      */
-    @Input({ transform: numberAttribute }) minOptionsThreshold =
+    @Input() minOptionsThreshold =
         this.defaultOptions?.minOptionsThreshold === 'auto'
             ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
             : this.defaultOptions?.minOptionsThreshold;
