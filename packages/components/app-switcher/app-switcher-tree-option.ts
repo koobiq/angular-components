@@ -19,7 +19,9 @@ import { KbqTreeBase } from '@koobiq/components/tree';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
-        { provide: KbqTreeNode, useExisting: KbqAppSwitcherTreeOption }]
+        { provide: KbqTreeNode, useExisting: KbqAppSwitcherTreeOption },
+        { provide: KbqTreeOption, useExisting: KbqAppSwitcherTreeOption }
+    ]
 })
 export class KbqAppSwitcherTreeOption extends KbqTreeOption {}
 
@@ -78,7 +80,7 @@ export class KbqAppSwitcherTreeNodePadding implements AfterViewInit {
                 ? this.tree.treeControl.getLevel(this.treeNode.data)
                 : 0;
 
-        const className = nodeLevel > 0 ? 'kbq-app-switcher-tree-option_nested' : 'kbq-app-switcher-tree-option_root'
+        const className = nodeLevel > 0 ? 'kbq-app-switcher-tree-option_nested' : 'kbq-app-switcher-tree-option_root';
 
         this.renderer.addClass(this.nativeElement, className);
     }
