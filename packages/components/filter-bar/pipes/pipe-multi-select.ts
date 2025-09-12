@@ -20,7 +20,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge, Observable, of } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
@@ -122,9 +122,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** @docs-private */
     ngOnInit(): void {
-        this.filteredOptions = merge(
-            of(this.values),
-            this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
+        this.filteredOptions = merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
+            map(this.getFilteredOptions),
+            takeUntilDestroyed(this.destroyRef)
         );
     }
 
@@ -208,9 +208,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.select.open();
     }
 
-    private getFilteredOptions(value: string): KbqSelectValue[] {
-        return value
-            ? this.values.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+    private getFilteredOptions = (): KbqSelectValue[] => {
+        return this.searchControl.value
+            ? this.values.filter((item) => item.name.toLowerCase().includes(this.searchControl.value.toLowerCase()))
             : this.values;
-    }
+    };
 }
