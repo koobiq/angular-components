@@ -8,7 +8,7 @@ import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
-import { docsData } from './data/colors';
+import { docsData } from './data/shadows';
 
 interface SectionInfo {
     type: string;
@@ -23,7 +23,7 @@ interface DocsColorsInfo {
 
 @Component({
     standalone: true,
-    selector: 'docs-design-tokens-colors',
+    selector: 'docs-design-tokens-shadows',
     template: `
         <docs-component-viewer-wrapper>
             <div article>
@@ -40,13 +40,6 @@ interface DocsColorsInfo {
                 </div>
             }
             <ng-container *ngTemplateOutlet="tokensTable; context: { $implicit: section }" />
-            @if (section.sections && section.sections.length > 0) {
-                @for (innerSection of section.sections; track innerSection.type) {
-                    <ng-container
-                        *ngTemplateOutlet="sectionTemplate; context: { $implicit: innerSection, level: level + 1 }"
-                    />
-                }
-            }
         </ng-template>
 
         <ng-template #tokensTable let-section>
@@ -64,8 +57,8 @@ interface DocsColorsInfo {
                             <tr>
                                 <td align="left">
                                     <div
-                                        class="kbq-design-token-example__dimensions"
-                                        [style.background-color]="'var(' + token.token + ')'"
+                                        class="kbq-design-token-example__shadows"
+                                        [style.box-shadow]="'var(' + token.token + ')'"
                                     ></div>
                                 </td>
                                 <td align="left">
@@ -91,7 +84,7 @@ interface DocsColorsInfo {
         </ng-template>
     `,
     host: {
-        class: 'docs-tokens-colors kbq-markdown'
+        class: 'docs-tokens-shadows kbq-markdown'
     },
     imports: [
         KbqDividerModule,
@@ -104,7 +97,7 @@ interface DocsColorsInfo {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsTokensColors implements AfterViewInit {
+export class DocsTokensShadows implements AfterViewInit {
     protected colors: DocsColorsInfo[];
 
     protected readonly themeService = inject(ThemeService);
@@ -127,31 +120,11 @@ export class DocsTokensColors implements AfterViewInit {
 
         const getTokenValue = (token: string) => styles.getPropertyValue(token);
 
-        this.colors = docsData.map((section) => {
-            if (section.tokens && section.tokens.length > 0) {
-                return {
-                    type: section.type,
-                    tokens: section.tokens.map((token) => ({ token, value: getTokenValue(token) }))
-                };
+        this.colors = [
+            {
+                type: 'No-header',
+                tokens: docsData.map((token) => ({ token, value: getTokenValue(token) }))
             }
-
-            if (section.sections && section.sections.length > 0) {
-                return {
-                    type: section.type,
-                    sections: section.sections.map((innerSection) => {
-                        if (innerSection.tokens && innerSection.tokens.length > 0) {
-                            return {
-                                type: innerSection.type,
-                                tokens: innerSection.tokens.map((token) => ({ token, value: getTokenValue(token) }))
-                            };
-                        }
-
-                        return { type: section.type, tokens: [] };
-                    })
-                };
-            }
-
-            return { type: section.type };
-        });
+        ];
     }
 }
