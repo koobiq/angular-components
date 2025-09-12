@@ -56,7 +56,7 @@ import { map, startWith } from 'rxjs/operators';
     `
 })
 export class SelectSearchExample {
-    readonly options = Array.from({ length: 100 }).map((_, i) => `Option #${i}`);
+    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
     readonly searchControl = new FormControl();
     readonly filteredOptions = this.searchControl.valueChanges.pipe(
         startWith(''),

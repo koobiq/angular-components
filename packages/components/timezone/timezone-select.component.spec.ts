@@ -122,7 +122,7 @@ class BasicTimezoneSelect {
     selector: 'select-with-search',
     template: `
         <kbq-form-field>
-            <kbq-timezone-select [(value)]="selected">
+            <kbq-timezone-select [minOptionsThreshold]="minOptionsThreshold" [(value)]="selected">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
                     <input kbqInput type="text" [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" />
@@ -144,6 +144,7 @@ class BasicTimezoneSelect {
 })
 class TimezoneSelectWithSearch implements OnInit {
     @ViewChild(KbqTimezoneSelect, { static: true }) select: KbqTimezoneSelect;
+    minOptionsThreshold: number;
 
     selected = 'Europe/city17';
 
@@ -664,6 +665,36 @@ describe('KbqTimezoneSelect', () => {
 
             expect(selectInstance.panelOpen).toBe(false);
         });
+
+        it('should hide search if options count less than threshold', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            componentInstance.minOptionsThreshold = 10;
+            fixture.detectChanges();
+
+            tick();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('input'))).toBeFalsy();
+        }));
+
+        it('should show search if options count more than threshold', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            componentInstance.minOptionsThreshold = 2;
+            fixture.detectChanges();
+
+            tick();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        }));
     });
 
     describe('option tooltip', () => {
