@@ -383,7 +383,7 @@ class ManySelects {
     selector: 'select-with-search',
     template: `
         <kbq-form-field>
-            <kbq-tree-select [formControl]="control">
+            <kbq-tree-select [formControl]="control" [minOptionsThreshold]="minOptionsThreshold">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
@@ -403,6 +403,7 @@ class ManySelects {
 })
 class SelectWithSearch implements OnInit {
     control = new UntypedFormControl();
+    minOptionsThreshold: number;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -3094,6 +3095,46 @@ describe(KbqTreeSelect.name, () => {
 
             expect(selectInstance.panelOpen).toBe(false);
         });
+
+        it('should hide search if options count less than threshold', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            componentInstance.minOptionsThreshold = 4;
+            componentInstance.dataSource.data = buildFileTree(
+                {
+                    Documents: {
+                        ProjectPlan: 'docx',
+                        MeetingNotes: 'txt'
+                    }
+                },
+                0
+            );
+            fixture.detectChanges();
+            console.log(componentInstance.select.options);
+
+            tick();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('input'))).toBeFalsy();
+        }));
+
+        it('should show search if options count more than threshold', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            componentInstance.minOptionsThreshold = 2;
+            fixture.detectChanges();
+
+            tick();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        }));
     });
 
     describe('with multiple kbq-select elements in one view', () => {
