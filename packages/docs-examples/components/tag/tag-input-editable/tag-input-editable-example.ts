@@ -13,7 +13,6 @@ import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from 
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
@@ -124,12 +123,10 @@ export class TagInputEditableExample {
         this.changeDetectorRef.detectChanges();
     }
 
-    protected create({ input, value }: KbqTagInputEvent): void {
-        const _value = (value || '').trim();
-
-        if (_value) {
+    protected create({ input, value = '' }: KbqTagInputEvent): void {
+        if (value) {
             this.tags.update((tags) => {
-                tags.push(_value);
+                tags.push(value);
 
                 return tags;
             });

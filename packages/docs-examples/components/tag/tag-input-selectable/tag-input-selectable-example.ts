@@ -45,12 +45,10 @@ export class TagInputSelectableExample {
         console.log('Tag selection was changed :', event);
     }
 
-    protected create({ input, value }: KbqTagInputEvent): void {
-        const _value = (value || '').trim();
-
-        if (_value) {
+    protected create({ input, value = '' }: KbqTagInputEvent): void {
+        if (value) {
             this.tags.update((tags) => {
-                tags.push(_value);
+                tags.push(value);
 
                 return tags;
             });
