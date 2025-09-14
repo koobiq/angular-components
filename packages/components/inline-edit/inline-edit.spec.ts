@@ -531,7 +531,7 @@ export class TestWithTextareaControl extends BaseTestComponent {
         this.currentMode.set($event);
     }
 
-    cancel() {}
+    cancel = jest.fn();
 }
 
 @Component({
