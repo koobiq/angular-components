@@ -25,6 +25,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
     isNull,
     KBQ_TITLE_TEXT_REF,
@@ -501,9 +502,7 @@ export class KbqTag
     handleMousedown(event: MouseEvent): void {
         if (this.disabled || (!this.selectable && !this.editable) || this.editing()) return event.preventDefault();
 
-        const hasMetaKey = event.metaKey || event.ctrlKey || event.shiftKey;
-
-        if (hasMetaKey && this.selectable) this.toggleSelected(true);
+        if (hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey') && this.selectable) this.toggleSelected(true);
 
         event.stopPropagation();
     }

@@ -1,7 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { A, BACKSPACE, END, HOME } from '@angular/cdk/keycodes';
+import { BACKSPACE, END, HOME } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -27,6 +27,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { isSelectAll } from '@koobiq/cdk/keycodes';
 import { CanUpdateErrorState, ErrorStateMatcher, isNull } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
@@ -553,14 +554,13 @@ export class KbqTagList
 
         if (this.disabled || isNull(target)) return;
 
-        const hasMetaKey = event.metaKey || event.ctrlKey;
-        const allowSelectAll = hasMetaKey && this.multiple && this.selectable;
+        const _isSelectAll = this.multiple && this.selectable && isSelectAll(event);
 
         if (this.isInputEmpty(target)) {
             if (event.keyCode === BACKSPACE) {
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
-            } else if (event.keyCode === A && allowSelectAll) {
+            } else if (_isSelectAll) {
                 this.selectAll();
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
@@ -572,7 +572,7 @@ export class KbqTagList
             } else if (event.keyCode === END) {
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
-            } else if (event.keyCode === A && allowSelectAll) {
+            } else if (_isSelectAll) {
                 this.selectAll();
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
