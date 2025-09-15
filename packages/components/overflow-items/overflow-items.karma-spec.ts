@@ -205,7 +205,7 @@ describe(KbqOverflowItemsModule.name, () => {
         componentInstance.reverseOverflowOrder.set(true);
         await fixture.whenStable();
 
-        expect(getOverflowHiddenItems(debugElement).length).toBe(10);
+        expect(getOverflowVisibleItems(debugElement).at(-1)!.nativeElement.textContent.trim()).toBe('Item19');
     });
 
     it('should render result', () => {
@@ -241,7 +241,7 @@ describe(KbqOverflowItemsModule.name, () => {
         componentInstance.containerWidth.set(1000);
         await fixture.whenStable();
 
-        expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
+        expect(isOverflowItemsResultVisible(debugElement)).toBeFalse();
     });
 
     it('should display result score', async () => {
