@@ -23,10 +23,10 @@ Creating a duplicate of a selected tag is not allowed: the system will show the 
 Tags can be selected in several ways:
 
 - Click on a tag while holding `Ctrl` or `Shift`.
-- Press `Ctrl+A` key combination.
+- Press `Ctrl+A` key combination (only in `multiple` mode, disabled by default).
 - Programmatic selection through the component [API](/en/components/tag/api).
 
-Selection option is configured using the `selectable` attribute (enabled by default) and the `multiple` attribute (disabled by default).
+The selection option is configured using the `selectable` attribute (enabled by default).
 
 ### Tag removal
 
@@ -36,4 +36,9 @@ Tags can be removed in several ways:
 - Press `Delete` or `Backspace` key.
 - Programmatic removal through the component [API](/en/components/tag/api).
 
-Removal option is configured using the `removable` attribute (enabled by default).
+The removal option is configured using the `removable` attribute (enabled by default).
+
+Note that:
+
+- In normal mode, the tag that is focused or selected is removed.
+- In `multiple` mode (multiple selection, disabled by default) only pre-selected tags are removed.
