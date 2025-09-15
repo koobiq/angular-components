@@ -122,7 +122,7 @@ class BasicTimezoneSelect {
     selector: 'select-with-search',
     template: `
         <kbq-form-field>
-            <kbq-timezone-select [minOptionsThreshold]="minOptionsThreshold" [(value)]="selected">
+            <kbq-timezone-select [searchMinOptionsThreshold]="minOptionsThreshold" [(value)]="selected">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
                     <input kbqInput type="text" [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" />

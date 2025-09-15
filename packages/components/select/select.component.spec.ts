@@ -396,7 +396,7 @@ class SelectWithChangeEvent {
     selector: 'select-with-search',
     template: `
         <kbq-form-field>
-            <kbq-select #select [minOptionsThreshold]="minOptionsThreshold" [(value)]="singleSelectedWithSearch">
+            <kbq-select #select [searchMinOptionsThreshold]="minOptionsThreshold" [(value)]="singleSelectedWithSearch">
                 <kbq-form-field kbqSelectSearch>
                     <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>

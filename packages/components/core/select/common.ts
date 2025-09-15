@@ -3,7 +3,7 @@ import { AfterContentInit, Directive, EventEmitter, Inject, OnDestroy, Optional 
 import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
-import { SELECT_PANEL_VIEWPORT_PADDING } from './constants';
+import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
     selector: 'kbq-select-trigger, [kbq-select-trigger]',
@@ -115,6 +115,7 @@ export class KbqSelectSearchEmptyResult {}
  * This class provides base functionality for handling the overlay positioning.
  * @docs-private
  */
+@Directive()
 export abstract class KbqAbstractSelect {
     protected overlayDir: CdkConnectedOverlay;
     protected triggerRect: DOMRect;
@@ -181,5 +182,9 @@ export abstract class KbqAbstractSelect {
         this.overlayDir.offsetX = 0;
         this.overlayDir.overlayRef.overlayElement.style.maxWidth = 'unset';
         this.overlayDir.overlayRef.updatePosition();
+    }
+
+    protected resolveSearchMinOptionsThreshold(value?: 'auto' | number) {
+        return value === 'auto' ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD : value;
     }
 }

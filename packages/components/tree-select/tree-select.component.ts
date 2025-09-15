@@ -59,7 +59,6 @@ import {
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
@@ -107,7 +106,7 @@ export type KbqTreeSelectOptions = Partial<{
      * - number - will enables search hiding and uses value as min.
      * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
      */
-    minOptionsThreshold: 'auto' | number;
+    searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-tree-select`. */
@@ -523,13 +522,20 @@ export class KbqTreeSelect
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
-     * Automatically enables search hiding if value provided, even if `defaultOptions.minOptionsThreshold` is provided.
-     * @default 10 or undefined
+     * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
+     * @default undefined
      */
-    @Input() minOptionsThreshold =
-        this.defaultOptions?.minOptionsThreshold === 'auto'
-            ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
-            : this.defaultOptions?.minOptionsThreshold;
+    @Input() set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
+        this._searchMinOptionsThreshold =
+            this.resolveSearchMinOptionsThreshold(value) ??
+            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
+    }
+
+    get searchMinOptionsThreshold(): number | undefined {
+        return this._searchMinOptionsThreshold;
+    }
+
+    private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold();
 
     get panelOpen(): boolean {
         return this._panelOpen;
@@ -1031,7 +1037,7 @@ export class KbqTreeSelect
 
     /** @docs-private */
     protected shouldShowSearch(): boolean {
-        return isUndefined(this.minOptionsThreshold) || this.options.length >= this.minOptionsThreshold;
+        return isUndefined(this.searchMinOptionsThreshold) || this.options.length >= this.searchMinOptionsThreshold;
     }
 
     private updateLocaleParams = () => {

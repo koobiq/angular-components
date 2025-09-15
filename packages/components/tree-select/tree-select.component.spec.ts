@@ -383,7 +383,7 @@ class ManySelects {
     selector: 'select-with-search',
     template: `
         <kbq-form-field>
-            <kbq-tree-select [formControl]="control" [minOptionsThreshold]="minOptionsThreshold">
+            <kbq-tree-select [formControl]="control" [searchMinOptionsThreshold]="searchMinOptionsThreshold">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
@@ -403,7 +403,7 @@ class ManySelects {
 })
 class SelectWithSearch implements OnInit {
     control = new UntypedFormControl();
-    minOptionsThreshold: number;
+    searchMinOptionsThreshold: number;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -3099,7 +3099,7 @@ describe(KbqTreeSelect.name, () => {
         it('should hide search if options count less than threshold', fakeAsync(() => {
             const { componentInstance } = fixture;
 
-            componentInstance.minOptionsThreshold = 4;
+            componentInstance.searchMinOptionsThreshold = 4;
             componentInstance.dataSource.data = buildFileTree(
                 {
                     Documents: {
@@ -3124,7 +3124,7 @@ describe(KbqTreeSelect.name, () => {
         it('should show search if options count more than threshold', fakeAsync(() => {
             const { componentInstance } = fixture;
 
-            componentInstance.minOptionsThreshold = 2;
+            componentInstance.searchMinOptionsThreshold = 2;
             fixture.detectChanges();
 
             tick();
