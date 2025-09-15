@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { KbqTimeRange } from '@koobiq/components/time-range';
 
 /**
  * @title Time range overview
@@ -7,9 +9,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'time-range-overview-example',
-    imports: [],
+    imports: [
+        KbqTimeRange,
+        KbqLuxonDateModule
+    ],
     template: `
-        hello world
+        <kbq-time-range />
     `
 })
 export class TimeRangeOverviewExample {}
