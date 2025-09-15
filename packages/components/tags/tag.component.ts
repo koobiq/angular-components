@@ -387,9 +387,9 @@ export class KbqTag
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
-            return isNull(focusOrigin) ? this.blur() : this.focus();
-        });
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .subscribe((focusOrigin) => (isNull(focusOrigin) ? this.blur() : this.focus()));
     }
 
     ngOnDestroy(): void {
