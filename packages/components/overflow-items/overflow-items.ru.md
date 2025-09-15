@@ -15,6 +15,12 @@
 
 <!-- example(overflow-items-with-order) -->
 
+### Выравнивание элементов
+
+Выравнивание элементов внутри контейнера задается с помощью CSS-свойства [`justify-content`](https://developer.mozilla.org/ru/docs/Web/CSS/justify-content).
+
+<!-- example(overflow-items-justify-content) -->
+
 ### Задержка при скрытии/отображении
 
 Задержка скрытия/отображения элементов задается с помощью атрибута `debounceTime`. Включение этой опции позитивно

@@ -9,6 +9,9 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
         <overflow-items-overview-example />
         <hr />
         <overflow-items-with-order-example />
+        <hr />
+        <overflow-items-justify-content-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

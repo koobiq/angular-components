@@ -6,7 +6,6 @@ import {
     contentChild,
     contentChildren,
     Directive,
-    ElementRef,
     inject,
     input,
     numberAttribute,
@@ -15,7 +14,7 @@ import {
     signal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectElementRef } from '@koobiq/components/core';
 import { debounceTime, merge, skip, switchMap } from 'rxjs';
 
 /**
@@ -37,7 +36,7 @@ export class ElementVisibilityManager {
     /**
      * @docs-private
      */
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    readonly elementRef = kbqInjectElementRef();
 
     /**
      * Whether the element is hidden.
@@ -128,7 +127,7 @@ export class KbqOverflowItem extends ElementVisibilityManager {
     host: { class: 'kbq-overflow-items' }
 })
 export class KbqOverflowItems {
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly elementRef = kbqInjectElementRef();
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
@@ -274,11 +273,9 @@ export class KbqOverflowItems {
         items: ReadonlyArray<KbqOverflowItem>,
         result: KbqOverflowItemsResult | undefined
     ): boolean {
-        const containerStyle = this.window.getComputedStyle(container);
+        const { paddingLeft, paddingRight } = this.window.getComputedStyle(container);
         const containerWidthWithoutPaddings =
-            container.clientWidth -
-            (parseFloat(containerStyle.paddingLeft) || 0) -
-            (parseFloat(containerStyle.paddingRight) || 0);
+            container.clientWidth - (parseFloat(paddingLeft) || 0) - (parseFloat(paddingRight) || 0);
         const itemsWidth = items.reduce(
             (width, item) =>
                 width + (item.hidden() ? 0 : this.getElementWidthWithMargins(item.elementRef.nativeElement)),
@@ -287,15 +284,13 @@ export class KbqOverflowItems {
         const resultWidth =
             !result || result?.hidden() ? 0 : this.getElementWidthWithMargins(result.elementRef.nativeElement);
 
-        return itemsWidth + resultWidth >= containerWidthWithoutPaddings;
+        return itemsWidth + resultWidth > containerWidthWithoutPaddings;
     }
 
     private getElementWidthWithMargins(element: HTMLElement): number {
-        const style = this.window.getComputedStyle(element);
-        const marginLeft = parseFloat(style.marginLeft) || 0;
-        const marginRight = parseFloat(style.marginRight) || 0;
+        const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
-        return element.offsetWidth + marginLeft + marginRight;
+        return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
     }
 
     /**
