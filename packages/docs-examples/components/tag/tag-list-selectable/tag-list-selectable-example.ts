@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
@@ -8,7 +7,7 @@ import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
 @Component({
     standalone: true,
     selector: 'tag-list-selectable-example',
-    imports: [KbqTagsModule, KbqIconModule],
+    imports: [KbqTagsModule],
     template: `
         <kbq-tag-list selectable multiple>
             @for (tag of tags(); track $index) {

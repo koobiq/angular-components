@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagInputEvent, KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
@@ -9,7 +8,7 @@ import { KbqTagInputEvent, KbqTagSelectionChange, KbqTagsModule } from '@koobiq/
 @Component({
     standalone: true,
     selector: 'tag-input-selectable-example',
-    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule],
+    imports: [KbqTagsModule, KbqFormFieldModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" selectable multiple>
