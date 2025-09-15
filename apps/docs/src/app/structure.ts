@@ -66,6 +66,7 @@ export enum DocsStructureItemId {
     TagList = 'tag-list',
     Textarea = 'textarea',
     Timepicker = 'timepicker',
+    TimeRange = 'time-range',
     Timezone = 'timezone',
     Title = 'title',
     Toast = 'toast',
@@ -852,6 +853,17 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'timepicker',
                     hasApi: true,
                     apiId: 'timepicker',
+                    hasExamples: false
+                },
+
+                {
+                    id: DocsStructureItemId.TimeRange,
+                    name: {
+                        ru: 'Time range',
+                        en: 'Time range'
+                    },
+                    hasApi: true,
+                    apiId: 'time-range',
                     hasExamples: false
                 },
                 {
