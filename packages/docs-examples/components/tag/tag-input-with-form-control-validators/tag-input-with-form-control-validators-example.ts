@@ -38,7 +38,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" [formControl]="formControl">
-                @for (tag of formControl.value; track tag) {
+                @for (tag of formControl.value; track $index) {
                     <kbq-tag [value]="tag" (removed)="removeTag(tag)">
                         {{ tag }}
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>

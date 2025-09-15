@@ -15,7 +15,7 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
     imports: [KbqTagsModule, KbqIconModule, JsonPipe],
     template: `
         <kbq-tag-list removable multiple>
-            @for (tag of tags(); track tag) {
+            @for (tag of tags(); track $index) {
                 <kbq-tag [value]="tag" (removed)="remove($event)">
                     {{ tag }}
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>

@@ -26,7 +26,7 @@ import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsMo
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" editable>
-                @for (tag of tags(); track tag) {
+                @for (tag of tags(); track $index) {
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                         {{ tag }}
                         <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />

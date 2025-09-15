@@ -17,7 +17,7 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" removable multiple>
-                @for (tag of tags(); track tag) {
+                @for (tag of tags(); track $index) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
                         {{ tag }}
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>

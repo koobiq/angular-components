@@ -70,7 +70,7 @@ const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
         <!-- KbqTagList does not support dynamic multiple attribute changes -->
         @if (multiple()) {
             <kbq-tag-list multiple [selectable]="selectable()" [removable]="removable()">
-                @for (tag of tags(); track tag) {
+                @for (tag of tags(); track $index) {
                     <kbq-tag
                         [selected]="tag.selected"
                         [attr.id]="tag.id"
@@ -84,7 +84,7 @@ const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
             </kbq-tag-list>
         } @else {
             <kbq-tag-list [selectable]="selectable()" [removable]="removable()">
-                @for (tag of tags(); track tag) {
+                @for (tag of tags(); track $index) {
                     <kbq-tag
                         [selected]="tag.selected"
                         [attr.id]="tag.id"
