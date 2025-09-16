@@ -36,7 +36,8 @@ export enum PopUpTriggers {
     Click = 'click',
     Focus = 'focus',
     Hover = 'hover',
-    Keydown = 'keydown'
+    Keydown = 'keydown',
+    Program = 'program'
 }
 
 export enum PopUpSizes {

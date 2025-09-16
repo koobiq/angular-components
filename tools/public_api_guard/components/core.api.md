@@ -2937,7 +2937,9 @@ export enum PopUpTriggers {
     // (undocumented)
     Hover = "hover",
     // (undocumented)
-    Keydown = "keydown"
+    Keydown = "keydown",
+    // (undocumented)
+    Program = "program"
 }
 
 // @public (undocumented)
