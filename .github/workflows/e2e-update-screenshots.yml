@@ -1,6 +1,7 @@
 name: E2E update screenshots
 
 on:
+  # Manually trigger the workflow.
   workflow_dispatch:
 
 permissions:
