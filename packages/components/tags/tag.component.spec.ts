@@ -621,6 +621,8 @@ describe(KbqTag.name, () => {
         const { debugElement } = createComponent(TestEditableTag);
         const tag = getTagElement(debugElement);
 
+        expect(isTagEditing(debugElement)).toBeFalsy();
+
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
         expect(isTagEditing(debugElement)).toBeTruthy();

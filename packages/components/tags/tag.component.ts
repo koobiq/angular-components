@@ -586,7 +586,8 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'cancel', reason });
-        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
+
+        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
     }
 
     /** @docs-private */
@@ -595,7 +596,8 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });
-        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
+
+        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
     }
 
     private dispatchSelectionChange(isUserInput = false) {

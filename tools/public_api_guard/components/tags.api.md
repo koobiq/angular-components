@@ -301,7 +301,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     set required(value: boolean);
     selectable: boolean;
     get selected(): KbqTag[] | KbqTag;
-    // (undocumented)
     selectionModel: SelectionModel<KbqTag>;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
