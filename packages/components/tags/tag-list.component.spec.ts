@@ -1467,12 +1467,8 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.removedChange).toHaveBeenCalledTimes(0);
     });
 
-    it('should remove focused tag when not multiple', () => {
-        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
-        const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(false);
-        fixture.detectChanges();
+    it('should remove focused tag when not selected tags', () => {
+        const { debugElement, componentInstance } = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
 
         getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
 
@@ -1481,15 +1477,7 @@ describe(KbqTagList.name, () => {
         );
     });
 
-    it('should NOT remove focused tag when multiple', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
-
-        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
-
-        expect(componentInstance.removedChange).toHaveBeenCalledTimes(0);
-    });
-
-    it('should ignore focused and remove only selected when multiple', () => {
+    it('should NOT remove focused tag when has selected tags', () => {
         const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1501,8 +1489,6 @@ describe(KbqTagList.name, () => {
             })
         );
         fixture.detectChanges();
-
-        expect(getSelectedTags(debugElement).length).toBe(1);
 
         getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
 

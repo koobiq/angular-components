@@ -14,6 +14,11 @@ The selection option is configured using the `selectable` attribute (enabled by 
 
 ### Tag removal
 
+Tag removal order:
+
+- If there are selected tags, all of them will be removed.
+- If there are no selected tags, the focused tag will be removed.
+
 Tags can be removed in several ways:
 
 - Click on the remove icon (`kbqTagRemove` directive) inside the tag.
@@ -21,11 +26,6 @@ Tags can be removed in several ways:
 - Programmatic removal through the component [API](/en/components/tag/api).
 
 The removal option is configured using the `removable` attribute (enabled by default).
-
-Note that:
-
-- In normal mode, the tag that is focused or selected is removed.
-- In `multiple` mode (multiple selection, disabled by default) only pre-selected tags are removed.
 
 <!-- example(tag-input-removable) -->
 

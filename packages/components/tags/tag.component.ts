@@ -515,7 +515,7 @@ export class KbqTag
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE:
-                this.tagList?.multiple ? this.tagList.removeSelected() : this.remove();
+                this.tagList?.selectionModel.selected.length ? this.tagList.removeSelected() : this.remove();
 
                 // Always prevent so page navigation does not occur
                 event.preventDefault();

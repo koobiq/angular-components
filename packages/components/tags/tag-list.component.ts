@@ -298,6 +298,9 @@ export class KbqTagList
 
     keyManager: FocusKeyManager<KbqTag>;
 
+    /**
+     * @docs-private
+     */
     selectionModel: SelectionModel<KbqTag>;
 
     tagChanges = new EventEmitter<any>();
@@ -698,7 +701,7 @@ export class KbqTagList
      * @docs-private
      */
     removeSelected(): void {
-        Array.isArray(this.selected) ? this.selected.forEach((tag) => tag.remove()) : this.selected.remove();
+        this.selectionModel.selected.forEach((tag) => tag.remove());
     }
 
     /**
