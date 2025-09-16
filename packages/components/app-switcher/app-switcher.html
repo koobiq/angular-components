@@ -37,49 +37,45 @@
             <div class="kbq-app-switcher-group-header__text">Другие площадки</div>
         </div>
 
-        <kbq-dropdown #appDropdownWithNested="kbqDropdown">
-            <div kbqDropdownStaticContent>
-                <button kbq-dropdown-item>Search settings</button>
-
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Headers & footers</button>
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Page numbers</button>
-
-                <kbq-divider />
-
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Table</button>
-
-                <kbq-divider />
-
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Image</button>
-
-                <kbq-divider />
-
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Clear formatting</button>
-
-                <kbq-divider />
-
-                <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Border & lines</button>
+        <kbq-dropdown #otherSites="kbqDropdown">
+            <div kbqDropdownStaticContent class="kbq-app-switcher-sites" (mouseleave)="otherSites.close()">
+                @for (site of sites; track site) {
+                    <a href=""
+                        kbq-dropdown-item
+                        [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
+                        [class.kbq-app-switcher__sites_main]="site.main"
+                        (mouseenter)="activeSite = site"
+                    >
+                        {{ site.name }}
+                        @if (site.main) {
+                            <kbq-badge [compact]="true">Главная</kbq-badge>
+                        }
+                    </a>
+                }
             </div>
         </kbq-dropdown>
     </div>
 }
 
-<kbq-dropdown #appDropdownNested="kbqDropdown">
-    <button kbq-dropdown-item>Border and shading</button>
+<kbq-dropdown #dropdownWithSelectedSite="kbqDropdown" [class]="'kbq-app-switcher-sites'">
+    @for (app of activeSite?.apps; track app) {
+        @if (app.apps) {
+            <a
+                href=""
+                kbq-dropdown-item
+                [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
+                (mouseenter)="activeApp = app"
+            >
+                {{ app.name }}
+            </a>
+        } @else {
+            <a href="" kbq-dropdown-item>{{ app.name }}</a>
+        }
+    }
+</kbq-dropdown>
 
-    <kbq-divider />
-
-    <button kbq-dropdown-item>Normal text</button>
-    <button kbq-dropdown-item>Title</button>
-    <button kbq-dropdown-item>Subtitle</button>
-    <button kbq-dropdown-item>Heading 1</button>
-    <button kbq-dropdown-item>Heading 2</button>
-    <button kbq-dropdown-item>Heading 3</button>
-    <button kbq-dropdown-item>Heading 4</button>
-    <button kbq-dropdown-item>Heading 5</button>
-    <button kbq-dropdown-item>Heading 6</button>
-
-    <kbq-divider />
-
-    <button kbq-dropdown-item>Options</button>
+<kbq-dropdown #dropdownWithGroupedApps="kbqDropdown" [class]="'kbq-app-switcher-sites'">
+    @for (app of activeApp?.apps; track app) {
+        <a href="" kbq-dropdown-item>{{ app.name }}</a>
+    }
 </kbq-dropdown>
