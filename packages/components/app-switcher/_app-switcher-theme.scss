@@ -8,6 +8,17 @@
             color: var(--kbq-foreground-contrast-secondary);
         }
     }
+
+    .kbq-app-switcher-sites {
+        & .kbq-dropdown-item {
+            text-decoration: none;
+
+            & .kbq-pressed {
+                background: var(--kbq-states-background-transparent-active)
+
+            }
+        }
+    }
 }
 
 @mixin kbq-app-switcher-typography() {

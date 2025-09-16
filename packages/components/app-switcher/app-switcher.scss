@@ -29,5 +29,24 @@
     justify-content: space-between;
 }
 
+.kbq-app-switcher__sites-container {
+}
+
+.kbq-app-switcher-sites {
+    & .kbq-app-switcher__sites_main {
+        & .kbq-dropdown-item__text {
+            justify-content: space-between;
+            display: flex;
+            flex-direction: row;
+        }
+
+        & .kbq-badge {
+            align-self: center;
+        }
+    }
+
+}
+
+
 @include kbq-app-switcher-theme();
 @include kbq-app-switcher-typography();
