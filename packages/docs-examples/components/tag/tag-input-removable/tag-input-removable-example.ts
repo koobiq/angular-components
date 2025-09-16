@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -12,7 +11,7 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
 @Component({
     standalone: true,
     selector: 'tag-input-removable-example',
-    imports: [KbqTagsModule, KbqIconModule, JsonPipe, KbqFormFieldModule, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
@@ -35,10 +34,6 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
                 <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
             </kbq-tag-list>
         </kbq-form-field>
-
-        <small>
-            <code>{{ tags() | json }}</code>
-        </small>
     `,
     styles: `
         :host {
@@ -48,10 +43,6 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
             gap: var(--kbq-size-m);
             min-height: var(--kbq-size-7xl);
             margin: var(--kbq-size-5xl);
-        }
-
-        small {
-            color: var(--kbq-foreground-contrast-secondary);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

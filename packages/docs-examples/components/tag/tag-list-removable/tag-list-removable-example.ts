@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -12,7 +11,7 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
 @Component({
     standalone: true,
     selector: 'tag-list-removable-example',
-    imports: [KbqTagsModule, KbqIconModule, JsonPipe],
+    imports: [KbqTagsModule, KbqIconModule],
     template: `
         <kbq-tag-list removable multiple>
             @for (tag of tags(); track $index) {
@@ -24,10 +23,6 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
                 <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="colors.ContrastFade" (click)="restart()"></i>
             }
         </kbq-tag-list>
-
-        <small>
-            <code>{{ tags() | json }}</code>
-        </small>
     `,
     styles: `
         :host {
@@ -37,10 +32,6 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
             gap: var(--kbq-size-m);
             min-height: var(--kbq-size-7xl);
             margin: var(--kbq-size-5xl);
-        }
-
-        small {
-            color: var(--kbq-foreground-contrast-secondary);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
