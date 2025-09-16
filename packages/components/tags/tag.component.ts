@@ -394,6 +394,7 @@ export class KbqTag
     }
 
     ngOnDestroy(): void {
+        this.cancelEditing('destroy');
         this.focusMonitor.stopMonitoring(this.elementRef);
         this.destroyed.emit({ tag: this });
     }
