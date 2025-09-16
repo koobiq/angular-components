@@ -161,6 +161,9 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
 
     isTrapFocus: boolean = false;
 
+    activeSite;
+    activeApp;
+
     @ViewChild('appSwitcherContent') appSwitcherContent: ElementRef<HTMLDivElement>;
     @ViewChild('appSwitcher') elementRef: ElementRef;
     @ViewChild(CdkTrapFocus) cdkTrapFocus: CdkTrapFocus;
@@ -213,6 +216,254 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     modelValue: any = '';
+
+    sites = [
+        {
+            name: 'ЦФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall'
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'СЗФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'ЮФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall'
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'СКФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ],
+            main: true
+        },
+        {
+            name: 'ПФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall'
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'УФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'СФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall'
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'ДФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        }
+    ];
 
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;
