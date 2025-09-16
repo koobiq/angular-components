@@ -692,9 +692,7 @@ export class KbqTagList
     }
 
     private selectAll(): void {
-        this.tags.forEach((tag) => {
-            if (tag.selectable) tag.select();
-        });
+        this.tags.forEach((tag) => tag.select());
     }
 
     /**

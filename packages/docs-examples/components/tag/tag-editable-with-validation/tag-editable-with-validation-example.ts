@@ -27,7 +27,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
             {{ tagValue() }}
             <input
                 kbqTagEditInput
-                kbqTrigger="manual"
+                kbqTrigger="none"
                 kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ length }})"
                 [kbqTooltipColor]="color.Error"
                 [(ngModel)]="tagModel"

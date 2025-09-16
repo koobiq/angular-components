@@ -438,7 +438,7 @@ export class KbqTag
     }
 
     select(): void {
-        if (this.disabled) return;
+        if (this.disabled || !this.selectable) return;
 
         if (!this._selected) {
             this._selected = true;
@@ -447,7 +447,7 @@ export class KbqTag
     }
 
     deselect(): void {
-        if (this.disabled) return;
+        if (this.disabled || !this.selectable) return;
 
         if (this._selected) {
             this._selected = false;
@@ -456,7 +456,7 @@ export class KbqTag
     }
 
     selectViaInteraction(): void {
-        if (this.disabled) return;
+        if (this.disabled || !this.selectable) return;
 
         if (!this._selected) {
             this._selected = true;
@@ -465,7 +465,7 @@ export class KbqTag
     }
 
     toggleSelected(isUserInput: boolean = false): boolean {
-        if (this.disabled) return this.selected;
+        if (this.disabled || !this.selectable) return this.selected;
 
         this._selected = !this.selected;
         this.dispatchSelectionChange(isUserInput);
