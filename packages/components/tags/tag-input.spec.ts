@@ -4,7 +4,7 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
+import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
@@ -125,6 +125,25 @@ describe('KbqTagInput', () => {
 
             tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
             expect(addSpyFn).not.toHaveBeenCalled();
+        });
+
+        it('divide string by kbqTagInputSeparatorKeyCodes and add 4 item', () => {
+            const addSpyFn = jest.spyOn(testTagInput, 'add');
+
+            testTagInput.addOnPaste = true;
+            tagInputDirective.separatorKeyCodes = [COMMA, SEMICOLON, SPACE, ENTER];
+            fixture.detectChanges();
+
+            const clipboardEventData = {
+                clipboardData: {
+                    getData: (_) => '36.185.103.120 16.229.226.236,160.249.196.235;144.132.144.37'
+                },
+                preventDefault: () => {},
+                stopPropagation: () => {}
+            };
+
+            tagInputDirective.onPaste(clipboardEventData as ClipboardEvent);
+            expect(addSpyFn).toHaveBeenCalledTimes(4);
         });
     });
 

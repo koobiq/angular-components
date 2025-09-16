@@ -258,15 +258,14 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             return;
         }
 
-        const items: string[] = [];
+        const separatorsInString = this.getSeparatorsForString(data);
 
-        for (const separator of this.separators) {
-            if (data.search(separator.symbol) > -1) {
-                items.push(...data.split(separator.symbol).map((item) => this.trimValue(item)));
+        // prettier-ignore
+        const dividedString: string[] = separatorsInString.length > 0 ?
+            [...data.split(new RegExp(`${separatorsInString.join('|')}`))] :
+            [data];
 
-                break;
-            }
-        }
+        const items: string[] = dividedString.map((item) => this.trimValue(item));
 
         if (items.length === 0) {
             items.push(data);
@@ -306,6 +305,12 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Focuses the input. */
     focus(): void {
         this.inputElement.focus();
+    }
+
+    private getSeparatorsForString(value: string): string[] {
+        return this.separators
+            .filter((separator) => value.search(separator.key) > -1)
+            .map((separator) => separator.key);
     }
 
     private trimValue(value) {
