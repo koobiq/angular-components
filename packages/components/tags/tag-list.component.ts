@@ -263,8 +263,7 @@ export class KbqTagList
 
     set removable(value: boolean) {
         this._removable = value;
-
-        this.tags?.forEach((tag) => tag.changeDetectorRef.markForCheck());
+        this.syncTagsRemovableState();
     }
 
     private _removable = true;
@@ -918,6 +917,10 @@ export class KbqTagList
                 tag.disabled = this._disabled;
             });
         }
+    }
+
+    private syncTagsRemovableState(): void {
+        this.tags?.forEach((tag) => (tag.removable = this.removable));
     }
 
     /** Revalidate control. */
