@@ -3,9 +3,11 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+
+const TAG = 'Editable tag with validation';
 
 /**
  * @title Tag editable with validation
@@ -15,50 +17,54 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     selector: 'tag-editable-with-validation-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqToolTipModule],
     template: `
-        @let length = tagModelTrimmed().length;
-
-        <kbq-tag
-            editable
-            [preventEditSubmit]="!isModelValid()"
-            [color]="tagColor()"
-            (editChange)="editChange($event)"
-            (removed)="remove()"
-        >
-            {{ tagValue() }}
-            <input
-                kbqTagEditInput
-                kbqTrigger="none"
-                kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ length }})"
-                [kbqTooltipColor]="color.Error"
-                [(ngModel)]="tagModel"
-            />
-            @if (length === 0) {
-                <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit></i>
-            } @else {
-                <i
-                    kbq-icon-button="kbq-check-s_16"
-                    kbqTagEditSubmit
-                    [disabled]="!isModelValid()"
-                    [color]="color.Theme"
-                ></i>
-            }
-            <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
-        </kbq-tag>
+        @if (tagValue().length > 0) {
+            <kbq-tag
+                editable
+                [preventEditSubmit]="!isModelValid()"
+                [color]="tagColor()"
+                (editChange)="editChange($event)"
+                (removed)="remove($event)"
+            >
+                {{ tagValue() }}
+                <input
+                    kbqTagEditInput
+                    kbqTrigger="none"
+                    kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ trimmedTagModel().length }})"
+                    [kbqTooltipColor]="color.Error"
+                    [(ngModel)]="tagModel"
+                />
+                @if (trimmedTagModel().length === 0) {
+                    <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit></i>
+                } @else {
+                    <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [disabled]="!isModelValid()"></i>
+                }
+                <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+            </kbq-tag>
+        } @else {
+            <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="color.ContrastFade" (click)="restart()"></i>
+        }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--kbq-size-m);
+            min-height: var(--kbq-size-xxl);
+            margin: var(--kbq-size-5xl);
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagEditableWithValidationExample {
     private readonly tooltip = viewChild.required(KbqTooltipTrigger);
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly color = KbqComponentColors;
-    protected readonly tagValue = signal('Editable tag with validation');
+    protected readonly tagValue = signal(TAG);
     protected readonly initialMaxLength = this.tagValue().length;
     protected readonly tagModel = model(this.tagValue());
-    protected readonly tagModelTrimmed = computed(() => this.tagModel().trim());
-    protected readonly isModelValid = computed(() => this.tagModelTrimmed().length <= this.initialMaxLength);
+    protected readonly trimmedTagModel = computed(() => this.tagModel().trim());
+    protected readonly isModelValid = computed(() => this.trimmedTagModel().length <= this.initialMaxLength);
     protected readonly tagColor = computed(() => (this.isModelValid() ? this.color.ContrastFade : this.color.Error));
 
     constructor() {
@@ -90,8 +96,15 @@ export class TagEditableWithValidationExample {
         }
     }
 
-    protected remove(): void {
-        console.info('Tag was removed.');
+    protected remove(event: KbqTagEvent): void {
+        console.info('Tag was removed: ', event);
+
+        this.tagValue.set('');
+    }
+
+    protected restart(): void {
+        this.tagValue.set(TAG);
+        this.tagModel.set(this.tagValue());
     }
 
     private start({ reason }: KbqTagEditChange): void {
@@ -111,12 +124,12 @@ export class TagEditableWithValidationExample {
     private submit(event: KbqTagEditChange): void {
         console.info(`Tag edit was submitted. Reason: "${event.reason}".`);
 
-        const model = this.tagModelTrimmed();
+        const model = this.trimmedTagModel();
 
         if (model.length === 0) {
             this.tagModel.set(this.tagValue());
 
-            return this.remove();
+            return event.tag.remove();
         }
 
         if (!this.isModelValid()) {

@@ -3,7 +3,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
+const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
 
 /**
  * @title Tag list removable
@@ -38,7 +38,7 @@ const INITIAL_TAGS = Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`);
 })
 export class TagListRemovableExample {
     protected readonly colors = KbqComponentColors;
-    protected readonly tags = model(INITIAL_TAGS.slice());
+    protected readonly tags = model(getTags());
 
     protected remove(event: KbqTagEvent): void {
         this.tags.update((tags) => {
@@ -53,6 +53,6 @@ export class TagListRemovableExample {
     }
 
     protected restart(): void {
-        this.tags.update(() => INITIAL_TAGS.slice());
+        this.tags.update(() => getTags());
     }
 }

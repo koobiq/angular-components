@@ -1,13 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    inject,
-    model,
-    viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -30,7 +22,11 @@ import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsMo
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                         {{ tag }}
                         <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
-                        <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
+                        @if (tag.length === 0) {
+                            <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit></i>
+                        } @else {
+                            <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit></i>
+                        }
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 }
@@ -71,7 +67,6 @@ export class TagInputEditableExample {
     protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
     private prevTags = this.tags().slice();
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
         const input = this.input().nativeElement as HTMLInputElement;
@@ -120,8 +115,6 @@ export class TagInputEditableExample {
 
             return tags;
         });
-
-        this.changeDetectorRef.detectChanges();
     }
 
     protected create({ input, value = '' }: KbqTagInputEvent): void {
