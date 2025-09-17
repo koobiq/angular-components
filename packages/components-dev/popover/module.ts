@@ -83,7 +83,7 @@ export class DevApp {
         CLICK: 'click',
         FOCUS: 'focus',
         HOVER: 'hover',
-        CUSTOM: 'custom'
+        PROGRAM: 'program'
     };
 
     SIZE = {

@@ -82,12 +82,12 @@
                             <kbq-option [value]="TRIGGERS.CLICK">Click</kbq-option>
                             <kbq-option [value]="TRIGGERS.HOVER">Hover</kbq-option>
                             <kbq-option [value]="TRIGGERS.FOCUS">Focus</kbq-option>
-                            <kbq-option [value]="TRIGGERS.CUSTOM">Custom</kbq-option>
+                            <kbq-option [value]="TRIGGERS.PROGRAM">Program</kbq-option>
                         </kbq-select>
                     </kbq-form-field>
                 </div>
 
-                @if (selectedTrigger === TRIGGERS.CUSTOM) {
+                @if (selectedTrigger === TRIGGERS.PROGRAM) {
                     <div class="kbq-form__control layout-padding-top-s">
                         <button kbq-button class="layout-margin-right-s" (click)="openPopover()">Open</button>
                         <button kbq-button (click)="closePopover()">Close</button>
