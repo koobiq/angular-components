@@ -1,0 +1,85 @@
+@use '../core/styles/common';
+@use '../core/styles/common/tokens';
+
+.kbq-app-switcher-dropdown-app {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    min-height: 50px;
+
+    border-radius: var(--kbq-size-xs);
+
+    @include common.user-select(none);
+
+    text-decoration: none;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+
+    padding: var(--kbq-size-xxs) var(--kbq-size-m);
+
+    & .kbq-app-switcher-dropdown-app__icon {
+        padding-top: var(--kbq-size-s);
+        padding-right: var(--kbq-size-m);
+    }
+
+    & .kbq-app-switcher-dropdown-app__container {
+        width: 100%;
+
+        align-self: center;
+
+        & .kbq-app-switcher-dropdown-app__name {
+            display: flex;
+            flex-direction: row;
+
+            justify-content: space-between;
+        }
+
+        & .kbq-app-switcher-dropdown-app__caption {
+            margin-left: var(--kbq-size-3xs);
+        }
+    }
+
+    & .kbq-dropdown-item__caption {
+        padding-top: var(--kbq-size-3xs);
+    }
+
+    & .kbq-app-switcher-dropdown-item-trigger__icon {
+        margin-top: var(--kbq-size-3xs);
+    }
+}
+
+@mixin kbq-app-switcher-dropdown-app-theme() {
+    .kbq-app-switcher-dropdown-app {
+        background: var(--kbq-list-default-container-background);
+        color: var(--kbq-list-default-text-color);
+
+        &.kbq-dropdown-item_highlighted,
+        &:hover {
+            background: var(--kbq-states-background-transparent-active);
+        }
+
+        &.cdk-keyboard-focused {
+            border-color: var(--kbq-list-states-focused-focus-outline-color);
+        }
+
+        .kbq-app-switcher-dropdown-app__caption {
+            color: var(--kbq-dropdown-item-caption-color);
+        }
+    }
+}
+
+@mixin kbq-app-switcher-dropdown-app-typography() {
+    .kbq-app-switcher-dropdown-app {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+        .kbq-app-switcher-dropdown-app__caption {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        }
+    }
+}
+
+@include kbq-app-switcher-dropdown-app-theme();
+@include kbq-app-switcher-dropdown-app-typography();

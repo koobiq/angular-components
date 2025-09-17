@@ -40,7 +40,7 @@ import {
     applyPopupMargins
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -48,6 +48,8 @@ import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { merge } from 'rxjs';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
+import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
+import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherTree } from './app-switcher-tree';
 import { KbqAppSwitcherTreeNodePadding, KbqAppSwitcherTreeOption } from './app-switcher-tree-option';
 
@@ -144,7 +146,9 @@ export const DATA_OBJECT = {
         KbqTreeModule,
         KbqAppSwitcherTreeOption,
         KbqAppSwitcherTreeNodePadding,
-        KbqDropdownModule
+        KbqDropdownModule,
+        KbqAppSwitcherDropdownApp,
+        KbqAppSwitcherDropdownSite
     ],
     animations: [kbqAppSwitcherAnimations.state]
 })
@@ -166,6 +170,7 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
 
     @ViewChild('appSwitcherContent') appSwitcherContent: ElementRef<HTMLDivElement>;
     @ViewChild('appSwitcher') elementRef: ElementRef;
+    @ViewChild('otherSites') otherSites: KbqDropdownTrigger;
     @ViewChild(CdkTrapFocus) cdkTrapFocus: CdkTrapFocus;
 
     constructor() {
@@ -222,21 +227,75 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
             name: 'ЦФО',
             apps: [
                 {
-                    name: 'Byte Sentinel',
-                    caption: 'Byte 001'
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
                 },
                 {
-                    name: 'CryptoWall'
+                    name: 'Name',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
                 },
                 {
-                    name: 'Phantom Gate'
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
                 },
                 {
-                    name: 'SentraLock',
-                    caption: 'Lock-sentral-urals'
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                    apps: [
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
+                        },
+                        {
+                            name: 'Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        },
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        }
+                    ]
                 },
                 {
-                    name: 'Zero Trace'
+                    name: 'Name',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
+                    apps: [
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
+                        },
+                        {
+                            name: 'Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        },
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        }
+                    ]
+                },
+                {
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
+                    apps: [
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
+                        },
+                        {
+                            name: 'Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        },
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        }
+                    ]
                 }
             ]
         },
@@ -245,7 +304,8 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
             apps: [
                 {
                     name: 'Byte Sentinel',
-                    caption: 'Byte 001'
+                    caption: 'Byte 001',
+                    icon: ''
                 },
                 {
                     name: 'CryptoWall',
@@ -302,7 +362,7 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
             ]
         },
         {
-            name: 'СКФО',
+            name: 'Южный Суверенный Федеральный Округ ФО',
             apps: [
                 {
                     name: 'Byte Sentinel',
