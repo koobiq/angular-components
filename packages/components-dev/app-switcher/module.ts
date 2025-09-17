@@ -6,13 +6,16 @@ import {
     DATA_OBJECT,
     FileFlatNode,
     FileNode,
+    KbqAppSwitcherDropdownApp,
+    KbqAppSwitcherDropdownSite,
     KbqAppSwitcherModule
 } from '@koobiq/components/app-switcher';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { KbqIcon } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
 
@@ -40,10 +43,11 @@ class DevExamples {}
         DevExamples,
         KbqAppSwitcherModule,
         KbqTreeModule,
-        KbqIconButton,
-        KbqIcon,
         KbqDropdownModule,
-        KbqDividerModule
+        KbqDividerModule,
+        KbqBadgeModule,
+        KbqAppSwitcherDropdownApp,
+        KbqAppSwitcherDropdownSite
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -56,6 +60,310 @@ export class DevApp {
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     modelValue: any = '';
+
+    sites = [
+        {
+            name: 'ЦФО',
+            apps: [
+                {
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
+                },
+                {
+                    name: 'Name',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                },
+                {
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                },
+                {
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                    apps: [
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
+                        },
+                        {
+                            name: 'Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        },
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        }
+                    ]
+                },
+                {
+                    name: 'Name',
+                    caption: 'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
+                    apps: [
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
+                        },
+                        {
+                            name: 'Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        },
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        }
+                    ]
+                },
+                {
+                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                    caption: 'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
+                    apps: [
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
+                        },
+                        {
+                            name: 'Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        },
+                        {
+                            name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
+                            caption:
+                                'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'СЗФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    icon: ''
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'ЮФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall'
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'Южный Суверенный Федеральный Округ ФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ],
+            main: true
+        },
+        {
+            name: 'ПФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall'
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'УФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'СФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall'
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        },
+        {
+            name: 'ДФО',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001'
+                },
+                {
+                    name: 'CryptoWall',
+                    apps: [
+                        {
+                            name: 'App Instance 1',
+                            caption: 'Instance Alias One'
+                        },
+                        {
+                            name: 'App Instance 2'
+                        },
+                        {
+                            name: 'App Instance 3',
+                            caption: 'Instance Alias Three'
+                        },
+                        {
+                            name: 'App Instance 4',
+                            caption: 'Instance Alias Four'
+                        }
+                    ]
+                },
+                {
+                    name: 'Phantom Gate'
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals'
+                },
+                {
+                    name: 'Zero Trace'
+                }
+            ]
+        }
+    ];
+
+    activeSite;
+    activeApp;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
