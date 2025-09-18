@@ -3,7 +3,7 @@ import { DevThemeToggle } from '../theme-toggle';
 import { DevActionsPanelWithOverlayContainer } from './components/actions-panel';
 import { DevButtonStateAndStyle } from './components/button';
 import { DevFileUploadStateAndStyle } from './components/file-upload';
-import { DevTagStateAndStyle } from './components/tag';
+import { DevTagEditable, DevTagStateAndStyle } from './components/tag';
 
 @Component({
     standalone: true,
@@ -12,7 +12,8 @@ import { DevTagStateAndStyle } from './components/tag';
         DevButtonStateAndStyle,
         DevFileUploadStateAndStyle,
         DevActionsPanelWithOverlayContainer,
-        DevTagStateAndStyle
+        DevTagStateAndStyle,
+        DevTagEditable
     ],
     selector: 'dev-app',
     templateUrl: 'template.html',
