@@ -82,6 +82,7 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    isUndefined,
     kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -114,6 +115,14 @@ export type KbqSelectOptions = Partial<{
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
     panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+    /**
+     * Whether to enable hiding search by default if options is less than minimum.
+     *
+     * - `'auto'` uses `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` as min value.
+     * - number - will enables search hiding and uses value as min.
+     * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
+     */
+    searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-select`. */
@@ -303,6 +312,25 @@ export class KbqSelect
      * Whether to use a multiline matcher or not. Default is false
      */
     @Input({ transform: booleanAttribute }) multiline: boolean = false;
+    /**
+     * Controls when the search functionality is displayed based on the number of available options.
+     *
+     * Automatically enables search hiding if value provided, even if `defaultOptions.minOptionsThreshold` is provided.
+     * @default undefined
+     */
+    @Input() set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
+        this._searchMinOptionsThreshold =
+            this.resolveSearchMinOptionsThreshold(value) ??
+            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
+    }
+
+    get searchMinOptionsThreshold(): number | undefined {
+        return this._searchMinOptionsThreshold;
+    }
+
+    private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold(
+        this.defaultOptions?.searchMinOptionsThreshold
+    );
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
@@ -1029,6 +1057,11 @@ export class KbqSelect
         if (this.footer?.nativeElement.contains($event.target)) {
             this.close();
         }
+    }
+
+    /** @docs-private */
+    protected shouldShowSearch(): boolean {
+        return isUndefined(this.searchMinOptionsThreshold) || this.options.length >= this.searchMinOptionsThreshold;
     }
 
     private updateLocaleParams = () => {

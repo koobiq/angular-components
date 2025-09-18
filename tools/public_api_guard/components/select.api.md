@@ -63,6 +63,7 @@ import { TemplateRef } from '@angular/core';
 export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
     panelWidth: KbqSelectPanelWidth;
     panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
+    searchMinOptionsThreshold: "auto" | number;
 }>>;
 
 // @public (undocumented)
@@ -122,6 +123,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     protected readonly defaultOptions: Partial<{
         panelWidth: KbqSelectPanelWidth;
         panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
+        searchMinOptionsThreshold: "auto" | number;
     }> | null;
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
@@ -249,6 +251,9 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     scrollStrategy: any;
     // (undocumented)
     search: KbqSelectSearch;
+    set searchMinOptionsThreshold(value: 'auto' | number | undefined);
+    // (undocumented)
+    get searchMinOptionsThreshold(): number | undefined;
     get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void);
     // (undocumented)
@@ -256,6 +261,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     readonly selectionChange: EventEmitter<KbqSelectChange>;
     selectionModel: SelectionModel<KbqOptionBase>;
     setDisabledState(isDisabled: boolean): void;
+    protected shouldShowSearch(): boolean;
     sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
     readonly stateChanges: Subject<void>;
     // (undocumented)
@@ -279,7 +285,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
@@ -310,6 +316,7 @@ export class KbqSelectModule {
 export type KbqSelectOptions = Partial<{
     panelWidth: KbqSelectPanelWidth;
     panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+    searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 // @public

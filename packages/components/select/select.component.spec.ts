@@ -396,7 +396,7 @@ class SelectWithChangeEvent {
     selector: 'select-with-search',
     template: `
         <kbq-form-field>
-            <kbq-select #select [(value)]="singleSelectedWithSearch">
+            <kbq-select #select [searchMinOptionsThreshold]="minOptionsThreshold" [(value)]="singleSelectedWithSearch">
                 <kbq-form-field kbqSelectSearch>
                     <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>
@@ -429,6 +429,7 @@ class SelectWithSearch implements OnInit {
 
     searchCtrl: UntypedFormControl = new UntypedFormControl();
     options$: Observable<string[]>;
+    minOptionsThreshold: number;
 
     private options: string[] = OPTIONS;
 
@@ -2802,6 +2803,39 @@ describe(KbqSelect.name, () => {
 
             expect(selectInstance.panelOpen).toBe(false);
         });
+
+        it('should hide search if options count less than threshold', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            componentInstance.minOptionsThreshold = 4;
+            componentInstance.options$ = of(Array.from({ length: 3 }).map((_, i) => `Text ${i}`));
+            fixture.detectChanges();
+
+            tick();
+            console.log(componentInstance.select.options.length);
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('input'))).toBeFalsy();
+        }));
+
+        it('should show search if options count more than threshold', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            componentInstance.minOptionsThreshold = 2;
+            componentInstance.options$ = of(Array.from({ length: 3 }).map((_, i) => `Text ${i}`));
+            fixture.detectChanges();
+
+            tick();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        }));
     });
 
     describe('with a selectionChange event handler', () => {

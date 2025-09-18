@@ -70,6 +70,7 @@ import {
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
+    isUndefined,
     kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -98,6 +99,14 @@ export type KbqTreeSelectOptions = Partial<{
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     panelWidth: KbqTreeSelectPanelWidth;
+    /**
+     * Whether to enable hiding search by default if options is less than minimum.
+     *
+     * - `'auto'` uses `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` as min value.
+     * - number - will enables search hiding and uses value as min.
+     * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
+     */
+    searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-tree-select`. */
@@ -510,6 +519,23 @@ export class KbqTreeSelect
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     @Input() panelWidth: KbqTreeSelectPanelWidth = this.defaultOptions?.panelWidth || null;
+    /**
+     * Controls when the search functionality is displayed based on the number of available options.
+     *
+     * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
+     * @default undefined
+     */
+    @Input() set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
+        this._searchMinOptionsThreshold =
+            this.resolveSearchMinOptionsThreshold(value) ??
+            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
+    }
+
+    get searchMinOptionsThreshold(): number | undefined {
+        return this._searchMinOptionsThreshold;
+    }
+
+    private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold();
 
     get panelOpen(): boolean {
         return this._panelOpen;
@@ -1007,6 +1033,11 @@ export class KbqTreeSelect
         }
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    /** @docs-private */
+    protected shouldShowSearch(): boolean {
+        return isUndefined(this.searchMinOptionsThreshold) || this.options.length >= this.searchMinOptionsThreshold;
     }
 
     private updateLocaleParams = () => {

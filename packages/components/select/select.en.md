@@ -100,6 +100,28 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 })
 ```
 
+##### Search in Select for short lists
+
+You can configure a select so that the search is disabled when there is a small number of options. By default, this feature is turned off.
+Use the `minOptionsThreshold` attribute to configure it.
+
+Possible values:
+
+- `'auto'` – disables search if the number of options is less than 10 (default behavior).
+- `<number>` – disables search if the number of options is less than the specified number.
+
+To configure search disabling for all selects in a module with consistent display rules, you can use the `kbqSelectOptionsProvider` provider:
+
+```ts
+import { kbqSelectOptionsProvider } from '@koobiq/components/select';
+
+@NgModule({
+    providers: [
+        kbqSelectOptionsProvider({ minOptionsThreshold: 'auto' })
+    ]
+})
+```
+
 ### Customized selection
 
 The select can contain preselected values.

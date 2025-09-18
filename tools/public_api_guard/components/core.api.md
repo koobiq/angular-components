@@ -1781,6 +1781,9 @@ export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
 };
 
 // @public
+export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
+
+// @public
 export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 
 // @public (undocumented)
@@ -1807,9 +1810,15 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected resetOverlay(): void;
     // (undocumented)
+    protected resolveSearchMinOptionsThreshold(value?: 'auto' | number): number | undefined;
+    // (undocumented)
     protected setOverlayPosition(): void;
     // (undocumented)
     protected triggerRect: DOMRect;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAbstractSelect, never, never, {}, {}, never, never, false, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbstractSelect, never>;
 }
 
 // @public (undocumented)
