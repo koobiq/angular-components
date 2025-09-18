@@ -10,23 +10,25 @@
     <kbq-divider />
 }
 
-<div class="kbq-app-switcher__app-container" (mouseenter)="otherSites.close()">
+<div kbq-scrollbar class="kbq-app-switcher__app-container" (mouseenter)="otherSites.close()">
     <div class="kbq-app-switcher-group-header">
         <div class="kbq-app-switcher-group-header__text">Название площадки</div>
         <kbq-badge class="kbq-app-switcher-group-header__badge" [compact]="true">Главная</kbq-badge>
     </div>
 
-    <kbq-app-switcher-tree [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
-        <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node" kbqAppSwitcherTreeNodePadding>
-            <span [innerHTML]="treeControl.getViewValue(node)"></span>
-        </kbq-app-switcher-tree-option>
+    <kbq-dropdown [class]="'kbq-app-switcher-sites'">
+        <div kbqDropdownStaticContent class="kbq-app-switcher-site">
+            @for (app of sites[0].apps; track app) {
+                <a #appSwitcherApp="kbqAppSwitcherApp" href="" [kbq-app-switcher-app]="app"></a>
 
-        <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqAppSwitcherTreeNodePadding>
-            <kbq-tree-node-toggle [node]="node" />
-
-            <span [innerHTML]="treeControl.getViewValue(node)"></span>
-        </kbq-app-switcher-tree-option>
-    </kbq-app-switcher-tree>
+                @if (!appSwitcherApp.collapsed) {
+                    @for (app of app.apps; track app) {
+                        <a href="" class="kbq-app-switcher-site_nested" [kbq-app-switcher-app]="app"></a>
+                    }
+                }
+            }
+        </div>
+    </kbq-dropdown>
 </div>
 
 @if (withSites) {

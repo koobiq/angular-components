@@ -45,13 +45,13 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { merge } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
+import { KbqAppSwitcherApp } from './app-switcher-app';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
-import { KbqAppSwitcherTree } from './app-switcher-tree';
-import { KbqAppSwitcherTreeNodePadding, KbqAppSwitcherTreeOption } from './app-switcher-tree-option';
 
 export class FileNode {
     children: FileNode[];
@@ -140,15 +140,14 @@ export const DATA_OBJECT = {
         KbqInputModule,
         FormsModule,
         KbqDividerModule,
-        KbqAppSwitcherTree,
         KbqBadgeModule,
         KbqIcon,
         KbqTreeModule,
-        KbqAppSwitcherTreeOption,
-        KbqAppSwitcherTreeNodePadding,
         KbqDropdownModule,
         KbqAppSwitcherDropdownApp,
-        KbqAppSwitcherDropdownSite
+        KbqAppSwitcherDropdownSite,
+        KbqAppSwitcherApp,
+        KbqScrollbarModule
     ],
     animations: [kbqAppSwitcherAnimations.state]
 })
@@ -641,6 +640,8 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
         };
     }
 
+    protected preventClosingByInnerScrollSubscription: Subscription;
+
     ngOnInit(): void {
         super.ngOnInit();
 
@@ -663,6 +664,19 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
                 }
             });
         }
+
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible: boolean) => {
+            if (visible) {
+                this.preventClosingByInnerScrollSubscription = this.closingActions().subscribe((event) => {
+                    if (event['scrollDispatcher']) {
+                        event['kbqPopoverPreventHide'] = true;
+                        event['type'] = 'click';
+                    }
+                });
+            } else {
+                this.preventClosingByInnerScrollSubscription.unsubscribe();
+            }
+        });
     }
 
     updateData() {

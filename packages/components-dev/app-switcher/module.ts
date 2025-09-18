@@ -6,8 +6,6 @@ import {
     DATA_OBJECT,
     FileFlatNode,
     FileNode,
-    KbqAppSwitcherDropdownApp,
-    KbqAppSwitcherDropdownSite,
     KbqAppSwitcherModule
 } from '@koobiq/components/app-switcher';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -45,9 +43,7 @@ class DevExamples {}
         KbqTreeModule,
         KbqDropdownModule,
         KbqDividerModule,
-        KbqBadgeModule,
-        KbqAppSwitcherDropdownApp,
-        KbqAppSwitcherDropdownSite
+        KbqBadgeModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
