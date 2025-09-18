@@ -34,9 +34,14 @@ const TAG = 'Editable tag with validation';
                     [(ngModel)]="tagModel"
                 />
                 @if (trimmedTagModel().length === 0) {
-                    <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit></i>
+                    <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                 } @else {
-                    <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [disabled]="!isModelValid()"></i>
+                    <i
+                        kbq-icon-button="kbq-check-s_16"
+                        kbqTagEditSubmit
+                        [color]="color.Theme"
+                        [disabled]="!isModelValid()"
+                    ></i>
                 }
                 <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
             </kbq-tag>

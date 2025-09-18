@@ -22,9 +22,9 @@ const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Editable ta
                     {{ tag }}
                     <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
                     @if (tag.length === 0) {
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                     } @else {
-                        <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit></i>
+                        <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                     }
                     <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
