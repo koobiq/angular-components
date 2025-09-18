@@ -3,6 +3,9 @@
 .kbq-app-switcher {
     position: relative;
 
+    display: flex;
+    flex-direction: column;
+
     margin-top: var(--kbq-size-xxs);
     margin-bottom: var(--kbq-size-xxs);
 
@@ -21,12 +24,20 @@
     padding-top: var(--kbq-size-xxs);
 }
 
-.kbq-app-switcher-group-header {
-    padding: var(--kbq-size-s) var(--kbq-size-l);
-
+.kbq-app-switcher__app-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    min-height: 0;
+
+    padding: var(--kbq-size-s) var(--kbq-size-xxs);
+
+    & .kbq-app-switcher-group-header {
+        padding: var(--kbq-size-s) var(--kbq-size-l);
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
 }
 
 .kbq-app-switcher__sites-container {

@@ -4,67 +4,6 @@
 <br />
 <br />
 
-<!--{{ modelValue }}-->
-
-<!--<kbq-app-switcher-tree [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">-->
-<!--    <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node" kbqAppSwitcherTreeNodePadding>-->
-<!--        {{ treeControl.getViewValue(node) }}-->
-<!--    </kbq-app-switcher-tree-option>-->
-
-<!--    <kbq-app-switcher-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqAppSwitcherTreeNodePadding>-->
-<!--        <kbq-tree-node-toggle [node]="node">-->
-<!--            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast-fade'"></i>-->
-<!--        </kbq-tree-node-toggle>-->
-
-<!--        {{ treeControl.getViewValue(node) }}-->
-<!--    </kbq-app-switcher-tree-option>-->
-<!--</kbq-app-switcher-tree>-->
-
-<div class="kbq-app-switcher__sites-container" style="width: 320px">
-    <div class="kbq-app-switcher-group-header">
-        <div class="kbq-app-switcher-group-header__text">Другие площадки</div>
-    </div>
-
-    <kbq-dropdown #otherSites="kbqDropdown">
-        <div kbqDropdownStaticContent class="kbq-app-switcher-sites">
-            @for (site of sites; track site) {
-                <a
-                    href=""
-                    [kbq-app-switcher-dropdown-site]="site"
-                    [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
-                    [offsetX]="0"
-                    [class.kbq-app-switcher__sites_main]="site.main"
-                    (mouseenter)="activeSite = site"
-                ></a>
-            }
-        </div>
-    </kbq-dropdown>
-</div>
-
-<kbq-dropdown #dropdownWithSelectedSite="kbqDropdown" [class]="'kbq-app-switcher-sites'">
-    @for (app of activeSite?.apps; track app) {
-        @if (app.apps) {
-            <a
-                #dropdownWithGroupedAppsTrigger="kbqDropdownTrigger"
-                href=""
-                [kbq-app-switcher-dropdown-app]="app"
-                [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
-                [offsetX]="0"
-                [class.kbq-pressed]="dropdownWithGroupedAppsTrigger.opened"
-                (mouseenter)="activeApp = app"
-            ></a>
-        } @else {
-            <a href="" [kbq-app-switcher-dropdown-app]="app"></a>
-        }
-    }
-</kbq-dropdown>
-
-<kbq-dropdown #dropdownWithGroupedApps="kbqDropdown" [class]="'kbq-app-switcher-sites'">
-    @for (app of activeApp?.apps; track app) {
-        <a href="" [kbq-app-switcher-dropdown-app]="app"></a>
-    }
-</kbq-dropdown>
-
 <br />
 <br />
 <br />

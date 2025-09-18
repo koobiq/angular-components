@@ -19,16 +19,17 @@ import {
     KbqAppSwitcher,
     KbqAppSwitcherTrigger
 } from './app-switcher';
-import { KbqAppSwitcherTree } from './app-switcher-tree';
-import { KbqAppSwitcherTreeNodePadding, KbqAppSwitcherTreeOption } from './app-switcher-tree-option';
+import { KbqAppSwitcherApp } from './app-switcher-app';
+import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
+import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 
 @NgModule({
     imports: [
         KbqAppSwitcher,
         KbqAppSwitcherTrigger,
-        KbqAppSwitcherTree,
-        KbqAppSwitcherTreeOption,
-        KbqAppSwitcherTreeNodePadding,
+        KbqAppSwitcherApp,
+        KbqAppSwitcherDropdownApp,
+        KbqAppSwitcherDropdownSite,
         OverlayModule,
         KbqButtonModule,
         A11yModule,
@@ -42,10 +43,7 @@ import { KbqAppSwitcherTreeNodePadding, KbqAppSwitcherTreeOption } from './app-s
     ],
     exports: [
         KbqAppSwitcher,
-        KbqAppSwitcherTrigger,
-        KbqAppSwitcherTree,
-        KbqAppSwitcherTreeOption,
-        KbqAppSwitcherTreeNodePadding
+        KbqAppSwitcherTrigger
     ],
     providers: [
         KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER,
