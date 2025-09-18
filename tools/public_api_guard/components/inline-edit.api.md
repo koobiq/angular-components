@@ -18,6 +18,7 @@ import { KbqLabel } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OutputEmitterRef } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
@@ -50,6 +51,7 @@ export class KbqInlineEdit implements AfterContentInit {
     protected readonly placements: typeof PopUpPlacements;
     protected save($event?: Event): void;
     protected readonly saved: OutputEmitterRef<void>;
+    protected readonly scrollStrategy: WritableSignal<ScrollStrategy>;
     readonly setValueHandler: InputSignal<((value: any) => void) | undefined>;
     readonly showActions: InputSignalWithTransform<boolean, unknown>;
     readonly showTooltipOnError: InputSignalWithTransform<boolean, unknown>;

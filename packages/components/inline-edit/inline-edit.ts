@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
-import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -120,6 +120,10 @@ export class KbqInlineEditMenu {
     encapsulation: ViewEncapsulation.None
 })
 export class KbqInlineEdit implements AfterContentInit {
+    private readonly elementRef = inject(ElementRef);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly kbqFocusMonitor = inject(KbqFocusMonitor, { host: true });
+    private readonly overlay = inject(Overlay);
     /**
      * Whether to show save/cancel action buttons in edit mode.
      * @default false
@@ -172,6 +176,8 @@ export class KbqInlineEdit implements AfterContentInit {
     /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
     /** @docs-private */
+    protected readonly scrollStrategy = signal<ScrollStrategy>(this.overlay.scrollStrategies.reposition());
+    /** @docs-private */
     readonly modeAsReadonly = computed(() => this.mode());
 
     /** @docs-private */
@@ -186,10 +192,6 @@ export class KbqInlineEdit implements AfterContentInit {
 
     /** @docs-private */
     protected readonly colors = KbqComponentColors;
-
-    private readonly elementRef = inject(ElementRef);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly kbqFocusMonitor = inject(KbqFocusMonitor, { host: true });
 
     private initialValue: unknown;
 
