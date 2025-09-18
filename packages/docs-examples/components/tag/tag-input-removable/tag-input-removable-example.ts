@@ -41,7 +41,7 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
             flex-direction: column;
             align-items: center;
             gap: var(--kbq-size-m);
-            min-height: var(--kbq-size-7xl);
+            min-height: var(--kbq-size-xxl);
             margin: var(--kbq-size-5xl);
         }
     `,
