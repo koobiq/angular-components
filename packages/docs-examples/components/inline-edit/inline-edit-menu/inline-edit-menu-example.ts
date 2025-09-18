@@ -31,7 +31,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     selector: 'inline-edit-menu-example',
     template: `
-        <div role="group" class="layout-flex layout-column" aria-label="vertical list">
+        <div role="group" class="layout-flex layout-column flex" aria-label="vertical list">
             <span class="kbq-text-normal-strong">Vertical list</span>
 
             <div class="layout-flex layout-column layout-gap-xs example-content__container">
@@ -151,6 +151,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </kbq-dropdown>
     `,
     styles: `
+        div[role='group'] {
+            width: 100%;
+        }
+
         .kbq-dl {
             grid-template-columns: unset;
             --kbq-description-list-size-horizontal-content-gap-horizontal: var(--kbq-size-xxs);
