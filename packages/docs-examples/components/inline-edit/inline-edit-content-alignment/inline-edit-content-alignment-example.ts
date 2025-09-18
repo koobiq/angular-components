@@ -89,7 +89,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         .example__hover-divider {
             position: absolute;
             top: 0;
-            border: 1px solid transparent;
+            border-right: 1px solid transparent;
             height: 100%;
         }
 

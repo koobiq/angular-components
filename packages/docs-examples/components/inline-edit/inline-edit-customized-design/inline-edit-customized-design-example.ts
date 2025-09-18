@@ -32,7 +32,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <kbq-inline-edit>
             <kbq-label>Link</kbq-label>
 
-            <div class="example-inline-text" kbqInlineEditViewMode>
+            <div class="example-inline-text example-inline-text_link" kbqInlineEditViewMode>
                 @if (!linkControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
@@ -45,10 +45,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </kbq-inline-edit>
 
         <kbq-inline-edit>
-            <kbq-label>
+            <kbq-label class="example-inline-text__content">
                 Badge
                 <i
-                    kbq-icon="kbq-question-circle_16"
+                    kbq-icon-button="kbq-question-circle_16"
                     [kbqTooltip]="'Tooltip on hover or focus'"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="popupPlacements.Top"
@@ -68,7 +68,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
-                    <kbq-cleaner #kbqSelectCleaner />
                 </kbq-select>
             </kbq-form-field>
         </kbq-inline-edit>
@@ -81,7 +80,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
                     <span class="example-inline-text__content">
-                        <i kbq-icon="kbq-xmark-circle-s_16" [color]="'contrast-fade'"></i>
+                        <i kbq-icon="kbq-diamond_16" [color]="'contrast-fade'"></i>
                         {{ iconControl.value }}
                     </span>
                 }
@@ -98,10 +97,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             white-space: nowrap;
         }
 
+        .example-inline-text_link {
+            padding: 1px;
+        }
+
         .example-inline-text__content {
             display: inline-flex;
             align-items: center;
-            gap: var(--kbq-size-3xs);
+            gap: var(--kbq-size-xs);
         }
     `,
     host: {

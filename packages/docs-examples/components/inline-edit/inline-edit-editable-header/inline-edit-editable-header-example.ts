@@ -48,7 +48,9 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     styles: `
         :host .kbq-inline-edit {
             width: calc(100% + 12px);
-            margin-left: -12px;
+            margin-left: -6px;
+            --kbq-inline-edit-padding-vertical: 3px;
+            --kbq-inline-edit-padding-horizontal: 5px;
         }
 
         .kbq-textarea {
@@ -59,6 +61,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             text-transform: var(--kbq-typography-headline-text-transform);
             font-feature-settings: var(--kbq-typography-headline-font-feature-settings);
             letter-spacing: var(--kbq-typography-headline-letter-spacing);
+            --kbq-textarea-size-padding-vertical: 3px;
+            --kbq-textarea-size-padding-horizontal: 5px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

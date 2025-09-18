@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider, KbqOptionModule } from '@koobiq/components/core';
@@ -45,9 +45,13 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 
                 <kbq-dt class="example-multiline-text__header">Textarea</kbq-dt>
                 <kbq-dd>
-                    <kbq-inline-edit #textareaInlineEdit showActions>
+                    <kbq-inline-edit #textareaInlineEdit showActions (saved)="update()">
                         <div kbqInlineEditViewMode>
-                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.textarea }" />
+                            @if (!textareaDisplayValue()) {
+                                <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                            } @else {
+                                {{ textareaDisplayValue() }}
+                            }
                         </div>
                         <div kbqInlineEditEditMode>
                             @if (textareaInlineEdit.modeAsReadonly() === 'edit') {
@@ -106,7 +110,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                                 @for (option of options; track option) {
                                     <kbq-option [value]="option">{{ option }}</kbq-option>
                                 }
-                                <kbq-cleaner #kbqSelectCleaner />
                             </kbq-select>
                         </kbq-form-field>
                     </kbq-inline-edit>
@@ -163,4 +166,10 @@ export class InlineEditControlsExample {
         selectMultiple: new FormControl(this.options.slice(0, 5)),
         select: new FormControl(this.options[0])
     });
+
+    protected readonly textareaDisplayValue = signal(this.form.controls.textarea.value);
+
+    protected update() {
+        this.textareaDisplayValue.set(this.form.controls.textarea.value);
+    }
 }
