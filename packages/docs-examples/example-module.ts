@@ -2115,6 +2115,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon-item"
   },
+  "inline-edit-content-alignment": {
+    "packagePath": "components/inline-edit/inline-edit-content-alignment",
+    "title": "Inline edit content alignment",
+    "componentName": "InlineEditContentAlignmentExample",
+    "files": [
+      "inline-edit-content-alignment-example.ts"
+    ],
+    "selector": "inline-edit-content-alignment-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-content-alignment-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-controls": {
     "packagePath": "components/inline-edit/inline-edit-controls",
     "title": "Inline edit controls",
@@ -5503,6 +5515,8 @@ return import('@koobiq/docs-examples/components/icon-item');
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-variant':
 return import('@koobiq/docs-examples/components/icon-item');
+  case 'inline-edit-content-alignment':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-controls':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-custom-handler':

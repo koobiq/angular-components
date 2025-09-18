@@ -620,7 +620,6 @@ export class TestWithValidatedControl extends BaseTestComponent {
     imports: [
         FormsModule,
         KbqFormFieldModule,
-        KbqInputModule,
         KbqInlineEditModule,
         KbqOptionModule,
         KbqSelectModule
