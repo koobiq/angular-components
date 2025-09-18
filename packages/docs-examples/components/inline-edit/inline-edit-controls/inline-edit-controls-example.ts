@@ -46,11 +46,11 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 <kbq-dt class="example-multiline-text__header">Textarea</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit #textareaInlineEdit showActions (saved)="update()">
-                        <div kbqInlineEditViewMode>
+                        <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
                             @if (!textareaDisplayValue()) {
                                 <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                             } @else {
-                                {{ textareaDisplayValue() }}
+                                <span>{{ textareaDisplayValue() }}</span>
                             }
                         </div>
                         <div kbqInlineEditEditMode>
@@ -147,6 +147,11 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .example-inline-text__textarea-view {
+            overflow: hidden;
+            white-space: pre-wrap;
         }
     `,
     providers: [

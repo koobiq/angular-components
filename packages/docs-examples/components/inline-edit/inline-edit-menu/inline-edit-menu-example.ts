@@ -94,7 +94,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                             [kbqDropdownTriggerFor]="dropdown"
                             [color]="'contrast-fade'"
                         ></i>
-                        <div kbqInlineEditViewMode>
+                        <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
                             <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.style.value }" />
                         </div>
                         <div kbqInlineEditEditMode>
@@ -166,6 +166,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .example-inline-text__textarea-view {
+            overflow: hidden;
+            white-space: pre-wrap;
         }
 
         .example-multiline-text__header {
