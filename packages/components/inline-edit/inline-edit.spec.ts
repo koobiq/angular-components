@@ -1,16 +1,17 @@
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
-import { Component, DebugElement, Directive, Provider, signal, TemplateRef, Type } from '@angular/core';
+import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ESCAPE, TAB } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { kbqDisableLegacyValidationDirectiveProvider, PopUpPlacements } from '@koobiq/components/core';
+import { kbqDisableLegacyValidationDirectiveProvider, KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
@@ -32,7 +33,8 @@ const componentCssClasses = {
     terminalButtons: '.kbq-inline-edit__action-buttons',
     menuMask: '.kbq-inline-edit__menu-mask',
     menu: '.kbq-inline-edit__menu',
-    overlay: '.cdk-overlay-pane'
+    overlay: '.cdk-overlay-pane',
+    selectPanel: '.kbq-select__panel'
 };
 
 const simulateKeyboardFocus = <T>(fixture: ComponentFixture<T>, debugElement: DebugElement): void => {
@@ -327,6 +329,19 @@ describe('KbqInlineEdit', () => {
 
         expect(spyFn).not.toHaveBeenCalled();
     });
+
+    it('should open select panel on mode toggle', async () => {
+        const fixture = setup(TestWithSelect);
+        const { debugElement } = fixture;
+        const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+        inlineEditDebugElement.nativeElement.click();
+        fixture.detectChanges();
+
+        await fixture.whenStable();
+
+        expect(document.querySelector(componentCssClasses.selectPanel)).toBeTruthy();
+    });
 });
 
 @Directive({
@@ -597,4 +612,78 @@ export class TestWithValidatedControl extends BaseTestComponent {
     }
 
     cancel() {}
+}
+
+@Component({
+    standalone: true,
+    selector: 'name',
+    imports: [
+        FormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqInlineEditModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-inline-edit
+            [showActions]="showActions()"
+            [showTooltipOnError]="showTooltipOnError()"
+            [validationTooltip]="validationTooltip()"
+            [disabled]="disabled()"
+            [editModeWidth]="editModeWidth()"
+            [tooltipPlacement]="tooltipPlacement()"
+            (saved)="update()"
+            (canceled)="cancel()"
+            (modeChange)="onModeChange($event)"
+        >
+            @if (showLabel()) {
+                <kbq-label>Label</kbq-label>
+            }
+
+            <div kbqInlineEditViewMode>
+                @if (displayValue().length) {
+                    {{ displayValue() }}
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <kbq-select placeholder="Placeholder" [(ngModel)]="selected">
+                    <kbq-cleaner #kbqSelectCleaner />
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithSelect extends BaseTestComponent {
+    value = '';
+    readonly placeholder = 'Placeholder';
+    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly currentMode = signal('view');
+    readonly displayValue = signal(this.value);
+    readonly selected = model(this.options[0]);
+
+    readonly showLabel = signal(false);
+
+    constructor() {
+        super();
+    }
+
+    update(): void {
+        this.displayValue.set(this.value);
+    }
+
+    toggleLabelVisibility() {
+        this.showLabel.update((state) => !state);
+    }
+
+    onModeChange($event: 'edit' | 'view') {
+        this.currentMode.set($event);
+    }
+
+    cancel = jest.fn();
 }
