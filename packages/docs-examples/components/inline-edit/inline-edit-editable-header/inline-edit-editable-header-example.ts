@@ -33,6 +33,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                             kbqTextarea
                             [rows]="1"
                             [freeRowsHeight]="0"
+                            [maxRows]="maxRows"
                             [placeholder]="placeholder"
                             [formControl]="control"
                         ></textarea>
@@ -68,6 +69,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditEditableHeaderExample {
+    protected readonly maxRows = 5;
     protected readonly placeholder = 'Placeholder';
     protected readonly control = new FormControl('Spain', { nonNullable: true });
     protected readonly displayValue = signal(this.control.value);

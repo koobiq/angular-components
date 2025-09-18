@@ -31,7 +31,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     selector: 'inline-edit-menu-example',
     template: `
-        @let viewValue = displayValue();
         <div role="group" class="layout-flex layout-column" aria-label="vertical list">
             <span class="kbq-text-normal-strong">Vertical list</span>
 
@@ -44,8 +43,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         [kbqDropdownTriggerFor]="dropdown"
                         [color]="'contrast-fade'"
                     ></i>
-                    <div kbqInlineEditViewMode>
-                        <ng-container *ngTemplateOutlet="view; context: { $implicit: viewValue }" />
+                    <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
+                        <ng-container *ngTemplateOutlet="view; context: { $implicit: displayValue() }" />
                     </div>
 
                     <div kbqInlineEditEditMode>
@@ -53,6 +52,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                             <kbq-form-field>
                                 <textarea
                                     kbqTextarea
+                                    [maxRows]="maxRows"
                                     [placeholder]="placeholder"
                                     [formControl]="form.controls.style"
                                 ></textarea>
@@ -87,7 +87,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <kbq-dl [vertical]="false">
                 <kbq-dt class="example-multiline-text__header">Style</kbq-dt>
                 <kbq-dd>
-                    <kbq-inline-edit #textareaInlineEditHorizontal>
+                    <kbq-inline-edit #textareaInlineEditHorizontal showActions (saved)="update()">
                         <i
                             kbqInlineEditMenu
                             kbq-icon-button="kbq-ellipsis-vertical_16"
@@ -95,13 +95,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                             [color]="'contrast-fade'"
                         ></i>
                         <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
-                            <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.style.value }" />
+                            <ng-container *ngTemplateOutlet="view; context: { $implicit: displayValue() }" />
                         </div>
                         <div kbqInlineEditEditMode>
                             @if (textareaInlineEditHorizontal.modeAsReadonly() === 'edit') {
                                 <kbq-form-field>
                                     <textarea
                                         kbqTextarea
+                                        [maxRows]="maxRows"
                                         [placeholder]="placeholder"
                                         [formControl]="form.controls.style"
                                     ></textarea>
@@ -136,11 +137,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             </kbq-dl>
         </div>
 
-        <ng-template #view let-value>
-            @if (!value) {
+        <ng-template #view let-templateValue>
+            @if (!templateValue) {
                 <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
             } @else {
-                {{ value }}
+                <span>{{ templateValue }}</span>
             }
         </ng-template>
 
@@ -188,6 +189,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditMenuExample {
+    protected readonly maxRows = 10;
     protected readonly clipboard = inject(Clipboard);
     protected readonly placeholder = 'Placeholder';
 

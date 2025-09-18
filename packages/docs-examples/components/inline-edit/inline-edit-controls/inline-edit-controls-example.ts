@@ -58,6 +58,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                                 <kbq-form-field>
                                     <textarea
                                         kbqTextarea
+                                        [maxRows]="maxRows"
                                         [placeholder]="placeholder"
                                         [formControl]="form.controls.textarea"
                                     ></textarea>
@@ -160,6 +161,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditControlsExample {
+    protected readonly maxRows = 10;
     protected readonly placeholder = 'Placeholder';
     protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i + 1}`);
 
