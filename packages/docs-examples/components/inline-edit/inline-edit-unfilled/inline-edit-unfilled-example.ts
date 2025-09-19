@@ -74,6 +74,10 @@ import { KbqInputModule } from '@koobiq/components/input';
         </ng-template>
     `,
     styles: `
+        .kbq-dl {
+            --kbq-description-list-size-horizontal-gap-vertical: 0;
+        }
+
         .kbq-dt {
             display: inline-flex;
             align-items: center;

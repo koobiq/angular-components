@@ -34,7 +34,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <div role="group" class="layout-flex layout-column flex" aria-label="vertical list">
             <span class="kbq-text-normal-strong">Vertical list</span>
 
-            <div class="layout-flex layout-column layout-gap-xs example-content__container">
+            <div class="layout-flex layout-column example-content__container">
                 <kbq-inline-edit #textareaInlineEditVertical showActions (saved)="update()">
                     <kbq-label>Style</kbq-label>
                     <i

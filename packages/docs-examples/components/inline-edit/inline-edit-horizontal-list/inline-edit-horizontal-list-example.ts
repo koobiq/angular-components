@@ -75,6 +75,10 @@ import { KbqInputModule } from '@koobiq/components/input';
             width: 100%;
         }
 
+        .kbq-dl {
+            --kbq-description-list-size-horizontal-gap-vertical: 0;
+        }
+
         .kbq-dt {
             display: inline-flex;
             align-items: center;
