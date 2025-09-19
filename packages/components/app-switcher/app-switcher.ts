@@ -32,6 +32,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
     KbqComponentColors,
+    KbqOptionModule,
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
@@ -47,7 +48,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { merge, Subscription } from 'rxjs';
+import { Subscription, merge } from 'rxjs';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
 import { KbqAppSwitcherApp } from './app-switcher-app';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
@@ -147,7 +148,8 @@ export const DATA_OBJECT = {
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,
         KbqAppSwitcherApp,
-        KbqScrollbarModule
+        KbqScrollbarModule,
+        KbqOptionModule
     ],
     animations: [kbqAppSwitcherAnimations.state]
 })
@@ -667,6 +669,7 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
 
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible: boolean) => {
             if (visible) {
+                // eslint-disable-next-line rxjs/no-nested-subscribe
                 this.preventClosingByInnerScrollSubscription = this.closingActions().subscribe((event) => {
                     if (event['scrollDispatcher']) {
                         event['kbqPopoverPreventHide'] = true;

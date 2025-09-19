@@ -6,14 +6,16 @@ import {
     DATA_OBJECT,
     FileFlatNode,
     FileNode,
+    KbqAppSwitcherApp,
     KbqAppSwitcherModule
 } from '@koobiq/components/app-switcher';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
 
@@ -43,7 +45,10 @@ class DevExamples {}
         KbqTreeModule,
         KbqDropdownModule,
         KbqDividerModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqScrollbar,
+        KbqAppSwitcherApp,
+        KbqOptionModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -94,7 +99,8 @@ export class DevApp {
                 },
                 {
                     name: 'Name',
-                    caption: 'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
                     apps: [
                         {
                             name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
@@ -113,7 +119,8 @@ export class DevApp {
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    caption: 'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
+                    caption:
+                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
                     apps: [
                         {
                             name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name'
