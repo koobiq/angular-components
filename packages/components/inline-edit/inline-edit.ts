@@ -246,8 +246,7 @@ export class KbqInlineEdit implements AfterContentInit {
             formFieldRef?.focus();
             this.initialValue = this.getValue();
 
-            const input: HTMLInputElement | HTMLTextAreaElement | null =
-                this.overlayDir()!.overlayRef.overlayElement.querySelector('input,textarea');
+            const input = this.getInputNativeElement();
 
             if (this.initialValue) input?.select();
 
@@ -272,6 +271,13 @@ export class KbqInlineEdit implements AfterContentInit {
     /** @docs-private */
     protected cancel(): void {
         this.setValue(this.initialValue);
+
+        const input = this.getInputNativeElement();
+
+        //
+        if (input) {
+            input.selectionStart = input.selectionEnd = null;
+        }
 
         this.toggleMode();
         this.canceled.emit();
@@ -375,5 +381,9 @@ export class KbqInlineEdit implements AfterContentInit {
         } else if (control instanceof KbqAutocompleteTrigger) {
             control.openPanel();
         }
+    }
+
+    private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {
+        return this.overlayDir()?.overlayRef.overlayElement.querySelector('input,textarea') ?? null;
     }
 }
