@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+
+const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`);
 
 /**
  * @title Tag list editable
@@ -12,16 +14,22 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
 @Component({
     standalone: true,
     selector: 'tag-list-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule, JsonPipe, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule, JsonPipe],
     template: `
-        <kbq-tag-list editable [(ngModel)]="tags">
+        <kbq-tag-list editable>
             @for (tag of tags(); track $index) {
-                <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($index)">
+                <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                     {{ tag }}
                     <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
-                    <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
+                    @if (tag.length === 0) {
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
+                    } @else {
+                        <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
+                    }
                     <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
+            } @empty {
+                <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="color.ContrastFade" (click)="restart()"></i>
             }
         </kbq-tag-list>
 
@@ -35,11 +43,12 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
             flex-direction: column;
             align-items: center;
             gap: var(--kbq-size-xl);
-            margin: var(--kbq-size-xl);
+            min-height: var(--kbq-size-7xl);
+            margin: var(--kbq-size-5xl);
         }
 
         .kbq-tag-list {
-            width: 100%;
+            max-width: 100%;
         }
 
         small {
@@ -49,28 +58,54 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagListEditableExample {
-    protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
     protected readonly color = KbqComponentColors;
+    protected readonly tags = model(getTags());
+    private prevTags = this.tags().slice();
 
-    protected editChange({ reason, type }: KbqTagEditChange, index: number): void {
+    protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
         switch (type) {
             case 'start': {
                 console.info(`Tag #${index} edit was started. Reason: "${reason}".`);
+
+                this.prevTags = this.tags().slice();
+
                 break;
             }
             case 'cancel': {
                 console.info(`Tag #${index} edit was canceled. Reason: "${reason}".`);
+
+                this.tags.update((tags) => {
+                    tags[index] = this.prevTags[index];
+
+                    return tags;
+                });
+
                 break;
             }
             case 'submit': {
                 console.info(`Tag #${index} edit was submitted. Reason: "${reason}".`);
+
+                if (!tag.value) tag.remove();
+
                 break;
             }
             default:
         }
     }
 
-    protected remove(index: number): void {
-        console.info(`Tag #${index} edit was removed.`);
+    protected remove(event: KbqTagEvent): void {
+        this.tags.update((tags) => {
+            const index = tags.indexOf(event.tag.value);
+
+            tags.splice(index, 1);
+
+            console.info(`Tag #${index} was removed.`);
+
+            return tags;
+        });
+    }
+
+    protected restart(): void {
+        this.tags.update(() => getTags());
     }
 }

@@ -22,8 +22,8 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
     ],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList>
-                @for (tag of tags; track tag) {
+            <kbq-tag-list #tagList="kbqTagList">
+                @for (tag of tags; track $index) {
                     <kbq-tag [value]="tag" (removed)="onRemoveTag(tag)">
                         {{ tag }}
                         <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
@@ -31,6 +31,7 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
                 }
 
                 <input
+                    autocomplete="off"
                     kbqInput
                     placeholder="New tag..."
                     [formControl]="control"

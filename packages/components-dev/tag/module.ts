@@ -26,12 +26,29 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TagExamplesModule } from '../../docs-examples/components/tag';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
     imports: [TagExamplesModule],
     selector: 'dev-examples',
     template: `
+        <tag-list-draggable-example />
+        <hr />
+        <tag-input-draggable-example />
+        <hr />
+        <tag-selectable-example />
+        <hr />
+        <tag-list-selectable-example />
+        <hr />
+        <tag-input-selectable-example />
+        <hr />
+        <tag-removable-example />
+        <hr />
+        <tag-list-removable-example />
+        <hr />
+        <tag-input-removable-example />
+        <hr />
         <tag-editable-example />
         <hr />
         <tag-editable-with-validation-example />
@@ -54,9 +71,8 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
         <hr />
         <tag-with-icon-example />
         <hr />
-        <tag-with-remove-button-example />
-        <hr />
         <tag-input-with-form-control-validators-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -73,7 +89,8 @@ export class DevExamples {}
         KbqIconModule,
         KbqTitleModule,
         DevExamples,
-        AsyncPipe
+        AsyncPipe,
+        DevThemeToggle
     ],
     providers: [
         {

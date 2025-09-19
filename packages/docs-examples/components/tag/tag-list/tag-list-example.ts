@@ -15,7 +15,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
     ],
     template: `
         <kbq-tag-list>
-            @for (tag of simpleTags; track tag) {
+            @for (tag of simpleTags; track $index) {
                 <kbq-tag [value]="tag" (removed)="onRemoveTag(tag)">
                     {{ tag }}
                     <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>

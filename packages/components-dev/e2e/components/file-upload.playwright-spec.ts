@@ -1,17 +1,15 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-
-const getThemeToggle = (page: Page) => page.getByTestId('e2eThemeToggle');
+import { devEnableDarkTheme, devGoToRootPage } from '../utils';
 
 test.describe('KbqFileUploadModule', () => {
     test.describe('DevFileUploadStateAndStyle', () => {
-        const goToPage = (page: Page) => page.goto('/');
         const getComponent = (page: Page) => page.getByTestId('e2eFileUploadStateAndStyle');
         const getSingleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eSingleFileUploadTable');
         const getMultipleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eMultipleFileUploadTable');
         const focusFileItem = (locator: Locator) => locator.locator('.dev-focused .kbq-list-selection')?.focus();
 
         test('KbqSingleFileUploadComponent states', async ({ page }) => {
-            await goToPage(page);
+            await devGoToRootPage(page);
             const locator = getComponent(page);
 
             const screenshotTarget = getSingleFileUploadTable(locator);
@@ -20,8 +18,8 @@ test.describe('KbqFileUploadModule', () => {
         });
 
         test(`KbqSingleFileUploadComponent states (dark theme)`, async ({ page }) => {
-            await goToPage(page);
-            await getThemeToggle(page).click();
+            await devGoToRootPage(page);
+            await devEnableDarkTheme(page);
 
             const locator = getComponent(page);
 
@@ -31,7 +29,7 @@ test.describe('KbqFileUploadModule', () => {
         });
 
         test('KbqMultipleFileUploadComponent states', async ({ page }) => {
-            await goToPage(page);
+            await devGoToRootPage(page);
             const locator = getComponent(page);
 
             const screenshotTarget = getMultipleFileUploadTable(locator);
@@ -40,8 +38,8 @@ test.describe('KbqFileUploadModule', () => {
         });
 
         test(`KbqMultipleFileUploadComponent states (dark theme)`, async ({ page }) => {
-            await goToPage(page);
-            await getThemeToggle(page).click();
+            await devGoToRootPage(page);
+            await devEnableDarkTheme(page);
 
             const locator = getComponent(page);
 
