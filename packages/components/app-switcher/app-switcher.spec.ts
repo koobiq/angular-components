@@ -6,7 +6,6 @@ import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import { KbqAppSwitcherModule } from './app-switcher.module';
 
-
 describe('KbqAppSwitcher', () => {
     let fixture: ComponentFixture<AppSwitcherSimple>;
     let componentInstance: AppSwitcherSimple;
@@ -48,6 +47,9 @@ describe('KbqAppSwitcher', () => {
         });
 
         it('kbqTrigger = hover', fakeAsync(() => {
+            console.log('componentInstance: ', componentInstance);
+            console.log('debugElement: ', debugElement);
+            console.log('overlayContainerElement: ', overlayContainerElement);
             expect(true).toBe(true);
         }));
     });

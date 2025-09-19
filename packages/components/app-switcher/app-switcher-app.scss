@@ -74,7 +74,6 @@
 
     border-radius: var(--kbq-size-xxs);
 
-
     & .kbq-icon {
         transform: rotate(0deg);
     }
@@ -109,13 +108,9 @@
 }
 
 @mixin kbq-app-switcher-app-theme() {
-
     .kbq-app-switcher-site_nested:after {
         border-left-color: var(--kbq-line-contrast-less);
         border-bottom-color: var(--kbq-line-contrast-less);
-    }
-
-    .kbq-app-switcher-app__name {
     }
 
     .kbq-app-switcher-app__caption {
