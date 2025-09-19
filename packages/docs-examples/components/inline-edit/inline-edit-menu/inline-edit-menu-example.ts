@@ -193,7 +193,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditMenuExample {
-    protected readonly maxRows = 10;
+    protected readonly maxRows = 20;
     protected readonly clipboard = inject(Clipboard);
     protected readonly placeholder = 'Placeholder';
 

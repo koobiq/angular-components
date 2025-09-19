@@ -161,7 +161,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditControlsExample {
-    protected readonly maxRows = 10;
+    protected readonly maxRows = 20;
     protected readonly placeholder = 'Placeholder';
     protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i + 1}`);
 
