@@ -28,6 +28,7 @@
             [cdkConnectedOverlayWidth]="overlayWidth()"
             [cdkConnectedOverlayDisableClose]="true"
             [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
+            [cdkConnectedOverlayHasBackdrop]="true"
             (attach)="onAttach()"
             (overlayOutsideClick)="save($event)"
             (overlayKeydown)="onOverlayKeydown($event)"
