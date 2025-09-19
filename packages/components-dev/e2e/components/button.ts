@@ -43,7 +43,7 @@ type DevButton = DevButtonState & DevButtonStyle;
             <kbq-checkbox data-testid="e2eShowSuffixIcon" [(ngModel)]="showSuffixIcon">show suffix icon</kbq-checkbox>
         </div>
 
-        <table>
+        <table data-testid="e2eScreenshotTarget">
             @for (buttons of rows; track buttons) {
                 <tr>
                     @for (button of buttons; track button.title) {

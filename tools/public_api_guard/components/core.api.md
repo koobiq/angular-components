@@ -52,6 +52,7 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -2099,6 +2100,15 @@ export class KbqHighlightPipe implements PipeTransform {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightPipe, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightPipe, "mcHighlight", false>;
+}
+
+// @public
+export class KbqHovered {
+    readonly hovered: Signal<boolean>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqHovered, "[kbqHovered]", ["kbqHovered"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqHovered, never>;
 }
 
 // @public

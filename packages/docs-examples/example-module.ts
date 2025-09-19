@@ -24,18 +24,6 @@ export interface LiveExample {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
-  "clamped-text-overview": {
-    "packagePath": "clamped-text/clamped-text-overview",
-    "title": "Clamped-text overview",
-    "componentName": "ClampedTextOverviewExample",
-    "files": [
-      "clamped-text-overview-example.ts"
-    ],
-    "selector": "clamped-text-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "clamped-text-overview-example.ts",
-    "importPath": "clamped-text"
-  },
   "accordion-content": {
     "packagePath": "components/accordion/accordion-content",
     "title": "Accordion content",
@@ -742,6 +730,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
+  },
+  "clamped-text-overview": {
+    "packagePath": "components/clamped-text/clamped-text-overview",
+    "title": "Clamped-text overview",
+    "componentName": "ClampedTextOverviewExample",
+    "files": [
+      "clamped-text-overview-example.ts"
+    ],
+    "selector": "clamped-text-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-text-overview-example.ts",
+    "importPath": "components/clamped-text"
   },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
@@ -1456,6 +1456,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "experimental-form-field-without-borders-example.ts",
     "importPath": "components/experimental-form-field"
   },
+  "file-upload-custom-text-via-input": {
+    "packagePath": "components/file-upload/file-upload-custom-text-via-input",
+    "title": "File-upload custom text via input example",
+    "componentName": "FileUploadCustomTextViaInputExample",
+    "files": [
+      "file-upload-custom-text-via-input-example.ts"
+    ],
+    "selector": "file-upload-custom-text-via-input-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-custom-text-via-input-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-cva-overview": {
     "packagePath": "components/file-upload/file-upload-cva-overview",
     "title": "File-upload with control value accessor",
@@ -1552,9 +1564,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-multiple-error-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-multiple-mixed-validation": {
+    "packagePath": "components/file-upload/file-upload-multiple-mixed-validation",
+    "title": "File upload multiple mixed validation example",
+    "componentName": "FileUploadMultipleMixedValidationExample",
+    "files": [
+      "file-upload-multiple-mixed-validation-example.ts"
+    ],
+    "selector": "file-upload-multiple-mixed-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-mixed-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-multiple-required-reactive-validation": {
     "packagePath": "components/file-upload/file-upload-multiple-required-reactive-validation",
-    "title": "File Upload Multiple Required Reactive Validation Example",
+    "title": "File upload multiple required reactive validation example",
     "componentName": "FileUploadMultipleRequiredReactiveValidationExample",
     "files": [
       "file-upload-multiple-required-reactive-validation-example.ts"
@@ -1588,6 +1612,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-single-error-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-single-mixed-validation": {
+    "packagePath": "components/file-upload/file-upload-single-mixed-validation",
+    "title": "File upload single mixed validation example",
+    "componentName": "FileUploadSingleMixedValidationExample",
+    "files": [
+      "file-upload-single-mixed-validation-example.ts"
+    ],
+    "selector": "file-upload-single-mixed-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-mixed-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-single-overview": {
     "packagePath": "components/file-upload/file-upload-single-overview",
     "title": "File-upload single",
@@ -1602,7 +1638,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-required-reactive-validation": {
     "packagePath": "components/file-upload/file-upload-single-required-reactive-validation",
-    "title": "File Upload Single Required Reactive Validation Example",
+    "title": "File upload single required reactive validation example",
     "componentName": "FileUploadSingleRequiredReactiveValidationExample",
     "files": [
       "file-upload-single-required-reactive-validation-example.ts"
@@ -3837,6 +3873,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-input-editable-example.ts",
     "importPath": "components/tag"
   },
+  "tag-input-removable": {
+    "packagePath": "components/tag/tag-input-removable",
+    "title": "Tag input removable",
+    "componentName": "TagInputRemovableExample",
+    "files": [
+      "tag-input-removable-example.ts"
+    ],
+    "selector": "tag-input-removable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-removable-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-input-selectable": {
+    "packagePath": "components/tag/tag-input-selectable",
+    "title": "Tag input selectable",
+    "componentName": "TagInputSelectableExample",
+    "files": [
+      "tag-input-selectable-example.ts"
+    ],
+    "selector": "tag-input-selectable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-selectable-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tag/tag-input-with-form-control-validators",
     "title": "Tag input with form control validators.",
@@ -3871,6 +3931,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-list-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-editable-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-list-removable": {
+    "packagePath": "components/tag/tag-list-removable",
+    "title": "Tag list removable",
+    "componentName": "TagListRemovableExample",
+    "files": [
+      "tag-list-removable-example.ts"
+    ],
+    "selector": "tag-list-removable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-list-removable-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-list-selectable": {
+    "packagePath": "components/tag/tag-list-selectable",
+    "title": "Tag list selectable",
+    "componentName": "TagListSelectableExample",
+    "files": [
+      "tag-list-selectable-example.ts"
+    ],
+    "selector": "tag-list-selectable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-list-selectable-example.ts",
     "importPath": "components/tag"
   },
   "tag-list": {
@@ -3909,6 +3993,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-overview-example.ts",
     "importPath": "components/tag"
   },
+  "tag-removable": {
+    "packagePath": "components/tag/tag-removable",
+    "title": "Tag removable",
+    "componentName": "TagRemovableExample",
+    "files": [
+      "tag-removable-example.ts"
+    ],
+    "selector": "tag-removable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-removable-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-selectable": {
+    "packagePath": "components/tag/tag-selectable",
+    "title": "Tag selectable",
+    "componentName": "TagSelectableExample",
+    "files": [
+      "tag-selectable-example.ts"
+    ],
+    "selector": "tag-selectable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-selectable-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-with-icon": {
     "packagePath": "components/tag/tag-with-icon",
     "title": "Tag with icon",
@@ -3919,18 +4027,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-with-icon-example",
     "additionalComponents": [],
     "primaryFile": "tag-with-icon-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-with-remove-button": {
-    "packagePath": "components/tag/tag-with-remove-button",
-    "title": "Tag with remove button",
-    "componentName": "TagWithRemoveButtonExample",
-    "files": [
-      "tag-with-remove-button-example.ts"
-    ],
-    "selector": "tag-with-remove-button-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-with-remove-button-example.ts",
     "importPath": "components/tag"
   },
   "tags-autocomplete-onpaste-off": {
@@ -4915,8 +5011,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
 };
 export async function loadExample(id: string): Promise<any> {
   switch (id) {
-  case 'clamped-text-overview':
-return import('@koobiq/docs-examples/clamped-text');
   case 'accordion-content':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-header':
@@ -5027,6 +5121,8 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'clamped-text-overview':
+return import('@koobiq/docs-examples/components/clamped-text');
   case 'code-block-with-custom-locale-configuration':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':
@@ -5143,6 +5239,8 @@ return import('@koobiq/docs-examples/components/experimental-form-field');
 return import('@koobiq/docs-examples/components/experimental-form-field');
   case 'experimental-form-field-without-borders':
 return import('@koobiq/docs-examples/components/experimental-form-field');
+  case 'file-upload-custom-text-via-input':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-cva-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-indeterminate-loading-overview':
@@ -5159,11 +5257,15 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-mixed-validation':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-required-reactive-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-error-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-mixed-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-overview':
 return import('@koobiq/docs-examples/components/file-upload');
@@ -5529,11 +5631,19 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-editable':
 return import('@koobiq/docs-examples/components/tag');
+  case 'tag-input-removable':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-input-selectable':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-editable':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-list-removable':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-list-selectable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list':
 return import('@koobiq/docs-examples/components/tag');
@@ -5541,9 +5651,11 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-overview':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-with-icon':
+  case 'tag-removable':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-with-remove-button':
+  case 'tag-selectable':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-with-icon':
 return import('@koobiq/docs-examples/components/tag');
   case 'tags-autocomplete-onpaste-off':
 return import('@koobiq/docs-examples/components/tag');

@@ -1,6 +1,18 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { Component, DebugElement, NgZone, Provider, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
+import { A } from '@angular/cdk/keycodes';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    NgZone,
+    Provider,
+    QueryList,
+    Type,
+    ViewChild,
+    ViewChildren,
+    model
+} from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -21,6 +33,88 @@ import { KbqInputModule } from '../input/index';
 import { KbqTagList, KbqTagsModule } from './index';
 import { KbqTagInputEvent } from './tag-input';
 import { KbqTag, KbqTagEvent, KbqTagRemove } from './tag.component';
+
+const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({
+        imports: [component, NoopAnimationsModule],
+        providers
+    });
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
+
+const getTagListElement = (debugElement: DebugElement): HTMLElement => {
+    return debugElement.query(By.directive(KbqTagList)).nativeElement;
+};
+
+const getTagElements = (debugElement: DebugElement): HTMLElement[] => {
+    return Array.from(debugElement.queryAll(By.directive(KbqTag))).map((tag) => tag.nativeElement);
+};
+
+const getLastTagElement = (debugElement: DebugElement): HTMLElement => {
+    return getTagElements(debugElement).at(-1)!;
+};
+
+const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
+    return getTagElements(debugElement).filter((tag) => tag.classList.contains('kbq-selected'));
+};
+
+@Component({
+    standalone: true,
+    selector: 'test-multiple-selectable-removable-tag-list',
+    imports: [KbqTagsModule],
+    template: `
+        <!-- KbqTagList does not support dynamic multiple attribute changes -->
+        @if (multiple()) {
+            <kbq-tag-list multiple [selectable]="selectable()" [removable]="removable()">
+                @for (tag of tags(); track $index) {
+                    <kbq-tag
+                        [selected]="tag.selected"
+                        [attr.id]="tag.id"
+                        [value]="tag.value"
+                        (selectionChange)="selectionChange($event)"
+                        (removed)="removedChange($event)"
+                    >
+                        {{ tag.value }}
+                    </kbq-tag>
+                }
+            </kbq-tag-list>
+        } @else {
+            <kbq-tag-list [selectable]="selectable()" [removable]="removable()">
+                @for (tag of tags(); track $index) {
+                    <kbq-tag
+                        [selected]="tag.selected"
+                        [attr.id]="tag.id"
+                        [value]="tag.value"
+                        (selectionChange)="selectionChange($event)"
+                        (removed)="removedChange($event)"
+                    >
+                        {{ tag.value }}
+                    </kbq-tag>
+                }
+            </kbq-tag-list>
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestMultipleSelectableRemovableTagList {
+    readonly multiple = model(true);
+    readonly tags = model<Array<{ id: string; value: string; selected: boolean }>>(
+        Array.from({ length: 3 }, (_, i) => ({
+            id: `tag${i}`,
+            value: `tag${i}`,
+            selected: false
+        }))
+    );
+    readonly selectable = model(true);
+    readonly removable = model(true);
+
+    readonly selectionChange = jest.fn();
+    readonly removedChange = jest.fn();
+}
 
 describe(KbqTagList.name, () => {
     let fixture: ComponentFixture<any>;
@@ -1018,16 +1112,9 @@ describe(KbqTagList.name, () => {
 
         it('should keep focus on the input after adding the first chip', fakeAsync(() => {
             const nativeInput = fixture.nativeElement.querySelector('input');
-            const chipEls = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.kbq-tag')).reverse();
 
-            // Remove the tags via backspace to simulate the user removing them.
-            chipEls.forEach((tag) => {
-                tag.focus();
-                flush();
-                dispatchKeyboardEvent(tag, 'keydown', BACKSPACE);
-                fixture.detectChanges();
-                tick();
-            });
+            fixture.componentInstance.foods = [];
+            fixture.detectChanges();
 
             nativeInput.focus();
             expect(fixture.componentInstance.foods).toEqual([]);
@@ -1188,6 +1275,7 @@ describe(KbqTagList.name, () => {
         });
     });
 
+    /** @deprecated Use `createStandaloneComponent` instead. */
     function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
         TestBed.configureTestingModule({
             imports: [
@@ -1238,6 +1326,176 @@ describe(KbqTagList.name, () => {
         testComponent = fixture.debugElement.componentInstance;
         tags = tagListInstance.tags;
     }
+
+    it('should select all on Ctrl + A', () => {
+        const { debugElement, componentInstance } = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
+
+        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
+        getTagListElement(debugElement).dispatchEvent(event);
+
+        expect(getSelectedTags(debugElement).length).toBe(componentInstance.tags().length);
+    });
+
+    it('should NOT select all on Ctrl + A when not selectable', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.selectable.set(false);
+        fixture.detectChanges();
+
+        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
+
+        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
+        getTagListElement(debugElement).dispatchEvent(event);
+
+        expect(getSelectedTags(debugElement).length).toBe(0);
+    });
+
+    it('should NOT select all on Ctrl + A when not multiple', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
+
+        componentInstance.multiple.set(false);
+        fixture.detectChanges();
+
+        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
+        getTagListElement(debugElement).dispatchEvent(event);
+
+        expect(getSelectedTags(debugElement).length).toBe(0);
+    });
+
+    it('should emit KbqTagSelectionChange event on Ctrl + A', () => {
+        const { debugElement, componentInstance } = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
+
+        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
+        getTagListElement(debugElement).dispatchEvent(event);
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledTimes(componentInstance.tags().length);
+    });
+
+    it('should NOT emit KbqTagSelectionChange event on Ctrl + A when not selectable', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.selectable.set(false);
+        fixture.detectChanges();
+
+        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
+
+        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
+        getTagListElement(debugElement).dispatchEvent(event);
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('should NOT emit KbqTagSelectionChange event on Ctrl + A when not multiple', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
+
+        componentInstance.multiple.set(false);
+        fixture.detectChanges();
+
+        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
+        getTagListElement(debugElement).dispatchEvent(event);
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('should remove all on DELETE keydown', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.tags.update((tags) =>
+            tags.map((tag) => {
+                tag.selected = true;
+
+                return tag;
+            })
+        );
+        fixture.detectChanges();
+
+        expect(getSelectedTags(debugElement).length).toBe(componentInstance.tags().length);
+
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(componentInstance.tags().length);
+    });
+
+    it('should remove all on BACKSPACE keydown', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.tags.update((tags) =>
+            tags.map((tag) => {
+                tag.selected = true;
+
+                return tag;
+            })
+        );
+        fixture.detectChanges();
+
+        expect(getSelectedTags(debugElement).length).toBe(componentInstance.tags().length);
+
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(componentInstance.tags().length);
+    });
+
+    it('should ignore DELETE/BACKSPACE keydown when not removable', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.tags.update((tags) =>
+            tags.map((tag) => {
+                tag.selected = true;
+
+                return tag;
+            })
+        );
+        componentInstance.removable.set(false);
+        fixture.detectChanges();
+
+        expect(getSelectedTags(debugElement).length).toBe(componentInstance.tags().length);
+
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('should remove focused tag when not selected tags', () => {
+        const { debugElement, componentInstance } = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledWith(
+            expect.objectContaining({ tag: expect.objectContaining({ value: 'tag2' }) })
+        );
+    });
+
+    it('should NOT remove focused tag when has selected tags', () => {
+        const fixture = createStandaloneComponent(TestMultipleSelectableRemovableTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.tags.update((tags) =>
+            tags.map((tag, index) => {
+                tag.selected = index === 0;
+
+                return tag;
+            })
+        );
+        fixture.detectChanges();
+
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+
+        expect(componentInstance.removedChange).toHaveBeenCalledWith(
+            expect.objectContaining({ tag: expect.objectContaining({ value: 'tag0' }) })
+        );
+    });
 });
 
 @Component({

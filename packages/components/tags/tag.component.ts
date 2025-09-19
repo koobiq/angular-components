@@ -1,5 +1,4 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
@@ -26,13 +25,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
     isNull,
-    isUndefined,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
     KbqFieldSizingContent,
+    KbqHovered,
     kbqInjectElementRef,
     KbqTitleTextRef
 } from '@koobiq/components/core';
@@ -157,6 +157,7 @@ export class KbqTagEditInput {
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
+    hostDirectives: [KbqHovered],
     template: `
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
@@ -170,7 +171,9 @@ export class KbqTagEditInput {
             @if (editing()) {
                 <ng-content select="[kbqTagEditSubmit]" />
             } @else {
-                <ng-content select="[kbqTagRemove]" />
+                @if (removable) {
+                    <ng-content select="[kbqTagRemove]" />
+                }
             }
         </div>
     `,
@@ -189,6 +192,8 @@ export class KbqTagEditInput {
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-tag_editable]': 'editable',
         '[class.kbq-tag_editing]': 'editing()',
+        '[class.kbq-tag_removable]': 'removable',
+        '[class.kbq-tag_selectable]': 'selectable',
 
         '(dblclick)': 'handleDblClick($event)',
         '(mousedown)': 'handleMousedown($event)',
@@ -207,34 +212,34 @@ export class KbqTag
     /** @docs-private */
     readonly elementRef = kbqInjectElementRef();
 
-    /** Emits when the tag is focused. */
+    /**
+     * Emits when the tag is focused.
+     *
+     * @docs-private
+     */
     readonly onFocus = new Subject<KbqTagEvent>();
 
-    /** Emits when the tag is blurred. */
+    /**
+     * Emits when the tag is blurred.
+     *
+     * @docs-private
+     */
     readonly onBlur = new Subject<KbqTagEvent>();
 
     /** @docs-private */
     readonly nativeElement = this.elementRef.nativeElement;
 
-    /** Whether the tag has focus. */
-    hasFocus: boolean = false;
-
-    /** Whether the tag list is selectable */
-    tagListSelectable: boolean = true;
-
     /**
-     * Whether the tag list is editable.
+     * Whether the tag has focus.
      *
      * @docs-private
      */
-    private get tagListEditable(): boolean {
-        return !!this.tagList?.editable;
-    }
+    hasFocus: boolean = false;
 
     /** Whether the tag is editable. */
     @Input({ transform: booleanAttribute })
     get editable(): boolean {
-        return isUndefined(this._editable) ? this.tagListEditable : this._editable;
+        return this._editable ?? !!this.tagList?.editable;
     }
 
     set editable(value: boolean) {
@@ -285,16 +290,14 @@ export class KbqTag
     @Output() readonly removed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
 
     /** Whether the tag is selected. */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get selected(): boolean {
         return this._selected;
     }
 
     set selected(value: boolean) {
-        const coercedValue = coerceBooleanProperty(value);
-
-        if (coercedValue !== this._selected) {
-            this._selected = coercedValue;
+        if (value !== this._selected) {
+            this._selected = value;
             this.dispatchSelectionChange();
         }
     }
@@ -319,27 +322,27 @@ export class KbqTag
      * selectable, and it becomes non-selectable if its parent tag list is
      * not selectable.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get selectable(): boolean {
-        return this._selectable && this.tagListSelectable;
+        return this._selectable && (this.tagList?.selectable ?? true);
     }
 
     set selectable(value: boolean) {
-        this._selectable = coerceBooleanProperty(value);
+        this._selectable = value;
     }
 
     private _selectable: boolean = true;
 
     /**
-     * Determines whether or not the tag displays the remove styling and emits (removed) events.
+     * Determines whether the tag is removable.
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get removable(): boolean {
-        return this._removable;
+        return this._removable && (this.tagList?.removable ?? true);
     }
 
     set removable(value: boolean) {
-        this._removable = coerceBooleanProperty(value);
+        this._removable = value;
     }
 
     private _removable: boolean = true;
@@ -355,12 +358,12 @@ export class KbqTag
 
     private _tabindex = -1;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     get disabled() {
         return this._disabled;
     }
 
-    set disabled(value: any) {
+    set disabled(value: boolean) {
         if (value !== this.disabled) {
             this._disabled = value;
         }
@@ -385,12 +388,13 @@ export class KbqTag
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
-            isNull(focusOrigin) ? this.blur() : this.focus();
-        });
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .subscribe((focusOrigin) => (isNull(focusOrigin) ? this.blur() : this.focus()));
     }
 
     ngOnDestroy(): void {
+        this.cancelEditing('destroy');
         this.focusMonitor.stopMonitoring(this.elementRef);
         this.destroyed.emit({ tag: this });
     }
@@ -434,6 +438,8 @@ export class KbqTag
     }
 
     select(): void {
+        if (this.disabled || !this.selectable) return;
+
         if (!this._selected) {
             this._selected = true;
             this.dispatchSelectionChange();
@@ -441,6 +447,8 @@ export class KbqTag
     }
 
     deselect(): void {
+        if (this.disabled || !this.selectable) return;
+
         if (this._selected) {
             this._selected = false;
             this.dispatchSelectionChange();
@@ -448,6 +456,8 @@ export class KbqTag
     }
 
     selectViaInteraction(): void {
+        if (this.disabled || !this.selectable) return;
+
         if (!this._selected) {
             this._selected = true;
             this.dispatchSelectionChange(true);
@@ -455,6 +465,8 @@ export class KbqTag
     }
 
     toggleSelected(isUserInput: boolean = false): boolean {
+        if (this.disabled || !this.selectable) return this.selected;
+
         this._selected = !this.selected;
         this.dispatchSelectionChange(isUserInput);
 
@@ -463,18 +475,16 @@ export class KbqTag
 
     /** Allows for programmatic focusing of the tag. */
     focus(): void {
-        if (!this.selectable && !this.editable) return;
+        if ((!this.selectable && !this.editable) || this.editing() || this.hasFocus) return;
 
-        if (!this.hasFocus) {
-            if (!this.editing()) this.elementRef.nativeElement.focus();
+        this.elementRef.nativeElement.focus();
 
-            this.onFocus.next({ tag: this });
+        this.onFocus.next({ tag: this });
 
-            Promise.resolve().then(() => {
-                this.hasFocus = true;
-                this.changeDetectorRef.markForCheck();
-            });
-        }
+        Promise.resolve().then(() => {
+            this.hasFocus = true;
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -490,25 +500,23 @@ export class KbqTag
     }
 
     /** @docs-private */
-    handleMousedown(event: Event) {
-        if (this.disabled || !this.selectable) {
-            event.preventDefault();
-        } else {
-            event.stopPropagation();
-        }
+    handleMousedown(event: MouseEvent): void {
+        if (this.disabled || (!this.selectable && !this.editable) || this.editing()) return event.preventDefault();
+
+        if (hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey') && this.selectable) this.toggleSelected(true);
+
+        event.stopPropagation();
     }
 
     /** @docs-private */
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled || this.editing()) return;
 
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE:
-                // If we are removable, remove the focused tag
-                this.remove();
+                this.tagList?.selectionModel.selected.length ? this.tagList.removeSelected() : this.remove();
+
                 // Always prevent so page navigation does not occur
                 event.preventDefault();
                 break;
@@ -531,8 +539,6 @@ export class KbqTag
 
     /** @docs-private */
     blur(): void {
-        this.cancelEditing('focusout');
-
         // When animations are enabled, Angular may end up removing the tag from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the tag list
         // that moves focus not the next item. To work around the issue, we defer marking the tag
@@ -544,6 +550,8 @@ export class KbqTag
                 this._ngZone.run(() => {
                     this.hasFocus = false;
                     this.onBlur.next({ tag: this });
+                    this.cancelEditing('blur');
+                    this.changeDetectorRef.markForCheck();
                 });
             });
     }
@@ -578,7 +586,8 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'cancel', reason });
-        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
+
+        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
     }
 
     /** @docs-private */
@@ -587,7 +596,8 @@ export class KbqTag
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });
-        this.textElement.nativeElement.scrollTo({ left: 0, behavior: 'instant' });
+
+        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
     }
 
     private dispatchSelectionChange(isUserInput = false) {

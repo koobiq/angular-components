@@ -26,6 +26,29 @@ Tag text does not wrap to a new line; instead, it is truncated with an ellipsis.
 
 <!-- example(tag-long-text) -->
 
+### Selection
+
+Tags can be selected in several ways:
+
+- Click on a tag while holding `Ctrl` or `Shift`.
+- Programmatic selection through the component [API](/en/components/tag/api).
+
+The selection option is configured using the `selectable` attribute (enabled by default).
+
+<!-- example(tag-selectable) -->
+
+### Removal
+
+Tags can be removed in several ways:
+
+- Click on the remove icon (`kbqTagRemove` directive) inside the tag.
+- Press `Delete` or `Backspace` key.
+- Programmatic removal through the component [API](/en/components/tag/api).
+
+The removal option is configured using the `removable` attribute (enabled by default).
+
+<!-- example(tag-removable) -->
+
 ### Editing
 
 To enable editing mode, set the `editable` property for `kbq-tag`.

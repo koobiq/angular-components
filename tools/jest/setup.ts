@@ -43,3 +43,7 @@ global.DragEvent = class extends MouseEvent {
         this.dataTransfer = eventInitDict.dataTransfer ?? null;
     }
 } as typeof DragEvent;
+
+global.CSS = {
+    supports: (..._args: any[]) => false
+} as typeof CSS;

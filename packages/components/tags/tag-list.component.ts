@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { BACKSPACE, END, HOME } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -26,8 +27,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { BACKSPACE, END, HOME } from '@koobiq/cdk/keycodes';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
+import { isSelectAll } from '@koobiq/cdk/keycodes';
+import { CanUpdateErrorState, ErrorStateMatcher, isNull } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
@@ -48,12 +49,26 @@ export class KbqTagListChange {
 @Component({
     selector: 'kbq-tag-list',
     exportAs: 'kbqTagList',
-    templateUrl: 'tag-list.partial.html',
+    template: `
+        <div class="kbq-tags-list__list-container">
+            <ng-content />
+        </div>
+
+        @if (canShowCleaner) {
+            <div class="kbq-tags-list__cleaner">
+                <ng-content select="kbq-cleaner" />
+            </div>
+        }
+    `,
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
+        '[class.kbq-tag-list_multiple]': 'multiple',
+        '[class.kbq-tag-list_selectable]': 'selectable',
+        '[class.kbq-tag-list_editable]': 'editable',
+        '[class.kbq-tag-list_removable]': 'removable',
 
         '[attr.tabindex]': 'disabled ? null : tabIndex',
         '[id]': 'uid',
@@ -119,15 +134,12 @@ export class KbqTagList
         return this.cleaner && this.tags.length > 0;
     }
 
-    /** Whether the user should be allowed to select multiple tags. */
-    @Input()
-    get multiple(): boolean {
-        return this._multiple;
-    }
-
-    set multiple(value: boolean) {
-        this._multiple = coerceBooleanProperty(value);
-    }
+    /**
+     * Whether the user should be allowed to select multiple tags.
+     *
+     * NOTE! Component does not support dynamic multiple attribute changes.
+     */
+    @Input({ transform: booleanAttribute }) multiple: boolean = false;
 
     /**
      * A function to compare the option values with the selected values. The first argument
@@ -238,19 +250,23 @@ export class KbqTagList
      * Whether or not this tag list is selectable. When a tag list is not selectable,
      * the selected states for all the tags inside the tag list are always ignored.
      */
-    @Input()
-    get selectable(): boolean {
-        return this._selectable;
-    }
+    @Input({ transform: booleanAttribute }) selectable = true;
 
-    set selectable(value: boolean) {
-        this._selectable = coerceBooleanProperty(value);
-
-        this.propagateSelectableToChildren();
-    }
-
-    /** Whether the tag list is editable. */
+    /** Whether the tags in the list are editable. */
     @Input({ transform: booleanAttribute }) editable = false;
+
+    /** Whether the tags in the list are removable. */
+    @Input({ transform: booleanAttribute })
+    get removable(): boolean {
+        return this._removable;
+    }
+
+    set removable(value: boolean) {
+        this._removable = value;
+        this.syncTagsRemovableState();
+    }
+
+    private _removable = true;
 
     @Input()
     get tabIndex(): number {
@@ -281,6 +297,9 @@ export class KbqTagList
 
     keyManager: FocusKeyManager<KbqTag>;
 
+    /**
+     * @docs-private
+     */
     selectionModel: SelectionModel<KbqTag>;
 
     tagChanges = new EventEmitter<any>();
@@ -315,12 +334,8 @@ export class KbqTagList
 
     private _disabled: boolean = false;
 
-    private _selectable: boolean = true;
-
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
-
-    private _multiple: boolean = false;
 
     /**
      * When a tag is destroyed, we store the index of the destroyed tag until the tags
@@ -432,8 +447,6 @@ export class KbqTagList
                     }
                 });
             });
-
-        this.propagateSelectableToChildren();
     }
 
     ngOnDestroy() {
@@ -535,19 +548,34 @@ export class KbqTagList
 
     /**
      * Pass events to the keyboard manager. Available here for tests.
+     *
+     * @docs-private
      */
-    keydown(event: KeyboardEvent) {
-        const target = event.target as HTMLElement;
+    keydown(event: KeyboardEvent): void {
+        const target = event.target as HTMLElement | null;
 
-        // If they are on an empty input and hit backspace, focus the last tag
-        if (event.keyCode === BACKSPACE && this.isInputEmpty(target)) {
-            this.keyManager.setLastItemActive();
-            event.preventDefault();
-        } else if (target && target.classList.contains('kbq-tag')) {
+        if (this.disabled || isNull(target)) return;
+
+        const _isSelectAll = this.multiple && this.selectable && isSelectAll(event);
+
+        if (this.isInputEmpty(target)) {
+            if (event.keyCode === BACKSPACE) {
+                this.keyManager.setLastItemActive();
+                event.preventDefault();
+            } else if (_isSelectAll) {
+                this.selectAll();
+                this.keyManager.setLastItemActive();
+                event.preventDefault();
+            }
+        } else if (this.isTagElement(target)) {
             if (event.keyCode === HOME) {
                 this.keyManager.setFirstItemActive();
                 event.preventDefault();
             } else if (event.keyCode === END) {
+                this.keyManager.setLastItemActive();
+                event.preventDefault();
+            } else if (_isSelectAll) {
+                this.selectAll();
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
             } else {
@@ -658,6 +686,21 @@ export class KbqTagList
         return false;
     }
 
+    private isTagElement(element: HTMLElement): boolean {
+        return element.classList.contains('kbq-tag');
+    }
+
+    private selectAll(): void {
+        this.tags.forEach((tag) => tag.select());
+    }
+
+    /**
+     * @docs-private
+     */
+    removeSelected(): void {
+        this.selectionModel.selected.forEach((tag) => tag.remove());
+    }
+
     /**
      * Finds and selects the tag based on its value.
      * @returns Tag that has the corresponding value.
@@ -710,7 +753,7 @@ export class KbqTagList
      * order that they have in the panel.
      */
     private sortValues(): void {
-        if (this._multiple) {
+        if (this.multiple) {
             this.selectionModel.clear();
 
             this.tags.forEach((tag) => {
@@ -852,7 +895,7 @@ export class KbqTagList
         let currentElement = event.target as HTMLElement | null;
 
         while (currentElement && currentElement !== this.elementRef.nativeElement) {
-            if (currentElement.classList.contains('kbq-tag')) {
+            if (this.isTagElement(currentElement)) {
                 return true;
             }
 
@@ -876,6 +919,10 @@ export class KbqTagList
         }
     }
 
+    private syncTagsRemovableState(): void {
+        this.tags?.forEach((tag) => (tag.removable = this.removable));
+    }
+
     /** Revalidate control. */
     private revalidate() {
         if (this.ngControl?.control) {
@@ -883,12 +930,6 @@ export class KbqTagList
 
             control.updateValueAndValidity({ emitEvent: false });
             (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
-    }
-
-    private propagateSelectableToChildren(): void {
-        if (this.tags) {
-            this.tags.forEach((tag) => (tag.tagListSelectable = this._selectable));
         }
     }
 }
