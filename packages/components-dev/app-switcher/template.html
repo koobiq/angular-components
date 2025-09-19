@@ -4,6 +4,20 @@
 <br />
 <br />
 
+<div kbq-scrollbar class="kbq-app-switcher__search-result">
+    <kbq-dropdown [class]="'kbq-app-switcher-sites'">
+        <div kbqDropdownStaticContent class="kbq-app-switcher-site">
+            @for (site of sites; track site) {
+                <kbq-optgroup label="{{ site.name }}" />
+
+                @for (app of site.apps; track app) {
+                    <a #appSwitcherApp="kbqAppSwitcherApp" href="" kbq-app-switcher-app [app]="app"></a>
+                }
+            }
+        </div>
+    </kbq-dropdown>
+</div>
+
 <br />
 <br />
 <br />
