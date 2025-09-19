@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, ViewEncapsulation } from '@angular/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
+import { KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
 
 @Component({
     selector: 'kbq-time-range-editor',
@@ -37,7 +38,7 @@ import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker'
                     <kbq-fieldset>
                         <kbq-form-field kbqFieldsetItem>
                             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                            <input kbqTimepicker [format]="format" />
+                            <input kbqTimepicker [format]="timepickerFormat" />
                         </kbq-form-field>
 
                         <kbq-form-field>
@@ -55,7 +56,7 @@ import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker'
                     <kbq-fieldset>
                         <kbq-form-field kbqFieldsetItem>
                             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                            <input kbqTimepicker [format]="format" />
+                            <input kbqTimepicker [format]="timepickerFormat" />
                         </kbq-form-field>
 
                         <kbq-form-field>
@@ -71,9 +72,17 @@ import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker'
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTimeRangeEditor {
+export class KbqTimeRangeEditor<T> {
+    /** The maximum selectable date. */
+    maxDate = input<T>();
+
+    /** The minimum selectable date. */
+    minDate = input<T>();
+
+    protected readonly providedDefaultTimeRangeTypes = inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true });
+
     protected readonly localeConfig = { from: 'c', to: 'по' };
-    protected readonly format = TimeFormats.HHmmss;
+    protected readonly timepickerFormat = TimeFormats.HHmmss;
 
     protected readonly mockTypes = Array.from({ length: 10 }, (_, i) => `Option ${i + 1}`);
 }

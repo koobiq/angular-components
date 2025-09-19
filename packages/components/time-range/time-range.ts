@@ -12,7 +12,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
-import { KbqTimeRangeEditor } from './time-range-editor/time-range-editor';
+import { KbqTimeRangeEditor } from './time-range-editor';
+import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqRangeValue } from './types';
 
 @Component({
@@ -29,9 +30,10 @@ import { KbqRangeValue } from './types';
             [kbqPopoverContent]="timeRangePopoverContent"
             [kbqPopoverFooter]="timeRangePopoverFooter"
             [kbqPopoverPlacement]="popupPlacement"
+            [kbqPopoverArrow]="arrow()"
             (kbqPopoverVisibleChange)="onVisibleChange($event)"
         >
-            <span>Mock label</span>
+            <kbq-time-range-title />
         </div>
 
         <ng-template #timeRangePopoverContent>
@@ -52,7 +54,8 @@ import { KbqRangeValue } from './types';
     imports: [
         KbqPopoverModule,
         KbqButtonModule,
-        KbqTimeRangeEditor
+        KbqTimeRangeEditor,
+        KbqTimeRangeTitle
     ],
     host: {
         class: 'kbq-time-range'
@@ -63,19 +66,22 @@ import { KbqRangeValue } from './types';
 export class KbqTimeRange<T> {
     readonly minDate = input();
     readonly maxDate = input();
-    readonly defaultRangeValue = input<KbqRangeValue<T> | undefined>();
+    readonly defaultRangeValue = input<KbqRangeValue<T>>();
     readonly availableTimeRangeTypes = input<any[]>();
     readonly titleTemplate = input<TemplateRef<any>>();
-    readonly arrow = input(true, { transform: booleanAttribute });
+    readonly arrow = input(false, { transform: booleanAttribute });
 
+    /** @docs-private */
     protected readonly resolvedAvailableTimeRangeTypes = computed(
         () => this.availableTimeRangeTypes() || this.defaultTimeRangeTypes
     );
+    /** @docs-private */
     protected readonly normalizedDefaultRangeValue = computed(() => ({
         ...this.getDefaultRangeValue(),
         ...this.defaultRangeValue()
     }));
 
+    /** @docs-private */
     protected readonly providedDefaultTimeRangeTypes = inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true });
 
     protected readonly PopUpSizes = PopUpSizes;
