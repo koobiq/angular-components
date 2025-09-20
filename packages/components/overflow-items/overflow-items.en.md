@@ -15,6 +15,12 @@ The order in which elements are hidden is determined using the `order` attribute
 
 <!-- example(overflow-items-with-order) -->
 
+### Element alignment
+
+Element alignment within the container is set using the CSS property [`justify-content`](https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content).
+
+<!-- example(overflow-items-justify-content) -->
+
 ### Delay when hiding/showing
 
 The delay for hiding/showing elements is set using the `debounceTime` attribute. Enabling this option positively

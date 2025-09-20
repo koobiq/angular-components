@@ -46,6 +46,7 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
             kbqOverflowItems
             [style.width.px]="containerWidth()"
             [reverseOverflowOrder]="reverseOverflowOrder()"
+            [style.justify-content]="justifyContent()"
         >
             <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItems.hiddenItemIDs().size }} more
@@ -64,6 +65,7 @@ export class TestOverflowItems {
     readonly containerWidth = signal(500);
     readonly itemWidth = signal(50);
     readonly resultWidth = signal(100);
+    readonly justifyContent = signal<'start' | 'end'>('start');
 }
 
 @Component({
@@ -112,7 +114,7 @@ export class TestOrderedOverflowItems {
     template: `
         <div #kbqOverflowItemsReverse="kbqOverflowItems" kbqOverflowItems [style.width.px]="containerWidth()">
             @for (item of items; track item) {
-                @let alwaysVisible = $index === 3;
+                @let alwaysVisible = $index === alwaysVisibleItemIndex();
                 <div
                     [kbqOverflowItem]="item"
                     [style.width.px]="itemWidth()"
@@ -135,6 +137,7 @@ export class TestAlwaysVisibleOverflowItem {
     readonly containerWidth = signal(500);
     readonly itemWidth = signal(50);
     readonly resultWidth = signal(100);
+    readonly alwaysVisibleItemIndex = signal(3);
 }
 
 describe(KbqOverflowItemsModule.name, () => {
@@ -149,6 +152,17 @@ describe(KbqOverflowItemsModule.name, () => {
         const { debugElement } = fixture;
 
         await fixture.whenStable();
+
+        expect(getOverflowHiddenItems(debugElement).length).toBe(12);
+    });
+
+    it('should hide overflown items with justify-content end', async () => {
+        const fixture = createComponent(TestOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.justifyContent.set('end');
+        await fixture.whenStable();
+
         expect(getOverflowHiddenItems(debugElement).length).toBe(12);
     });
 
@@ -157,8 +171,19 @@ describe(KbqOverflowItemsModule.name, () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerWidth.set(600);
-
         await fixture.whenStable();
+
+        expect(getOverflowHiddenItems(debugElement).length).toBe(10);
+    });
+
+    it('should recalculate hidden items on container width change with justify-content end', async () => {
+        const fixture = createComponent(TestOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.justifyContent.set('end');
+        componentInstance.containerWidth.set(600);
+        await fixture.whenStable();
+
         expect(getOverflowHiddenItems(debugElement).length).toBe(10);
     });
 
@@ -167,8 +192,19 @@ describe(KbqOverflowItemsModule.name, () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.reverseOverflowOrder.set(true);
-
         await fixture.whenStable();
+
+        expect(getOverflowVisibleItems(debugElement).at(-1)!.nativeElement.textContent.trim()).toBe('Item19');
+    });
+
+    it('should recalculate hidden items on `reverseOverflowOrder` attribute change with justify-content end', async () => {
+        const fixture = createComponent(TestOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.justifyContent.set('end');
+        componentInstance.reverseOverflowOrder.set(true);
+        await fixture.whenStable();
+
         expect(getOverflowVisibleItems(debugElement).at(-1)!.nativeElement.textContent.trim()).toBe('Item19');
     });
 
@@ -183,6 +219,7 @@ describe(KbqOverflowItemsModule.name, () => {
         const { debugElement } = fixture;
 
         await fixture.whenStable();
+
         expect(isOverflowItemsResultVisible(debugElement)).toBeTrue();
     });
 
@@ -192,6 +229,18 @@ describe(KbqOverflowItemsModule.name, () => {
 
         componentInstance.containerWidth.set(1000);
         await fixture.whenStable();
+
+        expect(isOverflowItemsResultVisible(debugElement)).toBeFalse();
+    });
+
+    it('should hide result with justify-content end', async () => {
+        const fixture = createComponent(TestOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.justifyContent.set('end');
+        componentInstance.containerWidth.set(1000);
+        await fixture.whenStable();
+
         expect(isOverflowItemsResultVisible(debugElement)).toBeFalse();
     });
 
@@ -200,6 +249,17 @@ describe(KbqOverflowItemsModule.name, () => {
         const { debugElement } = fixture;
 
         await fixture.whenStable();
+
+        expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
+    });
+
+    it('should display result score with justify-content end', async () => {
+        const fixture = createComponent(TestOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.justifyContent.set('end');
+        await fixture.whenStable();
+
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
     });
 
