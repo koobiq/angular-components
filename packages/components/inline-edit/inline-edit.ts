@@ -223,6 +223,7 @@ export class KbqInlineEdit implements AfterContentInit {
     protected onClick(event: Event): void {
         if (this.disabled() || this.isEditMode()) return;
 
+        event.preventDefault();
         event.stopPropagation();
         this.toggleMode();
     }
