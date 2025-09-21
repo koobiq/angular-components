@@ -22,7 +22,6 @@ import {
     ErrorStateMatcher,
     KbqComponentColors,
     kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -87,7 +86,7 @@ class ExampleResetTouchedOnFirstInput {
     ],
     selector: 'inline-edit-validation-example',
     template: `
-        <kbq-inline-edit [validationTooltip]="'Error message'" [tooltipPlacement]="popupPlacements.BottomLeft">
+        <kbq-inline-edit [validationTooltip]="'Error message'" [tooltipPlacement]="tooltipPlacement">
             <kbq-label>Not empty</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
@@ -104,10 +103,7 @@ class ExampleResetTouchedOnFirstInput {
             </kbq-form-field>
         </kbq-inline-edit>
 
-        <kbq-inline-edit
-            [validationTooltip]="'Invalid IP: RFC non-compliant'"
-            [tooltipPlacement]="popupPlacements.BottomLeft"
-        >
+        <kbq-inline-edit [validationTooltip]="'Invalid IP: RFC non-compliant'" [tooltipPlacement]="tooltipPlacement">
             <kbq-label>IP-address</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
@@ -123,12 +119,13 @@ class ExampleResetTouchedOnFirstInput {
                 <input
                     kbqInput
                     exampleResetTouchedOnFirstInput
+                    [errorStateMatcher]="errorStateMatcher"
                     [formControl]="ipAddressControl"
                     [kbqEnterDelay]="10"
-                    [kbqPlacement]="popUpPlacements.BottomLeft"
+                    [kbqPlacement]="tooltipPlacement"
                     [kbqTrigger]="'manual'"
                     [kbqTooltip]="'Numbers and dots only'"
-                    [kbqTooltipColor]="colors.Warning"
+                    [kbqTooltipColor]="tooltipColor"
                     [kbqTooltipArrow]="false"
                     (input)="onInput($event)"
                 />
@@ -146,14 +143,17 @@ class ExampleResetTouchedOnFirstInput {
         class: 'layout-flex layout-column'
     },
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditValidationExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
-
+    protected readonly errorStateMatcher = new CustomErrorStateMatcher();
+    protected readonly tooltipPlacement = PopUpPlacements.BottomLeft;
+    protected readonly tooltipColor = KbqComponentColors.Warning;
     protected readonly placeholder = 'Placeholder';
+
     protected readonly ipAddressControl = new FormControl<string>('192.168.0.2', {
         nonNullable: true,
         validators: [Validators.pattern(IP_PATTERN)]
@@ -162,7 +162,6 @@ export class InlineEditValidationExample {
         nonNullable: true,
         validators: [Validators.required]
     });
-    protected readonly popupPlacements = PopUpPlacements;
 
     onInput(event: Event): void {
         const allowedSymbolsRegex = /^[0-9.]+$/g;
@@ -185,7 +184,4 @@ export class InlineEditValidationExample {
             }
         }
     }
-
-    protected readonly popUpPlacements = PopUpPlacements;
-    protected readonly colors = KbqComponentColors;
 }

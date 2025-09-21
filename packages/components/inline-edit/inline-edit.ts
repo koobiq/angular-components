@@ -296,7 +296,8 @@ export class KbqInlineEdit implements AfterContentInit {
             }
             case 'Enter': {
                 if (hasModifierKey(event, 'ctrlKey', 'metaKey') || !(target instanceof HTMLTextAreaElement)) {
-                    this.save(event);
+                    this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
+                    setTimeout(() => this.save(event));
                 }
 
                 break;
