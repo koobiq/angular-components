@@ -1,10 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
-import { KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
+import { skip } from 'rxjs';
+import { KbqTimeRangeService } from './time-range.service';
+import { KbqTimeRangeType } from './types';
 
 @Component({
     selector: 'kbq-time-range-editor',
@@ -21,68 +24,86 @@ import { KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
     template: `
         <kbq-radio-group>
             <div class="kbq-time-range-editor__predefined">
-                @for (type of mockTypes; track type) {
+                @for (type of timeRangeTypesWithoutRange(); track type) {
                     <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type">
                         {{ type }}
                     </kbq-radio-button>
                 }
             </div>
 
-            <div class="kbq-time-range-editor__range" role="group">
-                <kbq-radio-button [value]="'Range'">range</kbq-radio-button>
+            @if (isRangeVisible) {
+                <div class="kbq-time-range-editor__range" role="group">
+                    <kbq-radio-button [value]="'Range'">range</kbq-radio-button>
 
-                <div class="kbq-time-range-editor__date-time">
-                    <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.from">
-                        {{ localeConfig.from }}
-                    </span>
-                    <kbq-fieldset>
-                        <kbq-form-field kbqFieldsetItem>
-                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                            <input kbqTimepicker [format]="timepickerFormat" />
-                        </kbq-form-field>
+                    <div class="kbq-time-range-editor__date-time">
+                        <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.from">
+                            {{ localeConfig.from }}
+                        </span>
+                        <kbq-fieldset>
+                            <kbq-form-field kbqFieldsetItem>
+                                <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                                <input kbqTimepicker [format]="timepickerFormat" />
+                            </kbq-form-field>
 
-                        <kbq-form-field>
-                            <input [kbqDatepicker]="datepickerFrom" />
-                            <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerFrom" />
-                            <kbq-datepicker #datepickerFrom />
-                        </kbq-form-field>
-                    </kbq-fieldset>
+                            <kbq-form-field>
+                                <input [kbqDatepicker]="datepickerFrom" />
+                                <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerFrom" />
+                                <kbq-datepicker #datepickerFrom [minDate]="minDate()" />
+                            </kbq-form-field>
+                        </kbq-fieldset>
+                    </div>
+
+                    <div class="kbq-time-range-editor__date-time">
+                        <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.to">
+                            {{ localeConfig.to }}
+                        </span>
+                        <kbq-fieldset>
+                            <kbq-form-field kbqFieldsetItem>
+                                <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                                <input kbqTimepicker [format]="timepickerFormat" />
+                            </kbq-form-field>
+
+                            <kbq-form-field>
+                                <input [kbqDatepicker]="datepickerTo" />
+                                <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerTo" />
+                                <kbq-datepicker #datepickerTo [maxDate]="maxDate()" />
+                            </kbq-form-field>
+                        </kbq-fieldset>
+                    </div>
                 </div>
-
-                <div class="kbq-time-range-editor__date-time">
-                    <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.to">
-                        {{ localeConfig.to }}
-                    </span>
-                    <kbq-fieldset>
-                        <kbq-form-field kbqFieldsetItem>
-                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                            <input kbqTimepicker [format]="timepickerFormat" />
-                        </kbq-form-field>
-
-                        <kbq-form-field>
-                            <input [kbqDatepicker]="datepickerTo" />
-                            <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerTo" />
-                            <kbq-datepicker #datepickerTo />
-                        </kbq-form-field>
-                    </kbq-fieldset>
-                </div>
-            </div>
+            }
         </kbq-radio-group>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqTimeRangeEditor<T> {
+    private readonly timeRangeService = inject(KbqTimeRangeService);
+
     /** The maximum selectable date. */
     maxDate = input<T>();
-
     /** The minimum selectable date. */
     minDate = input<T>();
+    /** Preset of selectable ranges */
+    availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
 
-    protected readonly providedDefaultTimeRangeTypes = inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true });
+    protected getTimeRangeTypesWithoutRange = (availableTimeRangeTypes: KbqTimeRangeType[]) =>
+        availableTimeRangeTypes.filter((item) => item !== 'range');
+
+    protected readonly timeRangeTypesWithoutRange = signal(
+        this.getTimeRangeTypesWithoutRange(this.availableTimeRangeTypes())
+    );
+
+    constructor() {
+        toObservable(this.availableTimeRangeTypes)
+            .pipe(skip(1), takeUntilDestroyed())
+            .subscribe(this.getTimeRangeTypesWithoutRange);
+    }
 
     protected readonly localeConfig = { from: 'c', to: 'по' };
     protected readonly timepickerFormat = TimeFormats.HHmmss;
 
-    protected readonly mockTypes = Array.from({ length: 10 }, (_, i) => `Option ${i + 1}`);
+    get isRangeVisible() {
+        return true;
+    }
 }
