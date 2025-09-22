@@ -100,5 +100,9 @@ export const esLALocaleData = {
             pinButton: 'Expandir el menú',
             collapseButton: 'Colapsar'
         }
+    },
+    searchExpandable: {
+        tooltip: 'Búsqueda',
+        placeholder: 'Búsqueda'
     }
 };

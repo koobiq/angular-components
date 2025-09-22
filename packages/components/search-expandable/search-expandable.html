@@ -1,0 +1,31 @@
+@if (!isOpened) {
+    <button
+        type="button"
+        kbq-button
+        class="kbq-search-expandable__button"
+        [color]="'contrast'"
+        [kbqStyle]="'transparent'"
+        kbqTooltip="{{ localeData.tooltip }}"
+        (click)="toggle()"
+    >
+        <i kbq-icon="kbq-magnifying-glass_16"></i>
+    </button>
+} @else {
+    <kbq-form-field class="kbq-search-expandable__search">
+        <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
+
+        <input
+            kbqInput
+            name="value"
+            type="text"
+            autocomplete="off"
+            [placeholder]="placeholder"
+            [ngModel]="value | async"
+            (ngModelChange)="value.next($event)"
+            (blur)="onTouch()"
+            (keyup.escape)="toggle()"
+        />
+
+        <i kbqSuffix kbq-icon-button="kbq-xmark-circle_16" (click)="toggle()"></i>
+    </kbq-form-field>
+}

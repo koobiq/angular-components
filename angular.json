@@ -1885,6 +1885,36 @@
                 }
             }
         },
+        "dev-search-expandable": {
+            "projectType": "application",
+            "root": "packages/components-dev/search-expandable",
+            "sourceRoot": "packages/components-dev/search-expandable",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/search-expandable"
+                        },
+                        "tsConfig": "packages/components-dev/search-expandable/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/search-expandable/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-search-expandable:build"
+                    }
+                }
+            }
+        },
         "dev-select": {
             "projectType": "application",
             "root": "packages/components-dev/select",

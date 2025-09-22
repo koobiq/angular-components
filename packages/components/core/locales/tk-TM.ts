@@ -101,5 +101,9 @@ export const tkTMLocaleData = {
             pinButton: 'Rugsat giňeldildi',
             collapseButton: 'Apseykylmak'
         }
+    },
+    searchExpandable: {
+        tooltip: 'Gözleg',
+        placeholder: 'Gözleg'
     }
 };

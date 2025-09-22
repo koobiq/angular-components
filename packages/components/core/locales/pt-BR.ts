@@ -100,5 +100,9 @@ export const ptBRLocaleData = {
             pinButton: 'Deixar expandido',
             collapseButton: 'Recolher'
         }
+    },
+    searchExpandable: {
+        tooltip: 'Pesquisar',
+        placeholder: 'Pesquisar'
     }
 };
