@@ -32,7 +32,7 @@
         "@koobiq/ag-grid-angular-theme": "^30.2.0",
         "@koobiq/date-adapter": "^3.2.3",
         "@koobiq/date-formatter": "^3.2.3",
-        "@koobiq/icons": "^10.7.1",
+        "@koobiq/icons": "^10.8.0",
         "@radix-ng/primitives": "0.23.0",
         "ag-grid-angular": "^30.2.1",
         "ag-grid-community": "^30.2.1",
