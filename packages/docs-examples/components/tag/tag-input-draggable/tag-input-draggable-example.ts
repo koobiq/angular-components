@@ -49,7 +49,6 @@ import { KbqTagInputEvent, KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq
 })
 export class TagInputDraggableExample {
     protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Draggable tag ${i}`));
-    protected readonly draggable = model(true);
 
     protected dropped(event: KbqTagListDroppedEvent): void {
         moveItemInArray(this.tags(), event.previousIndex, event.currentIndex);
