@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DebugElement, Provider, signal, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DebugElement, Provider, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqOverflowItemsModule } from './module';
@@ -75,51 +75,18 @@ export class TestOverflowItems {
     template: `
         <div
             #kbqOverflowItemsReverse="kbqOverflowItems"
-            reverseOverflowOrder
             kbqOverflowItems
+            [reverseOverflowOrder]="reverseOverflowOrder()"
             [style.width.px]="containerWidth()"
         >
-            <div
-                kbqOverflowItem="lastHiddenItem"
-                [style.width.px]="itemWidth()"
-                [style.flex-shrink]="0"
-                [order]="items.length + 1"
-            >
-                lastHiddenItem
-            </div>
-            <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
-                and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
-            </div>
-            @for (item of items; track item) {
-                <div [kbqOverflowItem]="item" [style.width.px]="itemWidth()" [style.flex-shrink]="0">
-                    {{ item }}
-                </div>
-            }
-        </div>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class TestOrderedOverflowItems {
-    readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
+            @for (item of items; track $index) {
+                @let isLastHiddenItem = $index === lastHiddenItemIndex();
 
-    readonly containerWidth = signal(500);
-    readonly itemWidth = signal(50);
-    readonly resultWidth = signal(100);
-}
-
-@Component({
-    standalone: true,
-    imports: [KbqOverflowItemsModule],
-    selector: 'overflow-items-test',
-    template: `
-        <div #kbqOverflowItemsReverse="kbqOverflowItems" kbqOverflowItems [style.width.px]="containerWidth()">
-            @for (item of items; track item) {
-                @let alwaysVisible = $index === alwaysVisibleItemIndex();
                 <div
                     [kbqOverflowItem]="item"
                     [style.width.px]="itemWidth()"
                     [style.flex-shrink]="0"
-                    [alwaysVisible]="alwaysVisible"
+                    [order]="isLastHiddenItem ? this.lastItemOrder() : $index"
                 >
                     {{ item }}
                 </div>
@@ -131,13 +98,53 @@ export class TestOrderedOverflowItems {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TestAlwaysVisibleOverflowItem {
+export class TestOrderedOverflowItems {
     readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
 
     readonly containerWidth = signal(500);
     readonly itemWidth = signal(50);
     readonly resultWidth = signal(100);
-    readonly alwaysVisibleItemIndex = signal(3);
+    readonly reverseOverflowOrder = signal(false);
+    readonly lastHiddenItemIndex = signal(5);
+
+    protected readonly lastItemOrder = computed(() => (this.reverseOverflowOrder() ? +Infinity : -Infinity));
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqOverflowItemsModule],
+    selector: 'overflow-items-test',
+    template: `
+        <div
+            #kbqOverflowItemsReverse="kbqOverflowItems"
+            kbqOverflowItems
+            [style.width.px]="containerWidth()"
+            [reverseOverflowOrder]="reverseOverflowOrder()"
+        >
+            @for (item of items(); track item.id) {
+                <div
+                    [kbqOverflowItem]="item.id"
+                    [style.width.px]="itemWidth()"
+                    [style.flex-shrink]="0"
+                    [alwaysVisible]="item.alwaysVisible"
+                >
+                    {{ item.id }}
+                </div>
+            }
+            <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
+                and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
+            </div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestAlwaysVisibleOverflowItem {
+    readonly items = signal(Array.from({ length: 20 }).map((_, i) => ({ id: `Item${i}`, alwaysVisible: i === 7 })));
+
+    readonly containerWidth = signal(500);
+    readonly itemWidth = signal(50);
+    readonly resultWidth = signal(100);
+    readonly reverseOverflowOrder = signal(false);
 }
 
 describe(KbqOverflowItemsModule.name, () => {
@@ -267,23 +274,72 @@ describe(KbqOverflowItemsModule.name, () => {
         const fixture = createComponent(TestOrderedOverflowItems);
         const { debugElement, componentInstance } = fixture;
 
-        componentInstance.containerWidth.set(150);
+        componentInstance.containerWidth.set(200);
         await fixture.whenStable();
         const visibleItems = getOverflowVisibleItems(debugElement);
 
-        expect(visibleItems.length).toEqual(1);
-        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('lastHiddenItem');
+        expect(visibleItems.length).toEqual(2);
+        expect(visibleItems[1].nativeElement.textContent.trim()).toEqual('Item5');
+    });
+
+    it('should hide items by order when reverseOverflowOrder is enabled', async () => {
+        const fixture = createComponent(TestOrderedOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.containerWidth.set(200);
+        componentInstance.reverseOverflowOrder.set(true);
+        await fixture.whenStable();
+        const visibleItems = getOverflowVisibleItems(debugElement);
+
+        expect(visibleItems.length).toEqual(2);
+        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('Item5');
+    });
+
+    it('should hide last ordered item when no space is available', async () => {
+        const fixture = createComponent(TestOrderedOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.containerWidth.set(componentInstance.itemWidth() - 1);
+        await fixture.whenStable();
+        const visibleItems = getOverflowVisibleItems(debugElement);
+
+        expect(visibleItems.length).toEqual(0);
     });
 
     it('should prevent hiding item with alwaysVisible attribute', async () => {
         const fixture = createComponent(TestAlwaysVisibleOverflowItem);
         const { debugElement, componentInstance } = fixture;
 
-        componentInstance.containerWidth.set(100);
+        componentInstance.containerWidth.set(250);
+        await fixture.whenStable();
+        const visibleItems = getOverflowVisibleItems(debugElement);
+
+        expect(visibleItems.length).toEqual(3);
+        expect(visibleItems[2].nativeElement.textContent.trim()).toEqual('Item7');
+    });
+
+    it('should prevent hiding item with alwaysVisible when no space is available', async () => {
+        const fixture = createComponent(TestAlwaysVisibleOverflowItem);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.containerWidth.set(componentInstance.itemWidth() - 1);
         await fixture.whenStable();
         const visibleItems = getOverflowVisibleItems(debugElement);
 
         expect(visibleItems.length).toEqual(1);
-        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('Item3');
+        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('Item7');
+    });
+
+    it('should prevent hiding item with alwaysVisible attribute when reverseOverflowOrder is enabled', async () => {
+        const fixture = createComponent(TestAlwaysVisibleOverflowItem);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.containerWidth.set(200);
+        componentInstance.reverseOverflowOrder.set(true);
+        await fixture.whenStable();
+        const visibleItems = getOverflowVisibleItems(debugElement);
+
+        expect(visibleItems.length).toEqual(2);
+        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('Item7');
     });
 });

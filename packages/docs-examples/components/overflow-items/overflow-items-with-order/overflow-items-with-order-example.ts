@@ -1,27 +1,37 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqBadgeModule } from '@koobiq/components/badge';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Overflow items result offset
  */
 @Component({
     standalone: true,
-    imports: [KbqOverflowItemsModule, KbqBadgeModule],
+    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-with-order-example',
     template: `
-        <div #kbqOverflowItems="kbqOverflowItems" reverseOverflowOrder kbqOverflowItems>
-            <kbq-badge class="layout-margin-right-xs" [kbqOverflowItem]="items[0]" [order]="items.length">
-                {{ items[0] }}
-            </kbq-badge>
-            <div class="layout-margin-right-xs" kbqOverflowItemsResult>
-                and {{ kbqOverflowItems.hiddenItemIDs().size }} more
-            </div>
-            @for (item of items.slice(1); track item) {
-                <kbq-badge [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="reverseOverflowOrder">
+            Reverse overflow order
+        </kbq-toggle>
+
+        <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems [reverseOverflowOrder]="reverseOverflowOrder()">
+            @for (item of items; track $index) {
+                @let isLastHiddenItem = $index === 5;
+
+                <kbq-badge
+                    [kbqOverflowItem]="item"
+                    [class.layout-margin-right-xs]="!$last"
+                    [order]="isLastHiddenItem ? this.lastItemOrder() : $index"
+                    [badgeColor]="isLastHiddenItem ? badgeColor.Theme : badgeColor.FadeContrast"
+                >
                     {{ item }}
                 </kbq-badge>
             }
+            <div class="layout-margin-right-xs" kbqOverflowItemsResult>
+                and {{ kbqOverflowItems.hiddenItemIDs().size }} more
+            </div>
         </div>
     `,
     styles: `
@@ -49,4 +59,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 })
 export class OverflowItemsWithOrderExample {
     readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
+    readonly badgeColor = KbqBadgeColors;
+    readonly reverseOverflowOrder = model(false);
+    readonly lastItemOrder = computed(() => (this.reverseOverflowOrder() ? +Infinity : -Infinity));
 }

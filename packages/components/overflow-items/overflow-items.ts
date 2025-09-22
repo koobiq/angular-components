@@ -202,7 +202,7 @@ export class KbqOverflowItems {
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
-                    this.sortItemsByOrder(this.excludeAlwaysVisibleItems(this.items())),
+                    this.sortItemsByOrder(this.items()),
                     this.reverseOverflowOrder(),
                     this.result(),
                     this.elementRef.nativeElement
@@ -224,13 +224,6 @@ export class KbqOverflowItems {
     }
 
     /**
-     * Excludes items that have the `alwaysVisible` attribute.
-     */
-    private excludeAlwaysVisibleItems(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
-        return items.filter(({ alwaysVisible }) => !alwaysVisible());
-    }
-
-    /**
      * Manages the visibility of items based on the available space in the container and returns the hidden items.
      * Direction of hiding is determined by the `reverseOverflowOrder` attribute.
      */
@@ -245,8 +238,8 @@ export class KbqOverflowItems {
 
         while (this.hasOverflown(container, items, result)) {
             const itemToHide = reverseOverflowOrder
-                ? items.find(({ hidden }) => !hidden())
-                : this.findLast(items, ({ hidden }) => !hidden());
+                ? items.find(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible())
+                : this.findLast(items, ({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
 
             if (!itemToHide) break;
 
