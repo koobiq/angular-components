@@ -50,3 +50,9 @@ Cancel changes:
 In editing mode, the tag transforms into an input field and remains at the same position within the control.
 
 <!-- example(tag-input-editable) -->
+
+### Drag and drop
+
+To enable tag reordering, you need to set the `draggable` property for `kbq-tag-list`.
+
+<!-- example(tag-input-draggable) -->

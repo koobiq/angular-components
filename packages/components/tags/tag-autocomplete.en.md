@@ -43,3 +43,7 @@ Tags can be selected in several ways:
 - Programmatic selection through the component [API](/en/components/tag/api).
 
 The selection option is configured using the `selectable` attribute (enabled by default).
+
+### Drag and drop
+
+To enable tag reordering, you need to set the `draggable` property for `kbq-tag-list`.

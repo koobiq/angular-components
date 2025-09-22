@@ -68,6 +68,11 @@
     .kbq-tag-edit-submit {
         margin-right: var(--kbq-size-3xs);
     }
+
+    &.cdk-drag-preview,
+    &.cdk-drag-placeholder {
+        opacity: var(--kbq-opacity-disabled);
+    }
 }
 
 .kbq-tag__wrapper {

@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { BACKSPACE, DELETE, ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
+import { CdkDrag } from '@angular/cdk/drag-drop';
+import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -155,7 +156,7 @@ export class KbqTagEditInput {
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
-    hostDirectives: [KbqHovered],
+    hostDirectives: [KbqHovered, CdkDrag],
     template: `
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
@@ -191,6 +192,7 @@ export class KbqTagEditInput {
         '[class.kbq-tag_editing]': 'editing()',
         '[class.kbq-tag_removable]': 'removable',
         '[class.kbq-tag_selectable]': 'selectable',
+        '[class.kbq-tag_draggable]': 'draggable',
 
         '(dblclick)': 'handleDblClick($event)',
         '(mousedown)': 'handleMousedown($event)',
@@ -206,6 +208,8 @@ export class KbqTag
 {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
+    private readonly drag = inject(CdkDrag, { host: true });
+
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -355,18 +359,29 @@ export class KbqTag
 
     private _tabindex = -1;
 
+    /**
+     * Whether the tag is disabled.
+     */
     @Input({ transform: booleanAttribute })
-    get disabled() {
-        return this._disabled;
+    get disabled(): boolean {
+        return this._disabled || (this.tagList?.disabled ?? false);
     }
 
     set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
+        this._disabled = value;
+        this.syncDragDisabledState();
     }
 
     private _disabled: boolean = false;
+
+    /**
+     * Whether the tag is draggable.
+     *
+     * @docs-private
+     */
+    protected get draggable(): boolean {
+        return (this.tagList?.draggable ?? false) && !this.disabled;
+    }
 
     constructor(
         public changeDetectorRef: ChangeDetectorRef,
@@ -378,6 +393,7 @@ export class KbqTag
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         this.addHostClassName();
+        this.setupDragInitialProperties();
     }
 
     ngAfterContentInit() {
@@ -616,6 +632,14 @@ export class KbqTag
             isUserInput,
             selected: this.selected
         });
+    }
+
+    private setupDragInitialProperties(): void {
+        this.drag.disabled = !this.draggable;
+    }
+
+    private syncDragDisabledState(): void {
+        this.drag.disabled = !this.draggable;
     }
 }
 

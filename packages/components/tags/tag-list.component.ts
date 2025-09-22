@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
@@ -46,6 +47,10 @@ export class KbqTagListChange {
     ) {}
 }
 
+export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previousIndex' | 'currentIndex'> & {
+    tag: KbqTag;
+};
+
 @Component({
     selector: 'kbq-tag-list',
     exportAs: 'kbqTagList',
@@ -69,6 +74,7 @@ export class KbqTagListChange {
         '[class.kbq-tag-list_selectable]': 'selectable',
         '[class.kbq-tag-list_editable]': 'editable',
         '[class.kbq-tag-list_removable]': 'removable',
+        '[class.kbq-tag-list_draggable]': 'draggable',
 
         '[attr.tabindex]': 'disabled ? null : tabIndex',
         '[id]': 'uid',
@@ -79,7 +85,8 @@ export class KbqTagListChange {
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }]
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
+    hostDirectives: [CdkDropList]
 })
 export class KbqTagList
     implements
@@ -91,7 +98,14 @@ export class KbqTagList
         OnDestroy,
         CanUpdateErrorState
 {
-    /** @docs-private */
+    private readonly dropList = inject(CdkDropList, { host: true });
+    private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
     readonly controlType: string = 'tag-list';
 
     /**
@@ -245,17 +259,35 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    @Input()
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.ngControl ? !!this.ngControl.disabled : this._disabled;
     }
 
     set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled = value;
         this.syncTagsDisabledState();
+        this.syncDraggableDisabledState();
     }
 
     private _disabled: boolean = false;
+
+    @Input({ transform: booleanAttribute })
+    get draggable(): boolean {
+        return this._draggable && !this.disabled;
+    }
+
+    set draggable(value: boolean) {
+        this._draggable = value;
+        this.syncDraggableDisabledState();
+    }
+
+    private _draggable: boolean = false;
+
+    /**
+     * Emits when the user drops tag inside tag list container.
+     */
+    @Output() readonly dropped = new EventEmitter<KbqTagListDroppedEvent>();
 
     /**
      * Whether or not this tag list is selectable. When a tag list is not selectable,
@@ -374,8 +406,6 @@ export class KbqTagList
     /** Subscription to edit changes in tags. */
     private tagEditSubscription: Subscription | null;
 
-    private readonly destroyRef = inject(DestroyRef);
-
     constructor(
         protected elementRef: ElementRef<HTMLElement>,
         private changeDetectorRef: ChangeDetectorRef,
@@ -388,6 +418,8 @@ export class KbqTagList
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
+
+        this.setupDropListInitialProperties();
     }
 
     ngOnInit() {
@@ -949,11 +981,7 @@ export class KbqTagList
 
     /** Syncs the list's disabled state with the individual tags. */
     private syncTagsDisabledState() {
-        if (this.tags) {
-            this.tags.forEach((tag) => {
-                tag.disabled = this._disabled;
-            });
-        }
+        this.tags?.forEach((tag) => (tag.disabled = this._disabled));
     }
 
     private syncTagsRemovableState(): void {
@@ -968,5 +996,26 @@ export class KbqTagList
             control.updateValueAndValidity({ emitEvent: false });
             (control.statusChanges as EventEmitter<string>).emit(control.status);
         }
+    }
+
+    private setupDropListInitialProperties(): void {
+        this.dropList.disabled = !this.draggable;
+        this.dropList.elementContainerSelector = '.kbq-tags-list__list-container';
+        this.dropList.orientation = 'mixed';
+        this.dropList.dropped
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ currentIndex, previousIndex, event }) => {
+                const tag = this.tags.get(previousIndex);
+
+                if (!tag) return;
+
+                this.dropped.emit({ currentIndex, previousIndex, event, tag });
+
+                setTimeout(() => tag.focus());
+            });
+    }
+
+    private syncDraggableDisabledState(): void {
+        this.dropList.disabled = !this.draggable;
     }
 }
