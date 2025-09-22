@@ -52,6 +52,7 @@
             "@koobiq/components/file-upload": ["packages/components/file-upload/index.ts"],
             "@koobiq/components/filter-bar": ["packages/components/filter-bar/index.ts"],
             "@koobiq/components/icon": ["packages/components/icon/index.ts"],
+            "@koobiq/components/inline-edit": ["packages/components/inline-edit/index.ts"],
             "@koobiq/components/input": ["packages/components/input/index.ts"],
             "@koobiq/components/link": ["packages/components/link/index.ts"],
             "@koobiq/components/list": ["packages/components/list/index.ts"],

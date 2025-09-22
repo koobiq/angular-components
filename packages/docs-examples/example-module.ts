@@ -2115,6 +2115,174 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon-item"
   },
+  "inline-edit-content-alignment": {
+    "packagePath": "components/inline-edit/inline-edit-content-alignment",
+    "title": "Inline edit content alignment",
+    "componentName": "InlineEditContentAlignmentExample",
+    "files": [
+      "inline-edit-content-alignment-example.ts"
+    ],
+    "selector": "inline-edit-content-alignment-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-content-alignment-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-controls": {
+    "packagePath": "components/inline-edit/inline-edit-controls",
+    "title": "Inline edit controls",
+    "componentName": "InlineEditControlsExample",
+    "files": [
+      "inline-edit-controls-example.ts"
+    ],
+    "selector": "inline-edit-controls-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-controls-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-custom-handler": {
+    "packagePath": "components/inline-edit/inline-edit-custom-handler",
+    "title": "Inline edit custom handler",
+    "componentName": "InlineEditCustomHandlerExample",
+    "files": [
+      "inline-edit-custom-handler-example.ts"
+    ],
+    "selector": "inline-edit-custom-handler-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-custom-handler-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-customized-design": {
+    "packagePath": "components/inline-edit/inline-edit-customized-design",
+    "title": "Inline edit customized design",
+    "componentName": "InlineEditCustomizedDesignExample",
+    "files": [
+      "inline-edit-customized-design-example.ts"
+    ],
+    "selector": "inline-edit-customized-design-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-customized-design-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-disabled": {
+    "packagePath": "components/inline-edit/inline-edit-disabled",
+    "title": "Inline edit disabled",
+    "componentName": "InlineEditDisabledExample",
+    "files": [
+      "inline-edit-disabled-example.ts"
+    ],
+    "selector": "inline-edit-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-disabled-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-editable-header": {
+    "packagePath": "components/inline-edit/inline-edit-editable-header",
+    "title": "Inline edit editable header",
+    "componentName": "InlineEditEditableHeaderExample",
+    "files": [
+      "inline-edit-editable-header-example.ts"
+    ],
+    "selector": "inline-edit-editable-header-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-editable-header-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-horizontal-list": {
+    "packagePath": "components/inline-edit/inline-edit-horizontal-list",
+    "title": "Inline edit horizontal list",
+    "componentName": "InlineEditHorizontalListExample",
+    "files": [
+      "inline-edit-horizontal-list-example.ts"
+    ],
+    "selector": "inline-edit-horizontal-list-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-horizontal-list-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-menu": {
+    "packagePath": "components/inline-edit/inline-edit-menu",
+    "title": "Inline edit menu",
+    "componentName": "InlineEditMenuExample",
+    "files": [
+      "inline-edit-menu-example.ts"
+    ],
+    "selector": "inline-edit-menu-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-menu-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-on-clean": {
+    "packagePath": "components/inline-edit/inline-edit-on-clean",
+    "title": "Inline edit on clean",
+    "componentName": "InlineEditOnCleanExample",
+    "files": [
+      "inline-edit-on-clean-example.ts"
+    ],
+    "selector": "inline-edit-on-clean-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-on-clean-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-overview": {
+    "packagePath": "components/inline-edit/inline-edit-overview",
+    "title": "Inline edit overview",
+    "componentName": "InlineEditOverviewExample",
+    "files": [
+      "inline-edit-overview-example.ts"
+    ],
+    "selector": "inline-edit-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-overview-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-unfilled": {
+    "packagePath": "components/inline-edit/inline-edit-unfilled",
+    "title": "Inline edit unfilled",
+    "componentName": "InlineEditUnfilledExample",
+    "files": [
+      "inline-edit-unfilled-example.ts"
+    ],
+    "selector": "inline-edit-unfilled-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-unfilled-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-validation": {
+    "packagePath": "components/inline-edit/inline-edit-validation",
+    "title": "Inline edit validation",
+    "componentName": "InlineEditValidationExample",
+    "files": [
+      "inline-edit-validation-example.ts"
+    ],
+    "selector": "inline-edit-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-validation-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-vertical-list": {
+    "packagePath": "components/inline-edit/inline-edit-vertical-list",
+    "title": "Inline edit vertical list",
+    "componentName": "InlineEditVerticalListExample",
+    "files": [
+      "inline-edit-vertical-list-example.ts"
+    ],
+    "selector": "inline-edit-vertical-list-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-vertical-list-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-without-label": {
+    "packagePath": "components/inline-edit/inline-edit-without-label",
+    "title": "Inline edit without label",
+    "componentName": "InlineEditWithoutLabelExample",
+    "files": [
+      "inline-edit-without-label-example.ts"
+    ],
+    "selector": "inline-edit-without-label-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-without-label-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "input-change-password": {
     "packagePath": "components/input/input-change-password",
     "title": "Input change password",
@@ -5347,6 +5515,34 @@ return import('@koobiq/docs-examples/components/icon-item');
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-variant':
 return import('@koobiq/docs-examples/components/icon-item');
+  case 'inline-edit-content-alignment':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-controls':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-custom-handler':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-customized-design':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-disabled':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-editable-header':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-horizontal-list':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-menu':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-on-clean':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-overview':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-unfilled':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-validation':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-vertical-list':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-without-label':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'input-change-password':
 return import('@koobiq/docs-examples/components/input');
   case 'input-number-overview':

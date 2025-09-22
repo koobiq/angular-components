@@ -35,6 +35,7 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import * as i2_2 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -2002,6 +2003,21 @@ export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<
 
 // @public
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
+
+// @public
+export class KbqFocusMonitor implements AfterContentInit, OnDestroy {
+    readonly checkChildren: InputSignalWithTransform<boolean, unknown>;
+    focusChange: Observable<FocusOrigin> | null;
+    focusVia(element: HTMLElement | ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusMonitor, "[kbqFocusMonitor]", ["kbqFocusMonitor"], { "checkChildren": { "alias": "checkChildren"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusMonitor, never>;
+}
 
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {

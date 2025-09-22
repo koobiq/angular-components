@@ -34,6 +34,7 @@ export enum DocsStructureItemId {
     EmptyState = 'empty-state',
     Icon = 'icon',
     IconItem = 'icon-item',
+    InlineEdit = 'inline-edit',
     Input = 'input',
     FileUpload = 'file-upload',
     FilterBar = 'filter-bar',
@@ -497,6 +498,17 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'icon',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.InlineEdit,
+                    name: {
+                        ru: 'Inline edit',
+                        en: 'Inline edit'
+                    },
+                    hasApi: true,
+                    apiId: 'inline-edit',
+                    hasExamples: true,
+                    isNew: expiresAt('2025-10-15')
                 },
                 {
                     id: DocsStructureItemId.Input,
