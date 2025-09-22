@@ -175,7 +175,7 @@ describe('KbqInlineEdit', () => {
         expect(spyFn).toHaveBeenCalled();
     });
 
-    it('should emit saved event on ENTER keydown event', () => {
+    it('should emit saved event on ENTER keydown event', async () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
@@ -187,6 +187,7 @@ describe('KbqInlineEdit', () => {
         const overlayElement = getOverlayElement();
 
         dispatchEvent(overlayElement!, createKeyboardEvent('keydown', ENTER, undefined, 'Enter'));
+        await fixture.whenStable();
 
         expect(spyFn).toHaveBeenCalled();
     });
@@ -258,7 +259,7 @@ describe('KbqInlineEdit', () => {
         expect(componentInstance.value).toEqual(initialValue);
     });
 
-    it('should emit saved event on CMD/CTRL + ENTER keydown event for TEXTAREA', () => {
+    it('should emit saved event on CMD/CTRL + ENTER keydown event for TEXTAREA', async () => {
         let event: KeyboardEvent;
         const fixture = setup(TestWithTextareaControl);
         const { componentInstance, debugElement } = fixture;
@@ -283,6 +284,7 @@ describe('KbqInlineEdit', () => {
             ctrlKey: { get: () => true }
         });
         dispatchEvent(overlayElement!, event);
+        await fixture.whenStable();
 
         expect(spyFn).toHaveBeenCalled();
     });
