@@ -110,7 +110,10 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
 })
 export class KbqTimeRange<T> implements ControlValueAccessor {
     private readonly timeRangeService = inject(KbqTimeRangeService);
+
+    /** The minimum selectable date. */
     readonly minDate = input<T>();
+    /** The maximum selectable date. */
     readonly maxDate = input<T>();
     /** provided value of selected range */
     readonly defaultRangeValue = input<KbqRangeValue<T>>();
@@ -145,9 +148,8 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
         this.rangeEditorControl = new FormControl<TimeRange>(this.titleValue(), { nonNullable: true });
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((id) => {
-            this.localeConfiguration.set(this.localeService?.getParams('timeRange') ?? ruRULocaleData.timeRange);
-
             this.timeRangeService.dateFormatter.setLocale(id);
+            this.localeConfiguration.set(this.localeService?.getParams('timeRange') ?? ruRULocaleData.timeRange);
         });
     }
 

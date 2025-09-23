@@ -7,6 +7,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRange, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeTitleContext } from './types';
 
+/** @docs-private */
 @Component({
     standalone: true,
     selector: 'kbq-time-range-title',

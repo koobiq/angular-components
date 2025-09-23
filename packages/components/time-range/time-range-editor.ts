@@ -19,6 +19,7 @@ interface FormValue<T> {
     toDate: FormControl<T>;
 }
 
+/** @docs-private */
 @Component({
     selector: 'kbq-time-range-editor',
     standalone: true,
