@@ -31,7 +31,7 @@ export class KbqTabLabelWrapper implements AfterViewInit {
     private _disabled: boolean = false;
 
     constructor(
-        public elementRef: ElementRef,
+        public elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2
     ) {}
 

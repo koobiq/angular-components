@@ -170,7 +170,7 @@ export class KbqInputPassword
     private _inputValueAccessor: { value: any };
 
     constructor(
-        protected elementRef: ElementRef,
+        protected elementRef: ElementRef<HTMLInputElement>,
         @Optional() @Self() public ngControl: NgControl,
         @Optional() public parentForm: NgForm,
         @Optional() public parentFormGroup: FormGroupDirective,

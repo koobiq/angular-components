@@ -38,7 +38,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     focusViaKeyboard(): void;
     // (undocumented)
-    getHostElement(): any;
+    getHostElement(): HTMLElement;
     // (undocumented)
     haltDisabledEvents(event: Event): void;
     // (undocumented)
@@ -73,7 +73,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
 // @public (undocumented)
 export class KbqButtonCssStyler implements AfterContentInit {
-    constructor(elementRef: ElementRef, renderer: Renderer2, cdr: ChangeDetectorRef);
+    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
     // (undocumented)
     icons: QueryList<KbqIcon>;
     // (undocumented)

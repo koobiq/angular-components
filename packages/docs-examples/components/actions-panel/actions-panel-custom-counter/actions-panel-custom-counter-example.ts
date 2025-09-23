@@ -161,7 +161,7 @@ export class ActionsPanelCustomCounterExample {
     protected readonly action = { Counter: 'counter' };
 
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly toast = inject(KbqToastService);
     private actionsPanelRef: KbqActionsPanelRef | null;

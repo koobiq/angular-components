@@ -25,7 +25,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, ENTER, NUMPAD_DIVIDE, RIGHT_ARROW, SLASH, SPACE } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
+import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -70,7 +70,7 @@ export class KbqNavbarBento {}
 })
 export class KbqNavbarTitle implements AfterViewInit {
     protected readonly isBrowser = inject(Platform).isBrowser;
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
 
     readonly hovered = new Subject<boolean>();
@@ -79,7 +79,7 @@ export class KbqNavbarTitle implements AfterViewInit {
     isTextOverflown: boolean = false;
 
     get text(): string {
-        return this.nativeElement.textContent;
+        return this.nativeElement.textContent || '';
     }
 
     get isOverflown() {
@@ -311,7 +311,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 })
 export class KbqNavbarRectangleElement {
     protected readonly isBrowser = inject(Platform).isBrowser;
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
 
     readonly state = new Subject<void>();

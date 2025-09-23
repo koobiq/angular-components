@@ -34,7 +34,7 @@ import { TooltipModifier } from '@koobiq/components/tooltip';
 
 // @public (undocumented)
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, focusMonitor: FocusMonitor);
+    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -42,7 +42,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     // (undocumented)
     protected dropSubscriptions(): void;
     // (undocumented)
-    protected readonly elementRef: ElementRef;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -74,11 +74,11 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
 // @public (undocumented)
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    protected readonly elementRef: ElementRef;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     // (undocumented)
@@ -294,7 +294,7 @@ export class KbqNavbarRectangleElement {
     // (undocumented)
     protected readonly isBrowser: boolean;
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     readonly state: Subject<void>;
     // (undocumented)
@@ -321,7 +321,7 @@ export class KbqNavbarTitle implements AfterViewInit {
     // (undocumented)
     isTextOverflown: boolean;
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -364,13 +364,13 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
 
 // @public (undocumented)
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     readonly animationDone: Subject<void>;
     // (undocumented)
     bento: KbqNavbarBento;
     // (undocumented)
-    protected elementRef: ElementRef;
+    protected elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     get expanded(): boolean;
     set expanded(value: boolean);

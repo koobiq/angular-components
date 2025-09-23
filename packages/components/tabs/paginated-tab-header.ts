@@ -180,7 +180,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     private selectedIndexChanged = false;
 
     protected readonly destroyRef = inject(DestroyRef);
-    public readonly elementRef = inject(ElementRef);
+    public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly viewportRuler = inject(ViewportRuler);
     private readonly ngZone = inject(NgZone);

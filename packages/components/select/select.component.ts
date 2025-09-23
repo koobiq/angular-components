@@ -640,7 +640,7 @@ export class KbqSelect
         private readonly _ngZone: NgZone,
         private readonly _renderer: Renderer2,
         public defaultErrorStateMatcher: ErrorStateMatcher,
-        public elementRef: ElementRef,
+        public elementRef: ElementRef<HTMLElement>,
         private overlayContainer: OverlayContainer,
         @Optional() private readonly _dir: Directionality,
         @Optional() public parentForm: NgForm,

@@ -38,7 +38,7 @@ export enum KbqAccordionVariant {
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit {
     protected readonly focusMonitor = inject(FocusMonitor);
-    protected readonly elementRef = inject(ElementRef<HTMLElement>);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     @Input() variant: KbqAccordionVariant | string = KbqAccordionVariant.fill;
 

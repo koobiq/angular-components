@@ -90,7 +90,7 @@ export class KbqModalBody {
 // @public (undocumented)
 export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions {
     // Warning: (ae-forgotten-export) The symbol "KbqModalControlService" needs to be exported by the entry point index.d.ts
-    constructor(overlay: Overlay, renderer: Renderer2, cfr: ComponentFactoryResolver, elementRef: ElementRef, viewContainer: ViewContainerRef, modalControl: KbqModalControlService, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    constructor(overlay: Overlay, renderer: Renderer2, cfr: ComponentFactoryResolver, elementRef: ElementRef<HTMLElement>, viewContainer: ViewContainerRef, modalControl: KbqModalControlService, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     get afterClose(): Observable<R | undefined>;
     // (undocumented)

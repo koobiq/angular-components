@@ -30,7 +30,7 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR: InjectionToken<{
 
 // @public (undocumented)
 export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
-    constructor(elementRef: ElementRef, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, parent: any, ngZone: NgZone);
+    constructor(elementRef: ElementRef<HTMLTextAreaElement>, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, parent: any, ngZone: NgZone);
     get canGrow(): boolean;
     set canGrow(value: boolean);
     controlType: string;
@@ -40,7 +40,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected elementRef: ElementRef;
+    protected elementRef: ElementRef<HTMLTextAreaElement>;
     get empty(): boolean;
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;

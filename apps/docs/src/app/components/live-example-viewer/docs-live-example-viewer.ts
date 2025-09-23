@@ -73,7 +73,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     private _example: string | null;
 
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly httpClient = inject(HttpClient);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly window = inject(KBQ_WINDOW);

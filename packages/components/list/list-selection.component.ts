@@ -217,7 +217,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     private optionBlurSubscription: Subscription | null;
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private changeDetectorRef: ChangeDetectorRef,
         @Attribute('multiple') multiple: MultipleMode,
         @Optional() private clipboard: Clipboard

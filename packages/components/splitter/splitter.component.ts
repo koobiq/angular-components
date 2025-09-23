@@ -110,7 +110,7 @@ export class KbqGutterDirective implements OnInit {
     dragged: boolean = false;
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2
     ) {}
 
@@ -203,7 +203,7 @@ export class KbqGutterGhostDirective {
     }
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2
     ) {}
 
@@ -313,7 +313,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     private _resizing: boolean = false;
 
     constructor(
-        public elementRef: ElementRef,
+        public elementRef: ElementRef<HTMLElement>,
         public changeDetectorRef: ChangeDetectorRef,
         private ngZone: NgZone,
         private renderer: Renderer2
@@ -559,7 +559,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     private readonly window = inject(KBQ_WINDOW);
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2,
         @Inject(forwardRef(() => KbqSplitterComponent)) private splitter: KbqSplitterComponent
     ) {}

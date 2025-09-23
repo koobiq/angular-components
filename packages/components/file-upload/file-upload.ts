@@ -99,7 +99,7 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
     /** @docs-private */
     protected readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
     /** @docs-private */
-    protected readonly elementRef = inject(ElementRef);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate
      * @docs-private */

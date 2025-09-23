@@ -9,7 +9,7 @@ import { Directive, ElementRef, inject } from '@angular/core';
 })
 export class KbqNormalizeWhitespace {
     /** @docs-private */
-    protected elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
      * Replace thin-space with space on copy event
