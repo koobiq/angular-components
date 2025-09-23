@@ -11,6 +11,7 @@ import { SearchExpandableExamplesModule } from '../../docs-examples/components/s
     template: `
         <search-expandable-overview-example />
         <br />
+        <search-expandable-in-header-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import {
+    AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,18 +11,21 @@ import {
     InjectionToken,
     Input,
     Output,
+    QueryList,
     ViewChild,
+    ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, ruRULocaleData } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /** default configuration of search-expandable */
 export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION = ruRULocaleData.searchExpandable;
@@ -60,25 +64,33 @@ export const defaultEmitValueTimeout = 200;
         }
     ]
 })
-export class KbqSearchExpandable implements ControlValueAccessor {
+export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit {
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
+    /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     readonly externalConfiguration = inject(KBQ_SEARCH_EXPANDABLE_CONFIGURATION, { optional: true });
 
+    @ViewChildren(KbqInput) private input: QueryList<KbqInput>;
+    @ViewChildren(KbqButton) private button: QueryList<KbqButton>;
     @ViewChild(KbqTooltipTrigger) private tooltip: KbqTooltipTrigger;
 
     configuration;
 
+    /** Current value in input. */
     value = new BehaviorSubject(defaultValue);
 
+    /** state of component. */
     @Input({ transform: booleanAttribute }) isOpened = false;
+    /** Emit event by enter or not. Default is false */
     @Input() isEmitValueByEnterEnabled = false;
+    /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
     @Input() emitValueTimeout = defaultEmitValueTimeout;
 
+    /** Placeholder for input when expanded */
     @Input()
     get placeholder(): string {
         return this._placeholder ?? this.localeData?.placeholder;
@@ -90,6 +102,7 @@ export class KbqSearchExpandable implements ControlValueAccessor {
 
     private _placeholder = this.localeData?.placeholder;
 
+    /** Event emitted when the search has been toggled. */
     @Output() readonly isOpenedChange = new EventEmitter<boolean>();
 
     /** localized data
@@ -117,8 +130,34 @@ export class KbqSearchExpandable implements ControlValueAccessor {
             .subscribe(this.emitValue);
     }
 
+    ngAfterViewInit(): void {
+        this.button.changes
+            .pipe(
+                filter((queryList) => queryList.length),
+                map((queryList) => queryList.first),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((button: KbqButton) => {
+                this.tooltip.disabled = true;
+
+                button.focusViaKeyboard();
+
+                this.tooltip.disabled = false;
+            });
+
+        this.input.changes
+            .pipe(
+                filter((queryList) => queryList.length),
+                map((queryList) => queryList.first),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((input: KbqInput) => input.focus());
+    }
+
+    /** @docs-private */
     onChange: (value: string) => void;
 
+    /** @docs-private */
     onTouch: () => void = () => {};
 
     registerOnChange(fn: (value: string) => void): void {

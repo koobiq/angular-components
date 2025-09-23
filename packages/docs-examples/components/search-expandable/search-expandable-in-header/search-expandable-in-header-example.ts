@@ -12,7 +12,14 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
         KbqSearchExpandableModule
     ],
     template: `
-        <kbq-search-expandable />
-    `
+        <div class="example-search-expandable-in-header-example__panel">
+            <div class="example-search-expandable-in-header-example__header">
+                <div class="example-search-expandable-in-header-example__name kbq-subheading">Panel Title</div>
+                <kbq-search-expandable />
+            </div>
+            <div class="example-search-expandable-in-header-example__body"></div>
+        </div>
+    `,
+    styleUrls: ['./search-expandable-in-header.scss']
 })
 export class SearchExpandableInHeaderExample {}

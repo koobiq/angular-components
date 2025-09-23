@@ -3193,7 +3193,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "search-expandable-in-header",
     "componentName": "SearchExpandableInHeaderExample",
     "files": [
-      "search-expandable-in-header-example.ts"
+      "search-expandable-in-header-example.ts",
+      "./search-expandable-in-header.scss"
     ],
     "selector": "search-expandable-in-header-example",
     "additionalComponents": [],
