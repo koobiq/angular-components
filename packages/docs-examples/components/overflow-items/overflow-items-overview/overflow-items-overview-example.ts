@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
@@ -9,19 +9,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  */
 @Component({
     standalone: true,
-    imports: [
-        KbqOverflowItemsModule,
-        KbqBadgeModule,
-        KbqToggleModule,
-        FormsModule
-    ],
+    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-overview-example',
     template: `
-        <kbq-toggle
-            class="layout-margin-bottom-m"
-            [ngModel]="reverseOverflowOrder()"
-            (ngModelChange)="reverseOverflowOrder.set($event)"
-        >
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="reverseOverflowOrder">
             Reverse overflow order
         </kbq-toggle>
 
@@ -64,7 +55,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsOverviewExample {
-    readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
-
-    readonly reverseOverflowOrder = signal(false);
+    readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
+    readonly reverseOverflowOrder = model(false);
 }

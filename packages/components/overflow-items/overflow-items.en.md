@@ -2,8 +2,8 @@ Component for automatically hiding elements with dynamic adaptation to the conta
 
 Supports two modes of operation:
 
-- hiding from the end (default)
-- hiding from the start
+- Hiding from the end (default).
+- Hiding from the start.
 
 Configurable via the `reverseOverflowOrder` attribute.
 
@@ -14,6 +14,18 @@ Configurable via the `reverseOverflowOrder` attribute.
 The order in which elements are hidden is determined using the `order` attribute for the `KbqOverflowItem` directive.
 
 <!-- example(overflow-items-with-order) -->
+
+### Always visible elements
+
+If you need some elements to always remain visible, you can use the `alwaysVisible` attribute for the `KbqOverflowItem` directive.
+
+<!-- example(overflow-items-with-always-visible-item) -->
+
+### Element alignment
+
+Element alignment within the container is set using the CSS property [`justify-content`](https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content).
+
+<!-- example(overflow-items-justify-content) -->
 
 ### Delay when hiding/showing
 

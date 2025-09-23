@@ -6,7 +6,6 @@ import {
     contentChild,
     contentChildren,
     Directive,
-    ElementRef,
     inject,
     input,
     numberAttribute,
@@ -15,6 +14,7 @@ import {
     signal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { KBQ_WINDOW, kbqInjectElementRef } from '@koobiq/components/core';
 import { debounceTime, merge, skip, switchMap } from 'rxjs';
 
 /**
@@ -31,8 +31,12 @@ import { debounceTime, merge, skip, switchMap } from 'rxjs';
 })
 export class ElementVisibilityManager {
     private readonly renderer = inject(Renderer2);
-    private readonly elementRef = inject(ElementRef);
     private readonly hiddenState = signal(false);
+
+    /**
+     * @docs-private
+     */
+    readonly elementRef = kbqInjectElementRef();
 
     /**
      * Whether the element is hidden.
@@ -123,10 +127,11 @@ export class KbqOverflowItem extends ElementVisibilityManager {
     host: { class: 'kbq-overflow-items' }
 })
 export class KbqOverflowItems {
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly elementRef = kbqInjectElementRef();
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
+    private readonly window = inject(KBQ_WINDOW);
 
     /**
      * `KbqOverflowItem` directive references.
@@ -140,6 +145,11 @@ export class KbqOverflowItems {
 
     /**
      * Whether the overflow order should be reversed.
+     *
+     * @example
+     * ```
+     * [0, 1, hidden, hidden] ---> [hidden, hidden, 2, 3]
+     * ```
      *
      * @default false
      */
@@ -192,7 +202,7 @@ export class KbqOverflowItems {
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
-                    this.sortItemsByOrder(this.excludeAlwaysVisibleItems(this.items())),
+                    this.sortItemsByOrder(this.items()),
                     this.reverseOverflowOrder(),
                     this.result(),
                     this.elementRef.nativeElement
@@ -214,13 +224,6 @@ export class KbqOverflowItems {
     }
 
     /**
-     * Excludes items that have the `alwaysVisible` attribute.
-     */
-    private excludeAlwaysVisibleItems(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
-        return items.filter(({ alwaysVisible }) => !alwaysVisible());
-    }
-
-    /**
      * Manages the visibility of items based on the available space in the container and returns the hidden items.
      * Direction of hiding is determined by the `reverseOverflowOrder` attribute.
      */
@@ -233,12 +236,12 @@ export class KbqOverflowItems {
         result?.hide();
         items.forEach((item) => item.show());
 
-        while (this.hasScrollbar(container)) {
-            const visibleItems = items.filter(({ hidden }) => !hidden());
+        while (this.hasOverflown(container, items, result)) {
+            const itemToHide = reverseOverflowOrder
+                ? items.find(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible())
+                : this.findLast(items, ({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
 
-            if (visibleItems.length === 0) break;
-
-            const itemToHide = reverseOverflowOrder ? visibleItems[0] : visibleItems[visibleItems.length - 1];
+            if (!itemToHide) break;
 
             itemToHide.hide();
             result?.show();
@@ -258,8 +261,41 @@ export class KbqOverflowItems {
         this.renderer.setStyle(this.elementRef.nativeElement, 'overflow', 'hidden');
     }
 
+    private hasOverflown(
+        container: HTMLElement,
+        items: ReadonlyArray<KbqOverflowItem>,
+        result: KbqOverflowItemsResult | undefined
+    ): boolean {
+        const { paddingLeft, paddingRight } = this.window.getComputedStyle(container);
+        const containerWidthWithoutPaddings =
+            container.clientWidth - (parseFloat(paddingLeft) || 0) - (parseFloat(paddingRight) || 0);
+        const itemsWidth = items.reduce(
+            (width, item) =>
+                width + (item.hidden() ? 0 : this.getElementWidthWithMargins(item.elementRef.nativeElement)),
+            0
+        );
+        const resultWidth =
+            !result || result?.hidden() ? 0 : this.getElementWidthWithMargins(result.elementRef.nativeElement);
+
+        return itemsWidth + resultWidth > containerWidthWithoutPaddings;
+    }
+
+    private getElementWidthWithMargins(element: HTMLElement): number {
+        const { marginRight, marginLeft } = this.window.getComputedStyle(element);
+
+        return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
+    }
+
     /**
-     * Determines if the given element has a scrollbar.
+     * @TODO Should be removed when `Array.prototype.findLast` is supported.
      */
-    private readonly hasScrollbar = ({ scrollWidth, clientWidth }: HTMLElement): boolean => scrollWidth > clientWidth;
+    private findLast<T>(array: ReadonlyArray<T>, predicate: (item: T) => boolean): T | undefined {
+        for (let i = array.length - 1; i >= 0; i--) {
+            if (predicate(array[i])) {
+                return array[i];
+            }
+        }
+
+        return undefined;
+    }
 }
