@@ -30,7 +30,7 @@ Tag text does not wrap to a new line; instead, it is truncated with an ellipsis.
 
 Tags can be selected in several ways:
 
-- Click on a tag while holding `Ctrl` or `Shift`.
+- Click on the tag or set focus on it.
 - Programmatic selection through the component [API](/en/components/tag/api).
 
 The selection option is configured using the `selectable` attribute (enabled by default).
