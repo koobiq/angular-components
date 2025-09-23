@@ -1,7 +1,8 @@
 import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration
+    KbqCodeBlockLocaleConfiguration,
+    KbqTimeRangeLocaleConfig
 } from './types';
 
 export const esLALocaleData = {
@@ -104,5 +105,17 @@ export const esLALocaleData = {
     searchExpandable: {
         tooltip: 'Búsqueda',
         placeholder: 'Búsqueda'
-    }
+    },
+    timeRange: {
+        title: {
+            for: 'para'
+        },
+        editor: {
+            from: 'de',
+            to: 'a',
+            apply: 'Aplicar',
+            cancel: 'Cancelar',
+            rangeLabel: 'para el período'
+        }
+    } satisfies KbqTimeRangeLocaleConfig
 };

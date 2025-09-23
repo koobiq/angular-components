@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -43,12 +44,17 @@ interface FormValue<T> {
                 </div>
 
                 @if (isRangeVisible()) {
+                    @let localeConfig = localeConfiguration();
+
                     <div class="kbq-time-range-editor__range" role="group">
-                        <kbq-radio-button [value]="'Range'">range</kbq-radio-button>
+                        <kbq-radio-button [value]="'range'">{{ localeConfig.editor.rangeLabel }}</kbq-radio-button>
 
                         <div class="kbq-time-range-editor__date-time">
-                            <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.from">
-                                {{ localeConfig.from }}
+                            <span
+                                class="kbq-time-range-editor__date-time-prefix"
+                                [attr.aria-label]="localeConfig.editor.from"
+                            >
+                                {{ localeConfig.editor.from }}
                             </span>
                             <kbq-fieldset>
                                 <kbq-form-field kbqFieldsetItem>
@@ -69,8 +75,11 @@ interface FormValue<T> {
                         </div>
 
                         <div class="kbq-time-range-editor__date-time">
-                            <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.to">
-                                {{ localeConfig.to }}
+                            <span
+                                class="kbq-time-range-editor__date-time-prefix"
+                                [attr.aria-label]="localeConfig.editor.to"
+                            >
+                                {{ localeConfig.editor.to }}
                             </span>
                             <kbq-fieldset>
                                 <kbq-form-field kbqFieldsetItem>
@@ -118,6 +127,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
     availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
 
     showRangeAsDefault = input(true);
+    localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
 
     /** @docs-private */
     protected readonly isRangeVisible = computed(

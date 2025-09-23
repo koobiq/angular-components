@@ -42,3 +42,17 @@ export type KbqClampedTextLocaleConfig = {
     openText: string;
     closeText: string;
 };
+
+/** Locale configuration for `KbqTimeRange` */
+export type KbqTimeRangeLocaleConfig = {
+    title: {
+        for: string;
+    };
+    editor: {
+        from: string;
+        to: string;
+        apply: string;
+        cancel: string;
+        rangeLabel: string;
+    };
+};

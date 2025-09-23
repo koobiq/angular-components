@@ -1,7 +1,8 @@
 import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration
+    KbqCodeBlockLocaleConfiguration,
+    KbqTimeRangeLocaleConfig
 } from './types';
 
 export const tkTMLocaleData = {
@@ -105,5 +106,17 @@ export const tkTMLocaleData = {
     searchExpandable: {
         tooltip: 'Gözleg',
         placeholder: 'Gözleg'
-    }
+    },
+    timeRange: {
+        title: {
+            for: 'soňky'
+        },
+        editor: {
+            from: 'şundan',
+            to: 'şuňa',
+            apply: 'Ulanmak',
+            cancel: 'Ýatyrmak',
+            rangeLabel: 'şu döwürde'
+        }
+    } satisfies KbqTimeRangeLocaleConfig
 };

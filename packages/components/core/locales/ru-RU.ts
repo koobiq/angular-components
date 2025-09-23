@@ -1,7 +1,8 @@
 import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration
+    KbqCodeBlockLocaleConfiguration,
+    KbqTimeRangeLocaleConfig
 } from './types';
 
 export const ruRULocaleData = {
@@ -105,5 +106,17 @@ export const ruRULocaleData = {
     searchExpandable: {
         tooltip: 'Поиск',
         placeholder: 'Поиск'
-    }
+    },
+    timeRange: {
+        title: {
+            for: 'за'
+        },
+        editor: {
+            from: 'с',
+            to: 'по',
+            apply: 'Применить',
+            cancel: 'Отмена',
+            rangeLabel: 'за период'
+        }
+    } satisfies KbqTimeRangeLocaleConfig
 };
