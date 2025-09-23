@@ -2065,6 +2065,36 @@
                 }
             }
         },
+        "dev-split-button": {
+            "projectType": "application",
+            "root": "packages/components-dev/split-button",
+            "sourceRoot": "packages/components-dev/split-button",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/split-button"
+                        },
+                        "tsConfig": "packages/components-dev/split-button/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/split-button/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-split-button:build"
+                    }
+                }
+            }
+        },
         "dev-ssr": {
             "projectType": "application",
             "root": "packages/components-dev/ssr",
