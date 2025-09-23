@@ -18,7 +18,7 @@ import { KbqTimeRange, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeTitleCo
             <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null" />
         } @else {
             <a kbq-link pseudo>
-                <span class="kbq-link__text">Mock Label</span>
+                <span class="kbq-link__text">За {{ formattedDate() }}</span>
 
                 <i kbq-icon="kbq-calendar-o_16"></i>
             </a>
@@ -26,10 +26,10 @@ import { KbqTimeRange, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeTitleCo
     `
 })
 export class KbqTimeRangeTitle {
-    private readonly timeRangeService = inject(KbqTimeRangeService);
-
     readonly timeRange = input<KbqTimeRange>();
     readonly titleTemplate = input<TemplateRef<any>>();
+
+    protected readonly timeRangeService = inject(KbqTimeRangeService);
 
     protected context = computed<KbqTimeRangeTitleContext | undefined>(() => {
         const timeRange = this.timeRange();
@@ -51,5 +51,18 @@ export class KbqTimeRangeTitle {
             $implicit: context,
             ...context
         };
+    });
+
+    protected readonly formattedDate = computed(() => {
+        const context = this.context();
+
+        if (!context || !context.startDateTime) return '';
+
+        return this.timeRangeService.dateFormatter.durationLong(
+            this.timeRangeService.fromISO(context.startDateTime),
+            this.timeRangeService.dateAdapter.today(),
+            // @TODO
+            ['hours']
+        );
     });
 }

@@ -14,18 +14,17 @@ import { KbqTimeRange } from '@koobiq/components/time-range';
     standalone: true,
     selector: 'time-range-overview-example',
     imports: [
+        JsonPipe,
         KbqTimeRange,
         KbqLuxonDateModule,
         KbqIconModule,
         KbqButtonModule,
-        JsonPipe,
         KbqFormattersModule
     ],
     template: `
         <ng-template #titleTemplate let-context>
             <div class="kbq-mono-compact" style="color: var(--kbq-foreground-contrast-secondary)">
                 {{ context | json }}
-                {{ context.startDateTime | absoluteShortDate }}
             </div>
             <button kbq-button aria-label="time range trigger">
                 <i kbq-icon="kbq-calendar-o_16"></i>

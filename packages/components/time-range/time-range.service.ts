@@ -1,12 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import { createMissingDateImplError, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
 import { KbqRange, KbqRangeValue, KbqTimeRange, KbqTimeRangeType, KbqTimeRangeUnits } from './types';
 
 @Injectable()
 export class KbqTimeRangeService<T> {
+    readonly dateAdapter = inject<DateAdapter<T>>(DateAdapter);
+    readonly dateFormatter = inject<DateFormatter<T>>(DateFormatter);
     protected readonly providedDefaultTimeRangeTypes = inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true });
-    protected readonly dateAdapter = inject<DateAdapter<T>>(DateAdapter);
 
     protected defaultTimeRangeTypes: KbqTimeRangeType[] = [
         'lastHour',
@@ -99,11 +100,11 @@ export class KbqTimeRangeService<T> {
             return {
                 startDateTime:
                     checkedRangeValue.fromDate && checkedRangeValue.fromTime
-                        ? this.toIso(this.combineDateAndTime(checkedRangeValue.fromDate, checkedRangeValue.fromTime))
+                        ? this.toISO(this.combineDateAndTime(checkedRangeValue.fromDate, checkedRangeValue.fromTime))
                         : '',
                 endDateTime:
                     checkedRangeValue.toDate && checkedRangeValue.toTime
-                        ? this.toIso(this.combineDateAndTime(checkedRangeValue.toDate, checkedRangeValue.toTime))
+                        ? this.toISO(this.combineDateAndTime(checkedRangeValue.toDate, checkedRangeValue.toTime))
                         : ''
             };
         }
@@ -140,7 +141,7 @@ export class KbqTimeRangeService<T> {
                     endDateTime: undefined
                 };
             case 'currentYear':
-                return { startDateTime: this.toIso(this.startOfYear()) };
+                return { startDateTime: this.toISO(this.startOfYear()) };
             case 'allTime':
             default:
                 return {
@@ -162,7 +163,8 @@ export class KbqTimeRangeService<T> {
         );
     }
 
-    toIso = (date: T): string => this.dateAdapter!.toIso8601(date);
+    toISO = (date: T): string => this.dateAdapter!.toIso8601(date);
+    fromISO = (date: string) => this.dateAdapter.deserialize(date);
 
     startOfYear(): T {
         const date = this.dateAdapter!.today();
@@ -174,7 +176,7 @@ export class KbqTimeRangeService<T> {
         const date = this.dateAdapter!.today();
 
         return {
-            startDateTime: this.toIso(
+            startDateTime: this.toISO(
                 this.dateAdapter!.createDateTime(
                     this.dateAdapter.getYear(date),
                     this.dateAdapter.getMonth(date),
@@ -192,7 +194,7 @@ export class KbqTimeRangeService<T> {
         const date = this.dateAdapter!.today();
 
         return {
-            startDateTime: this.toIso(
+            startDateTime: this.toISO(
                 this.dateAdapter!.createDateTime(
                     this.dateAdapter.getYear(date),
                     this.dateAdapter.getMonth(date),
@@ -206,13 +208,31 @@ export class KbqTimeRangeService<T> {
         };
     };
 
-    lastDaysRange = (days: number): KbqRange => {
-        return {
-            startDateTime: this.toIso(this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -days))
-        };
-    };
+    lastDaysRange = (days: number): KbqRange => ({
+        startDateTime: this.toISO(this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -days))
+    });
 
     lastMonthsRange = (months: number): KbqRange => ({
-        startDateTime: this.toIso(this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), months))
+        startDateTime: this.toISO(this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), -months))
     });
+
+    checkAndCorrectTimeRangeValue(
+        value: KbqTimeRange | undefined,
+        availableTimeRangeTypes: KbqTimeRangeType[],
+        rangeValue: KbqRangeValue<T>
+    ): KbqTimeRange {
+        let result =
+            value && availableTimeRangeTypes.includes(value.type)
+                ? value
+                : this.getTimeRangeDefaultValue(rangeValue, availableTimeRangeTypes);
+
+        if (!result.startDateTime || (result.type === 'range' && (!result.startDateTime || !result.endDateTime))) {
+            result = {
+                ...this.calculateTimeRange(result.type, rangeValue),
+                type: result.type
+            };
+        }
+
+        return result;
+    }
 }
