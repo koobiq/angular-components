@@ -73,6 +73,7 @@
             "@koobiq/components/sidepanel": ["packages/components/sidepanel/index.ts"],
             "@koobiq/components/scrollbar": ["packages/components/scrollbar/index.ts"],
             "@koobiq/components/splitter": ["packages/components/splitter/index.ts"],
+            "@koobiq/components/split-button": ["packages/components/split-button/index.ts"],
             "@koobiq/components/table": ["packages/components/table/index.ts"],
             "@koobiq/components/tabs": ["packages/components/tabs/index.ts"],
             "@koobiq/components/tags": ["packages/components/tags/index.ts"],

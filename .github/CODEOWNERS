@@ -12,6 +12,7 @@
 /packages/components/popover/*                              @lskramarov
 /packages/components/select/*                               @lskramarov
 /packages/components/search-expandable/*                    @lskramarov
+/packages/components/split-button/*                         @lskramarov
 /packages/components/title/*                                @lskramarov
 /packages/components/toast/*                                @lskramarov
 /packages/components/tooltip/*                              @lskramarov
