@@ -72,69 +72,42 @@ const getTagRemoveElement = (debugElement: DebugElement): HTMLElement => {
 
 @Component({
     standalone: true,
-    selector: 'test-editable-tag',
+    selector: 'test-tag',
     imports: [KbqTagsModule, FormsModule],
-    template: `
-        <kbq-tag [editable]="editable()" [preventEditSubmit]="preventEditSubmit()" (editChange)="editChange($event)">
-            {{ tag() }}
-            <input kbqTagEditInput [(ngModel)]="tag" />
-            <i kbqTagEditSubmit></i>
-        </kbq-tag>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class TestEditableTag {
-    readonly tag = model('Editable tag');
-    readonly editable = model(true);
-    readonly preventEditSubmit = model(false);
-
-    readonly editChange = jest.fn();
-}
-
-@Component({
-    standalone: true,
-    selector: 'test-selectable-tag',
-    imports: [KbqTagsModule],
     template: `
         <kbq-tag
             [value]="value()"
             [selectable]="selectable()"
             [selected]="selected()"
             [disabled]="disabled()"
+            [removable]="removable()"
+            [editable]="editable()"
+            [preventEditSubmit]="preventEditSubmit()"
             (selectionChange)="selectionChange($event)"
+            (removed)="removedChange($event)"
+            (editChange)="editChange($event)"
         >
             {{ value() }}
+            <i kbqTagRemove></i>
+            <input kbqTagEditInput [(ngModel)]="value" />
+            <i kbqTagEditSubmit></i>
         </kbq-tag>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TestSelectableTag {
+export class TestTag {
     readonly tag = viewChild.required(KbqTag);
-    readonly value = model('Selectable tag');
+    readonly value = model('Tag');
     readonly selectable = model(true);
     readonly disabled = model(false);
     readonly selected = model(false);
+    readonly removable = model(true);
+    readonly editable = model(true);
+    readonly preventEditSubmit = model(false);
 
     readonly selectionChange = jest.fn();
-}
-
-@Component({
-    standalone: true,
-    selector: 'test-removable-tag',
-    imports: [KbqTagsModule],
-    template: `
-        <kbq-tag [removable]="removable()" (removed)="removedChange($event)">
-            {{ tag() }}
-            <i kbqTagRemove></i>
-        </kbq-tag>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class TestRemovableTag {
-    readonly tag = model('Removable tag');
-    readonly removable = model(true);
-
     readonly removedChange = jest.fn();
+    readonly editChange = jest.fn();
 }
 
 describe(KbqTag.name, () => {
@@ -413,7 +386,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should start editing on double click', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
@@ -424,7 +397,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should start editing on ENTER press', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
@@ -436,7 +409,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should start editing on F2 press', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
@@ -448,7 +421,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should emit KbqTagEditChange event when editing starts', () => {
-        const { debugElement, componentInstance } = createComponent(TestEditableTag);
+        const { debugElement, componentInstance } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
@@ -459,7 +432,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should cancel editing on ESCAPE press', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
@@ -472,7 +445,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should cancel editing on focusout', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
@@ -485,7 +458,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should emit KbqTagEditChange event when editing cancelled', () => {
-        const { debugElement, componentInstance } = createComponent(TestEditableTag);
+        const { debugElement, componentInstance } = createComponent(TestTag);
 
         getTagElement(debugElement).dispatchEvent(new MouseEvent('dblclick'));
 
@@ -497,7 +470,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should submit editing on ENTER press', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
@@ -510,7 +483,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should submit editing on kbqEditSubmit click', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
@@ -523,7 +496,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should prevent submit editing by preventEditSubmit property', () => {
-        const fixture = createComponent(TestEditableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
         const tag = getTagElement(debugElement);
 
@@ -542,7 +515,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should emit KbqTagEditChange event when editing submitted', () => {
-        const { debugElement, componentInstance } = createComponent(TestEditableTag);
+        const { debugElement, componentInstance } = createComponent(TestTag);
 
         getTagElement(debugElement).dispatchEvent(new MouseEvent('dblclick'));
 
@@ -554,7 +527,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should stay editable when pressing BACKSPACE/SPACE/DELETE keys', () => {
-        const { debugElement } = createComponent(TestEditableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
@@ -573,7 +546,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should select tag on Ctrl + click', () => {
-        const { debugElement } = createComponent(TestSelectableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
@@ -582,7 +555,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should select tag by selected attribute', () => {
-        const fixture = createComponent(TestSelectableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
         expect(isTagSelected(debugElement)).toBeFalsy();
@@ -594,7 +567,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should NOT select tag when it is disabled', () => {
-        const fixture = createComponent(TestSelectableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
         expect(isTagSelected(debugElement)).toBeFalsy();
@@ -609,7 +582,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should select tag by select() method', () => {
-        const fixture = createComponent(TestSelectableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
         expect(isTagSelected(debugElement)).toBeFalsy();
@@ -621,7 +594,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should DEselect tag by deselect() method', () => {
-        const fixture = createComponent(TestSelectableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
         expect(isTagSelected(debugElement)).toBeFalsy();
@@ -638,7 +611,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should toggle tag selection by toggleSelected() method', () => {
-        const fixture = createComponent(TestSelectableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
         expect(isTagSelected(debugElement)).toBeFalsy();
@@ -650,7 +623,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should select tag on Cmd + click', () => {
-        const { debugElement } = createComponent(TestSelectableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('mousedown', { metaKey: true }));
@@ -659,7 +632,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should select tag on Shift + click', () => {
-        const { debugElement } = createComponent(TestSelectableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true }));
@@ -668,7 +641,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should NOT select tag on Ctrl + click', () => {
-        const fixture = createComponent(TestSelectableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
         const tag = getTagElement(debugElement);
 
@@ -681,7 +654,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should emit KbqTagSelectionChange event on Ctrl + click', () => {
-        const { debugElement, componentInstance } = createComponent(TestSelectableTag);
+        const { debugElement, componentInstance } = createComponent(TestTag);
 
         getTagElement(debugElement).dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
 
@@ -691,7 +664,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should be focused by focus() method', () => {
-        const { debugElement } = createComponent(TestSelectableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         expect(isTagFocused(debugElement)).toBeFalsy();
@@ -705,8 +678,22 @@ describe(KbqTag.name, () => {
         expect(isTagFocused(debugElement)).toBeFalsy();
     });
 
+    it('should NOT be focused when disabled', () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(isTagFocused(debugElement)).toBeFalsy();
+
+        componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        getTagElement(debugElement).focus();
+
+        expect(isTagFocused(debugElement)).toBeFalsy();
+    });
+
     it('should focus by mouse', () => {
-        const { debugElement } = createComponent(TestSelectableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         expect(isTagFocused(debugElement)).toBeFalsy();
@@ -721,7 +708,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should focus by keyboard', () => {
-        const { debugElement } = createComponent(TestSelectableTag);
+        const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         expect(isTagFocused(debugElement)).toBeFalsy();
@@ -736,7 +723,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should remove on DELETE keydown', () => {
-        const { debugElement, componentInstance } = createComponent(TestRemovableTag);
+        const { debugElement, componentInstance } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
@@ -745,7 +732,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should remove on BACKSPACE keydown', () => {
-        const { debugElement, componentInstance } = createComponent(TestRemovableTag);
+        const { debugElement, componentInstance } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
@@ -754,7 +741,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should NOT remove on DELETE/BACKSPACE keydown', () => {
-        const fixture = createComponent(TestRemovableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
         const tag = getTagElement(debugElement);
 
@@ -768,7 +755,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should NOT remove unfocused on DELETE/BACKSPACE keydown', () => {
-        const { componentInstance } = createComponent(TestRemovableTag);
+        const { componentInstance } = createComponent(TestTag);
 
         document.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
         document.dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
@@ -777,7 +764,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should remove on KbqTagRemove click', () => {
-        const { debugElement, componentInstance } = createComponent(TestRemovableTag);
+        const { debugElement, componentInstance } = createComponent(TestTag);
 
         getTagRemoveElement(debugElement).click();
 
@@ -785,7 +772,7 @@ describe(KbqTag.name, () => {
     });
 
     it('should hide KbqTagRemove when removable attribute is false', () => {
-        const fixture = createComponent(TestRemovableTag);
+        const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
         expect(getTagRemoveElement(debugElement)).toBeInstanceOf(HTMLElement);
@@ -794,6 +781,23 @@ describe(KbqTag.name, () => {
         fixture.detectChanges();
 
         expect(getTagRemoveElement(debugElement)).toBeUndefined();
+    });
+
+    it('should select/unselect tag on focus/blur', () => {
+        const { debugElement } = createComponent(TestTag);
+
+        expect(isTagFocused(debugElement)).toBeFalsy();
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        getTagElement(debugElement).focus();
+
+        expect(isTagFocused(debugElement)).toBeTruthy();
+        expect(isTagSelected(debugElement)).toBeTruthy();
+
+        getTagElement(debugElement).blur();
+
+        expect(isTagFocused(debugElement)).toBeFalsy();
+        expect(isTagSelected(debugElement)).toBeFalsy();
     });
 });
 

@@ -436,6 +436,9 @@ export class KbqTag
         (this.elementRef.nativeElement as HTMLElement).classList.add('kbq-standard-tag');
     }
 
+    /**
+     * Selects the tag.
+     */
     select(): void {
         if (this.disabled || !this.selectable) return;
 
@@ -445,6 +448,9 @@ export class KbqTag
         }
     }
 
+    /**
+     * Deselects the tag.
+     */
     deselect(): void {
         if (this.disabled || !this.selectable) return;
 
@@ -454,6 +460,11 @@ export class KbqTag
         }
     }
 
+    /**
+     * Selects the tag and emits event with isUserInput flag.
+     *
+     * @docs-private
+     */
     selectViaInteraction(): void {
         if (this.disabled || !this.selectable) return;
 
@@ -463,6 +474,9 @@ export class KbqTag
         }
     }
 
+    /**
+     * Toggles the current selected state of the tag.
+     */
     toggleSelected(isUserInput: boolean = false): boolean {
         if (this.disabled || !this.selectable) return this.selected;
 
@@ -472,13 +486,15 @@ export class KbqTag
         return this.selected;
     }
 
-    /** Allows for programmatic focusing of the tag. */
+    /** Focuses the tag. */
     focus(): void {
-        if ((!this.selectable && !this.editable) || this.editing() || this.hasFocus) return;
+        if (this.disabled || (!this.selectable && !this.editable) || this.editing() || this.hasFocus) return;
 
         this.elementRef.nativeElement.focus();
 
         this.onFocus.next({ tag: this });
+
+        if (!this.tagList) this.select();
 
         Promise.resolve().then(() => {
             this.hasFocus = true;
@@ -540,7 +556,11 @@ export class KbqTag
                 this._ngZone.run(() => {
                     this.hasFocus = false;
                     this.onBlur.next({ tag: this });
+
                     this.cancelEditing('blur');
+
+                    if (!this.tagList) this.deselect();
+
                     this.changeDetectorRef.markForCheck();
                 });
             });
@@ -594,7 +614,7 @@ export class KbqTag
         this.selectionChange.emit({
             source: this,
             isUserInput,
-            selected: this._selected
+            selected: this.selected
         });
     }
 }
