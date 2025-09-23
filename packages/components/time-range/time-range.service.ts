@@ -20,7 +20,7 @@ export class KbqTimeRangeService<T> {
         'range'
     ];
 
-    protected readonly DEFAULT_RANGE_TYPE = 'lastHour';
+    protected readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
     protected readonly timeRangeMap: Record<
         Exclude<KbqTimeRangeType, 'allTime' | 'currentQuarter' | 'currentYear' | 'range'>,
@@ -100,12 +100,10 @@ export class KbqTimeRangeService<T> {
                 startDateTime:
                     checkedRangeValue.fromDate && checkedRangeValue.fromTime
                         ? this.toIso(this.combineDateAndTime(checkedRangeValue.fromDate, checkedRangeValue.fromTime))
-                              .startDateTime
                         : '',
                 endDateTime:
                     checkedRangeValue.toDate && checkedRangeValue.toTime
                         ? this.toIso(this.combineDateAndTime(checkedRangeValue.toDate, checkedRangeValue.toTime))
-                              .startDateTime
                         : ''
             };
         }
@@ -136,14 +134,13 @@ export class KbqTimeRangeService<T> {
             case 'last12Months':
                 return this.lastMonthsRange(12);
             case 'currentQuarter':
-                //     return startOf('quarter');
                 // @TODO
                 return {
                     startDateTime: undefined,
                     endDateTime: undefined
                 };
             case 'currentYear':
-                return this.startOfYear();
+                return { startDateTime: this.toIso(this.startOfYear()) };
             case 'allTime':
             default:
                 return {
@@ -165,62 +162,57 @@ export class KbqTimeRangeService<T> {
         );
     }
 
-    toIso = (date: T): KbqRange => ({ startDateTime: this.dateAdapter!.toIso8601(date) });
+    toIso = (date: T): string => this.dateAdapter!.toIso8601(date);
 
-    startOfYear(): KbqRange {
+    startOfYear(): T {
         const date = this.dateAdapter!.today();
 
-        return this.toIso(this.dateAdapter!.createDate(this.dateAdapter.getYear(date), 0, 1));
+        return this.dateAdapter!.createDate(this.dateAdapter.getYear(date), 0, 1);
     }
 
     lastMinutesRange = (minutes: number): KbqRange => {
         const date = this.dateAdapter!.today();
 
-        return this.toIso(
-            this.dateAdapter!.createDateTime(
-                this.dateAdapter.getYear(date),
-                this.dateAdapter.getMonth(date),
-                this.dateAdapter.getDate(date),
-                this.dateAdapter.getHours(date),
-                this.dateAdapter.getMinutes(date) - minutes,
-                0,
-                0
+        return {
+            startDateTime: this.toIso(
+                this.dateAdapter!.createDateTime(
+                    this.dateAdapter.getYear(date),
+                    this.dateAdapter.getMonth(date),
+                    this.dateAdapter.getDate(date),
+                    this.dateAdapter.getHours(date),
+                    this.dateAdapter.getMinutes(date) - minutes,
+                    0,
+                    0
+                )
             )
-        );
+        };
     };
 
     lastHoursRange = (hours: number): KbqRange => {
         const date = this.dateAdapter!.today();
 
-        return this.toIso(
-            this.dateAdapter!.createDateTime(
-                this.dateAdapter.getYear(date),
-                this.dateAdapter.getMonth(date),
-                this.dateAdapter.getDate(date),
-                this.dateAdapter.getHours(date) - hours,
-                0,
-                0,
-                0
+        return {
+            startDateTime: this.toIso(
+                this.dateAdapter!.createDateTime(
+                    this.dateAdapter.getYear(date),
+                    this.dateAdapter.getMonth(date),
+                    this.dateAdapter.getDate(date),
+                    this.dateAdapter.getHours(date) - hours,
+                    this.dateAdapter.getMinutes(date),
+                    0,
+                    0
+                )
             )
-        );
+        };
     };
 
     lastDaysRange = (days: number): KbqRange => {
-        const date = this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), days);
-
-        return this.toIso(
-            this.dateAdapter!.createDateTime(
-                this.dateAdapter.getYear(date),
-                this.dateAdapter.getMonth(date),
-                this.dateAdapter.getDate(date),
-                0,
-                0,
-                0,
-                0
-            )
-        );
+        return {
+            startDateTime: this.toIso(this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -days))
+        };
     };
 
-    lastMonthsRange = (months: number): KbqRange =>
-        this.toIso(this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), months));
+    lastMonthsRange = (months: number): KbqRange => ({
+        startDateTime: this.toIso(this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), months))
+    });
 }

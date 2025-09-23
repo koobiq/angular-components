@@ -26,6 +26,8 @@ import { KbqTimeRange, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeTitleCo
     `
 })
 export class KbqTimeRangeTitle {
+    private readonly timeRangeService = inject(KbqTimeRangeService);
+
     readonly timeRange = input<KbqTimeRange>();
     readonly titleTemplate = input<TemplateRef<any>>();
 
@@ -50,6 +52,4 @@ export class KbqTimeRangeTitle {
             ...context
         };
     });
-
-    private readonly timeRangeService = inject(KbqTimeRangeService);
 }

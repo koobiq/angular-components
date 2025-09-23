@@ -1,3 +1,7 @@
+.kbq-time-range-editor__container {
+    width: 100%;
+}
+
 .kbq-time-range-editor__predefined {
     column-count: 2;
 
@@ -5,6 +9,10 @@
         display: block;
         margin-bottom: var(--kbq-size-s);
     }
+}
+
+.kbq-time-range-editor {
+    display: block;
 }
 
 .kbq-time-range-editor__range {

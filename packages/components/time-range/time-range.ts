@@ -5,16 +5,19 @@ import {
     computed,
     inject,
     input,
+    signal,
+    Signal,
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqRangeValue } from './types';
+import { KbqRangeValue, KbqTimeRange as TimeRange } from './types';
 
 @Component({
     standalone: true,
@@ -33,13 +36,11 @@ import { KbqRangeValue } from './types';
             [kbqPopoverArrow]="arrow()"
             (kbqPopoverVisibleChange)="onVisibleChange($event)"
         >
-            <kbq-time-range-title [titleTemplate]="titleTemplate()" />
+            <kbq-time-range-title [titleTemplate]="titleTemplate()" [timeRange]="titleValue()" />
         </div>
 
         <ng-template #timeRangePopoverContent>
-            <div class="kbq-time-range__content">
-                <kbq-time-range-editor [maxDate]="maxDate()" [minDate]="minDate()" />
-            </div>
+            <kbq-time-range-editor [maxDate]="maxDate()" [minDate]="minDate()" />
         </ng-template>
 
         <ng-template #timeRangePopoverFooter>
@@ -89,7 +90,15 @@ export class KbqTimeRange<T> {
     /** @docs-private */
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
-    // @TODO:
+    protected titleValue: Signal<TimeRange>;
+    protected readonly rangeControl: FormControl<TimeRange>;
+
+    constructor() {
+        const defaultValue = this.timeRangeService.getTimeRangeDefaultValue(this.normalizedDefaultRangeValue());
+
+        this.titleValue = signal(defaultValue);
+        this.rangeControl = new FormControl<TimeRange>(this.titleValue(), { nonNullable: true });
+    }
 
     onVisibleChange(isVisible: boolean): void {
         if (!isVisible) {
