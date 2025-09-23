@@ -34,7 +34,7 @@
 /packages/components/scrollbar/*                            @NikGurev
 /packages/components/table/*                                @NikGurev
 /packages/components/tags/*                                 @NikGurev
-/packages/components/time-range/*                             @NikGurev
+/packages/components/time-range/*                           @NikGurev
 /packages/components/timezone/*                             @NikGurev
 /packages/components/toggle/*                               @NikGurev
 /packages/components/top-bar/*                              @NikGurev
