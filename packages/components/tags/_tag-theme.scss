@@ -29,7 +29,7 @@
         outline: 2px solid var(--kbq-tag-#{$type}-states-focus-outline);
     }
 
-    &.kbq-selected:not(.kbq-disabled) {
+    &.kbq-selected:not(.kbq-disabled, .kbq-tag_editing) {
         @include _kbq-tag-state($type, states-selected);
 
         &.kbq-focused {
