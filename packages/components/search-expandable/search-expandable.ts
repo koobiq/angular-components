@@ -108,7 +108,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     /** localized data
      * @docs-private */
     get localeData() {
-        return this.configuration?.search;
+        return this.configuration;
     }
 
     private lastEmittedValue = defaultValue;
@@ -189,7 +189,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     }
 
     private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('filterBar');
+        this.configuration = this.externalConfiguration || this.localeService?.getParams('searchExpandable');
 
         this.changeDetectorRef.markForCheck();
     };
