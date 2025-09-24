@@ -26,7 +26,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqRangeValue, KbqTimeRange as TimeRange } from './types';
+import { KbqRangeValue, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange as TimeRange } from './types';
 
 /** Localization configuration provider. */
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfig>(
@@ -45,9 +45,8 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
 @Component({
     standalone: true,
     selector: 'kbq-time-range',
-    exportAs: 'kbqTimeRange',
     template: `
-        @let localeConfig = localeConfiguration();
+        @let localeConf = localeConfiguration();
         <div
             #popover="kbqPopover"
             class="kbq-time-range__trigger"
@@ -58,12 +57,11 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
             [kbqPopoverFooter]="timeRangePopoverFooter"
             [kbqPopoverPlacement]="popupPlacement"
             [kbqPopoverArrow]="arrow()"
-            (kbqPopoverVisibleChange)="onVisibleChange($event)"
         >
             <kbq-time-range-title
                 [titleTemplate]="titleTemplate()"
                 [timeRange]="titleValue()"
-                [localeConfiguration]="localeConfig"
+                [localeConfiguration]="localeConf"
             />
         </div>
 
@@ -72,17 +70,18 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
                 [maxDate]="maxDate()"
                 [minDate]="minDate()"
                 [formControl]="rangeEditorControl"
-                [localeConfiguration]="localeConfig"
+                [localeConfiguration]="localeConf"
+                [rangeValue]="normalizedDefaultRangeValue()"
             />
         </ng-template>
 
         <ng-template #timeRangePopoverFooter>
             <div class="kbq-time-range__buttons" role="group">
                 <button kbq-button [color]="'contrast'" (click)="onApply(popover)">
-                    {{ localeConfig.editor.apply }}
+                    {{ localeConf.editor.apply }}
                 </button>
 
-                <button kbq-button (click)="onCancel(popover)">{{ localeConfig.editor.cancel }}</button>
+                <button kbq-button (click)="onCancel(popover)">{{ localeConf.editor.cancel }}</button>
             </div>
         </ng-template>
     `,
@@ -117,9 +116,12 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     readonly maxDate = input<T>();
     /** provided value of selected range */
     readonly defaultRangeValue = input<KbqRangeValue<T>>();
+    /** Preset of selectable ranges */
     readonly availableTimeRangeTypes = input<any[]>(this.timeRangeService.resolvedTimeRangeTypes);
-    readonly titleTemplate = input<TemplateRef<any>>();
+    /** Customizable trigger output */
+    readonly titleTemplate = input<TemplateRef<KbqTimeRangeCustomizableTitleContext>>();
 
+    /** Whether to show popover with arrow */
     readonly arrow = input(false, { transform: booleanAttribute });
 
     /**
@@ -131,13 +133,16 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     }));
 
     /** @docs-private */
+    protected titleValue: WritableSignal<TimeRange>;
+    /** @docs-private */
+    protected readonly rangeEditorControl: FormControl<TimeRange>;
+
+    /** @docs-private */
     protected readonly popoverSize = PopUpSizes.Medium;
     /** @docs-private */
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
-    protected titleValue: WritableSignal<TimeRange>;
-    protected readonly rangeEditorControl: FormControl<TimeRange>;
-
+    /** @docs-private */
     localeConfiguration = signal(inject(KBQ_TIME_RANGE_LOCALE_CONFIGURATION));
     private localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
@@ -155,6 +160,31 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
 
     /** Implemented as part of ControlValueAccessor
      * @docs-private */
+    writeValue(value: TimeRange | undefined): void {
+        const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
+            value,
+            this.availableTimeRangeTypes(),
+            this.normalizedDefaultRangeValue()
+        );
+
+        this.titleValue.set(corrected);
+        this.rangeEditorControl.setValue(corrected);
+    }
+
+    /** @docs-private */
+    onApply(popover: KbqPopoverTrigger): void {
+        this.titleValue.set(this.rangeEditorControl.value);
+        this.onChange(this.rangeEditorControl.value);
+        popover.hide();
+    }
+
+    /** @docs-private */
+    onCancel(popover: KbqPopoverTrigger): void {
+        popover.hide();
+    }
+
+    /** Implemented as part of ControlValueAccessor
+     * @docs-private */
     onChange = (_value: TimeRange) => {};
     /** Implemented as part of ControlValueAccessor
      * @docs-private */
@@ -168,36 +198,5 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
      * @docs-private */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;
-    }
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
-    writeValue(value: TimeRange | undefined): void {
-        const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
-            value,
-            this.availableTimeRangeTypes(),
-            this.normalizedDefaultRangeValue()
-        );
-
-        this.titleValue.set(corrected);
-        this.rangeEditorControl.setValue(corrected);
-    }
-
-    /** @docs-private */
-    onVisibleChange(isVisible: boolean): void {
-        if (!isVisible) {
-            this.rangeEditorControl.setValue(this.titleValue());
-        }
-    }
-
-    /** @docs-private */
-    onApply(popover: KbqPopoverTrigger): void {
-        this.titleValue.set(this.rangeEditorControl.value);
-        this.onChange(this.rangeEditorControl.value);
-        popover.hide();
-    }
-
-    /** @docs-private */
-    onCancel(popover: KbqPopoverTrigger): void {
-        popover.hide();
     }
 }

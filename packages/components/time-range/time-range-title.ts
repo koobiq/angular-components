@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { merge } from 'rxjs';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqTimeRange, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeTitleContext } from './types';
+import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
 
 /** @docs-private */
 @Component({
@@ -30,13 +30,13 @@ import { KbqTimeRange, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeTitleCo
     `
 })
 export class KbqTimeRangeTitle {
-    readonly timeRange = input<KbqTimeRange>();
+    readonly timeRange = input<KbqTimeRangeRange>();
     readonly titleTemplate = input<TemplateRef<any>>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
 
-    protected readonly timeRangeService = inject(KbqTimeRangeService);
-
     protected readonly formattedDate = signal<string | undefined>(undefined);
+
+    private readonly timeRangeService = inject(KbqTimeRangeService);
 
     constructor() {
         merge(toObservable(this.context), toObservable(this.localeConfiguration))
@@ -75,12 +75,25 @@ export class KbqTimeRangeTitle {
             return;
         }
 
+        const timeRangeUnit = this.timeRangeService.getTimeRangeUnitByType(context.type);
+
+        if (timeRangeUnit === 'other') {
+            this.formattedDate.set(
+                this.timeRangeService.dateFormatter.rangeLongDate(
+                    this.timeRangeService.fromISO(context.startDateTime ?? ''),
+                    this.timeRangeService.fromISO(context.endDateTime ?? '')
+                )
+            );
+
+            return;
+        }
+
         this.formattedDate.set(
             this.timeRangeService.dateFormatter.durationLong(
                 this.timeRangeService.fromISO(context.startDateTime),
                 this.timeRangeService.dateAdapter.today(),
                 // @TODO
-                ['hours']
+                [timeRangeUnit]
             )
         );
     };

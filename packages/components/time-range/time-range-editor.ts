@@ -8,8 +8,9 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { skip } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqTimeRange, KbqTimeRangeType } from './types';
+import { KbqRangeValue, KbqTimeRangeRange, KbqTimeRangeType } from './types';
 
 interface FormValue<T> {
     type: FormControl<KbqTimeRangeType>;
@@ -126,6 +127,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
     minDate = input<T | null>(null);
     /** Preset of selectable ranges */
     availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
+    /** provided value of selected range */
+    rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
 
     showRangeAsDefault = input(true);
     localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
@@ -143,9 +146,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
         this.getTimeRangeTypesWithoutRange(this.availableTimeRangeTypes())
     );
     /** @docs-private */
-    protected readonly form: FormGroup<FormValue<T>>;
-    /** @docs-private */
-    protected readonly localeConfig = { from: 'c', to: 'по' };
+    protected form: FormGroup<FormValue<T>>;
     /** @docs-private */
     protected readonly timepickerFormat = TimeFormats.HHmmss;
 
@@ -154,22 +155,45 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe(this.getTimeRangeTypesWithoutRange);
 
+        toObservable(this.rangeValue)
+            .pipe(take(1))
+            .subscribe((value) => {
+                this.form.patchValue(value);
+            });
+
         const defaultRangeValue = this.timeRangeService.getDefaultRangeValue();
 
         this.form = new FormGroup({
             type: new FormControl<KbqTimeRangeType>('lastHour', { nonNullable: true }),
-            fromTime: new FormControl(defaultRangeValue.fromTime, { nonNullable: true }),
-            fromDate: new FormControl(defaultRangeValue.fromDate, { nonNullable: true }),
-            toTime: new FormControl(defaultRangeValue.toTime, { nonNullable: true }),
-            toDate: new FormControl(defaultRangeValue.toDate, { nonNullable: true })
+            fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
+            fromDate: new FormControl<T>(defaultRangeValue.fromDate, { nonNullable: true }),
+            toTime: new FormControl<T>(defaultRangeValue.toTime, { nonNullable: true }),
+            toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
         });
 
         this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(({ type, fromTime, fromDate, toTime, toDate }) => {
+            const rangeControls = [
+                this.form.controls.fromTime,
+                this.form.controls.fromDate,
+                this.form.controls.toTime,
+                this.form.controls.toDate
+            ];
+
+            const isDisabled = type !== 'range';
+
+            rangeControls.forEach((control) => {
+                if (isDisabled) {
+                    control.disable({ emitEvent: false });
+                } else {
+                    control.enable({ emitEvent: false });
+                }
+            });
+
             const range = this.timeRangeService.calculateTimeRange(type, {
-                fromTime,
-                fromDate,
-                toTime,
-                toDate
+                fromTime: fromTime,
+                fromDate: fromDate,
+                toTime: toTime,
+                toDate: toDate
             });
 
             if (type) {
@@ -183,13 +207,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
 
     /** Implemented as part of ControlValueAccessor
      * @docs-private */
-    onChange = (_value: KbqTimeRange) => {};
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
-    onTouch = () => {};
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
-    writeValue(value: KbqTimeRange | undefined): void {
+    writeValue(value: KbqTimeRangeRange | undefined): void {
         if (!value) return;
 
         const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
@@ -203,8 +221,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
         });
 
         if (corrected.type === 'range' && corrected.startDateTime && corrected.endDateTime) {
-            const from = this.timeRangeService.fromISO(corrected.startDateTime);
-            const to = this.timeRangeService.fromISO(corrected.endDateTime);
+            const from: T = this.timeRangeService.fromISO(corrected.startDateTime);
+            const to: T = this.timeRangeService.fromISO(corrected.endDateTime);
 
             this.form.patchValue({
                 fromTime: from,
@@ -214,9 +232,16 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
             });
         }
     }
+
+    /** Implemented as part of ControlValueAccessor
+     * @docs-private */
+    onChange = (_value: KbqTimeRangeRange) => {};
+    /** Implemented as part of ControlValueAccessor
+     * @docs-private */
+    onTouch = () => {};
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
-    registerOnChange(fn: (value: KbqTimeRange) => void): void {
+    registerOnChange(fn: (value: KbqTimeRangeRange) => void): void {
         this.onChange = fn;
     }
     /** Implemented as part of ControlValueAccessor.

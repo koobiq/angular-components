@@ -1,3 +1,5 @@
+import { DurationUnit } from '@koobiq/date-adapter';
+
 export interface KbqRangeValue<T> {
     fromTime?: T;
     fromDate?: T;
@@ -10,7 +12,7 @@ export interface KbqRange {
     endDateTime?: string;
 }
 
-export interface KbqTimeRange extends KbqRange {
+export interface KbqTimeRangeRange extends KbqRange {
     type: KbqTimeRangeType;
 }
 
@@ -35,6 +37,8 @@ export type KbqTimeRangeType =
     | 'currentYear'
     | 'range';
 
+export type KbqTimeRangeTranslationType = Extract<DurationUnit, 'minutes' | 'hours' | 'days' | 'months'> | 'other';
+
 export interface KbqTimeRangeUnits {
     minutes?: number;
     hours?: number;
@@ -42,7 +46,9 @@ export interface KbqTimeRangeUnits {
     months?: number;
 }
 
-export type KbqTimeRangeTitleContext = KbqTimeRange & KbqTimeRangeUnits;
+export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
 export type KbqTimeRangeCustomizableTitleContext = KbqTimeRangeTitleContext & {
     $implicit: KbqTimeRangeTitleContext;
 };
+
+export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;

@@ -1,7 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import { createMissingDateImplError, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
-import { KbqRange, KbqRangeValue, KbqTimeRange, KbqTimeRangeType, KbqTimeRangeUnits } from './types';
+import {
+    KbqRange,
+    KbqRangeValue,
+    KbqTimeRangeRange,
+    KbqTimeRangeTranslateTypeMap,
+    KbqTimeRangeTranslationType,
+    KbqTimeRangeType,
+    KbqTimeRangeUnits
+} from './types';
 
 @Injectable()
 export class KbqTimeRangeService<T> {
@@ -23,7 +31,7 @@ export class KbqTimeRangeService<T> {
 
     protected readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
-    protected readonly timeRangeMap: Record<
+    static readonly timeRangeMap: Record<
         Exclude<KbqTimeRangeType, 'allTime' | 'currentQuarter' | 'currentYear' | 'range'>,
         KbqTimeRangeUnits
     > = {
@@ -48,6 +56,30 @@ export class KbqTimeRangeService<T> {
         last12Months: { months: 12 }
     };
 
+    static readonly timeRangeTranslationMap: KbqTimeRangeTranslateTypeMap = {
+        // minutes
+        lastMinute: 'minutes',
+        last5Minutes: 'minutes',
+        last15Minutes: 'minutes',
+        last30Minutes: 'minutes',
+        // hours
+        lastHour: 'hours',
+        last24Hours: 'hours',
+        // days
+        last3Days: 'days',
+        last7Days: 'days',
+        last14Days: 'days',
+        last30Days: 'days',
+        // months
+        last3Months: 'months',
+        last12Months: 'months',
+        // other
+        allTime: 'other',
+        currentYear: 'other',
+        currentQuarter: 'other',
+        range: 'other'
+    };
+
     get resolvedTimeRangeTypes(): KbqTimeRangeType[] {
         return this.providedDefaultTimeRangeTypes || this.defaultTimeRangeTypes;
     }
@@ -59,7 +91,11 @@ export class KbqTimeRangeService<T> {
     }
 
     getTimeRangeTypeUnits(type: KbqTimeRangeType): KbqTimeRangeUnits {
-        return this.timeRangeMap[type];
+        return KbqTimeRangeService.timeRangeMap[type];
+    }
+
+    getTimeRangeUnitByType(type: KbqTimeRangeType): KbqTimeRangeTranslationType {
+        return KbqTimeRangeService.timeRangeTranslationMap[type];
     }
 
     getDefaultRangeValue(): Required<KbqRangeValue<T>> {
@@ -77,7 +113,7 @@ export class KbqTimeRangeService<T> {
     getTimeRangeDefaultValue(
         rangeValue: KbqRangeValue<T>,
         availableTimeRangeTypes: KbqTimeRangeType[] = []
-    ): KbqTimeRange {
+    ): KbqTimeRangeRange {
         const defaultType = availableTimeRangeTypes[0] ?? this.defaultTimeRangeTypes[0] ?? this.DEFAULT_RANGE_TYPE;
 
         return {
@@ -123,13 +159,13 @@ export class KbqTimeRangeService<T> {
             case 'last24Hours':
                 return this.lastHoursRange(24);
             case 'last3Days':
-                return this.lastDaysRange(2);
+                return this.lastDaysRange(3);
             case 'last7Days':
-                return this.lastDaysRange(6);
+                return this.lastDaysRange(7);
             case 'last14Days':
-                return this.lastDaysRange(13);
+                return this.lastDaysRange(14);
             case 'last30Days':
-                return this.lastDaysRange(29);
+                return this.lastDaysRange(30);
             case 'last3Months':
                 return this.lastMonthsRange(3);
             case 'last12Months':
@@ -217,10 +253,10 @@ export class KbqTimeRangeService<T> {
     });
 
     checkAndCorrectTimeRangeValue(
-        value: KbqTimeRange | undefined,
+        value: KbqTimeRangeRange | undefined,
         availableTimeRangeTypes: KbqTimeRangeType[],
         rangeValue: KbqRangeValue<T>
-    ): KbqTimeRange {
+    ): KbqTimeRangeRange {
         let result =
             value && availableTimeRangeTypes.includes(value.type)
                 ? value
