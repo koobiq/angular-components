@@ -4,6 +4,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { merge } from 'rxjs';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRange, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeTitleContext } from './types';
 
@@ -38,26 +39,9 @@ export class KbqTimeRangeTitle {
     protected readonly formattedDate = signal<string | undefined>(undefined);
 
     constructor() {
-        toObservable(this.localeConfiguration)
+        merge(toObservable(this.context), toObservable(this.localeConfiguration))
             .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                const context = this.context();
-
-                if (!context || !context.startDateTime) {
-                    this.formattedDate.set('');
-
-                    return;
-                }
-
-                this.formattedDate.set(
-                    this.timeRangeService.dateFormatter.durationLong(
-                        this.timeRangeService.fromISO(context.startDateTime),
-                        this.timeRangeService.dateAdapter.today(),
-                        // @TODO
-                        ['hours']
-                    )
-                );
-            });
+            .subscribe(this.updateFormattedDate);
     }
 
     protected context = computed<KbqTimeRangeTitleContext | undefined>(() => {
@@ -81,4 +65,23 @@ export class KbqTimeRangeTitle {
             ...context
         };
     });
+
+    private updateFormattedDate = () => {
+        const context = this.context();
+
+        if (!context || !context.startDateTime) {
+            this.formattedDate.set('');
+
+            return;
+        }
+
+        this.formattedDate.set(
+            this.timeRangeService.dateFormatter.durationLong(
+                this.timeRangeService.fromISO(context.startDateTime),
+                this.timeRangeService.dateAdapter.today(),
+                // @TODO
+                ['hours']
+            )
+        );
+    };
 }
