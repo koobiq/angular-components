@@ -383,7 +383,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         const isVerticalTrigger = this.dropdown.overlapTriggerY && !this.dropdown.overlapTriggerX;
 
         if (!this.dropdown.parent && !isVerticalTrigger) {
-            this.dropdown.triggerWidth = this.getWidth();
+            this.dropdown.triggerWidth = this.dropdown.triggerWidth ?? this.getWidth();
         }
 
         this.dropdown.focusFirstItem(this.openedBy || 'program');

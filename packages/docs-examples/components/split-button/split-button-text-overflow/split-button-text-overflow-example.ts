@@ -5,11 +5,11 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 
 /**
- * @title split-button
+ * @title split-button-text-overflow
  */
 @Component({
     standalone: true,
-    selector: 'split-button-overview-example',
+    selector: 'split-button-text-overflow-example',
     imports: [
         KbqSplitButtonModule,
         KbqButtonModule,
@@ -18,7 +18,11 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button>Split Button</button>
+            <button kbq-button>
+                Save engineering time with unified payments functionality. We obsess over the maze of gateways, payments
+                rails, and financial institutions that make up the global economic landscape so that your teams can
+                build what you need on one platform.
+            </button>
             <button kbq-button [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
@@ -40,4 +44,4 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonOverviewExample {}
+export class SplitButtonTextOverflowExample {}

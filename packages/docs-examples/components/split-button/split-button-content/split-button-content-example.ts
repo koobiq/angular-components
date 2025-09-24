@@ -5,11 +5,11 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 
 /**
- * @title split-button
+ * @title split-button-content
  */
 @Component({
     standalone: true,
-    selector: 'split-button-overview-example',
+    selector: 'split-button-content-example',
     imports: [
         KbqSplitButtonModule,
         KbqButtonModule,
@@ -18,7 +18,26 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <kbq-split-button>
+            <button kbq-button>
+                <i kbq-icon="kbq-plus_16"></i>
+                Split Button
+            </button>
+            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
+            </button>
+        </kbq-split-button>
+
+        <kbq-split-button>
             <button kbq-button>Split Button</button>
+            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
+            </button>
+        </kbq-split-button>
+
+        <kbq-split-button>
+            <button kbq-button>
+                <i kbq-icon="kbq-plus_16"></i>
+            </button>
             <button kbq-button [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
@@ -36,8 +55,10 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
             justify-content: center;
             align-items: center;
             min-height: 120px;
+
+            gap: var(--kbq-size-l);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonOverviewExample {}
+export class SplitButtonContentExample {}
