@@ -45,21 +45,22 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     get localeData(): any;
     protected readonly localeService: KbqLocaleService | null;
     // (undocumented)
+    static ngAcceptInputType_emitValueTimeout: unknown;
+    // (undocumented)
     static ngAcceptInputType_isOpened: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
     onChange: (value: string) => void;
+    // (undocumented)
     onTouch: () => void;
     get placeholder(): string;
     set placeholder(value: string);
-    // (undocumented)
     registerOnChange(fn: (value: string) => void): void;
-    // (undocumented)
     registerOnTouched(fn: () => void): void;
     // (undocumented)
     toggle(): void;
     value: BehaviorSubject<string>;
-    // (undocumented)
     writeValue(value: string): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;

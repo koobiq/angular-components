@@ -7,3 +7,15 @@
     min-width: 0;
     min-height: 0;
 }
+
+.kbq-search-expandable__search {
+    & .kbq-icon-button.kbq-suffix {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: var(--kbq-size-xxs);
+
+        height: var(--kbq-size-xxl);
+    }
+}

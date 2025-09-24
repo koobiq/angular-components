@@ -10,6 +10,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    numberAttribute,
     Output,
     QueryList,
     ViewChild,
@@ -88,7 +89,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     /** Emit event by enter or not. Default is false */
     @Input() isEmitValueByEnterEnabled = false;
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
-    @Input() emitValueTimeout = defaultEmitValueTimeout;
+    @Input({ transform: numberAttribute }) emitValueTimeout = defaultEmitValueTimeout;
 
     /** Placeholder for input when expanded */
     @Input()
@@ -160,14 +161,17 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     /** @docs-private */
     onTouch: () => void = () => {};
 
+    /** Implemented as part of ControlValueAccessor. */
     registerOnChange(fn: (value: string) => void): void {
         this.onChange = fn;
     }
 
+    /** Implemented as part of ControlValueAccessor. */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;
     }
 
+    /** Implemented as part of ControlValueAccessor. */
     writeValue(value: string): void {
         this.value.next(value || defaultValue);
     }

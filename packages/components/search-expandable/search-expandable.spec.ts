@@ -26,12 +26,39 @@ describe('KbqSearchExpandable', () => {
     it('should init', () => {
         expect(nativeElement.classList.contains('kbq-search-expandable')).toBe(true);
     });
+
+    it('should toggle', () => {
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__button').length).toBe(1);
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(0);
+
+        debugElement.query(By.css('.kbq-search-expandable__button')).nativeElement.click();
+        fixture.detectChanges();
+
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__button').length).toBe(0);
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
+
+        debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+        fixture.detectChanges();
+
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__button').length).toBe(1);
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(0);
+    });
+
+    it('should open by [isOpened]', () => {
+        fixture.componentInstance.openedState = true;
+        fixture.detectChanges();
+
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__button').length).toBe(0);
+        expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
+    });
 });
 
 @Component({
     selector: 'test-app',
     template: `
-        <kbq-search-expandable />
+        <kbq-search-expandable [isOpened]="openedState" />
     `
 })
-class TestApp {}
+class TestApp {
+    openedState: boolean = false;
+}
