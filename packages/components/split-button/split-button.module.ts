@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import { SplitButton } from './split-button';
+import { KbqSplitButton } from './split-button';
 
 @NgModule({
     imports: [
-        SplitButton
+        KbqSplitButton
     ],
-    exports: [SplitButton]
+    exports: [KbqSplitButton]
 })
 export class KbqSplitButtonModule {}

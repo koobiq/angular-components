@@ -5,11 +5,11 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 
 /**
- * @title split-button
+ * @title split-button-menu-width
  */
 @Component({
     standalone: true,
-    selector: 'split-button-overview-example',
+    selector: 'split-button-menu-width-example',
     imports: [
         KbqSplitButtonModule,
         KbqButtonModule,
@@ -17,7 +17,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         KbqDropdownModule
     ],
     template: `
-        <kbq-split-button>
+        <kbq-split-button [panelAutoWidth]="true">
             <button kbq-button>Split Button</button>
             <button kbq-button [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -40,4 +40,4 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonOverviewExample {}
+export class SplitButtonMenuWidthExample {}
