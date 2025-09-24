@@ -116,7 +116,10 @@ export const tkTMLocaleData = {
             to: 'şuňa',
             apply: 'Ulanmak',
             cancel: 'Ýatyrmak',
-            rangeLabel: 'şu döwürde'
+            rangeLabel: 'şu döwürde',
+            allTime: 'hemme döwür üçin',
+            currentQuarter: 'şu çärýek üçin',
+            currentYear: 'şu ýyl üçin'
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

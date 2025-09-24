@@ -115,7 +115,10 @@ export const ptBRLocaleData = {
             to: 'até',
             apply: 'Aplicar',
             cancel: 'Cancelar',
-            rangeLabel: 'para o período'
+            rangeLabel: 'para o período',
+            allTime: 'por todo o tempo',
+            currentQuarter: 'pelo trimestre atual',
+            currentYear: 'pelo ano atual'
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

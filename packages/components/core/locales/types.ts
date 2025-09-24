@@ -54,5 +54,8 @@ export type KbqTimeRangeLocaleConfig = {
         apply: string;
         cancel: string;
         rangeLabel: string;
+        allTime: string;
+        currentQuarter: string;
+        currentYear: string;
     };
 };

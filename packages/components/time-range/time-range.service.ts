@@ -31,10 +31,7 @@ export class KbqTimeRangeService<T> {
 
     protected readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
-    static readonly timeRangeMap: Record<
-        Exclude<KbqTimeRangeType, 'allTime' | 'currentQuarter' | 'currentYear' | 'range'>,
-        KbqTimeRangeUnits
-    > = {
+    static readonly timeRangeMap: Record<KbqTimeRangeType, KbqTimeRangeUnits> = {
         // minutes
         lastMinute: { minutes: 1 },
         last5Minutes: { minutes: 5 },
@@ -53,7 +50,11 @@ export class KbqTimeRangeService<T> {
 
         // months
         last3Months: { months: 3 },
-        last12Months: { months: 12 }
+        last12Months: { months: 12 },
+        allTime: {},
+        currentQuarter: {},
+        currentYear: {},
+        range: {}
     };
 
     static readonly timeRangeTranslationMap: KbqTimeRangeTranslateTypeMap = {

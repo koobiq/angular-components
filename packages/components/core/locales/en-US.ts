@@ -116,7 +116,10 @@ export const enUSLocaleData = {
             to: 'to',
             apply: 'Apply',
             cancel: 'Cancel',
-            rangeLabel: 'for period'
+            rangeLabel: 'for period',
+            allTime: 'for all time',
+            currentQuarter: 'for the current quarter',
+            currentYear: 'for the current year'
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

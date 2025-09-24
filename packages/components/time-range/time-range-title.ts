@@ -22,7 +22,7 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
             <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null" />
         } @else {
             <a kbq-link pseudo>
-                <span class="kbq-link__text">{{ localeConfiguration().title.for }} {{ formattedDate() }}</span>
+                <span class="kbq-link__text">{{ formattedDate() }}</span>
 
                 <i kbq-icon="kbq-calendar-o_16"></i>
             </a>
@@ -76,25 +76,46 @@ export class KbqTimeRangeTitle {
         }
 
         const timeRangeUnit = this.timeRangeService.getTimeRangeUnitByType(context.type);
+        const localeConfig = this.localeConfiguration();
+
+        console.log(context.type);
 
         if (timeRangeUnit === 'other') {
-            this.formattedDate.set(
-                this.timeRangeService.dateFormatter.rangeLongDate(
-                    this.timeRangeService.fromISO(context.startDateTime ?? ''),
-                    this.timeRangeService.fromISO(context.endDateTime ?? '')
-                )
-            );
+            switch (context.type) {
+                case 'range': {
+                    this.formattedDate.set(
+                        this.timeRangeService.dateFormatter.rangeLongDate(
+                            this.timeRangeService.fromISO(context.startDateTime ?? ''),
+                            this.timeRangeService.fromISO(context.endDateTime ?? '')
+                        )
+                    );
+                    break;
+                }
+                case 'allTime': {
+                    this.formattedDate.set(localeConfig.editor.allTime);
+                    break;
+                }
+                case 'currentQuarter': {
+                    this.formattedDate.set(localeConfig.editor.currentQuarter);
+                    break;
+                }
+                case 'currentYear': {
+                    this.formattedDate.set(localeConfig.editor.currentYear);
+                    break;
+                }
+            }
 
             return;
         }
 
         this.formattedDate.set(
-            this.timeRangeService.dateFormatter.durationLong(
-                this.timeRangeService.fromISO(context.startDateTime),
-                this.timeRangeService.dateAdapter.today(),
-                // @TODO
-                [timeRangeUnit]
-            )
+            localeConfig.title.for +
+                ' ' +
+                this.timeRangeService.dateFormatter.durationLong(
+                    this.timeRangeService.fromISO(context.startDateTime),
+                    this.timeRangeService.dateAdapter.today(),
+                    [timeRangeUnit]
+                )
         );
     };
 }

@@ -116,7 +116,10 @@ export const ruRULocaleData = {
             to: 'по',
             apply: 'Применить',
             cancel: 'Отмена',
-            rangeLabel: 'за период'
+            rangeLabel: 'за период',
+            allTime: 'за все время',
+            currentQuarter: 'за текущий квартал',
+            currentYear: 'за текущий год'
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

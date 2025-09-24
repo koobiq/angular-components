@@ -7,14 +7,16 @@ export interface KbqRangeValue<T> {
     toDate?: T;
 }
 
-export interface KbqRange {
+export type KbqRange = {
     startDateTime?: string;
     endDateTime?: string;
-}
+};
 
-export interface KbqTimeRangeRange extends KbqRange {
+export type KbqTimeRangeRange = KbqRange & KbqTimeRangeTypeContext;
+
+export type KbqTimeRangeTypeContext = {
     type: KbqTimeRangeType;
-}
+};
 
 /**
  * Default accepted “time‑range” identifiers.
@@ -52,3 +54,5 @@ export type KbqTimeRangeCustomizableTitleContext = KbqTimeRangeTitleContext & {
 };
 
 export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
+export type KbqTimeRangeOptionContext = KbqTimeRangeTypeContext &
+    KbqTimeRangeUnits & { translationType: KbqTimeRangeTranslationType };

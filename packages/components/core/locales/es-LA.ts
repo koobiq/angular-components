@@ -115,7 +115,10 @@ export const esLALocaleData = {
             to: 'a',
             apply: 'Aplicar',
             cancel: 'Cancelar',
-            rangeLabel: 'para el período'
+            rangeLabel: 'para el período',
+            allTime: 'por todo el tiempo',
+            currentQuarter: 'por el trimestre actual',
+            currentYear: 'por el año actual'
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

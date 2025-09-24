@@ -1,0 +1,91 @@
+<form [formGroup]="form">
+    <kbq-radio-group class="kbq-time-range-editor__container" [formControl]="form.controls.type">
+        <div class="kbq-time-range-editor__predefined">
+            @for (type of timeRangeTypesWithoutRange(); track type) {
+                <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            optionTemplate;
+                            context: { $implicit: getTimeRangeOptionTemplateContext(type) }
+                        "
+                    />
+                </kbq-radio-button>
+            }
+        </div>
+
+        @if (isRangeVisible()) {
+            @let localeConfig = localeConfiguration();
+
+            <div class="kbq-time-range-editor__range" role="group">
+                <kbq-radio-button [value]="'range'">{{ localeConfig.editor.rangeLabel }}</kbq-radio-button>
+
+                <div class="kbq-time-range-editor__date-time">
+                    <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.editor.from">
+                        {{ localeConfig.editor.from }}
+                    </span>
+                    <kbq-fieldset>
+                        <kbq-form-field kbqFieldsetItem>
+                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                            <input kbqTimepicker [format]="timepickerFormat" [formControl]="form.controls.fromTime" />
+                        </kbq-form-field>
+
+                        <kbq-form-field>
+                            <input [kbqDatepicker]="datepickerFrom" [formControl]="form.controls.fromDate" />
+                            <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerFrom" />
+                            <kbq-datepicker #datepickerFrom [minDate]="minDate()" [maxDate]="maxDate()" />
+                        </kbq-form-field>
+                    </kbq-fieldset>
+                </div>
+
+                <div class="kbq-time-range-editor__date-time">
+                    <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.editor.to">
+                        {{ localeConfig.editor.to }}
+                    </span>
+                    <kbq-fieldset>
+                        <kbq-form-field kbqFieldsetItem>
+                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                            <input kbqTimepicker [format]="timepickerFormat" [formControl]="form.controls.toTime" />
+                        </kbq-form-field>
+
+                        <kbq-form-field>
+                            <input [kbqDatepicker]="datepickerTo" [formControl]="form.controls.toDate" />
+                            <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerTo" />
+                            <kbq-datepicker #datepickerTo [minDate]="minDate()" [maxDate]="maxDate()" />
+                        </kbq-form-field>
+                    </kbq-fieldset>
+                </div>
+            </div>
+        }
+    </kbq-radio-group>
+</form>
+
+<ng-template #optionTemplate let-context>
+    @let localeConfig = localeConfiguration();
+    @switch (context.translationType) {
+        @case ('minutes') {
+            {{ localeConfig.title.for }} {{ context.minutes }} минут
+        }
+        @case ('hours') {
+            {{ localeConfig.title.for }} {{ context.hours }} часов
+        }
+        @case ('days') {
+            {{ localeConfig.title.for }} {{ context.days }} дней
+        }
+        @case ('months') {
+            {{ localeConfig.title.for }} {{ context.months }} месяцев
+        }
+        @default {
+            @switch (context.type) {
+                @case ('allTime') {
+                    {{ localeConfig.editor.allTime }}
+                }
+                @case ('currentQuarter') {
+                    {{ localeConfig.editor.currentQuarter }}
+                }
+                @case ('currentYear') {
+                    {{ localeConfig.editor.currentYear }}
+                }
+            }
+        }
+    }
+</ng-template>
