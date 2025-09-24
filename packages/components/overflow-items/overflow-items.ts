@@ -14,8 +14,13 @@ import {
     signal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqInjectElementRef } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import { debounceTime, merge, skip, switchMap } from 'rxjs';
+
+/**
+ * Orientation of the overflow items.
+ */
+export type KbqOverflowItemsOrientation = 'horizontal' | 'vertical';
 
 /**
  * Manages the visibility of the element.
@@ -36,7 +41,7 @@ export class ElementVisibilityManager {
     /**
      * @docs-private
      */
-    readonly elementRef = kbqInjectElementRef();
+    readonly element = kbqInjectNativeElement();
 
     /**
      * Whether the element is hidden.
@@ -51,8 +56,8 @@ export class ElementVisibilityManager {
      * @docs-private
      */
     hide(): void {
-        this.renderer.setStyle(this.elementRef.nativeElement, 'visibility', 'hidden');
-        this.renderer.setStyle(this.elementRef.nativeElement, 'position', 'absolute');
+        this.renderer.setStyle(this.element, 'visibility', 'hidden');
+        this.renderer.setStyle(this.element, 'position', 'absolute');
         this.hiddenState.set(true);
     }
 
@@ -62,8 +67,8 @@ export class ElementVisibilityManager {
      * @docs-private
      */
     show(): void {
-        this.renderer.removeStyle(this.elementRef.nativeElement, 'visibility');
-        this.renderer.removeStyle(this.elementRef.nativeElement, 'position');
+        this.renderer.removeStyle(this.element, 'visibility');
+        this.renderer.removeStyle(this.element, 'position');
         this.hiddenState.set(false);
     }
 }
@@ -127,7 +132,7 @@ export class KbqOverflowItem extends ElementVisibilityManager {
     host: { class: 'kbq-overflow-items' }
 })
 export class KbqOverflowItems {
-    private readonly elementRef = kbqInjectElementRef();
+    private readonly element = kbqInjectNativeElement();
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
@@ -181,6 +186,44 @@ export class KbqOverflowItems {
         initialValue: new Set<unknown>([]) as ReadonlySet<unknown>
     });
 
+    /**
+     * Defines the orientation of the overflow items.
+     *
+     * @default 'horizontal'
+     */
+    readonly orientation = input<KbqOverflowItemsOrientation>('horizontal');
+
+    private readonly orientationConfig: Record<
+        KbqOverflowItemsOrientation,
+        {
+            containerSize: (element: HTMLElement) => number;
+            paddingStart: (computedStyle: CSSStyleDeclaration) => number;
+            paddingEnd: (computedStyle: CSSStyleDeclaration) => number;
+            itemSize: (element: HTMLElement) => number;
+        }
+    > = {
+        horizontal: {
+            containerSize: (element) => element.clientWidth,
+            paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
+            paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
+            itemSize: (element) => {
+                const { marginRight, marginLeft } = this.window.getComputedStyle(element);
+
+                return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
+            }
+        },
+        vertical: {
+            containerSize: (element) => element.clientHeight,
+            paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
+            paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
+            itemSize: (element) => {
+                const { marginTop, marginBottom } = this.window.getComputedStyle(element);
+
+                return element.offsetHeight + (parseFloat(marginTop) || 0) + (parseFloat(marginBottom) || 0);
+            }
+        }
+    } as const;
+
     constructor() {
         this.setStyles();
         this.setupObservers();
@@ -188,7 +231,7 @@ export class KbqOverflowItems {
 
     private setupObservers(): void {
         const resizeObservers = merge(
-            this.resizeObserver.observe(this.elementRef.nativeElement),
+            this.resizeObserver.observe(this.element),
             toObservable(this.additionalResizeObserverTargets).pipe(
                 switchMap((targets) => {
                     return Array.isArray(targets)
@@ -198,14 +241,20 @@ export class KbqOverflowItems {
             )
         );
 
-        merge(toObservable(this.items), toObservable(this.reverseOverflowOrder).pipe(skip(1)), resizeObservers)
+        merge(
+            toObservable(this.items),
+            toObservable(this.reverseOverflowOrder).pipe(skip(1)),
+            toObservable(this.orientation).pipe(skip(1)),
+            resizeObservers
+        )
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
                     this.sortItemsByOrder(this.items()),
                     this.reverseOverflowOrder(),
                     this.result(),
-                    this.elementRef.nativeElement
+                    this.element,
+                    this.orientation()
                 );
                 const hiddenItemIDs = new Set(hiddenItems.map(({ id }) => id()));
 
@@ -231,12 +280,13 @@ export class KbqOverflowItems {
         items: ReadonlyArray<KbqOverflowItem>,
         reverseOverflowOrder: boolean,
         result: KbqOverflowItemsResult | undefined,
-        container: HTMLElement
+        container: HTMLElement,
+        orientation: KbqOverflowItemsOrientation
     ): ReadonlyArray<KbqOverflowItem> {
         result?.hide();
         items.forEach((item) => item.show());
 
-        while (this.hasOverflown(container, items, result)) {
+        while (this.hasOverflown(container, items, result, orientation)) {
             const itemToHide = reverseOverflowOrder
                 ? items.find(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible())
                 : this.findLast(items, ({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
@@ -254,36 +304,33 @@ export class KbqOverflowItems {
      * This method sets the necessary styles for the directive.
      */
     private setStyles(): void {
-        this.renderer.setStyle(this.elementRef.nativeElement, 'position', 'relative');
-        this.renderer.setStyle(this.elementRef.nativeElement, 'display', 'flex');
-        this.renderer.setStyle(this.elementRef.nativeElement, 'flex-wrap', 'nowrap');
-        this.renderer.setStyle(this.elementRef.nativeElement, 'flex-grow', '1');
-        this.renderer.setStyle(this.elementRef.nativeElement, 'overflow', 'hidden');
+        this.renderer.setStyle(this.element, 'position', 'relative');
+        this.renderer.setStyle(this.element, 'overflow', 'hidden');
+        this.renderer.setStyle(this.element, 'display', 'flex');
+        this.renderer.setStyle(this.element, 'flex-grow', '1');
+        this.renderer.setStyle(this.element, 'flex-wrap', 'nowrap');
+
+        toObservable(this.orientation)
+            .pipe(takeUntilDestroyed())
+            .subscribe((orientation) => {
+                this.renderer.setStyle(this.element, 'flex-direction', orientation === 'horizontal' ? 'row' : 'column');
+            });
     }
 
     private hasOverflown(
         container: HTMLElement,
         items: ReadonlyArray<KbqOverflowItem>,
-        result: KbqOverflowItemsResult | undefined
+        result: KbqOverflowItemsResult | undefined,
+        orientation: KbqOverflowItemsOrientation
     ): boolean {
-        const { paddingLeft, paddingRight } = this.window.getComputedStyle(container);
-        const containerWidthWithoutPaddings =
-            container.clientWidth - (parseFloat(paddingLeft) || 0) - (parseFloat(paddingRight) || 0);
-        const itemsWidth = items.reduce(
-            (width, item) =>
-                width + (item.hidden() ? 0 : this.getElementWidthWithMargins(item.elementRef.nativeElement)),
-            0
-        );
-        const resultWidth =
-            !result || result?.hidden() ? 0 : this.getElementWidthWithMargins(result.elementRef.nativeElement);
+        const { containerSize, paddingStart, paddingEnd, itemSize } = this.orientationConfig[orientation];
+        const computedStyle = this.window.getComputedStyle(container);
+        const containerSizeWithoutPaddings =
+            containerSize(container) - paddingStart(computedStyle) - paddingEnd(computedStyle);
+        const itemsSize = items.reduce((size, item) => size + (item.hidden() ? 0 : itemSize(item.element)), 0);
+        const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
 
-        return itemsWidth + resultWidth > containerWidthWithoutPaddings;
-    }
-
-    private getElementWidthWithMargins(element: HTMLElement): number {
-        const { marginRight, marginLeft } = this.window.getComputedStyle(element);
-
-        return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
+        return itemsSize + resultSize > containerSizeWithoutPaddings;
     }
 
     /**

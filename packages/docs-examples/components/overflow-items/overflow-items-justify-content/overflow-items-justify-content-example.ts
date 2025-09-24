@@ -50,6 +50,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
 
         .kbq-overflow-items-result {
             text-wrap: nowrap;
+            color: var(--kbq-foreground-contrast-secondary);
+            user-select: none;
         }
 
         .kbq-form-field {

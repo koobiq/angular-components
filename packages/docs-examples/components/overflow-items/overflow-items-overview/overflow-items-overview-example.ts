@@ -50,6 +50,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 
         .kbq-overflow-items-result {
             text-wrap: nowrap;
+            color: var(--kbq-foreground-contrast-secondary);
+            user-select: none;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

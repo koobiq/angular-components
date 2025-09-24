@@ -4,7 +4,6 @@
 
 ```ts
 
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
@@ -13,7 +12,7 @@ import { Signal } from '@angular/core';
 
 // @public
 export class ElementVisibilityManager {
-    readonly elementRef: ElementRef<HTMLElement>;
+    readonly element: HTMLElement;
     readonly hidden: Signal<boolean>;
     hide(): void;
     show(): void;
@@ -42,9 +41,10 @@ export class KbqOverflowItems {
     readonly changes: OutputEmitterRef<ReadonlySet<unknown>>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
     readonly hiddenItemIDs: Signal<ReadonlySet<unknown>>;
+    readonly orientation: InputSignal<KbqOverflowItemsOrientation>;
     readonly reverseOverflowOrder: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "additionalResizeObserverTargets": { "alias": "additionalResizeObserverTargets"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "additionalResizeObserverTargets": { "alias": "additionalResizeObserverTargets"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItems, never>;
 }
@@ -60,6 +60,9 @@ export class KbqOverflowItemsModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOverflowItemsModule, never, [typeof i1.KbqOverflowItems, typeof i1.KbqOverflowItem, typeof i1.KbqOverflowItemsResult], [typeof i1.KbqOverflowItems, typeof i1.KbqOverflowItem, typeof i1.KbqOverflowItemsResult]>;
 }
+
+// @public
+export type KbqOverflowItemsOrientation = 'horizontal' | 'vertical';
 
 // @public
 export class KbqOverflowItemsResult extends ElementVisibilityManager {
