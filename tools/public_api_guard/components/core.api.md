@@ -1936,6 +1936,7 @@ export class KbqColorDirective {
     // (undocumented)
     get colorClassName(): KbqComponentColors | ThemePalette | string;
     readonly elementRef: ElementRef<HTMLElement>;
+    protected defaultColor: KbqComponentColors | ThemePalette | string;
     setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
