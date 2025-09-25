@@ -10,6 +10,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqLocaleService } from '@koobiq/components/core';
@@ -39,20 +40,22 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     emitValueTimeout: number;
     // (undocumented)
     readonly externalConfiguration: unknown;
+    protected readonly focusMonitor: FocusMonitor;
     isEmitValueByEnterEnabled: boolean;
     isOpened: boolean;
     readonly isOpenedChange: EventEmitter<boolean>;
+    // (undocumented)
+    protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
     get localeData(): any;
     protected readonly localeService: KbqLocaleService | null;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_emitValueTimeout: unknown;
     // (undocumented)
     static ngAcceptInputType_isOpened: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
     onChange: (value: string) => void;
-    // (undocumented)
     onTouch: () => void;
     get placeholder(): string;
     set placeholder(value: string);

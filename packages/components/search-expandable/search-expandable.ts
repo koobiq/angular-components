@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
@@ -6,6 +7,7 @@ import {
     ChangeDetectorRef,
     Component,
     DestroyRef,
+    ElementRef,
     EventEmitter,
     inject,
     InjectionToken,
@@ -67,11 +69,15 @@ export const defaultEmitValueTimeout = 200;
 })
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit {
     /** @docs-private */
+    protected readonly focusMonitor = inject(FocusMonitor);
+    /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    /** @docs-private */
+    protected readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
 
     readonly externalConfiguration = inject(KBQ_SEARCH_EXPANDABLE_CONFIGURATION, { optional: true });
 
@@ -83,6 +89,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
 
     /** Current value in input. */
     value = new BehaviorSubject(defaultValue);
+
+    protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
     /** state of component. */
     @Input({ transform: booleanAttribute }) isOpened = false;
@@ -115,6 +123,11 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     private lastEmittedValue = defaultValue;
 
     constructor() {
+        this.focusMonitor
+            .monitor(this.nativeElement, true)
+            .pipe(takeUntilDestroyed())
+            .subscribe((origin) => (this.lastFocusOrigin = origin));
+
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         if (!this.localeService) {
@@ -141,7 +154,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
             .subscribe((button: KbqButton) => {
                 this.tooltip.disabled = true;
 
-                button.focusViaKeyboard();
+                this.focusMonitor.focusVia(button.elementRef.nativeElement, this.lastFocusOrigin);
 
                 this.tooltip.disabled = false;
             });
