@@ -10,17 +10,17 @@ import { SplitButtonExamplesModule } from '../../docs-examples/components/split-
     imports: [SplitButtonExamplesModule],
     selector: 'dev-examples',
     template: `
-        <!--        <split-button-overview-example />-->
-        <!--        <br />-->
-        <!--        <split-button-styles-example />-->
-        <!--        <br />-->
-        <!--        <split-button-content-example />-->
-        <!--        <br />-->
-        <!--        <split-button-text-overflow-example />-->
-        <!--        <br />-->
-        <!--        <split-button-disabled-state-example />-->
-        <!--        <br />-->
-        <!--        <split-button-progress-state-example />-->
+        <split-button-overview-example />
+        <br />
+        <split-button-styles-example />
+        <br />
+        <split-button-content-example />
+        <br />
+        <split-button-text-overflow-example />
+        <br />
+        <split-button-disabled-state-example />
+        <br />
+        <split-button-progress-state-example />
         <br />
         <split-button-menu-width-example />
     `,

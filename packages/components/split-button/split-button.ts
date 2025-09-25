@@ -37,7 +37,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     @ContentChildren(KbqButton) buttons: QueryList<KbqButton>;
     @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
 
-    @Input() panelAutoWidth: boolean = true;
+    @Input() panelAutoWidth: boolean = false;
 
     @Input()
     get kbqStyle(): string {
@@ -109,6 +109,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         this.dropdownTrigger.dropdown.xPosition = 'before';
 
         if (this.panelAutoWidth) {
+            // we need to use a timeout of about 50ms to wait for the styles to apply
             setTimeout(() => {
                 const { width } = this.nativeElement.getClientRects()[0];
 

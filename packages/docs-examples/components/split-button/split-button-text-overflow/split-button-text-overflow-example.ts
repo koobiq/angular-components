@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { KbqTitleModule } from '@koobiq/components/title';
 
 /**
  * @title split-button-text-overflow
@@ -14,11 +15,13 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         KbqSplitButtonModule,
         KbqButtonModule,
         KbqIcon,
-        KbqDropdownModule
+        KbqDropdownModule,
+        KbqTitleModule
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button>
+            <button kbq-button kbq-title>
+                <i kbq-icon="kbq-plus_16"></i>
                 Save engineering time with unified payments functionality. We obsess over the maze of gateways, payments
                 rails, and financial institutions that make up the global economic landscape so that your teams can
                 build what you need on one platform.
