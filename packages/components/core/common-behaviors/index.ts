@@ -8,6 +8,7 @@ export { CanDisable, CanDisableCtor, mixinDisabled } from './disabled';
 export { CanUpdateErrorState, CanUpdateErrorStateCtor, KbqErrorStateTracker, mixinErrorState } from './error-state';
 export * from './focus-monitor';
 export * from './hovered';
+export * from './orientation';
 export { KbqDefaultSizes } from './size';
 export { HasTabIndex, HasTabIndexCtor, mixinTabIndex } from './tabindex';
 

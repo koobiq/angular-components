@@ -14,13 +14,8 @@ import {
     signal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectNativeElement, KbqOrientation } from '@koobiq/components/core';
 import { debounceTime, merge, skip, switchMap } from 'rxjs';
-
-/**
- * Orientation of the overflow items.
- */
-export type KbqOverflowItemsOrientation = 'horizontal' | 'vertical';
 
 /**
  * Manages the visibility of the element.
@@ -191,15 +186,16 @@ export class KbqOverflowItems {
      *
      * @default 'horizontal'
      */
-    readonly orientation = input<KbqOverflowItemsOrientation>('horizontal');
+    readonly orientation = input<KbqOrientation>('horizontal');
 
     private readonly orientationConfig: Record<
-        KbqOverflowItemsOrientation,
+        KbqOrientation,
         {
             containerSize: (element: HTMLElement) => number;
             paddingStart: (computedStyle: CSSStyleDeclaration) => number;
             paddingEnd: (computedStyle: CSSStyleDeclaration) => number;
             itemSize: (element: HTMLElement) => number;
+            flexDirection: 'row' | 'column';
         }
     > = {
         horizontal: {
@@ -210,7 +206,8 @@ export class KbqOverflowItems {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
                 return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
-            }
+            },
+            flexDirection: 'row'
         },
         vertical: {
             containerSize: (element) => element.clientHeight,
@@ -220,7 +217,8 @@ export class KbqOverflowItems {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
                 return element.offsetHeight + (parseFloat(marginTop) || 0) + (parseFloat(marginBottom) || 0);
-            }
+            },
+            flexDirection: 'column'
         }
     } as const;
 
@@ -281,7 +279,7 @@ export class KbqOverflowItems {
         reverseOverflowOrder: boolean,
         result: KbqOverflowItemsResult | undefined,
         container: HTMLElement,
-        orientation: KbqOverflowItemsOrientation
+        orientation: KbqOrientation
     ): ReadonlyArray<KbqOverflowItem> {
         result?.hide();
         items.forEach((item) => item.show());
@@ -313,7 +311,9 @@ export class KbqOverflowItems {
         toObservable(this.orientation)
             .pipe(takeUntilDestroyed())
             .subscribe((orientation) => {
-                this.renderer.setStyle(this.element, 'flex-direction', orientation === 'horizontal' ? 'row' : 'column');
+                const { flexDirection } = this.orientationConfig[orientation];
+
+                this.renderer.setStyle(this.element, 'flex-direction', flexDirection);
             });
     }
 
@@ -321,7 +321,7 @@ export class KbqOverflowItems {
         container: HTMLElement,
         items: ReadonlyArray<KbqOverflowItem>,
         result: KbqOverflowItemsResult | undefined,
-        orientation: KbqOverflowItemsOrientation
+        orientation: KbqOrientation
     ): boolean {
         const { containerSize, paddingStart, paddingEnd, itemSize } = this.orientationConfig[orientation];
         const computedStyle = this.window.getComputedStyle(container);
