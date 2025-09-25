@@ -1,5 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    input,
+    viewChildren,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     AbstractControl,
@@ -19,7 +27,7 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
+import { KbqTimepicker, KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { rangeValidator } from './constants';
 import { KbqTimeRangeService } from './time-range.service';
@@ -108,6 +116,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
             }));
     });
 
+    protected readonly timepickerList = viewChildren<KbqTimepicker<T>>(KbqTimepicker);
+
     /** @docs-private */
     protected form: FormGroup<FormValue<T>>;
     /** @docs-private */
@@ -155,6 +165,14 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
 
             if (range) {
                 this.onChange(range);
+            }
+        });
+
+        this.form.statusChanges.pipe(takeUntilDestroyed()).subscribe((status) => {
+            const timepickerList = this.timepickerList();
+
+            if (timepickerList.at(0)) {
+                timepickerList.at(0)!.errorState = status === 'INVALID';
             }
         });
     }
