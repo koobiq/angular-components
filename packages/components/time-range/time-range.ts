@@ -83,7 +83,12 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
 
         <ng-template #timeRangePopoverFooter>
             <div class="kbq-time-range__buttons" role="group">
-                <button kbq-button [color]="'contrast'" (click)="onApply(popover)">
+                <button
+                    kbq-button
+                    [color]="'contrast'"
+                    [disabled]="rangeEditorControl.invalid"
+                    (click)="onApply(popover)"
+                >
                     {{ localeConfig.editor.apply }}
                 </button>
 
