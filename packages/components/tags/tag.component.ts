@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
+import { BACKSPACE, DELETE, ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     AfterViewInit,
