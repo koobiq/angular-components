@@ -1,10 +1,13 @@
 @use '../core/styles/common';
+@use './split-button-theme';
 
 .kbq-split-button {
     display: flex;
     flex-direction: row;
 
     min-width: 0;
+
+    border-radius: var(--kbq-size-border-radius);
 
     & .kbq-button:first-child,
     & .kbq-button-icon:first-child {
@@ -27,36 +30,21 @@
         border-bottom-left-radius: unset;
     }
 
-    & .kbq-button:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]),
-    & .kbq-button-icon:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]) {
-        & + .kbq-button:not(:hover, .cdk-keyboard-focused, .kbq-active),
-        & + .kbq-button-icon:not(:hover, .cdk-keyboard-focused, .kbq-active) {
-            &::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 10px;
+    & .kbq-button,
+    & .kbq-button-icon {
+        &:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]) {
+            & + .kbq-button,
+            & + .kbq-button-icon {
+                &:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]) {
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: 10px;
 
-                width: 1px;
-                height: 12px;
-            }
-
-            &.kbq-contrast.kbq-button_filled::before {
-                background: var(--kbq-foreground-on-contrast);
-            }
-
-            &.kbq-contrast.kbq-button_transparent,
-            &.kbq-contrast-fade.kbq-button_outline,
-            &.kbq-contrast-fade.kbq-button_filled {
-                &::before {
-                    background: var(--kbq-line-contrast-fade);
-                }
-            }
-
-            &.kbq-theme-fade.kbq-button_outline,
-            &.kbq-theme.kbq-button_transparent {
-                &::before {
-                    background: var(--kbq-line-theme-fade);
+                        width: 1px;
+                        height: 12px;
+                    }
                 }
             }
         }
@@ -67,3 +55,5 @@
         padding-right: var(--kbq-size-xxs);
     }
 }
+
+@include split-button-theme.kbq-split-button-theme();

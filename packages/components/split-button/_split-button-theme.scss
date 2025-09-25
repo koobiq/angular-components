@@ -1,0 +1,40 @@
+@use '../core/styles/common';
+
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-split-button-theme() {
+    .kbq-split-button {
+        &:hover:has(.kbq-button_transparent) {
+            background: var(--kbq-states-background-transparent-hover, rgba(108, 115, 147, 0.08));
+        }
+
+        & .kbq-button,
+        & .kbq-button-icon {
+            &:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]) {
+                & + .kbq-button,
+                & + .kbq-button-icon {
+                    &:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]) {
+                        &.kbq-contrast.kbq-button_filled::before {
+                            background: var(--kbq-foreground-on-contrast);
+                        }
+
+                        &.kbq-contrast.kbq-button_transparent,
+                        &.kbq-contrast-fade.kbq-button_outline,
+                        &.kbq-contrast-fade.kbq-button_filled {
+                            &::before {
+                                background: var(--kbq-line-contrast-fade);
+                            }
+                        }
+
+                        &.kbq-theme-fade.kbq-button_outline,
+                        &.kbq-theme.kbq-button_transparent {
+                            &::before {
+                                background: var(--kbq-line-theme-fade);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

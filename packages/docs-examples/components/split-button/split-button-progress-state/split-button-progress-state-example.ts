@@ -18,7 +18,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <div>
-            <div class="example-split-button-styles__header">Primary Disabled</div>
+            <div class="example-split-button-styles__header">Primary in Progress</div>
             <kbq-split-button>
                 <button kbq-button [class.kbq-progress]="true">
                     <i kbq-icon="kbq-plus_16"></i>
@@ -31,7 +31,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">Secondary Disabled</div>
+            <div class="example-split-button-styles__header">Secondary in Progress</div>
             <kbq-split-button>
                 <button kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
@@ -44,13 +44,13 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">Сompletely Disabled</div>
-            <kbq-split-button [class.kbq-progress]="true">
-                <button kbq-button>
+            <div class="example-split-button-styles__header">Completely in Progress</div>
+            <kbq-split-button>
+                <button kbq-button [class.kbq-progress]="true">
                     <i kbq-icon="kbq-plus_16"></i>
                     Split Button
                 </button>
-                <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button [kbqDropdownTriggerFor]="dropdown" [class.kbq-progress]="true">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
