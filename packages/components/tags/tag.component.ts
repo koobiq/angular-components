@@ -141,7 +141,7 @@ export class KbqTagEditInput {
                 break;
             }
 
-            // prevent KbqTag from receiving these keydown events
+            // We should prevent KbqTag from receiving these keydown events
             case BACKSPACE:
             case DELETE:
             case SPACE: {
@@ -518,15 +518,6 @@ export class KbqTag
                 this.tagList?.selectionModel.selected.length ? this.tagList.removeSelected() : this.remove();
 
                 // Always prevent so page navigation does not occur
-                event.preventDefault();
-                break;
-            case SPACE:
-                // If we are selectable, toggle the focused tag
-                if (this.selectable) {
-                    this.toggleSelected(true);
-                }
-
-                // Always prevent space from scrolling the page since the list has focus
                 event.preventDefault();
                 break;
             case F2:
