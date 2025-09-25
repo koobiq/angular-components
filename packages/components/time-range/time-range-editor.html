@@ -2,13 +2,8 @@
     <kbq-radio-group class="kbq-time-range-editor__container" [formControl]="form.controls.type">
         <div class="kbq-time-range-editor__predefined">
             @for (type of timeRangeTypesWithoutRange(); track type) {
-                <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type">
-                    <ng-container
-                        *ngTemplateOutlet="
-                            optionTemplate;
-                            context: { $implicit: getTimeRangeOptionTemplateContext(type) }
-                        "
-                    />
+                <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type.type">
+                    <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: type }" />
                 </kbq-radio-button>
             }
         </div>
@@ -62,19 +57,7 @@
 <ng-template #optionTemplate let-context>
     @let localeConfig = localeConfiguration();
     @switch (context.translationType) {
-        @case ('minutes') {
-            {{ localeConfig.title.for }} {{ context.minutes }} минут
-        }
-        @case ('hours') {
-            {{ localeConfig.title.for }} {{ context.hours }} часов
-        }
-        @case ('days') {
-            {{ localeConfig.title.for }} {{ context.days }} дней
-        }
-        @case ('months') {
-            {{ localeConfig.title.for }} {{ context.months }} месяцев
-        }
-        @default {
+        @case ('other') {
             @switch (context.type) {
                 @case ('allTime') {
                     {{ localeConfig.editor.allTime }}
@@ -86,6 +69,9 @@
                     {{ localeConfig.editor.currentYear }}
                 }
             }
+        }
+        @default {
+            {{ context.formattedValue }}
         }
     }
 </ng-template>

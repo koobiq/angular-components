@@ -131,9 +131,9 @@ export class KbqTimeRangeService<T> {
             };
         }
 
-        const checkedRangeValue = rangeValue || this.getDefaultRangeValue();
-
         if (type === 'range') {
+            const checkedRangeValue = rangeValue || this.getDefaultRangeValue();
+
             return {
                 startDateTime:
                     checkedRangeValue.fromDate && checkedRangeValue.fromTime

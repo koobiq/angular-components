@@ -129,6 +129,10 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
 
     /** Whether to show popover with arrow */
     readonly arrow = input(false, { transform: booleanAttribute });
+    /**
+     * Whether to show range in popover if not provided
+     * @see availableTimeRangeTypes
+     */
     readonly showRangeAsDefault = input(true);
 
     /**

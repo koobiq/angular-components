@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
@@ -8,16 +8,9 @@ import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/compon
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
-import { skip } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { KbqTimeRangeService } from './time-range.service';
-import {
-    KbqRangeValue,
-    KbqTimeRangeOptionContext,
-    KbqTimeRangeRange,
-    KbqTimeRangeType,
-    KbqTimeRangeTypeContext
-} from './types';
+import { KbqRangeValue, KbqTimeRangeRange, KbqTimeRangeType, KbqTimeRangeTypeContext } from './types';
 
 interface FormValue<T> {
     type: FormControl<KbqTimeRangeType>;
@@ -77,22 +70,24 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
     );
 
     /** @docs-private */
-    protected getTimeRangeTypesWithoutRange = (availableTimeRangeTypes: KbqTimeRangeType[]) =>
-        availableTimeRangeTypes.filter((item) => item !== 'range');
-    /** @docs-private */
-    protected readonly timeRangeTypesWithoutRange = signal(
-        this.getTimeRangeTypesWithoutRange(this.availableTimeRangeTypes())
-    );
+    protected readonly timeRangeTypesWithoutRange = computed(() => {
+        const localeConfig = this.localeConfiguration();
+
+        return this.availableTimeRangeTypes()
+            .filter((type) => type !== 'range')
+            .map((type) => ({
+                type,
+                translationType: this.timeRangeService.getTimeRangeUnitByType(type),
+                formattedValue: this.getFormattedOption(type, localeConfig)
+            }));
+    });
+
     /** @docs-private */
     protected form: FormGroup<FormValue<T>>;
     /** @docs-private */
     protected readonly timepickerFormat = TimeFormats.HHmmss;
 
     constructor() {
-        toObservable(this.availableTimeRangeTypes)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(this.getTimeRangeTypesWithoutRange);
-
         const defaultRangeValue = this.rangeValue();
 
         this.form = new FormGroup({
@@ -156,13 +151,17 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
         }
     }
 
-    /** @docs-private */
-    protected getTimeRangeOptionTemplateContext(type: KbqTimeRangeType): KbqTimeRangeOptionContext {
-        return {
-            ...this.timeRangeService.getTimeRangeTypeUnits(type),
-            translationType: this.timeRangeService.getTimeRangeUnitByType(type),
-            type
-        };
+    /** Implemented as part of ControlValueAccessor */
+    onChange = (_value: KbqTimeRangeRange) => {};
+    /** Implemented as part of ControlValueAccessor */
+    onTouch = () => {};
+    /** Implemented as part of ControlValueAccessor */
+    registerOnChange(fn: (value: KbqTimeRangeRange) => void): void {
+        this.onChange = fn;
+    }
+    /** Implemented as part of ControlValueAccessor */
+    registerOnTouched(fn: () => void): void {
+        this.onTouch = fn;
     }
 
     private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {
@@ -181,16 +180,19 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
         };
     }
 
-    /** Implemented as part of ControlValueAccessor */
-    onChange = (_value: KbqTimeRangeRange) => {};
-    /** Implemented as part of ControlValueAccessor */
-    onTouch = () => {};
-    /** Implemented as part of ControlValueAccessor */
-    registerOnChange(fn: (value: KbqTimeRangeRange) => void): void {
-        this.onChange = fn;
-    }
-    /** Implemented as part of ControlValueAccessor */
-    registerOnTouched(fn: () => void): void {
-        this.onTouch = fn;
+    private getFormattedOption(type: KbqTimeRangeType, localeConfig: KbqTimeRangeLocaleConfig): string {
+        const translationType = this.timeRangeService.getTimeRangeUnitByType(type);
+
+        if (translationType === 'other') return '';
+
+        const range = this.timeRangeService.calculateTimeRange(type);
+
+        return this.timeRangeService.dateFormatter.duration(
+            this.timeRangeService.fromISO(range.startDateTime!),
+            this.timeRangeService.dateAdapter.today(),
+            [translationType],
+            false,
+            localeConfig.durationTemplate
+        );
     }
 }
