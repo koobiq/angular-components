@@ -45,8 +45,10 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             [style.width.px]="containerWidth()"
-            [reverseOverflowOrder]="reverseOverflowOrder()"
+            [style.padding.px]="containerPadding()"
             [style.justify-content]="justifyContent()"
+            [style.box-sizing]="containerBoxSizing()"
+            [reverseOverflowOrder]="reverseOverflowOrder()"
         >
             <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItems.hiddenItemIDs().size }} more
@@ -56,6 +58,7 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
                     [kbqOverflowItem]="item.id"
                     [style.width.px]="itemWidth()"
                     [style.flex-shrink]="0"
+                    [style.margin-right.px]="itemMarginRight()"
                     [alwaysVisible]="item.alwaysVisible"
                 >
                     {{ item.id }}
@@ -68,9 +71,11 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
 export class TestOverflowItems {
     readonly reverseOverflowOrder = signal(false);
     readonly items = signal(Array.from({ length: 20 }).map((_, i) => ({ id: `Item${i}`, alwaysVisible: i === 7 })));
-
+    readonly containerBoxSizing = signal<'border-box' | 'content-box'>('border-box');
+    readonly containerPadding = signal(0);
     readonly containerWidth = signal(500);
     readonly itemWidth = signal(50);
+    readonly itemMarginRight = signal(0);
     readonly resultWidth = signal(100);
     readonly justifyContent = signal<'start' | 'end'>('start');
 }
@@ -84,18 +89,21 @@ export class TestOverflowItems {
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             orientation="vertical"
+            [style.padding.px]="containerPadding()"
+            [style.box-sizing]="containerBoxSizing()"
             [style.height.px]="containerHeight()"
             [reverseOverflowOrder]="reverseOverflowOrder()"
         >
             @for (item of items(); track item.id) {
-                <kbq-badge
+                <div
                     [kbqOverflowItem]="item.id"
                     [alwaysVisible]="item.alwaysVisible"
                     [style.height.px]="itemHeight()"
                     [style.flex-shrink]="0"
+                    [style.margin-bottom.px]="itemMarginBottom()"
                 >
                     {{ item.id }}
-                </kbq-badge>
+                </div>
             }
             <div kbqOverflowItemsResult [style.height.px]="resultHeight()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItems.hiddenItemIDs().size }} more
@@ -107,9 +115,11 @@ export class TestOverflowItems {
 export class TestOverflowItemsWithVerticalOrientation {
     readonly items = signal(Array.from({ length: 20 }, (_, i) => ({ id: `Item${i}`, alwaysVisible: i === 7 })));
     readonly reverseOverflowOrder = signal(false);
-
+    readonly containerBoxSizing = signal<'border-box' | 'content-box'>('border-box');
+    readonly containerPadding = signal(0);
     readonly containerHeight = signal(500);
     readonly itemHeight = signal(50);
+    readonly itemMarginBottom = signal(0);
     readonly resultHeight = signal(50);
 }
 
@@ -145,7 +155,6 @@ export class TestOverflowItemsWithVerticalOrientation {
 })
 export class TestOrderedOverflowItems {
     readonly items = signal(Array.from({ length: 20 }, (_, i) => `Item${i}`));
-
     readonly containerWidth = signal(500);
     readonly itemWidth = signal(50);
     readonly resultWidth = signal(100);
@@ -171,13 +180,53 @@ describe(KbqOverflowItemsModule.name, () => {
         expect(getOverflowHiddenItems(debugElement).length).toBe(12);
     });
 
-    it('should hide overflown items when vertical orientation', async () => {
+    it('should hide overflown items with container padding', async () => {
+        const fixture = createComponent(TestOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.containerPadding.set(25);
+        await fixture.whenStable();
+
+        expect(getOverflowHiddenItems(debugElement).length).toBe(13);
+    });
+
+    it('should hide overflown items with right margin', async () => {
+        const fixture = createComponent(TestOverflowItems);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.itemMarginRight.set(10);
+        await fixture.whenStable();
+
+        expect(getOverflowHiddenItems(debugElement).length).toBe(14);
+    });
+
+    it('should hide overflown items (vertical orientation)', async () => {
         const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
         const { debugElement } = fixture;
 
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(11);
+    });
+
+    it('should hide overflown items with container padding (vertical orientation)', async () => {
+        const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.containerPadding.set(25);
+        await fixture.whenStable();
+
+        expect(getOverflowHiddenItems(debugElement).length).toBe(12);
+    });
+
+    it('should hide overflown items with bottom margin (vertical orientation)', async () => {
+        const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.itemMarginBottom.set(10);
+        await fixture.whenStable();
+
+        expect(getOverflowHiddenItems(debugElement).length).toBe(13);
     });
 
     it('should hide overflown items with justify-content end', async () => {
@@ -200,7 +249,7 @@ describe(KbqOverflowItemsModule.name, () => {
         expect(getOverflowHiddenItems(debugElement).length).toBe(10);
     });
 
-    it('should recalculate hidden items on container width change when vertical orientation', async () => {
+    it('should recalculate hidden items on container width change (vertical orientation)', async () => {
         const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
         const { debugElement, componentInstance } = fixture;
 
@@ -231,7 +280,7 @@ describe(KbqOverflowItemsModule.name, () => {
         expect(getOverflowVisibleItems(debugElement).at(-1)!.nativeElement.textContent.trim()).toBe('Item19');
     });
 
-    it('should recalculate hidden items on `reverseOverflowOrder` attribute change when vertical orientation', async () => {
+    it('should recalculate hidden items on `reverseOverflowOrder` attribute change (vertical orientation)', async () => {
         const fixture = createComponent(TestOverflowItems);
         const { debugElement, componentInstance } = fixture;
 
@@ -267,7 +316,7 @@ describe(KbqOverflowItemsModule.name, () => {
         expect(isOverflowItemsResultVisible(debugElement)).toBeTrue();
     });
 
-    it('should display result when vertical orientation', async () => {
+    it('should display result (vertical orientation)', async () => {
         const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
         const { debugElement } = fixture;
 
@@ -368,7 +417,7 @@ describe(KbqOverflowItemsModule.name, () => {
         expect(visibleItems[2].nativeElement.textContent.trim()).toEqual('Item7');
     });
 
-    it('should prevent hiding item with alwaysVisible attribute when vertical orientation', async () => {
+    it('should prevent hiding item with alwaysVisible attribute (vertical orientation)', async () => {
         const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
         const { debugElement, componentInstance } = fixture;
 
