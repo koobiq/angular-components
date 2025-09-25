@@ -20,12 +20,16 @@
                     </span>
                     <kbq-fieldset>
                         <kbq-form-field kbqFieldsetItem>
-                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                            <i kbq-icon="kbq-clock_16" kbqPrefix [autoColor]="true"></i>
                             <input kbqTimepicker [format]="timepickerFormat" [formControl]="form.controls.fromTime" />
                         </kbq-form-field>
 
                         <kbq-form-field>
-                            <input [kbqDatepicker]="datepickerFrom" [formControl]="form.controls.fromDate" />
+                            <input
+                                [kbqDatepicker]="datepickerFrom"
+                                [formControl]="form.controls.fromDate"
+                                [errorStateMatcher]="rangeStateMatcher"
+                            />
                             <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerFrom" />
                             <kbq-datepicker #datepickerFrom [minDate]="minDate()" [maxDate]="maxDate()" />
                         </kbq-form-field>
@@ -38,12 +42,16 @@
                     </span>
                     <kbq-fieldset>
                         <kbq-form-field kbqFieldsetItem>
-                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                            <i kbq-icon="kbq-clock_16" kbqPrefix [autoColor]="true"></i>
                             <input kbqTimepicker [format]="timepickerFormat" [formControl]="form.controls.toTime" />
                         </kbq-form-field>
 
                         <kbq-form-field>
-                            <input [kbqDatepicker]="datepickerTo" [formControl]="form.controls.toDate" />
+                            <input
+                                [kbqDatepicker]="datepickerTo"
+                                [formControl]="form.controls.toDate"
+                                [errorStateMatcher]="rangeStateMatcher"
+                            />
                             <kbq-datepicker-toggle-icon kbqSuffix [for]="datepickerTo" />
                             <kbq-datepicker #datepickerTo [minDate]="minDate()" [maxDate]="maxDate()" />
                         </kbq-form-field>

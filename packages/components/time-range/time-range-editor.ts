@@ -1,14 +1,27 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
+import {
+    AbstractControl,
+    ControlValueAccessor,
+    FormControl,
+    FormGroup,
+    FormGroupDirective,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    NgForm,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validator
+} from '@angular/forms';
+import { ErrorStateMatcher, KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { rangeValidator } from './constants';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqRangeValue, KbqTimeRangeRange, KbqTimeRangeType, KbqTimeRangeTypeContext } from './types';
 
@@ -18,6 +31,12 @@ interface FormValue<T> {
     fromDate: FormControl<T>;
     toTime: FormControl<T>;
     toDate: FormControl<T>;
+}
+
+class RangeErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return !!form?.invalid || !!control?.invalid;
+    }
 }
 
 /** @docs-private */
@@ -41,16 +60,23 @@ interface FormValue<T> {
     },
     providers: [
         {
+            multi: true,
             provide: NG_VALUE_ACCESSOR,
-            useExisting: KbqTimeRangeEditor,
-            multi: true
+            useExisting: KbqTimeRangeEditor
+        },
+        {
+            multi: true,
+            provide: NG_VALIDATORS,
+            useExisting: KbqTimeRangeEditor
         }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
+export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
     private readonly timeRangeService = inject(KbqTimeRangeService);
+    /** @docs-private */
+    protected readonly rangeStateMatcher = new RangeErrorStateMatcher();
 
     /** The maximum selectable date. */
     readonly maxDate = input<T | null>(null);
@@ -89,14 +115,21 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
 
     constructor() {
         const defaultRangeValue = this.rangeValue();
+        const availableTimeRangeTypes = this.availableTimeRangeTypes();
 
-        this.form = new FormGroup({
-            type: new FormControl<KbqTimeRangeType>('lastHour', { nonNullable: true }),
-            fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
-            fromDate: new FormControl<T>(defaultRangeValue.fromDate, { nonNullable: true }),
-            toTime: new FormControl<T>(defaultRangeValue.toTime, { nonNullable: true }),
-            toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
-        });
+        this.form = new FormGroup(
+            {
+                type: new FormControl<KbqTimeRangeType>(
+                    (availableTimeRangeTypes.length && availableTimeRangeTypes[0]) || 'lastHour',
+                    { nonNullable: true }
+                ),
+                fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
+                fromDate: new FormControl<T>(defaultRangeValue.fromDate, { nonNullable: true }),
+                toTime: new FormControl<T>(defaultRangeValue.toTime, { nonNullable: true }),
+                toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
+            },
+            { validators: rangeValidator(this.timeRangeService) }
+        );
 
         const rangeControls = [
             this.form.controls.fromTime,
@@ -124,6 +157,10 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
                 this.onChange(range);
             }
         });
+    }
+
+    validate(): ValidationErrors | null {
+        return this.form.errors;
     }
 
     /** Implemented as part of ControlValueAccessor */

@@ -1,10 +1,10 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRange } from '@koobiq/components/time-range';
+import { KbqTimeRange, KbqTimeRangeRange } from '@koobiq/components/time-range';
 
 /**
  * @title Time range overview
@@ -14,7 +14,7 @@ import { KbqTimeRange } from '@koobiq/components/time-range';
     standalone: true,
     selector: 'time-range-overview-example',
     imports: [
-        JsonPipe,
+        ReactiveFormsModule,
         KbqTimeRange,
         KbqLuxonDateModule,
         KbqIconModule,
@@ -22,10 +22,7 @@ import { KbqTimeRange } from '@koobiq/components/time-range';
         KbqFormattersModule
     ],
     template: `
-        <ng-template #titleTemplate let-context>
-            <div class="kbq-mono-compact" style="color: var(--kbq-foreground-contrast-secondary)">
-                {{ context | json }}
-            </div>
+        <ng-template #titleTemplate>
             <button kbq-button aria-label="time range trigger">
                 <i kbq-icon="kbq-calendar-o_16"></i>
             </button>
@@ -33,10 +30,12 @@ import { KbqTimeRange } from '@koobiq/components/time-range';
 
         <kbq-time-range [titleTemplate]="titleTemplate" />
 
-        <kbq-time-range />
+        <kbq-time-range [formControl]="control" />
     `,
     host: {
         class: 'layout-flex layout-column'
     }
 })
-export class TimeRangeOverviewExample {}
+export class TimeRangeOverviewExample {
+    control = new FormControl<KbqTimeRangeRange | undefined>(undefined);
+}

@@ -1,4 +1,6 @@
 import { InjectionToken } from '@angular/core';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeType } from './types';
 
 export const KBQ_DEFAULT_TIME_RANGE_TYPES = new InjectionToken<KbqTimeRangeType[]>('KBQ_DEFAULT_TIME_RANGE_TYPES');
@@ -9,3 +11,20 @@ export function createMissingDateImplError(componentName: string, provider: stri
             `modules at your application root or provide a custom implementation or use exists ones.`
     );
 }
+
+export const rangeValidator = <T>(timeRangeService: KbqTimeRangeService<T>): ValidatorFn => {
+    return (control: AbstractControl) => {
+        const form = control.value;
+
+        if (!form.fromTime || !form.fromDate || !form.toTime || !form.toDate) {
+            return null;
+        }
+
+        const fromDateTime = timeRangeService.combineDateAndTime(form.fromDate, form.fromTime);
+        const toDateTime = timeRangeService.combineDateAndTime(form.toDate, form.toTime);
+
+        return timeRangeService.dateAdapter.compareDate(fromDateTime, toDateTime) > 0
+            ? { fromIsGreaterThanTo: fromDateTime }
+            : null;
+    };
+};
