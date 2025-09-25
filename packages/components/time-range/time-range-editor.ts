@@ -9,9 +9,15 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { skip } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { distinctUntilChanged, take } from 'rxjs/operators';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqRangeValue, KbqTimeRangeOptionContext, KbqTimeRangeRange, KbqTimeRangeType } from './types';
+import {
+    KbqRangeValue,
+    KbqTimeRangeOptionContext,
+    KbqTimeRangeRange,
+    KbqTimeRangeType,
+    KbqTimeRangeTypeContext
+} from './types';
 
 interface FormValue<T> {
     type: FormControl<KbqTimeRangeType>;
@@ -59,7 +65,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
     minDate = input<T | null>(null);
     /** Preset of selectable ranges */
     availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
-    /** provided value of selected range */
+    /** Provided value of selected range */
     rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
 
     showRangeAsDefault = input(true);
@@ -93,7 +99,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
                 this.form.patchValue(value);
             });
 
-        const defaultRangeValue = this.timeRangeService.getDefaultRangeValue();
+        const defaultRangeValue = this.rangeValue();
 
         this.form = new FormGroup({
             type: new FormControl<KbqTimeRangeType>('lastHour', { nonNullable: true }),
@@ -103,14 +109,14 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
             toDate: new FormControl<T>(defaultRangeValue.toDate, { nonNullable: true })
         });
 
-        this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(({ type, fromTime, fromDate, toTime, toDate }) => {
-            const rangeControls = [
-                this.form.controls.fromTime,
-                this.form.controls.fromDate,
-                this.form.controls.toTime,
-                this.form.controls.toDate
-            ];
+        const rangeControls = [
+            this.form.controls.fromTime,
+            this.form.controls.fromDate,
+            this.form.controls.toTime,
+            this.form.controls.toDate
+        ];
 
+        this.form.valueChanges.pipe(distinctUntilChanged(), takeUntilDestroyed()).subscribe(({ type }) => {
             const isDisabled = type !== 'range';
 
             rangeControls.forEach((control) => {
@@ -120,25 +126,18 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
                     control.enable({ emitEvent: false });
                 }
             });
+        });
 
-            const range = this.timeRangeService.calculateTimeRange(type, {
-                fromTime: fromTime,
-                fromDate: fromDate,
-                toTime: toTime,
-                toDate: toDate
-            });
+        this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((formValue) => {
+            const range = this.mapTimeRange(formValue);
 
-            if (type) {
-                this.onChange({
-                    type,
-                    ...range
-                });
+            if (range) {
+                this.onChange(range);
             }
         });
     }
 
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    /** Implemented as part of ControlValueAccessor */
     writeValue(value: KbqTimeRangeRange | undefined): void {
         if (!value) return;
 
@@ -148,9 +147,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
             this.form.value
         );
 
-        this.form.patchValue({
-            type: corrected.type
-        });
+        this.form.controls.type.setValue(corrected.type, { onlySelf: true });
 
         if (corrected.type === 'range' && corrected.startDateTime && corrected.endDateTime) {
             const from: T = this.timeRangeService.fromISO(corrected.startDateTime);
@@ -165,6 +162,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
         }
     }
 
+    /** @docs-private */
     protected getTimeRangeOptionTemplateContext(type: KbqTimeRangeType): KbqTimeRangeOptionContext {
         return {
             ...this.timeRangeService.getTimeRangeTypeUnits(type),
@@ -173,19 +171,31 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
         };
     }
 
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {
+        if (!type) {
+            return undefined;
+        }
+
+        return {
+            type,
+            ...this.timeRangeService.calculateTimeRange(type, {
+                fromTime: this.form.controls.fromTime.value,
+                fromDate: this.form.controls.fromDate.value,
+                toDate: this.form.controls.toTime.value,
+                toTime: this.form.controls.toTime.value
+            })
+        };
+    }
+
+    /** Implemented as part of ControlValueAccessor */
     onChange = (_value: KbqTimeRangeRange) => {};
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    /** Implemented as part of ControlValueAccessor */
     onTouch = () => {};
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /** Implemented as part of ControlValueAccessor */
     registerOnChange(fn: (value: KbqTimeRangeRange) => void): void {
         this.onChange = fn;
     }
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /** Implemented as part of ControlValueAccessor */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;
     }

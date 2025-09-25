@@ -69,7 +69,7 @@ export class KbqTimeRangeTitle {
     private updateFormattedDate = () => {
         const context = this.context();
 
-        if (!context || !context.startDateTime) {
+        if (!context) {
             this.formattedDate.set('');
 
             return;
@@ -78,16 +78,16 @@ export class KbqTimeRangeTitle {
         const timeRangeUnit = this.timeRangeService.getTimeRangeUnitByType(context.type);
         const localeConfig = this.localeConfiguration();
 
-        console.log(context.type);
-
         if (timeRangeUnit === 'other') {
             switch (context.type) {
                 case 'range': {
                     this.formattedDate.set(
-                        this.timeRangeService.dateFormatter.rangeLongDate(
-                            this.timeRangeService.fromISO(context.startDateTime ?? ''),
-                            this.timeRangeService.fromISO(context.endDateTime ?? '')
-                        )
+                        localeConfig.title.for +
+                            ' ' +
+                            this.timeRangeService.dateFormatter.rangeLongDate(
+                                this.timeRangeService.fromISO(context.startDateTime ?? ''),
+                                this.timeRangeService.fromISO(context.endDateTime ?? '')
+                            )
                     );
                     break;
                 }
@@ -104,6 +104,12 @@ export class KbqTimeRangeTitle {
                     break;
                 }
             }
+
+            return;
+        }
+
+        if (!context.startDateTime) {
+            this.formattedDate.set('');
 
             return;
         }

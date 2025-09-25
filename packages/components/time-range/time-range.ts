@@ -26,7 +26,12 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqRangeValue, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange as TimeRange } from './types';
+import {
+    KbqRangeValue,
+    KbqTimeRangeCustomizableTitleContext,
+    KbqTimeRangeType,
+    KbqTimeRangeRange as TimeRange
+} from './types';
 
 /** Localization configuration provider. */
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfig>(
@@ -46,7 +51,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
     standalone: true,
     selector: 'kbq-time-range',
     template: `
-        @let localeConf = localeConfiguration();
+        @let localeConfig = localeConfiguration();
         <div
             #popover="kbqPopover"
             class="kbq-time-range__trigger"
@@ -61,7 +66,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
             <kbq-time-range-title
                 [titleTemplate]="titleTemplate()"
                 [timeRange]="titleValue()"
-                [localeConfiguration]="localeConf"
+                [localeConfiguration]="localeConfig"
             />
         </div>
 
@@ -70,7 +75,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
                 [maxDate]="maxDate()"
                 [minDate]="minDate()"
                 [formControl]="rangeEditorControl"
-                [localeConfiguration]="localeConf"
+                [localeConfiguration]="localeConfig"
                 [rangeValue]="normalizedDefaultRangeValue()"
             />
         </ng-template>
@@ -78,10 +83,10 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
         <ng-template #timeRangePopoverFooter>
             <div class="kbq-time-range__buttons" role="group">
                 <button kbq-button [color]="'contrast'" (click)="onApply(popover)">
-                    {{ localeConf.editor.apply }}
+                    {{ localeConfig.editor.apply }}
                 </button>
 
-                <button kbq-button (click)="onCancel(popover)">{{ localeConf.editor.cancel }}</button>
+                <button kbq-button (click)="onCancel(popover)">{{ localeConfig.editor.cancel }}</button>
             </div>
         </ng-template>
     `,
@@ -117,7 +122,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     /** provided value of selected range */
     readonly defaultRangeValue = input<KbqRangeValue<T>>();
     /** Preset of selectable ranges */
-    readonly availableTimeRangeTypes = input<any[]>(this.timeRangeService.resolvedTimeRangeTypes);
+    readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
     /** Customizable trigger output */
     readonly titleTemplate = input<TemplateRef<KbqTimeRangeCustomizableTitleContext>>();
 
@@ -158,8 +163,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
         });
     }
 
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    /** Implemented as part of ControlValueAccessor */
     writeValue(value: TimeRange | undefined): void {
         const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
             value,
@@ -189,13 +193,11 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     /** Implemented as part of ControlValueAccessor
      * @docs-private */
     onTouch = () => {};
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    /** Implemented as part of ControlValueAccessor */
     registerOnChange(fn: (_value: TimeRange) => void): void {
         this.onChange = fn;
     }
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    /** Implemented as part of ControlValueAccessor */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;
     }
