@@ -3034,6 +3034,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "number-formatter-overview-example.ts",
     "importPath": "components/number-formatter"
   },
+  "overflow-items-justify-content": {
+    "packagePath": "components/overflow-items/overflow-items-justify-content",
+    "title": "Overflow items justify content",
+    "componentName": "OverflowItemsJustifyContentExample",
+    "files": [
+      "overflow-items-justify-content-example.ts"
+    ],
+    "selector": "overflow-items-justify-content-example",
+    "additionalComponents": [],
+    "primaryFile": "overflow-items-justify-content-example.ts",
+    "importPath": "components/overflow-items"
+  },
   "overflow-items-overview": {
     "packagePath": "components/overflow-items/overflow-items-overview",
     "title": "Overflow items overview",
@@ -3046,6 +3058,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "overflow-items-overview-example.ts",
     "importPath": "components/overflow-items"
   },
+  "overflow-items-with-always-visible-item": {
+    "packagePath": "components/overflow-items/overflow-items-with-always-visible-item",
+    "title": "Overflow items with always visible item",
+    "componentName": "OverflowItemsWithAlwaysVisibleItemExample",
+    "files": [
+      "overflow-items-with-always-visible-item-example.ts"
+    ],
+    "selector": "overflow-items-with-always-visible-item-example",
+    "additionalComponents": [],
+    "primaryFile": "overflow-items-with-always-visible-item-example.ts",
+    "importPath": "components/overflow-items"
+  },
   "overflow-items-with-order": {
     "packagePath": "components/overflow-items/overflow-items-with-order",
     "title": "Overflow items result offset",
@@ -3056,6 +3080,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "overflow-items-with-order-example",
     "additionalComponents": [],
     "primaryFile": "overflow-items-with-order-example.ts",
+    "importPath": "components/overflow-items"
+  },
+  "overflow-items-with-vertical-orientation": {
+    "packagePath": "components/overflow-items/overflow-items-with-vertical-orientation",
+    "title": "Overflow items with vertical orientation",
+    "componentName": "OverflowItemsWithVerticalOrientationExample",
+    "files": [
+      "overflow-items-with-vertical-orientation-example.ts"
+    ],
+    "selector": "overflow-items-with-vertical-orientation-example",
+    "additionalComponents": [],
+    "primaryFile": "overflow-items-with-vertical-orientation-example.ts",
     "importPath": "components/overflow-items"
   },
   "popover-arrow-and-offset": {
@@ -5663,9 +5699,15 @@ return import('@koobiq/docs-examples/components/navbar');
 return import('@koobiq/docs-examples/components/navbar');
   case 'number-formatter-overview':
 return import('@koobiq/docs-examples/components/number-formatter');
+  case 'overflow-items-justify-content':
+return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-overview':
 return import('@koobiq/docs-examples/components/overflow-items');
+  case 'overflow-items-with-always-visible-item':
+return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-with-order':
+return import('@koobiq/docs-examples/components/overflow-items');
+  case 'overflow-items-with-vertical-orientation':
 return import('@koobiq/docs-examples/components/overflow-items');
   case 'popover-arrow-and-offset':
 return import('@koobiq/docs-examples/components/popover');

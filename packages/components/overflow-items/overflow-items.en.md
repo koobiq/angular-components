@@ -27,6 +27,12 @@ Element alignment within the container is set using the CSS property [`justify-c
 
 <!-- example(overflow-items-justify-content) -->
 
+### Orientation
+
+By default, elements are hidden horizontally. If you need to hide elements vertically, you can use the `orientation="vertical"` attribute.
+
+<!-- example(overflow-items-with-vertical-orientation) -->
+
 ### Delay when hiding/showing
 
 The delay for hiding/showing elements is set using the `debounceTime` attribute. Enabling this option positively

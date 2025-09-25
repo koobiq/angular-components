@@ -2418,6 +2418,9 @@ export class KbqOptionSelectionChange<T = KbqOption> {
     source: T;
 }
 
+// @public
+export type KbqOrientation = 'horizontal' | 'vertical';
+
 // @public (undocumented)
 export interface KbqParentPopup {
     // (undocumented)

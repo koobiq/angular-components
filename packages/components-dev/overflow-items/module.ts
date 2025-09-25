@@ -6,6 +6,8 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
     imports: [OverflowItemsExamplesModule],
     selector: 'dev-examples',
     template: `
+        <overflow-items-with-vertical-orientation-example />
+        <hr />
         <overflow-items-overview-example />
         <hr />
         <overflow-items-with-always-visible-item-example />
