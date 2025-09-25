@@ -1,7 +1,8 @@
 import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration
+    KbqCodeBlockLocaleConfiguration,
+    KbqTimeRangeLocaleConfig
 } from './types';
 
 export const faIRLocaleData = {
@@ -104,5 +105,39 @@ export const faIRLocaleData = {
     searchExpandable: {
         tooltip: 'جستجو',
         placeholder: 'جستجو'
-    }
+    },
+    timeRange: {
+        title: {
+            for: 'برای'
+        },
+        editor: {
+            from: 'از',
+            to: 'تا',
+            apply: 'اعمال',
+            cancel: 'لغو',
+            rangeLabel: 'برای دوره',
+            allTime: 'برای همه زمان‌ها',
+            currentQuarter: 'برای فصل جاری',
+            currentYear: 'برای سال جاری'
+        },
+        durationTemplate: {
+            SEPARATOR: ' و ',
+            LAST_PART_SEPARATOR: '',
+            YEARS: `{years} سال گذشته`,
+            MONTHS: `{months} ماه گذشته`,
+            WEEKS: `{weeks} هفته گذشته`,
+            DAYS: `{days} روز گذشته`,
+            HOURS: `{hours} ساعت گذشته`,
+            MINUTES: `{minutes} دقیقه گذشته`,
+            SECONDS: `{seconds} ثانیه گذشته`,
+            YEARS_FRACTION: `{floorValue, plural,
+                =1 {سال {years, number, ::# و #}}
+                other {سالها {years, number, ::# و #}}
+            }`,
+            MONTHS_FRACTION: `{floorValue, plural,
+                =1 {ماه {months, number, ::# و #}}
+                other {ماه ها {months, number, ::# و #}}
+            }`
+        }
+    } satisfies KbqTimeRangeLocaleConfig
 };

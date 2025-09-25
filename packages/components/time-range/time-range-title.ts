@@ -4,7 +4,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { merge } from 'rxjs';
+import { merge, skip } from 'rxjs';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
 
@@ -39,7 +39,7 @@ export class KbqTimeRangeTitle {
     private readonly timeRangeService = inject(KbqTimeRangeService);
 
     constructor() {
-        merge(toObservable(this.context), toObservable(this.localeConfiguration))
+        merge(toObservable(this.context), toObservable(this.localeConfiguration).pipe(skip(1)))
             .pipe(takeUntilDestroyed())
             .subscribe(this.updateFormattedDate);
     }
@@ -117,10 +117,12 @@ export class KbqTimeRangeTitle {
         this.formattedDate.set(
             localeConfig.title.for +
                 ' ' +
-                this.timeRangeService.dateFormatter.durationLong(
+                this.timeRangeService.dateFormatter.duration(
                     this.timeRangeService.fromISO(context.startDateTime),
                     this.timeRangeService.dateAdapter.today(),
-                    [timeRangeUnit]
+                    [timeRangeUnit],
+                    false,
+                    localeConfig.durationTemplate
                 )
         );
     };

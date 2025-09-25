@@ -120,6 +120,40 @@ export const tkTMLocaleData = {
             allTime: 'hemme döwür üçin',
             currentQuarter: 'şu çärýek üçin',
             currentYear: 'şu ýyl üçin'
+        },
+        durationTemplate: {
+            SEPARATOR: ' ',
+            LAST_PART_SEPARATOR: '',
+            YEARS: `{years, plural,
+                one {# ýyl}
+                other {soňky # ýyl}
+            }`,
+            MONTHS: `{months, plural,
+                one {soňky aý}
+                other {soňky # aý}
+            }`,
+            WEEKS: `{weeks, plural,
+                one {soňky hepde}
+                other {soňky # hepde}
+            }`,
+            DAYS: `{days, plural,
+                one {soňky gün}
+                other {soňky # gün}
+            }`,
+            HOURS: `{hours, plural,
+                one {soňky sagat}
+                other {soňky # sagat}
+            }`,
+            MINUTES: `{minutes, plural,
+                one {soňky minut}
+                other {soňky # minut}
+            }`,
+            SECONDS: `{seconds, plural,
+                one {soňky sekunt}
+                other {soňky # sekunt}
+            }`,
+            YEARS_FRACTION: `{years} ýyl`,
+            MONTHS_FRACTION: `{months} aý`
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

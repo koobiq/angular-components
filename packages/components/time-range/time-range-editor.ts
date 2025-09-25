@@ -9,7 +9,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { skip } from 'rxjs';
-import { distinctUntilChanged, take } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { KbqTimeRangeService } from './time-range.service';
 import {
     KbqRangeValue,
@@ -60,16 +60,16 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
     private readonly timeRangeService = inject(KbqTimeRangeService);
 
     /** The maximum selectable date. */
-    maxDate = input<T | null>(null);
+    readonly maxDate = input<T | null>(null);
     /** The minimum selectable date. */
-    minDate = input<T | null>(null);
+    readonly minDate = input<T | null>(null);
     /** Preset of selectable ranges */
-    availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
+    readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
     /** Provided value of selected range */
-    rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
+    readonly rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
 
-    showRangeAsDefault = input(true);
-    localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
+    readonly showRangeAsDefault = input.required<boolean>();
+    readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
 
     /** @docs-private */
     protected readonly isRangeVisible = computed(
@@ -92,12 +92,6 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
         toObservable(this.availableTimeRangeTypes)
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe(this.getTimeRangeTypesWithoutRange);
-
-        toObservable(this.rangeValue)
-            .pipe(take(1))
-            .subscribe((value) => {
-                this.form.patchValue(value);
-            });
 
         const defaultRangeValue = this.rangeValue();
 
@@ -147,7 +141,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
             this.form.value
         );
 
-        this.form.controls.type.setValue(corrected.type, { onlySelf: true });
+        this.form.controls.type.setValue(corrected.type);
 
         if (corrected.type === 'range' && corrected.startDateTime && corrected.endDateTime) {
             const from: T = this.timeRangeService.fromISO(corrected.startDateTime);

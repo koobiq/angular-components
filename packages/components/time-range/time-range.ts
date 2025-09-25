@@ -76,6 +76,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
                 [minDate]="minDate()"
                 [formControl]="rangeEditorControl"
                 [localeConfiguration]="localeConfig"
+                [showRangeAsDefault]="showRangeAsDefault()"
                 [rangeValue]="normalizedDefaultRangeValue()"
             />
         </ng-template>
@@ -128,6 +129,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
 
     /** Whether to show popover with arrow */
     readonly arrow = input(false, { transform: booleanAttribute });
+    readonly showRangeAsDefault = input(true);
 
     /**
      * Used to calculate time range.

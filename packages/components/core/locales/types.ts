@@ -58,4 +58,5 @@ export type KbqTimeRangeLocaleConfig = {
         currentQuarter: string;
         currentYear: string;
     };
+    durationTemplate: any;
 };
