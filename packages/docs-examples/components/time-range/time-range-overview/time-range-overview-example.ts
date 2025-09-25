@@ -33,9 +33,9 @@ import { KbqTimeRange, KbqTimeRangeRange } from '@koobiq/components/time-range';
         <kbq-time-range [formControl]="control" />
     `,
     host: {
-        class: 'layout-flex layout-column'
+        class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
 export class TimeRangeOverviewExample {
-    control = new FormControl<KbqTimeRangeRange | undefined>(undefined);
+    control = new FormControl<KbqTimeRangeRange | null>(null);
 }

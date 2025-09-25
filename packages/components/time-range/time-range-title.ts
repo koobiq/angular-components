@@ -39,9 +39,11 @@ export class KbqTimeRangeTitle {
     private readonly timeRangeService = inject(KbqTimeRangeService);
 
     constructor() {
-        merge(toObservable(this.context), toObservable(this.localeConfiguration).pipe(skip(1)))
-            .pipe(takeUntilDestroyed())
-            .subscribe(this.updateFormattedDate);
+        if (!this.titleTemplate()) {
+            merge(toObservable(this.context), toObservable(this.localeConfiguration).pipe(skip(1)))
+                .pipe(takeUntilDestroyed())
+                .subscribe(this.updateFormattedDate);
+        }
     }
 
     protected context = computed<KbqTimeRangeTitleContext | undefined>(() => {

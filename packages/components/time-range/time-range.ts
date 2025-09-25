@@ -62,6 +62,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
             [kbqPopoverFooter]="timeRangePopoverFooter"
             [kbqPopoverPlacement]="popupPlacement"
             [kbqPopoverArrow]="arrow()"
+            (kbqPopoverVisibleChange)="onVisibleChange($event)"
         >
             <kbq-time-range-title
                 [titleTemplate]="titleTemplate()"
@@ -78,6 +79,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
                 [localeConfiguration]="localeConfig"
                 [showRangeAsDefault]="showRangeAsDefault()"
                 [rangeValue]="normalizedDefaultRangeValue()"
+                [availableTimeRangeTypes]="availableTimeRangeTypes()"
             />
         </ng-template>
 
@@ -196,6 +198,12 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     /** @docs-private */
     onCancel(popover: KbqPopoverTrigger): void {
         popover.hide();
+    }
+
+    onVisibleChange(isVisible: boolean) {
+        if (!isVisible) {
+            this.rangeEditorControl.setValue(this.titleValue());
+        }
     }
 
     /** Implemented as part of ControlValueAccessor
