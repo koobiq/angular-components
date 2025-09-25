@@ -100,5 +100,9 @@ export const faIRLocaleData = {
             pinButton: 'ترک گسترش یافته',
             collapseButton: 'جمع کردن'
         }
+    },
+    searchExpandable: {
+        tooltip: 'جستجو',
+        placeholder: 'جستجو'
     }
 };

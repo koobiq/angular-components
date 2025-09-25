@@ -248,6 +248,7 @@
         "dev:radio": "ng serve dev-radio --port 3003",
         "dev:risk-level": "ng serve dev-risk-level --port 3003",
         "dev:scrollbar": "ng serve dev-scrollbar --port 3003",
+        "dev:search-expandable": "ng serve dev-search-expandable --port 3003",
         "dev:select": "ng serve dev-select --port 3003",
         "dev:sidebar": "ng serve dev-sidebar --port 3003",
         "dev:sidepanel": "ng serve dev-sidepanel --port 3003",

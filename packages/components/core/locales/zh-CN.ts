@@ -100,5 +100,9 @@ export const zhCNLocaleData = {
             pinButton: '保持展开',
             collapseButton: '折叠'
         }
+    },
+    searchExpandable: {
+        tooltip: '搜索',
+        placeholder: '搜索'
     }
 };

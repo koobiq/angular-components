@@ -3392,6 +3392,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "scrollbar-with-options-example.ts",
     "importPath": "components/scrollbar"
   },
+  "search-expandable-in-header": {
+    "packagePath": "components/search-expandable/search-expandable-in-header",
+    "title": "search-expandable-in-header",
+    "componentName": "SearchExpandableInHeaderExample",
+    "files": [
+      "search-expandable-in-header-example.ts"
+    ],
+    "selector": "search-expandable-in-header-example",
+    "additionalComponents": [],
+    "primaryFile": "search-expandable-in-header-example.ts",
+    "importPath": "components/search-expandable"
+  },
+  "search-expandable-overview": {
+    "packagePath": "components/search-expandable/search-expandable-overview",
+    "title": "search-expandable",
+    "componentName": "SearchExpandableOverviewExample",
+    "files": [
+      "search-expandable-overview-example.ts"
+    ],
+    "selector": "search-expandable-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "search-expandable-overview-example.ts",
+    "importPath": "components/search-expandable"
+  },
   "select-cleaner": {
     "packagePath": "components/select/select-cleaner",
     "title": "Select cleaner",
@@ -5757,6 +5781,10 @@ return import('@koobiq/docs-examples/components/scrollbar');
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-with-options':
 return import('@koobiq/docs-examples/components/scrollbar');
+  case 'search-expandable-in-header':
+return import('@koobiq/docs-examples/components/search-expandable');
+  case 'search-expandable-overview':
+return import('@koobiq/docs-examples/components/search-expandable');
   case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');
   case 'select-custom-matcher':

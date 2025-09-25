@@ -54,6 +54,7 @@ export enum DocsStructureItemId {
     Radio = 'radio',
     Scrollbar = 'scrollbar',
     Select = 'select',
+    SearchExpandable = 'search-expandable',
     Sidebar = 'sidebar',
     Sidepanel = 'sidepanel',
     Splitter = 'splitter',
@@ -718,6 +719,18 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'select',
                     hasExamples: true
+                },
+                {
+                    id: DocsStructureItemId.SearchExpandable,
+                    name: {
+                        ru: 'Search expandable',
+                        en: 'Search expandable'
+                    },
+                    svgPreview: 'SearchExpandable',
+                    hasApi: true,
+                    apiId: 'search-expandable',
+                    hasExamples: false,
+                    isNew: expiresAt('2025-10-10')
                 },
                 {
                     id: DocsStructureItemId.Sidebar,

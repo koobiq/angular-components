@@ -101,5 +101,9 @@ export const ruRULocaleData = {
             pinButton: 'Оставить развернутым',
             collapseButton: 'Свернуть'
         }
+    },
+    searchExpandable: {
+        tooltip: 'Поиск',
+        placeholder: 'Поиск'
     }
 };

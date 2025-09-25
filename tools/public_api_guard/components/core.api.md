@@ -376,6 +376,10 @@ export const enUSLocaleData: {
             collapseButton: string;
         };
     };
+    searchExpandable: {
+        tooltip: string;
+        placeholder: string;
+    };
 };
 
 // @public
@@ -533,6 +537,10 @@ export const esLALocaleData: {
             collapseButton: string;
         };
     };
+    searchExpandable: {
+        tooltip: string;
+        placeholder: string;
+    };
 };
 
 // @public (undocumented)
@@ -679,6 +687,10 @@ export const faIRLocaleData: {
             pinButton: string;
             collapseButton: string;
         };
+    };
+    searchExpandable: {
+        tooltip: string;
+        placeholder: string;
     };
 };
 
@@ -910,6 +922,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 collapseButton: string;
             };
         };
+        searchExpandable: {
+            tooltip: string;
+            placeholder: string;
+        };
     };
     'zh-CN': {
         formatters: {
@@ -1042,6 +1058,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 pinButton: string;
                 collapseButton: string;
             };
+        };
+        searchExpandable: {
+            tooltip: string;
+            placeholder: string;
         };
     };
     'es-LA': {
@@ -1181,6 +1201,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 collapseButton: string;
             };
         };
+        searchExpandable: {
+            tooltip: string;
+            placeholder: string;
+        };
     };
     'pt-BR': {
         formatters: {
@@ -1314,6 +1338,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 pinButton: string;
                 collapseButton: string;
             };
+        };
+        searchExpandable: {
+            tooltip: string;
+            placeholder: string;
         };
     };
     'ru-RU': {
@@ -1455,6 +1483,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 collapseButton: string;
             };
         };
+        searchExpandable: {
+            tooltip: string;
+            placeholder: string;
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1590,6 +1622,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 collapseButton: string;
             };
         };
+        searchExpandable: {
+            tooltip: string;
+            placeholder: string;
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1724,6 +1760,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 pinButton: string;
                 collapseButton: string;
             };
+        };
+        searchExpandable: {
+            tooltip: string;
+            placeholder: string;
         };
     };
 };
@@ -3154,6 +3194,10 @@ export const ptBRLocaleData: {
             collapseButton: string;
         };
     };
+    searchExpandable: {
+        tooltip: string;
+        placeholder: string;
+    };
 };
 
 // @public (undocumented)
@@ -3474,6 +3518,10 @@ export const ruRULocaleData: {
             collapseButton: string;
         };
     };
+    searchExpandable: {
+        tooltip: string;
+        placeholder: string;
+    };
 };
 
 // @public
@@ -3705,6 +3753,10 @@ export const tkTMLocaleData: {
             collapseButton: string;
         };
     };
+    searchExpandable: {
+        tooltip: string;
+        placeholder: string;
+    };
 };
 
 // @public @deprecated
@@ -3864,6 +3916,10 @@ export const zhCNLocaleData: {
             pinButton: string;
             collapseButton: string;
         };
+    };
+    searchExpandable: {
+        tooltip: string;
+        placeholder: string;
     };
 };
 

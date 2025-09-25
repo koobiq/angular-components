@@ -101,5 +101,9 @@ export const enUSLocaleData = {
             pinButton: 'Leave expanded',
             collapseButton: 'Collapse'
         }
+    },
+    searchExpandable: {
+        tooltip: 'Search',
+        placeholder: 'Search'
     }
 };
