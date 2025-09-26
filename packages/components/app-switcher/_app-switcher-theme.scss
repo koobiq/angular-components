@@ -1,0 +1,32 @@
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-app-switcher-theme() {
+    .kbq-app-switcher {
+        background: var(--kbq-background-card);
+
+        .kbq-app-switcher-group-header {
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    }
+
+    .kbq-app-switcher-sites {
+    }
+}
+
+@mixin kbq-app-switcher-typography() {
+    .kbq-app-switcher {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    }
+
+    .kbq-app-switcher-group-header__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+    }
+
+    .kbq-app-switcher-group-header__badge {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
+    }
+
+    .kbq-app-switch-tree-option__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+    }
+}
