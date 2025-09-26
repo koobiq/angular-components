@@ -73,3 +73,9 @@
         );
     }
 }
+
+// We should apply `cursor: grabbing` to the body, not to the dragged element itself.
+// Reason: https://github.com/angular/components/blob/18.2.14/src/cdk/drag-drop/resets.scss#L14-L15
+body:has(.kbq-tag-list.cdk-drop-list-dragging) {
+    cursor: grabbing;
+}

@@ -42,3 +42,7 @@ Tags can be removed in several ways:
 - Programmatic removal through the component [API](/en/components/tag/api).
 
 The removal option is configured using the `removable` attribute (enabled by default).
+
+### Drag and drop
+
+To enable tag reordering, you need to set the `draggable` property for `kbq-tag-list`.

@@ -5,11 +5,13 @@ import { TagDisabledExample } from './tag-disabled/tag-disabled-example';
 import { TagEditableWithValidationExample } from './tag-editable-with-validation/tag-editable-with-validation-example';
 import { TagEditableExample } from './tag-editable/tag-editable-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
+import { TagInputDraggableExample } from './tag-input-draggable/tag-input-draggable-example';
 import { TagInputEditableExample } from './tag-input-editable/tag-input-editable-example';
 import { TagInputRemovableExample } from './tag-input-removable/tag-input-removable-example';
 import { TagInputSelectableExample } from './tag-input-selectable/tag-input-selectable-example';
 import { TagInputWithFormControlValidatorsExample } from './tag-input-with-form-control-validators/tag-input-with-form-control-validators-example';
 import { TagInputExample } from './tag-input/tag-input-example';
+import { TagListDraggableExample } from './tag-list-draggable/tag-list-draggable-example';
 import { TagListEditableExample } from './tag-list-editable/tag-list-editable-example';
 import { TagListRemovableExample } from './tag-list-removable/tag-list-removable-example';
 import { TagListSelectableExample } from './tag-list-selectable/tag-list-selectable-example';
@@ -29,11 +31,13 @@ export {
     TagEditableExample,
     TagEditableWithValidationExample,
     TagFillAndStyleExample,
+    TagInputDraggableExample,
     TagInputEditableExample,
     TagInputExample,
     TagInputRemovableExample,
     TagInputSelectableExample,
     TagInputWithFormControlValidatorsExample,
+    TagListDraggableExample,
     TagListEditableExample,
     TagListExample,
     TagListRemovableExample,
@@ -69,7 +73,9 @@ const EXAMPLES = [
     TagInputEditableExample,
     TagEditableWithValidationExample,
     TagInputRemovableExample,
-    TagInputSelectableExample
+    TagInputSelectableExample,
+    TagListDraggableExample,
+    TagInputDraggableExample
 ];
 
 @NgModule({
