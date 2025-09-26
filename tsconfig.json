@@ -78,6 +78,7 @@
             "@koobiq/components/tags": ["packages/components/tags/index.ts"],
             "@koobiq/components/textarea": ["packages/components/textarea/index.ts"],
             "@koobiq/components/timepicker": ["packages/components/timepicker/index.ts"],
+            "@koobiq/components/time-range": ["packages/components/time-range/index.ts"],
             "@koobiq/components/timezone": ["packages/components/timezone/index.ts"],
             "@koobiq/components/title": ["packages/components/title/index.ts"],
             "@koobiq/components/ellipsis-center": ["packages/components/ellipsis-center/index.ts"],

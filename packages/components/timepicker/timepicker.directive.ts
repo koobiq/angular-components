@@ -117,7 +117,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
      */
     readonly stateChanges: Subject<void> = new Subject<void>();
 
-    readonly errorState: boolean;
+    errorState: boolean;
 
     /**
      * Implemented as part of KbqFormFieldControl.

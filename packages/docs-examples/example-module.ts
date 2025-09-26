@@ -4295,6 +4295,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "text-area-overview-example.ts",
     "importPath": "components/textarea"
   },
+  "time-range-custom-trigger": {
+    "packagePath": "components/time-range/time-range-custom-trigger",
+    "title": "Time range custom trigger",
+    "componentName": "TimeRangeCustomTriggerExample",
+    "files": [
+      "time-range-custom-trigger-example.ts"
+    ],
+    "selector": "time-range-custom-trigger-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-custom-trigger-example.ts",
+    "importPath": "components/time-range"
+  },
+  "time-range-empty-type-list": {
+    "packagePath": "components/time-range/time-range-empty-type-list",
+    "title": "Time range empty type list",
+    "componentName": "TimeRangeEmptyTypeListExample",
+    "files": [
+      "time-range-empty-type-list-example.ts"
+    ],
+    "selector": "time-range-empty-type-list-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-empty-type-list-example.ts",
+    "importPath": "components/time-range"
+  },
+  "time-range-min-max": {
+    "packagePath": "components/time-range/time-range-min-max",
+    "title": "Time range min max",
+    "componentName": "TimeRangeMinMaxExample",
+    "files": [
+      "time-range-min-max-example.ts"
+    ],
+    "selector": "time-range-min-max-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-min-max-example.ts",
+    "importPath": "components/time-range"
+  },
+  "time-range-overview": {
+    "packagePath": "components/time-range/time-range-overview",
+    "title": "Time range overview",
+    "componentName": "TimeRangeOverviewExample",
+    "files": [
+      "time-range-overview-example.ts"
+    ],
+    "selector": "time-range-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-overview-example.ts",
+    "importPath": "components/time-range"
+  },
   "timepicker-validation-symbols": {
     "packagePath": "components/timepicker/timepicker-validation-symbols",
     "title": "Timepicker validation symbols",
@@ -5929,6 +5977,16 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'text-area-overview':
 return import('@koobiq/docs-examples/components/textarea');
+  case 'time-range-as-form-field':
+return import('@koobiq/docs-examples/components/time-range');
+  case 'time-range-custom-trigger':
+return import('@koobiq/docs-examples/components/time-range');
+  case 'time-range-empty-type-list':
+return import('@koobiq/docs-examples/components/time-range');
+  case 'time-range-min-max':
+return import('@koobiq/docs-examples/components/time-range');
+  case 'time-range-overview':
+return import('@koobiq/docs-examples/components/time-range');
   case 'timepicker-validation-symbols':
 return import('@koobiq/docs-examples/components/timepicker');
   case 'timepicker-variations':

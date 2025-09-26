@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqTimeRange Component initialization should apply default configuration 1`] = `"за последний час"`;
+
+exports[`KbqTimeRange Component initialization should check range as default if nothing provided 1`] = `
+{
+  "current": "range",
+  "initial": "lastMinute",
+}
+`;
+
+exports[`KbqTimeRange Component initialization should check selected radio if external value provided 1`] = `
+{
+  "checkedRadio": " за текущий год ",
+  "trigger": "за текущий год",
+}
+`;
