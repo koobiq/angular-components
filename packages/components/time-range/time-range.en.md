@@ -1,5 +1,21 @@
-🚧 **Documentation in progress** 🚧
+Time range selection menu. The user can choose one of the preset values or specify the range manually.
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(time-range-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### Trigger element
+
+The menu can drop down from different trigger elements, and the window can have a pointer.
+
+<!-- example(time-range-custom-trigger) -->
+
+### Custom presets
+
+When there are no preset values, only the From and To fields remain in the dialog:
+
+<!-- example(time-range-empty-list) -->
+
+### Selection restriction
+
+It is possible to configure the minimum and maximum date:
+
+<!-- example(time-range-min-max) -->
