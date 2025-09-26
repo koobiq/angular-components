@@ -12,7 +12,7 @@ The menu can drop down from different trigger elements, and the window can have 
 
 When there are no preset values, only the From and To fields remain in the dialog:
 
-<!-- example(time-range-empty-list) -->
+<!-- example(time-range-empty-type-list) -->
 
 ### Selection restriction
 

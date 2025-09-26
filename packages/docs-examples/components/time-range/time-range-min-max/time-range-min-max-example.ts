@@ -20,13 +20,13 @@ import { DateTime } from 'luxon';
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     template: `
-        <div class="layout-margin-bottom-xs" style="color: var(--kbq-foreground-contrast-secondary)">
-            From 2017 to 2025
+        <div>
+            <div style="color: var(--kbq-foreground-contrast-secondary)">From 2017 to 2025</div>
+            <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" />
         </div>
-        <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" />
     `,
     host: {
-        class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
+        class: 'layout-flex layout-column layout-align-center-center layout-gap-xs'
     }
 })
 export class TimeRangeMinMaxExample {
