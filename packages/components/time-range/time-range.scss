@@ -1,42 +1,42 @@
-.kbq-time-range-editor__container {
-    width: 100%;
-}
-
-.kbq-time-range-editor__predefined {
-    column-count: 2;
-
-    .kbq-time-range-editor__predefined-option {
-        display: block;
-        margin-bottom: var(--kbq-size-s);
-    }
-}
-
 .kbq-time-range-editor {
     display: block;
-}
 
-.kbq-time-range-editor__range {
-    display: flex;
-    flex-direction: column;
-    gap: var(--kbq-size-s);
+    .kbq-time-range-editor__container {
+        width: 100%;
+    }
 
     .kbq-time-range-editor__predefined {
         column-count: 2;
 
         .kbq-time-range-editor__predefined-option {
             display: block;
+            margin-bottom: var(--kbq-size-s);
         }
     }
 
-    .kbq-time-range-editor__date-time {
+    .kbq-time-range-editor__range {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
         gap: var(--kbq-size-s);
 
-        .kbq-time-range-editor__date-time-prefix {
-            align-self: center;
-            width: 57px;
+        .kbq-time-range-editor__predefined {
+            column-count: 2;
+
+            .kbq-time-range-editor__predefined-option {
+                display: block;
+            }
+        }
+
+        .kbq-time-range-editor__date-time {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: var(--kbq-size-s);
+
+            .kbq-time-range-editor__date-time-prefix {
+                align-self: center;
+                width: 57px;
+            }
         }
     }
 }

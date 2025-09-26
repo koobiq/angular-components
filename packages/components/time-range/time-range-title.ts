@@ -47,11 +47,13 @@ export class KbqTimeRangeTitle {
 
     protected readonly titleContext = computed<KbqTimeRangeCustomizableTitleContext | undefined>(() => {
         const context = this.context();
+        const formattedDate = this.formattedDate();
 
         if (!context) return undefined;
 
         return {
-            $implicit: context,
+            $implicit: { ...context, formattedDate },
+            formattedDate,
             ...context
         };
     });

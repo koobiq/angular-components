@@ -1,10 +1,13 @@
+import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormattersModule } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
+import { KbqCleaner, KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRange, KbqTimeRangeRange } from '@koobiq/components/time-range';
+import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
 
 /**
  * @title Time range overview
@@ -16,11 +19,16 @@ import { KbqTimeRange, KbqTimeRangeRange } from '@koobiq/components/time-range';
     imports: [
         ReactiveFormsModule,
         KbqTimeRange,
-        KbqLuxonDateModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqFormattersModule
+        KbqCleaner,
+        KbqFormField,
+        KbqSelectModule,
+        LuxonDateModule,
+        JsonPipe
     ],
+    providers: [
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     template: `
         <ng-template #titleTemplate>
             <button kbq-button aria-label="time range trigger">
@@ -28,14 +36,49 @@ import { KbqTimeRange, KbqTimeRangeRange } from '@koobiq/components/time-range';
             </button>
         </ng-template>
 
-        <kbq-time-range [titleTemplate]="titleTemplate" />
+        <kbq-time-range [formControl]="control" [availableTimeRangeTypes]="selected.value" />
 
-        <kbq-time-range [formControl]="control" />
+        <div style="width: 300px;">
+            <kbq-form-field>
+                <kbq-select multiple placeholder="Placeholder" [formControl]="selected">
+                    @for (option of availableTimeRangeTypes; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+
+                    <kbq-cleaner #kbqSelectCleaner />
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+
+        {{ control.value | json }}
     `,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
 export class TimeRangeOverviewExample {
-    control = new FormControl<KbqTimeRangeRange | null>(null);
+    control = new FormControl<KbqTimeRangeRange | null>({
+        type: 'last5Minutes',
+        startDateTime: '2025-09-26T13:11:00.000+03:00'
+    });
+    availableTimeRangeTypes: KbqTimeRangeType[] = [
+        'lastMinute',
+        'last5Minutes',
+        'last15Minutes',
+        'last30Minutes',
+        'lastHour',
+        'last24Hours',
+        'last3Days',
+        'last7Days',
+        'last14Days',
+        'last30Days',
+        'last3Months',
+        'last12Months',
+        'allTime',
+        'currentQuarter',
+        'currentYear',
+        'range'
+    ];
+
+    readonly selected = new FormControl<KbqTimeRangeType[]>(this.availableTimeRangeTypes, { nonNullable: true });
 }

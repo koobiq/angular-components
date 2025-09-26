@@ -51,7 +51,7 @@ export interface KbqTimeRangeUnits {
 export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
 export type KbqTimeRangeCustomizableTitleContext = KbqTimeRangeTitleContext & {
     $implicit: KbqTimeRangeTitleContext;
-};
+} & { formattedDate: string };
 
 export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
 export type KbqTimeRangeOptionContext = KbqTimeRangeTypeContext &

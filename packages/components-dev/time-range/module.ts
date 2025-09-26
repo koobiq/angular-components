@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import { TimeRangeExamplesModule } from '../../docs-examples/components/time-range';
 import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
@@ -40,7 +41,8 @@ export class DevExamples {}
     imports: [
         DevLocaleSelector,
         DevThemeToggle,
-        DevExamples
+        DevExamples,
+        KbqLocaleServiceModule
     ],
     selector: 'dev-app',
     styleUrls: ['styles.scss'],
