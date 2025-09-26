@@ -1,10 +1,8 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input, signal, TemplateRef } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, input, TemplateRef } from '@angular/core';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { merge, skip } from 'rxjs';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
 
@@ -30,23 +28,13 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
     `
 })
 export class KbqTimeRangeTitle {
+    private readonly timeRangeService = inject(KbqTimeRangeService);
+
     readonly timeRange = input<KbqTimeRangeRange>();
     readonly titleTemplate = input<TemplateRef<any>>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
 
-    protected readonly formattedDate = signal<string | undefined>(undefined);
-
-    private readonly timeRangeService = inject(KbqTimeRangeService);
-
-    constructor() {
-        if (!this.titleTemplate()) {
-            merge(toObservable(this.context), toObservable(this.localeConfiguration).pipe(skip(1)))
-                .pipe(takeUntilDestroyed())
-                .subscribe(this.updateFormattedDate);
-        }
-    }
-
-    protected context = computed<KbqTimeRangeTitleContext | undefined>(() => {
+    protected readonly context = computed<KbqTimeRangeTitleContext | undefined>(() => {
         const timeRange = this.timeRange();
 
         if (!timeRange) return undefined;
@@ -57,7 +45,7 @@ export class KbqTimeRangeTitle {
         };
     });
 
-    protected titleContext = computed<KbqTimeRangeCustomizableTitleContext | undefined>(() => {
+    protected readonly titleContext = computed<KbqTimeRangeCustomizableTitleContext | undefined>(() => {
         const context = this.context();
 
         if (!context) return undefined;
@@ -68,64 +56,55 @@ export class KbqTimeRangeTitle {
         };
     });
 
-    private updateFormattedDate = () => {
+    protected readonly formattedDate = computed(() => {
         const context = this.context();
 
         if (!context) {
-            this.formattedDate.set('');
-
-            return;
+            return '';
         }
 
         const timeRangeUnit = this.timeRangeService.getTimeRangeUnitByType(context.type);
-        const localeConfig = this.localeConfiguration();
+        const localeConfiguration = this.localeConfiguration();
 
         if (timeRangeUnit === 'other') {
             switch (context.type) {
                 case 'range': {
-                    this.formattedDate.set(
-                        localeConfig.title.for +
-                            ' ' +
-                            this.timeRangeService.dateFormatter.rangeLongDate(
-                                this.timeRangeService.dateAdapter.deserialize(context.startDateTime ?? ''),
-                                this.timeRangeService.dateAdapter.deserialize(context.endDateTime ?? '')
-                            )
+                    return (
+                        localeConfiguration.title.for +
+                        ' ' +
+                        this.timeRangeService.dateFormatter.rangeLongDate(
+                            this.timeRangeService.dateAdapter.deserialize(context.startDateTime ?? ''),
+                            this.timeRangeService.dateAdapter.deserialize(context.endDateTime ?? '')
+                        )
                     );
-                    break;
                 }
                 case 'allTime': {
-                    this.formattedDate.set(localeConfig.editor.allTime);
-                    break;
+                    return localeConfiguration.editor.allTime;
                 }
                 case 'currentQuarter': {
-                    this.formattedDate.set(localeConfig.editor.currentQuarter);
-                    break;
+                    return localeConfiguration.editor.currentQuarter;
                 }
                 case 'currentYear': {
-                    this.formattedDate.set(localeConfig.editor.currentYear);
-                    break;
+                    return localeConfiguration.editor.currentYear;
+                }
+                default: {
+                    return '';
                 }
             }
-
-            return;
         }
 
-        if (!context.startDateTime) {
-            this.formattedDate.set('');
+        if (!context.startDateTime) return '';
 
-            return;
-        }
-
-        this.formattedDate.set(
-            localeConfig.title.for +
-                ' ' +
-                this.timeRangeService.dateFormatter.duration(
-                    this.timeRangeService.dateAdapter.deserialize(context.startDateTime),
-                    this.timeRangeService.dateAdapter.today(),
-                    [timeRangeUnit],
-                    false,
-                    localeConfig.durationTemplate
-                )
+        return (
+            localeConfiguration.title.for +
+            ' ' +
+            this.timeRangeService.dateFormatter.duration(
+                this.timeRangeService.dateAdapter.deserialize(context.startDateTime),
+                this.timeRangeService.dateAdapter.today(),
+                [timeRangeUnit],
+                false,
+                localeConfiguration.durationTemplate
+            )
         );
-    };
+    });
 }

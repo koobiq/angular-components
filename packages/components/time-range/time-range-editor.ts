@@ -163,9 +163,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
         this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((formValue) => {
             const range = this.mapTimeRange(formValue);
 
-            if (range) {
-                this.onChange(range);
-            }
+            if (range) this.onChange(range);
         });
 
         this.form.statusChanges.pipe(takeUntilDestroyed()).subscribe((status) => {
@@ -220,9 +218,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
     }
 
     private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {
-        if (!type) {
-            return undefined;
-        }
+        if (!type) return undefined;
 
         return {
             type,

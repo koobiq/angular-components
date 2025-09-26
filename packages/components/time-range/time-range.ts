@@ -174,7 +174,10 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
             .pipe(takeUntilDestroyed())
             .subscribe((types) => {
                 this.titleValue.set(
-                    this.timeRangeService.getTimeRangeDefaultValue(this.normalizedDefaultRangeValue(), types)
+                    this.timeRangeService.getTimeRangeDefaultValue(
+                        this.normalizedDefaultRangeValue(),
+                        types.length ? types : ['range']
+                    )
                 );
                 this.onChange(this.titleValue());
             });

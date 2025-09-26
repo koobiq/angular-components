@@ -16,7 +16,9 @@
             @let localeConfig = localeConfiguration();
 
             <div class="kbq-time-range-editor__range" role="group">
-                <kbq-radio-button [value]="'range'">{{ localeConfig.editor.rangeLabel }}</kbq-radio-button>
+                @if (types.length) {
+                    <kbq-radio-button [value]="'range'">{{ localeConfig.editor.rangeLabel }}</kbq-radio-button>
+                }
 
                 <div class="kbq-time-range-editor__date-time">
                     <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.editor.from">
