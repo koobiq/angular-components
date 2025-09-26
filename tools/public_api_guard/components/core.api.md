@@ -1935,7 +1935,7 @@ export class KbqColorDirective {
     protected _color: KbqComponentColors | ThemePalette | string;
     // (undocumented)
     get colorClassName(): KbqComponentColors | ThemePalette | string;
-    readonly elementRef: ElementRef<any>;
+    readonly elementRef: ElementRef<HTMLElement>;
     setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
@@ -2168,10 +2168,7 @@ export class KbqHovered {
 }
 
 // @public
-export const kbqInjectElementRef: <T = HTMLElement>() => ElementRef<T>;
-
-// @public
-export const kbqInjectNativeElement: <T = HTMLElement>() => T;
+export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
 
 // @public
 export class KbqLine {
@@ -2260,7 +2257,7 @@ export class KbqMeasureScrollbarService {
 
 // @public (undocumented)
 export class KbqNormalizeWhitespace {
-    protected elementRef: ElementRef<HTMLElement>;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     onCopy($event: ClipboardEvent): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNormalizeWhitespace, "[kbqNormalizeWhitespace]", never, {}, {}, never, never, true, never>;
@@ -2304,7 +2301,7 @@ export class KbqOptgroup {
 
 // @public
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
-    constructor(element: ElementRef, changeDetectorRef: ChangeDetectorRef, parent: KbqOptionParentComponent, group: KbqOptgroup);
+    constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: KbqOptionParentComponent, group: KbqOptgroup);
     get active(): boolean;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
@@ -2363,7 +2360,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
 // @public (undocumented)
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, option: KbqOptionActionParent);
+    constructor(elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor, option: KbqOptionActionParent);
     // (undocumented)
     get active(): boolean;
     // (undocumented)
@@ -2495,7 +2492,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     detectChanges(): void;
     // (undocumented)
-    protected readonly elementRef: ElementRef<any>;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     handleBodyInteraction(): void;
     // (undocumented)
@@ -2569,7 +2566,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected _disabled: boolean;
     // (undocumented)
-    protected readonly elementRef: ElementRef;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     enterDelay: number;
     // (undocumented)
@@ -2708,7 +2705,7 @@ export class KbqRectangleItem {
     // (undocumented)
     protected readonly isBrowser: boolean;
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     readonly state: Subject<void>;
     // (undocumented)

@@ -84,11 +84,11 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         return this.tabNavPanel ? 'tablist' : this.elementRef.nativeElement.getAttribute('role');
     }
 
-    protected get activeTabOffsetWidth(): string | null {
+    protected get activeTabOffsetWidth(): number | undefined {
         return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth;
     }
 
-    protected get activeTabOffsetLeft(): string | null {
+    protected get activeTabOffsetLeft(): number | undefined {
         return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
     }
 
@@ -231,7 +231,7 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
         return this.active && !this.tabNavBar.tabNavPanel ? 'page' : null;
     }
 
-    readonly elementRef = inject(ElementRef);
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly renderer = inject(Renderer2);
     private readonly tabNavBar = inject(KbqTabNavBar);

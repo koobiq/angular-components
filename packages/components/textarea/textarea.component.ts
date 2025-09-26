@@ -195,7 +195,7 @@ export class KbqTextarea
     private rowsCount: number;
 
     constructor(
-        protected elementRef: ElementRef,
+        protected elementRef: ElementRef<HTMLTextAreaElement>,
         @Optional() @Self() public ngControl: NgControl,
         @Optional() public parentForm: NgForm,
         @Optional() public parentFormGroup: FormGroupDirective,
@@ -292,14 +292,14 @@ export class KbqTextarea
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;
 
-            const clone = textarea.cloneNode(false);
+            const clone = textarea.cloneNode(false) as HTMLTextAreaElement;
 
             this.renderer.appendChild(this.renderer.parentNode(textarea), clone);
 
             const outerHeight = parseInt(this.window.getComputedStyle(textarea).height!, 10);
             const diff = outerHeight - +textarea.clientHeight;
 
-            clone.style.minHeight = 0; // this line is important to height recalculation
+            clone.style.minHeight = '0'; // this line is important to height recalculation
 
             const height = Math.max(this.minHeight, +clone.scrollHeight + diff + this.freeRowsHeight);
 

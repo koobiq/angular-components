@@ -7,7 +7,7 @@ import { DocsDocStates } from '../../services/doc-states';
 })
 export class DocsRegisterHeaderDirective {
     private readonly docStates = inject(DocsDocStates);
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     constructor() {
         this.docStates.registerHeader(this.elementRef.nativeElement);

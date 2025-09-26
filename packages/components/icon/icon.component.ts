@@ -24,7 +24,7 @@ import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
     }
 })
 export class KbqIcon extends KbqColorDirective implements AfterContentInit {
-    readonly elementRef = inject(ElementRef);
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     protected readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);

@@ -50,7 +50,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
     exportAs: 'exampleResetTouchedOnFirstInput'
 })
 class ExampleResetTouchedOnFirstInput {
-    protected readonly elementRef = inject(ElementRef);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly control = inject(NgControl, { optional: true, host: true });
     protected validators: ValidatorFn | null = null;
 

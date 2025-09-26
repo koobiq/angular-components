@@ -65,7 +65,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     constructor(
         protected readonly changeDetectorRef: ChangeDetectorRef,
-        protected readonly elementRef: ElementRef,
+        protected readonly elementRef: ElementRef<HTMLElement>,
         protected readonly focusMonitor: FocusMonitor
     ) {}
 
@@ -222,7 +222,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private resizeSubscription: Subscription;
 
     constructor(
-        protected readonly elementRef: ElementRef,
+        protected readonly elementRef: ElementRef<HTMLElement>,
         protected readonly changeDetectorRef: ChangeDetectorRef,
         protected readonly focusMonitor: FocusMonitor
     ) {

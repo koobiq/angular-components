@@ -123,7 +123,7 @@ export class KbqInlineEditMenu {
     encapsulation: ViewEncapsulation.None
 })
 export class KbqInlineEdit implements AfterContentInit {
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
     private readonly kbqFocusMonitor = inject(KbqFocusMonitor, { host: true });
     private readonly overlay = inject(Overlay);

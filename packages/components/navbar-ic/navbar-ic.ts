@@ -53,7 +53,7 @@ export const KBQ_NAVBAR_IC_CONFIGURATION = new InjectionToken('KbqNavbarIcConfig
 @Directive()
 export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    protected readonly elementRef = inject(ElementRef);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly destroyRef = inject(DestroyRef);
     protected readonly focusMonitor = inject(FocusMonitor);
 

@@ -256,9 +256,9 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
     // (undocumented)
-    protected get activeTabOffsetLeft(): string | null;
+    protected get activeTabOffsetLeft(): number | undefined;
     // (undocumented)
-    protected get activeTabOffsetWidth(): string | null;
+    protected get activeTabOffsetWidth(): number | undefined;
     // (undocumented)
     readonly items: QueryList<KbqTabLabelWrapper>;
     // (undocumented)
@@ -293,14 +293,14 @@ export class KbqTabLabel extends CdkPortal {
 
 // @public
 export class KbqTabLabelWrapper implements AfterViewInit {
-    constructor(elementRef: ElementRef, renderer: Renderer2);
+    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
     // (undocumented)
     checkOverflow(): void;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    elementRef: ElementRef;
+    elementRef: ElementRef<HTMLElement>;
     focus(): void;
     // (undocumented)
     getInnerText(): any;
@@ -333,7 +333,7 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
     protected get ariaSelected(): string | null;
     disabled: boolean;
     // (undocumented)
-    readonly elementRef: ElementRef<any>;
+    readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
     protected handleFocus(): void;
     protected handleKeydown(event: KeyboardEvent): void;
@@ -364,9 +364,9 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
 // @public
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
     // (undocumented)
-    protected get activeTabOffsetLeft(): string | null;
+    protected get activeTabOffsetLeft(): number | undefined;
     // (undocumented)
-    protected get activeTabOffsetWidth(): string | null;
+    protected get activeTabOffsetWidth(): number | undefined;
     // (undocumented)
     readonly items: QueryList<KbqTabLink>;
     // (undocumented)

@@ -300,7 +300,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     }
 
     constructor(
-        protected elementRef: ElementRef,
+        protected elementRef: ElementRef<HTMLElement>,
         @Inject(forwardRef(() => KbqTreeBase)) public tree: KbqTreeBase<T>
     ) {
         KbqTreeNode.mostRecentTreeNode = this;

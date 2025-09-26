@@ -35,7 +35,7 @@ describe('KbqTooltip', () => {
     });
 
     const getTooltipAndStyles = (
-        trigger: ElementRef,
+        trigger: ElementRef<HTMLElement>,
         selector = '.kbq-tooltip'
     ): [Element | null, CSSStyleDeclaration | null] => {
         dispatchMouseEvent(trigger.nativeElement, 'mouseenter');

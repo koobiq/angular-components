@@ -292,14 +292,14 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
 
 // @public (undocumented)
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
-    constructor(elementRef: ElementRef, tree: KbqTreeBase<T>);
+    constructor(elementRef: ElementRef<HTMLElement>, tree: KbqTreeBase<T>);
     // (undocumented)
     get data(): T;
     set data(value: T);
     // (undocumented)
     protected destroyed: Subject<void>;
     // (undocumented)
-    protected elementRef: ElementRef;
+    protected elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -426,7 +426,7 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
 
 // @public (undocumented)
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, tree: any);
+    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, tree: any);
     // (undocumented)
     actionButton: KbqOptionActionComponent;
     // (undocumented)
@@ -556,7 +556,7 @@ export const kbqTreeSelectAllValue = "selectAll";
 
 // @public (undocumented)
 export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
+    constructor(elementRef: ElementRef<HTMLElement>, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);

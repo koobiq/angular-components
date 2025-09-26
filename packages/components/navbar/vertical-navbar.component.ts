@@ -78,7 +78,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     private _expanded: boolean = false;
 
     constructor(
-        protected elementRef: ElementRef,
+        protected elementRef: ElementRef<HTMLElement>,
         changeDetectorRef: ChangeDetectorRef,
         focusMonitor: FocusMonitor
     ) {

@@ -1,7 +1,8 @@
 import { Platform } from '@angular/cdk/platform';
-import { Directive, ElementRef, inject } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { KBQ_WINDOW } from '../tokens';
+import { kbqInjectNativeElement } from '../utils';
 
 @Directive({
     standalone: true,
@@ -12,7 +13,7 @@ import { KBQ_WINDOW } from '../tokens';
 })
 export class KbqRectangleItem {
     protected readonly isBrowser = inject(Platform).isBrowser;
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
 
     readonly state = new Subject<void>();

@@ -95,7 +95,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly scheduler = inject(AsyncScheduler, { optional: true }) || undefined;
 
     protected readonly overlay: Overlay = inject(Overlay);
-    protected readonly elementRef: ElementRef = inject(ElementRef);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly ngZone: NgZone = inject(NgZone);
     protected readonly scrollDispatcher: ScrollDispatcher = inject(ScrollDispatcher);
     protected readonly hostView: ViewContainerRef = inject(ViewContainerRef);

@@ -579,7 +579,7 @@ export class KbqTreeSelect
     private readonly window = inject(KBQ_WINDOW);
 
     constructor(
-        public elementRef: ElementRef,
+        public elementRef: ElementRef<HTMLElement>,
         readonly changeDetectorRef: ChangeDetectorRef,
         private readonly ngZone: NgZone,
         private readonly renderer: Renderer2,

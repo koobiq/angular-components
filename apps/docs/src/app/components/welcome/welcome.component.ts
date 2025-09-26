@@ -33,7 +33,7 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     protected structureCategories: DocsStructureCategory[];
     currentTheme$: Observable<string>;
 
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly docStates = inject(DocsDocStates);
 
     constructor(private readonly themeService: ThemeService) {

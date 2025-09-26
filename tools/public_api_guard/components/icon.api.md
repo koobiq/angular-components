@@ -21,11 +21,11 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit {
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    readonly elementRef: ElementRef<any>;
+    readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     protected readonly formField: KbqFormFieldRef | null;
     // (undocumented)
-    getHostElement(): any;
+    getHostElement(): HTMLElement;
     // (undocumented)
     hasError: boolean;
     iconName: string;

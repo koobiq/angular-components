@@ -15,7 +15,7 @@ export class KbqFocusMonitor implements AfterContentInit, OnDestroy {
     /** Observable that emits focus origin when element or its children gains/loses focus. */
     focusChange: Observable<FocusOrigin> | null = null;
 
-    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
 
     ngAfterContentInit(): void {

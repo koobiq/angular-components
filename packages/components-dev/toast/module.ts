@@ -38,7 +38,7 @@ export class DevToastComponent extends KbqToastComponent {
     constructor(
         readonly data: KbqToastData,
         readonly service: KbqToastService,
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLElement>,
         focusMonitor: FocusMonitor
     ) {
         super(data, service, elementRef, focusMonitor);

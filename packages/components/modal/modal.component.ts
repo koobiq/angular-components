@@ -214,7 +214,7 @@ export class KbqModalComponent<T = any, R = any>
         private overlay: Overlay,
         private renderer: Renderer2,
         private cfr: ComponentFactoryResolver,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private viewContainer: ViewContainerRef,
         private modalControl: KbqModalControlService,
         private changeDetector: ChangeDetectorRef,

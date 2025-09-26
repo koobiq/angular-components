@@ -85,7 +85,7 @@ export class KbqColorDirective {
     /**
      * @docs-private
      */
-    readonly elementRef = inject(ElementRef);
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private defaultColor: KbqComponentColors | ThemePalette | string;
 
     get colorClassName(): KbqComponentColors | ThemePalette | string {

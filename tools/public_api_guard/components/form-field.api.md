@@ -93,7 +93,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     connectionContainerRef: ElementRef;
     control: KbqFormFieldControl<unknown>;
     get disabled(): boolean;
-    readonly elementRef: ElementRef<any>;
+    readonly elementRef: ElementRef<HTMLElement>;
     focus(options?: FocusOptions): void;
     get focusOrigin(): FocusOrigin;
     // @deprecated (undocumented)
@@ -280,7 +280,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     // (undocumented)
     kbqTooltipHidden: string | TemplateRef<any>;
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_tabindex: unknown;
     ngAfterContentInit(): void;

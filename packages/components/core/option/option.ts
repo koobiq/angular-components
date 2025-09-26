@@ -237,7 +237,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     private mostRecentViewValue = '';
 
     constructor(
-        private readonly element: ElementRef,
+        private readonly element: ElementRef<HTMLElement>,
         private readonly changeDetectorRef: ChangeDetectorRef,
         @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) private readonly parent: KbqOptionParentComponent,
         @Optional() readonly group: KbqOptgroup

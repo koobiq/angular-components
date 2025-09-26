@@ -2,7 +2,6 @@ import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
     Directive,
-    ElementRef,
     inject,
     InjectionToken,
     Input,
@@ -12,7 +11,7 @@ import {
     SecurityContext
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import hljs from 'highlight.js';
 import { KbqCodeBlockFile } from './types';
 
@@ -42,7 +41,7 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
     }
 })
 export class KbqCodeBlockHighlight {
-    private readonly nativeElement = inject(ElementRef).nativeElement;
+    private readonly nativeElement = kbqInjectNativeElement();
     private readonly document = inject<Document>(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly domSanitizer = inject(DomSanitizer);

@@ -16,7 +16,7 @@ import { Renderer2 } from '@angular/core';
 
 // @public (undocumented)
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
-    constructor(elementRef: ElementRef, renderer: Renderer2);
+    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
     // (undocumented)
     caption: string;
     // (undocumented)

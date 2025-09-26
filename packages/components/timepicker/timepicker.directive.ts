@@ -351,7 +351,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     private localeSubscription = Subscription.EMPTY;
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLInputElement>,
         private renderer: Renderer2,
         @Optional() private dateAdapter: DateAdapter<any>,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService

@@ -87,7 +87,7 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
     protected readonly cdr: ChangeDetectorRef;
     protected readonly defaultErrorStateMatcher: ErrorStateMatcher;
     protected readonly destroyRef: DestroyRef;
-    protected readonly elementRef: ElementRef<any>;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     errorState: boolean;
     abstract errorStateMatcher: ErrorStateMatcher;
     // (undocumented)

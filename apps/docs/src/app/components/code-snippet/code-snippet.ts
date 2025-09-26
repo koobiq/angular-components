@@ -14,10 +14,10 @@ import { DocsLocaleState } from 'src/app/services/locale';
 export class DocsCodeSnippetDirective extends DocsLocaleState {
     private readonly clipboard = inject(Clipboard);
     private readonly toastService = inject(KbqToastService);
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     copy() {
-        if (!this.clipboard.copy(this.elementRef.nativeElement.textContent)) {
+        if (!this.clipboard.copy(this.elementRef.nativeElement.textContent || '')) {
             return;
         }
 

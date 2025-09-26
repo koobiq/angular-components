@@ -4,12 +4,11 @@ import {
     Component,
     ContentChild,
     DestroyRef,
-    ElementRef,
-    ViewEncapsulation,
-    inject
+    inject,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
+import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqNavbarIc } from './navbar-ic';
 import { KbqNavbarIcLogo, KbqNavbarIcTitle } from './navbar-ic-item';
@@ -33,7 +32,7 @@ import { KbqNavbarIcLogo, KbqNavbarIcTitle } from './navbar-ic-item';
 })
 export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContentInit {
     protected readonly navbar = inject(KbqNavbarIc);
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly nativeElement = kbqInjectNativeElement();
     protected readonly destroyRef = inject(DestroyRef);
 
     @ContentChild(KbqNavbarIcLogo) logo: KbqNavbarIcLogo;

@@ -43,7 +43,7 @@ import { KbqToastService } from '@koobiq/components/toast';
 })
 export class ActionsPanelCloseExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly toast = inject(KbqToastService);
     private actionsPanelRef: KbqActionsPanelRef | null;

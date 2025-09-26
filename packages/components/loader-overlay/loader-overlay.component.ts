@@ -93,7 +93,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @ContentChild(KbqLoaderOverlayCaption) externalCaption: KbqLoaderOverlayCaption | null;
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2
     ) {}
 

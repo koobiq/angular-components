@@ -68,7 +68,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocsDocStates);
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     constructor() {
         super();

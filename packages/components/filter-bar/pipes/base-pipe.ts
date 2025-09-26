@@ -154,7 +154,7 @@ export class KbqPipeMinWidth {
     protected readonly filterBar = inject(KbqFilterBar, { optional: true });
 
     /** @docs-private */
-    protected readonly elementRef = inject(ElementRef);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 

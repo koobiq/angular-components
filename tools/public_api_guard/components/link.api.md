@@ -22,7 +22,7 @@ export const baseURLRegex: RegExp;
 
 // @public (undocumented)
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, changeDetector: ChangeDetectorRef);
+    constructor(elementRef: ElementRef<HTMLAnchorElement>, focusMonitor: FocusMonitor, changeDetector: ChangeDetectorRef);
     // (undocumented)
     big: boolean;
     // (undocumented)
@@ -34,7 +34,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     focus(): void;
     // (undocumented)
-    getHostElement(): any;
+    getHostElement(): HTMLAnchorElement;
     // (undocumented)
     get hasIcon(): boolean;
     // (undocumented)
@@ -42,7 +42,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     icons: QueryList<ElementRef>;
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_big: unknown;
     // (undocumented)

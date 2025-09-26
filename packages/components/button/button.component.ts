@@ -54,7 +54,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
     isIconButton: boolean = false;
 
     constructor(
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2,
         @SkipSelf() private cdr: ChangeDetectorRef
     ) {

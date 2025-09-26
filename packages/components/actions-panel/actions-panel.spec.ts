@@ -91,7 +91,7 @@ export class ActionsPanelController {
     readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
     readonly component = ActionsPanelComponent;
-    readonly elementRef = inject(ElementRef);
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     openFromTemplate<D = string>(config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef {
         return this.actionsPanel.open(this.template(), config);
