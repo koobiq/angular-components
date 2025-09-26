@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLocaleServiceModule } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { SplitButtonExamplesModule } from '../../docs-examples/components/split-button';
 
@@ -34,8 +34,8 @@ export class DevExamples {}
         KbqLocaleServiceModule,
         KbqSplitButtonModule,
         DevExamples,
-        FormsModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqIconModule
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

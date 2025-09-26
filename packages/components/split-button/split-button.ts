@@ -5,16 +5,13 @@ import {
     Component,
     ContentChild,
     ContentChildren,
-    ElementRef,
-    inject,
     Input,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqColorDirective, KbqComponentColors, ThemePalette } from '@koobiq/components/core';
+import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqColorDirective, KbqComponentColors, kbqInjectNativeElement, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
     standalone: true,
@@ -25,20 +22,17 @@ import { KbqIconModule } from '@koobiq/components/icon';
         class: 'kbq-split-button'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    imports: [
-        KbqButtonModule,
-        KbqIconModule
-    ]
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
-    protected nativeElement = inject(ElementRef).nativeElement;
+    private nativeElement = kbqInjectNativeElement();
+    @ContentChildren(KbqButton) private buttons: QueryList<KbqButton>;
+    @ContentChild(KbqDropdownTrigger) private dropdownTrigger: KbqDropdownTrigger;
 
-    @ContentChildren(KbqButton) buttons: QueryList<KbqButton>;
-    @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
-
+    /** Sets the width of the dropdown to the width of the trigger. Default is false */
     @Input() panelAutoWidth: boolean = false;
 
+    /** component style, will be set for nested buttons */
     @Input()
     get kbqStyle(): string {
         return `kbq-button_${this._kbqStyle}`;
@@ -52,6 +46,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
 
     private _kbqStyle: string | KbqButtonStyles = KbqButtonStyles.Filled;
 
+    /** component color, will be set for nested buttons */
     @Input()
     get color(): KbqComponentColors | ThemePalette | string {
         return this._color;
@@ -63,6 +58,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         this.updateColor(this.color);
     }
 
+    /** Whether the checkbox is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -71,7 +67,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     set disabled(value: boolean) {
         this._disabled = value;
 
-        this.updateColor(this.color);
+        this.updateDisabledState(this._disabled);
     }
 
     protected _disabled: boolean;
@@ -89,15 +85,15 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         this.updateDropdownParams();
     }
 
-    protected updateColor(color: KbqComponentColors | ThemePalette | string) {
+    private updateColor(color: KbqComponentColors | ThemePalette | string) {
         this.buttons?.forEach((button: KbqButton) => (button.color = color));
     }
 
-    protected updateStyle(style: KbqButtonStyles | string) {
+    private updateStyle(style: KbqButtonStyles | string) {
         this.buttons?.forEach((button: KbqButton) => (button.kbqStyle = style));
     }
 
-    protected updateDisabledState(state: boolean) {
+    private updateDisabledState(state: boolean) {
         if (state === undefined) return;
 
         this.buttons?.forEach((button: KbqButton) => (button.disabled = state));

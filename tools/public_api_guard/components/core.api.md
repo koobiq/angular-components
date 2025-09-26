@@ -1933,9 +1933,7 @@ export class KbqColorDirective {
     set color(value: KbqComponentColors | ThemePalette | string);
     // (undocumented)
     protected _color: KbqComponentColors | ThemePalette | string;
-    // (undocumented)
     get colorClassName(): KbqComponentColors | ThemePalette | string;
-    // (undocumented)
     protected defaultColor: KbqComponentColors | ThemePalette | string;
     readonly elementRef: ElementRef<any>;
     setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
