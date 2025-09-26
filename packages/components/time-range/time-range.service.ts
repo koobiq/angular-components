@@ -176,13 +176,17 @@ export class KbqTimeRangeService<T> {
             case 'last12Months':
                 return this.lastMonthsRange(12);
             case 'currentQuarter':
-                // @TODO
                 return {
-                    startDateTime: undefined,
-                    endDateTime: undefined
+                    startDateTime: this.dateAdapter.toIso8601(
+                        this.dateAdapter.startOf(this.dateAdapter.today(), 'quarter')
+                    )
                 };
             case 'currentYear':
-                return { startDateTime: this.dateAdapter.toIso8601(this.startOfYear()) };
+                return {
+                    startDateTime: this.dateAdapter.toIso8601(
+                        this.dateAdapter.startOf(this.dateAdapter.today(), 'year')
+                    )
+                };
             case 'allTime':
             default:
                 return {
@@ -205,12 +209,6 @@ export class KbqTimeRangeService<T> {
     }
 
     fromISO = (date: string) => this.dateAdapter.deserialize(date);
-
-    startOfYear(): T {
-        const date = this.dateAdapter!.today();
-
-        return this.dateAdapter!.createDate(this.dateAdapter.getYear(date), 0, 1);
-    }
 
     lastMinutesRange = (minutes: number): KbqRange => {
         const date = this.dateAdapter!.today();
