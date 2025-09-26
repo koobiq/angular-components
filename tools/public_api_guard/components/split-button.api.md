@@ -6,46 +6,27 @@
 
 import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { QueryList } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
 // @public (undocumented)
 export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
     constructor();
-    // (undocumented)
-    buttons: QueryList<KbqButton>;
-    // (undocumented)
     get color(): KbqComponentColors | ThemePalette | string;
     set color(value: KbqComponentColors | ThemePalette | string);
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     protected _disabled: boolean;
-    // (undocumented)
-    dropdownTrigger: KbqDropdownTrigger;
-    // (undocumented)
     get kbqStyle(): string;
     set kbqStyle(value: KbqButtonStyles | string);
-    // (undocumented)
-    protected nativeElement: any;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
     panelAutoWidth: boolean;
-    // (undocumented)
-    protected updateColor(color: KbqComponentColors | ThemePalette | string): void;
-    // (undocumented)
-    protected updateDisabledState(state: boolean): void;
-    // (undocumented)
-    protected updateStyle(style: KbqButtonStyles | string): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["dropdownTrigger", "buttons"], ["[kbq-button]", "[kbq-button]"], true, never>;
     // (undocumented)
