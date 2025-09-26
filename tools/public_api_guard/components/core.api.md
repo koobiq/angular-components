@@ -2168,7 +2168,7 @@ export class KbqHovered {
 }
 
 // @public
-export const kbqInjectElement: <T extends Element = HTMLElement>() => T;
+export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
 
 // @public
 export class KbqLine {
