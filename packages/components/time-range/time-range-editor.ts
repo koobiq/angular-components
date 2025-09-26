@@ -260,7 +260,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             this.timeRangeService.dateAdapter.today(),
             [translationType],
             false,
-            localeConfig.durationTemplate
+            localeConfig.durationTemplate.option
         );
     }
 }

@@ -1,3 +1,5 @@
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+
 /** Locale configuration for `KbqCodeBlockModule`. */
 export type KbqCodeBlockLocaleConfiguration = {
     softWrapOnTooltip: string;
@@ -58,5 +60,8 @@ export type KbqTimeRangeLocaleConfig = {
         currentQuarter: string;
         currentYear: string;
     };
-    durationTemplate: any;
+    durationTemplate: {
+        title: FormatterDurationTemplate;
+        option: FormatterDurationTemplate;
+    };
 };

@@ -122,38 +122,74 @@ export const enUSLocaleData = {
             currentYear: 'for the current year'
         },
         durationTemplate: {
-            SEPARATOR: ' ',
-            LAST_PART_SEPARATOR: '',
-            YEARS: `{years, plural,
+            title: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
                 one {# year}
                 other {last # years}
             }`,
-            MONTHS: `{months, plural,
+                MONTHS: `{months, plural,
                 one {last month}
                 other {last # months}
             }`,
-            WEEKS: `{weeks, plural,
+                WEEKS: `{weeks, plural,
                 one {last week}
                 other {last # weeks}
             }`,
-            DAYS: `{days, plural,
+                DAYS: `{days, plural,
                 one {last day}
                 other {last # days}
             }`,
-            HOURS: `{hours, plural,
+                HOURS: `{hours, plural,
                 one {last hour}
                 other {last # hours}
             }`,
-            MINUTES: `{minutes, plural,
+                MINUTES: `{minutes, plural,
                 one {last minute}
                 other {last # minutes}
             }`,
-            SECONDS: `{seconds, plural,
+                SECONDS: `{seconds, plural,
                 one {last second}
                 other {last # seconds}
             }`,
-            YEARS_FRACTION: `{years} years`,
-            MONTHS_FRACTION: `{months} months`
+                YEARS_FRACTION: `{years} years`,
+                MONTHS_FRACTION: `{months} months`
+            },
+            option: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
+                one {# year}
+                other {last # years}
+            }`,
+                MONTHS: `{months, plural,
+                one {last month}
+                other {last # months}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {last week}
+                other {last # weeks}
+            }`,
+                DAYS: `{days, plural,
+                one {last day}
+                other {last # days}
+            }`,
+                HOURS: `{hours, plural,
+                one {last hour}
+                other {last # hours}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {last minute}
+                other {last # minutes}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {last second}
+                other {last # seconds}
+            }`,
+                YEARS_FRACTION: `{years} years`,
+                MONTHS_FRACTION: `{months} months`
+            }
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

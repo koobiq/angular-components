@@ -122,45 +122,88 @@ export const ruRULocaleData = {
             currentYear: 'за текущий год'
         },
         durationTemplate: {
-            SEPARATOR: ' ',
-            LAST_PART_SEPARATOR: 'и',
-            YEARS: `{years, plural,
+            title: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: 'и',
+                YEARS: `{years, plural,
                 one {# год}
                 few {последние # лет}
                 other {последние # лет}
             }`,
-            MONTHS: `{months, plural,
+                MONTHS: `{months, plural,
                 one {последний месяц}
                 few {последние # месяца}
                 other {последние # месяцев}
             }`,
-            WEEKS: `{weeks, plural,
+                WEEKS: `{weeks, plural,
                 one {последнюю неделю}
                 few {последние # недели}
                 other {последние # недель}
             }`,
-            DAYS: `{days, plural,
+                DAYS: `{days, plural,
                 one {последний день}
                 few {последние # дня}
                 other {последние # дней}
             }`,
-            HOURS: `{hours, plural,
+                HOURS: `{hours, plural,
                 one {последний час}
                 few {последние # часа}
                 other {последние # часов}
             }`,
-            MINUTES: `{minutes, plural,
+                MINUTES: `{minutes, plural,
                 one {последнюю минуту}
                 few {последние # минуты}
                 other {последние # минут}
             }`,
-            SECONDS: `{seconds, plural,
+                SECONDS: `{seconds, plural,
                 one {последнюю секунду}
                 few {последние # секунды}
                 other {последние # секунд}
             }`,
-            YEARS_FRACTION: `{years} лет`,
-            MONTHS_FRACTION: `{months} месяцев`
+                YEARS_FRACTION: `{years} лет`,
+                MONTHS_FRACTION: `{months} месяцев`
+            },
+            option: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: 'и',
+                YEARS: `{years, plural,
+                one {последний год}
+                few {последние # лет}
+                other {последние # лет}
+            }`,
+                MONTHS: `{months, plural,
+                one {последний месяц}
+                few {последние # месяца}
+                other {последние # месяцев}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {последняя неделя}
+                few {последние # недели}
+                other {последние # недель}
+            }`,
+                DAYS: `{days, plural,
+                one {последний день}
+                few {последние # дня}
+                other {последние # дней}
+            }`,
+                HOURS: `{hours, plural,
+                one {последний час}
+                few {последние # часа}
+                other {последние # часов}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {последняя минута}
+                few {последние # минуты}
+                other {последние # минут}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {последняя секунда}
+                few {последние # секунды}
+                other {последние # секунд}
+            }`,
+                YEARS_FRACTION: `{years} лет`,
+                MONTHS_FRACTION: `{months} месяцев`
+            }
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

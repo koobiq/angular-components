@@ -121,17 +121,32 @@ export const zhCNLocaleData = {
             currentYear: '当前年份'
         },
         durationTemplate: {
-            SEPARATOR: ' ',
-            LAST_PART_SEPARATOR: '',
-            YEARS: `{years} 年`,
-            MONTHS: `{months} 个月`,
-            WEEKS: `{weeks} 周`,
-            DAYS: `{days} 天`,
-            HOURS: `{hours} 小时`,
-            MINUTES: `{minutes} 分`,
-            SECONDS: `{seconds} 秒`,
-            YEARS_FRACTION: `{years} 年`,
-            MONTHS_FRACTION: `{months} 个月`
+            title: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years} 年`,
+                MONTHS: `{months} 个月`,
+                WEEKS: `{weeks} 周`,
+                DAYS: `{days} 天`,
+                HOURS: `{hours} 小时`,
+                MINUTES: `{minutes} 分`,
+                SECONDS: `{seconds} 秒`,
+                YEARS_FRACTION: `{years} 年`,
+                MONTHS_FRACTION: `{months} 个月`
+            },
+            option: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years} 年`,
+                MONTHS: `{months} 个月`,
+                WEEKS: `{weeks} 周`,
+                DAYS: `{days} 天`,
+                HOURS: `{hours} 小时`,
+                MINUTES: `{minutes} 分`,
+                SECONDS: `{seconds} 秒`,
+                YEARS_FRACTION: `{years} 年`,
+                MONTHS_FRACTION: `{months} 个月`
+            }
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

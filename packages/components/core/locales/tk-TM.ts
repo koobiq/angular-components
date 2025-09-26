@@ -122,38 +122,74 @@ export const tkTMLocaleData = {
             currentYear: 'şu ýyl üçin'
         },
         durationTemplate: {
-            SEPARATOR: ' ',
-            LAST_PART_SEPARATOR: '',
-            YEARS: `{years, plural,
+            title: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
                 one {# ýyl}
-                other {soňky # ýyl}
+                other {# ýyl}
             }`,
-            MONTHS: `{months, plural,
-                one {soňky aý}
-                other {soňky # aý}
+                MONTHS: `{months, plural,
+                one {aý}
+                other {# aý}
             }`,
-            WEEKS: `{weeks, plural,
-                one {soňky hepde}
-                other {soňky # hepde}
+                WEEKS: `{weeks, plural,
+                one {hepde}
+                other {# hepde}
             }`,
-            DAYS: `{days, plural,
-                one {soňky gün}
-                other {soňky # gün}
+                DAYS: `{days, plural,
+                one {gün}
+                other {# gün}
             }`,
-            HOURS: `{hours, plural,
-                one {soňky sagat}
-                other {soňky # sagat}
+                HOURS: `{hours, plural,
+                one {sagat}
+                other {# sagat}
             }`,
-            MINUTES: `{minutes, plural,
-                one {soňky minut}
-                other {soňky # minut}
+                MINUTES: `{minutes, plural,
+                one {minut}
+                other {# minut}
             }`,
-            SECONDS: `{seconds, plural,
-                one {soňky sekunt}
-                other {soňky # sekunt}
+                SECONDS: `{seconds, plural,
+                one {sekunt}
+                other {# sekunt}
             }`,
-            YEARS_FRACTION: `{years} ýyl`,
-            MONTHS_FRACTION: `{months} aý`
+                YEARS_FRACTION: `{years} ýyl`,
+                MONTHS_FRACTION: `{months} aý`
+            },
+            option: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
+                one {# ýyl}
+                other {# ýyl}
+            }`,
+                MONTHS: `{months, plural,
+                one {aý}
+                other {# aý}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {hepde}
+                other {# hepde}
+            }`,
+                DAYS: `{days, plural,
+                one {gün}
+                other {# gün}
+            }`,
+                HOURS: `{hours, plural,
+                one {sagat}
+                other {# sagat}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {minut}
+                other {# minut}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {sekunt}
+                other {# sekunt}
+            }`,
+                YEARS_FRACTION: `{years} ýyl`,
+                MONTHS_FRACTION: `{months} aý`
+            }
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

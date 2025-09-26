@@ -105,7 +105,7 @@ export class KbqTimeRangeTitle {
                 this.timeRangeService.dateAdapter.today(),
                 [timeRangeUnit],
                 false,
-                localeConfiguration.durationTemplate
+                localeConfiguration.durationTemplate.title
             )
         );
     });

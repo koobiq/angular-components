@@ -121,38 +121,74 @@ export const ptBRLocaleData = {
             currentYear: 'pelo ano atual'
         },
         durationTemplate: {
-            SEPARATOR: ' e ',
-            LAST_PART_SEPARATOR: '',
-            YEARS: `{years, plural,
+            title: {
+                SEPARATOR: ' e ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
                 one {# ano}
                 other {últimos # anos}
             }`,
-            MONTHS: `{months, plural,
+                MONTHS: `{months, plural,
                 one {último mês}
                 other {últimos # meses}
             }`,
-            WEEKS: `{weeks, plural,
+                WEEKS: `{weeks, plural,
                 one {última semana}
                 other {últimas # semanas}
             }`,
-            DAYS: `{days, plural,
+                DAYS: `{days, plural,
                 one {último dia}
                 other {últimos # dias}
             }`,
-            HOURS: `{hours, plural,
+                HOURS: `{hours, plural,
                 one {última hora}
                 other {últimas # horas}
             }`,
-            MINUTES: `{minutes, plural,
+                MINUTES: `{minutes, plural,
                 one {último minuto}
                 other {últimos # minutos}
             }`,
-            SECONDS: `{seconds, plural,
+                SECONDS: `{seconds, plural,
                 one {último segundo}
                 other {últimos # segundos}
             }`,
-            YEARS_FRACTION: `{years} anos`,
-            MONTHS_FRACTION: `{months} meses`
+                YEARS_FRACTION: `{years} anos`,
+                MONTHS_FRACTION: `{months} meses`
+            },
+            option: {
+                SEPARATOR: ' e ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
+                one {# ano}
+                other {últimos # anos}
+            }`,
+                MONTHS: `{months, plural,
+                one {último mês}
+                other {últimos # meses}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {última semana}
+                other {últimas # semanas}
+            }`,
+                DAYS: `{days, plural,
+                one {último dia}
+                other {últimos # dias}
+            }`,
+                HOURS: `{hours, plural,
+                one {última hora}
+                other {últimas # horas}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {último minuto}
+                other {últimos # minutos}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {último segundo}
+                other {últimos # segundos}
+            }`,
+                YEARS_FRACTION: `{years} anos`,
+                MONTHS_FRACTION: `{months} meses`
+            }
         }
     } satisfies KbqTimeRangeLocaleConfig
 };

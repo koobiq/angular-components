@@ -121,23 +121,44 @@ export const faIRLocaleData = {
             currentYear: 'برای سال جاری'
         },
         durationTemplate: {
-            SEPARATOR: ' و ',
-            LAST_PART_SEPARATOR: '',
-            YEARS: `{years} سال گذشته`,
-            MONTHS: `{months} ماه گذشته`,
-            WEEKS: `{weeks} هفته گذشته`,
-            DAYS: `{days} روز گذشته`,
-            HOURS: `{hours} ساعت گذشته`,
-            MINUTES: `{minutes} دقیقه گذشته`,
-            SECONDS: `{seconds} ثانیه گذشته`,
-            YEARS_FRACTION: `{floorValue, plural,
+            title: {
+                SEPARATOR: ' و ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years} سال گذشته`,
+                MONTHS: `{months} ماه گذشته`,
+                WEEKS: `{weeks} هفته گذشته`,
+                DAYS: `{days} روز گذشته`,
+                HOURS: `{hours} ساعت گذشته`,
+                MINUTES: `{minutes} دقیقه گذشته`,
+                SECONDS: `{seconds} ثانیه گذشته`,
+                YEARS_FRACTION: `{floorValue, plural,
                 =1 {سال {years, number, ::# و #}}
                 other {سالها {years, number, ::# و #}}
             }`,
-            MONTHS_FRACTION: `{floorValue, plural,
+                MONTHS_FRACTION: `{floorValue, plural,
                 =1 {ماه {months, number, ::# و #}}
                 other {ماه ها {months, number, ::# و #}}
             }`
+            },
+            option: {
+                SEPARATOR: ' و ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years} سال گذشته`,
+                MONTHS: `{months} ماه گذشته`,
+                WEEKS: `{weeks} هفته گذشته`,
+                DAYS: `{days} روز گذشته`,
+                HOURS: `{hours} ساعت گذشته`,
+                MINUTES: `{minutes} دقیقه گذشته`,
+                SECONDS: `{seconds} ثانیه گذشته`,
+                YEARS_FRACTION: `{floorValue, plural,
+                =1 {سال {years, number, ::# و #}}
+                other {سالها {years, number, ::# و #}}
+            }`,
+                MONTHS_FRACTION: `{floorValue, plural,
+                =1 {ماه {months, number, ::# و #}}
+                other {ماه ها {months, number, ::# و #}}
+            }`
+            }
         }
     } satisfies KbqTimeRangeLocaleConfig
 };
