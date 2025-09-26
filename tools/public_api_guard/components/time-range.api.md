@@ -4,23 +4,68 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { DurationUnit } from '@koobiq/date-adapter';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
+import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqTimepicker } from '@koobiq/components/timepicker';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
+import { Validator } from '@angular/forms';
 import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION: InjectionToken<KbqTimeRangeLocaleConfig>;
+
+// @public (undocumented)
+export class KbqFormFieldContent implements KbqFormFieldControl<any> {
+    // (undocumented)
+    controlType: string;
+    // (undocumented)
+    disabled: boolean;
+    // (undocumented)
+    empty: boolean;
+    // (undocumented)
+    errorState: boolean;
+    // (undocumented)
+    focus(_options?: FocusOptions): void;
+    // (undocumented)
+    focused: boolean;
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    ngControl: NgControl | null;
+    // (undocumented)
+    onContainerClick(_event: MouseEvent): void;
+    // (undocumented)
+    placeholder: string;
+    // (undocumented)
+    required: boolean;
+    // (undocumented)
+    stateChanges: Observable<void>;
+    // (undocumented)
+    value: any;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormFieldContent, "kbq-form-field-content", never, {}, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormFieldContent, never>;
+}
 
 // @public (undocumented)
 export type KbqRange = {
@@ -41,34 +86,39 @@ export interface KbqRangeValue<T> {
 }
 
 // @public (undocumented)
-export class KbqTimeRange<T> implements ControlValueAccessor {
+export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     constructor();
     readonly arrow: InputSignalWithTransform<boolean, unknown>;
-    readonly availableTimeRangeTypes: InputSignal<any[]>;
+    readonly availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
     readonly defaultRangeValue: InputSignal<KbqRangeValue<T> | undefined>;
-    localeConfiguration: WritableSignal<KbqTimeRangeLocaleConfig>;
+    protected readonly localeConfiguration: WritableSignal<KbqTimeRangeLocaleConfig>;
     readonly maxDate: InputSignal<T | undefined>;
     readonly minDate: InputSignal<T | undefined>;
+    // (undocumented)
+    ngOnInit(): void;
     protected readonly normalizedDefaultRangeValue: Signal<    {
-    fromTime: any;
-    fromDate: any;
-    toTime: any;
-    toDate: any;
+    fromTime: T;
+    fromDate: T;
+    toTime: T;
+    toDate: T;
     }>;
     onApply(popover: KbqPopoverTrigger): void;
     onCancel(popover: KbqPopoverTrigger): void;
     onChange: (_value: KbqTimeRangeRange) => void;
     onTouch: () => void;
+    // (undocumented)
+    onVisibleChange(isVisible: boolean): void;
     protected readonly popoverSize = PopUpSizes.Medium;
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
     protected readonly rangeEditorControl: FormControl<KbqTimeRangeRange>;
     registerOnChange(fn: (_value: KbqTimeRangeRange) => void): void;
     registerOnTouched(fn: () => void): void;
+    readonly showRangeAsDefault: InputSignal<boolean>;
     readonly titleTemplate: InputSignal<TemplateRef<KbqTimeRangeCustomizableTitleContext> | undefined>;
     protected titleValue: WritableSignal<KbqTimeRangeRange>;
     writeValue(value: KbqTimeRangeRange | undefined): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRange<any>, "kbq-time-range", never, { "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "defaultRangeValue": { "alias": "defaultRangeValue"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; "arrow": { "alias": "arrow"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRange<any>, "kbq-time-range", never, { "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "defaultRangeValue": { "alias": "defaultRangeValue"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; "arrow": { "alias": "arrow"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRange<any>, never>;
 }
@@ -76,34 +126,45 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
 // @public (undocumented)
 export type KbqTimeRangeCustomizableTitleContext = KbqTimeRangeTitleContext & {
     $implicit: KbqTimeRangeTitleContext;
+} & {
+    formattedDate: string;
 };
 
 // @public
-export class KbqTimeRangeEditor<T> implements ControlValueAccessor {
+export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     constructor();
-    availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
+    readonly availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
     // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
     protected form: FormGroup<FormValue<T>>;
-    // (undocumented)
-    protected getTimeRangeOptionTemplateContext(type: KbqTimeRangeType): KbqTimeRangeOptionContext;
-    protected getTimeRangeTypesWithoutRange: (availableTimeRangeTypes: KbqTimeRangeType[]) => ("lastMinute" | "last5Minutes" | "last15Minutes" | "last30Minutes" | "lastHour" | "last24Hours" | "last3Days" | "last7Days" | "last14Days" | "last30Days" | "last3Months" | "last12Months" | "allTime" | "currentQuarter" | "currentYear")[];
     protected readonly isRangeVisible: Signal<boolean>;
     // (undocumented)
-    localeConfiguration: InputSignal<KbqTimeRangeLocaleConfig>;
-    maxDate: InputSignal<T | null>;
-    minDate: InputSignal<T | null>;
+    readonly localeConfiguration: InputSignal<KbqTimeRangeLocaleConfig>;
+    readonly maxDate: InputSignal<T | null>;
+    readonly minDate: InputSignal<T | null>;
+    // (undocumented)
+    ngOnInit(): void;
     onChange: (_value: KbqTimeRangeRange) => void;
     onTouch: () => void;
-    rangeValue: InputSignal<Required<KbqRangeValue<T>>>;
+    // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point index.d.ts
+    protected readonly rangeStateMatcher: RangeErrorStateMatcher;
+    readonly rangeValue: InputSignal<Required<KbqRangeValue<T>>>;
     registerOnChange(fn: (value: KbqTimeRangeRange) => void): void;
     registerOnTouched(fn: () => void): void;
     // (undocumented)
-    showRangeAsDefault: InputSignal<boolean>;
+    readonly showRangeAsDefault: InputSignal<boolean>;
     protected readonly timepickerFormat = TimeFormats.HHmmss;
-    protected readonly timeRangeTypesWithoutRange: WritableSignal<("lastMinute" | "last5Minutes" | "last15Minutes" | "last30Minutes" | "lastHour" | "last24Hours" | "last3Days" | "last7Days" | "last14Days" | "last30Days" | "last3Months" | "last12Months" | "allTime" | "currentQuarter" | "currentYear")[]>;
+    // (undocumented)
+    protected readonly timepickerList: Signal<readonly KbqTimepicker<T>[]>;
+    protected readonly timeRangeTypesWithoutRange: Signal<    {
+    type: "lastMinute" | "last5Minutes" | "last15Minutes" | "last30Minutes" | "lastHour" | "last24Hours" | "last3Days" | "last7Days" | "last14Days" | "last30Days" | "last3Months" | "last12Months" | "allTime" | "currentQuarter" | "currentYear";
+    translationType: KbqTimeRangeTranslationType;
+    formattedValue: string;
+    }[]>;
+    // (undocumented)
+    validate(): ValidationErrors | null;
     writeValue(value: KbqTimeRangeRange | undefined): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRangeEditor<any>, "kbq-time-range-editor", never, { "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "rangeValue": { "alias": "rangeValue"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": false; "isSignal": true; }; "localeConfiguration": { "alias": "localeConfiguration"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRangeEditor<any>, "kbq-time-range-editor", never, { "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "rangeValue": { "alias": "rangeValue"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": true; "isSignal": true; }; "localeConfiguration": { "alias": "localeConfiguration"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeEditor<any>, never>;
 }
@@ -135,17 +196,16 @@ export type KbqTimeRangeRange = KbqRange & KbqTimeRangeTypeContext;
 
 // @public
 export class KbqTimeRangeTitle {
-    constructor();
     // (undocumented)
-    protected context: Signal<KbqTimeRangeTitleContext | undefined>;
+    protected readonly context: Signal<KbqTimeRangeTitleContext | undefined>;
     // (undocumented)
-    protected readonly formattedDate: WritableSignal<string | undefined>;
+    protected readonly formattedDate: Signal<string>;
     // (undocumented)
     readonly localeConfiguration: InputSignal<KbqTimeRangeLocaleConfig>;
     // (undocumented)
     readonly timeRange: InputSignal<KbqTimeRangeRange | undefined>;
     // (undocumented)
-    protected titleContext: Signal<KbqTimeRangeCustomizableTitleContext | undefined>;
+    protected readonly titleContext: Signal<KbqTimeRangeCustomizableTitleContext | undefined>;
     // (undocumented)
     readonly titleTemplate: InputSignal<TemplateRef<any> | undefined>;
     // (undocumented)
