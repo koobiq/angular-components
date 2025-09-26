@@ -58,6 +58,7 @@ export enum DocsStructureItemId {
     Sidebar = 'sidebar',
     Sidepanel = 'sidepanel',
     Splitter = 'splitter',
+    SplitButton = 'split-button',
     Table = 'table',
     Tabs = 'tabs',
     Tag = 'tag',
@@ -765,6 +766,18 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'splitter',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.SplitButton,
+                    name: {
+                        ru: 'Split button',
+                        en: 'Split button'
+                    },
+                    svgPreview: 'SplitButton',
+                    hasApi: true,
+                    apiId: 'split-button',
+                    hasExamples: false,
+                    isNew: expiresAt('2025-10-10')
                 },
                 {
                     id: DocsStructureItemId.Table,

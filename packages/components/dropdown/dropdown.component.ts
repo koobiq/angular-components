@@ -146,7 +146,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     private _overlapTriggerY: boolean = this.defaultOptions.overlapTriggerY;
     private _hasBackdrop: boolean = this.defaultOptions.hasBackdrop;
 
-    triggerWidth: string = '';
+    triggerWidth: string;
     /** Config object to be passed into the dropdown's ngClass */
     classList: { [key: string]: boolean } = {};
 

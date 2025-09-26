@@ -1,0 +1,59 @@
+@use '../core/styles/common';
+@use './split-button-theme';
+
+.kbq-split-button {
+    display: flex;
+    flex-direction: row;
+
+    min-width: 0;
+
+    border-radius: var(--kbq-size-border-radius);
+
+    & .kbq-button:first-child,
+    & .kbq-button-icon:first-child {
+        min-width: 0;
+
+        border-top-right-radius: unset;
+        border-bottom-right-radius: unset;
+
+        & .kbq-button-wrapper {
+            display: block;
+
+            @include common.kbq-truncate-line();
+        }
+    }
+
+    & .kbq-button:last-child,
+    & .kbq-button-icon:last-child {
+        margin-left: -1px;
+        border-top-left-radius: unset;
+        border-bottom-left-radius: unset;
+    }
+
+    & .kbq-button,
+    & .kbq-button-icon {
+        &:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]) {
+            & + .kbq-button,
+            & + .kbq-button-icon {
+                &:not(:hover, .cdk-keyboard-focused, .kbq-active, [disabled]) {
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: 10px;
+
+                        width: 1px;
+                        height: 12px;
+                    }
+                }
+            }
+        }
+    }
+
+    & .kbq-button-icon + .kbq-button-icon {
+        padding-left: var(--kbq-size-xxs);
+        padding-right: var(--kbq-size-xxs);
+    }
+}
+
+@include split-button-theme.kbq-split-button-theme();
