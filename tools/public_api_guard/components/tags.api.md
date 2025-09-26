@@ -26,6 +26,7 @@ import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
@@ -234,11 +235,9 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     // (undocumented)
     get canShowCleaner(): boolean;
     readonly change: EventEmitter<KbqTagListChange>;
-    // (undocumented)
     cleaner: KbqCleaner;
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
-    // (undocumented)
     readonly controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -255,7 +254,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     focusInput(): void;
     get id(): string;
     keydown(event: KeyboardEvent): void;
-    // (undocumented)
     keyManager: FocusKeyManager<KbqTag>;
     markAsTouched(): void;
     multiple: boolean;
@@ -277,12 +275,10 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
     onChange: (value: any) => void;
     onContainerClick(event: MouseEvent): void;
-    // (undocumented)
     onTouched: () => void;
-    orientation: 'horizontal' | 'vertical';
+    orientation: KbqOrientation;
     // (undocumented)
     parentForm: NgForm;
     // (undocumented)
@@ -290,9 +286,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get placeholder(): string;
     set placeholder(value: string);
     registerInput(inputElement: KbqTagTextControl): void;
-    // (undocumented)
     registerOnChange(fn: (value: any) => void): void;
-    // (undocumented)
     registerOnTouched(fn: () => void): void;
     get removable(): boolean;
     set removable(value: boolean);
@@ -302,9 +296,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     selectable: boolean;
     get selected(): KbqTag[] | KbqTag;
     selectionModel: SelectionModel<KbqTag>;
-    // (undocumented)
     setDisabledState(isDisabled: boolean): void;
-    // (undocumented)
     setSelectionByValue(value: any, isUserInput?: boolean): void;
     get shouldLabelFloat(): boolean;
     readonly stateChanges: Subject<void>;
@@ -312,16 +304,13 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get tabIndex(): number;
     set tabIndex(value: number);
     get tagBlurChanges(): Observable<KbqTagEvent>;
-    // (undocumented)
     tagChanges: EventEmitter<any>;
     get tagEditChanges(): Observable<KbqTagEditChange>;
     get tagFocusChanges(): Observable<KbqTagEvent>;
     get tagRemoveChanges(): Observable<KbqTagEvent>;
     tags: QueryList<KbqTag>;
     get tagSelectionChanges(): Observable<KbqTagSelectionChange>;
-    // (undocumented)
     uid: string;
-    // (undocumented)
     updateErrorState(): void;
     protected updateFocusForDestroyedTags(): void;
     protected updateTabIndex(): void;
@@ -329,7 +318,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get value(): any;
     set value(value: any);
     readonly valueChange: EventEmitter<any>;
-    // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], false, never>;
