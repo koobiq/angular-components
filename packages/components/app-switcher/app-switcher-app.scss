@@ -12,7 +12,7 @@
 
     border-radius: var(--kbq-size-s);
 
-    padding: var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-xs) var(--kbq-size-m);
+    padding: var(--kbq-size-xxs) var(--kbq-size-m) var(--kbq-size-xs) var(--kbq-size-m);
 
     @include common.user-select(none);
 

@@ -17,6 +17,8 @@
     @include common.user-select(none);
     @include common.kbq-list-item-base();
 
+    padding: var(--kbq-size-xxs) var(--kbq-size-m);
+
     &:not(.kbq-disabled) {
         cursor: pointer;
     }
