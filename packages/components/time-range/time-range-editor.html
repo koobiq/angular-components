@@ -1,12 +1,16 @@
 <form [formGroup]="form">
     <kbq-radio-group class="kbq-time-range-editor__container" [formControl]="form.controls.type">
-        <div class="kbq-time-range-editor__predefined">
-            @for (type of timeRangeTypesWithoutRange(); track type) {
-                <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type.type">
-                    <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: type }" />
-                </kbq-radio-button>
-            }
-        </div>
+        @let types = timeRangeTypesWithoutRange();
+
+        @if (types.length) {
+            <div class="kbq-time-range-editor__predefined">
+                @for (type of types; track type) {
+                    <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type.type">
+                        <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: type }" />
+                    </kbq-radio-button>
+                }
+            </div>
+        }
 
         @if (isRangeVisible()) {
             @let localeConfig = localeConfiguration();

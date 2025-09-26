@@ -176,17 +176,13 @@ export class KbqTimeRangeService<T> {
             case 'last12Months':
                 return this.lastMonthsRange(12);
             case 'currentQuarter':
-                return {
-                    startDateTime: this.dateAdapter.toIso8601(
-                        this.dateAdapter.startOf(this.dateAdapter.today(), 'quarter')
-                    )
-                };
+                return KbqTimeRangeService.range(
+                    this.dateAdapter.toIso8601(this.dateAdapter.startOf(this.dateAdapter.today(), 'quarter'))
+                );
             case 'currentYear':
-                return {
-                    startDateTime: this.dateAdapter.toIso8601(
-                        this.dateAdapter.startOf(this.dateAdapter.today(), 'year')
-                    )
-                };
+                return KbqTimeRangeService.range(
+                    this.dateAdapter.toIso8601(this.dateAdapter.startOf(this.dateAdapter.today(), 'year'))
+                );
             case 'allTime':
             default:
                 return {
@@ -208,13 +204,11 @@ export class KbqTimeRangeService<T> {
         );
     }
 
-    fromISO = (date: string) => this.dateAdapter.deserialize(date);
-
     lastMinutesRange = (minutes: number): KbqRange => {
         const date = this.dateAdapter!.today();
 
-        return {
-            startDateTime: this.dateAdapter.toIso8601(
+        return KbqTimeRangeService.range(
+            this.dateAdapter.toIso8601(
                 this.dateAdapter!.createDateTime(
                     this.dateAdapter.getYear(date),
                     this.dateAdapter.getMonth(date),
@@ -225,14 +219,14 @@ export class KbqTimeRangeService<T> {
                     0
                 )
             )
-        };
+        );
     };
 
     lastHoursRange = (hours: number): KbqRange => {
         const date = this.dateAdapter!.today();
 
-        return {
-            startDateTime: this.dateAdapter.toIso8601(
+        return KbqTimeRangeService.range(
+            this.dateAdapter.toIso8601(
                 this.dateAdapter!.createDateTime(
                     this.dateAdapter.getYear(date),
                     this.dateAdapter.getMonth(date),
@@ -243,17 +237,21 @@ export class KbqTimeRangeService<T> {
                     0
                 )
             )
-        };
+        );
     };
 
-    lastDaysRange = (days: number): KbqRange => ({
-        startDateTime: this.dateAdapter.toIso8601(this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -days))
-    });
+    lastDaysRange = (days: number): KbqRange =>
+        KbqTimeRangeService.range(
+            this.dateAdapter.toIso8601(this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -days))
+        );
 
-    lastMonthsRange = (months: number): KbqRange => ({
-        startDateTime: this.dateAdapter.toIso8601(
-            this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), -months)
-        )
+    lastMonthsRange = (months: number): KbqRange =>
+        KbqTimeRangeService.range(
+            this.dateAdapter.toIso8601(this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), -months))
+        );
+
+    static range = (dateTimeISOString: string): KbqRange => ({
+        startDateTime: dateTimeISOString
     });
 
     checkAndCorrectTimeRangeValue(

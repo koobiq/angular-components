@@ -130,7 +130,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
         this.form = new FormGroup(
             {
                 type: new FormControl<KbqTimeRangeType>(
-                    (availableTimeRangeTypes.length && availableTimeRangeTypes[0]) || 'lastHour',
+                    (availableTimeRangeTypes.length && availableTimeRangeTypes[0]) || 'range',
                     { nonNullable: true }
                 ),
                 fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
@@ -194,8 +194,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
         this.form.controls.type.setValue(corrected.type);
 
         if (corrected.type === 'range' && corrected.startDateTime && corrected.endDateTime) {
-            const from: T = this.timeRangeService.fromISO(corrected.startDateTime);
-            const to: T = this.timeRangeService.fromISO(corrected.endDateTime);
+            const from: T = this.timeRangeService.dateAdapter.deserialize(corrected.startDateTime);
+            const to: T = this.timeRangeService.dateAdapter.deserialize(corrected.endDateTime);
 
             this.form.patchValue({
                 fromTime: from,
@@ -243,7 +243,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
         const range = this.timeRangeService.calculateTimeRange(type);
 
         return this.timeRangeService.dateFormatter.duration(
-            this.timeRangeService.fromISO(range.startDateTime!),
+            this.timeRangeService.dateAdapter.deserialize(range.startDateTime!),
             this.timeRangeService.dateAdapter.today(),
             [translationType],
             false,

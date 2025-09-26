@@ -87,8 +87,8 @@ export class KbqTimeRangeTitle {
                         localeConfig.title.for +
                             ' ' +
                             this.timeRangeService.dateFormatter.rangeLongDate(
-                                this.timeRangeService.fromISO(context.startDateTime ?? ''),
-                                this.timeRangeService.fromISO(context.endDateTime ?? '')
+                                this.timeRangeService.dateAdapter.deserialize(context.startDateTime ?? ''),
+                                this.timeRangeService.dateAdapter.deserialize(context.endDateTime ?? '')
                             )
                     );
                     break;
@@ -120,7 +120,7 @@ export class KbqTimeRangeTitle {
             localeConfig.title.for +
                 ' ' +
                 this.timeRangeService.dateFormatter.duration(
-                    this.timeRangeService.fromISO(context.startDateTime),
+                    this.timeRangeService.dateAdapter.deserialize(context.startDateTime),
                     this.timeRangeService.dateAdapter.today(),
                     [timeRangeUnit],
                     false,

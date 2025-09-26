@@ -12,7 +12,7 @@ import {
     ViewEncapsulation,
     WritableSignal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -26,12 +26,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeService } from './time-range.service';
-import {
-    KbqRangeValue,
-    KbqTimeRangeCustomizableTitleContext,
-    KbqTimeRangeType,
-    KbqTimeRangeRange as TimeRange
-} from './types';
+import { KbqRangeValue, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeType } from './types';
 
 /** Localization configuration provider. */
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfig>(
@@ -121,7 +116,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
     encapsulation: ViewEncapsulation.None
 })
 export class KbqTimeRange<T> implements ControlValueAccessor {
-    private readonly timeRangeService = inject(KbqTimeRangeService);
+    private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
 
     /** The minimum selectable date. */
     readonly minDate = input<T>();
@@ -151,9 +146,9 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     }));
 
     /** @docs-private */
-    protected titleValue: WritableSignal<TimeRange>;
+    protected titleValue: WritableSignal<KbqTimeRangeRange>;
     /** @docs-private */
-    protected readonly rangeEditorControl: FormControl<TimeRange>;
+    protected readonly rangeEditorControl: FormControl<KbqTimeRangeRange>;
 
     /** @docs-private */
     protected readonly popoverSize = PopUpSizes.Medium;
@@ -168,16 +163,25 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
         const defaultValue = this.timeRangeService.getTimeRangeDefaultValue(this.normalizedDefaultRangeValue());
 
         this.titleValue = signal(defaultValue);
-        this.rangeEditorControl = new FormControl<TimeRange>(this.titleValue(), { nonNullable: true });
+        this.rangeEditorControl = new FormControl<KbqTimeRangeRange>(this.titleValue(), { nonNullable: true });
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((id) => {
             this.timeRangeService.dateFormatter.setLocale(id);
             this.localeConfiguration.set(this.localeService?.getParams('timeRange') ?? ruRULocaleData.timeRange);
         });
+
+        toObservable(this.availableTimeRangeTypes)
+            .pipe(takeUntilDestroyed())
+            .subscribe((types) => {
+                this.titleValue.set(
+                    this.timeRangeService.getTimeRangeDefaultValue(this.normalizedDefaultRangeValue(), types)
+                );
+                this.onChange(this.titleValue());
+            });
     }
 
     /** Implemented as part of ControlValueAccessor */
-    writeValue(value: TimeRange | undefined): void {
+    writeValue(value: KbqTimeRangeRange | undefined): void {
         const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
             value,
             this.availableTimeRangeTypes(),
@@ -208,12 +212,12 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
 
     /** Implemented as part of ControlValueAccessor
      * @docs-private */
-    onChange = (_value: TimeRange) => {};
+    onChange = (_value: KbqTimeRangeRange) => {};
     /** Implemented as part of ControlValueAccessor
      * @docs-private */
     onTouch = () => {};
     /** Implemented as part of ControlValueAccessor */
-    registerOnChange(fn: (_value: TimeRange) => void): void {
+    registerOnChange(fn: (_value: KbqTimeRangeRange) => void): void {
         this.onChange = fn;
     }
     /** Implemented as part of ControlValueAccessor */
