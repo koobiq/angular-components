@@ -6,6 +6,7 @@ import {
     inject,
     InjectionToken,
     input,
+    OnInit,
     Provider,
     signal,
     TemplateRef,
@@ -115,8 +116,9 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTimeRange<T> implements ControlValueAccessor {
+export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
     /** The minimum selectable date. */
     readonly minDate = input<T>();
@@ -156,31 +158,45 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
     /** @docs-private */
-    localeConfiguration = signal(inject(KBQ_TIME_RANGE_LOCALE_CONFIGURATION));
-    private localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    protected readonly localeConfiguration = signal(inject(KBQ_TIME_RANGE_LOCALE_CONFIGURATION));
 
     constructor() {
-        const defaultValue = this.timeRangeService.getTimeRangeDefaultValue(this.normalizedDefaultRangeValue());
+        const defaultValue = this.timeRangeService.getTimeRangeDefaultValue(
+            this.normalizedDefaultRangeValue(),
+            this.availableTimeRangeTypes()
+        );
 
         this.titleValue = signal(defaultValue);
         this.rangeEditorControl = new FormControl<KbqTimeRangeRange>(this.titleValue(), { nonNullable: true });
 
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((id) => {
-            this.timeRangeService.dateFormatter.setLocale(id);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             this.localeConfiguration.set(this.localeService?.getParams('timeRange') ?? ruRULocaleData.timeRange);
         });
 
         toObservable(this.availableTimeRangeTypes)
             .pipe(takeUntilDestroyed())
             .subscribe((types) => {
+                if (
+                    types.includes(this.rangeEditorControl.value.type) ||
+                    this.rangeEditorControl.value.type === 'range'
+                ) {
+                    return;
+                }
+
                 this.titleValue.set(
                     this.timeRangeService.getTimeRangeDefaultValue(
                         this.normalizedDefaultRangeValue(),
                         types.length ? types : ['range']
                     )
                 );
-                this.onChange(this.titleValue());
+                this.rangeEditorControl.setValue(this.titleValue());
+                this.onChange(this.rangeEditorControl.value);
             });
+    }
+
+    ngOnInit() {
+        // call on init, so availableTimeRangeTypes value will be correct
+        this.writeValue(undefined);
     }
 
     /** Implemented as part of ControlValueAccessor */

@@ -5,6 +5,7 @@ import {
     computed,
     inject,
     input,
+    OnInit,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
@@ -28,7 +29,7 @@ import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/compon
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepicker, KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { rangeValidator } from './constants';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqRangeValue, KbqTimeRangeRange, KbqTimeRangeType, KbqTimeRangeTypeContext } from './types';
@@ -81,7 +82,7 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
+export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     private readonly timeRangeService = inject(KbqTimeRangeService);
     /** @docs-private */
     protected readonly rangeStateMatcher = new RangeErrorStateMatcher();
@@ -125,14 +126,10 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
 
     constructor() {
         const defaultRangeValue = this.rangeValue();
-        const availableTimeRangeTypes = this.availableTimeRangeTypes();
 
         this.form = new FormGroup(
             {
-                type: new FormControl<KbqTimeRangeType>(
-                    (availableTimeRangeTypes.length && availableTimeRangeTypes[0]) || 'range',
-                    { nonNullable: true }
-                ),
+                type: new FormControl<KbqTimeRangeType>(KbqTimeRangeService.DEFAULT_RANGE_TYPE, { nonNullable: true }),
                 fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
                 fromDate: new FormControl<T>(defaultRangeValue.fromDate, { nonNullable: true }),
                 toTime: new FormControl<T>(defaultRangeValue.toTime, { nonNullable: true }),
@@ -148,17 +145,23 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
             this.form.controls.toDate
         ];
 
-        this.form.valueChanges.pipe(distinctUntilChanged(), takeUntilDestroyed()).subscribe(({ type }) => {
-            const isDisabled = type !== 'range';
+        this.form.valueChanges
+            .pipe(
+                map((formValue) => formValue.type),
+                distinctUntilChanged(),
+                takeUntilDestroyed()
+            )
+            .subscribe((type) => {
+                const isDisabled = type !== 'range';
 
-            rangeControls.forEach((control) => {
-                if (isDisabled) {
-                    control.disable({ emitEvent: false });
-                } else {
-                    control.enable({ emitEvent: false });
-                }
+                rangeControls.forEach((control) => {
+                    if (isDisabled) {
+                        control.disable({ emitEvent: false });
+                    } else {
+                        control.enable({ emitEvent: false });
+                    }
+                });
             });
-        });
 
         this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((formValue) => {
             const range = this.mapTimeRange(formValue);
@@ -172,6 +175,19 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
             if (timepickerList.at(0)) {
                 timepickerList.at(0)!.errorState = status === 'INVALID';
             }
+        });
+    }
+
+    ngOnInit(): void {
+        const defaultRangeValue = this.rangeValue();
+        const availableTimeRangeTypes = this.availableTimeRangeTypes();
+
+        this.form.setValue({
+            type: (availableTimeRangeTypes.length && availableTimeRangeTypes[0]) || 'range',
+            fromTime: defaultRangeValue.fromTime,
+            fromDate: defaultRangeValue.fromDate,
+            toTime: defaultRangeValue.toTime,
+            toDate: defaultRangeValue.toDate
         });
     }
 
@@ -223,6 +239,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator {
         return {
             type,
             ...this.timeRangeService.calculateTimeRange(type, {
+                // use control.value, since via form.value control values can be undefined
                 fromTime: this.form.controls.fromTime.value,
                 fromDate: this.form.controls.fromDate.value,
                 toDate: this.form.controls.toTime.value,

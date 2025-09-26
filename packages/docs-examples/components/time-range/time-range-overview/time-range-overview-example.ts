@@ -57,11 +57,14 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
     }
 })
 export class TimeRangeOverviewExample {
-    control = new FormControl<KbqTimeRangeRange | null>({
-        type: 'last5Minutes',
-        startDateTime: '2025-09-26T13:11:00.000+03:00'
-    });
-    availableTimeRangeTypes: KbqTimeRangeType[] = [
+    protected readonly control = new FormControl<KbqTimeRangeRange | null>(
+        {
+            type: 'last5Minutes'
+        },
+        { nonNullable: true }
+    );
+
+    protected readonly availableTimeRangeTypes: KbqTimeRangeType[] = [
         'lastMinute',
         'last5Minutes',
         'last15Minutes',
@@ -80,5 +83,7 @@ export class TimeRangeOverviewExample {
         'range'
     ];
 
-    readonly selected = new FormControl<KbqTimeRangeType[]>(this.availableTimeRangeTypes, { nonNullable: true });
+    protected readonly selected = new FormControl<KbqTimeRangeType[]>(this.availableTimeRangeTypes, {
+        nonNullable: true
+    });
 }

@@ -29,7 +29,7 @@ export class KbqTimeRangeService<T> {
         'range'
     ];
 
-    protected readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
+    static readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
     static readonly timeRangeMap: Record<KbqTimeRangeType, KbqTimeRangeUnits> = {
         // minutes
@@ -115,7 +115,8 @@ export class KbqTimeRangeService<T> {
         rangeValue: KbqRangeValue<T>,
         availableTimeRangeTypes: KbqTimeRangeType[] = []
     ): KbqTimeRangeRange {
-        const defaultType = availableTimeRangeTypes[0] ?? this.defaultTimeRangeTypes[0] ?? this.DEFAULT_RANGE_TYPE;
+        const defaultType =
+            availableTimeRangeTypes[0] ?? this.defaultTimeRangeTypes[0] ?? KbqTimeRangeService.DEFAULT_RANGE_TYPE;
 
         return {
             ...this.calculateTimeRange(defaultType, rangeValue || this.getDefaultRangeValue()),
@@ -260,7 +261,7 @@ export class KbqTimeRangeService<T> {
         rangeValue: KbqRangeValue<T>
     ): KbqTimeRangeRange {
         let result =
-            value && availableTimeRangeTypes.includes(value.type)
+            value && (!availableTimeRangeTypes.length || availableTimeRangeTypes.includes(value.type))
                 ? value
                 : this.getTimeRangeDefaultValue(rangeValue, availableTimeRangeTypes);
 
