@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
+import { BACKSPACE, DELETE, ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -141,10 +141,9 @@ export class KbqTagEditInput {
                 break;
             }
 
-            // prevent KbqTag from receiving these keydown events
+            // We should prevent KbqTag from receiving these keydown events
             case BACKSPACE:
-            case DELETE:
-            case SPACE: {
+            case DELETE: {
                 event.stopPropagation();
                 break;
             }
@@ -518,15 +517,6 @@ export class KbqTag
                 this.tagList?.selectionModel.selected.length ? this.tagList.removeSelected() : this.remove();
 
                 // Always prevent so page navigation does not occur
-                event.preventDefault();
-                break;
-            case SPACE:
-                // If we are selectable, toggle the focused tag
-                if (this.selectable) {
-                    this.toggleSelected(true);
-                }
-
-                // Always prevent space from scrolling the page since the list has focus
                 event.preventDefault();
                 break;
             case F2:
