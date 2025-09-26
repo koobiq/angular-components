@@ -141,7 +141,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
     private loadComponents(componentName: string, componentClass: any) {
         const exampleElements = this.elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
-        [...exampleElements].forEach((element: Element) => {
+        exampleElements.forEach((element: Element) => {
             const example = element.getAttribute(componentName);
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
