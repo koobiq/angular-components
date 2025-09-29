@@ -33,5 +33,5 @@ export class TimeRangeMinMaxExample {
     protected readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     protected readonly minDate = this.adapter.createDate(2017, 0, 1);
-    protected readonly maxDate = this.adapter.createDate(2025, 11, 31);
+    protected readonly maxDate = this.adapter.today();
 }

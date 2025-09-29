@@ -29,7 +29,7 @@ import { KbqTimeRange, KbqTimeRangeRange } from '@koobiq/components/time-range';
             </button>
         </ng-template>
 
-        <kbq-time-range [titleTemplate]="titleTemplate" [formControl]="control" />
+        <kbq-time-range [titleTemplate]="titleTemplate" [formControl]="control" [arrow]="false" />
 
         <kbq-time-range [formControl]="control" />
     `,

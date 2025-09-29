@@ -132,7 +132,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     readonly titleTemplate = input<TemplateRef<KbqTimeRangeCustomizableTitleContext>>();
 
     /** Whether to show popover with arrow */
-    readonly arrow = input(false, { transform: booleanAttribute });
+    readonly arrow = input(true, { transform: booleanAttribute });
     /**
      * Whether to show range in popover if not provided
      * @see availableTimeRangeTypes
