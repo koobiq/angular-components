@@ -999,7 +999,7 @@ export class KbqTagList
     }
 
     private setupDropListInitialProperties(): void {
-        this.dropList.disabled = !this.draggable;
+        this.syncDraggableDisabledState();
         this.dropList.elementContainerSelector = '.kbq-tags-list__list-container';
         this.dropList.orientation = 'mixed';
         this.dropList.dropped

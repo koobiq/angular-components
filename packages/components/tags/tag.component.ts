@@ -635,7 +635,7 @@ export class KbqTag
     }
 
     private setupDragInitialProperties(): void {
-        this.drag.disabled = !this.draggable;
+        this.syncDragDisabledState();
     }
 
     private syncDragDisabledState(): void {
