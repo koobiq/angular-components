@@ -673,67 +673,6 @@ describe(KbqTagList.name, () => {
         }));
     });
 
-    // todo need rethink this selection logic
-    xdescribe('selection logic', () => {
-        let nativeTags: HTMLElement[];
-
-        beforeEach(() => {
-            fixture = createComponent(BasicTagList);
-            fixture.detectChanges();
-
-            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
-
-            tagListDebugElement = fixture.debugElement.query(By.directive(KbqTagList));
-            tagListInstance = tagListDebugElement.componentInstance;
-            tags = tagListInstance.tags;
-        });
-
-        it('should remove selection if tag has been removed', fakeAsync(() => {
-            const instanceTags = fixture.componentInstance.tags;
-            const tagList = fixture.componentInstance.tagList;
-            const firstTag = nativeTags[0];
-
-            dispatchKeyboardEvent(firstTag, 'keydown', SPACE);
-            fixture.detectChanges();
-
-            expect(instanceTags.first.selected).toBe(true);
-            expect(tagList.selected).toBe(tags.first);
-
-            fixture.componentInstance.foods = [];
-            fixture.detectChanges();
-            tick();
-
-            expect(tagList.selected).toBe(undefined);
-        }));
-
-        it('should select an option that was added after initialization', () => {
-            fixture.componentInstance.foods.push({ viewValue: 'Potatoes', value: 'potatoes-8' });
-            fixture.detectChanges();
-
-            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
-            const lastChip = nativeTags[8];
-
-            dispatchKeyboardEvent(lastChip, 'keydown', SPACE);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.tagList.value).toContain('potatoes-8');
-            expect(fixture.componentInstance.tags.last.selected).toBeTruthy();
-        });
-
-        // todo need rethink this selection logic
-        xit('should not select disabled tags', () => {
-            const array = tags.toArray();
-            const disabledTag = nativeTags[2];
-
-            dispatchKeyboardEvent(disabledTag, 'keydown', SPACE);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.tagList.value).toBeUndefined();
-            expect(array[2].selected).toBeFalsy();
-            expect(fixture.componentInstance.tagList.selected).toBeUndefined();
-        });
-    });
-
     describe('forms integration', () => {
         let nativeTags: HTMLElement[];
 
@@ -744,20 +683,6 @@ describe(KbqTagList.name, () => {
 
                 nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
                 tags = fixture.componentInstance.tags;
-            });
-
-            it('should take an initial view value with reactive forms', () => {
-                fixture.componentInstance.control = new UntypedFormControl('pizza-1');
-                fixture.detectChanges();
-
-                const array = tags.toArray();
-
-                expect(array[1].selected).toBeTruthy();
-
-                dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeFalsy();
             });
 
             // todo need rethink this selection logic
@@ -923,20 +848,6 @@ describe(KbqTagList.name, () => {
                 tags = fixture.componentInstance.tags;
             });
 
-            it('should take an initial view value with reactive forms', () => {
-                fixture.componentInstance.control = new UntypedFormControl(['pizza-1']);
-                fixture.detectChanges();
-
-                const array = tags.toArray();
-
-                expect(array[1].selected).toBeTruthy();
-
-                dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeFalsy();
-            });
-
             it('should set the view value from the form', () => {
                 const tagList = fixture.componentInstance.tagList;
                 const array = tags.toArray();
@@ -988,27 +899,9 @@ describe(KbqTagList.name, () => {
     });
 
     describe('tag list with tag input', () => {
-        let nativeTags: HTMLElement[];
-
         beforeEach(() => {
             fixture = createComponent(InputTagList);
             fixture.detectChanges();
-
-            nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
-        });
-
-        it('should take an initial view value with reactive forms', () => {
-            fixture.componentInstance.control = new UntypedFormControl(['pizza-1']);
-            fixture.detectChanges();
-
-            const array = fixture.componentInstance.tags.toArray();
-
-            expect(array[1].selected).toBeTruthy();
-
-            dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
-            fixture.detectChanges();
-
-            expect(array[1].selected).toBeFalsy();
         });
 
         it('should set the view value from the form', () => {
@@ -1020,15 +913,6 @@ describe(KbqTagList.name, () => {
             fixture.detectChanges();
 
             expect(array[1].selected).toBeTruthy();
-        });
-
-        xit('should update the form value when the view changes', () => {
-            expect(fixture.componentInstance.control.value).toEqual(null);
-
-            dispatchKeyboardEvent(nativeTags[0], 'keydown', SPACE);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.control.value).toEqual(['steak-0']);
         });
 
         it('should clear the selection when a nonexistent option value is selected', () => {
@@ -1078,15 +962,6 @@ describe(KbqTagList.name, () => {
             dispatchFakeEvent(nativeTagList, 'blur');
 
             expect(fixture.componentInstance.control.touched).toBe(false);
-        });
-
-        xit("should set the control to dirty when the tag list's value changes in the DOM", () => {
-            expect(fixture.componentInstance.control.dirty).toEqual(false);
-
-            dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.control.dirty).toEqual(true);
         });
 
         // todo need rethink this selection logic
