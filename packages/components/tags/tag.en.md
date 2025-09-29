@@ -35,8 +35,6 @@ Tags can be selected in several ways:
 
 The selection option is configured using the `selectable` attribute (enabled by default).
 
-<!-- example(tag-selectable) -->
-
 ### Removal
 
 Tags can be removed in several ways:

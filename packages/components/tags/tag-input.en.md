@@ -11,8 +11,6 @@ Tags can be selected in several ways:
 
 The selection option is configured using the `selectable` attribute (enabled by default).
 
-<!-- example(tag-input-selectable) -->
-
 ### Tag removal
 
 Tag removal order:
