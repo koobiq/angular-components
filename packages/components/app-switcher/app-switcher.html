@@ -21,13 +21,17 @@
     @if (!searchValue) {
         <div class="kbq-app-switcher__app-container" (mouseenter)="otherSites.close()">
             <div class="kbq-app-switcher-group-header">
-                <div class="kbq-app-switcher-group-header__text">Название площадки</div>
-                <kbq-badge class="kbq-app-switcher-group-header__badge" [compact]="true">Главная</kbq-badge>
+                <div class="kbq-app-switcher-group-header__text">{{ trigger.selectedSite?.name }}</div>
+                @if (trigger.selectedSite?.status) {
+                    <kbq-badge class="kbq-app-switcher-group-header__badge" [compact]="true">
+                        {{ trigger.selectedSite.status }}
+                    </kbq-badge>
+                }
             </div>
 
             <kbq-dropdown [class]="'kbq-app-switcher-sites'">
                 <div kbqDropdownStaticContent class="kbq-app-switcher-site">
-                    @for (app of trigger.sites[0].apps; track app) {
+                    @for (app of trigger.selectedSite?.apps; track app) {
                         <a
                             #appSwitcherApp="kbqAppSwitcherApp"
                             href=""
@@ -57,14 +61,14 @@
                 <kbq-dropdown #otherSites="kbqDropdown">
                     <div kbqDropdownStaticContent class="kbq-app-switcher-sites">
                         @for (site of trigger.sites; track site) {
-                            <a
-                                href=""
-                                [kbq-app-switcher-dropdown-site]="site"
-                                [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
-                                [offsetX]="0"
-                                [class.kbq-app-switcher__sites_main]="site.main"
-                                (mouseenter)="activeSite = site"
-                            ></a>
+                            @if (site.id !== trigger.selectedSite?.id) {
+                                <div
+                                    [kbq-app-switcher-dropdown-site]="site"
+                                    [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
+                                    [offsetX]="0"
+                                    (mouseenter)="activeSite = site"
+                                ></div>
+                            }
                         }
                     </div>
                 </kbq-dropdown>
@@ -73,24 +77,25 @@
             <kbq-dropdown #dropdownWithSelectedSite="kbqDropdown" [class]="'kbq-app-switcher-sites'">
                 @for (app of activeSite?.apps; track app) {
                     @if (app.apps) {
-                        <a
+                        <!--                            href=""-->
+                        <div
                             #dropdownWithGroupedAppsTrigger="kbqDropdownTrigger"
-                            href=""
                             [kbq-app-switcher-dropdown-app]="app"
                             [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
                             [offsetX]="0"
                             [class.kbq-pressed]="dropdownWithGroupedAppsTrigger.opened"
                             (mouseenter)="activeApp = app"
-                        ></a>
+                            (click)="selectAppInSite(activeSite, app)"
+                        ></div>
                     } @else {
-                        <a href="" [kbq-app-switcher-dropdown-app]="app"></a>
+                        <div [kbq-app-switcher-dropdown-app]="app" (click)="selectAppInSite(activeSite, app)"></div>
                     }
                 }
             </kbq-dropdown>
 
             <kbq-dropdown #dropdownWithGroupedApps="kbqDropdown" [class]="'kbq-app-switcher-sites'">
                 @for (app of activeApp?.apps; track app) {
-                    <a href="" [kbq-app-switcher-dropdown-app]="app"></a>
+                    <div [kbq-app-switcher-dropdown-app]="app" (click)="selectAppInSite(activeSite, app)"></div>
                 }
             </kbq-dropdown>
         }

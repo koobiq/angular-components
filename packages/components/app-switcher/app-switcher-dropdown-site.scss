@@ -19,10 +19,6 @@
 
     padding: var(--kbq-size-xxs) var(--kbq-size-m);
 
-    &:not(.kbq-disabled) {
-        cursor: pointer;
-    }
-
     & .kbq-app-switcher-dropdown-item-trigger__icon,
     & .kbq-badge {
         margin-top: var(--kbq-size-3xs);

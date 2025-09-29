@@ -53,6 +53,23 @@ import { KbqAppSwitcherApp } from './app-switcher-app';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 
+export interface KbaAppSwitcherApp {
+    name: string;
+    id: string | number;
+    type: string | number;
+    icon?: string;
+    caption?: string;
+    apps?: KbaAppSwitcherApp[];
+}
+
+export interface KbaAppSwitcherSite {
+    name: string;
+    id: string | number;
+    status?: string;
+    icon?: string;
+    apps: KbaAppSwitcherApp[];
+}
+
 @Component({
     standalone: true,
     selector: 'kbq-app-switcher',
@@ -84,7 +101,10 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
     protected readonly componentColors = KbqComponentColors;
 
     searchValue: string = '';
-    withSites: boolean = true;
+
+    get withSites(): boolean {
+        return !!this.trigger.sites.length;
+    }
 
     prefix = 'kbq-app-switcher';
 
@@ -92,8 +112,8 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
 
     isTrapFocus: boolean = false;
 
-    activeSite;
-    activeApp;
+    protected activeSite;
+    protected activeApp;
 
     @ViewChild(KbqInput) input: KbqInput;
     @ViewChild('appSwitcherContent') appSwitcherContent: ElementRef<HTMLDivElement>;
@@ -139,7 +159,13 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
         this.hide(0);
     }
 
-    modelValue: any = '';
+    selectAppInSite(site, app) {
+        this.trigger.selectedSite = site;
+        this.trigger.selectedApp = app;
+
+        this.trigger.selectedSiteChanges.emit(site);
+        this.trigger.selectedAppChanges.emit(site);
+    }
 }
 
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -169,7 +195,13 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         '(touchend)': 'handleTouchend()'
     }
 })
-export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> implements AfterContentInit, OnInit {
+export class KbqAppSwitcherTrigger<
+        S extends KbaAppSwitcherSite = KbaAppSwitcherSite,
+        A extends KbaAppSwitcherApp = KbaAppSwitcherApp
+    >
+    extends KbqPopUpTrigger<KbqAppSwitcher>
+    implements AfterContentInit, OnInit
+{
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_APP_SWITCHER_SCROLL_STRATEGY);
 
     // not used
@@ -184,7 +216,46 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
 
     @Input({ transform: booleanAttribute }) search: boolean;
 
-    @Input() sites;
+    @Input()
+    get sites(): S[] {
+        return this._parsedSites;
+    }
+
+    set sites(value: S[]) {
+        console.log('set sites(value: S[]) {: ');
+
+        this._parsedSites = [];
+
+        value.forEach((site: S) => {
+            const newSite: S = { ...site };
+
+            const groupedApps: any = {};
+
+            site.apps.forEach((app) => {
+                if (groupedApps[app.type]) {
+                    groupedApps[app.type].apps.push(app);
+                } else {
+                    groupedApps[app.type] = {
+                        name: app.type,
+                        apps: []
+                    };
+                }
+            });
+
+            if (Object.values(groupedApps).length > 1) {
+                newSite.apps = Object.values(groupedApps);
+            }
+
+            this._parsedSites.push(newSite);
+        });
+    }
+
+    private _parsedSites: S[];
+
+    @Input() selectedSite: S;
+
+    @Input() apps: A[];
+    @Input() selectedApp: A;
 
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -212,6 +283,9 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     @Output('kbqPlacementChange') readonly placementChange = new EventEmitter();
 
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
+
+    @Output() readonly selectedSiteChanges = new EventEmitter<any>();
+    @Output() readonly selectedAppChanges = new EventEmitter<any>();
 
     protected originSelector = '.kbq-app-switcher';
 
