@@ -39,7 +39,7 @@
         margin-left: -1px;
         margin-right: 0;
 
-        height: 12px;
+        height: var(--kbq-size-l);
 
         align-self: center;
 
@@ -53,10 +53,10 @@
             content: '';
             position: absolute;
             left: 0;
-            top: 10px;
+            top: var(--kbq-size-s);
 
             width: 1px;
-            height: 12px;
+            height: var(--kbq-size-l);
 
             background: var(--kbq-line-contrast-less);
         }
