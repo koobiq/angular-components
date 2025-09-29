@@ -65,7 +65,7 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
     ],
     templateUrl: './time-range-editor.html',
     host: {
-        class: 'kbq-time-range-editor'
+        class: 'kbq-time-range__editor'
     },
     providers: [
         {
@@ -92,7 +92,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /** The minimum selectable date. */
     readonly minDate = input<T | null>(null);
     /** Preset of selectable ranges */
-    readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
+    readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.providedDefaultTimeRangeTypes);
     /** Provided value of selected range */
     readonly rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
 

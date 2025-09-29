@@ -15,7 +15,6 @@ import {
 export class KbqTimeRangeService<T> {
     readonly dateAdapter = inject<DateAdapter<T>>(DateAdapter);
     readonly dateFormatter = inject<DateFormatter<T>>(DateFormatter);
-    protected readonly providedDefaultTimeRangeTypes = inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true });
 
     protected defaultTimeRangeTypes: KbqTimeRangeType[] = [
         'lastHour',
@@ -28,6 +27,9 @@ export class KbqTimeRangeService<T> {
         'allTime',
         'range'
     ];
+
+    readonly providedDefaultTimeRangeTypes =
+        inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true }) || this.defaultTimeRangeTypes;
 
     static readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
@@ -81,15 +83,15 @@ export class KbqTimeRangeService<T> {
         range: 'other'
     };
 
-    get resolvedTimeRangeTypes(): KbqTimeRangeType[] {
-        return this.providedDefaultTimeRangeTypes || this.defaultTimeRangeTypes;
-    }
-
     constructor() {
         if (!this.dateAdapter) {
             throw createMissingDateImplError('KbqTimeRange', 'DateAdapter');
         }
     }
+
+    static range = (dateTimeISOString: string): KbqRange => ({
+        startDateTime: dateTimeISOString
+    });
 
     getTimeRangeTypeUnits(type: KbqTimeRangeType): KbqTimeRangeUnits {
         return KbqTimeRangeService.timeRangeMap[type];
@@ -116,7 +118,9 @@ export class KbqTimeRangeService<T> {
         availableTimeRangeTypes: KbqTimeRangeType[] = []
     ): KbqTimeRangeRange {
         const defaultType =
-            availableTimeRangeTypes[0] ?? this.defaultTimeRangeTypes[0] ?? KbqTimeRangeService.DEFAULT_RANGE_TYPE;
+            availableTimeRangeTypes[0] ??
+            this.providedDefaultTimeRangeTypes[0] ??
+            KbqTimeRangeService.DEFAULT_RANGE_TYPE;
 
         return {
             ...this.calculateTimeRange(defaultType, rangeValue || this.getDefaultRangeValue()),
@@ -151,45 +155,42 @@ export class KbqTimeRangeService<T> {
             };
         }
 
-        switch (type) {
-            case 'lastMinute':
-                return this.lastMinutesRange(1);
-            case 'last5Minutes':
-                return this.lastMinutesRange(5);
-            case 'last15Minutes':
-                return this.lastMinutesRange(15);
-            case 'last30Minutes':
-                return this.lastMinutesRange(30);
-            case 'lastHour':
-                return this.lastHoursRange(1);
-            case 'last24Hours':
-                return this.lastHoursRange(24);
-            case 'last3Days':
-                return this.lastDaysRange(3);
-            case 'last7Days':
-                return this.lastDaysRange(7);
-            case 'last14Days':
-                return this.lastDaysRange(14);
-            case 'last30Days':
-                return this.lastDaysRange(30);
-            case 'last3Months':
-                return this.lastMonthsRange(3);
-            case 'last12Months':
-                return this.lastMonthsRange(12);
-            case 'currentQuarter':
-                return KbqTimeRangeService.range(
-                    this.dateAdapter.toIso8601(this.dateAdapter.startOf(this.dateAdapter.today(), 'quarter'))
-                );
-            case 'currentYear':
-                return KbqTimeRangeService.range(
-                    this.dateAdapter.toIso8601(this.dateAdapter.startOf(this.dateAdapter.today(), 'year'))
-                );
-            case 'allTime':
-            default:
-                return {
-                    startDateTime: undefined,
-                    endDateTime: undefined
-                };
+        switch (this.getTimeRangeUnitByType(type)) {
+            case 'seconds': {
+                return this.lastSecondsRange(this.getTimeRangeTypeUnits(type).seconds!);
+            }
+            case 'minutes': {
+                return this.lastMinutesRange(this.getTimeRangeTypeUnits(type).minutes!);
+            }
+            case 'hours': {
+                return this.lastHoursRange(this.getTimeRangeTypeUnits(type).hours!);
+            }
+            case 'days': {
+                return this.lastDaysRange(this.getTimeRangeTypeUnits(type).days!);
+            }
+            // @TODO: implement weeks range after date adapter update
+            case 'months': {
+                return this.lastMonthsRange(this.getTimeRangeTypeUnits(type).months!);
+            }
+            case 'other':
+            default: {
+                switch (type) {
+                    case 'currentQuarter':
+                        return KbqTimeRangeService.range(
+                            this.dateAdapter.toIso8601(this.dateAdapter.startOf(this.dateAdapter.today(), 'quarter'))
+                        );
+                    case 'currentYear':
+                        return KbqTimeRangeService.range(
+                            this.dateAdapter.toIso8601(this.dateAdapter.startOf(this.dateAdapter.today(), 'year'))
+                        );
+                    case 'allTime':
+                    default:
+                        return {
+                            startDateTime: undefined,
+                            endDateTime: undefined
+                        };
+                }
+            }
         }
     }
 
@@ -204,6 +205,24 @@ export class KbqTimeRangeService<T> {
             this.dateAdapter.getMilliseconds(time)
         );
     }
+
+    lastSecondsRange = (seconds: number): KbqRange => {
+        const date = this.dateAdapter!.today();
+
+        return KbqTimeRangeService.range(
+            this.dateAdapter.toIso8601(
+                this.dateAdapter!.createDateTime(
+                    this.dateAdapter.getYear(date),
+                    this.dateAdapter.getMonth(date),
+                    this.dateAdapter.getDate(date),
+                    this.dateAdapter.getHours(date),
+                    this.dateAdapter.getMinutes(date),
+                    this.dateAdapter.getSeconds(date) - seconds,
+                    0
+                )
+            )
+        );
+    };
 
     lastMinutesRange = (minutes: number): KbqRange => {
         const date = this.dateAdapter!.today();
@@ -250,10 +269,6 @@ export class KbqTimeRangeService<T> {
         KbqTimeRangeService.range(
             this.dateAdapter.toIso8601(this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), -months))
         );
-
-    static range = (dateTimeISOString: string): KbqRange => ({
-        startDateTime: dateTimeISOString
-    });
 
     checkAndCorrectTimeRangeValue(
         value: KbqTimeRangeRange | undefined,

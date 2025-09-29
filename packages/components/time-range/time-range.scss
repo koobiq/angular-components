@@ -1,4 +1,16 @@
-.kbq-time-range-editor {
+.kbq-time-range {
+    .kbq-time-range__trigger {
+        display: block;
+    }
+
+    .kbq-time-range__buttons {
+        display: flex;
+        flex-direction: row;
+        gap: var(--kbq-size-l);
+    }
+}
+
+.kbq-time-range__editor {
     display: block;
 
     .kbq-time-range-editor__container {
@@ -41,8 +53,8 @@
     }
 }
 
-.kbq-time-range__buttons {
-    display: flex;
-    flex-direction: row;
-    gap: var(--kbq-size-l);
+.kbq-time-range-title-as-form-field {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-height: calc(var(--kbq-form-field-size-height) - 2 * var(--kbq-size-border-width));
 }

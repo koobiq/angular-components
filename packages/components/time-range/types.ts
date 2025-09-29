@@ -1,3 +1,4 @@
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { DurationUnit } from '@koobiq/date-adapter';
 
 export interface KbqRangeValue<T> {
@@ -39,19 +40,23 @@ export type KbqTimeRangeType =
     | 'currentYear'
     | 'range';
 
-export type KbqTimeRangeTranslationType = Extract<DurationUnit, 'minutes' | 'hours' | 'days' | 'months'> | 'other';
+export type KbqTimeRangeTranslationType =
+    | Extract<DurationUnit, 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months'>
+    | 'other';
 
 export interface KbqTimeRangeUnits {
+    seconds?: number;
     minutes?: number;
     hours?: number;
     days?: number;
+    weeks?: number;
     months?: number;
 }
 
 export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
 export type KbqTimeRangeCustomizableTitleContext = KbqTimeRangeTitleContext & {
     $implicit: KbqTimeRangeTitleContext;
-} & { formattedDate: string };
+} & { formattedDate: string; popover: KbqPopoverTrigger };
 
 export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
 export type KbqTimeRangeOptionContext = KbqTimeRangeTypeContext &

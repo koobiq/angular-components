@@ -10,6 +10,11 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     template: `
         <time-range-overview-example />
+        <time-range-custom-trigger-example />
+        <time-range-empty-type-list-example />
+        <time-range-min-max-example />
+
+        <time-range-as-form-field-example />
     `,
     styles: `
         :host {

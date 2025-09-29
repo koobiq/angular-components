@@ -1,8 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Injector, input, TemplateRef } from '@angular/core';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
 
@@ -17,7 +18,7 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
     ],
     template: `
         @if (titleTemplate()) {
-            <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null" />
+            <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null; injector: injector" />
         } @else {
             <a kbq-link pseudo>
                 <span class="kbq-link__text">{{ formattedDate() }}</span>
@@ -25,10 +26,13 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
                 <i kbq-icon="kbq-calendar-o_16"></i>
             </a>
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqTimeRangeTitle {
     private readonly timeRangeService = inject(KbqTimeRangeService);
+    private readonly popover = inject(KbqPopoverTrigger, { host: true });
+    protected readonly injector = inject(Injector);
 
     readonly timeRange = input<KbqTimeRangeRange>();
     readonly titleTemplate = input<TemplateRef<any>>();
@@ -51,10 +55,11 @@ export class KbqTimeRangeTitle {
 
         if (!context) return undefined;
 
+        const customizableTitleContext = { ...context, formattedDate, popover: this.popover };
+
         return {
-            $implicit: { ...context, formattedDate },
-            formattedDate,
-            ...context
+            $implicit: customizableTitleContext,
+            ...customizableTitleContext
         };
     });
 

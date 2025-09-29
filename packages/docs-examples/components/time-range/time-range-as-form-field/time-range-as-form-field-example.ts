@@ -1,42 +1,31 @@
 import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
-import { KbqFormField, KbqSuffix } from '@koobiq/components/form-field';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
+import { KbqTimeRangeModule, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
 
 /**
- * @title Time range custom trigger
+ * @title Time range as form field
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    selector: 'time-range-custom-trigger-example',
+    selector: 'time-range-as-form-field-example',
     imports: [
         ReactiveFormsModule,
-        KbqTimeRange,
-        KbqIconModule,
-        KbqButtonModule,
+        KbqTimeRangeModule,
         LuxonDateModule,
-        KbqFormField,
-        KbqSuffix,
+        KbqIconModule,
+        KbqFormFieldModule,
         KbqTimeRangeTitleAsControl,
         TitleCasePipe
     ],
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     template: `
-        <ng-template #titleTemplate let-context>
-            <button kbq-button aria-label="time range trigger" [class.kbq-active]="context.popover.isOpen">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-            </button>
-        </ng-template>
-
-        <kbq-time-range [titleTemplate]="titleTemplate" [formControl]="control" [arrow]="false" />
-
         <ng-template #titleAsFormField let-context>
             <kbq-form-field>
                 <kbq-time-range-title-as-control>
@@ -46,17 +35,10 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
             </kbq-form-field>
         </ng-template>
 
-        <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [formControl]="control" />
+        <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" />
     `,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeCustomTriggerExample {
-    protected readonly control = new FormControl<KbqTimeRangeRange | null>(
-        {
-            type: 'last5Minutes'
-        },
-        { nonNullable: true }
-    );
-}
+export class TimeRangeAsFormFieldExample {}

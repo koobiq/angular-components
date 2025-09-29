@@ -3,6 +3,7 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeType } from './types';
 
+/** Preset of selectable time ranges, provided by DI. */
 export const KBQ_DEFAULT_TIME_RANGE_TYPES = new InjectionToken<KbqTimeRangeType[]>('KBQ_DEFAULT_TIME_RANGE_TYPES');
 
 export function createMissingDateImplError(componentName: string, provider: string): Error {

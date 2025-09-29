@@ -14,7 +14,7 @@ import {
     WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
@@ -36,11 +36,9 @@ export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRan
 );
 
 /** Utility provider for `KBQ_TIME_RANGE_LOCALE_CONFIGURATION`. */
-export const kbqTimeRangeLocaleConfigurationProvider = (
-    configuration: Partial<KbqTimeRangeLocaleConfig>
-): Provider => ({
+export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRangeLocaleConfig): Provider => ({
     provide: KBQ_TIME_RANGE_LOCALE_CONFIGURATION,
-    useValue: { ...ruRULocaleData.timeRange, ...configuration }
+    useValue: configuration
 });
 
 @Component({
@@ -48,7 +46,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
     selector: 'kbq-time-range',
     template: `
         @let localeConfig = localeConfiguration();
-        <div
+        <kbq-time-range-title
             #popover="kbqPopover"
             class="kbq-time-range__trigger"
             kbqPopover
@@ -58,14 +56,11 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
             [kbqPopoverFooter]="timeRangePopoverFooter"
             [kbqPopoverPlacement]="popupPlacement"
             [kbqPopoverArrow]="arrow()"
+            [titleTemplate]="titleTemplate()"
+            [timeRange]="titleValue()"
+            [localeConfiguration]="localeConfig"
             (kbqPopoverVisibleChange)="onVisibleChange($event)"
-        >
-            <kbq-time-range-title
-                [titleTemplate]="titleTemplate()"
-                [timeRange]="titleValue()"
-                [localeConfiguration]="localeConfig"
-            />
-        </div>
+        />
 
         <ng-template #timeRangePopoverContent>
             <kbq-time-range-editor
@@ -105,20 +100,14 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
     host: {
         class: 'kbq-time-range'
     },
-    providers: [
-        KbqTimeRangeService,
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: KbqTimeRange,
-            multi: true
-        }
-    ],
+    providers: [KbqTimeRangeService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    readonly ngControl = inject(NgControl, { optional: true, self: true });
 
     /** The minimum selectable date. */
     readonly minDate = input<T>();
@@ -127,7 +116,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     /** provided value of selected range */
     readonly defaultRangeValue = input<KbqRangeValue<T>>();
     /** Preset of selectable ranges */
-    readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.resolvedTimeRangeTypes);
+    readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.providedDefaultTimeRangeTypes);
     /** Customizable trigger output */
     readonly titleTemplate = input<TemplateRef<KbqTimeRangeCustomizableTitleContext>>();
 
@@ -161,6 +150,10 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly localeConfiguration = signal(inject(KBQ_TIME_RANGE_LOCALE_CONFIGURATION));
 
     constructor() {
+        if (this.ngControl) {
+            this.ngControl.valueAccessor = this;
+        }
+
         const defaultValue = this.timeRangeService.getTimeRangeDefaultValue(
             this.normalizedDefaultRangeValue(),
             this.availableTimeRangeTypes()
@@ -175,23 +168,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
         toObservable(this.availableTimeRangeTypes)
             .pipe(takeUntilDestroyed())
-            .subscribe((types) => {
-                if (
-                    types.includes(this.rangeEditorControl.value.type) ||
-                    this.rangeEditorControl.value.type === 'range'
-                ) {
-                    return;
-                }
-
-                this.titleValue.set(
-                    this.timeRangeService.getTimeRangeDefaultValue(
-                        this.normalizedDefaultRangeValue(),
-                        types.length ? types : ['range']
-                    )
-                );
-                this.rangeEditorControl.setValue(this.titleValue());
-                this.onChange(this.rangeEditorControl.value);
-            });
+            .subscribe(this.handleAvailableTypesChange);
     }
 
     ngOnInit() {
@@ -243,4 +220,19 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;
     }
+
+    private handleAvailableTypesChange = (types: KbqTimeRangeType[]) => {
+        if (types.includes(this.rangeEditorControl.value.type) || this.rangeEditorControl.value.type === 'range') {
+            return;
+        }
+
+        this.titleValue.set(
+            this.timeRangeService.getTimeRangeDefaultValue(
+                this.normalizedDefaultRangeValue(),
+                types.length ? types : ['range']
+            )
+        );
+        this.rangeEditorControl.setValue(this.titleValue());
+        this.onChange(this.rangeEditorControl.value);
+    };
 }
