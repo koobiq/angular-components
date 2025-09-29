@@ -526,8 +526,6 @@ export class KbqTagList
 
     /**
      * Implemented as part of ControlValueAccessor.
-     *
-     * @docs-private
      */
     writeValue(value: any): void {
         if (this.tags) {
@@ -537,8 +535,6 @@ export class KbqTagList
 
     /**
      * Implemented as part of ControlValueAccessor.
-     *
-     * @docs-private
      */
     registerOnChange(fn: (value: any) => void): void {
         this.onChange = fn;
@@ -546,8 +542,6 @@ export class KbqTagList
 
     /**
      * Implemented as part of ControlValueAccessor.
-     *
-     * @docs-private
      */
     registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
@@ -555,8 +549,6 @@ export class KbqTagList
 
     /**
      * Implemented as part of ControlValueAccessor.
-     *
-     * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
