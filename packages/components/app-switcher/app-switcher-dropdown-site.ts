@@ -11,8 +11,8 @@ import { KbqIcon } from '@koobiq/components/icon';
     template: `
         <span class="kbq-app-switcher-dropdown-site__name">{{ site.name }}</span>
 
-        @if (site.main) {
-            <kbq-badge class="kbq-app-switcher-dropdown-site__badge" [compact]="true">Главная</kbq-badge>
+        @if (site.status) {
+            <kbq-badge class="kbq-app-switcher-dropdown-site__badge" [compact]="true">{{ site.status }}</kbq-badge>
         }
 
         @if (isNested) {
