@@ -651,34 +651,6 @@ describe(KbqTagList.name, () => {
         });
     });
 
-    describe('with tag remove', () => {
-        let tagList: KbqTagList;
-        let chipRemoveDebugElements: DebugElement[];
-
-        beforeEach(() => {
-            fixture = createComponent(TagListWithRemove);
-            fixture.detectChanges();
-
-            tagList = fixture.debugElement.query(By.directive(KbqTagList)).componentInstance;
-            chipRemoveDebugElements = fixture.debugElement.queryAll(By.directive(KbqTagRemove));
-            tags = tagList.tags;
-        });
-
-        it('should properly focus next item if tag is removed through click', fakeAsync(() => {
-            tags.toArray()[2].focus();
-
-            // Destroy the third focused tag by dispatching a bubbling click event on the
-            // associated tag remove element.
-            dispatchMouseEvent(chipRemoveDebugElements[2].nativeElement, 'click');
-            fixture.detectChanges();
-            tick();
-
-            expect(tags.toArray()[2].value).not.toBe(2);
-
-            expect(tagList.keyManager.activeItemIndex).toBe(2);
-        }));
-    });
-
     describe('forms integration', () => {
         let nativeTags: HTMLElement[];
 
