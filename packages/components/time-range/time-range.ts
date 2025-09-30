@@ -194,14 +194,13 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
         );
 
         if (
-            (value && 'type' in value && !('startDateTime' in value)) ||
-            (value && 'type' in value && !availableTimeRangeTypes.includes(value.type)) ||
+            (value && value.type && !('startDateTime' in value && availableTimeRangeTypes.includes(value.type))) ||
             (nonNullable && value === null)
         ) {
             this.valueCorrected.emit(corrected);
         }
 
-        this.titleValue.set(nonNullable ? corrected : value === null ? null : corrected);
+        this.titleValue.set(nonNullable || value !== null ? corrected : null);
         this.rangeEditorControl.setValue(corrected);
     }
 
