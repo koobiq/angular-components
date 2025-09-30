@@ -91,9 +91,7 @@ export class KbqTagList
         OnDestroy,
         CanUpdateErrorState
 {
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     readonly controlType: string = 'tag-list';
 
     /**
@@ -300,9 +298,7 @@ export class KbqTagList
      */
     @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     uid: string = `kbq-tag-list-${nextUniqueId++}`;
 
     /**
@@ -313,19 +309,13 @@ export class KbqTagList
      */
     userTabIndex: number | null = null;
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     keyManager: FocusKeyManager<KbqTag>;
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     selectionModel: SelectionModel<KbqTag>;
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     tagChanges = new EventEmitter<any>();
 
     /** An object used to control when error messages are shown. */
@@ -337,9 +327,7 @@ export class KbqTagList
     /** Event emitted when the selected tag list value has been changed by the user. */
     @Output() readonly change: EventEmitter<KbqTagListChange> = new EventEmitter<KbqTagListChange>();
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     @ContentChild('kbqTagListCleaner', { static: true }) cleaner: KbqCleaner;
 
     /**
@@ -482,9 +470,7 @@ export class KbqTagList
         this.dropSubscriptions();
     }
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     updateErrorState() {
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
@@ -498,14 +484,10 @@ export class KbqTagList
         }
     }
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     onTouched = () => {};
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     onChange: (value: any) => void = () => {};
 
     /**
@@ -635,9 +617,7 @@ export class KbqTagList
         }
     }
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     setSelectionByValue(value: any, isUserInput: boolean = true) {
         this.clearSelection();
         // @TODO seems like redundant action, need to double check (#DS-3740)
@@ -748,9 +728,7 @@ export class KbqTagList
         this.tags.forEach((tag) => tag.select());
     }
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     removeSelected(): void {
         this.selectionModel.selected.forEach((tag) => tag.remove());
     }
