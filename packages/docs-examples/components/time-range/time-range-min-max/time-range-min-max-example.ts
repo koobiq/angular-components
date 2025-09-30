@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -15,7 +16,8 @@ import { DateTime } from 'luxon';
     imports: [
         ReactiveFormsModule,
         KbqTimeRange,
-        LuxonDateModule
+        LuxonDateModule,
+        JsonPipe
     ],
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],

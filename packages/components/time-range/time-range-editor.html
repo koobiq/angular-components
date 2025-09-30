@@ -32,6 +32,8 @@
 
                         <kbq-form-field>
                             <input
+                                [min]="minDate()"
+                                [max]="maxDate()"
                                 [kbqDatepicker]="datepickerFrom"
                                 [formControl]="form.controls.fromDate"
                                 [errorStateMatcher]="rangeStateMatcher"
@@ -54,6 +56,8 @@
 
                         <kbq-form-field>
                             <input
+                                [min]="minDate()"
+                                [max]="maxDate()"
                                 [kbqDatepicker]="datepickerTo"
                                 [formControl]="form.controls.toDate"
                                 [errorStateMatcher]="rangeStateMatcher"

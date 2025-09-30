@@ -106,10 +106,10 @@ export class KbqTimeRangeService<T> {
         const to = this.dateAdapter!.today();
 
         return {
-            fromTime: from,
-            fromDate: from,
-            toTime: to,
-            toDate: to
+            fromTime: this.omitMilliseconds(from),
+            fromDate: this.omitMilliseconds(from),
+            toTime: this.omitMilliseconds(to),
+            toDate: this.omitMilliseconds(to)
         };
     }
 
@@ -288,5 +288,17 @@ export class KbqTimeRangeService<T> {
         }
 
         return result;
+    }
+
+    omitMilliseconds(date: T): T {
+        return this.dateAdapter.createDateTime(
+            this.dateAdapter.getYear(date),
+            this.dateAdapter.getMonth(date),
+            this.dateAdapter.getDate(date),
+            this.dateAdapter.getHours(date),
+            this.dateAdapter.getMinutes(date),
+            this.dateAdapter.getSeconds(date),
+            0
+        );
     }
 }

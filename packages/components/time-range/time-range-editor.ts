@@ -29,6 +29,7 @@ import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/compon
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepicker, KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
+import { merge } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { rangeValidator } from './constants';
 import { KbqTimeRangeService } from './time-range.service';
@@ -95,7 +96,6 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.providedDefaultTimeRangeTypes);
     /** Provided value of selected range */
     readonly rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
-
     readonly showRangeAsDefault = input.required<boolean>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
 
@@ -124,6 +124,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /** @docs-private */
     protected readonly timepickerFormat = TimeFormats.HHmmss;
 
+    private lastValidationErrorOnEmit: ValidationErrors | null = null;
+
     constructor() {
         const defaultRangeValue = this.rangeValue();
 
@@ -144,6 +146,10 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             this.form.controls.toTime,
             this.form.controls.toDate
         ];
+
+        merge(...rangeControls.map((control) => control.statusChanges))
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => (this.lastValidationErrorOnEmit = this.concatControlValidationErrors()));
 
         this.form.valueChanges
             .pipe(
@@ -192,7 +198,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     }
 
     validate(): ValidationErrors | null {
-        return this.form.errors;
+        return this.form.errors || this.lastValidationErrorOnEmit;
     }
 
     /** Implemented as part of ControlValueAccessor */
@@ -262,5 +268,20 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             false,
             localeConfig.durationTemplate.option
         );
+    }
+
+    private concatControlValidationErrors(): ValidationErrors | null {
+        let result: ValidationErrors | null = this.form.errors;
+
+        Object.values(this.form.controls).forEach((control: AbstractControl) => {
+            if (control.errors) {
+                result = {
+                    ...result,
+                    ...control.errors
+                };
+            }
+        });
+
+        return result;
     }
 }
