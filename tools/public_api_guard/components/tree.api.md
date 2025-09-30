@@ -411,7 +411,7 @@ export class KbqTreeNodeToggleBaseDirective<T> {
 // @public (undocumented)
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeNodeToggleComponent<any>, "kbq-tree-node-toggle", ["kbqTreeNodeToggle"], {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeNodeToggleComponent<any>, "kbq-tree-node-toggle", ["kbqTreeNodeToggle"], {}, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleComponent<any>, never>;
 }

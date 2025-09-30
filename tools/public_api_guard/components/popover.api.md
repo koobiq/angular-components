@@ -33,6 +33,9 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
+// @public (undocumented)
+export const defaultOffsetYWithArrow = 8;
+
 // @public
 export function getKbqPopoverInvalidPositionError(position: string): Error;
 
