@@ -347,13 +347,21 @@ export class KbqTagList
     /** @docs-private */
     selectionModel: SelectionModel<KbqTag>;
 
-    /** @docs-private */
+    /**
+     * @docs-private
+     *
+     * @deprecated Unused. Will be removed in next major release.
+     */
     tagChanges = new EventEmitter<any>();
 
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    /** Orientation of the tag list. */
+    /**
+     * Orientation of the tag list.
+     *
+     * @deprecated Unused. Will be removed in next major release.
+     */
     @Input() orientation: KbqOrientation = 'horizontal';
 
     /** Event emitted when the selected tag list value has been changed by the user. */

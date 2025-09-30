@@ -69,9 +69,12 @@
         margin-right: var(--kbq-size-3xs);
     }
 
-    &.cdk-drag-preview,
     &.cdk-drag-placeholder {
         opacity: var(--kbq-opacity-disabled);
+    }
+
+    &.cdk-drag-animating {
+        transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
     }
 }
 
