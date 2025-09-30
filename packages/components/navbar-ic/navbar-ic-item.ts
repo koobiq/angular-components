@@ -4,23 +4,29 @@ import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
     Directive,
     ElementRef,
+    inject,
     Input,
     NgZone,
     OnDestroy,
-    ViewEncapsulation,
-    booleanAttribute,
-    inject
+    ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { ENTER, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KBQ_WINDOW, KbqRectangleItem, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
+import {
+    KBQ_WINDOW,
+    kbqInjectNativeElement,
+    KbqRectangleItem,
+    PopUpPlacements,
+    PopUpTriggers
+} from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -60,7 +66,7 @@ export class KbqNavbarIcLogo {}
 })
 export class KbqNavbarIcTitle implements AfterViewInit {
     protected readonly isBrowser = inject(Platform).isBrowser;
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
 
     readonly hovered = new Subject<boolean>();
@@ -69,7 +75,7 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     isTextOverflown: boolean = false;
 
     get text(): string {
-        return this.nativeElement.textContent;
+        return this.nativeElement.textContent || '';
     }
 
     get isOverflown() {
@@ -120,7 +126,7 @@ export class KbqNavbarIcDivider {}
     }
 })
 export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
-    protected readonly elementRef = inject(ElementRef<HTMLElement>);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetector = inject(ChangeDetectorRef);
     protected readonly focusMonitor = inject(FocusMonitor);
     protected readonly ngZone = inject(NgZone);

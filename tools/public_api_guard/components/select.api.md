@@ -93,7 +93,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 
 // @public (undocumented)
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
-    constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
+    constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef<HTMLElement>, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
     // (undocumented)
     backdropClass: string;
     // (undocumented)
@@ -130,7 +130,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    elementRef: ElementRef;
+    elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     get empty(): boolean;
     errorState: boolean;

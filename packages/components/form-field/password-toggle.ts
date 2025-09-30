@@ -6,7 +6,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     inject,
     Input,
     numberAttribute,
@@ -15,7 +14,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_FORM_FIELD_REF, PopUpTriggers } from '@koobiq/components/core';
+import { KBQ_FORM_FIELD_REF, kbqInjectNativeElement, PopUpTriggers } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqFormField } from './form-field';
@@ -66,7 +65,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly nativeElement = kbqInjectNativeElement();
     protected readonly focusMonitor = inject(FocusMonitor);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 

@@ -260,7 +260,7 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     protected readonly buttonStyle = KbqButtonStyles;
 
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly destroyRef = inject(DestroyRef);

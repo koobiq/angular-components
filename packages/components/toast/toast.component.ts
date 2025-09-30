@@ -89,7 +89,7 @@ export class KbqToastComponent implements OnDestroy {
     constructor(
         readonly data: KbqToastData,
         @Inject(forwardRef(() => KbqToastService)) readonly service: KbqToastService,
-        public elementRef: ElementRef,
+        public elementRef: ElementRef<HTMLElement>,
         private focusMonitor: FocusMonitor
     ) {
         this.$implicit = this;

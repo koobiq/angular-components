@@ -105,7 +105,7 @@ export const getKbqFormFieldMissingControlError = (): Error => {
 export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
     private readonly focusMonitor = inject(FocusMonitor);
 

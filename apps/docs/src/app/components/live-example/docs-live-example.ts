@@ -88,7 +88,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
     private readonly appRef = inject(ApplicationRef);
     private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly ngZone = inject(NgZone);

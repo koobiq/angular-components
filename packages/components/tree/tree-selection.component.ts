@@ -229,7 +229,7 @@ export class KbqTreeSelection
     private optionBlurSubscription: Subscription | null;
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private scheduler: AsyncScheduler,
         differs: IterableDiffers,
         changeDetectorRef: ChangeDetectorRef,

@@ -64,7 +64,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly titleService = inject(Title);
     private readonly docStates = inject(DocsDocStates);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
 
     readonly themePalette = ThemePalette;

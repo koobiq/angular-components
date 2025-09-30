@@ -175,7 +175,7 @@ export class KbqListSelectAllEvent<T> {
 
 // @public (undocumented)
 export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
+    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);

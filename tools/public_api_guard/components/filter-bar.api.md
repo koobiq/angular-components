@@ -516,7 +516,7 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    protected readonly elementRef: ElementRef<any>;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly filterBar: KbqFilterBar | null;
     maxSymbolsForFitContent: number;
     protected minWidth: string;

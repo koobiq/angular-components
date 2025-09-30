@@ -18,7 +18,12 @@ import {
     Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { getNodesWithoutComments, leftIconClassName, rightIconClassName } from '@koobiq/components/core';
+import {
+    getNodesWithoutComments,
+    kbqInjectNativeElement,
+    leftIconClassName,
+    rightIconClassName
+} from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
 export const baseURLRegex = /^http(s)?:\/\//;
@@ -45,7 +50,7 @@ export const baseURLRegex = /^http(s)?:\/\//;
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly renderer = inject(Renderer2);
     protected readonly destroyRef = inject(DestroyRef);
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly nativeElement = kbqInjectNativeElement();
 
     @ContentChildren(forwardRef(() => KbqIcon), { read: ElementRef }) icons: QueryList<ElementRef>;
 
@@ -107,7 +112,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     @ContentChild(KbqIcon) icon: KbqIcon;
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLAnchorElement>,
         private focusMonitor: FocusMonitor,
         private changeDetector: ChangeDetectorRef
     ) {

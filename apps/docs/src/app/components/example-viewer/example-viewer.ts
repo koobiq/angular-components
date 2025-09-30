@@ -66,11 +66,11 @@ export class DocsExampleViewerComponent implements OnDestroy {
         this.fetchDocument(url);
     }
 
-    @Output() readonly contentRendered = new EventEmitter<void>();
-    @Output() readonly contentRenderFailed = new EventEmitter<void>();
+    @Output() readonly contentRendered = new EventEmitter<HTMLElement>();
+    @Output() readonly contentRenderFailed = new EventEmitter<HTMLElement>();
 
     /** The document text. It should not be HTML encoded. */
-    textContent = '';
+    textContent: string | null = '';
 
     private static initExampleViewer(exampleViewerComponent: DocsLiveExampleViewerComponent, example: string) {
         exampleViewerComponent.example = example;
@@ -79,7 +79,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
     constructor(
         private appRef: ApplicationRef,
         private componentFactoryResolver: ComponentFactoryResolver,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private injector: Injector,
         private viewContainerRef: ViewContainerRef,
         private ngZone: NgZone,
@@ -130,7 +130,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
         console.error(error);
-        this.elementRef.nativeElement.innerHtml = `Failed to load document: ${url}. Error: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Create issue</a>`;
+        this.elementRef.nativeElement.innerHTML = `Failed to load document: ${url}. Error: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Create issue</a>`;
 
         this.ngZone.onStable
             .pipe(take(1))
@@ -141,7 +141,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
     private loadComponents(componentName: string, componentClass: any) {
         const exampleElements = this.elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
-        [...exampleElements].forEach((element: Element) => {
+        exampleElements.forEach((element: Element) => {
             const example = element.getAttribute(componentName);
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);

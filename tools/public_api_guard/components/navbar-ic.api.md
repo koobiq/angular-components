@@ -65,7 +65,7 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
     // (undocumented)
     protected dropSubscriptions(): void;
     // (undocumented)
-    protected readonly elementRef: ElementRef<any>;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     focusableItems: QueryList<KbqNavbarIcFocusableItem>;
     focusHandler(): void;
@@ -200,7 +200,7 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected readonly elementRef: ElementRef<any>;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     focus(origin?: FocusOrigin): void;
     focusHandler(): void;
@@ -247,7 +247,7 @@ export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContent
     // (undocumented)
     logo: KbqNavbarIcLogo;
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     protected readonly navbar: KbqNavbarIc;
     // (undocumented)
@@ -337,7 +337,7 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     // (undocumented)
     isTextOverflown: boolean;
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

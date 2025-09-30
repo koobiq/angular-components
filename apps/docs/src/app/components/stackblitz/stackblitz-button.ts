@@ -43,7 +43,7 @@ export class DocsStackblitzButtonComponent extends KbqLink {
     private openStackBlitzFn: (() => void) | null = null;
 
     constructor(
-        elementRef: ElementRef,
+        elementRef: ElementRef<HTMLAnchorElement>,
         focusMonitor: FocusMonitor,
         changeDetector: ChangeDetectorRef,
         private stackBlitzWriter: DocsStackblitzWriter,

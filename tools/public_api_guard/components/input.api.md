@@ -66,7 +66,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
-    constructor(elementRef: ElementRef, ngControl: NgControl, numberInput: KbqNumberInput, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
+    constructor(elementRef: ElementRef<HTMLInputElement>, ngControl: NgControl, numberInput: KbqNumberInput, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -74,7 +74,7 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected elementRef: ElementRef;
+    protected elementRef: ElementRef<HTMLInputElement>;
     get empty(): boolean;
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
@@ -150,7 +150,7 @@ export class KbqInputMono {
 
 // @public (undocumented)
 export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
-    constructor(elementRef: ElementRef, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
+    constructor(elementRef: ElementRef<HTMLInputElement>, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
     // (undocumented)
     readonly checkRule: Subject<void>;
     // (undocumented)
@@ -162,7 +162,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected elementRef: ElementRef;
+    protected elementRef: ElementRef<HTMLInputElement>;
     // (undocumented)
     elementType: string;
     get empty(): boolean;
@@ -213,7 +213,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
 
 // @public (undocumented)
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
-    constructor(elementRef: ElementRef, renderer: Renderer2, step: string, bigStep: string, min: string, max: string, localeService?: KbqLocaleService | undefined);
+    constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, step: string, bigStep: string, min: string, max: string, localeService?: KbqLocaleService | undefined);
     // (undocumented)
     bigStep: number;
     // (undocumented)

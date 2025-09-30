@@ -80,7 +80,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private focusMonitor: FocusMonitor,
         @Inject(KBQ_OPTION_ACTION_PARENT) private option: KbqOptionActionParent
     ) {}

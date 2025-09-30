@@ -48,7 +48,7 @@ export class KbqToastCloseButton {
 export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     $implicit: any;
-    constructor(data: KbqToastData, service: KbqToastService, elementRef: ElementRef, focusMonitor: FocusMonitor);
+    constructor(data: KbqToastData, service: KbqToastService, elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor);
     // (undocumented)
     animationState: string;
     // (undocumented)
@@ -58,7 +58,7 @@ export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     delay: any;
     // (undocumented)
-    elementRef: ElementRef;
+    elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     readonly focused: BehaviorSubject<boolean>;
     // (undocumented)

@@ -33,7 +33,6 @@ import {
     KbqComponentColors,
     KbqFieldSizingContent,
     KbqHovered,
-    kbqInjectElementRef,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -209,7 +208,7 @@ export class KbqTag
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
     /** @docs-private */
-    readonly elementRef = kbqInjectElementRef();
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
      * Emits when the tag is focused.
