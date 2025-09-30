@@ -6,7 +6,6 @@ import {
     inject,
     InjectionToken,
     input,
-    OnInit,
     Provider,
     signal,
     TemplateRef,
@@ -104,7 +103,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
+export class KbqTimeRange<T> implements ControlValueAccessor {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     readonly ngControl = inject(NgControl, { optional: true, self: true });
@@ -169,11 +168,6 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
         toObservable(this.availableTimeRangeTypes)
             .pipe(takeUntilDestroyed())
             .subscribe(this.handleAvailableTypesChange);
-    }
-
-    ngOnInit() {
-        // call on init, so availableTimeRangeTypes value will be correct
-        this.writeValue(undefined);
     }
 
     /** Implemented as part of ControlValueAccessor */

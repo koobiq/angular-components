@@ -26,9 +26,9 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
     }
 })
 export class TimeRangeOverviewExample {
-    protected readonly control = new FormControl<KbqTimeRangeRange | null>(
+    protected readonly control = new FormControl<KbqTimeRangeRange>(
         {
-            type: 'last5Minutes'
+            type: 'last24Hours'
         },
         { nonNullable: true }
     );

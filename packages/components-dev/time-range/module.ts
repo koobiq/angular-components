@@ -33,9 +33,6 @@ import { DevThemeToggle } from '../theme-toggle';
             flex: 1 0 auto;
             width: 40%;
         }
-        ::ng-deep .kbq-inline-edit {
-            width: 100%;
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
