@@ -8,23 +8,25 @@ import { KbqComponentColors, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
+import { AppSwitcherExamplesModule } from '../../docs-examples/components/app-switcher';
 
 @Component({
     standalone: true,
-    imports: [PopoverExamplesModule, KbqButtonModule, KbqIcon, KbqAppSwitcherModule],
+    imports: [AppSwitcherExamplesModule, KbqButtonModule, KbqIcon, KbqAppSwitcherModule],
     selector: 'dev-examples',
     template: `
-        <button
-            kbq-button
-            kbqAppSwitcher
-            [sites]="sites"
-            [selectedSite]="sites[0]"
-            (selectedSiteChanges)="onSelectSite($event)"
-            (selectedAppChanges)="onSelectApp($event)"
-        >
-            <i kbq-icon="kbq-bento-menu_16"></i>
-        </button>
+        <app-switcher-overview-example />
+
+        <!--        <button-->
+        <!--            kbq-button-->
+        <!--            kbqAppSwitcher-->
+        <!--            [sites]="sites"-->
+        <!--            [selectedSite]="sites[0]"-->
+        <!--            (selectedSiteChanges)="onSelectSite($event)"-->
+        <!--            (selectedAppChanges)="onSelectApp($event)"-->
+        <!--        >-->
+        <!--            <i kbq-icon="kbq-bento-menu_16"></i>-->
+        <!--        </button>-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -467,7 +469,6 @@ class DevExamples {
 @Component({
     standalone: true,
     selector: 'dev-app',
-    styleUrls: ['./styles.scss'],
     templateUrl: './template.html',
     imports: [
         A11yModule,
