@@ -19,7 +19,7 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     template: `
-        <kbq-time-range [formControl]="control" />
+        <kbq-time-range [formControl]="control" [availableTimeRangeTypes]="availableTimeRangeTypes" />
     `,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
@@ -28,7 +28,7 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
 export class TimeRangeOverviewExample {
     protected readonly control = new FormControl<KbqTimeRangeRange>(
         {
-            type: 'last24Hours'
+            type: 'last5Minutes'
         },
         { nonNullable: true }
     );
@@ -51,8 +51,4 @@ export class TimeRangeOverviewExample {
         'currentYear',
         'range'
     ];
-
-    protected readonly selected = new FormControl<KbqTimeRangeType[]>(this.availableTimeRangeTypes, {
-        nonNullable: true
-    });
 }

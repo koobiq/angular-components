@@ -252,6 +252,6 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
         this.titleValue.set(timeRangeDefaultValue);
         this.rangeEditorControl.setValue(timeRangeDefaultValue);
-        this.onChange(this.rangeEditorControl.value);
+        this.onChange(timeRangeDefaultValue);
     };
 }
