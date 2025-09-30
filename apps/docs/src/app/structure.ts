@@ -14,6 +14,7 @@ export enum DocsStructureItemId {
     // Components
     Accordion = 'accordion',
     ActionsPanel = 'actions-panel',
+    AppSwitcher = 'app-switcher',
     AgGrid = 'ag-grid',
     Alert = 'alert',
     Autocomplete = 'autocomplete',
@@ -279,6 +280,17 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'actions-panel',
                     hasExamples: true
+                },
+                {
+                    id: DocsStructureItemId.AppSwitcher,
+                    name: {
+                        ru: 'App Switcher',
+                        en: 'App Switcher'
+                    },
+                    svgPreview: 'app-switcher',
+                    hasApi: true,
+                    apiId: 'app-switcher',
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.AgGrid,
