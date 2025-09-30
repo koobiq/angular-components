@@ -19,15 +19,15 @@ import {
     KbqAppSwitcher,
     KbqAppSwitcherTrigger
 } from './app-switcher';
-import { KbqAppSwitcherApp } from './app-switcher-app';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
+import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
 
 @NgModule({
     imports: [
         KbqAppSwitcher,
         KbqAppSwitcherTrigger,
-        KbqAppSwitcherApp,
+        KbqAppSwitcherListItem,
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,
         OverlayModule,

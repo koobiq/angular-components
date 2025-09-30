@@ -24,6 +24,24 @@
     padding-top: var(--kbq-size-xxs);
 }
 
+.kbq-app-switcher__search-result {
+    max-width: 320px;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    padding: var(--kbq-size-xxs) var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-xxs);
+}
+
+.kbq-app-switcher__empty-search-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 96px;
+}
+
 .kbq-app-switcher__app-container {
     display: flex;
     flex-direction: column;

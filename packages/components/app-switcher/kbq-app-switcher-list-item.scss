@@ -1,7 +1,7 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
 
-.kbq-app-switcher-app {
+.kbq-app-switcher-list-item {
     position: relative;
 
     display: flex;
@@ -59,7 +59,7 @@
     }
 }
 
-.kbq-app-switcher-app__toggle {
+.kbq-app-switcher-list-item__toggle {
     position: absolute;
 
     display: none;
@@ -85,47 +85,47 @@
     }
 }
 
-.kbq-app-switcher-app__icon {
+.kbq-app-switcher-list-item__icon {
     padding-top: var(--kbq-size-s);
     padding-right: var(--kbq-size-m);
 }
 
-.kbq-app-switcher-app__container {
+.kbq-app-switcher-list-item__container {
     max-width: 100%;
     min-width: 0;
 
     align-self: center;
 
-    & .kbq-app-switcher-app__name {
+    & .kbq-app-switcher-list-item__name {
         @include common.kbq-truncate-line();
     }
 
-    & .kbq-app-switcher-app__caption {
+    & .kbq-app-switcher-list-item__caption {
         margin-left: var(--kbq-size-3xs);
 
         @include common.kbq-truncate-line();
     }
 }
 
-@mixin kbq-app-switcher-app-theme() {
+@mixin kbq-app-switcher-list-item-theme() {
     .kbq-app-switcher-site_nested:after {
         border-left-color: var(--kbq-line-contrast-less);
         border-bottom-color: var(--kbq-line-contrast-less);
     }
 
-    .kbq-app-switcher-app__caption {
+    .kbq-app-switcher-list-item__caption {
         color: var(--kbq-foreground-contrast-secondary);
     }
 
-    .kbq-app-switcher-app {
+    .kbq-app-switcher-list-item {
         &:hover,
         &.kbq-hover,
         &.kbq-focused {
-            &:has(.kbq-app-switcher-app__toggle) .kbq-app-switcher-app__icon {
+            &:has(.kbq-app-switcher-list-item__toggle) .kbq-app-switcher-list-item__icon {
                 visibility: hidden;
             }
 
-            & .kbq-app-switcher-app__toggle {
+            & .kbq-app-switcher-list-item__toggle {
                 display: flex;
             }
         }
@@ -134,7 +134,7 @@
         &.kbq-hover {
             background: var(--kbq-states-background-transparent-hover);
 
-            & .kbq-app-switcher-app__toggle {
+            & .kbq-app-switcher-list-item__toggle {
                 background: var(--kbq-states-background-transparent-hover);
             }
         }
@@ -168,15 +168,15 @@
     }
 }
 
-@mixin kbq-app-switcher-app-typography() {
-    .kbq-app-switcher-app__name {
+@mixin kbq-app-switcher-list-item-typography() {
+    .kbq-app-switcher-list-item__name {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 
-    .kbq-app-switcher-app__caption {
+    .kbq-app-switcher-list-item__caption {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }
 
-@include kbq-app-switcher-app-theme();
-@include kbq-app-switcher-app-typography();
+@include kbq-app-switcher-list-item-theme();
+@include kbq-app-switcher-list-item-typography();
