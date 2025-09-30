@@ -398,6 +398,7 @@ export class KbqTag
         this.destroyed.emit({ tag: this });
     }
 
+    /** @docs-private */
     addClassModificatorForIcons() {
         const icons = this.contentChildren.map((item) => item.elementRef.nativeElement);
 
@@ -420,6 +421,7 @@ export class KbqTag
         }
     }
 
+    /** @docs-private */
     addHostClassName() {
         // Add class for the different tags
         for (const attr of TAG_ATTRIBUTE_NAMES) {
@@ -642,11 +644,16 @@ export class KbqTag
 export class KbqTagRemove {
     constructor(@Inject(forwardRef(() => KbqTag)) protected parentTag: KbqTag) {}
 
-    focus($event): void {
-        $event.stopPropagation();
+    /** @docs-private */
+    focus(event: FocusEvent): void {
+        event.stopPropagation();
     }
 
-    /** Calls the parent tag's public `remove()` method if applicable. */
+    /**
+     * Calls the parent tag's public `remove()` method if applicable.
+     *
+     * @docs-private
+     */
     handleClick(event: Event): void {
         if (this.parentTag.removable) {
             this.parentTag.hasFocus = true;
