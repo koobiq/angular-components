@@ -49,7 +49,7 @@ const isTagSelected = (debugElement: DebugElement): boolean => {
 };
 
 const isTagFocused = (debugElement: DebugElement): boolean => {
-    return getTagElement(debugElement).classList.contains('kbq-focused');
+    return getTagElement(debugElement).classList.contains('cdk-focused');
 };
 
 const isTagEditing = (debugElement: DebugElement): boolean => {

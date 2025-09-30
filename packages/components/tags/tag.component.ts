@@ -184,7 +184,6 @@ export class KbqTagEditInput {
         '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-selected]': 'selected',
-        '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-tag-with-avatar]': 'avatar',
         '[class.kbq-tag-with-icon]': 'contentChildren',
         '[class.kbq-tag-with-trailing-icon]': 'trailingIcon || removeIcon',

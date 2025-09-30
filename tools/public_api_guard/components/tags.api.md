@@ -48,9 +48,7 @@ export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 // @public (undocumented)
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
-    // (undocumented)
     addClassModificatorForIcons(): void;
-    // (undocumented)
     addHostClassName(): void;
     avatar: KbqTagAvatar;
     blur(): void;
@@ -333,8 +331,7 @@ export class KbqTagListChange {
 // @public
 export class KbqTagRemove {
     constructor(parentTag: KbqTag);
-    // (undocumented)
-    focus($event: any): void;
+    focus(event: FocusEvent): void;
     handleClick(event: Event): void;
     // (undocumented)
     protected parentTag: KbqTag;

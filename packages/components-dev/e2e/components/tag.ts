@@ -23,7 +23,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
                                         [selected]="type === 'selected'"
                                         [color]="color"
                                         [class.kbq-hovered]="state === 'hovered'"
-                                        [class.kbq-focused]="state === 'focused'"
+                                        [class.cdk-keyboard-focused]="state === 'focused'"
                                         [disabled]="state === 'disabled'"
                                     >
                                         <i kbq-icon="kbq-check-circle_16"></i>
