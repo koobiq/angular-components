@@ -177,7 +177,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     }
 
     ngOnInit(): void {
-        // call again init, so input signals values will be correct
+        // call again on init, so input signals values will be correct
         this.writeValue(this.ngControl?.value ?? null);
     }
 
