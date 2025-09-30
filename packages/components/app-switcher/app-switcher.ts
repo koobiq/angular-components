@@ -1,4 +1,3 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     CdkScrollable,
@@ -7,13 +6,13 @@ import {
     OverlayConfig,
     ScrollStrategy
 } from '@angular/cdk/overlay';
+import { AsyncPipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     Directive,
-    ElementRef,
     EventEmitter,
     InjectionToken,
     Input,
@@ -28,10 +27,9 @@ import {
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
-    KbqComponentColors,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpTrigger,
@@ -48,18 +46,20 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { Subscription, merge } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
-import { KbqAppSwitcherApp } from './app-switcher-app';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
+import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
 
 export interface KbaAppSwitcherApp {
     name: string;
     id: string | number;
-    type: string | number;
+    type?: string | number;
     icon?: string;
     caption?: string;
-    apps?: KbaAppSwitcherApp[];
+    aliases?: KbaAppSwitcherApp[];
+    link?: string;
 }
 
 export interface KbaAppSwitcherSite {
@@ -69,6 +69,22 @@ export interface KbaAppSwitcherSite {
     icon?: string;
     apps: KbaAppSwitcherApp[];
 }
+
+export function defaultGroupBy(groupedApps: Record<string, Partial<KbaAppSwitcherApp>>, app: KbaAppSwitcherApp) {
+    const appType = app.type ? app.type.toString() : 'untyped';
+
+    if (groupedApps[appType]) {
+        groupedApps[appType].aliases!.push(app);
+    } else {
+        groupedApps[appType] = {
+            name: appType,
+            aliases: []
+        };
+    }
+}
+
+export const MAX_APPS_FOR_ENABLE_SEARCH = 7;
+export const MAX_APPS_FOR_ENABLE_GROUPING = 3;
 
 @Component({
     standalone: true,
@@ -91,16 +107,21 @@ export interface KbaAppSwitcherSite {
         KbqDropdownModule,
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,
-        KbqAppSwitcherApp,
+        KbqAppSwitcherListItem,
         KbqScrollbarModule,
-        KbqOptionModule
+        KbqOptionModule,
+        ReactiveFormsModule,
+        AsyncPipe
     ],
     animations: [kbqAppSwitcherAnimations.state]
 })
 export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
-    protected readonly componentColors = KbqComponentColors;
+    readonly searchControl = new FormControl('');
 
-    searchValue: string = '';
+    readonly filteredSites = this.searchControl.valueChanges.pipe(
+        startWith(''),
+        map((query) => this.filterSites(query))
+    );
 
     get withSites(): boolean {
         return !!this.trigger.sites.length;
@@ -112,23 +133,16 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
 
     isTrapFocus: boolean = false;
 
-    protected activeSite;
-    protected activeApp;
+    protected activeSite: KbaAppSwitcherSite;
+    protected activeApp: KbaAppSwitcherApp;
 
     @ViewChild(KbqInput) input: KbqInput;
-    @ViewChild('appSwitcherContent') appSwitcherContent: ElementRef<HTMLDivElement>;
-    @ViewChild('appSwitcher') elementRef: ElementRef;
     @ViewChild('otherSites') otherSites: KbqDropdownTrigger;
-    @ViewChild(CdkTrapFocus) cdkTrapFocus: CdkTrapFocus;
 
     ngAfterViewInit() {
         if (this.input) {
             this.input.focus();
         }
-
-        if (!this.appSwitcherContent) return;
-
-        this.cdkTrapFocus.focusTrap.focusFirstTabbableElement();
 
         this.visibleChange.subscribe((state) => {
             if (this.offset !== null && state) {
@@ -150,21 +164,34 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
         this.isTrapFocus = isTrapFocus;
     }
 
-    onSearchChange(value: string) {
-        this.searchValue = value;
-        console.log('onSearchChange: ', value);
-    }
-
     onEscape() {
         this.hide(0);
     }
 
-    selectAppInSite(site, app) {
+    selectAppInSite(site, app: KbaAppSwitcherApp) {
         this.trigger.selectedSite = site;
         this.trigger.selectedApp = app;
 
         this.trigger.selectedSiteChanges.emit(site);
-        this.trigger.selectedAppChanges.emit(site);
+        this.trigger.selectedAppChanges.emit(app);
+    }
+
+    private filterSites(query: string | null): KbaAppSwitcherSite[] {
+        const filteredSites = structuredClone(this.trigger.originalSites);
+
+        return query
+            ? filteredSites.filter((site) => {
+                  const filteredApps = site.apps.filter((app) => app.name.toLowerCase().includes(query.toLowerCase()));
+
+                  if (filteredApps.length) {
+                      site.apps = filteredApps;
+
+                      return true;
+                  }
+
+                  return false;
+              })
+            : filteredSites;
     }
 }
 
@@ -172,12 +199,12 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
     'kbq-app-switcher-scroll-strategy'
 );
 
-/** @docs-private */
+// @docs-private
 export function kbqAppSwitcherScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
     return () => overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
 }
 
-/** @docs-private */
+// @docs-private
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_APP_SWITCHER_SCROLL_STRATEGY,
     deps: [Overlay],
@@ -195,13 +222,7 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         '(touchend)': 'handleTouchend()'
     }
 })
-export class KbqAppSwitcherTrigger<
-        S extends KbaAppSwitcherSite = KbaAppSwitcherSite,
-        A extends KbaAppSwitcherApp = KbaAppSwitcherApp
-    >
-    extends KbqPopUpTrigger<KbqAppSwitcher>
-    implements AfterContentInit, OnInit
-{
+export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> implements AfterContentInit, OnInit {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_APP_SWITCHER_SCROLL_STRATEGY);
 
     // not used
@@ -214,48 +235,98 @@ export class KbqAppSwitcherTrigger<
     footer: string | TemplateRef<any>;
     private closeOnScroll: null;
 
-    @Input({ transform: booleanAttribute }) search: boolean;
+    get search(): boolean {
+        return this.appsCount > MAX_APPS_FOR_ENABLE_SEARCH;
+    }
+
+    get appsCount(): number {
+        return this.originalSites.reduce((acc, site) => acc + site.apps.length, 0);
+    }
 
     @Input()
-    get sites(): S[] {
+    get sites(): KbaAppSwitcherSite[] {
         return this._parsedSites;
     }
 
-    set sites(value: S[]) {
-        console.log('set sites(value: S[]) {: ');
+    set sites(value: KbaAppSwitcherSite[]) {
+        this.originalSites = value;
 
         this._parsedSites = [];
 
-        value.forEach((site: S) => {
-            const newSite: S = { ...site };
+        value.forEach((site: KbaAppSwitcherSite) => {
+            const newSite: KbaAppSwitcherSite = { ...site, apps: [] };
 
-            const groupedApps: any = {};
+            const groupedApps: Record<string, KbaAppSwitcherApp> = {};
 
-            site.apps.forEach((app) => {
-                if (groupedApps[app.type]) {
-                    groupedApps[app.type].apps.push(app);
-                } else {
-                    groupedApps[app.type] = {
-                        name: app.type,
-                        apps: []
-                    };
+            // todo refactor
+            if (site.apps.length > MAX_APPS_FOR_ENABLE_GROUPING) {
+                site.apps.forEach((app) => {
+                    this.groupBy(groupedApps, app);
+                });
+
+                if (Object.values(groupedApps).length > 1) {
+                    newSite.apps = Object.values(groupedApps).filter((app) => app.name !== 'untyped');
                 }
-            });
 
-            if (Object.values(groupedApps).length > 1) {
-                newSite.apps = Object.values(groupedApps);
+                if (groupedApps.untyped?.aliases?.length) {
+                    newSite.apps.push(...groupedApps.untyped.aliases);
+                }
             }
 
             this._parsedSites.push(newSite);
         });
     }
 
-    private _parsedSites: S[];
+    private _parsedSites: KbaAppSwitcherSite[];
+    originalSites: KbaAppSwitcherSite[];
 
-    @Input() selectedSite: S;
+    // Function to group the apps by type. The first argument is an object with app types. The second is an app
+    @Input()
+    get groupBy() {
+        return this._groupBy;
+    }
 
-    @Input() apps: A[];
-    @Input() selectedApp: A;
+    set groupBy(fn: (groupedApps: Record<string, Partial<KbaAppSwitcherApp>>, app: KbaAppSwitcherApp) => void) {
+        if (typeof fn !== 'function') {
+            throw new Error('The argument must be a function');
+        }
+
+        this._groupBy = fn;
+    }
+
+    private _groupBy = defaultGroupBy;
+
+    @Input()
+    get selectedSite(): KbaAppSwitcherSite {
+        return this._parsedSelectedSite;
+    }
+
+    set selectedSite(value: KbaAppSwitcherSite) {
+        const originValue = this.originalSites.find((site) => value.id === site.id) as KbaAppSwitcherSite;
+        const newSite: KbaAppSwitcherSite = { ...originValue, apps: [] };
+        const groupedApps: Record<string, KbaAppSwitcherApp> = {};
+
+        if (originValue.apps.length > MAX_APPS_FOR_ENABLE_GROUPING) {
+            originValue.apps.forEach((app) => {
+                this.groupBy(groupedApps, app);
+            });
+
+            if (Object.values(groupedApps).length > 1) {
+                newSite.apps = Object.values(groupedApps).filter((app) => app.name !== 'untyped');
+            }
+
+            if (groupedApps.untyped?.aliases?.length) {
+                newSite.apps.push(...groupedApps.untyped.aliases);
+            }
+        }
+
+        this._parsedSelectedSite = newSite;
+    }
+
+    private _parsedSelectedSite: KbaAppSwitcherSite;
+
+    @Input() apps: KbaAppSwitcherApp[];
+    @Input() selectedApp: KbaAppSwitcherApp;
 
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -284,8 +355,8 @@ export class KbqAppSwitcherTrigger<
 
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
-    @Output() readonly selectedSiteChanges = new EventEmitter<any>();
-    @Output() readonly selectedAppChanges = new EventEmitter<any>();
+    @Output() readonly selectedSiteChanges = new EventEmitter<KbaAppSwitcherSite>();
+    @Output() readonly selectedAppChanges = new EventEmitter<KbaAppSwitcherApp>();
 
     protected originSelector = '.kbq-app-switcher';
 

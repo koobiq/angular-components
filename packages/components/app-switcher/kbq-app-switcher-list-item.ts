@@ -2,15 +2,16 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, Input, ViewEncaps
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbaAppSwitcherApp } from './app-switcher';
 
 @Component({
     standalone: true,
-    selector: '[kbq-app-switcher-app]',
+    selector: '[kbq-app-switcher-list-item]',
     exportAs: 'kbqAppSwitcherApp',
     template: `
         <i class="kbq kbq-icon" [className]=""></i>
 
-        <span class="kbq-app-switcher-app__icon">
+        <span class="kbq-app-switcher-list-item__icon">
             <!-- prettier-ignore -->
             <svg fill="none" height="24" viewBox="0 0 32 32" width="24"
                  xmlns="http://www.w3.org/2000/svg">
@@ -22,44 +23,47 @@ import { KbqIcon } from '@koobiq/components/icon';
                     [attr.fill]="'white'" /></svg>
         </span>
 
-        <div class="kbq-app-switcher-app__container">
-            <div class="kbq-app-switcher-app__name">{{ app.name }}</div>
+        <div class="kbq-app-switcher-list-item__container">
+            <div class="kbq-app-switcher-list-item__name">{{ app.name }}</div>
             @if (app.caption) {
-                <div class="kbq-app-switcher-app__caption">{{ app.caption }}</div>
+                <div class="kbq-app-switcher-list-item__caption">{{ app.caption }}</div>
             }
         </div>
 
         @if (toggle) {
-            <div class="kbq-app-switcher-app__toggle" [class.kbq-expanded]="!collapsed" (click)="clickHandler($event)">
+            <div class="kbq-app-switcher-list-item__toggle" [class.kbq-expanded]="!collapsed">
                 <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast-fade'"></i>
             </div>
         }
     `,
-    styleUrls: ['app-switcher-app.scss'],
+    styleUrls: ['kbq-app-switcher-list-item.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-app-switcher-app',
-        '[class.kbq-dropdown-item]': 'false'
+        class: 'kbq-app-switcher-list-item',
+        '[class.kbq-dropdown-item]': 'false',
+        '(click)': 'clickHandler($event)'
     },
     imports: [
         KbqIcon
     ],
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherApp },
-        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherApp }
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherListItem },
+        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherListItem }
     ]
 })
-export class KbqAppSwitcherApp extends KbqDropdownItem {
-    @Input() app;
+export class KbqAppSwitcherListItem extends KbqDropdownItem {
+    @Input() app: KbaAppSwitcherApp;
     @Input({ transform: booleanAttribute }) toggle = false;
 
     @Input() collapsed: boolean = false;
 
     clickHandler(event: MouseEvent) {
-        event.stopPropagation();
-        event.preventDefault();
+        if (this.toggle) {
+            event.stopPropagation();
+            event.preventDefault();
 
-        this.collapsed = !this.collapsed;
+            this.collapsed = !this.collapsed;
+        }
     }
 }

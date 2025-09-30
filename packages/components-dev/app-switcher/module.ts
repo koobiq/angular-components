@@ -15,7 +15,14 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
     imports: [PopoverExamplesModule, KbqButtonModule, KbqIcon, KbqAppSwitcherModule],
     selector: 'dev-examples',
     template: `
-        <button kbq-button kbqAppSwitcher [search]="true" [sites]="sites" (selectedSiteChanges)="onSelectSite($event)">
+        <button
+            kbq-button
+            kbqAppSwitcher
+            [sites]="sites"
+            [selectedSite]="sites[0]"
+            (selectedSiteChanges)="onSelectSite($event)"
+            (selectedAppChanges)="onSelectApp($event)"
+        >
             <i kbq-icon="kbq-bento-menu_16"></i>
         </button>
     `,
@@ -30,97 +37,94 @@ class DevExamples {
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     id: 'CFO_01',
-                    type: 'type_1'
+                    type: 'NAD'
                 },
                 {
                     name: 'Name',
                     id: 'CFO_02',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'type_1'
+                    type: 'NAD'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     id: 'CFO_03',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'type_1'
+                    type: 'NAD'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     id: 'CFO_04',
-                    type: 'type_1'
+                    type: 'NAD'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     id: 'CFO_05',
-                    type: 'type_2'
+                    type: 'NE_NAD'
                 },
                 {
                     name: 'Name',
                     id: 'CFO_06',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'type_2'
+                    type: 'NE_NAD'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     id: 'CFO_07',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'type_2'
+                    type: 'NE_NAD'
                 },
                 {
                     name: 'Name',
                     id: 'CFO_08',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'type_2'
+                    type: 'NE_NAD'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     id: 'CFO_09',
-                    type: 'type_3'
+                    type: 'SIEM'
                 },
                 {
                     name: 'Name',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
                     id: 'CFO_10',
-                    type: 'type_3'
+                    type: 'SIEM'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
                     id: 'CFO_11',
-                    type: 'type_3'
+                    type: 'SIEM'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     id: 'CFO_12',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'type_3'
+                    type: 'SIEM'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_13',
-                    type: 'type_4'
+                    id: 'CFO_13'
                 },
                 {
                     name: 'Name',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    id: 'CFO_14',
-                    type: 'type_4'
+                    id: 'CFO_14'
                 },
                 {
                     name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
                     caption:
                         'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    id: 'CFO_15',
-                    type: 'type_4'
+                    id: 'CFO_15'
                 }
             ]
         },
@@ -453,6 +457,10 @@ class DevExamples {
 
     onSelectSite(site) {
         console.log('onSelectSite: ', site);
+    }
+
+    onSelectApp(app) {
+        console.log('onSelectApp: ', app);
     }
 }
 

@@ -3,6 +3,7 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbaAppSwitcherSite } from './app-switcher';
 
 @Component({
     standalone: true,
@@ -40,5 +41,5 @@ import { KbqIcon } from '@koobiq/components/icon';
     ]
 })
 export class KbqAppSwitcherDropdownSite extends KbqDropdownItem {
-    @Input('kbq-app-switcher-dropdown-site') site;
+    @Input('kbq-app-switcher-dropdown-site') site: KbaAppSwitcherSite;
 }

@@ -9,12 +9,14 @@
         }
     }
 
-    .kbq-app-switcher-sites {
+    .kbq-app-switcher__empty-search-result {
+        color: var(--kbq-foreground-contrast-secondary);
     }
 }
 
 @mixin kbq-app-switcher-typography() {
-    .kbq-app-switcher {
+    .kbq-app-switcher,
+    .kbq-app-switcher__empty-search-result {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
