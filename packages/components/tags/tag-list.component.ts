@@ -28,7 +28,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isSelectAll } from '@koobiq/cdk/keycodes';
-import { CanUpdateErrorState, ErrorStateMatcher, isNull } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, isNull, KbqOrientation } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
@@ -91,6 +91,7 @@ export class KbqTagList
         OnDestroy,
         CanUpdateErrorState
 {
+    /** @docs-private */
     readonly controlType: string = 'tag-list';
 
     /**
@@ -160,6 +161,8 @@ export class KbqTagList
         }
     }
 
+    private _compareWith = (o1: any, o2: any) => o1 === o2;
+
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
@@ -173,6 +176,8 @@ export class KbqTagList
         this.writeValue(value);
         this._value = value;
     }
+
+    private _value: any;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -197,6 +202,8 @@ export class KbqTagList
         this.stateChanges.next();
     }
 
+    private _required: boolean = false;
+
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
@@ -210,6 +217,8 @@ export class KbqTagList
         this._placeholder = value;
         this.stateChanges.next();
     }
+
+    private _placeholder: string;
 
     /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
     get focused(): boolean {
@@ -245,6 +254,8 @@ export class KbqTagList
         this._disabled = coerceBooleanProperty(value);
         this.syncTagsDisabledState();
     }
+
+    private _disabled: boolean = false;
 
     /**
      * Whether or not this tag list is selectable. When a tag list is not selectable,
@@ -287,35 +298,43 @@ export class KbqTagList
      */
     @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
+    /** @docs-private */
     uid: string = `kbq-tag-list-${nextUniqueId++}`;
 
     /**
      * User defined tab index.
      * When it is not null, use user defined tab index. Otherwise use tabIndex
+     *
+     * @docs-private
      */
     userTabIndex: number | null = null;
 
+    /** @docs-private */
     keyManager: FocusKeyManager<KbqTag>;
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     selectionModel: SelectionModel<KbqTag>;
 
+    /** @docs-private */
     tagChanges = new EventEmitter<any>();
 
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /** Orientation of the tag list. */
-    @Input() orientation: 'horizontal' | 'vertical' = 'horizontal';
+    @Input() orientation: KbqOrientation = 'horizontal';
 
     /** Event emitted when the selected tag list value has been changed by the user. */
     @Output() readonly change: EventEmitter<KbqTagListChange> = new EventEmitter<KbqTagListChange>();
 
+    /** @docs-private */
     @ContentChild('kbqTagListCleaner', { static: true }) cleaner: KbqCleaner;
 
-    /** The tag components contained within this tag list. */
+    /**
+     * The tag components contained within this tag list.
+     *
+     * @docs-private
+     */
     @ContentChildren(KbqTag, {
         // Need to use `descendants: true`,
         // Ivy will no longer match indirect descendants if it's left as false.
@@ -323,16 +342,12 @@ export class KbqTagList
     })
     tags: QueryList<KbqTag>;
 
-    /** Whether the component is in an error state. */
+    /**
+     * Whether the component is in an error state.
+     *
+     * @docs-private
+     */
     errorState: boolean = false;
-
-    private _value: any;
-
-    private _required: boolean = false;
-
-    private _placeholder: string;
-
-    private _disabled: boolean = false;
 
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
@@ -455,6 +470,7 @@ export class KbqTagList
         this.dropSubscriptions();
     }
 
+    /** @docs-private */
     updateErrorState() {
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
@@ -468,11 +484,17 @@ export class KbqTagList
         }
     }
 
+    /** @docs-private */
     onTouched = () => {};
 
+    /** @docs-private */
     onChange: (value: any) => void = () => {};
 
-    /** Associates an HTML input element with this tag list. */
+    /**
+     * Associates an HTML input element with this tag list.
+     *
+     * @docs-private
+     */
     registerInput(inputElement: KbqTagTextControl): void {
         this.tagInput = inputElement;
 
@@ -484,24 +506,32 @@ export class KbqTagList
         }
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     */
     writeValue(value: any): void {
         if (this.tags) {
             this.setSelectionByValue(value, false);
         }
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     */
     registerOnChange(fn: (value: any) => void): void {
         this.onChange = fn;
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     */
     registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     */
     setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
         this.stateChanges.next();
@@ -509,6 +539,7 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     onContainerClick(event: MouseEvent) {
@@ -586,6 +617,7 @@ export class KbqTagList
         }
     }
 
+    /** @docs-private */
     setSelectionByValue(value: any, isUserInput: boolean = true) {
         this.clearSelection();
         // @TODO seems like redundant action, need to double check (#DS-3740)
@@ -640,6 +672,8 @@ export class KbqTagList
 
     /**
      * Check the tab index as you should not be allowed to focus an empty list.
+     *
+     * @docs-private
      */
     protected updateTabIndex(): void {
         // If we have 0 tags, we should not allow keyboard focus
@@ -649,6 +683,8 @@ export class KbqTagList
     /**
      * If the amount of tags changed, we need to update the
      * key manager state and focus the next closest tag.
+     *
+     * @docs-private
      */
     protected updateFocusForDestroyedTags() {
         if (this.lastDestroyedTagIndex != null) {
@@ -663,8 +699,6 @@ export class KbqTagList
 
         this.lastDestroyedTagIndex = null;
     }
-
-    private _compareWith = (o1: any, o2: any) => o1 === o2;
 
     /**
      * Utility to ensure all indexes are valid.
@@ -694,9 +728,7 @@ export class KbqTagList
         this.tags.forEach((tag) => tag.select());
     }
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     removeSelected(): void {
         this.selectionModel.selected.forEach((tag) => tag.remove());
     }
