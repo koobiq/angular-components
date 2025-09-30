@@ -23,7 +23,8 @@
         @include _kbq-tag-state($type, states-hover);
     }
 
-    &.cdk-keyboard-focused {
+    &.cdk-keyboard-focused,
+    &.kbq-tag_editing {
         @include _kbq-tag-state($type, states-focus);
 
         outline: 2px solid var(--kbq-tag-#{$type}-states-focus-outline);
