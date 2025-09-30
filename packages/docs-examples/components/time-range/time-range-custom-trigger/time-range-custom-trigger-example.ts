@@ -49,7 +49,7 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
         <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [formControl]="control" />
     `,
     host: {
-        class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
+        class: 'layout-flex layout-row layout-align-center-center layout-gap-xl'
     }
 })
 export class TimeRangeCustomTriggerExample {
