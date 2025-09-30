@@ -384,6 +384,7 @@ export const enUSLocaleData: {
     timeRange: {
         title: {
             for: string;
+            placeholder: string;
         };
         editor: {
             from: string;
@@ -588,6 +589,7 @@ export const esLALocaleData: {
     timeRange: {
         title: {
             for: string;
+            placeholder: string;
         };
         editor: {
             from: string;
@@ -782,6 +784,7 @@ export const faIRLocaleData: {
     timeRange: {
         title: {
             for: string;
+            placeholder: string;
         };
         editor: {
             from: string;
@@ -1059,6 +1062,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timeRange: {
             title: {
                 for: string;
+                placeholder: string;
             };
             editor: {
                 from: string;
@@ -1239,6 +1243,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timeRange: {
             title: {
                 for: string;
+                placeholder: string;
             };
             editor: {
                 from: string;
@@ -1424,6 +1429,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timeRange: {
             title: {
                 for: string;
+                placeholder: string;
             };
             editor: {
                 from: string;
@@ -1605,6 +1611,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timeRange: {
             title: {
                 for: string;
+                placeholder: string;
             };
             editor: {
                 from: string;
@@ -1792,6 +1799,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timeRange: {
             title: {
                 for: string;
+                placeholder: string;
             };
             editor: {
                 from: string;
@@ -1974,6 +1982,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timeRange: {
             title: {
                 for: string;
+                placeholder: string;
             };
             editor: {
                 from: string;
@@ -2156,6 +2165,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timeRange: {
             title: {
                 for: string;
+                placeholder: string;
             };
             editor: {
                 from: string;
@@ -3283,6 +3293,7 @@ export enum KbqThemeSelector {
 export type KbqTimeRangeLocaleConfig = {
     title: {
         for: string;
+        placeholder: string;
     };
     editor: {
         from: string;
@@ -3653,6 +3664,7 @@ export const ptBRLocaleData: {
     timeRange: {
         title: {
             for: string;
+            placeholder: string;
         };
         editor: {
             from: string;
@@ -4020,6 +4032,7 @@ export const ruRULocaleData: {
     timeRange: {
         title: {
             for: string;
+            placeholder: string;
         };
         editor: {
             from: string;
@@ -4298,6 +4311,7 @@ export const tkTMLocaleData: {
     timeRange: {
         title: {
             for: string;
+            placeholder: string;
         };
         editor: {
             from: string;
@@ -4505,6 +4519,7 @@ export const zhCNLocaleData: {
     timeRange: {
         title: {
             for: string;
+            placeholder: string;
         };
         editor: {
             from: string;
