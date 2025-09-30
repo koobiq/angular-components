@@ -109,7 +109,8 @@ export const enUSLocaleData = {
     },
     timeRange: {
         title: {
-            for: 'for'
+            for: 'for',
+            placeholder: 'Select period'
         },
         editor: {
             from: 'from',

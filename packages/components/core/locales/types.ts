@@ -49,6 +49,7 @@ export type KbqClampedTextLocaleConfig = {
 export type KbqTimeRangeLocaleConfig = {
     title: {
         for: string;
+        placeholder: string;
     };
     editor: {
         from: string;

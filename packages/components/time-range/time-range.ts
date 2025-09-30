@@ -6,6 +6,8 @@ import {
     inject,
     InjectionToken,
     input,
+    OnInit,
+    output,
     Provider,
     signal,
     TemplateRef,
@@ -103,7 +105,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTimeRange<T> implements ControlValueAccessor {
+export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     readonly ngControl = inject(NgControl, { optional: true, self: true });
@@ -118,7 +120,6 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.providedDefaultTimeRangeTypes);
     /** Customizable trigger output */
     readonly titleTemplate = input<TemplateRef<KbqTimeRangeCustomizableTitleContext>>();
-
     /** Whether to show popover with arrow */
     readonly arrow = input(true, { transform: booleanAttribute });
     /**
@@ -126,6 +127,11 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
      * @see availableTimeRangeTypes
      */
     readonly showRangeAsDefault = input(true);
+    /** Whether component should fallback to default value if null provided */
+    readonly nonNullable = input(true, { transform: booleanAttribute });
+
+    /** Emit value update if provided value via formControl wasn't valid */
+    readonly valueCorrected = output<KbqTimeRangeRange>();
 
     /**
      * Used to calculate time range.
@@ -136,7 +142,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     }));
 
     /** @docs-private */
-    protected titleValue: WritableSignal<KbqTimeRangeRange>;
+    protected titleValue: WritableSignal<KbqTimeRangeRange | null>;
     /** @docs-private */
     protected readonly rangeEditorControl: FormControl<KbqTimeRangeRange>;
 
@@ -158,8 +164,8 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
             this.availableTimeRangeTypes()
         );
 
-        this.titleValue = signal(defaultValue);
-        this.rangeEditorControl = new FormControl<KbqTimeRangeRange>(this.titleValue(), { nonNullable: true });
+        this.titleValue = signal(this.nonNullable() ? defaultValue : null);
+        this.rangeEditorControl = new FormControl<KbqTimeRangeRange>(defaultValue, { nonNullable: true });
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             this.localeConfiguration.set(this.localeService?.getParams('timeRange') ?? ruRULocaleData.timeRange);
@@ -170,15 +176,32 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
             .subscribe(this.handleAvailableTypesChange);
     }
 
+    ngOnInit(): void {
+        // call again init, so input signals values will be correct
+        this.writeValue(this.ngControl?.value ?? null);
+    }
+
     /** Implemented as part of ControlValueAccessor */
-    writeValue(value: KbqTimeRangeRange | undefined): void {
+    writeValue(value: KbqTimeRangeRange | null): void {
+        const nonNullable = this.nonNullable();
+
+        const availableTimeRangeTypes = this.availableTimeRangeTypes();
+
         const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
             value,
-            this.availableTimeRangeTypes(),
+            availableTimeRangeTypes,
             this.normalizedDefaultRangeValue()
         );
 
-        this.titleValue.set(corrected);
+        if (
+            (value && 'type' in value && !('startDateTime' in value)) ||
+            (value && 'type' in value && !availableTimeRangeTypes.includes(value.type)) ||
+            (nonNullable && value === null)
+        ) {
+            this.valueCorrected.emit(corrected);
+        }
+
+        this.titleValue.set(nonNullable ? corrected : value === null ? null : corrected);
         this.rangeEditorControl.setValue(corrected);
     }
 
@@ -195,8 +218,10 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
     }
 
     onVisibleChange(isVisible: boolean) {
-        if (!isVisible) {
-            this.rangeEditorControl.setValue(this.titleValue());
+        const titleValue = this.titleValue();
+
+        if (!isVisible && titleValue) {
+            this.rangeEditorControl.setValue(titleValue);
         }
     }
 
@@ -220,13 +245,13 @@ export class KbqTimeRange<T> implements ControlValueAccessor {
             return;
         }
 
-        this.titleValue.set(
-            this.timeRangeService.getTimeRangeDefaultValue(
-                this.normalizedDefaultRangeValue(),
-                types.length ? types : ['range']
-            )
+        const timeRangeDefaultValue = this.timeRangeService.getTimeRangeDefaultValue(
+            this.normalizedDefaultRangeValue(),
+            types.length ? types : ['range']
         );
-        this.rangeEditorControl.setValue(this.titleValue());
+
+        this.titleValue.set(timeRangeDefaultValue);
+        this.rangeEditorControl.setValue(timeRangeDefaultValue);
         this.onChange(this.rangeEditorControl.value);
     };
 }

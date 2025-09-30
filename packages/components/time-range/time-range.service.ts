@@ -271,7 +271,7 @@ export class KbqTimeRangeService<T> {
         );
 
     checkAndCorrectTimeRangeValue(
-        value: KbqTimeRangeRange | undefined,
+        value: KbqTimeRangeRange | null | undefined,
         availableTimeRangeTypes: KbqTimeRangeType[],
         rangeValue: KbqRangeValue<T>
     ): KbqTimeRangeRange {

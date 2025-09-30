@@ -59,4 +59,8 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     min-height: calc(var(--kbq-form-field-size-height) - 2 * var(--kbq-size-border-width));
+
+    .kbq-time-range-title__placeholder {
+        color: var(--kbq-foreground-contrast-tertiary);
+    }
 }

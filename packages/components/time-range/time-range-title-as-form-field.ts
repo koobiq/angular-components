@@ -1,8 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Observable, Subject } from 'rxjs';
 import { KbqTimeRange } from './time-range';
+
+@Directive({
+    standalone: true,
+    selector: '[kbqTimeRangeTitlePlaceholder]',
+    host: {
+        class: 'kbq-time-range-title__placeholder'
+    }
+})
+export class KbqTimeRangeTitlePlaceholder {}
 
 @Component({
     standalone: true,

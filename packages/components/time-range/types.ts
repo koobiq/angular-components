@@ -54,8 +54,8 @@ export interface KbqTimeRangeUnits {
 }
 
 export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
-export type KbqTimeRangeCustomizableTitleContext = KbqTimeRangeTitleContext & {
-    $implicit: KbqTimeRangeTitleContext;
+export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleContext> & {
+    $implicit: Partial<KbqTimeRangeTitleContext> & { formattedDate: string; popover: KbqPopoverTrigger };
 } & { formattedDate: string; popover: KbqPopoverTrigger };
 
 export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;

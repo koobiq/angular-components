@@ -109,7 +109,8 @@ export const tkTMLocaleData = {
     },
     timeRange: {
         title: {
-            for: 'soňky'
+            for: 'soňky',
+            placeholder: 'Möhleti saýla'
         },
         editor: {
             from: 'şundan',

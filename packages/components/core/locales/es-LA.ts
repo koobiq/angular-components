@@ -108,7 +108,8 @@ export const esLALocaleData = {
     },
     timeRange: {
         title: {
-            for: 'para'
+            for: 'para',
+            placeholder: 'Seleccione el período'
         },
         editor: {
             from: 'de',

@@ -109,7 +109,8 @@ export const ruRULocaleData = {
     },
     timeRange: {
         title: {
-            for: 'за'
+            for: 'за',
+            placeholder: 'Выберите период'
         },
         editor: {
             from: 'с',

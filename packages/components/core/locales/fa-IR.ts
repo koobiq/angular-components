@@ -108,7 +108,8 @@ export const faIRLocaleData = {
     },
     timeRange: {
         title: {
-            for: 'برای'
+            for: 'برای',
+            placeholder: 'دوره را انتخاب کنید'
         },
         editor: {
             from: 'از',

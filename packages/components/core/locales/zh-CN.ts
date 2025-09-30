@@ -108,7 +108,8 @@ export const zhCNLocaleData = {
     },
     timeRange: {
         title: {
-            for: '时间范围'
+            for: '时间范围',
+            placeholder: '选择一个时期'
         },
         editor: {
             from: '开始时间',

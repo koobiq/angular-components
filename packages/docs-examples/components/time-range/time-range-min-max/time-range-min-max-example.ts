@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -16,15 +15,14 @@ import { DateTime } from 'luxon';
     imports: [
         ReactiveFormsModule,
         KbqTimeRange,
-        LuxonDateModule,
-        JsonPipe
+        LuxonDateModule
     ],
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     template: `
         <div>
             <div style="color: var(--kbq-foreground-contrast-secondary)">From 2017 to 2025</div>
-            <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" />
+            <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" [nonNullable]="false" />
         </div>
     `,
     host: {

@@ -34,9 +34,9 @@ export class KbqTimeRangeTitle {
     private readonly popover = inject(KbqPopoverTrigger, { host: true });
     protected readonly injector = inject(Injector);
 
-    readonly timeRange = input<KbqTimeRangeRange>();
-    readonly titleTemplate = input<TemplateRef<any>>();
+    readonly timeRange = input.required<KbqTimeRangeRange | null>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
+    readonly titleTemplate = input<TemplateRef<any>>();
 
     protected readonly context = computed<KbqTimeRangeTitleContext | undefined>(() => {
         const timeRange = this.timeRange();
@@ -53,9 +53,11 @@ export class KbqTimeRangeTitle {
         const context = this.context();
         const formattedDate = this.formattedDate();
 
-        if (!context) return undefined;
+        let customizableTitleContext = { formattedDate, popover: this.popover };
 
-        const customizableTitleContext = { ...context, formattedDate, popover: this.popover };
+        if (context) {
+            customizableTitleContext = { ...context, ...customizableTitleContext };
+        }
 
         return {
             $implicit: customizableTitleContext,
@@ -65,13 +67,13 @@ export class KbqTimeRangeTitle {
 
     protected readonly formattedDate = computed(() => {
         const context = this.context();
+        const localeConfiguration = this.localeConfiguration();
 
         if (!context) {
-            return '';
+            return localeConfiguration.title.placeholder;
         }
 
         const timeRangeUnit = this.timeRangeService.getTimeRangeUnitByType(context.type);
-        const localeConfiguration = this.localeConfiguration();
 
         if (timeRangeUnit === 'other') {
             switch (context.type) {

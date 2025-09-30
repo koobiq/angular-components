@@ -5,7 +5,7 @@ import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRangeModule, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
+import { KbqTimeRangeModule } from '@koobiq/components/time-range';
 
 /**
  * @title Time range as form field
@@ -20,7 +20,6 @@ import { KbqTimeRangeModule, KbqTimeRangeTitleAsControl } from '@koobiq/componen
         LuxonDateModule,
         KbqIconModule,
         KbqFormFieldModule,
-        KbqTimeRangeTitleAsControl,
         TitleCasePipe
     ],
     providers: [
@@ -29,13 +28,17 @@ import { KbqTimeRangeModule, KbqTimeRangeTitleAsControl } from '@koobiq/componen
         <ng-template #titleAsFormField let-context>
             <kbq-form-field>
                 <kbq-time-range-title-as-control>
-                    {{ context.formattedDate[0] | titlecase }}{{ context.formattedDate.slice(1) }}
+                    @if (!context.type) {
+                        <span kbqTimeRangeTitlePlaceholder>{{ context.formattedDate }}</span>
+                    } @else {
+                        {{ context.formattedDate[0] | titlecase }}{{ context.formattedDate.slice(1) }}
+                    }
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
             </kbq-form-field>
         </ng-template>
 
-        <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" />
+        <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [nonNullable]="false" />
     `,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
