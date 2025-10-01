@@ -300,6 +300,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "app-switcher-overview-example.ts",
     "importPath": "components/app-switcher"
   },
+  "app-switcher-sites": {
+    "packagePath": "components/app-switcher/app-switcher-sites",
+    "title": "app-switcher-sites",
+    "componentName": "AppSwitcherSitesExample",
+    "files": [
+      "app-switcher-sites-example.ts"
+    ],
+    "selector": "app-switcher-sites-example",
+    "additionalComponents": [],
+    "primaryFile": "app-switcher-sites-example.ts",
+    "importPath": "components/app-switcher"
+  },
   "autocomplete-overview": {
     "packagePath": "components/autocomplete/autocomplete-overview",
     "title": "Autocomplete",
@@ -5448,6 +5460,8 @@ return import('@koobiq/docs-examples/components/alert');
   case 'alert-variants':
 return import('@koobiq/docs-examples/components/alert');
   case 'app-switcher-overview':
+return import('@koobiq/docs-examples/components/app-switcher');
+  case 'app-switcher-sites':
 return import('@koobiq/docs-examples/components/app-switcher');
   case 'autocomplete-overview':
 return import('@koobiq/docs-examples/components/autocomplete');

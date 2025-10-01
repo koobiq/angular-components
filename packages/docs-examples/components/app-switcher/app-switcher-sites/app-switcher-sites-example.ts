@@ -1,125 +1,43 @@
-import { A11yModule } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbaAppSwitcherSite, KbqAppSwitcherModule } from '@koobiq/components/app-switcher';
-import { KbqBadgeModule } from '@koobiq/components/badge';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { KbaAppSwitcherSite, KbqAppSwitcherApp, KbqAppSwitcherModule } from '@koobiq/components/app-switcher';
+import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOptionModule } from '@koobiq/components/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { AppSwitcherExamplesModule } from '../../docs-examples/components/app-switcher';
+import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 
+/**
+ * @title app-switcher-sites
+ */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [AppSwitcherExamplesModule, KbqButtonModule, KbqAppSwitcherModule],
-    selector: 'dev-examples',
+    selector: 'app-switcher-sites-example',
+    imports: [
+        KbqFormFieldModule,
+        KbqAutocompleteModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        KbqFormsModule,
+        KbqAppSwitcherModule,
+        KbqButtonModule,
+        KbqIcon
+    ],
     template: `
-        <app-switcher-overview-example />
+        App: {{ selectedApp.name }}
         <br />
-        <app-switcher-sites-example />
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+        Site: {{ selectedSite.name }}
+        <br />
+        <br />
+        <button kbq-button kbqAppSwitcher [sites]="sites" [(selectedSite)]="selectedSite" [(selectedApp)]="selectedApp">
+            <i kbq-icon="kbq-bento-menu_16"></i>
+        </button>
+    `
 })
-class DevExamples {
+export class AppSwitcherSitesExample {
     sites: KbaAppSwitcherSite[] = [
-        {
-            name: 'ЦФО',
-            id: '01',
-            apps: [
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_01',
-                    type: 'NAD'
-                },
-                {
-                    name: 'Name',
-                    id: 'CFO_02',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'NAD'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_03',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'NAD'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_04',
-                    type: 'NAD'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_05',
-                    type: 'NE_NAD'
-                },
-                {
-                    name: 'Name',
-                    id: 'CFO_06',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'NE_NAD'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_07',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'NE_NAD'
-                },
-                {
-                    name: 'Name',
-                    id: 'CFO_08',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'NE_NAD'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_09',
-                    type: 'SIEM'
-                },
-                {
-                    name: 'Name',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    id: 'CFO_10',
-                    type: 'SIEM'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    id: 'CFO_11',
-                    type: 'SIEM'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_12',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    type: 'SIEM'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    id: 'CFO_13'
-                },
-                {
-                    name: 'Name',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    id: 'CFO_14'
-                },
-                {
-                    name: 'Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name Name',
-                    caption:
-                        'Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption Caption',
-                    id: 'CFO_15'
-                }
-            ]
-        },
         {
             name: 'СЗФО',
             id: '02',
@@ -129,46 +47,46 @@ class DevExamples {
                     caption: 'Byte 001',
                     id: 'SZFO_01',
                     icon: '',
-                    type: ''
+                    type: 'NAD'
                 },
                 {
                     name: 'CryptoWall',
                     id: 'SZFO_02',
-                    type: ''
+                    type: 'NAD'
                 },
                 {
                     name: 'App Instance 1',
                     caption: 'Instance Alias One',
                     id: 'SZFO_03',
-                    type: ''
+                    type: 'NAD'
                 },
                 {
                     name: 'App Instance 2',
                     id: 'SZFO_04',
-                    type: ''
+                    type: 'NAD'
                 },
                 {
                     name: 'App Instance 3',
                     caption: 'Instance Alias Three',
                     id: 'SZFO_05',
-                    type: ''
+                    type: 'NE-NAD'
                 },
                 {
                     name: 'App Instance 4',
                     caption: 'Instance Alias Four',
                     id: 'SZFO_06',
-                    type: ''
+                    type: 'NE-NAD'
                 },
                 {
                     name: 'Phantom Gate',
                     id: 'SZFO_07',
-                    type: ''
+                    type: 'NE-NAD'
                 },
                 {
                     name: 'SentraLock',
                     id: 'SZFO_08',
                     caption: 'Lock-sentral-urals',
-                    type: ''
+                    type: 'NE-NAD'
                 },
                 {
                     name: 'Zero Trace',
@@ -185,23 +103,23 @@ class DevExamples {
                     name: 'Byte Sentinel',
                     caption: 'Byte 001',
                     id: 'UFO_01',
-                    type: ''
+                    type: 'SIEM'
                 },
                 {
                     name: 'CryptoWall',
                     id: 'UFO_02',
-                    type: ''
+                    type: 'SIEM'
                 },
                 {
                     name: 'Phantom Gate',
                     id: 'UFO_03',
-                    type: ''
+                    type: 'SIEM'
                 },
                 {
                     name: 'SentraLock',
                     caption: 'Lock-sentral-urals',
                     id: 'UFO_04',
-                    type: ''
+                    type: 'SIEM'
                 },
                 {
                     name: 'Zero Trace',
@@ -219,35 +137,35 @@ class DevExamples {
                     name: 'Byte Sentinel',
                     caption: 'Byte 001',
                     id: 'USFO_01',
-                    type: ''
+                    type: 'APP'
                 },
                 {
                     name: 'CryptoWall',
                     id: 'USFO_02',
-                    type: ''
+                    type: 'APP'
                 },
                 {
                     name: 'App Instance 1',
                     caption: 'Instance Alias One',
                     id: 'USFO_03',
-                    type: ''
+                    type: 'APP'
                 },
                 {
                     name: 'App Instance 2',
                     id: 'USFO_04',
-                    type: ''
+                    type: 'APP'
                 },
                 {
                     name: 'App Instance 3',
                     caption: 'Instance Alias Three',
                     id: 'USFO_05',
-                    type: ''
+                    type: 'APP'
                 },
                 {
                     name: 'App Instance 4',
                     caption: 'Instance Alias Four',
                     id: 'USFO_06',
-                    type: ''
+                    type: 'APP'
                 },
                 {
                     name: 'Phantom Gate',
@@ -447,30 +365,6 @@ class DevExamples {
         }
     ];
 
-    onSelectSite(site) {
-        console.log('onSelectSite: ', site);
-    }
-
-    onSelectApp(app) {
-        console.log('onSelectApp: ', app);
-    }
+    selectedSite: KbaAppSwitcherSite = this.sites[0];
+    selectedApp: KbqAppSwitcherApp = this.sites[0].apps[0];
 }
-
-@Component({
-    standalone: true,
-    selector: 'dev-app',
-    templateUrl: './template.html',
-    imports: [
-        A11yModule,
-        FormsModule,
-        DevExamples,
-        KbqAppSwitcherModule,
-        KbqDropdownModule,
-        KbqDividerModule,
-        KbqBadgeModule,
-        KbqOptionModule
-    ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class DevApp {}

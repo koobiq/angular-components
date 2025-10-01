@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbaAppSwitcherApp } from './app-switcher';
+import { KbqAppSwitcherApp } from './app-switcher';
 
 @Component({
     standalone: true,
@@ -49,5 +49,5 @@ import { KbaAppSwitcherApp } from './app-switcher';
     ]
 })
 export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
-    @Input('kbq-app-switcher-dropdown-app') app: KbaAppSwitcherApp;
+    @Input('kbq-app-switcher-dropdown-app') app: KbqAppSwitcherApp;
 }

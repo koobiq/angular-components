@@ -2,7 +2,7 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, Input, ViewEncaps
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbaAppSwitcherApp } from './app-switcher';
+import { KbqAppSwitcherApp } from './app-switcher';
 
 @Component({
     standalone: true,
@@ -53,7 +53,7 @@ import { KbaAppSwitcherApp } from './app-switcher';
     ]
 })
 export class KbqAppSwitcherListItem extends KbqDropdownItem {
-    @Input() app: KbaAppSwitcherApp;
+    @Input() app: KbqAppSwitcherApp;
     @Input({ transform: booleanAttribute }) toggle = false;
 
     @Input() collapsed: boolean = false;

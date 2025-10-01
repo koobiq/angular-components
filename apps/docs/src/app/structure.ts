@@ -290,7 +290,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'app-switcher',
                     hasApi: true,
                     apiId: 'app-switcher',
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2025-10-20')
                 },
                 {
                     id: DocsStructureItemId.AgGrid,
