@@ -48,9 +48,7 @@ export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 // @public (undocumented)
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
-    // (undocumented)
     addClassModificatorForIcons(): void;
-    // (undocumented)
     addHostClassName(): void;
     avatar: KbqTagAvatar;
     blur(): void;
@@ -59,7 +57,6 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     contentChildren: QueryList<KbqIcon>;
-    // (undocumented)
     deselect(): void;
     readonly destroyed: EventEmitter<KbqTagEvent>;
     // (undocumented)
@@ -102,21 +99,18 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     remove(): void;
     readonly removed: EventEmitter<KbqTagEvent>;
     removeIcon: KbqTagRemove;
-    // (undocumented)
     select(): void;
     get selectable(): boolean;
     set selectable(value: boolean);
     get selected(): boolean;
     set selected(value: boolean);
     readonly selectionChange: EventEmitter<KbqTagSelectionChange>;
-    // (undocumented)
     selectViaInteraction(): void;
     submitEditing(reason: string): void;
     // (undocumented)
     get tabindex(): any;
     set tabindex(value: any);
     readonly textElement: ElementRef<HTMLSpanElement>;
-    // (undocumented)
     toggleSelected(isUserInput?: boolean): boolean;
     trailingIcon: KbqTagTrailingIcon;
     get value(): any;
@@ -337,8 +331,7 @@ export class KbqTagListChange {
 // @public
 export class KbqTagRemove {
     constructor(parentTag: KbqTag);
-    // (undocumented)
-    focus($event: any): void;
+    focus(event: FocusEvent): void;
     handleClick(event: Event): void;
     // (undocumented)
     protected parentTag: KbqTag;

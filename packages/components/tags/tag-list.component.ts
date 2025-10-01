@@ -893,11 +893,16 @@ export class KbqTagList
                 this.keyManager.updateActiveItem(tagIndex);
             }
 
+            if (!this.multiple) event.tag.select();
+
             this.stateChanges.next();
         });
 
-        this.tagBlurSubscription = this.tagBlurChanges.subscribe(() => {
+        this.tagBlurSubscription = this.tagBlurChanges.subscribe((event) => {
             this.blur();
+
+            if (!this.multiple) event.tag.deselect();
+
             this.stateChanges.next();
         });
     }
