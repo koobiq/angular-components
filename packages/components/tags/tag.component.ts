@@ -605,6 +605,8 @@ export class KbqTag
 
     private setupFocusMonitor(): void {
         this.focusMonitor.monitor(this.elementRef, true).subscribe((origin) => {
+            if (this.disabled) return;
+
             const hasFocus = !isNull(origin);
 
             if (hasFocus !== this.hasFocus) {

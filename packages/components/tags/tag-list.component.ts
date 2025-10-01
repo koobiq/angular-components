@@ -266,7 +266,6 @@ export class KbqTagList
 
     set disabled(value: boolean) {
         this._disabled = value;
-        this.syncTagsDisabledState();
         this.syncDraggableDisabledState();
     }
 
@@ -347,11 +346,7 @@ export class KbqTagList
     /** @docs-private */
     selectionModel: SelectionModel<KbqTag>;
 
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
+    /** @docs-private */
     tagChanges = new EventEmitter<any>();
 
     /** An object used to control when error messages are shown. */
@@ -471,14 +466,6 @@ export class KbqTagList
         this.tags.changes
             .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
             .subscribe((currentTags: QueryList<KbqTag> | null) => {
-                if (this.disabled) {
-                    // Since this happens after the content has been
-                    // checked, we need to defer it to the next tick.
-                    Promise.resolve().then(() => {
-                        this.syncTagsDisabledState();
-                    });
-                }
-
                 this.resetTags();
 
                 // Reset tags selected/deselected status
@@ -985,11 +972,6 @@ export class KbqTagList
     /** Checks whether any of the tags is focused. */
     private hasFocusedTag() {
         return this.tags.some((tag) => tag.hasFocus);
-    }
-
-    /** Syncs the list's disabled state with the individual tags. */
-    private syncTagsDisabledState() {
-        this.tags?.forEach((tag) => (tag.disabled = this._disabled));
     }
 
     private syncTagsRemovableState(): void {
