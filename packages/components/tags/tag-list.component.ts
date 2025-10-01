@@ -266,7 +266,7 @@ export class KbqTagList
 
     set disabled(value: boolean) {
         this._disabled = value;
-        this.syncDraggableDisabledState();
+        this.syncDropListDisabledState();
     }
 
     private _disabled: boolean = false;
@@ -278,7 +278,7 @@ export class KbqTagList
 
     set draggable(value: boolean) {
         this._draggable = value;
-        this.syncDraggableDisabledState();
+        this.syncDropListDisabledState();
     }
 
     private _draggable: boolean = false;
@@ -989,7 +989,7 @@ export class KbqTagList
     }
 
     private setupDropListInitialProperties(): void {
-        this.syncDraggableDisabledState();
+        this.syncDropListDisabledState();
         this.dropList.elementContainerSelector = '.kbq-tags-list__list-container';
         this.dropList.orientation = 'mixed';
         this.dropList.dropped
@@ -1000,12 +1000,10 @@ export class KbqTagList
                 if (!tag) return;
 
                 this.dropped.emit({ currentIndex, previousIndex, event, tag });
-
-                setTimeout(() => tag.focus());
             });
     }
 
-    private syncDraggableDisabledState(): void {
+    private syncDropListDisabledState(): void {
         this.dropList.disabled = !this.draggable;
     }
 }
