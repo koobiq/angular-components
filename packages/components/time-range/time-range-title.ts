@@ -12,9 +12,9 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
     standalone: true,
     selector: 'kbq-time-range-title',
     imports: [
+        NgTemplateOutlet,
         KbqLinkModule,
-        KbqIconModule,
-        NgTemplateOutlet
+        KbqIconModule
     ],
     template: `
         @if (titleTemplate()) {

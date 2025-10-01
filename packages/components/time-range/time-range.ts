@@ -142,7 +142,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     }));
 
     /** @docs-private */
-    protected titleValue: WritableSignal<KbqTimeRangeRange | null>;
+    protected readonly titleValue: WritableSignal<KbqTimeRangeRange | null>;
     /** @docs-private */
     protected readonly rangeEditorControl: FormControl<KbqTimeRangeRange>;
 
@@ -224,11 +224,9 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
         }
     }
 
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    /** @docs-private */
     onChange = (_value: KbqTimeRangeRange) => {};
-    /** Implemented as part of ControlValueAccessor
-     * @docs-private */
+    /** @docs-private */
     onTouch = () => {};
     /** Implemented as part of ControlValueAccessor */
     registerOnChange(fn: (_value: KbqTimeRangeRange) => void): void {
@@ -239,7 +237,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
         this.onTouch = fn;
     }
 
-    private handleAvailableTypesChange = (types: KbqTimeRangeType[]) => {
+    private handleAvailableTypesChange = (types: KbqTimeRangeType[]): void => {
         if (types.includes(this.rangeEditorControl.value.type) || this.rangeEditorControl.value.type === 'range') {
             return;
         }

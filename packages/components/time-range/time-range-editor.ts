@@ -85,8 +85,6 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
 })
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     private readonly timeRangeService = inject(KbqTimeRangeService);
-    /** @docs-private */
-    protected readonly rangeStateMatcher = new RangeErrorStateMatcher();
 
     /** The maximum selectable date. */
     readonly maxDate = input<T | null>(null);
@@ -117,12 +115,15 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             }));
     });
 
+    /** @docs-private */
     protected readonly timepickerList = viewChildren<KbqTimepicker<T>>(KbqTimepicker);
 
     /** @docs-private */
-    protected form: FormGroup<FormValue<T>>;
+    protected readonly form: FormGroup<FormValue<T>>;
     /** @docs-private */
     protected readonly timepickerFormat = TimeFormats.HHmmss;
+    /** @docs-private */
+    protected readonly rangeStateMatcher = new RangeErrorStateMatcher();
 
     private lastValidationErrorOnEmit: ValidationErrors | null = null;
 
@@ -197,6 +198,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         });
     }
 
+    /** @docs-private */
     validate(): ValidationErrors | null {
         return this.form.errors || this.lastValidationErrorOnEmit;
     }
@@ -226,9 +228,9 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
         }
     }
 
-    /** Implemented as part of ControlValueAccessor */
+    /** @docs-private */
     onChange = (_value: KbqTimeRangeRange) => {};
-    /** Implemented as part of ControlValueAccessor */
+    /** @docs-private */
     onTouch = () => {};
     /** Implemented as part of ControlValueAccessor */
     registerOnChange(fn: (value: KbqTimeRangeRange) => void): void {

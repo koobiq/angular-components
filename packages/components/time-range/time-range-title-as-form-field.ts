@@ -4,6 +4,7 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Observable, Subject } from 'rxjs';
 import { KbqTimeRange } from './time-range';
 
+/** Directive for easy using styles of time-range placeholder publicly. */
 @Directive({
     standalone: true,
     selector: '[kbqTimeRangeTitlePlaceholder]',
@@ -13,6 +14,7 @@ import { KbqTimeRange } from './time-range';
 })
 export class KbqTimeRangeTitlePlaceholder {}
 
+/** Component simulates `KbqFormFieldControl` allowing to provide custom content inside `KbqFormField` */
 @Component({
     standalone: true,
     selector: 'kbq-time-range-title-as-control',
@@ -43,17 +45,29 @@ export class KbqTimeRangeTitlePlaceholder {}
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     private timeRange = inject(KbqTimeRange);
 
-    stateChanges: Observable<void> = new Subject<void>();
-    ngControl: NgControl | null = this.timeRange.ngControl;
     controlType = 'select';
+    /** @docs-private */
+    stateChanges: Observable<void> = new Subject<void>();
+    /** @docs-private */
+    ngControl: NgControl | null = this.timeRange.ngControl;
+    /** @docs-private */
     value: any;
+    /** @docs-private */
     id: string;
+    /** @docs-private */
     placeholder: string;
+    /** @docs-private */
     focused: boolean;
+    /** @docs-private */
     empty: boolean;
+    /** @docs-private */
     required: boolean;
+    /** @docs-private */
     disabled: boolean;
+    /** @docs-private */
     errorState: boolean;
+    /** @docs-private */
     onContainerClick(_event: MouseEvent): void {}
+    /** @docs-private */
     focus(_options?: FocusOptions): void {}
 }

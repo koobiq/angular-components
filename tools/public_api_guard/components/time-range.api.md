@@ -95,7 +95,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     registerOnTouched(fn: () => void): void;
     readonly showRangeAsDefault: InputSignal<boolean>;
     readonly titleTemplate: InputSignal<TemplateRef<KbqTimeRangeCustomizableTitleContext> | undefined>;
-    protected titleValue: WritableSignal<KbqTimeRangeRange | null>;
+    protected readonly titleValue: WritableSignal<KbqTimeRangeRange | null>;
     readonly valueCorrected: OutputEmitterRef<KbqTimeRangeRange>;
     writeValue(value: KbqTimeRangeRange | null): void;
     // (undocumented)
@@ -120,7 +120,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     constructor();
     readonly availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
     // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
-    protected form: FormGroup<FormValue<T>>;
+    protected readonly form: FormGroup<FormValue<T>>;
     protected readonly isRangeVisible: Signal<boolean>;
     // (undocumented)
     readonly localeConfiguration: InputSignal<KbqTimeRangeLocaleConfig>;
@@ -138,14 +138,12 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     // (undocumented)
     readonly showRangeAsDefault: InputSignal<boolean>;
     protected readonly timepickerFormat = TimeFormats.HHmmss;
-    // (undocumented)
     protected readonly timepickerList: Signal<readonly KbqTimepicker<T>[]>;
     protected readonly timeRangeTypesWithoutRange: Signal<    {
     type: "lastMinute" | "last5Minutes" | "last15Minutes" | "last30Minutes" | "lastHour" | "last24Hours" | "last3Days" | "last7Days" | "last14Days" | "last30Days" | "last3Months" | "last12Months" | "allTime" | "currentQuarter" | "currentYear";
     translationType: KbqTimeRangeTranslationType;
     formattedValue: string;
     }[]>;
-    // (undocumented)
     validate(): ValidationErrors | null;
     writeValue(value: KbqTimeRangeRange | undefined): void;
     // (undocumented)
@@ -202,33 +200,21 @@ export class KbqTimeRangeTitle {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeTitle, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     // (undocumented)
     controlType: string;
-    // (undocumented)
     disabled: boolean;
-    // (undocumented)
     empty: boolean;
-    // (undocumented)
     errorState: boolean;
-    // (undocumented)
     focus(_options?: FocusOptions): void;
-    // (undocumented)
     focused: boolean;
-    // (undocumented)
     id: string;
-    // (undocumented)
     ngControl: NgControl | null;
-    // (undocumented)
     onContainerClick(_event: MouseEvent): void;
-    // (undocumented)
     placeholder: string;
-    // (undocumented)
     required: boolean;
-    // (undocumented)
     stateChanges: Observable<void>;
-    // (undocumented)
     value: any;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRangeTitleAsControl, "kbq-time-range-title-as-control", never, {}, {}, never, ["*"], true, never>;
@@ -239,7 +225,7 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
 // @public (undocumented)
 export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
 
-// @public (undocumented)
+// @public
 export class KbqTimeRangeTitlePlaceholder {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimeRangeTitlePlaceholder, "[kbqTimeRangeTitlePlaceholder]", never, {}, {}, never, never, true, never>;
