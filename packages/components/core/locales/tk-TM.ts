@@ -1,7 +1,8 @@
 import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration
+    KbqCodeBlockLocaleConfiguration,
+    KbqTimeRangeLocaleConfig
 } from './types';
 
 export const tkTMLocaleData = {
@@ -105,5 +106,91 @@ export const tkTMLocaleData = {
     searchExpandable: {
         tooltip: 'Gözleg',
         placeholder: 'Gözleg'
-    }
+    },
+    timeRange: {
+        title: {
+            for: 'soňky',
+            placeholder: 'Möhleti saýla'
+        },
+        editor: {
+            from: 'şundan',
+            to: 'şuňa',
+            apply: 'Ulanmak',
+            cancel: 'Ýatyrmak',
+            rangeLabel: 'şu döwürde',
+            allTime: 'hemme döwür üçin',
+            currentQuarter: 'şu çärýek üçin',
+            currentYear: 'şu ýyl üçin'
+        },
+        durationTemplate: {
+            title: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
+                one {# ýyl}
+                other {# ýyl}
+            }`,
+                MONTHS: `{months, plural,
+                one {aý}
+                other {# aý}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {hepde}
+                other {# hepde}
+            }`,
+                DAYS: `{days, plural,
+                one {gün}
+                other {# gün}
+            }`,
+                HOURS: `{hours, plural,
+                one {sagat}
+                other {# sagat}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {minut}
+                other {# minut}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {sekunt}
+                other {# sekunt}
+            }`,
+                YEARS_FRACTION: `{years} ýyl`,
+                MONTHS_FRACTION: `{months} aý`
+            },
+            option: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
+                one {# ýyl}
+                other {# ýyl}
+            }`,
+                MONTHS: `{months, plural,
+                one {aý}
+                other {# aý}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {hepde}
+                other {# hepde}
+            }`,
+                DAYS: `{days, plural,
+                one {gün}
+                other {# gün}
+            }`,
+                HOURS: `{hours, plural,
+                one {sagat}
+                other {# sagat}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {minut}
+                other {# minut}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {sekunt}
+                other {# sekunt}
+            }`,
+                YEARS_FRACTION: `{years} ýyl`,
+                MONTHS_FRACTION: `{months} aý`
+            }
+        }
+    } satisfies KbqTimeRangeLocaleConfig
 };

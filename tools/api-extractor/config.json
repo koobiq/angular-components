@@ -52,6 +52,7 @@
         "tags",
         "textarea",
         "timepicker",
+        "time-range",
         "timezone",
         "top-bar",
         "toast",

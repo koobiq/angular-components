@@ -1,7 +1,8 @@
 import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration
+    KbqCodeBlockLocaleConfiguration,
+    KbqTimeRangeLocaleConfig
 } from './types';
 
 export const enUSLocaleData = {
@@ -105,5 +106,91 @@ export const enUSLocaleData = {
     searchExpandable: {
         tooltip: 'Search',
         placeholder: 'Search'
-    }
+    },
+    timeRange: {
+        title: {
+            for: 'for',
+            placeholder: 'Select period'
+        },
+        editor: {
+            from: 'from',
+            to: 'to',
+            apply: 'Apply',
+            cancel: 'Cancel',
+            rangeLabel: 'for period',
+            allTime: 'for all time',
+            currentQuarter: 'for the current quarter',
+            currentYear: 'for the current year'
+        },
+        durationTemplate: {
+            title: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
+                one {# year}
+                other {last # years}
+            }`,
+                MONTHS: `{months, plural,
+                one {last month}
+                other {last # months}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {last week}
+                other {last # weeks}
+            }`,
+                DAYS: `{days, plural,
+                one {last day}
+                other {last # days}
+            }`,
+                HOURS: `{hours, plural,
+                one {last hour}
+                other {last # hours}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {last minute}
+                other {last # minutes}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {last second}
+                other {last # seconds}
+            }`,
+                YEARS_FRACTION: `{years} years`,
+                MONTHS_FRACTION: `{months} months`
+            },
+            option: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: '',
+                YEARS: `{years, plural,
+                one {# year}
+                other {last # years}
+            }`,
+                MONTHS: `{months, plural,
+                one {last month}
+                other {last # months}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {last week}
+                other {last # weeks}
+            }`,
+                DAYS: `{days, plural,
+                one {last day}
+                other {last # days}
+            }`,
+                HOURS: `{hours, plural,
+                one {last hour}
+                other {last # hours}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {last minute}
+                other {last # minutes}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {last second}
+                other {last # seconds}
+            }`,
+                YEARS_FRACTION: `{years} years`,
+                MONTHS_FRACTION: `{months} months`
+            }
+        }
+    } satisfies KbqTimeRangeLocaleConfig
 };

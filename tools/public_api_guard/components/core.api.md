@@ -30,6 +30,7 @@ import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
@@ -380,6 +381,50 @@ export const enUSLocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    timeRange: {
+        title: {
+            for: string;
+            placeholder: string;
+        };
+        editor: {
+            from: string;
+            to: string;
+            apply: string;
+            cancel: string;
+            rangeLabel: string;
+            allTime: string;
+            currentQuarter: string;
+            currentYear: string;
+        };
+        durationTemplate: {
+            title: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+            option: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+        };
+    };
 };
 
 // @public
@@ -541,6 +586,50 @@ export const esLALocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    timeRange: {
+        title: {
+            for: string;
+            placeholder: string;
+        };
+        editor: {
+            from: string;
+            to: string;
+            apply: string;
+            cancel: string;
+            rangeLabel: string;
+            allTime: string;
+            currentQuarter: string;
+            currentYear: string;
+        };
+        durationTemplate: {
+            title: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+            option: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -691,6 +780,50 @@ export const faIRLocaleData: {
     searchExpandable: {
         tooltip: string;
         placeholder: string;
+    };
+    timeRange: {
+        title: {
+            for: string;
+            placeholder: string;
+        };
+        editor: {
+            from: string;
+            to: string;
+            apply: string;
+            cancel: string;
+            rangeLabel: string;
+            allTime: string;
+            currentQuarter: string;
+            currentYear: string;
+        };
+        durationTemplate: {
+            title: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+            option: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+        };
     };
 };
 
@@ -926,6 +1059,50 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        timeRange: {
+            title: {
+                for: string;
+                placeholder: string;
+            };
+            editor: {
+                from: string;
+                to: string;
+                apply: string;
+                cancel: string;
+                rangeLabel: string;
+                allTime: string;
+                currentQuarter: string;
+                currentYear: string;
+            };
+            durationTemplate: {
+                title: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+                option: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+            };
+        };
     };
     'zh-CN': {
         formatters: {
@@ -1062,6 +1239,50 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         searchExpandable: {
             tooltip: string;
             placeholder: string;
+        };
+        timeRange: {
+            title: {
+                for: string;
+                placeholder: string;
+            };
+            editor: {
+                from: string;
+                to: string;
+                apply: string;
+                cancel: string;
+                rangeLabel: string;
+                allTime: string;
+                currentQuarter: string;
+                currentYear: string;
+            };
+            durationTemplate: {
+                title: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+                option: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+            };
         };
     };
     'es-LA': {
@@ -1205,6 +1426,50 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        timeRange: {
+            title: {
+                for: string;
+                placeholder: string;
+            };
+            editor: {
+                from: string;
+                to: string;
+                apply: string;
+                cancel: string;
+                rangeLabel: string;
+                allTime: string;
+                currentQuarter: string;
+                currentYear: string;
+            };
+            durationTemplate: {
+                title: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+                option: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+            };
+        };
     };
     'pt-BR': {
         formatters: {
@@ -1342,6 +1607,50 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         searchExpandable: {
             tooltip: string;
             placeholder: string;
+        };
+        timeRange: {
+            title: {
+                for: string;
+                placeholder: string;
+            };
+            editor: {
+                from: string;
+                to: string;
+                apply: string;
+                cancel: string;
+                rangeLabel: string;
+                allTime: string;
+                currentQuarter: string;
+                currentYear: string;
+            };
+            durationTemplate: {
+                title: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+                option: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+            };
         };
     };
     'ru-RU': {
@@ -1487,6 +1796,50 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        timeRange: {
+            title: {
+                for: string;
+                placeholder: string;
+            };
+            editor: {
+                from: string;
+                to: string;
+                apply: string;
+                cancel: string;
+                rangeLabel: string;
+                allTime: string;
+                currentQuarter: string;
+                currentYear: string;
+            };
+            durationTemplate: {
+                title: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+                option: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+            };
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1626,6 +1979,50 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        timeRange: {
+            title: {
+                for: string;
+                placeholder: string;
+            };
+            editor: {
+                from: string;
+                to: string;
+                apply: string;
+                cancel: string;
+                rangeLabel: string;
+                allTime: string;
+                currentQuarter: string;
+                currentYear: string;
+            };
+            durationTemplate: {
+                title: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+                option: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+            };
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1764,6 +2161,50 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         searchExpandable: {
             tooltip: string;
             placeholder: string;
+        };
+        timeRange: {
+            title: {
+                for: string;
+                placeholder: string;
+            };
+            editor: {
+                from: string;
+                to: string;
+                apply: string;
+                cancel: string;
+                rangeLabel: string;
+                allTime: string;
+                currentQuarter: string;
+                currentYear: string;
+            };
+            durationTemplate: {
+                title: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+                option: {
+                    SEPARATOR: string;
+                    LAST_PART_SEPARATOR: string;
+                    YEARS: string;
+                    MONTHS: string;
+                    WEEKS: string;
+                    DAYS: string;
+                    HOURS: string;
+                    MINUTES: string;
+                    SECONDS: string;
+                    YEARS_FRACTION: string;
+                    MONTHS_FRACTION: string;
+                };
+            };
         };
     };
 };
@@ -2845,6 +3286,28 @@ export enum KbqThemeSelector {
     Default = "kbq-light"
 }
 
+// @public
+export type KbqTimeRangeLocaleConfig = {
+    title: {
+        for: string;
+        placeholder: string;
+    };
+    editor: {
+        from: string;
+        to: string;
+        apply: string;
+        cancel: string;
+        rangeLabel: string;
+        allTime: string;
+        currentQuarter: string;
+        currentYear: string;
+    };
+    durationTemplate: {
+        title: FormatterDurationTemplate;
+        option: FormatterDurationTemplate;
+    };
+};
+
 // @public (undocumented)
 export interface KbqTitleTextRef {
     // (undocumented)
@@ -3195,6 +3658,50 @@ export const ptBRLocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    timeRange: {
+        title: {
+            for: string;
+            placeholder: string;
+        };
+        editor: {
+            from: string;
+            to: string;
+            apply: string;
+            cancel: string;
+            rangeLabel: string;
+            allTime: string;
+            currentQuarter: string;
+            currentYear: string;
+        };
+        durationTemplate: {
+            title: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+            option: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+        };
+    };
 };
 
 // @public (undocumented)
@@ -3519,6 +4026,50 @@ export const ruRULocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    timeRange: {
+        title: {
+            for: string;
+            placeholder: string;
+        };
+        editor: {
+            from: string;
+            to: string;
+            apply: string;
+            cancel: string;
+            rangeLabel: string;
+            allTime: string;
+            currentQuarter: string;
+            currentYear: string;
+        };
+        durationTemplate: {
+            title: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+            option: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+        };
+    };
 };
 
 // @public
@@ -3754,6 +4305,50 @@ export const tkTMLocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    timeRange: {
+        title: {
+            for: string;
+            placeholder: string;
+        };
+        editor: {
+            from: string;
+            to: string;
+            apply: string;
+            cancel: string;
+            rangeLabel: string;
+            allTime: string;
+            currentQuarter: string;
+            currentYear: string;
+        };
+        durationTemplate: {
+            title: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+            option: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+        };
+    };
 };
 
 // @public @deprecated
@@ -3917,6 +4512,50 @@ export const zhCNLocaleData: {
     searchExpandable: {
         tooltip: string;
         placeholder: string;
+    };
+    timeRange: {
+        title: {
+            for: string;
+            placeholder: string;
+        };
+        editor: {
+            from: string;
+            to: string;
+            apply: string;
+            cancel: string;
+            rangeLabel: string;
+            allTime: string;
+            currentQuarter: string;
+            currentYear: string;
+        };
+        durationTemplate: {
+            title: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+            option: {
+                SEPARATOR: string;
+                LAST_PART_SEPARATOR: string;
+                YEARS: string;
+                MONTHS: string;
+                WEEKS: string;
+                DAYS: string;
+                HOURS: string;
+                MINUTES: string;
+                SECONDS: string;
+                YEARS_FRACTION: string;
+                MONTHS_FRACTION: string;
+            };
+        };
     };
 };
 

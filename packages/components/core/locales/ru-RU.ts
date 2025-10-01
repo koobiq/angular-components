@@ -1,7 +1,8 @@
 import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration
+    KbqCodeBlockLocaleConfiguration,
+    KbqTimeRangeLocaleConfig
 } from './types';
 
 export const ruRULocaleData = {
@@ -105,5 +106,105 @@ export const ruRULocaleData = {
     searchExpandable: {
         tooltip: 'Поиск',
         placeholder: 'Поиск'
-    }
+    },
+    timeRange: {
+        title: {
+            for: 'за',
+            placeholder: 'Выберите период'
+        },
+        editor: {
+            from: 'с',
+            to: 'по',
+            apply: 'Применить',
+            cancel: 'Отмена',
+            rangeLabel: 'за период',
+            allTime: 'за все время',
+            currentQuarter: 'за текущий квартал',
+            currentYear: 'за текущий год'
+        },
+        durationTemplate: {
+            title: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: 'и',
+                YEARS: `{years, plural,
+                one {# год}
+                few {последние # лет}
+                other {последние # лет}
+            }`,
+                MONTHS: `{months, plural,
+                one {последний месяц}
+                few {последние # месяца}
+                other {последние # месяцев}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {последнюю неделю}
+                few {последние # недели}
+                other {последние # недель}
+            }`,
+                DAYS: `{days, plural,
+                one {последний день}
+                few {последние # дня}
+                other {последние # дней}
+            }`,
+                HOURS: `{hours, plural,
+                one {последний час}
+                few {последние # часа}
+                other {последние # часов}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {последнюю минуту}
+                few {последние # минуты}
+                other {последние # минут}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {последнюю секунду}
+                few {последние # секунды}
+                other {последние # секунд}
+            }`,
+                YEARS_FRACTION: `{years} лет`,
+                MONTHS_FRACTION: `{months} месяцев`
+            },
+            option: {
+                SEPARATOR: ' ',
+                LAST_PART_SEPARATOR: 'и',
+                YEARS: `{years, plural,
+                one {последний год}
+                few {последние # лет}
+                other {последние # лет}
+            }`,
+                MONTHS: `{months, plural,
+                one {последний месяц}
+                few {последние # месяца}
+                other {последние # месяцев}
+            }`,
+                WEEKS: `{weeks, plural,
+                one {последняя неделя}
+                few {последние # недели}
+                other {последние # недель}
+            }`,
+                DAYS: `{days, plural,
+                one {последний день}
+                few {последние # дня}
+                other {последние # дней}
+            }`,
+                HOURS: `{hours, plural,
+                one {последний час}
+                few {последние # часа}
+                other {последние # часов}
+            }`,
+                MINUTES: `{minutes, plural,
+                one {последняя минута}
+                few {последние # минуты}
+                other {последние # минут}
+            }`,
+                SECONDS: `{seconds, plural,
+                one {последняя секунда}
+                few {последние # секунды}
+                other {последние # секунд}
+            }`,
+                YEARS_FRACTION: `{years} лет`,
+                MONTHS_FRACTION: `{months} месяцев`
+            }
+        }
+    } satisfies KbqTimeRangeLocaleConfig
 };
