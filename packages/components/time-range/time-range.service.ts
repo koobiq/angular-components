@@ -168,7 +168,7 @@ export class KbqTimeRangeService<T> {
             case 'days': {
                 return this.lastDaysRange(this.getTimeRangeTypeUnits(type).days!);
             }
-            // @TODO: implement weeks range after date adapter update
+            // @TODO: implement weeks range after date adapter update (#DS-4226)
             case 'months': {
                 return this.lastMonthsRange(this.getTimeRangeTypeUnits(type).months!);
             }
