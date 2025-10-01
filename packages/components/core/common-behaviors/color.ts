@@ -82,12 +82,12 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
 
 @Directive({ standalone: true })
 export class KbqColorDirective {
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private defaultColor: KbqComponentColors | ThemePalette | string;
+    /** @docs-private */
+    protected defaultColor: KbqComponentColors | ThemePalette | string;
 
+    /** current class name of color */
     get colorClassName(): KbqComponentColors | ThemePalette | string {
         return `kbq-${this._color}`;
     }

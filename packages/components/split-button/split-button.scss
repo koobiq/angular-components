@@ -1,0 +1,83 @@
+@use '../core/styles/common';
+@use './split-button-theme';
+
+.kbq-split-button {
+    display: flex;
+    flex-direction: row;
+
+    min-width: 0;
+
+    border-radius: var(--kbq-size-border-radius);
+
+    & .kbq-button:first-child {
+        padding-right: 10px;
+    }
+
+    & .kbq-button:first-child,
+    & .kbq-button-icon:first-child {
+        min-width: 0;
+
+        border-right: none;
+
+        border-top-right-radius: unset;
+        border-bottom-right-radius: unset;
+
+        & .kbq-button-wrapper {
+            @include common.kbq-truncate-line();
+        }
+    }
+
+    & .kbq-button:last-child,
+    & .kbq-button-icon:last-child {
+        border-left: none;
+
+        border-top-left-radius: unset;
+        border-bottom-left-radius: unset;
+
+        &::before {
+            display: none;
+
+            content: '';
+            position: absolute;
+            left: 0;
+            top: calc(var(--kbq-size-s) - var(--kbq-button-size-border-width));
+
+            width: 1px;
+            height: var(--kbq-size-l);
+        }
+    }
+
+    & .kbq-button,
+    & .kbq-button-icon {
+        &:not(:hover, .cdk-keyboard-focused, .kbq-active, .kbq-progress) {
+            & + .kbq-button,
+            & + .kbq-button-icon {
+                &:not(:hover, .cdk-keyboard-focused, .kbq-active, .kbq-progress) {
+                    &::before {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        &.kbq-progress {
+            & + .kbq-button,
+            & + .kbq-button-icon {
+                &.kbq-progress::before {
+                    display: block;
+                }
+            }
+        }
+
+        &[disabled] + [disabled]::before {
+            display: block;
+        }
+    }
+
+    & .kbq-button-icon + .kbq-button-icon {
+        padding-left: var(--kbq-size-xxs);
+        padding-right: var(--kbq-size-xxs);
+    }
+}
+
+@include split-button-theme.kbq-split-button-theme();

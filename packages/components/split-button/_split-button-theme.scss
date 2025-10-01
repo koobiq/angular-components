@@ -1,0 +1,59 @@
+@mixin kbq-split-button-theme() {
+    .kbq-split-button {
+        &:hover:has(.kbq-button_transparent) {
+            background: var(--kbq-states-background-transparent-hover, rgba(108, 115, 147, 0.08));
+        }
+
+        & .kbq-button,
+        & .kbq-button-icon {
+            &:not(:hover, .cdk-keyboard-focused, .kbq-active) {
+                & + .kbq-button,
+                & + .kbq-button-icon {
+                    &:not(:hover, .cdk-keyboard-focused, .kbq-active) {
+                        &.kbq-contrast.kbq-button_filled::before {
+                            background: var(--kbq-foreground-on-contrast);
+                        }
+
+                        &.kbq-contrast.kbq-button_transparent,
+                        &.kbq-contrast-fade.kbq-button_outline,
+                        &.kbq-contrast-fade.kbq-button_filled {
+                            &::before {
+                                background: var(--kbq-line-contrast-fade);
+                            }
+                        }
+
+                        &.kbq-theme-fade.kbq-button_outline,
+                        &.kbq-theme.kbq-button_transparent {
+                            &::before {
+                                background: var(--kbq-line-theme-fade);
+                            }
+                        }
+                    }
+                }
+            }
+
+            &[disabled] + [disabled]::before {
+                background: var(--kbq-line-contrast-fade);
+            }
+
+            &[disabled] {
+                & + .kbq-button,
+                & + .kbq-button-icon {
+                    background: var(--kbq-button-filled-contrast-fade-on-states-disabled-background);
+                }
+            }
+
+            &:not([disabled]) + [disabled] {
+                background: var(--kbq-button-filled-contrast-fade-on-background) !important;
+            }
+        }
+
+        & .kbq-button_outline:has(+ .kbq-button_outline) {
+            border-right: none;
+
+            & + .kbq-button_outline {
+                border-left: none;
+            }
+        }
+    }
+}

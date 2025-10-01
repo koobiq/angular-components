@@ -3746,6 +3746,90 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
     "importPath": "components/sidepanel"
   },
+  "split-button-content": {
+    "packagePath": "components/split-button/split-button-content",
+    "title": "split-button-content",
+    "componentName": "SplitButtonContentExample",
+    "files": [
+      "split-button-content-example.ts"
+    ],
+    "selector": "split-button-content-example",
+    "additionalComponents": [],
+    "primaryFile": "split-button-content-example.ts",
+    "importPath": "components/split-button"
+  },
+  "split-button-disabled-state": {
+    "packagePath": "components/split-button/split-button-disabled-state",
+    "title": "split-button-disabled-state",
+    "componentName": "SplitButtonDisabledStateExample",
+    "files": [
+      "split-button-disabled-state-example.ts"
+    ],
+    "selector": "split-button-disabled-state-example",
+    "additionalComponents": [],
+    "primaryFile": "split-button-disabled-state-example.ts",
+    "importPath": "components/split-button"
+  },
+  "split-button-menu-width": {
+    "packagePath": "components/split-button/split-button-menu-width",
+    "title": "split-button-menu-width",
+    "componentName": "SplitButtonMenuWidthExample",
+    "files": [
+      "split-button-menu-width-example.ts"
+    ],
+    "selector": "split-button-menu-width-example",
+    "additionalComponents": [],
+    "primaryFile": "split-button-menu-width-example.ts",
+    "importPath": "components/split-button"
+  },
+  "split-button-overview": {
+    "packagePath": "components/split-button/split-button-overview",
+    "title": "split-button",
+    "componentName": "SplitButtonOverviewExample",
+    "files": [
+      "split-button-overview-example.ts"
+    ],
+    "selector": "split-button-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "split-button-overview-example.ts",
+    "importPath": "components/split-button"
+  },
+  "split-button-progress-state": {
+    "packagePath": "components/split-button/split-button-progress-state",
+    "title": "split-button-progress-state",
+    "componentName": "SplitButtonProgressStateExample",
+    "files": [
+      "split-button-progress-state-example.ts"
+    ],
+    "selector": "split-button-progress-state-example",
+    "additionalComponents": [],
+    "primaryFile": "split-button-progress-state-example.ts",
+    "importPath": "components/split-button"
+  },
+  "split-button-styles": {
+    "packagePath": "components/split-button/split-button-styles",
+    "title": "split-button-styles",
+    "componentName": "SplitButtonStylesExample",
+    "files": [
+      "split-button-styles-example.ts"
+    ],
+    "selector": "split-button-styles-example",
+    "additionalComponents": [],
+    "primaryFile": "split-button-styles-example.ts",
+    "importPath": "components/split-button"
+  },
+  "split-button-text-overflow": {
+    "packagePath": "components/split-button/split-button-text-overflow",
+    "title": "split-button-text-overflow",
+    "componentName": "SplitButtonTextOverflowExample",
+    "files": [
+      "split-button-text-overflow-example.ts"
+    ],
+    "selector": "split-button-text-overflow-example",
+    "additionalComponents": [],
+    "primaryFile": "split-button-text-overflow-example.ts",
+    "importPath": "components/split-button"
+  },
   "splitter-dynamic-data": {
     "packagePath": "components/splitter/splitter-dynamic-data",
     "title": "Splitter dynamic data",
@@ -5839,6 +5923,20 @@ return import('@koobiq/docs-examples/components/sidepanel');
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-with-dynamic-config-update':
 return import('@koobiq/docs-examples/components/sidepanel');
+  case 'split-button-content':
+return import('@koobiq/docs-examples/components/split-button');
+  case 'split-button-disabled-state':
+return import('@koobiq/docs-examples/components/split-button');
+  case 'split-button-menu-width':
+return import('@koobiq/docs-examples/components/split-button');
+  case 'split-button-overview':
+return import('@koobiq/docs-examples/components/split-button');
+  case 'split-button-progress-state':
+return import('@koobiq/docs-examples/components/split-button');
+  case 'split-button-styles':
+return import('@koobiq/docs-examples/components/split-button');
+  case 'split-button-text-overflow':
+return import('@koobiq/docs-examples/components/split-button');
   case 'splitter-dynamic-data':
 return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-fixed':
