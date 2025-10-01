@@ -1934,8 +1934,8 @@ export class KbqColorDirective {
     // (undocumented)
     protected _color: KbqComponentColors | ThemePalette | string;
     get colorClassName(): KbqComponentColors | ThemePalette | string;
-    readonly elementRef: ElementRef<HTMLElement>;
     protected defaultColor: KbqComponentColors | ThemePalette | string;
+    readonly elementRef: ElementRef<HTMLElement>;
     setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
