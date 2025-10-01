@@ -34,6 +34,7 @@ import {
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
+    PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
     applyPopupMargins
@@ -52,13 +53,13 @@ import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
 
-export interface KbaAppSwitcherApp {
+export interface KbqAppSwitcherApp {
     name: string;
     id: string | number;
     type?: string | number;
     icon?: string;
     caption?: string;
-    aliases?: KbaAppSwitcherApp[];
+    aliases?: KbqAppSwitcherApp[];
     link?: string;
 }
 
@@ -67,24 +68,33 @@ export interface KbaAppSwitcherSite {
     id: string | number;
     status?: string;
     icon?: string;
-    apps: KbaAppSwitcherApp[];
+    apps: KbqAppSwitcherApp[];
 }
 
-export function defaultGroupBy(groupedApps: Record<string, Partial<KbaAppSwitcherApp>>, app: KbaAppSwitcherApp) {
-    const appType = app.type ? app.type.toString() : 'untyped';
-
-    if (groupedApps[appType]) {
-        groupedApps[appType].aliases!.push(app);
+export function defaultGroupBy(
+    app: KbqAppSwitcherApp,
+    groups: Record<string, KbqAppSwitcherApp>,
+    untyped: KbqAppSwitcherApp[]
+) {
+    if (!app.type) {
+        untyped.push(app);
     } else {
-        groupedApps[appType] = {
-            name: appType,
-            aliases: []
-        };
+        const appType = app.type.toString();
+
+        if (groups[appType]) {
+            groups[appType].aliases!.push(app);
+        } else {
+            groups[appType] = {
+                name: appType,
+                aliases: [app],
+                id: ''
+            };
+        }
     }
 }
 
-export const MAX_APPS_FOR_ENABLE_SEARCH = 7;
-export const MAX_APPS_FOR_ENABLE_GROUPING = 3;
+export const MIN_APPS_FOR_ENABLE_SEARCH: number = 7;
+export const MIN_APPS_FOR_ENABLE_GROUPING: number = 3;
 
 @Component({
     standalone: true,
@@ -124,7 +134,7 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
     );
 
     get withSites(): boolean {
-        return !!this.trigger.sites.length;
+        return this.trigger.sitesMode;
     }
 
     prefix = 'kbq-app-switcher';
@@ -134,7 +144,7 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
     isTrapFocus: boolean = false;
 
     protected activeSite: KbaAppSwitcherSite;
-    protected activeApp: KbaAppSwitcherApp;
+    protected activeApp: KbqAppSwitcherApp;
 
     @ViewChild(KbqInput) input: KbqInput;
     @ViewChild('otherSites') otherSites: KbqDropdownTrigger;
@@ -168,12 +178,12 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
         this.hide(0);
     }
 
-    selectAppInSite(site, app: KbaAppSwitcherApp) {
+    selectAppInSite(site, app: KbqAppSwitcherApp) {
         this.trigger.selectedSite = site;
         this.trigger.selectedApp = app;
 
-        this.trigger.selectedSiteChanges.emit(site);
-        this.trigger.selectedAppChanges.emit(app);
+        this.trigger.selectedSiteChange.emit(site);
+        this.trigger.selectedAppChange.emit(app);
     }
 
     private filterSites(query: string | null): KbaAppSwitcherSite[] {
@@ -235,13 +245,27 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     footer: string | TemplateRef<any>;
     private closeOnScroll: null;
 
-    get search(): boolean {
-        return this.appsCount > MAX_APPS_FOR_ENABLE_SEARCH;
+    get withSearch(): boolean {
+        return this.appsCount > MIN_APPS_FOR_ENABLE_SEARCH;
     }
 
     get appsCount(): number {
-        return this.originalSites.reduce((acc, site) => acc + site.apps.length, 0);
+        if (this.sitesMode) {
+            return this.originalSites.reduce((acc, site) => acc + site.apps.length, 0);
+        }
+
+        return this.originalApps.length;
     }
+
+    get sitesMode(): boolean {
+        return this.originalSites?.length > 0;
+    }
+
+    get currentApps() {
+        return this.sitesMode ? this.selectedSite.apps : this._parsedApps;
+    }
+
+    @Input('kbqAppSwitcherPlacement') placement: PopUpPlacements = PopUpPlacements.BottomLeft;
 
     @Input()
     get sites(): KbaAppSwitcherSite[] {
@@ -256,29 +280,51 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
         value.forEach((site: KbaAppSwitcherSite) => {
             const newSite: KbaAppSwitcherSite = { ...site, apps: [] };
 
-            const groupedApps: Record<string, KbaAppSwitcherApp> = {};
-
-            // todo refactor
-            if (site.apps.length > MAX_APPS_FOR_ENABLE_GROUPING) {
-                site.apps.forEach((app) => {
-                    this.groupBy(groupedApps, app);
-                });
-
-                if (Object.values(groupedApps).length > 1) {
-                    newSite.apps = Object.values(groupedApps).filter((app) => app.name !== 'untyped');
-                }
-
-                if (groupedApps.untyped?.aliases?.length) {
-                    newSite.apps.push(...groupedApps.untyped.aliases);
-                }
-            }
+            newSite.apps = this.makeGroupsForApps(site.apps, MIN_APPS_FOR_ENABLE_GROUPING);
 
             this._parsedSites.push(newSite);
         });
     }
 
     private _parsedSites: KbaAppSwitcherSite[];
+
+    @Input()
+    get apps(): KbqAppSwitcherApp[] {
+        return this._parsedApps;
+    }
+
+    set apps(apps: KbqAppSwitcherApp[]) {
+        this.originalApps = apps;
+
+        this._parsedApps = this.makeGroupsForApps(this.originalApps, MIN_APPS_FOR_ENABLE_GROUPING);
+    }
+
+    private makeGroupsForApps(apps: KbqAppSwitcherApp[], minAppsForGrouping: number): KbqAppSwitcherApp[] {
+        const groups: Record<string, KbqAppSwitcherApp> = {};
+        const untyped: KbqAppSwitcherApp[] = [];
+        const groupedApps: KbqAppSwitcherApp[] = [];
+
+        apps.forEach((app) => {
+            this.groupBy(app, groups, untyped);
+        });
+
+        Object.values(groups).forEach((group) => {
+            if (group.aliases && group.aliases.length > minAppsForGrouping) {
+                groupedApps.push(group);
+            } else {
+                untyped.push(...group.aliases!);
+            }
+        });
+
+        groupedApps.push(...untyped);
+
+        return groupedApps;
+    }
+
+    private _parsedApps: KbqAppSwitcherApp[];
+
     originalSites: KbaAppSwitcherSite[];
+    originalApps: KbqAppSwitcherApp[];
 
     // Function to group the apps by type. The first argument is an object with app types. The second is an app
     @Input()
@@ -286,7 +332,9 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
         return this._groupBy;
     }
 
-    set groupBy(fn: (groupedApps: Record<string, Partial<KbaAppSwitcherApp>>, app: KbaAppSwitcherApp) => void) {
+    set groupBy(
+        fn: (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]) => void
+    ) {
         if (typeof fn !== 'function') {
             throw new Error('The argument must be a function');
         }
@@ -304,29 +352,15 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     set selectedSite(value: KbaAppSwitcherSite) {
         const originValue = this.originalSites.find((site) => value.id === site.id) as KbaAppSwitcherSite;
         const newSite: KbaAppSwitcherSite = { ...originValue, apps: [] };
-        const groupedApps: Record<string, KbaAppSwitcherApp> = {};
 
-        if (originValue.apps.length > MAX_APPS_FOR_ENABLE_GROUPING) {
-            originValue.apps.forEach((app) => {
-                this.groupBy(groupedApps, app);
-            });
-
-            if (Object.values(groupedApps).length > 1) {
-                newSite.apps = Object.values(groupedApps).filter((app) => app.name !== 'untyped');
-            }
-
-            if (groupedApps.untyped?.aliases?.length) {
-                newSite.apps.push(...groupedApps.untyped.aliases);
-            }
-        }
+        newSite.apps = this.makeGroupsForApps(originValue.apps, MIN_APPS_FOR_ENABLE_GROUPING);
 
         this._parsedSelectedSite = newSite;
     }
 
-    private _parsedSelectedSite: KbaAppSwitcherSite;
+    @Input() selectedApp: KbqAppSwitcherApp;
 
-    @Input() apps: KbaAppSwitcherApp[];
-    @Input() selectedApp: KbaAppSwitcherApp;
+    private _parsedSelectedSite: KbaAppSwitcherSite;
 
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -355,8 +389,8 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
 
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
-    @Output() readonly selectedSiteChanges = new EventEmitter<KbaAppSwitcherSite>();
-    @Output() readonly selectedAppChanges = new EventEmitter<KbaAppSwitcherApp>();
+    @Output() readonly selectedSiteChange = new EventEmitter<KbaAppSwitcherSite>();
+    @Output() readonly selectedAppChange = new EventEmitter<KbqAppSwitcherApp>();
 
     protected originSelector = '.kbq-app-switcher';
 

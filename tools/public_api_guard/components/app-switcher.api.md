@@ -30,6 +30,7 @@ import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
@@ -37,30 +38,12 @@ import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
 // @public (undocumented)
-export function defaultGroupBy(groupedApps: Record<string, Partial<KbaAppSwitcherApp>>, app: KbaAppSwitcherApp): void;
-
-// @public (undocumented)
-export interface KbaAppSwitcherApp {
-    // (undocumented)
-    aliases?: KbaAppSwitcherApp[];
-    // (undocumented)
-    caption?: string;
-    // (undocumented)
-    icon?: string;
-    // (undocumented)
-    id: string | number;
-    // (undocumented)
-    link?: string;
-    // (undocumented)
-    name: string;
-    // (undocumented)
-    type?: string | number;
-}
+export function defaultGroupBy(app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]): void;
 
 // @public (undocumented)
 export interface KbaAppSwitcherSite {
     // (undocumented)
-    apps: KbaAppSwitcherApp[];
+    apps: KbqAppSwitcherApp[];
     // (undocumented)
     icon?: string;
     // (undocumented)
@@ -84,7 +67,7 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 // @public (undocumented)
 export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
     // (undocumented)
-    protected activeApp: KbaAppSwitcherApp;
+    protected activeApp: KbqAppSwitcherApp;
     // (undocumented)
     protected activeSite: KbaAppSwitcherSite;
     // (undocumented)
@@ -104,7 +87,7 @@ export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     readonly searchControl: FormControl<string | null>;
     // (undocumented)
-    selectAppInSite(site: any, app: KbaAppSwitcherApp): void;
+    selectAppInSite(site: any, app: KbqAppSwitcherApp): void;
     // (undocumented)
     trigger: KbqAppSwitcherTrigger;
     // (undocumented)
@@ -125,9 +108,27 @@ export const kbqAppSwitcherAnimations: {
 };
 
 // @public (undocumented)
+export interface KbqAppSwitcherApp {
+    // (undocumented)
+    aliases?: KbqAppSwitcherApp[];
+    // (undocumented)
+    caption?: string;
+    // (undocumented)
+    icon?: string;
+    // (undocumented)
+    id: string | number;
+    // (undocumented)
+    link?: string;
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    type?: string | number;
+}
+
+// @public (undocumented)
 export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     // (undocumented)
-    app: KbaAppSwitcherApp;
+    app: KbqAppSwitcherApp;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherDropdownApp, "[kbq-app-switcher-dropdown-app]", ["kbqAppSwitcherDropdownApp"], { "app": { "alias": "kbq-app-switcher-dropdown-app"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -147,7 +148,7 @@ export class KbqAppSwitcherDropdownSite extends KbqDropdownItem {
 // @public (undocumented)
 export class KbqAppSwitcherListItem extends KbqDropdownItem {
     // (undocumented)
-    app: KbaAppSwitcherApp;
+    app: KbqAppSwitcherApp;
     // (undocumented)
     clickHandler(event: MouseEvent): void;
     // (undocumented)
@@ -183,7 +184,8 @@ export function kbqAppSwitcherScrollStrategyFactory(overlay: Overlay): () => Scr
 // @public (undocumented)
 export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> implements AfterContentInit, OnInit {
     // (undocumented)
-    apps: KbaAppSwitcherApp[];
+    get apps(): KbqAppSwitcherApp[];
+    set apps(apps: KbqAppSwitcherApp[]);
     // (undocumented)
     get appsCount(): number;
     // (undocumented)
@@ -195,6 +197,8 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     // (undocumented)
     content: string | TemplateRef<any>;
     // (undocumented)
+    get currentApps(): KbqAppSwitcherApp[];
+    // (undocumented)
     customClass: string;
     // (undocumented)
     get disabled(): boolean;
@@ -204,8 +208,8 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     // (undocumented)
     getOverlayHandleComponentType(): Type<KbqAppSwitcher>;
     // (undocumented)
-    get groupBy(): (groupedApps: Record<string, Partial<KbaAppSwitcherApp>>, app: KbaAppSwitcherApp) => void;
-    set groupBy(fn: (groupedApps: Record<string, Partial<KbaAppSwitcherApp>>, app: KbaAppSwitcherApp) => void);
+    get groupBy(): (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]) => void;
+    set groupBy(fn: (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]) => void);
     // (undocumented)
     get hasClickTrigger(): boolean;
     // (undocumented)
@@ -221,11 +225,15 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     // (undocumented)
     offset: number | null;
     // (undocumented)
+    originalApps: KbqAppSwitcherApp[];
+    // (undocumented)
     originalSites: KbaAppSwitcherSite[];
     // (undocumented)
     protected originSelector: string;
     // (undocumented)
     protected get overlayConfig(): OverlayConfig;
+    // (undocumented)
+    placement: PopUpPlacements;
     // (undocumented)
     readonly placementChange: EventEmitter<any>;
     // (undocumented)
@@ -233,19 +241,19 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;
     // (undocumented)
-    get search(): boolean;
+    selectedApp: KbqAppSwitcherApp;
     // (undocumented)
-    selectedApp: KbaAppSwitcherApp;
-    // (undocumented)
-    readonly selectedAppChanges: EventEmitter<KbaAppSwitcherApp>;
+    readonly selectedAppChange: EventEmitter<KbqAppSwitcherApp>;
     // (undocumented)
     get selectedSite(): KbaAppSwitcherSite;
     set selectedSite(value: KbaAppSwitcherSite);
     // (undocumented)
-    readonly selectedSiteChanges: EventEmitter<KbaAppSwitcherSite>;
+    readonly selectedSiteChange: EventEmitter<KbaAppSwitcherSite>;
     // (undocumented)
     get sites(): KbaAppSwitcherSite[];
     set sites(value: KbaAppSwitcherSite[]);
+    // (undocumented)
+    get sitesMode(): boolean;
     // (undocumented)
     trigger: string;
     // (undocumented)
@@ -256,16 +264,18 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     // (undocumented)
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "sites": { "alias": "sites"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "apps": { "alias": "apps"; "required": false; }; "selectedApp": { "alias": "selectedApp"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChanges": "selectedSiteChanges"; "selectedAppChanges": "selectedAppChanges"; }, never, never, true, never>;
+    get withSearch(): boolean;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "placement": { "alias": "kbqAppSwitcherPlacement"; "required": false; }; "sites": { "alias": "sites"; "required": false; }; "apps": { "alias": "apps"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "selectedApp": { "alias": "selectedApp"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChange": "selectedSiteChange"; "selectedAppChange": "selectedAppChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherTrigger, never>;
 }
 
 // @public (undocumented)
-export const MAX_APPS_FOR_ENABLE_GROUPING = 3;
+export const MIN_APPS_FOR_ENABLE_GROUPING: number;
 
 // @public (undocumented)
-export const MAX_APPS_FOR_ENABLE_SEARCH = 7;
+export const MIN_APPS_FOR_ENABLE_SEARCH: number;
 
 // (No @packageDocumentation comment for this package)
 

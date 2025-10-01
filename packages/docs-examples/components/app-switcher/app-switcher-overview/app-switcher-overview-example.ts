@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KbaAppSwitcherSite, KbqAppSwitcherTrigger } from '@koobiq/components/app-switcher';
+import { KbqAppSwitcherApp, KbqAppSwitcherModule } from '@koobiq/components/app-switcher';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
@@ -21,74 +21,54 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqInputModule,
         ReactiveFormsModule,
         KbqFormsModule,
-        KbqAppSwitcherTrigger,
+        KbqAppSwitcherModule,
         KbqButtonModule,
         KbqIcon
     ],
     template: `
-        <button kbq-button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]">
+        App: {{ selectedApp.name }}
+        <br />
+        <br />
+        <button kbq-button kbqAppSwitcher [apps]="apps" [(selectedApp)]="selectedApp">
             <i kbq-icon="kbq-bento-menu_16"></i>
         </button>
     `
 })
 export class AppSwitcherOverviewExample {
-    sites: KbaAppSwitcherSite[] = [
+    apps: KbqAppSwitcherApp[] = [
         {
-            name: 'СЗФО',
-            id: '02',
-            apps: [
-                {
-                    name: 'Byte Sentinel',
-                    caption: 'Byte 001',
-                    id: 'SZFO_01',
-                    icon: '',
-                    type: ''
-                },
-                {
-                    name: 'CryptoWall',
-                    id: 'SZFO_02',
-                    type: ''
-                },
-                {
-                    name: 'App Instance 1',
-                    caption: 'Instance Alias One',
-                    id: 'SZFO_03',
-                    type: ''
-                },
-                {
-                    name: 'App Instance 2',
-                    id: 'SZFO_04',
-                    type: ''
-                },
-                {
-                    name: 'App Instance 3',
-                    caption: 'Instance Alias Three',
-                    id: 'SZFO_05',
-                    type: ''
-                },
-                {
-                    name: 'App Instance 4',
-                    caption: 'Instance Alias Four',
-                    id: 'SZFO_06',
-                    type: ''
-                },
-                {
-                    name: 'Phantom Gate',
-                    id: 'SZFO_07',
-                    type: ''
-                },
-                {
-                    name: 'SentraLock',
-                    id: 'SZFO_08',
-                    caption: 'Lock-sentral-urals',
-                    type: ''
-                },
-                {
-                    name: 'Zero Trace',
-                    id: 'SZFO_09',
-                    type: ''
-                }
-            ]
+            name: 'Byte Sentinel',
+            caption: 'Byte 001',
+            id: 'SZFO_01',
+            icon: ''
+        },
+        {
+            name: 'CryptoWall',
+            id: 'SZFO_02'
+        },
+        {
+            name: 'App Instance 1',
+            caption: 'Instance Alias One',
+            id: 'SZFO_03'
+        },
+        {
+            name: 'App Instance 2',
+            id: 'SZFO_04'
+        },
+        {
+            name: 'App Instance 3',
+            caption: 'Instance Alias Three',
+            id: 'SZFO_05'
+        },
+        {
+            name: 'App Instance 4',
+            caption: 'Instance Alias Four',
+            id: 'SZFO_06'
+        },
+        {
+            name: 'Phantom Gate',
+            id: 'SZFO_07'
         }
     ];
+    selectedApp: KbqAppSwitcherApp = this.apps[0];
 }
