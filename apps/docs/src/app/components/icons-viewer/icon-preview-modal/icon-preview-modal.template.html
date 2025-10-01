@@ -62,7 +62,7 @@
             <kbq-dt>{{ isRuLocale() ? 'Для MS Word' : 'For MS Word' }}</kbq-dt>
             <kbq-dd>
                 <span #wordExample docsCodeSnippet [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'">
-                    [#{{ getHexColor() }}]
+                    <span>[#{{ getHexColor() }}]</span>
                     <span class="docs-icon-unicode" [innerHtml]="getUnicode()"></span>
                 </span>
             </kbq-dd>
