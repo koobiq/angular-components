@@ -117,6 +117,7 @@ const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestTagList {
+    readonly tagList = viewChild.required(KbqTagList);
     readonly tags = model<Array<{ id: string; value: string; selected: boolean }>>(
         Array.from({ length: 3 }, (_, i) => ({
             id: `tag${i}`,
@@ -1269,7 +1270,11 @@ describe(KbqTagList.name, () => {
     });
 
     it('should NOT select tag on focus when multiple', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.multiple.set(true);
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement).length).toBe(0);
 

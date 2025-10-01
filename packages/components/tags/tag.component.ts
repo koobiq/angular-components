@@ -3,7 +3,6 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
-    AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -17,7 +16,6 @@ import {
     inject,
     Inject,
     Input,
-    NgZone,
     OnDestroy,
     Output,
     QueryList,
@@ -38,7 +36,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { KbqTagList } from './tag-list.component';
 
 export interface KbqTagEvent {
@@ -204,7 +201,7 @@ export class KbqTagEditInput {
 })
 export class KbqTag
     extends KbqColorDirective
-    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit
+    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit
 {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
@@ -383,10 +380,7 @@ export class KbqTag
         return (this.tagList?.draggable ?? false) && !this.disabled;
     }
 
-    constructor(
-        public changeDetectorRef: ChangeDetectorRef,
-        private _ngZone: NgZone
-    ) {
+    constructor(public changeDetectorRef: ChangeDetectorRef) {
         super();
 
         this.color = KbqComponentColors.ContrastFade;
@@ -394,16 +388,11 @@ export class KbqTag
 
         this.addHostClassName();
         this.setupDragInitialProperties();
+        this.setupFocusMonitor();
     }
 
     ngAfterContentInit() {
         this.addClassModificatorForIcons();
-    }
-
-    ngAfterViewInit(): void {
-        this.focusMonitor
-            .monitor(this.elementRef, true)
-            .subscribe((focusOrigin) => (isNull(focusOrigin) ? this.blur() : this.focus()));
     }
 
     ngOnDestroy(): void {
@@ -504,18 +493,9 @@ export class KbqTag
 
     /** Focuses the tag. */
     focus(): void {
-        if (this.disabled || (!this.selectable && !this.editable) || this.editing() || this.hasFocus) return;
+        if (this.disabled) return;
 
         this.elementRef.nativeElement.focus();
-
-        this.onFocus.next({ tag: this });
-
-        if (!this.tagList) this.select();
-
-        Promise.resolve().then(() => {
-            this.hasFocus = true;
-            this.changeDetectorRef.markForCheck();
-        });
     }
 
     /**
@@ -561,25 +541,7 @@ export class KbqTag
 
     /** @docs-private */
     blur(): void {
-        // When animations are enabled, Angular may end up removing the tag from the DOM a little
-        // earlier than usual, causing it to be blurred and throwing off the logic in the tag list
-        // that moves focus not the next item. To work around the issue, we defer marking the tag
-        // as not focused until the next time the zone stabilizes.
-        this._ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
-                this._ngZone.run(() => {
-                    this.hasFocus = false;
-                    this.onBlur.next({ tag: this });
-
-                    this.cancelEditing('blur');
-
-                    if (!this.tagList) this.deselect();
-
-                    this.changeDetectorRef.markForCheck();
-                });
-            });
+        this.elementRef.nativeElement.blur();
     }
 
     /** @docs-private */
@@ -601,7 +563,6 @@ export class KbqTag
 
             if (!input) throw getTagEditInputMissingError();
 
-            input.focus();
             input.select();
         });
     }
@@ -640,6 +601,27 @@ export class KbqTag
 
     private syncDragDisabledState(): void {
         this.drag.disabled = !this.draggable;
+    }
+
+    private setupFocusMonitor(): void {
+        this.focusMonitor.monitor(this.elementRef, true).subscribe((origin) => {
+            const hasFocus = !isNull(origin);
+
+            if (hasFocus !== this.hasFocus) {
+                this.hasFocus = hasFocus;
+
+                if (this.hasFocus) {
+                    this.onFocus.next({ tag: this });
+                    if (!this.tagList) this.select();
+                } else {
+                    this.onBlur.next({ tag: this });
+                    this.cancelEditing('blur');
+                    if (!this.tagList) this.deselect();
+                }
+
+                this.changeDetectorRef.markForCheck();
+            }
+        });
     }
 }
 

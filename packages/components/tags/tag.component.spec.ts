@@ -444,11 +444,13 @@ describe(KbqTag.name, () => {
         expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
-    it('should cancel editing on focusout', () => {
+    it('should cancel editing on blur', () => {
         const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
+        // dblclick in tests does not focus the tag, so we need to use FocusMonitor to simulate real user behavior
+        getFocusMonitor().focusVia(tag, 'mouse');
 
         expect(isTagEditing(debugElement)).toBeTruthy();
 
@@ -459,8 +461,11 @@ describe(KbqTag.name, () => {
 
     it('should emit KbqTagEditChange event when editing cancelled', () => {
         const { debugElement, componentInstance } = createComponent(TestTag);
+        const tag = getTagElement(debugElement);
 
-        getTagElement(debugElement).dispatchEvent(new MouseEvent('dblclick'));
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+        // dblclick in tests does not focus the tag, so we need to use FocusMonitor to simulate real user behavior
+        getFocusMonitor().focusVia(tag, 'mouse');
 
         getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
 

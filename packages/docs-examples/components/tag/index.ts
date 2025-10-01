@@ -65,7 +65,6 @@ const EXAMPLES = [
     TagInputEditableExample,
     TagEditableWithValidationExample,
     TagInputRemovableExample,
-    TagInputSelectableExample,
     TagListDraggableExample,
     TagInputDraggableExample
 ];

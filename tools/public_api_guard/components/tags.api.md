@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef } from '@angular/core';
@@ -33,7 +32,6 @@ import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -48,8 +46,8 @@ import { WritableSignal } from '@angular/core';
 export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
 // @public (undocumented)
-export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
-    constructor(changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
+export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit {
+    constructor(changeDetectorRef: ChangeDetectorRef);
     addClassModificatorForIcons(): void;
     addHostClassName(): void;
     avatar: KbqTagAvatar;
@@ -89,8 +87,6 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     static ngAcceptInputType_selected: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     readonly onBlur: Subject<KbqTagEvent>;
@@ -282,6 +278,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     onChange: (value: any) => void;
     onContainerClick(event: MouseEvent): void;
     onTouched: () => void;
+    // @deprecated
     orientation: KbqOrientation;
     // (undocumented)
     parentForm: NgForm;
@@ -308,6 +305,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get tabIndex(): number;
     set tabIndex(value: number);
     get tagBlurChanges(): Observable<KbqTagEvent>;
+    // @deprecated
     tagChanges: EventEmitter<any>;
     get tagEditChanges(): Observable<KbqTagEditChange>;
     get tagFocusChanges(): Observable<KbqTagEvent>;
