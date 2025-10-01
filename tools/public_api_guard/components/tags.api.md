@@ -305,7 +305,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get tabIndex(): number;
     set tabIndex(value: number);
     get tagBlurChanges(): Observable<KbqTagEvent>;
-    // @deprecated
     tagChanges: EventEmitter<any>;
     get tagEditChanges(): Observable<KbqTagEditChange>;
     get tagFocusChanges(): Observable<KbqTagEvent>;
