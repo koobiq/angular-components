@@ -2,6 +2,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -127,6 +128,8 @@ export class KbqInlineEdit implements AfterContentInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly kbqFocusMonitor = inject(KbqFocusMonitor, { host: true });
     private readonly overlay = inject(Overlay);
+    private readonly document = inject(DOCUMENT);
+
     /**
      * Whether to show save/cancel action buttons in edit mode.
      * @default false
@@ -290,6 +293,17 @@ export class KbqInlineEdit implements AfterContentInit {
 
         switch (key) {
             // @TODO Handle Tab keydown (#DS-4160)
+            case 'Tab': {
+                this.save(event);
+                setTimeout(() => {
+                    const activeElement = this.document.activeElement;
+
+                    if (activeElement?.tagName.toLowerCase() === 'kbq-inline-edit') {
+                        activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+                    }
+                });
+                break;
+            }
             case 'Escape': {
                 this.cancel();
                 break;
