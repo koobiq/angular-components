@@ -11,15 +11,6 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/common';
-import * as i11 from '@koobiq/components/form-field';
-import * as i12 from '@koobiq/components/input';
-import * as i13 from '@angular/forms';
-import * as i5 from '@angular/cdk/overlay';
-import * as i6 from '@koobiq/components/button';
-import * as i7 from '@angular/cdk/a11y';
-import * as i8 from '@koobiq/components/icon';
-import * as i9 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -37,72 +28,20 @@ import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export function defaultGroupBy(app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]): void;
 
-// @public (undocumented)
-export interface KbaAppSwitcherSite {
-    // (undocumented)
-    apps: KbqAppSwitcherApp[];
-    // (undocumented)
-    icon?: string;
-    // (undocumented)
-    id: string | number;
-    // (undocumented)
-    name: string;
-    // (undocumented)
-    status?: string;
-}
-
-// @public (undocumented)
+// @public
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public (undocumented)
+// @public
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof Overlay)[];
     useFactory: typeof kbqAppSwitcherScrollStrategyFactory;
 };
 
-// @public (undocumented)
-export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
-    // (undocumented)
-    protected activeApp: KbqAppSwitcherApp;
-    // (undocumented)
-    protected activeSite: KbaAppSwitcherSite;
-    // (undocumented)
-    readonly filteredSites: Observable<KbaAppSwitcherSite[]>;
-    // (undocumented)
-    input: KbqInput;
-    // (undocumented)
-    isTrapFocus: boolean;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    onEscape(): void;
-    // (undocumented)
-    otherSites: KbqDropdownTrigger;
-    // (undocumented)
-    prefix: string;
-    // (undocumented)
-    readonly searchControl: FormControl<string | null>;
-    // (undocumented)
-    selectAppInSite(site: any, app: KbqAppSwitcherApp): void;
-    // (undocumented)
-    trigger: KbqAppSwitcherTrigger;
-    // (undocumented)
-    updateClassMap(placement: string, customClass: string, size: PopUpSizes): void;
-    // (undocumented)
-    updateTrapFocus(isTrapFocus: boolean): void;
-    // (undocumented)
-    get withSites(): boolean;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcher, "kbq-app-switcher", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcher, never>;
-}
-
-// @public (undocumented)
+// @public
 export const kbqAppSwitcherAnimations: {
     readonly state: AnimationTriggerMetadata;
 };
@@ -125,7 +64,30 @@ export interface KbqAppSwitcherApp {
     type?: string | number;
 }
 
-// @public (undocumented)
+// @public
+export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
+    protected activeApp: KbqAppSwitcherApp;
+    protected activeSite: KbqAppSwitcherSite;
+    escapeHandler(): void;
+    readonly filteredSites: Observable<KbqAppSwitcherSite[]>;
+    input: KbqInput;
+    isTrapFocus: boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    otherSites: KbqDropdownTrigger;
+    prefix: string;
+    readonly searchControl: FormControl<string | null>;
+    selectAppInSite(site: KbqAppSwitcherSite, app: KbqAppSwitcherApp): void;
+    trigger: KbqAppSwitcherTrigger;
+    updateClassMap(placement: string, customClass: string, size: PopUpSizes): void;
+    updateTrapFocus(isTrapFocus: boolean): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherComponent, never>;
+}
+
+// @public
 export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     // (undocumented)
     app: KbqAppSwitcherApp;
@@ -135,17 +97,17 @@ export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherDropdownApp, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqAppSwitcherDropdownSite extends KbqDropdownItem {
     // (undocumented)
-    site: KbaAppSwitcherSite;
+    site: KbqAppSwitcherSite;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherDropdownSite, "[kbq-app-switcher-dropdown-site]", ["kbqAppSwitcherDropdownSite"], { "site": { "alias": "kbq-app-switcher-dropdown-site"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherDropdownSite, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqAppSwitcherListItem extends KbqDropdownItem {
     // (undocumented)
     app: KbqAppSwitcherApp;
@@ -153,6 +115,8 @@ export class KbqAppSwitcherListItem extends KbqDropdownItem {
     clickHandler(event: MouseEvent): void;
     // (undocumented)
     collapsed: boolean;
+    // (undocumented)
+    static ngAcceptInputType_collapsed: unknown;
     // (undocumented)
     static ngAcceptInputType_toggle: unknown;
     // (undocumented)
@@ -175,44 +139,44 @@ export class KbqAppSwitcherModule {
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAppSwitcherModule, never, [typeof i1.KbqAppSwitcher, typeof i1.KbqAppSwitcherTrigger, typeof i2.KbqAppSwitcherListItem, typeof i3.KbqAppSwitcherDropdownApp, typeof i4.KbqAppSwitcherDropdownSite, typeof i5.OverlayModule, typeof i6.KbqButtonModule, typeof i7.A11yModule, typeof i8.KbqIconModule, typeof i9.CdkObserveContent, typeof i10.NgClass, typeof i10.NgTemplateOutlet, typeof i11.KbqFormField, typeof i12.KbqInputModule, typeof i13.FormsModule], [typeof i1.KbqAppSwitcher, typeof i1.KbqAppSwitcherTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAppSwitcherModule, never, [typeof i1.KbqAppSwitcherComponent, typeof i1.KbqAppSwitcherTrigger, typeof i2.KbqAppSwitcherListItem, typeof i3.KbqAppSwitcherDropdownApp, typeof i4.KbqAppSwitcherDropdownSite], [typeof i1.KbqAppSwitcherTrigger]>;
 }
 
-// @public (undocumented)
+// @public
 export function kbqAppSwitcherScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> implements AfterContentInit, OnInit {
+export interface KbqAppSwitcherSite {
     // (undocumented)
+    apps: KbqAppSwitcherApp[];
+    // (undocumented)
+    icon?: string;
+    // (undocumented)
+    id: string | number;
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    status?: string;
+}
+
+// @public (undocumented)
+export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherComponent> implements AfterContentInit, OnInit {
     get apps(): KbqAppSwitcherApp[];
     set apps(apps: KbqAppSwitcherApp[]);
-    // (undocumented)
     get appsCount(): number;
-    // (undocumented)
     arrow: boolean;
-    // (undocumented)
     backdropClass: string;
-    // (undocumented)
     closingActions(): Observable<void | MouseEvent | CdkScrollable>;
-    // (undocumented)
     content: string | TemplateRef<any>;
-    // (undocumented)
     get currentApps(): KbqAppSwitcherApp[];
-    // (undocumented)
     customClass: string;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
-    // (undocumented)
     footer: string | TemplateRef<any>;
-    // (undocumented)
-    getOverlayHandleComponentType(): Type<KbqAppSwitcher>;
-    // (undocumented)
+    getOverlayHandleComponentType(): Type<KbqAppSwitcherComponent>;
     get groupBy(): (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]) => void;
     set groupBy(fn: (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]) => void);
-    // (undocumented)
     get hasClickTrigger(): boolean;
-    // (undocumented)
     header: string | TemplateRef<any>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -222,60 +186,40 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> imple
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
     offset: number | null;
-    // (undocumented)
     originalApps: KbqAppSwitcherApp[];
-    // (undocumented)
-    originalSites: KbaAppSwitcherSite[];
-    // (undocumented)
+    originalSites: KbqAppSwitcherSite[];
     protected originSelector: string;
-    // (undocumented)
     protected get overlayConfig(): OverlayConfig;
-    // (undocumented)
     placement: PopUpPlacements;
-    // (undocumented)
     readonly placementChange: EventEmitter<any>;
-    // (undocumented)
     protected preventClosingByInnerScrollSubscription: Subscription;
-    // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;
-    // (undocumented)
     selectedApp: KbqAppSwitcherApp;
-    // (undocumented)
     readonly selectedAppChange: EventEmitter<KbqAppSwitcherApp>;
-    // (undocumented)
-    get selectedSite(): KbaAppSwitcherSite;
-    set selectedSite(value: KbaAppSwitcherSite);
-    // (undocumented)
-    readonly selectedSiteChange: EventEmitter<KbaAppSwitcherSite>;
-    // (undocumented)
-    get sites(): KbaAppSwitcherSite[];
-    set sites(value: KbaAppSwitcherSite[]);
-    // (undocumented)
+    get selectedSite(): KbqAppSwitcherSite;
+    set selectedSite(value: KbqAppSwitcherSite);
+    readonly selectedSiteChange: EventEmitter<KbqAppSwitcherSite>;
+    get sites(): KbqAppSwitcherSite[];
+    set sites(value: KbqAppSwitcherSite[]);
     get sitesMode(): boolean;
-    // (undocumented)
     trigger: string;
-    // (undocumented)
     updateClassMap(newPlacement?: string): void;
-    // (undocumented)
     updateData(): void;
     updatePosition(reapplyPosition?: boolean): void;
-    // (undocumented)
     readonly visibleChange: EventEmitter<boolean>;
-    // (undocumented)
     get withSearch(): boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "placement": { "alias": "kbqAppSwitcherPlacement"; "required": false; }; "sites": { "alias": "sites"; "required": false; }; "apps": { "alias": "apps"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "selectedApp": { "alias": "selectedApp"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChange": "selectedSiteChange"; "selectedAppChange": "selectedAppChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "selectedApp": { "alias": "selectedApp"; "required": false; }; "placement": { "alias": "kbqAppSwitcherPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "sites": { "alias": "sites"; "required": false; }; "apps": { "alias": "apps"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChange": "selectedSiteChange"; "selectedAppChange": "selectedAppChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherTrigger, never>;
 }
 
 // @public (undocumented)
-export const MIN_APPS_FOR_ENABLE_GROUPING: number;
+export const MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number;
 
 // @public (undocumented)
-export const MIN_APPS_FOR_ENABLE_SEARCH: number;
+export const MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number;
 
 // (No @packageDocumentation comment for this package)
 

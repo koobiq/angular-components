@@ -7,7 +7,7 @@
                 kbqInput
                 placeholder="Поиск"
                 [formControl]="searchControl"
-                (keydown.escape)="onEscape()"
+                (keydown.escape)="escapeHandler()"
             />
             <kbq-cleaner />
         </kbq-form-field>
@@ -66,7 +66,7 @@
             </kbq-dropdown>
         </div>
 
-        @if (withSites) {
+        @if (trigger.sitesMode) {
             <kbq-divider />
 
             <div class="kbq-app-switcher__sites-container">

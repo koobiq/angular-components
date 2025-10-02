@@ -3,8 +3,9 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbaAppSwitcherSite } from './app-switcher';
+import { KbqAppSwitcherSite } from './app-switcher';
 
+/** @docs-private */
 @Component({
     standalone: true,
     selector: '[kbq-app-switcher-dropdown-site]',
@@ -41,5 +42,5 @@ import { KbaAppSwitcherSite } from './app-switcher';
     ]
 })
 export class KbqAppSwitcherDropdownSite extends KbqDropdownItem {
-    @Input('kbq-app-switcher-dropdown-site') site: KbaAppSwitcherSite;
+    @Input('kbq-app-switcher-dropdown-site') site: KbqAppSwitcherSite;
 }

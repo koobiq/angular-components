@@ -561,7 +561,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
         '(keydown)': 'onKeydown($event)',
         '(click)': 'toggle()',
-        '(touchend)': 'handleTouchend()'
+        '(touchend)': 'touchendHandler()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -612,7 +612,7 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
             $event.preventDefault();
         }
 
-        super.handleKeydown($event);
+        super.keydownHandler($event);
     }
 
     ngOnDestroy(): void {

@@ -155,8 +155,8 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
-        '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()'
+        '(keydown)': 'keydownHandler($event)',
+        '(touchend)': 'touchendHandler()'
     }
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {

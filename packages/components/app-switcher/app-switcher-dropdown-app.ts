@@ -4,6 +4,7 @@ import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqAppSwitcherApp } from './app-switcher';
 
+/** @docs-private */
 @Component({
     standalone: true,
     selector: '[kbq-app-switcher-dropdown-app]',
