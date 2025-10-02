@@ -11,7 +11,7 @@ import {
     viewChild,
     ViewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -184,7 +184,7 @@ describe(KbqTag.name, () => {
                 expect(tagNativeElement.classList).not.toContain('kbq-basic-tag');
             });
 
-            it('emits focus only once for multiple clicks', () => {
+            it('emits focus only once for multiple clicks', fakeAsync(() => {
                 let counter = 0;
 
                 tagInstance.onFocus.subscribe(() => {
@@ -193,10 +193,10 @@ describe(KbqTag.name, () => {
 
                 tagNativeElement.focus();
                 tagNativeElement.focus();
-                fixture.detectChanges();
+                tick();
 
                 expect(counter).toBe(1);
-            });
+            }));
 
             it('emits destroy on destruction', () => {
                 const tagDestroySpyFn = jest.spyOn(testComponent, 'tagDestroy');
@@ -444,35 +444,39 @@ describe(KbqTag.name, () => {
         expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
-    it('should cancel editing on blur', () => {
+    it('should cancel editing on blur', fakeAsync(() => {
         const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
         // dblclick in tests does not focus the tag, so we need to use FocusMonitor to simulate real user behavior
         getFocusMonitor().focusVia(tag, 'mouse');
+        tick();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
+        tick();
 
         expect(isTagEditing(debugElement)).toBeFalsy();
-    });
+    }));
 
-    it('should emit KbqTagEditChange event when editing cancelled', () => {
+    it('should emit KbqTagEditChange event when editing cancelled', fakeAsync(() => {
         const { debugElement, componentInstance } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
         // dblclick in tests does not focus the tag, so we need to use FocusMonitor to simulate real user behavior
         getFocusMonitor().focusVia(tag, 'mouse');
+        tick();
 
         getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
+        tick();
 
         expect(componentInstance.editChange).toHaveBeenCalledWith(
             expect.objectContaining({ type: 'cancel', reason: 'blur' })
         );
-    });
+    }));
 
     it('should submit editing on ENTER press', () => {
         const { debugElement } = createComponent(TestTag);
@@ -788,22 +792,24 @@ describe(KbqTag.name, () => {
         expect(getTagRemoveElement(debugElement)).toBeUndefined();
     });
 
-    it('should select/unselect tag on focus/blur', () => {
+    it('should select/unselect tag on focus/blur', fakeAsync(() => {
         const { debugElement } = createComponent(TestTag);
 
         expect(isTagFocused(debugElement)).toBeFalsy();
         expect(isTagSelected(debugElement)).toBeFalsy();
 
         getTagElement(debugElement).focus();
+        tick();
 
         expect(isTagFocused(debugElement)).toBeTruthy();
         expect(isTagSelected(debugElement)).toBeTruthy();
 
         getTagElement(debugElement).blur();
+        tick();
 
         expect(isTagFocused(debugElement)).toBeFalsy();
         expect(isTagSelected(debugElement)).toBeFalsy();
-    });
+    }));
 });
 
 @Component({
