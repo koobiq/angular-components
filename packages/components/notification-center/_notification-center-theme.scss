@@ -1,0 +1,14 @@
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-notification-center-theme() {
+    .kbq-notification-center {
+        background: var(--kbq-background-card);
+    }
+
+}
+
+@mixin kbq-notification-center-typography() {
+    .kbq-notification-center {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+    }
+}

@@ -1705,6 +1705,36 @@
                 }
             }
         },
+        "dev-notification-center": {
+            "projectType": "application",
+            "root": "packages/components-dev/notification-center",
+            "sourceRoot": "packages/components-dev/notification-center",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/notification-center"
+                        },
+                        "tsConfig": "packages/components-dev/notification-center/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/notification-center/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-notification-center:build"
+                    }
+                }
+            }
+        },
         "dev-overflow-items": {
             "projectType": "application",
             "root": "packages/components-dev/overflow-items",

@@ -1,0 +1,24 @@
+@use './notification-center-theme' as *;
+
+.kbq-notification-center {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-top: var(--kbq-size-xxs);
+    margin-bottom: var(--kbq-size-xxs);
+
+    width: 320px;
+
+    border-radius: var(--kbq-size-xs);
+
+    box-shadow: var(--kbq-shadow-popup);
+
+    box-sizing: border-box;
+
+    z-index: 1;
+}
+
+@include kbq-notification-center-theme();
+@include kbq-notification-center-typography();

@@ -62,6 +62,7 @@
             "@koobiq/components/modal": ["packages/components/modal/index.ts"],
             "@koobiq/components/navbar": ["packages/components/navbar/index.ts"],
             "@koobiq/components/navbar-ic": ["packages/components/navbar-ic/index.ts"],
+            "@koobiq/components/notification-center": ["packages/components/notification-center/index.ts"],
             "@koobiq/components/overflow-items": ["packages/components/overflow-items/index.ts"],
             "@koobiq/components/popover": ["packages/components/popover/index.ts"],
             "@koobiq/components/progress-bar": ["packages/components/progress-bar/index.ts"],
