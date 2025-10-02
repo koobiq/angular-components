@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEvent, KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
-const getTags = (): string[] => Array.from({ length: 6 }, (_, i) => `Draggable tag ${i}`);
+const getTags = () => Array.from({ length: 6 }, (_, id) => ({ id, value: `Draggable tag ${id}` }));
 
 /**
  * @title Tag list draggable
@@ -19,9 +19,9 @@ const getTags = (): string[] => Array.from({ length: 6 }, (_, i) => `Draggable t
         <kbq-toggle [(ngModel)]="draggable">Draggable</kbq-toggle>
 
         <kbq-tag-list [draggable]="draggable()" (dropped)="dropped($event)">
-            @for (tag of tags(); track tag) {
-                <kbq-tag [value]="tag" (removed)="remove($event)">
-                    {{ tag }}
+            @for (tag of tags(); track tag.id) {
+                <kbq-tag [value]="tag.value" (removed)="remove($event)">
+                    {{ tag.value }}
                     <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
             } @empty {

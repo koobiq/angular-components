@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef } from '@angular/core';
@@ -15,6 +16,7 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
@@ -45,8 +47,15 @@ import { WritableSignal } from '@angular/core';
 // @public
 export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
+// @public
+export type KbqDragData = {
+    tag: KbqTag;
+    hasFocus: boolean;
+    focusOrigin: FocusOrigin;
+};
+
 // @public (undocumented)
-export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit {
+export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef);
     addClassModificatorForIcons(): void;
     addHostClassName(): void;
@@ -87,6 +96,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     static ngAcceptInputType_selected: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     readonly onBlur: Subject<KbqTagEvent>;

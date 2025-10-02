@@ -1,9 +1,10 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEvent, KbqTagInputEvent, KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
+
+const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Draggable tag ${id}` }));
 
 /**
  * @title Tag input draggable
@@ -11,13 +12,13 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagListDroppedEvent, KbqTagsModule } 
 @Component({
     standalone: true,
     selector: 'tag-input-draggable-example',
-    imports: [KbqTagsModule, KbqFormFieldModule, JsonPipe, KbqIconModule],
+    imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" draggable (dropped)="dropped($event)">
-                @for (tag of tags(); track $index) {
-                    <kbq-tag [value]="tag" (removed)="remove($event)">
-                        {{ tag }}
+                @for (tag of tags(); track tag.id) {
+                    <kbq-tag [value]="tag.value" (removed)="remove($event)">
+                        {{ tag.value }}
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 }
@@ -31,10 +32,6 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagListDroppedEvent, KbqTagsModule } 
                 />
             </kbq-tag-list>
         </kbq-form-field>
-
-        <small>
-            <code>{{ tags() | json }}</code>
-        </small>
     `,
     styles: `
         :host {
@@ -44,15 +41,11 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagListDroppedEvent, KbqTagsModule } 
             gap: var(--kbq-size-m);
             margin: var(--kbq-size-5xl);
         }
-
-        small {
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputDraggableExample {
-    protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Draggable tag ${i}`));
+    protected readonly tags = model(getTags());
 
     protected dropped(event: KbqTagListDroppedEvent): void {
         moveItemInArray(this.tags(), event.previousIndex, event.currentIndex);
@@ -61,7 +54,7 @@ export class TagInputDraggableExample {
     protected create({ input, value = '' }: KbqTagInputEvent): void {
         if (value) {
             this.tags.update((tags) => {
-                tags.push(value);
+                tags.push({ id: tags.length, value });
 
                 return tags;
             });

@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -34,7 +35,7 @@ import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
-import { KbqTag, KbqTagEditChange, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
+import { KbqDragData, KbqTag, KbqTagEditChange, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
 
 // Increasing integer for generating unique ids for tag-list components.
 let nextUniqueId = 0;
@@ -100,6 +101,7 @@ export class KbqTagList
 {
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly focusMonitor = inject(FocusMonitor);
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -994,12 +996,18 @@ export class KbqTagList
         this.dropList.orientation = 'mixed';
         this.dropList.dropped
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(({ currentIndex, previousIndex, event }) => {
-                const tag = this.tags.get(previousIndex);
-
-                if (!tag) return;
+            .subscribe(({ currentIndex, previousIndex, event, item }) => {
+                const { tag, hasFocus, focusOrigin }: KbqDragData = item.data;
 
                 this.dropped.emit({ currentIndex, previousIndex, event, tag });
+
+                if (this.tagInput) {
+                    return this.tagInput.focus();
+                }
+
+                if (hasFocus) {
+                    return setTimeout(() => this.focusMonitor.focusVia(tag.nativeElement, focusOrigin));
+                }
             });
     }
 

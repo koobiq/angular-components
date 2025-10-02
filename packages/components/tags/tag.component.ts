@@ -1,14 +1,16 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
+    AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -23,6 +25,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
@@ -35,7 +38,7 @@ import {
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { Subject } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
 import { KbqTagList } from './tag-list.component';
 
 export interface KbqTagEvent {
@@ -66,6 +69,13 @@ const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
 
 const getTagEditInputMissingError = (): Error => {
     return Error('Editable kbq-tag must contain a KbqTagEditInput.');
+};
+
+/** @docs-private */
+export type KbqDragData = {
+    tag: KbqTag;
+    hasFocus: boolean;
+    focusOrigin: FocusOrigin;
 };
 
 /**
@@ -201,11 +211,12 @@ export class KbqTagEditInput {
 })
 export class KbqTag
     extends KbqColorDirective
-    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit
+    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit
 {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
-    private readonly drag = inject(CdkDrag, { host: true });
+    private readonly drag: CdkDrag<KbqDragData> = inject(CdkDrag, { host: true });
+    private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -233,6 +244,8 @@ export class KbqTag
      * @docs-private
      */
     hasFocus: boolean = false;
+
+    private focusOrigin: FocusOrigin = null;
 
     /** Whether the tag is editable. */
     @Input({ transform: booleanAttribute })
@@ -388,11 +401,14 @@ export class KbqTag
 
         this.addHostClassName();
         this.setupDragInitialProperties();
-        this.setupFocusMonitor();
     }
 
     ngAfterContentInit() {
         this.addClassModificatorForIcons();
+    }
+
+    ngAfterViewInit(): void {
+        this.setupFocusMonitor();
     }
 
     ngOnDestroy(): void {
@@ -597,6 +613,14 @@ export class KbqTag
 
     private setupDragInitialProperties(): void {
         this.syncDragDisabledState();
+
+        this.drag.started.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.drag.data = {
+                tag: this,
+                hasFocus: this.hasFocus,
+                focusOrigin: this.focusOrigin
+            };
+        });
     }
 
     private syncDragDisabledState(): void {
@@ -604,26 +628,34 @@ export class KbqTag
     }
 
     private setupFocusMonitor(): void {
-        this.focusMonitor.monitor(this.elementRef, true).subscribe((origin) => {
-            if (this.disabled) return;
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(
+                // Debounce to ensure correct hasFocus and focusOrigin state during drag start operations
+                debounceTime(0)
+            )
+            .subscribe((origin) => {
+                if (this.disabled) return;
 
-            const hasFocus = !isNull(origin);
+                this.focusOrigin = origin;
 
-            if (hasFocus !== this.hasFocus) {
-                this.hasFocus = hasFocus;
+                const hasFocus = !isNull(origin);
 
-                if (this.hasFocus) {
-                    this.onFocus.next({ tag: this });
-                    if (!this.tagList) this.select();
-                } else {
-                    this.onBlur.next({ tag: this });
-                    this.cancelEditing('blur');
-                    if (!this.tagList) this.deselect();
+                if (hasFocus !== this.hasFocus) {
+                    this.hasFocus = hasFocus;
+
+                    if (this.hasFocus) {
+                        this.onFocus.next({ tag: this });
+                        if (!this.tagList) this.select();
+                    } else {
+                        this.onBlur.next({ tag: this });
+                        this.cancelEditing('blur');
+                        if (!this.tagList) this.deselect();
+                    }
+
+                    this.changeDetectorRef.markForCheck();
                 }
-
-                this.changeDetectorRef.markForCheck();
-            }
-        });
+            });
     }
 }
 
