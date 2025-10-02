@@ -1,7 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbaAppSwitcherSite, KbqAppSwitcherModule } from '@koobiq/components/app-switcher';
+import { KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule } from '@koobiq/components/core';
@@ -21,7 +21,7 @@ import { AppSwitcherExamplesModule } from '../../docs-examples/components/app-sw
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class DevExamples {
-    sites: KbaAppSwitcherSite[] = [
+    sites: KbqAppSwitcherSite[] = [
         {
             name: 'ЦФО',
             id: '01',

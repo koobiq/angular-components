@@ -1,5 +1,6 @@
 import { animate, AnimationTriggerMetadata, state, style, transition, trigger } from '@angular/animations';
 
+/** @docs-private */
 export const kbqAppSwitcherAnimations: {
     readonly state: AnimationTriggerMetadata;
 } = {

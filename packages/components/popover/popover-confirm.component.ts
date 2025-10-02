@@ -39,8 +39,8 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     exportAs: 'kbqPopoverConfirm',
     host: {
         '[class.kbq-popover_open]': 'isOpen',
-        '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()'
+        '(keydown)': 'keydownHandler($event)',
+        '(touchend)': 'touchendHandler()'
     }
 })
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {

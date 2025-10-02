@@ -4,6 +4,7 @@ import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqAppSwitcherApp } from './app-switcher';
 
+/** @docs-private */
 @Component({
     standalone: true,
     selector: '[kbq-app-switcher-list-item]',
@@ -55,8 +56,7 @@ import { KbqAppSwitcherApp } from './app-switcher';
 export class KbqAppSwitcherListItem extends KbqDropdownItem {
     @Input() app: KbqAppSwitcherApp;
     @Input({ transform: booleanAttribute }) toggle = false;
-
-    @Input() collapsed: boolean = false;
+    @Input({ transform: booleanAttribute }) collapsed: boolean = false;
 
     clickHandler(event: MouseEvent) {
         if (this.toggle) {

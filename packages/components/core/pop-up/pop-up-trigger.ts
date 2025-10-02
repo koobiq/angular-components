@@ -209,13 +209,13 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         }
     }
 
-    handleKeydown(event: KeyboardEvent) {
+    keydownHandler(event: KeyboardEvent) {
         if (this.isOpen && event.keyCode === ESCAPE) {
             this.hide();
         }
     }
 
-    handleTouchend() {
+    touchendHandler() {
         this.hide();
     }
 

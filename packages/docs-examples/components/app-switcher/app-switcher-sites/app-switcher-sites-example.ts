@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KbaAppSwitcherSite, KbqAppSwitcherApp, KbqAppSwitcherModule } from '@koobiq/components/app-switcher';
+import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
@@ -8,9 +8,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 
-/**
- * @title app-switcher-sites
- */
+/** @title app-switcher-sites */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
@@ -37,7 +35,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     `
 })
 export class AppSwitcherSitesExample {
-    sites: KbaAppSwitcherSite[] = [
+    sites: KbqAppSwitcherSite[] = [
         {
             name: 'СЗФО',
             id: '02',
@@ -365,6 +363,6 @@ export class AppSwitcherSitesExample {
         }
     ];
 
-    selectedSite: KbaAppSwitcherSite = this.sites[0];
+    selectedSite: KbqAppSwitcherSite = this.sites[0];
     selectedApp: KbqAppSwitcherApp = this.sites[0].apps[0];
 }
