@@ -126,8 +126,8 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     host: {
         '[class.kbq-tooltip_open]': 'isOpen',
 
-        '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()'
+        '(keydown)': 'keydownHandler($event)',
+        '(touchend)': 'touchendHandler()'
     }
 })
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnDestroy {
@@ -383,8 +383,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     host: {
         '[class.kbq-tooltip_open]': 'isOpen',
 
-        '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()'
+        '(keydown)': 'keydownHandler($event)',
+        '(touchend)': 'touchendHandler()'
     }
 })
 export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
@@ -409,8 +409,8 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     host: {
         '[class.kbq-tooltip_open]': 'isOpen',
 
-        '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()'
+        '(keydown)': 'keydownHandler($event)',
+        '(touchend)': 'touchendHandler()'
     }
 })
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
