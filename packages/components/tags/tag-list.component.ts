@@ -19,7 +19,6 @@ import {
     inject,
     Input,
     OnDestroy,
-    OnInit,
     Optional,
     Output,
     QueryList,
@@ -90,14 +89,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     hostDirectives: [CdkDropList]
 })
 export class KbqTagList
-    implements
-        KbqFormFieldControl<any>,
-        ControlValueAccessor,
-        AfterContentInit,
-        DoCheck,
-        OnInit,
-        OnDestroy,
-        CanUpdateErrorState
+    implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState
 {
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
@@ -143,10 +135,11 @@ export class KbqTagList
     }
 
     /** The array of selected tags inside tag list. */
-    get selected(): KbqTag[] | KbqTag {
-        return this.multiple ? this.selectionModel.selected : this.selectionModel.selected[0];
+    get selected(): KbqTag[] {
+        return this.tags.filter(({ selected }) => selected);
     }
 
+    /** @docs-private */
     get canShowCleaner(): boolean {
         return this.cleaner && this.tags.length > 0;
     }
@@ -162,22 +155,10 @@ export class KbqTagList
      * A function to compare the option values with the selected values. The first argument
      * is a value from an option. The second is a value from the selection. A boolean
      * should be returned.
+     *
+     * @deprecated Unused. Will be removed in next major release.
      */
-    @Input()
-    get compareWith(): (o1: any, o2: any) => boolean {
-        return this._compareWith;
-    }
-
-    set compareWith(fn: (o1: any, o2: any) => boolean) {
-        this._compareWith = fn;
-
-        if (this.selectionModel) {
-            // A different comparator means the selection could change.
-            this.initializeSelection();
-        }
-    }
-
-    private _compareWith = (o1: any, o2: any) => o1 === o2;
+    @Input() compareWith = (o1: any, o2: any) => o1 === o2;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -189,7 +170,6 @@ export class KbqTagList
     }
 
     set value(value: any) {
-        this.writeValue(value);
         this._value = value;
     }
 
@@ -345,7 +325,11 @@ export class KbqTagList
     /** @docs-private */
     keyManager: FocusKeyManager<KbqTag>;
 
-    /** @docs-private */
+    /**
+     * @docs-private
+     *
+     * @deprecated Unused. Will be removed in next major release.
+     */
     selectionModel: SelectionModel<KbqTag>;
 
     /** @docs-private */
@@ -427,11 +411,6 @@ export class KbqTagList
         this.setupDropListInitialProperties();
     }
 
-    ngOnInit() {
-        this.selectionModel = new SelectionModel<KbqTag>(this.multiple, undefined, false);
-        this.stateChanges.next();
-    }
-
     ngDoCheck() {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
@@ -469,9 +448,6 @@ export class KbqTagList
             .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
             .subscribe((currentTags: QueryList<KbqTag> | null) => {
                 this.resetTags();
-
-                // Reset tags selected/deselected status
-                this.initializeSelection();
 
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
@@ -539,9 +515,7 @@ export class KbqTagList
      * Implemented as part of ControlValueAccessor.
      */
     writeValue(value: any): void {
-        if (this.tags) {
-            this.setSelectionByValue(value, false);
-        }
+        this.value = value;
     }
 
     /**
@@ -646,25 +620,12 @@ export class KbqTagList
         }
     }
 
-    /** @docs-private */
-    setSelectionByValue(value: any, isUserInput: boolean = true) {
-        this.clearSelection();
-        // @TODO seems like redundant action, need to double check (#DS-3740)
-        this.tags.forEach((tag) => tag.deselect());
-
-        if (Array.isArray(value)) {
-            value.forEach((currentValue) => this.selectValue(currentValue, isUserInput));
-            this.sortValues();
-        } else {
-            const correspondingTag = this.selectValue(value, isUserInput);
-
-            // Shift focus to the active item. Note that we shouldn't do this in multiple
-            // mode, because we don't know what tag the user interacted with last.
-            if (correspondingTag && isUserInput) {
-                this.keyManager.setActiveItem(correspondingTag);
-            }
-        }
-    }
+    /**
+     * @docs-private
+     *
+     * @deprecated Unused. Will be removed in next major release.
+     */
+    setSelectionByValue(_value: any, _isUserInput: boolean = true): void {}
 
     /** When blurred, mark the field as touched when focus moved outside the tag list. */
     blur() {
@@ -754,94 +715,16 @@ export class KbqTagList
     }
 
     private selectAll(): void {
-        this.tags.forEach((tag) => tag.select());
+        this.tags.forEach((tag) => tag.selectViaInteraction());
     }
 
-    /** @docs-private */
+    /**
+     * Removes all selected tags from the list.
+     *
+     * @docs-private
+     */
     removeSelected(): void {
-        this.selectionModel.selected.forEach((tag) => tag.remove());
-    }
-
-    /**
-     * Finds and selects the tag based on its value.
-     * @returns Tag that has the corresponding value.
-     */
-    private selectValue(value: any, isUserInput: boolean = true): KbqTag | undefined {
-        const correspondingTag = this.tags.find((tag) => {
-            return tag.value != null && this._compareWith(tag.value, value);
-        });
-
-        if (correspondingTag) {
-            if (isUserInput) {
-                correspondingTag.selectViaInteraction();
-            } else {
-                correspondingTag.select();
-            }
-
-            this.selectionModel.select(correspondingTag);
-        }
-
-        return correspondingTag;
-    }
-
-    private initializeSelection(): void {
-        // Defer setting the value in order to avoid the "Expression
-        // has changed after it was checked" errors from Angular.
-        Promise.resolve().then(() => {
-            if (this.ngControl || this._value) {
-                this.setSelectionByValue(this.ngControl ? this.ngControl.value : this._value, false);
-                this.stateChanges.next();
-            }
-        });
-    }
-
-    /**
-     * Deselects every tag in the list.
-     * @param skip Tag that should not be deselected.
-     */
-    private clearSelection(skip?: KbqTag): void {
-        this.selectionModel.clear();
-        this.tags.forEach((tag) => {
-            if (tag !== skip) {
-                tag.deselect();
-            }
-        });
-        this.stateChanges.next();
-    }
-
-    /**
-     * Sorts the model values, ensuring that they keep the same
-     * order that they have in the panel.
-     */
-    private sortValues(): void {
-        if (this.multiple) {
-            this.selectionModel.clear();
-
-            this.tags.forEach((tag) => {
-                if (tag.selected) {
-                    this.selectionModel.select(tag);
-                }
-            });
-            this.stateChanges.next();
-        }
-    }
-
-    /** Emits change event to set the model value. */
-    // todo need rethink this method and selection logic (#DS-3740)
-    private propagateChanges(fallbackValue?: any): void {
-        let valueToEmit: any;
-
-        if (Array.isArray(this.selected)) {
-            valueToEmit = this.selected.map((tag) => tag.value);
-        } else {
-            valueToEmit = this.selected ? this.selected.value : fallbackValue;
-        }
-
-        this._value = valueToEmit;
-        this.change.emit(new KbqTagListChange(this, valueToEmit));
-        this.valueChange.emit(valueToEmit);
-        this.onChange(valueToEmit);
-        this.changeDetectorRef.markForCheck();
+        this.selected.forEach((tag) => tag.remove());
     }
 
     private propagateTagsChanges(): void {
@@ -892,23 +775,10 @@ export class KbqTagList
     /** Listens to user-generated selection events on each tag. */
     private listenToTagsSelection(): void {
         this.tagSelectionSubscription = this.tagSelectionChanges.subscribe((event) => {
-            if (event.source.selected) {
-                this.selectionModel.select(event.source);
-            } else {
-                this.selectionModel.deselect(event.source);
-            }
-
-            // For single selection tag list, make sure the deselected value is unselected.
             if (!this.multiple) {
                 this.tags.forEach((tag) => {
-                    if (!this.selectionModel.isSelected(tag) && tag.selected) {
-                        tag.deselect();
-                    }
+                    if (tag !== event.source) tag.setSelectedState(false, false, false);
                 });
-            }
-
-            if (event.isUserInput) {
-                this.propagateChanges();
             }
         });
     }
