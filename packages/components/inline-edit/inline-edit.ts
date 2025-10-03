@@ -292,7 +292,6 @@ export class KbqInlineEdit implements AfterContentInit {
         const { target, key } = event;
 
         switch (key) {
-            // @TODO Handle Tab keydown (#DS-4160)
             case 'Tab': {
                 this.save(event);
                 setTimeout(() => {
