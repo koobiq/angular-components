@@ -16,7 +16,7 @@ const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Editable ta
     selector: 'tag-list-editable-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule, JsonPipe],
     template: `
-        <kbq-tag-list editable>
+        <kbq-tag-list editable multiple [(ngModel)]="tags">
             @for (tag of tags(); track $index) {
                 <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                     {{ tag }}

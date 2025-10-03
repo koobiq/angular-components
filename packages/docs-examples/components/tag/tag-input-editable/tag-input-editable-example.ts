@@ -17,7 +17,7 @@ import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsMo
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" editable>
+            <kbq-tag-list #tagList="kbqTagList" editable multiple [(ngModel)]="tags">
                 @for (tag of tags(); track $index) {
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                         {{ tag }}

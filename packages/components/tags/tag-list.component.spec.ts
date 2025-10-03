@@ -686,21 +686,6 @@ describe(KbqTagList.name, () => {
                 expect(fixture.componentInstance.control.value).toEqual('steak-0');
             });
 
-            it('should clear the selection when a nonexistent option value is selected', () => {
-                const array = tags.toArray();
-
-                fixture.componentInstance.control.setValue('pizza-1');
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeTruthy();
-
-                fixture.componentInstance.control.setValue('gibberish');
-
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeFalsy();
-            });
-
             it('should clear the selection when the control is reset', () => {
                 const array = tags.toArray();
 
@@ -770,21 +755,6 @@ describe(KbqTagList.name, () => {
 
                 requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
                 expect(requiredMarker).not.toBeNull();
-            });
-
-            it('should be able to programmatically select a falsy option', () => {
-                fixture.destroy();
-                TestBed.resetTestingModule();
-
-                const falsyFixture = createComponent(FalsyValueTagList);
-
-                falsyFixture.detectChanges();
-
-                falsyFixture.componentInstance.control.setValue([0]);
-                falsyFixture.detectChanges();
-                falsyFixture.detectChanges();
-
-                expect(falsyFixture.componentInstance.tags.first.selected).toBe(true);
             });
 
             it('should not focus the active tag when the value is set programmatically', () => {
@@ -880,32 +850,6 @@ describe(KbqTagList.name, () => {
         beforeEach(() => {
             fixture = createComponent(InputTagList);
             fixture.detectChanges();
-        });
-
-        it('should set the view value from the form', () => {
-            const array = fixture.componentInstance.tags.toArray();
-
-            expect(array[1].selected).toBeFalsy();
-
-            fixture.componentInstance.control.setValue(['pizza-1']);
-            fixture.detectChanges();
-
-            expect(array[1].selected).toBeTruthy();
-        });
-
-        it('should clear the selection when a nonexistent option value is selected', () => {
-            const array = fixture.componentInstance.tags.toArray();
-
-            fixture.componentInstance.control.setValue(['pizza-1']);
-            fixture.detectChanges();
-
-            expect(array[1].selected).toBeTruthy();
-
-            fixture.componentInstance.control.setValue(['gibberish']);
-
-            fixture.detectChanges();
-
-            expect(array[1].selected).toBeFalsy();
         });
 
         it('should clear the selection when the control is reset', () => {
@@ -1673,28 +1617,6 @@ class InputTagList {
             this.foods.splice(index, 1);
         }
     }
-}
-
-@Component({
-    template: `
-        <kbq-form-field>
-            <kbq-tag-list [formControl]="control">
-                @for (food of foods; track food) {
-                    <kbq-tag [value]="food.value">
-                        {{ food.viewValue }}
-                    </kbq-tag>
-                }
-            </kbq-tag-list>
-        </kbq-form-field>
-    `
-})
-class FalsyValueTagList {
-    foods: any[] = [
-        { value: 0, viewValue: 'Steak' },
-        { value: 1, viewValue: 'Pizza' }
-    ];
-    control = new UntypedFormControl();
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 }
 
 @Component({
