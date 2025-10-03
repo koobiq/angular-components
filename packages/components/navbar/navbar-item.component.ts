@@ -313,6 +313,7 @@ export class KbqNavbarRectangleElement {
     protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     readonly state = new Subject<void>();
 
@@ -321,10 +322,13 @@ export class KbqNavbarRectangleElement {
     }
 
     set horizontal(value: boolean) {
+        if (this._horizontal === value) return;
+
         this._horizontal = value;
         this._vertical = !value;
 
         this.state.next();
+        this.changeDetectorRef.markForCheck();
     }
 
     private _horizontal: boolean = false;
@@ -334,10 +338,13 @@ export class KbqNavbarRectangleElement {
     }
 
     set vertical(value: boolean) {
+        if (this._vertical === value) return;
+
         this._vertical = value;
         this._horizontal = !value;
 
         this.state.next();
+        this.changeDetectorRef.markForCheck();
     }
 
     private _vertical: boolean = true;

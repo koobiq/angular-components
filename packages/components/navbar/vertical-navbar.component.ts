@@ -140,8 +140,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private setItemVerticalState = (item: KbqNavbarRectangleElement): void => {
         item.vertical = true;
-
-        this.changeDetectorRef.markForCheck();
     };
 
     private updateItemExpandedState = (item: KbqNavbarRectangleElement): void => {

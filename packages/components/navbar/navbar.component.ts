@@ -330,12 +330,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     private setItemsState = (rectangleElements: Readonly<KbqNavbarRectangleElement[]>) => {
-        Promise.resolve().then(() =>
-            rectangleElements.forEach((item) => {
-                item.horizontal = true;
-
-                this.changeDetectorRef.markForCheck();
-            })
-        );
+        Promise.resolve().then(() => rectangleElements.forEach((item) => (item.horizontal = true)));
     };
 }
