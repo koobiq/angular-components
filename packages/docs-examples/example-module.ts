@@ -4173,6 +4173,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-fill-and-style-example.ts",
     "importPath": "components/tag"
   },
+  "tag-input-draggable": {
+    "packagePath": "components/tag/tag-input-draggable",
+    "title": "Tag input draggable",
+    "componentName": "TagInputDraggableExample",
+    "files": [
+      "tag-input-draggable-example.ts"
+    ],
+    "selector": "tag-input-draggable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-draggable-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-input-editable": {
     "packagePath": "components/tag/tag-input-editable",
     "title": "Tag input editable",
@@ -4231,6 +4243,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-list-draggable": {
+    "packagePath": "components/tag/tag-list-draggable",
+    "title": "Tag list draggable",
+    "componentName": "TagListDraggableExample",
+    "files": [
+      "tag-list-draggable-example.ts"
+    ],
+    "selector": "tag-list-draggable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-list-draggable-example.ts",
     "importPath": "components/tag"
   },
   "tag-list-editable": {
@@ -6041,6 +6065,8 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-fill-and-style':
 return import('@koobiq/docs-examples/components/tag');
+  case 'tag-input-draggable':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-editable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-removable':
@@ -6050,6 +6076,8 @@ return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-list-draggable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-editable':
 return import('@koobiq/docs-examples/components/tag');

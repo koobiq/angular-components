@@ -48,3 +48,9 @@ Canceling changes:
 - When losing focus.
 
 <!-- example(tag-list-editable) -->
+
+### Drag and drop
+
+To enable tag reordering, you need to set the `draggable` property for `kbq-tag-list`.
+
+<!-- example(tag-list-draggable) -->

@@ -10,6 +10,10 @@
     &:focus-visible {
         outline: none;
     }
+
+    &.cdk-drop-list-dragging .cdk-drag {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
 }
 
 .kbq-tag-input {
@@ -72,4 +76,10 @@
             form-field-size-border-width]
         );
     }
+}
+
+// We should apply `cursor: grabbing` to the body, not to the dragged element itself.
+// Reason: https://github.com/angular/components/blob/18.2.14/src/cdk/drag-drop/resets.scss#L14-L15
+body:has(.kbq-tag-list.cdk-drop-list-dragging) {
+    cursor: grabbing;
 }

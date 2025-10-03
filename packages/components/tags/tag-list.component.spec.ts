@@ -73,8 +73,14 @@ const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
     template: `
         <!-- KbqTagList does not support dynamic multiple attribute changes -->
         @if (multiple()) {
-            <kbq-tag-list multiple [selectable]="selectable()" [removable]="removable()">
-                @for (tag of tags(); track tag.id) {
+            <kbq-tag-list
+                [multiple]="true"
+                [draggable]="draggable()"
+                [selectable]="selectable()"
+                [removable]="removable()"
+                [disabled]="disabled()"
+            >
+                @for (tag of tags(); track $index) {
                     <kbq-tag
                         [selected]="tag.selected"
                         [attr.id]="tag.id"
@@ -87,8 +93,14 @@ const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
                 }
             </kbq-tag-list>
         } @else {
-            <kbq-tag-list [selectable]="selectable()" [removable]="removable()">
-                @for (tag of tags(); track tag.id) {
+            <kbq-tag-list
+                [multiple]="false"
+                [draggable]="draggable()"
+                [selectable]="selectable()"
+                [removable]="removable()"
+                [disabled]="disabled()"
+            >
+                @for (tag of tags(); track $index) {
                     <kbq-tag
                         [selected]="tag.selected"
                         [attr.id]="tag.id"
@@ -106,8 +118,6 @@ const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
 })
 export class TestTagList {
     readonly tagList = viewChild.required(KbqTagList);
-
-    readonly multiple = model(true);
     readonly tags = model<Array<{ id: string; value: string; selected: boolean }>>(
         Array.from({ length: 3 }, (_, i) => ({
             id: `tag${i}`,
@@ -115,8 +125,12 @@ export class TestTagList {
             selected: false
         }))
     );
+
+    readonly multiple = model(false);
     readonly selectable = model(true);
     readonly removable = model(true);
+    readonly draggable = model(false);
+    readonly disabled = model(false);
 
     readonly selectionChange = jest.fn();
     readonly removedChange = jest.fn();
@@ -228,27 +242,16 @@ describe(KbqTagList.name, () => {
                 expect(manager.activeItemIndex).toBe(0);
             });
 
-            it('should watch for tag focus', () => {
+            it('should watch for tag focus', fakeAsync(() => {
                 const array = tags.toArray();
                 const lastIndex = array.length - 1;
                 const lastItem = array[lastIndex];
 
                 lastItem.focus();
-                fixture.detectChanges();
+                tick();
 
                 expect(manager.activeItemIndex).toBe(lastIndex);
-            });
-
-            it('should watch for tag focus', () => {
-                const array = tags.toArray();
-                const lastIndex = array.length - 1;
-                const lastItem = array[lastIndex];
-
-                lastItem.focus();
-                fixture.detectChanges();
-
-                expect(manager.activeItemIndex).toBe(lastIndex);
-            });
+            }));
 
             it('should be able to become focused when disabled', () => {
                 expect(tagListInstance.focused).toBe(false);
@@ -348,14 +351,11 @@ describe(KbqTagList.name, () => {
                     tags = tagListInstance.tags;
 
                     tags.last.focus();
-                    flush();
-                    fixture.detectChanges();
+                    tick();
 
                     expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
 
                     dispatchKeyboardEvent(tags.last.elementRef.nativeElement, 'keydown', BACKSPACE);
-                    fixture.detectChanges();
-                    tick(500);
 
                     expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
                 }));
@@ -380,7 +380,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     lastItem.focus();
-                    flush();
+                    tick();
                     expect(manager.activeItemIndex).toEqual(lastIndex);
 
                     // Press the LEFT arrow
@@ -402,7 +402,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     firstItem.focus();
-                    flush();
+                    tick();
                     expect(manager.activeItemIndex).toEqual(0);
 
                     // Press the RIGHT arrow
@@ -424,7 +424,7 @@ describe(KbqTagList.name, () => {
                     expect(manager.activeItemIndex).toBe(initialActiveIndex);
                 });
 
-                it('should focus the first item when pressing HOME', () => {
+                it('should focus the first item when pressing HOME', fakeAsync(() => {
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const lastNativeChip = nativeTags[nativeTags.length - 1] as HTMLElement;
                     const HOME_EVENT = createKeyboardEvent('keydown', HOME, lastNativeChip);
@@ -432,6 +432,7 @@ describe(KbqTagList.name, () => {
                     const lastItem = array[array.length - 1];
 
                     lastItem.focus();
+                    tick();
                     expect(manager.activeItemIndex).toBe(array.length - 1);
 
                     tagListInstance.keydown(HOME_EVENT);
@@ -439,7 +440,7 @@ describe(KbqTagList.name, () => {
 
                     expect(manager.activeItemIndex).toBe(0);
                     expect(HOME_EVENT.defaultPrevented).toBe(true);
-                });
+                }));
 
                 it('should focus the last item when pressing END', () => {
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
@@ -472,7 +473,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     lastItem.focus();
-                    flush();
+                    tick();
                     expect(manager.activeItemIndex).toEqual(lastIndex);
 
                     // Press the RIGHT arrow
@@ -494,7 +495,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     firstItem.focus();
-                    flush();
+                    tick();
                     expect(manager.activeItemIndex).toEqual(0);
 
                     // Press the LEFT arrow
@@ -545,7 +546,7 @@ describe(KbqTagList.name, () => {
                 const firstItem = array[0];
 
                 firstItem.focus();
-                flush();
+                tick();
                 expect(manager.activeItemIndex).toBe(0);
 
                 tagListInstance.keydown(RIGHT_EVENT);
@@ -578,14 +579,11 @@ describe(KbqTagList.name, () => {
                 const secondTag = fixture.nativeElement.querySelectorAll('.kbq-tag')[1];
 
                 secondTag.focus();
-                fixture.detectChanges();
-                flush();
+                tick();
 
                 expect(tagListInstance.tags.toArray().findIndex((tag) => tag.hasFocus)).toBe(1);
 
                 dispatchKeyboardEvent(secondTag, 'keydown', DELETE);
-                fixture.detectChanges();
-                flush();
 
                 expect(tagListInstance.tags.toArray().findIndex((tag) => tag.hasFocus)).toBe(1);
             }));
@@ -605,21 +603,23 @@ describe(KbqTagList.name, () => {
                     expect(manager.activeItemIndex).toEqual(-1);
                 });
 
-                it('should focus the last tag when press BACKSPACE', () => {
+                it('should focus the last tag when press BACKSPACE', fakeAsync(() => {
                     const nativeInput = fixture.nativeElement.querySelector('input');
                     const BACKSPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', BACKSPACE, nativeInput);
 
                     // Focus the input
                     nativeInput.focus();
+                    tick();
+
                     expect(manager.activeItemIndex).toBe(-1);
 
                     // Press the BACKSPACE key
                     tagListInstance.keydown(BACKSPACE_EVENT);
-                    fixture.detectChanges();
+                    tick();
 
                     // It focuses the last chip
                     expect(manager.activeItemIndex).toEqual(tags.length - 1);
-                });
+                }));
             });
         });
 
@@ -1007,7 +1007,7 @@ describe(KbqTagList.name, () => {
                     expect(manager.activeItemIndex).toEqual(-1);
                 });
 
-                it('should focus the last tag when press BACKSPACE', () => {
+                it('should focus the last tag when press BACKSPACE', fakeAsync(() => {
                     const nativeInput = fixture.nativeElement.querySelector('input');
                     const BACKSPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', BACKSPACE, nativeInput);
 
@@ -1017,11 +1017,11 @@ describe(KbqTagList.name, () => {
 
                     // Press the BACKSPACE key
                     tagListInstance.keydown(BACKSPACE_EVENT);
-                    fixture.detectChanges();
+                    tick();
 
                     // It focuses the last chip
                     expect(manager.activeItemIndex).toEqual(tags.length - 1);
-                });
+                }));
             });
         });
     });
@@ -1180,8 +1180,13 @@ describe(KbqTagList.name, () => {
         tags = tagListInstance.tags;
     }
 
-    it('should select all on Ctrl + A', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select all on Ctrl + A when multiple is enabled', () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.multiple.set(true);
+        fixture.detectChanges();
+
         const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
 
         Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
@@ -1190,7 +1195,7 @@ describe(KbqTagList.name, () => {
         expect(getSelectedTags(debugElement).length).toBe(componentInstance.tags().length);
     });
 
-    it('should focus previous tag if last tag is removed', () => {
+    it('should focus previous tag if last tag is removed', fakeAsync(() => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1202,7 +1207,7 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(-1);
 
         getLastTagElement(debugElement).focus();
-        fixture.detectChanges();
+        tick();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(2);
 
@@ -1211,9 +1216,9 @@ describe(KbqTagList.name, () => {
 
         expect(getTagElements(debugElement).length).toBe(2);
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
-    });
+    }));
 
-    it('should focus next tag if first tag is removed', () => {
+    it('should focus next tag if first tag is removed', fakeAsync(() => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1225,7 +1230,7 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(-1);
 
         getFirstTagElement(debugElement).focus();
-        fixture.detectChanges();
+        tick();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(0);
 
@@ -1234,9 +1239,9 @@ describe(KbqTagList.name, () => {
 
         expect(getTagElements(debugElement).length).toBe(2);
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(0);
-    });
+    }));
 
-    it('should select tag on focus when NOT multiple', () => {
+    it('should select tag on focus when NOT multiple', fakeAsync(() => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1246,19 +1251,25 @@ describe(KbqTagList.name, () => {
         expect(getSelectedTags(debugElement).length).toBe(0);
 
         getLastTagElement(debugElement).focus();
+        tick();
 
         expect(getSelectedTags(debugElement).length).toBe(1);
-    });
+    }));
 
-    it('should NOT select tag on focus when multiple', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should NOT select tag on focus when multiple', fakeAsync(() => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.multiple.set(true);
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement).length).toBe(0);
 
         getLastTagElement(debugElement).focus();
+        tick();
 
         expect(getSelectedTags(debugElement).length).toBe(0);
-    });
+    }));
 
     it('should NOT select all on Ctrl + A when not selectable', () => {
         const fixture = createStandaloneComponent(TestTagList);
@@ -1289,8 +1300,13 @@ describe(KbqTagList.name, () => {
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
 
-    it('should emit KbqTagSelectionChange event on Ctrl + A', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should emit KbqTagSelectionChange event on Ctrl + A when multiple is enabled', () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.multiple.set(true);
+        fixture.detectChanges();
+
         const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
 
         Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
@@ -1328,9 +1344,12 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.selectionChange).toHaveBeenCalledTimes(0);
     });
 
-    it('should remove all on DELETE keydown', () => {
+    it('should remove all on DELETE keydown when multiple is enabled', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
+
+        componentInstance.multiple.set(true);
+        fixture.detectChanges();
 
         componentInstance.tags.update((tags) =>
             tags.map((tag) => {
@@ -1348,9 +1367,12 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.removedChange).toHaveBeenCalledTimes(componentInstance.tags().length);
     });
 
-    it('should remove all on BACKSPACE keydown', () => {
+    it('should remove all on BACKSPACE keydown when multiple is enabled', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
+
+        componentInstance.multiple.set(true);
+        fixture.detectChanges();
 
         componentInstance.tags.update((tags) =>
             tags.map((tag) => {
@@ -1418,6 +1440,37 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.removedChange).toHaveBeenCalledWith(
             expect.objectContaining({ tag: expect.objectContaining({ value: 'tag0' }) })
         );
+    });
+
+    it('should be draggable when draggable is enabled', () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(getTagListElement(debugElement).classList.contains('kbq-tag-list_draggable')).toBeFalsy();
+        expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBeFalsy();
+
+        componentInstance.draggable.set(true);
+        fixture.detectChanges();
+
+        expect(getTagListElement(debugElement).classList.contains('kbq-tag-list_draggable')).toBeTruthy();
+        expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBeTruthy();
+    });
+
+    it('should NOT be draggable when disabled', () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.draggable.set(true);
+        fixture.detectChanges();
+
+        expect(getTagListElement(debugElement).classList.contains('kbq-tag-list_draggable')).toBeTruthy();
+        expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBeTruthy();
+
+        componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        expect(getTagListElement(debugElement).classList.contains('kbq-tag-list_draggable')).toBeFalsy();
+        expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBeFalsy();
     });
 });
 

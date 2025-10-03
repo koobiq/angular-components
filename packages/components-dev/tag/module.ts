@@ -33,6 +33,10 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [TagExamplesModule],
     selector: 'dev-examples',
     template: `
+        <tag-list-draggable-example />
+        <hr />
+        <tag-input-draggable-example />
+        <hr />
         <tag-removable-example />
         <hr />
         <tag-list-removable-example />

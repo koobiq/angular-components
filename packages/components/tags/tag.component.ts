@@ -1,4 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
@@ -9,6 +10,7 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -16,7 +18,6 @@ import {
     inject,
     Inject,
     Input,
-    NgZone,
     OnDestroy,
     Output,
     QueryList,
@@ -24,6 +25,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
@@ -36,8 +38,7 @@ import {
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { debounceTime, Subject } from 'rxjs';
 import { KbqTagList } from './tag-list.component';
 
 export interface KbqTagEvent {
@@ -68,6 +69,13 @@ const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
 
 const getTagEditInputMissingError = (): Error => {
     return Error('Editable kbq-tag must contain a KbqTagEditInput.');
+};
+
+/** @docs-private */
+export type KbqDragData = {
+    tag: KbqTag;
+    hasFocus: boolean;
+    focusOrigin: FocusOrigin;
 };
 
 /**
@@ -155,7 +163,7 @@ export class KbqTagEditInput {
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
-    hostDirectives: [KbqHovered],
+    hostDirectives: [KbqHovered, CdkDrag],
     template: `
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
@@ -191,6 +199,7 @@ export class KbqTagEditInput {
         '[class.kbq-tag_editing]': 'editing()',
         '[class.kbq-tag_removable]': 'removable',
         '[class.kbq-tag_selectable]': 'selectable',
+        '[class.kbq-tag_draggable]': 'draggable',
 
         '(dblclick)': 'handleDblClick($event)',
         '(mousedown)': 'handleMousedown($event)',
@@ -206,6 +215,9 @@ export class KbqTag
 {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
+    private readonly drag: CdkDrag<KbqDragData> = inject(CdkDrag, { host: true });
+    private readonly destroyRef = inject(DestroyRef);
+
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -232,6 +244,8 @@ export class KbqTag
      * @docs-private
      */
     hasFocus: boolean = false;
+
+    private focusOrigin: FocusOrigin = null;
 
     /** Whether the tag is editable. */
     @Input({ transform: booleanAttribute })
@@ -355,29 +369,38 @@ export class KbqTag
 
     private _tabindex = -1;
 
+    /**
+     * Whether the tag is disabled.
+     */
     @Input({ transform: booleanAttribute })
-    get disabled() {
-        return this._disabled;
+    get disabled(): boolean {
+        return this._disabled || (this.tagList?.disabled ?? false);
     }
 
     set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
+        this._disabled = value;
+        this.syncDragDisabledState();
     }
 
     private _disabled: boolean = false;
 
-    constructor(
-        public changeDetectorRef: ChangeDetectorRef,
-        private _ngZone: NgZone
-    ) {
+    /**
+     * Whether the tag is draggable.
+     *
+     * @docs-private
+     */
+    protected get draggable(): boolean {
+        return (this.tagList?.draggable ?? false) && !this.disabled;
+    }
+
+    constructor(public changeDetectorRef: ChangeDetectorRef) {
         super();
 
         this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         this.addHostClassName();
+        this.setupDragInitialProperties();
     }
 
     ngAfterContentInit() {
@@ -385,9 +408,7 @@ export class KbqTag
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor
-            .monitor(this.elementRef, true)
-            .subscribe((focusOrigin) => (isNull(focusOrigin) ? this.blur() : this.focus()));
+        this.setupFocusMonitor();
     }
 
     ngOnDestroy(): void {
@@ -488,18 +509,9 @@ export class KbqTag
 
     /** Focuses the tag. */
     focus(): void {
-        if (this.disabled || (!this.selectable && !this.editable) || this.editing() || this.hasFocus) return;
+        if (this.disabled) return;
 
         this.elementRef.nativeElement.focus();
-
-        this.onFocus.next({ tag: this });
-
-        if (!this.tagList) this.select();
-
-        Promise.resolve().then(() => {
-            this.hasFocus = true;
-            this.changeDetectorRef.markForCheck();
-        });
     }
 
     /**
@@ -545,25 +557,7 @@ export class KbqTag
 
     /** @docs-private */
     blur(): void {
-        // When animations are enabled, Angular may end up removing the tag from the DOM a little
-        // earlier than usual, causing it to be blurred and throwing off the logic in the tag list
-        // that moves focus not the next item. To work around the issue, we defer marking the tag
-        // as not focused until the next time the zone stabilizes.
-        this._ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
-                this._ngZone.run(() => {
-                    this.hasFocus = false;
-                    this.onBlur.next({ tag: this });
-
-                    this.cancelEditing('blur');
-
-                    if (!this.tagList) this.deselect();
-
-                    this.changeDetectorRef.markForCheck();
-                });
-            });
+        this.elementRef.nativeElement.blur();
     }
 
     /** @docs-private */
@@ -585,7 +579,6 @@ export class KbqTag
 
             if (!input) throw getTagEditInputMissingError();
 
-            input.focus();
             input.select();
         });
     }
@@ -616,6 +609,53 @@ export class KbqTag
             isUserInput,
             selected: this.selected
         });
+    }
+
+    private setupDragInitialProperties(): void {
+        this.syncDragDisabledState();
+
+        this.drag.started.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.drag.data = {
+                tag: this,
+                hasFocus: this.hasFocus,
+                focusOrigin: this.focusOrigin
+            };
+        });
+    }
+
+    private syncDragDisabledState(): void {
+        this.drag.disabled = !this.draggable;
+    }
+
+    private setupFocusMonitor(): void {
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(
+                // Debounce to ensure correct hasFocus and focusOrigin state during drag start operations
+                debounceTime(0)
+            )
+            .subscribe((origin) => {
+                if (this.disabled) return;
+
+                this.focusOrigin = origin;
+
+                const hasFocus = !isNull(origin);
+
+                if (hasFocus !== this.hasFocus) {
+                    this.hasFocus = hasFocus;
+
+                    if (this.hasFocus) {
+                        this.onFocus.next({ tag: this });
+                        if (!this.tagList) this.select();
+                    } else {
+                        this.onBlur.next({ tag: this });
+                        this.cancelEditing('blur');
+                        if (!this.tagList) this.deselect();
+                    }
+
+                    this.changeDetectorRef.markForCheck();
+                }
+            });
     }
 }
 
