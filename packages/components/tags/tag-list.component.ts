@@ -332,7 +332,11 @@ export class KbqTagList
      */
     selectionModel: SelectionModel<KbqTag>;
 
-    /** @docs-private */
+    /**
+     * @docs-private
+     *
+     * @deprecated Unused. Will be removed in next major release.
+     */
     tagChanges = new EventEmitter<any>();
 
     /** An object used to control when error messages are shown. */
@@ -458,7 +462,6 @@ export class KbqTagList
                 // Defer setting the value in order to avoid the "Expression
                 // has changed after it was checked" errors from Angular.
                 Promise.resolve().then(() => {
-                    this.tagChanges.emit(this.tags.toArray());
                     this.stateChanges.next();
 
                     // do not call on initial
