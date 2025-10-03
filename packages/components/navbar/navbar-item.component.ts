@@ -322,11 +322,12 @@ export class KbqNavbarRectangleElement {
 
     set horizontal(value: boolean) {
         this._horizontal = value;
+        this._vertical = !value;
 
         this.state.next();
     }
 
-    private _horizontal: boolean;
+    private _horizontal: boolean = false;
 
     get vertical(): boolean {
         return this._vertical;
@@ -334,11 +335,12 @@ export class KbqNavbarRectangleElement {
 
     set vertical(value: boolean) {
         this._vertical = value;
+        this._horizontal = !value;
 
         this.state.next();
     }
 
-    private _vertical: boolean;
+    private _vertical: boolean = true;
 
     get collapsed(): boolean {
         return this._collapsed;
