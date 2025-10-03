@@ -529,6 +529,7 @@ export class KbqTag
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE:
+                console.log('before delete', this.tagList?.selected.length);
                 // If tag list has selected tags, remove them all. Otherwise remove the focused tag.
                 this.tagList?.selected.length ? this.tagList.removeSelected() : this.remove();
 
@@ -596,7 +597,7 @@ export class KbqTag
      *
      * @docs-private
      */
-    setSelectedState(isSelected: boolean, isUserInput: boolean, emitEvent: boolean) {
+    setSelectedState(isSelected: boolean, isUserInput: boolean, emitEvent: boolean): void {
         if (isSelected !== this.selected) {
             this._selected = isSelected;
 
