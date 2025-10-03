@@ -5,6 +5,8 @@
 .kbq-tag {
     @include vendor-prefixes.user-select(none);
 
+    background-color: cyan !important;
+
     position: relative;
 
     display: inline-block;
