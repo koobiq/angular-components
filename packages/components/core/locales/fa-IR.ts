@@ -106,6 +106,11 @@ export const faIRLocaleData = {
         tooltip: 'جستجو',
         placeholder: 'جستجو'
     },
+    appSwitcher: {
+        searchPlaceholder: 'جستجو',
+        searchEmptyResult: 'چیزی پیدا نشد',
+        sitesHeader: 'سایت‌های دیگر'
+    },
     timeRange: {
         title: {
             for: 'برای',

@@ -210,7 +210,7 @@ export class KbqDropdownModule {
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent], [typeof i5.OverlayModule, typeof i6.KbqIconModule, typeof i7.NgClass, typeof i1.kbqDropdownStaticContent], [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent, typeof i1.kbqDropdownStaticContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent], [typeof i5.OverlayModule, typeof i6.KbqIconModule, typeof i7.NgClass, typeof i1.KbqDropdownStaticContent], [typeof i1.KbqDropdown, typeof i2.KbqDropdownItem, typeof i3.KbqDropdownTrigger, typeof i4.KbqDropdownContent, typeof i1.KbqDropdownStaticContent]>;
 }
 
 // @public
@@ -250,11 +250,11 @@ export interface KbqDropdownPanel {
 }
 
 // @public (undocumented)
-export class kbqDropdownStaticContent {
+export class KbqDropdownStaticContent {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<kbqDropdownStaticContent, "[kbqDropdownStaticContent]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownStaticContent, "[kbqDropdownStaticContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<kbqDropdownStaticContent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownStaticContent, never>;
 }
 
 // @public

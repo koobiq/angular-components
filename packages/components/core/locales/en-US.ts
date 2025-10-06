@@ -107,6 +107,11 @@ export const enUSLocaleData = {
         tooltip: 'Search',
         placeholder: 'Search'
     },
+    appSwitcher: {
+        searchPlaceholder: 'Search',
+        searchEmptyResult: 'Nothing found',
+        sitesHeader: 'Other sites'
+    },
     timeRange: {
         title: {
             for: 'for',

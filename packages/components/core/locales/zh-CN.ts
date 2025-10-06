@@ -106,6 +106,11 @@ export const zhCNLocaleData = {
         tooltip: '搜索',
         placeholder: '搜索'
     },
+    appSwitcher: {
+        searchPlaceholder: '搜索',
+        searchEmptyResult: '未找到任何内容',
+        sitesHeader: '其他网站'
+    },
     timeRange: {
         title: {
             for: '时间范围',

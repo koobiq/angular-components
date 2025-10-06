@@ -15,6 +15,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
@@ -23,6 +24,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
+import { SafeHtml } from '@angular/platform-browser';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -30,6 +32,16 @@ import { Type } from '@angular/core';
 
 // @public
 export function defaultGroupBy(app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]): void;
+
+// @public
+export const KBQ_APP_SWITCHER_CONFIGURATION: InjectionToken<unknown>;
+
+// @public
+export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: {
+    searchPlaceholder: string;
+    searchEmptyResult: string;
+    sitesHeader: string;
+};
 
 // @public
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
@@ -40,6 +52,12 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     deps: (typeof Overlay)[];
     useFactory: typeof kbqAppSwitcherScrollStrategyFactory;
 };
+
+// @public (undocumented)
+export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number;
+
+// @public (undocumented)
+export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number;
 
 // @public
 export const kbqAppSwitcherAnimations: {
@@ -53,7 +71,7 @@ export interface KbqAppSwitcherApp {
     // (undocumented)
     caption?: string;
     // (undocumented)
-    icon?: string;
+    icon: string;
     // (undocumented)
     id: string | number;
     // (undocumented)
@@ -66,12 +84,19 @@ export interface KbqAppSwitcherApp {
 
 // @public
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
+    constructor();
     protected activeApp: KbqAppSwitcherApp;
     protected activeSite: KbqAppSwitcherSite;
+    // (undocumented)
+    configuration: any;
     escapeHandler(): void;
-    readonly filteredSites: Observable<KbqAppSwitcherSite[]>;
+    // (undocumented)
+    readonly externalConfiguration: unknown;
+    filteredSites: KbqAppSwitcherSite[];
     input: KbqInput;
     isTrapFocus: boolean;
+    get localeData(): any;
+    protected readonly localeService: KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;
     otherSites: KbqDropdownTrigger;
@@ -91,6 +116,8 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
 export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     // (undocumented)
     app: KbqAppSwitcherApp;
+    // (undocumented)
+    getIcon(icon: string | null): SafeHtml;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherDropdownApp, "[kbq-app-switcher-dropdown-app]", ["kbqAppSwitcherDropdownApp"], { "app": { "alias": "kbq-app-switcher-dropdown-app"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -115,6 +142,8 @@ export class KbqAppSwitcherListItem extends KbqDropdownItem {
     clickHandler(event: MouseEvent): void;
     // (undocumented)
     collapsed: boolean;
+    // (undocumented)
+    getIcon(icon: string | null): SafeHtml;
     // (undocumented)
     static ngAcceptInputType_collapsed: unknown;
     // (undocumented)
@@ -214,12 +243,6 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherTrigger, never>;
 }
-
-// @public (undocumented)
-export const MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number;
-
-// @public (undocumented)
-export const MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number;
 
 // (No @packageDocumentation comment for this package)
 

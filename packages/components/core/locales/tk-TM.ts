@@ -107,6 +107,11 @@ export const tkTMLocaleData = {
         tooltip: 'Gözleg',
         placeholder: 'Gözleg'
     },
+    appSwitcher: {
+        searchPlaceholder: 'Gözleg',
+        searchEmptyResult: 'Hiç zat tapylmady',
+        sitesHeader: 'Beýleki saýtlar'
+    },
     timeRange: {
         title: {
             for: 'soňky',

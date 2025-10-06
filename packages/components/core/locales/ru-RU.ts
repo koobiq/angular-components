@@ -107,6 +107,11 @@ export const ruRULocaleData = {
         tooltip: 'Поиск',
         placeholder: 'Поиск'
     },
+    appSwitcher: {
+        searchPlaceholder: 'Поиск',
+        searchEmptyResult: 'Ничего не найдено',
+        sitesHeader: 'Другие площадки'
+    },
     timeRange: {
         title: {
             for: 'за',

@@ -5,7 +5,7 @@
             <input
                 autocomplete="off"
                 kbqInput
-                placeholder="Поиск"
+                placeholder="{{ localeData.searchPlaceholder }}"
                 [formControl]="searchControl"
                 (keydown.escape)="escapeHandler()"
             />
@@ -71,7 +71,7 @@
 
             <div class="kbq-app-switcher__sites-container">
                 <div class="kbq-app-switcher-group-header">
-                    <div class="kbq-app-switcher-group-header__text">Другие площадки</div>
+                    <div class="kbq-app-switcher-group-header__text">{{ localeData.sitesHeader }}</div>
                 </div>
 
                 <kbq-dropdown #otherSites="kbqDropdown">
@@ -122,10 +122,10 @@
             </kbq-dropdown>
         }
     } @else {
-        <div kbq-scrollbar class="kbq-app-switcher__search-result">
+        <div class="kbq-app-switcher__search-result">
             <kbq-dropdown [class]="'kbq-app-switcher-sites'">
                 <div kbqDropdownStaticContent class="kbq-app-switcher-site">
-                    @for (site of filteredSites | async; track site) {
+                    @for (site of filteredSites; track site) {
                         @if (site.apps) {
                             <kbq-optgroup label="{{ site.name }}" />
                         }
@@ -134,7 +134,7 @@
                             <a kbq-app-switcher-list-item href="{{ app.link }}" [app]="app"></a>
                         }
                     } @empty {
-                        <div class="kbq-app-switcher__empty-search-result">Ничего не найдено</div>
+                        <div class="kbq-app-switcher__empty-search-result">{{ localeData.searchEmptyResult }}</div>
                     }
                 </div>
             </kbq-dropdown>

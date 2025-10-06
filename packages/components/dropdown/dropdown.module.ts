@@ -5,21 +5,21 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqDropdownTrigger } from './dropdown-trigger.directive';
-import { KbqDropdown, kbqDropdownStaticContent } from './dropdown.component';
+import { KbqDropdown, KbqDropdownStaticContent } from './dropdown.component';
 
 @NgModule({
     imports: [
         OverlayModule,
         KbqIconModule,
         NgClass,
-        kbqDropdownStaticContent
+        KbqDropdownStaticContent
     ],
     exports: [
         KbqDropdown,
         KbqDropdownItem,
         KbqDropdownTrigger,
         KbqDropdownContent,
-        kbqDropdownStaticContent
+        KbqDropdownStaticContent
     ],
     declarations: [
         KbqDropdown,

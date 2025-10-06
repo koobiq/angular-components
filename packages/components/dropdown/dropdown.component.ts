@@ -44,7 +44,7 @@ import {
     standalone: true,
     selector: '[kbqDropdownStaticContent]'
 })
-export class kbqDropdownStaticContent {}
+export class KbqDropdownStaticContent {}
 
 @Component({
     selector: 'kbq-dropdown',

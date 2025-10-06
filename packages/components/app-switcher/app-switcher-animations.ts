@@ -1,4 +1,5 @@
 import { animate, AnimationTriggerMetadata, state, style, transition, trigger } from '@angular/animations';
+import { KbqAnimationCurves, KbqAnimationDurations } from '@koobiq/components/core';
 
 /** @docs-private */
 export const kbqAppSwitcherAnimations: {
@@ -16,13 +17,13 @@ export const kbqAppSwitcherAnimations: {
         transition(
             '* => visible',
             animate(
-                '120ms cubic-bezier(0, 0, 0.2, 1)',
+                `120ms ${KbqAnimationCurves.DecelerationCurve}`,
                 style({
                     opacity: 1,
                     transform: 'scale(1, 1)'
                 })
             )
         ),
-        transition('* => hidden', animate('100ms linear', style({ opacity: 0 })))
+        transition('* => hidden', animate(`${KbqAnimationDurations.Rapid} linear`, style({ opacity: 0 })))
     ])
 };

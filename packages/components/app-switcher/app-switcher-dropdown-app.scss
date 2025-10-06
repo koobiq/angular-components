@@ -51,7 +51,7 @@
     }
 }
 
-@mixin kbq-app-switcher-dropdown-app-theme() {
+@mixin _kbq-app-switcher-dropdown-app-theme() {
     .kbq-app-switcher-dropdown-app {
         background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
@@ -71,7 +71,7 @@
     }
 }
 
-@mixin kbq-app-switcher-dropdown-app-typography() {
+@mixin _kbq-app-switcher-dropdown-app-typography() {
     .kbq-app-switcher-dropdown-app {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
@@ -81,5 +81,5 @@
     }
 }
 
-@include kbq-app-switcher-dropdown-app-theme();
-@include kbq-app-switcher-dropdown-app-typography();
+@include _kbq-app-switcher-dropdown-app-theme();
+@include _kbq-app-switcher-dropdown-app-typography();

@@ -6,7 +6,7 @@ import {
     OverlayConfig,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -30,6 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
+    KBQ_LOCALE_SERVICE,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpTrigger,
@@ -37,7 +38,8 @@ import {
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -47,7 +49,6 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { Subscription, merge } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
@@ -57,7 +58,7 @@ export interface KbqAppSwitcherApp {
     name: string;
     id: string | number;
     type?: string | number;
-    icon?: string;
+    icon: string;
     caption?: string;
     aliases?: KbqAppSwitcherApp[];
     link?: string;
@@ -88,14 +89,15 @@ export function defaultGroupBy(
             groups[appType] = {
                 name: appType,
                 aliases: [app],
+                icon: app.icon,
                 id: ''
             };
         }
     }
 }
 
-export const MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number = 7;
-export const MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number = 3;
+export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number = 7;
+export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number = 3;
 
 /** @docs-private */
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -113,6 +115,14 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     deps: [Overlay],
     useFactory: kbqAppSwitcherScrollStrategyFactory
 };
+
+/** default configuration of app-switcher */
+/** @docs-private */
+export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION = ruRULocaleData.appSwitcher;
+
+/** Injection Token for providing configuration of app-switcher */
+/** @docs-private */
+export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcherConfiguration');
 
 /** @docs-private */
 @Component({
@@ -140,19 +150,30 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         KbqOptionModule,
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,
-        KbqAppSwitcherListItem
+        KbqAppSwitcherListItem,
+        JsonPipe
     ],
     animations: [kbqAppSwitcherAnimations.state]
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    readonly externalConfiguration = inject(KBQ_APP_SWITCHER_CONFIGURATION, { optional: true });
+
+    configuration;
+
+    /** localized data
+     * @docs-private */
+    get localeData() {
+        return this.configuration;
+    }
+
+    /** @docs-private */
     readonly searchControl = new FormControl('');
 
     /** @docs-private */
-    readonly filteredSites = this.searchControl.valueChanges.pipe(
-        startWith(''),
-        map((query) => this.filterSites(query))
-    );
+    filteredSites: KbqAppSwitcherSite[];
 
     /** @docs-private */
     prefix = 'kbq-app-switcher';
@@ -173,6 +194,16 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     @ViewChild('otherSites') otherSites: KbqDropdownTrigger;
 
+    constructor() {
+        super();
+
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.initDefaultParams();
+        }
+    }
+
     ngAfterViewInit() {
         if (this.input) {
             this.input.focus();
@@ -188,6 +219,8 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
                 );
             }
         });
+
+        this.searchControl.valueChanges.subscribe((value) => (this.filteredSites = this.filterSites(value)));
     }
 
     /** @docs-private */
@@ -231,6 +264,16 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
               })
             : filteredSites;
     }
+
+    private updateLocaleParams = () => {
+        this.configuration = this.externalConfiguration || this.localeService?.getParams('appSwitcher');
+
+        this.changeDetectorRef.markForCheck();
+    };
+
+    private initDefaultParams() {
+        this.configuration = KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
+    }
 }
 
 @Directive({
@@ -271,7 +314,7 @@ export class KbqAppSwitcherTrigger
 
     /** Whether search is used or not */
     get withSearch(): boolean {
-        return this.appsCount > MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH;
+        return this.appsCount > KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH;
     }
 
     /** Number of applications to choose from
@@ -322,7 +365,7 @@ export class KbqAppSwitcherTrigger
         value.forEach((site: KbqAppSwitcherSite) => {
             const newSite: KbqAppSwitcherSite = { ...site, apps: [] };
 
-            newSite.apps = this.makeGroupsForApps(site.apps, MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
+            newSite.apps = this.makeGroupsForApps(site.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
 
             this._parsedSites.push(newSite);
         });
@@ -339,7 +382,7 @@ export class KbqAppSwitcherTrigger
     set apps(apps: KbqAppSwitcherApp[]) {
         this.originalApps = apps;
 
-        this._parsedApps = this.makeGroupsForApps(this.originalApps, MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
+        this._parsedApps = this.makeGroupsForApps(this.originalApps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
     }
 
     private makeGroupsForApps(apps: KbqAppSwitcherApp[], minAppsForGrouping: number): KbqAppSwitcherApp[] {
@@ -395,7 +438,7 @@ export class KbqAppSwitcherTrigger
         const originValue = this.originalSites.find((site) => value.id === site.id) as KbqAppSwitcherSite;
         const newSite: KbqAppSwitcherSite = { ...originValue, apps: [] };
 
-        newSite.apps = this.makeGroupsForApps(originValue.apps, MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
+        newSite.apps = this.makeGroupsForApps(originValue.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
 
         this._parsedSelectedSite = newSite;
     }

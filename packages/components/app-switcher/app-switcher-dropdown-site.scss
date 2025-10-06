@@ -27,7 +27,7 @@
     }
 }
 
-@mixin kbq-app-switcher-dropdown-site-theme() {
+@mixin _kbq-app-switcher-dropdown-site-theme() {
     .kbq-app-switcher-dropdown-site {
         background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
@@ -43,11 +43,11 @@
     }
 }
 
-@mixin kbq-app-switcher-dropdown-site-typography() {
+@mixin _kbq-app-switcher-dropdown-site-typography() {
     .kbq-app-switcher-dropdown-site {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }
 
-@include kbq-app-switcher-dropdown-site-theme();
-@include kbq-app-switcher-dropdown-site-typography();
+@include _kbq-app-switcher-dropdown-site-theme();
+@include _kbq-app-switcher-dropdown-site-typography();

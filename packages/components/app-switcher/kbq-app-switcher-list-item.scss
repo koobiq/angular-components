@@ -101,13 +101,11 @@
     }
 
     & .kbq-app-switcher-list-item__caption {
-        margin-left: var(--kbq-size-3xs);
-
         @include common.kbq-truncate-line();
     }
 }
 
-@mixin kbq-app-switcher-list-item-theme() {
+@mixin _kbq-app-switcher-list-item-theme() {
     .kbq-app-switcher-site_nested:after {
         border-left-color: var(--kbq-line-contrast-less);
         border-bottom-color: var(--kbq-line-contrast-less);
@@ -168,7 +166,7 @@
     }
 }
 
-@mixin kbq-app-switcher-list-item-typography() {
+@mixin _kbq-app-switcher-list-item-typography() {
     .kbq-app-switcher-list-item__name {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
@@ -178,5 +176,5 @@
     }
 }
 
-@include kbq-app-switcher-list-item-theme();
-@include kbq-app-switcher-list-item-typography();
+@include _kbq-app-switcher-list-item-theme();
+@include _kbq-app-switcher-list-item-typography();
