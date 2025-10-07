@@ -4582,6 +4582,7 @@ export const zhCNLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+    };
     timeRange: {
         title: {
             for: string;
