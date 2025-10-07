@@ -1,0 +1,48 @@
+<div class="kbq-notification-center-header">
+    <div class="kbq-notification-center-title">
+        <div class="kbq-notification-center-title__text">Уведомления</div>
+        @if (true) {
+            <button
+                kbq-button
+                class="kbq-notification-center-title__button"
+                [kbqStyle]="'transparent'"
+                [color]="'contrast'"
+            >
+                <i kbq-icon="kbq-bell_16"></i>
+            </button>
+        } @else {
+            <button kbq-button class="kbq-notification-center-title__button">
+                <i kbq-icon="kbq-bell-slash_16"></i>
+            </button>
+        }
+    </div>
+    <div class="kbq-notification-center-toolbar">
+        <button
+            kbq-button
+            class="kbq-notification-center-toolbar__button"
+            [kbqStyle]="'transparent'"
+            [color]="'contrast'"
+        >
+            <i kbq-icon="kbq-trash_16"></i>
+        </button>
+
+        <kbq-divider [vertical]="true" />
+
+        <button
+            kbq-button
+            class="kbq-notification-center-toolbar__button"
+            [kbqStyle]="'transparent'"
+            [color]="'contrast'"
+        >
+            <i kbq-icon="kbq-xmark_16"></i>
+        </button>
+    </div>
+</div>
+
+<div class="kbq-notification-center-sub-header">7 Октября</div>
+
+<div kbq-scrollbar class="kbq-notification-center-container">
+    @for (item of items; track item) {
+        <kbq-notification-item [data]="item" />
+    }
+</div>

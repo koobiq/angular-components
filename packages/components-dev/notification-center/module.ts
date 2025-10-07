@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqNotificationCenterModule } from '@koobiq/components/notification-center';
+import {
+    KbqNotificationCenterComponent,
+    KbqNotificationCenterModule,
+    KbqNotificationCenterTrigger
+} from '@koobiq/components/notification-center';
 import { NotificationCenterExamplesModule } from '../../docs-examples/components/notification-center';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -21,7 +25,9 @@ export class DevExamples {}
         DevThemeToggle,
         KbqButtonModule,
         KbqNotificationCenterModule,
-        KbqIcon
+        KbqIcon,
+        KbqNotificationCenterTrigger,
+        KbqNotificationCenterComponent
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
