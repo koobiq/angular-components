@@ -315,7 +315,7 @@ export class KbqInlineEdit implements AfterContentInit {
 
     /** @docs-private */
     protected onEditModeContainerKeydown(event: KeyboardEvent) {
-        if (this.showActions() && !hasModifierKey(event, 'shiftKey')) return;
+        if ((this.showActions() && !hasModifierKey(event, 'shiftKey')) || event.key !== 'Tab') return;
 
         this.saveAndFocusNextInlineEdit(event);
     }
