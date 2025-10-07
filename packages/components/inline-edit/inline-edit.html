@@ -55,7 +55,7 @@
                             kbq-button
                             [color]="'contrast-fade'"
                             (click)="cancel()"
-                            (keydown)="toggleModeAndOpenNext($event)"
+                            (keydown)="onTerminalButtonKeydown($event)"
                         >
                             <i kbq-icon="kbq-xmark_16"></i>
                         </button>

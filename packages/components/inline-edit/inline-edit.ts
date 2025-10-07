@@ -252,6 +252,8 @@ export class KbqInlineEdit implements AfterContentInit {
 
             const input = this.getInputNativeElement();
 
+            if (!formFieldRef) input?.focus();
+
             if (this.initialValue) input?.select();
 
             if (formFieldRef) {
@@ -278,7 +280,6 @@ export class KbqInlineEdit implements AfterContentInit {
 
         const input = this.getInputNativeElement();
 
-        //
         if (input) {
             input.selectionStart = input.selectionEnd = null;
         }
@@ -316,13 +317,17 @@ export class KbqInlineEdit implements AfterContentInit {
     protected onEditModeContainerKeydown(event: KeyboardEvent) {
         if (this.showActions() && !hasModifierKey(event, 'shiftKey')) return;
 
-        this.toggleModeAndOpenNext(event);
+        this.saveAndFocusNextInlineEdit(event);
     }
 
     /** @docs-private */
-    protected toggleModeAndOpenNext(event: KeyboardEvent): void {
-        if (event.key !== 'Tab') return;
+    protected onTerminalButtonKeydown(event: KeyboardEvent): void {
+        if (event.key !== 'Tab' && hasModifierKey(event, 'shiftKey')) return;
 
+        this.saveAndFocusNextInlineEdit(event);
+    }
+
+    private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
         this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
         this.save(event);
 
