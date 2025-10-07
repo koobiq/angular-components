@@ -33,7 +33,7 @@
             (overlayOutsideClick)="save($event)"
             (overlayKeydown)="onOverlayKeydown($event)"
         >
-            <div class="kbq-inline-edit__panel" cdkTrapFocusAutoCapture cdkTrapFocus>
+            <div class="kbq-inline-edit__panel">
                 <div
                     class="kbq-inline-edit__control-container"
                     [kbqTooltipColor]="colors.Error"
@@ -41,6 +41,7 @@
                     [kbqTooltipArrow]="false"
                     [kbqTrigger]="'manual'"
                     [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
+                    (keydown)="onEditModeContainerKeydown($event)"
                 >
                     <ng-content select="[kbqInlineEditEditMode]" />
                 </div>
@@ -50,7 +51,12 @@
                         <button kbq-button [color]="'contrast'" (click)="save()">
                             <i kbq-icon="kbq-check_16"></i>
                         </button>
-                        <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
+                        <button
+                            kbq-button
+                            [color]="'contrast-fade'"
+                            (click)="cancel()"
+                            (keydown)="toggleModeAndOpenNext($event)"
+                        >
                             <i kbq-icon="kbq-xmark_16"></i>
                         </button>
                     </div>

@@ -291,18 +291,9 @@ export class KbqInlineEdit implements AfterContentInit {
     protected onOverlayKeydown(event: KeyboardEvent): void {
         const { target, key } = event;
 
-        switch (key) {
-            case 'Tab': {
-                this.save(event);
-                setTimeout(() => {
-                    const activeElement = this.document.activeElement;
+        this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
 
-                    if (activeElement?.tagName.toLowerCase() === 'kbq-inline-edit') {
-                        activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-                    }
-                });
-                break;
-            }
+        switch (key) {
             case 'Escape': {
                 this.cancel();
                 break;
@@ -319,6 +310,29 @@ export class KbqInlineEdit implements AfterContentInit {
                 return;
             }
         }
+    }
+
+    /** @docs-private */
+    protected onEditModeContainerKeydown(event: KeyboardEvent) {
+        if (this.showActions() && !hasModifierKey(event, 'shiftKey')) return;
+
+        this.toggleModeAndOpenNext(event);
+    }
+
+    /** @docs-private */
+    protected toggleModeAndOpenNext(event: KeyboardEvent): void {
+        if (event.key !== 'Tab') return;
+
+        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
+        this.save(event);
+
+        setTimeout(() => {
+            const activeElement = this.document.activeElement;
+
+            if (activeElement?.tagName.toLowerCase() === 'kbq-inline-edit') {
+                activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            }
+        });
     }
 
     private isInvalid(): boolean {

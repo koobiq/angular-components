@@ -44,6 +44,7 @@ export class KbqInlineEdit implements AfterContentInit {
     ngAfterContentInit(): void;
     protected onAttach(): void;
     protected onClick(event: Event): void;
+    protected onEditModeContainerKeydown(event: KeyboardEvent): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
     protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
     protected readonly overlayOrigin: Signal<CdkOverlayOrigin | undefined>;
@@ -57,6 +58,7 @@ export class KbqInlineEdit implements AfterContentInit {
     readonly showTooltipOnError: InputSignalWithTransform<boolean, unknown>;
     protected readonly tabIndex: Signal<0 | -1>;
     protected toggleMode(): void;
+    protected toggleModeAndOpenNext(event: KeyboardEvent): void;
     readonly tooltipPlacement: InputSignal<PopUpPlacements | undefined>;
     protected readonly tooltipTrigger: Signal<KbqTooltipTrigger | undefined>;
     readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
