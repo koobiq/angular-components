@@ -9,7 +9,7 @@
     margin-top: var(--kbq-size-xxs);
     margin-bottom: var(--kbq-size-xxs);
 
-    width: 320px;
+    width: 400px;
 
     border-radius: var(--kbq-size-xs);
 
@@ -18,6 +18,39 @@
     box-sizing: border-box;
 
     z-index: 1;
+}
+
+.kbq-notification-center-header {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+
+    padding: var(--kbq-size-xl) var(--kbq-size-xl) var(--kbq-size-xxs) var(--kbq-size-xxl);
+}
+
+.kbq-notification-center-title {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: var(--kbq-size-xxs);
+}
+
+.kbq-notification-center-toolbar {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+
+    & .kbq-divider.kbq-divider_vertical {
+        height: var(--kbq-size-m);
+    }
+}
+
+.kbq-notification-center-sub-header {
+    padding: var(--kbq-size-s) var(--kbq-size-xxl);
 }
 
 @include kbq-notification-center-theme();

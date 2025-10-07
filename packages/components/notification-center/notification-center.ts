@@ -25,10 +25,9 @@ import {
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KbqOptionModule,
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
@@ -38,15 +37,14 @@ import {
     applyPopupMargins
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqToastStyle } from '@koobiq/components/toast';
 import { Subscription, merge } from 'rxjs';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
+import { KbqNotificationItem } from './notification-item';
 
-const defaultOffsetYWithArrow = 8;
+const defaultOffsetX = 8;
 
 /** @docs-private */
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -70,36 +68,57 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     standalone: true,
     selector: 'kbq-notification-center',
     templateUrl: './notification-center.html',
-    preserveWhitespaces: false,
     styleUrls: ['./notification-center.scss'],
+    preserveWhitespaces: false,
     host: {
         class: 'kbq-notification-center'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
         KbqIconModule,
-        KbqDividerModule,
         KbqBadgeModule,
-        KbqDropdownModule,
         KbqScrollbarModule,
-        KbqOptionModule
+        KbqButtonModule,
+        KbqDividerModule,
+        KbqNotificationItem
     ],
     animations: [KbqNotificationCenterAnimations.state]
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     prefix = 'kbq-notification-center';
-
     /** @docs-private */
     trigger: KbqNotificationCenterTrigger;
-
     /** @docs-private */
     isTrapFocus: boolean = false;
+
+    items = [
+        {
+            title: 'title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1',
+            caption: 'caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1',
+            icon: true,
+            style: KbqToastStyle.Success
+        },
+        {
+            title: 'title_2',
+            caption: 'caption_2',
+            icon: true,
+            style: KbqToastStyle.Warning
+        },
+        {
+            title: 'title_3',
+            caption: 'caption_3',
+            icon: true,
+            style: KbqToastStyle.Contrast
+        },
+        {
+            title: 'title_4',
+            caption: 'caption_4',
+            icon: true,
+            style: KbqToastStyle.Error
+        }
+    ];
 
     ngAfterViewInit() {
         this.visibleChange.subscribe((state) => {
@@ -165,13 +184,13 @@ export class KbqNotificationCenterTrigger
     private closeOnScroll: null;
 
     /** Placement of popUp */
-    @Input('kbqNotificationCenterPlacement') placement: PopUpPlacements = PopUpPlacements.BottomLeft;
+    @Input('kbqNotificationCenterPlacement') placement: PopUpPlacements = PopUpPlacements.RightTop;
 
     /** Class that will be used in the background */
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Offset of popUp */
-    @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
+    @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetX;
 
     /** Whether the trigger is disabled. */
     @Input({ transform: booleanAttribute })
@@ -273,6 +292,7 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Updates the current position.
+     *
      * @docs-private */
     updatePosition(reapplyPosition: boolean = false) {
         this.overlayRef = this.createOverlay();
