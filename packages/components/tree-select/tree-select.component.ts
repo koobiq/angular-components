@@ -999,7 +999,15 @@ export class KbqTreeSelect
     }
 
     calculateHiddenItems() {
-        if (!this.isBrowser || this.customTrigger || this.empty || !this.multiple || this.customMatcher) return;
+        if (
+            !this.isBrowser ||
+            this.customTrigger ||
+            this.empty ||
+            !this.multiple ||
+            this.customMatcher ||
+            this.multiline
+        )
+            return;
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
