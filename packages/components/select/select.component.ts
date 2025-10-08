@@ -158,6 +158,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
 
+        // @TODO: turn event listener only for specific conditions (#DS-4253)
         '(window:resize)': 'calculateHiddenItems()'
     },
     animations: [
