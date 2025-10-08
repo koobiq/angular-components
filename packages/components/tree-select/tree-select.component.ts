@@ -150,7 +150,6 @@ export class KbqTreeSelectChange {
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
-        // @TODO: turn event listener only for specific conditions (#DS-4253)
         '(window:resize)': 'calculateHiddenItems()'
     },
     animations: [

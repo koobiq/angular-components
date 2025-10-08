@@ -88,7 +88,7 @@ import {
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { BehaviorSubject, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, defer, merge } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 
 let nextUniqueId = 0;
@@ -158,7 +158,6 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
 
-        // @TODO: turn event listener only for specific conditions (#DS-4253)
         '(window:resize)': 'calculateHiddenItems()'
     },
     animations: [
@@ -734,13 +733,9 @@ export class KbqSelect
     }
 
     ngAfterViewInit(): void {
-        if (this.isBrowser && !this.customTrigger && this.multiple && !this.customMatcher && !this.multiline) {
-            fromEvent(this.window, 'resize').subscribe(() => this.calculateHiddenItems());
-
-            this.tags.changes.subscribe(() => {
-                setTimeout(() => this.calculateHiddenItems(), 0);
-            });
-        }
+        this.tags.changes.subscribe(() => {
+            setTimeout(() => this.calculateHiddenItems(), 0);
+        });
     }
 
     ngOnDestroy() {
@@ -1018,7 +1013,6 @@ export class KbqSelect
     }
 
     calculateHiddenItems(): void {
-        console.log('calculateHiddenItems(): void {');
         if (
             !this.isBrowser ||
             this.customTrigger ||
