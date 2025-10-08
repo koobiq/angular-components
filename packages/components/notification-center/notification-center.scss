@@ -50,7 +50,31 @@
 }
 
 .kbq-notification-center-sub-header {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+
     padding: var(--kbq-size-s) var(--kbq-size-xxl);
+
+    & .kbq-notification-center-sub-header__date {}
+
+    & .kbq-notification-center-sub-header__button {
+        position: absolute;
+
+        top: 0;
+        right: var(--kbq-size-xl);
+
+        display: none;
+    }
+
+    &:hover .kbq-notification-center-sub-header__button {
+        display: flex;
+    }
+}
+
+.kbq-notification-center-container {
+    padding-bottom: var(--kbq-size-m);
 }
 
 @include kbq-notification-center-theme();

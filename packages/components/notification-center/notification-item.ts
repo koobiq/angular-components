@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    forwardRef,
     Inject,
     Input,
     TemplateRef,
@@ -38,7 +37,7 @@ let id = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqNotificationItem {
+export class KbqNotificationItem<D> {
     themePalette = ThemePalette;
     id = id++;
 
@@ -53,19 +52,14 @@ export class KbqNotificationItem {
     @Input() data: KbqToastData;
 
     constructor(
-        @Inject(forwardRef(() => KbqNotificationCenterService)) readonly service: KbqNotificationCenterService,
+        @Inject(KbqNotificationCenterService<D>) readonly service: KbqNotificationCenterService<D>,
         public elementRef: ElementRef<HTMLElement>
     ) {
         this.$implicit = this;
-
-        // this.data.style = this.data?.style || KbqToastStyle.Contrast;
-        // this.data.icon = this.data?.icon !== undefined ? this.data.icon : true;
-        // this.data.iconClass = this.data?.iconClass || undefined;
-        // this.data.closeButton = this.data?.closeButton !== undefined ? this.data.closeButton : true;
     }
 
     close(): void {
-        this.service.delete(this.id);
+        this.service.removeNotification(this);
     }
 
     isTemplateRef(value): boolean {
