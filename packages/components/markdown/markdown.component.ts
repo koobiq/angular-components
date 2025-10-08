@@ -1,5 +1,6 @@
 import {
     afterNextRender,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -36,13 +37,17 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
         <div class="markdown-output" [innerHtml]="resultHtml"></div>
     `,
     host: {
-        class: 'kbq-markdown'
+        class: 'kbq-markdown',
+        '[class.kbq-markdown_transparent]': 'transparent'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqMarkdown {
     @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef;
+
+    /** Whether to override default background with transparent. */
+    @Input({ transform: booleanAttribute }) transparent: boolean = false;
 
     /** `Markdown` text. */
     @Input()
