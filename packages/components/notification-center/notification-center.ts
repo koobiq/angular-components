@@ -19,6 +19,7 @@ import {
     Output,
     TemplateRef,
     Type,
+    ViewChild,
     ViewEncapsulation,
     booleanAttribute,
     inject,
@@ -26,8 +27,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
+    DateAdapter,
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
@@ -37,11 +39,14 @@ import {
     applyPopupMargins
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToastStyle } from '@koobiq/components/toast';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subscription, merge } from 'rxjs';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
+import { KbqNotificationCenterService } from './notification-center.service';
 import { KbqNotificationItem } from './notification-item';
 
 const defaultOffsetX = 8;
@@ -81,11 +86,16 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         KbqScrollbarModule,
         KbqButtonModule,
         KbqDividerModule,
-        KbqNotificationItem
+        KbqNotificationItem,
+        KbqDropdownModule,
+        KbqTooltipTrigger
     ],
     animations: [KbqNotificationCenterAnimations.state]
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit {
+    dateAdapter = inject(DateAdapter);
+    service = inject(KbqNotificationCenterService);
+
     /** @docs-private */
     prefix = 'kbq-notification-center';
     /** @docs-private */
@@ -98,27 +108,68 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             title: 'title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1',
             caption: 'caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1',
             icon: true,
-            style: KbqToastStyle.Success
+            style: KbqToastStyle.Success,
+            date: '2025-10-08T11:43:32.944Z'
         },
         {
             title: 'title_2',
             caption: 'caption_2',
             icon: true,
-            style: KbqToastStyle.Warning
+            style: KbqToastStyle.Warning,
+            date: '2025-10-08T11:43:32.944Z'
         },
         {
             title: 'title_3',
             caption: 'caption_3',
             icon: true,
-            style: KbqToastStyle.Contrast
+            style: KbqToastStyle.Contrast,
+            date: '2025-10-08T11:43:32.944Z'
         },
         {
             title: 'title_4',
             caption: 'caption_4',
             icon: true,
-            style: KbqToastStyle.Error
+            style: KbqToastStyle.Error,
+            date: '2025-10-08T11:43:32.944Z'
+        },
+        {
+            title: 'title_4',
+            caption: 'caption_4',
+            icon: true,
+            style: KbqToastStyle.Error,
+            date: '2025-10-07T11:43:32.944Z'
+        },
+        {
+            title: 'title_4',
+            caption: 'caption_4',
+            icon: true,
+            style: KbqToastStyle.Error,
+            date: '2025-10-07T11:43:32.944Z'
+        },
+        {
+            title: 'title_4',
+            caption: 'caption_4',
+            icon: true,
+            style: KbqToastStyle.Error,
+            date: '2025-10-01T11:43:32.944Z'
+        },
+        {
+            title: 'title_4',
+            caption: 'caption_4',
+            icon: true,
+            style: KbqToastStyle.Error,
+            date: '2025-10-01T11:43:32.944Z'
+        },
+        {
+            title: 'title_4',
+            caption: 'caption_4',
+            icon: true,
+            style: KbqToastStyle.Error,
+            date: '2025-10-01T11:43:32.944Z'
         }
     ];
+
+    @ViewChild('notificationSwitcher') switcher: KbqButton;
 
     ngAfterViewInit() {
         this.visibleChange.subscribe((state) => {
@@ -131,6 +182,15 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
                 );
             }
         });
+
+        this.service.changes.subscribe(() => {
+            console.log('this.service.changes: ');
+            this.changeDetectorRef.markForCheck();
+        });
+
+        this.switcher.focus();
+
+        console.log('dateAdapter: ', this.dateAdapter.today());
     }
 
     /** @docs-private */
