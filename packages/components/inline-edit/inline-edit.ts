@@ -1,4 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
@@ -61,7 +62,8 @@ const baseClass = 'kbq-inline-edit';
     exportAs: 'kbqFocusRegionItem',
     host: {
         '(focusin)': 'isFocused = true',
-        '(keydown)': 'onTabOut($event)'
+        '(keydown.tab)': 'onTabOut($event)',
+        '(keydown.shift.tab)': 'onTabOut($event)'
     }
 })
 export class KbqFocusRegionItem {
@@ -70,8 +72,6 @@ export class KbqFocusRegionItem {
     protected isFocused = false;
 
     protected onTabOut(event: KeyboardEvent) {
-        if (event.key !== 'Tab') return;
-
         if (this.isFocused) {
             this.tabOut.emit(event);
         }
@@ -143,7 +143,8 @@ export class KbqInlineEditMenu {
         KbqButtonModule,
         KbqIcon,
         KbqTooltipTrigger,
-        KbqFocusRegionItem
+        KbqFocusRegionItem,
+        CdkTrapFocus
     ],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -282,8 +283,6 @@ export class KbqInlineEdit implements AfterContentInit {
 
             const input = this.getInputNativeElement();
 
-            if (!formFieldRef) input?.focus();
-
             if (this.initialValue) input?.select();
 
             if (formFieldRef) {
@@ -331,6 +330,7 @@ export class KbqInlineEdit implements AfterContentInit {
             }
             case 'Enter': {
                 if (hasModifierKey(event, 'ctrlKey', 'metaKey') || !(target instanceof HTMLTextAreaElement)) {
+                    event.preventDefault();
                     this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
                     setTimeout(() => this.save(event));
                 }
@@ -370,8 +370,9 @@ export class KbqInlineEdit implements AfterContentInit {
     }
 
     private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
-        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
         this.save(event);
+        if (this.isInvalid()) return;
+        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
 
         setTimeout(() => {
             const activeElement = this.document.activeElement;
@@ -460,6 +461,6 @@ export class KbqInlineEdit implements AfterContentInit {
     }
 
     private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {
-        return this.overlayDir()?.overlayRef.overlayElement.querySelector('input,textarea') ?? null;
+        return this.overlayDir()?.overlayRef.overlayElement.querySelector('input:not([type="file"]),textarea') ?? null;
     }
 }
