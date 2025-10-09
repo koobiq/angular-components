@@ -7,10 +7,6 @@
         color: var(--kbq-foreground-contrast);
         background: var(--kbq-markdown-bg);
 
-        &.kbq-markdown_transparent {
-            --kbq-markdown-bg: transparent;
-        }
-
         // h1, h2, h3, h4, h5, h6
         @for $i from 1 through 6 {
             .kbq-markdown__h#{$i} {
