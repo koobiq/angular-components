@@ -18,17 +18,19 @@
         </button>
     </div>
     <div class="kbq-notification-center-toolbar">
-        <button
-            kbq-button
-            class="kbq-notification-center-toolbar__button"
-            [kbqStyle]="'transparent'"
-            [color]="'contrast'"
-            (click)="service.removeAllNotifications()"
-        >
-            <i kbq-icon="kbq-trash_16"></i>
-        </button>
+        @if (!service.isEmpty) {
+            <button
+                kbq-button
+                class="kbq-notification-center-toolbar__button"
+                [kbqStyle]="'transparent'"
+                [color]="'contrast'"
+                (click)="service.removeAll()"
+            >
+                <i kbq-icon="kbq-trash_16"></i>
+            </button>
 
-        <kbq-divider [vertical]="true" />
+            <kbq-divider [vertical]="true" />
+        }
 
         <button
             kbq-button
@@ -42,23 +44,44 @@
     </div>
 </div>
 
-<div class="kbq-notification-center-sub-header">
-    <div class="kbq-notification-center-sub-header__date">7 Октября</div>
-
-    <button
-        kbq-button
-        class="kbq-notification-center-sub-header__button"
-        [kbqStyle]="'transparent'"
-        [color]="'contrast'"
-        (click)="service.removeGroupOfNotifications(this)"
-    >
-        <i kbq-icon="kbq-trash_16"></i>
-    </button>
-</div>
-
 <div kbq-scrollbar class="kbq-notification-center-container">
-    @for (item of items; track item) {
-        <kbq-notification-item [data]="item" />
+    @if (!service.errorMode.value) {
+        @if (!service.loadingMode.value) {
+            @for (group of service.itemsForView | async; track group) {
+                <div class="kbq-notification-center-sub-header">
+                    <div class="kbq-notification-center-sub-header__date">{{ group.title }}</div>
+
+                    <button
+                        kbq-button
+                        class="kbq-notification-center-sub-header__button"
+                        [kbqStyle]="'transparent'"
+                        [color]="'contrast'"
+                        (click)="service.removeGroup(group)"
+                    >
+                        <i kbq-icon="kbq-trash_16"></i>
+                    </button>
+                </div>
+
+                @for (item of group.items; track item) {
+                    <kbq-notification-item [data]="item" />
+                }
+            } @empty {
+                <div class="kbq-notification-center-empty-container">
+                    <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
+                    Нет уведомлений
+                </div>
+            }
+        } @else {
+            <kbq-loader-overlay [transparent]="true" />
+        }
+    } @else {
+        <div class="kbq-notification-center-error-container">
+            <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
+            Не удалось загрузить уведомления
+            <button kbq-button [kbqStyle]="'transparent'" [color]="'theme'" (click)="service.onReload.emit()">
+                Повторить
+            </button>
+        </div>
     }
 </div>
 

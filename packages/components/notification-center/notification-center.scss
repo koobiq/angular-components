@@ -74,7 +74,34 @@
 }
 
 .kbq-notification-center-container {
+    border-radius: inherit;
+
     padding-bottom: var(--kbq-size-m);
+
+    min-height: 412px;
+
+    & .kbq-loader-overlay_parent {
+        border-radius: inherit;
+    }
+}
+
+.kbq-notification-center-empty-container,
+.kbq-notification-center-error-container {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+
+    & .kbq-icon {
+        margin-bottom: var(--kbq-size-xl);
+    }
+
+    & .kbq-button {
+        margin-top: var(--kbq-size-s);
+    }
 }
 
 @include kbq-notification-center-theme();

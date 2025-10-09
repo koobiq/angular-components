@@ -1,6 +1,6 @@
 import { ConfigurableFocusTrapFactory, FOCUS_TRAP_INERT_STRATEGY, FocusTrapFactory } from '@angular/cdk/a11y';
 import { NgModule } from '@angular/core';
-import { DateAdapter, EmptyFocusTrapStrategy } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, EmptyFocusTrapStrategy } from '@koobiq/components/core';
 import {
     KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER,
     KbqNotificationCenterComponent,
@@ -21,6 +21,6 @@ import { KbqNotificationCenterService } from './notification-center.service';
         KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
         { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy },
-        { provide: KbqNotificationCenterService, deps: [DateAdapter] }]
+        { provide: KbqNotificationCenterService, deps: [DateAdapter, DateFormatter] }]
 })
 export class KbqNotificationCenterModule {}
