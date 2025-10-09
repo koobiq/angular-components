@@ -1,44 +1,104 @@
-import { AnimationEvent } from '@angular/animations';
-import { Injectable } from '@angular/core';
-import { DateAdapter } from '@koobiq/date-adapter';
+import { EventEmitter, inject, Injectable, TemplateRef } from '@angular/core';
+import { DateAdapter, DateFormatter } from '@koobiq/components/core';
+import { KbqToastStyle } from '@koobiq/components/toast';
 import { BehaviorSubject, merge } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export interface KbqNotificationItem {
+    title?: string | TemplateRef<unknown>;
+    style?: string | KbqToastStyle;
+
+    icon?: boolean | TemplateRef<unknown>;
+    iconClass?: string;
+    caption?: string | TemplateRef<unknown>;
+
+    content?: string | TemplateRef<unknown>;
+    actions?: TemplateRef<unknown>;
+
+    date: string;
+}
+
+type KbqNotificationsGroup = { title: string; items: KbqNotificationItem[] };
+
+type KbqNotificationsGroups = Record<string, KbqNotificationsGroup>;
 
 @Injectable({ providedIn: 'root' })
 export class KbqNotificationCenterService<D> {
-    silentMode: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private readonly adapter = inject(DateAdapter<D>);
+    private readonly formatter = inject(DateFormatter<D>);
 
-    changes = merge(this.silentMode);
+    readonly silentMode = new BehaviorSubject(false);
+    readonly loadingMode = new BehaviorSubject(false);
+    readonly errorMode = new BehaviorSubject(false);
+
+    readonly onReload = new EventEmitter<void>();
+
+    private originalItems = new BehaviorSubject([] as KbqNotificationItem[]);
+
+    readonly itemsForView = this.originalItems.pipe(
+        map((items) => {
+            const result: KbqNotificationsGroups = {};
+
+            items.map((item) => this.makeGroup(item, result));
+
+            return Object.values(result).reverse();
+        })
+    );
+
+    readonly changes = merge(this.silentMode, this.originalItems);
 
     get items() {
-        return Object.values(this.notificationsDict);
+        return this.originalItems.value;
     }
 
-    readonly animation = new BehaviorSubject<AnimationEvent | null>(null);
+    set items(values: KbqNotificationItem[]) {
+        this.originalItems.next(values);
+    }
 
-    private notificationsDict: { [id: number]: any } = {};
-
-    constructor(readonly adapter: DateAdapter<D>) {
-        console.log('KbqNotificationCenterService: ');
+    get isEmpty() {
+        return this.originalItems.value.length === 0;
     }
 
     setSilentMode(value: boolean) {
-        console.log('setSilentMode: ', value);
         this.silentMode.next(value);
     }
 
-    push() {
-        return '';
+    setLoadingMode(value: boolean) {
+        this.loadingMode.next(value);
     }
 
-    removeNotification(item) {
-        console.log('removeNotification: ', item);
+    setErrorMode(value: boolean) {
+        this.errorMode.next(value);
     }
 
-    removeGroupOfNotifications(item) {
-        console.log('removeGroupOfNotifications: ', item);
+    push(item: KbqNotificationItem) {
+        return this.originalItems.next([...this.originalItems.value, item]);
     }
 
-    removeAllNotifications() {
-        console.log('removeAllNotifications: ');
+    remove(removedItem: KbqNotificationItem) {
+        this.originalItems.next(this.originalItems.value.filter((item) => removedItem !== item));
     }
+
+    removeGroup(group: KbqNotificationsGroup) {
+        this.originalItems.next(this.originalItems.value.filter((item) => !group.items.includes(item)));
+    }
+
+    removeAll() {
+        this.originalItems.next([]);
+    }
+
+    private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {
+        const parsedDate = this.adapter.parse(item.date, '');
+        const groupId = this.adapter.format(parsedDate, 'MMdd');
+        const groupTitle = this.formatter.absoluteLongDate(parsedDate);
+
+        if (groups[groupId]) {
+            groups[groupId].items.push(item);
+        } else {
+            groups[groupId] = {
+                title: groupTitle,
+                items: [item]
+            };
+        }
+    };
 }

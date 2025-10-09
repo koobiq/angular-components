@@ -6,6 +6,7 @@ import {
     OverlayConfig,
     ScrollStrategy
 } from '@angular/cdk/overlay';
+import { AsyncPipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -41,13 +42,13 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
-import { KbqToastStyle } from '@koobiq/components/toast';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Subscription, merge } from 'rxjs';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
 import { KbqNotificationCenterService } from './notification-center.service';
-import { KbqNotificationItem } from './notification-item';
+import { KbqNotificationItemComponent } from './notification-item';
 
 const defaultOffsetX = 8;
 
@@ -86,9 +87,11 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         KbqScrollbarModule,
         KbqButtonModule,
         KbqDividerModule,
-        KbqNotificationItem,
         KbqDropdownModule,
-        KbqTooltipTrigger
+        KbqToolTipModule,
+        AsyncPipe,
+        KbqNotificationItemComponent,
+        KbqLoaderOverlayModule
     ],
     animations: [KbqNotificationCenterAnimations.state]
 })
@@ -102,72 +105,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     trigger: KbqNotificationCenterTrigger;
     /** @docs-private */
     isTrapFocus: boolean = false;
-
-    items = [
-        {
-            title: 'title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1',
-            caption: 'caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1',
-            icon: true,
-            style: KbqToastStyle.Success,
-            date: '2025-10-08T11:43:32.944Z'
-        },
-        {
-            title: 'title_2',
-            caption: 'caption_2',
-            icon: true,
-            style: KbqToastStyle.Warning,
-            date: '2025-10-08T11:43:32.944Z'
-        },
-        {
-            title: 'title_3',
-            caption: 'caption_3',
-            icon: true,
-            style: KbqToastStyle.Contrast,
-            date: '2025-10-08T11:43:32.944Z'
-        },
-        {
-            title: 'title_4',
-            caption: 'caption_4',
-            icon: true,
-            style: KbqToastStyle.Error,
-            date: '2025-10-08T11:43:32.944Z'
-        },
-        {
-            title: 'title_4',
-            caption: 'caption_4',
-            icon: true,
-            style: KbqToastStyle.Error,
-            date: '2025-10-07T11:43:32.944Z'
-        },
-        {
-            title: 'title_4',
-            caption: 'caption_4',
-            icon: true,
-            style: KbqToastStyle.Error,
-            date: '2025-10-07T11:43:32.944Z'
-        },
-        {
-            title: 'title_4',
-            caption: 'caption_4',
-            icon: true,
-            style: KbqToastStyle.Error,
-            date: '2025-10-01T11:43:32.944Z'
-        },
-        {
-            title: 'title_4',
-            caption: 'caption_4',
-            icon: true,
-            style: KbqToastStyle.Error,
-            date: '2025-10-01T11:43:32.944Z'
-        },
-        {
-            title: 'title_4',
-            caption: 'caption_4',
-            icon: true,
-            style: KbqToastStyle.Error,
-            date: '2025-10-01T11:43:32.944Z'
-        }
-    ];
 
     @ViewChild('notificationSwitcher') switcher: KbqButton;
 
@@ -189,8 +126,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         });
 
         this.switcher.focus();
-
-        console.log('dateAdapter: ', this.dateAdapter.today());
     }
 
     /** @docs-private */

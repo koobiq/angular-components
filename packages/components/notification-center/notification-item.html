@@ -56,7 +56,7 @@
             }
 
             <div class="kbq-notification-item-time">
-                <div class="kbq-notification-item-time__value">9:01</div>
+                <div class="kbq-notification-item-time__value">{{ time }}</div>
                 <i class="kbq-notification-item-time__state" kbq-icon="kbq-circle-xs_16" [color]="'theme'"></i>
             </div>
         </div>
@@ -105,7 +105,7 @@
     class="kbq-notification-item__remove-button"
     [kbqStyle]="'transparent'"
     [color]="'contrast'"
-    (click)="service.removeNotification(this)"
+    (click)="service.remove(data)"
 >
     <i kbq-icon="kbq-trash_16"></i>
 </button>

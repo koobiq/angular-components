@@ -3,17 +3,17 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    inject,
     Inject,
     Input,
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ThemePalette } from '@koobiq/components/core';
+import { DateAdapter, ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqToastData } from './../toast/toast.type';
-import { KbqNotificationCenterService } from './notification-center.service';
+import { KbqNotificationCenterService, KbqNotificationItem } from './notification-center.service';
 
 let id = 0;
 
@@ -37,29 +37,40 @@ let id = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqNotificationItem<D> {
+export class KbqNotificationItemComponent<D> {
+    private readonly adapter = inject(DateAdapter<D>);
+
     themePalette = ThemePalette;
     id = id++;
+
+    time: string;
 
     $implicit;
 
     get style() {
         return {
-            [`kbq-notification-item_${this.data?.style}`]: true
+            [`kbq-notification-item_${this._data?.style}`]: true
         };
     }
 
-    @Input() data: KbqToastData;
+    @Input()
+    get data(): KbqNotificationItem {
+        return this._data;
+    }
+
+    set data(value: KbqNotificationItem) {
+        this._data = value;
+
+        this.time = this.adapter.format(this.adapter.parse(value.date, ''), 'hh:mm');
+    }
+
+    private _data: KbqNotificationItem;
 
     constructor(
         @Inject(KbqNotificationCenterService<D>) readonly service: KbqNotificationCenterService<D>,
         public elementRef: ElementRef<HTMLElement>
     ) {
         this.$implicit = this;
-    }
-
-    close(): void {
-        this.service.removeNotification(this);
     }
 
     isTemplateRef(value): boolean {
