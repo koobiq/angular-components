@@ -1,5 +1,4 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
@@ -20,6 +19,7 @@ import {
     signal,
     TemplateRef,
     viewChild,
+    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -53,6 +53,32 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 ]);
 
 const baseClass = 'kbq-inline-edit';
+
+/** @docs-private */
+@Directive({
+    standalone: true,
+    selector: '[kbqFocusRegionItem]',
+    exportAs: 'kbqFocusRegionItem',
+    host: {
+        '(focusin)': 'isFocused = true',
+        '(keydown)': 'onTabOut($event)'
+    }
+})
+export class KbqFocusRegionItem {
+    readonly tabOut = output<KeyboardEvent>();
+
+    protected isFocused = false;
+
+    protected onTabOut(event: KeyboardEvent) {
+        if (event.key !== 'Tab') return;
+
+        if (this.isFocused) {
+            this.tabOut.emit(event);
+        }
+
+        this.isFocused = !this.isFocused;
+    }
+}
 
 /** Directive for easy using styles of inline edit placeholder publicly. */
 @Directive({
@@ -114,10 +140,10 @@ export class KbqInlineEditMenu {
     imports: [
         CdkConnectedOverlay,
         CdkOverlayOrigin,
-        CdkTrapFocus,
         KbqButtonModule,
         KbqIcon,
-        KbqTooltipTrigger
+        KbqTooltipTrigger,
+        KbqFocusRegionItem
     ],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -176,6 +202,8 @@ export class KbqInlineEdit implements AfterContentInit {
     protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
     /** @docs-private */
     protected readonly overlayDir = viewChild(CdkConnectedOverlay);
+    /** @docs-private */
+    protected readonly regionItems = viewChildren(KbqFocusRegionItem);
 
     /** @docs-private */
     protected readonly mode = signal<'view' | 'edit'>('view');
@@ -234,6 +262,8 @@ export class KbqInlineEdit implements AfterContentInit {
     /** @docs-private */
     protected onAttach(): void {
         this.setOverlayWidth();
+        this.setOverlayKeydownListener();
+
         const formFieldRef = this.formFieldRef();
 
         formFieldRef?.control.stateChanges
@@ -313,18 +343,30 @@ export class KbqInlineEdit implements AfterContentInit {
         }
     }
 
-    /** @docs-private */
-    protected onEditModeContainerKeydown(event: KeyboardEvent) {
-        if ((this.showActions() && !hasModifierKey(event, 'shiftKey')) || event.key !== 'Tab') return;
+    /**
+     * Sets up Tab key listeners on region items.
+     * Single item: Tab moves to next edit.
+     * Multiple items: Shift+Tab on first or Tab on last moves to next edit.
+     */
+    private setOverlayKeydownListener(): void {
+        const regionItems = this.regionItems();
 
-        this.saveAndFocusNextInlineEdit(event);
-    }
+        if (regionItems.length === 0) return;
 
-    /** @docs-private */
-    protected onTerminalButtonKeydown(event: KeyboardEvent): void {
-        if (event.key !== 'Tab' && hasModifierKey(event, 'shiftKey')) return;
+        const firstItem = regionItems.at(0);
+        const lastItem = regionItems.at(regionItems.length - 1);
 
-        this.saveAndFocusNextInlineEdit(event);
+        if (regionItems.length === 1) {
+            firstItem?.tabOut.subscribe((event) => this.saveAndFocusNextInlineEdit(event));
+        } else {
+            firstItem?.tabOut.subscribe(
+                (event) => hasModifierKey(event, 'shiftKey') && this.saveAndFocusNextInlineEdit(event)
+            );
+
+            lastItem?.tabOut.subscribe(
+                (event) => !hasModifierKey(event, 'shiftKey') && this.saveAndFocusNextInlineEdit(event)
+            );
+        }
     }
 
     private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {

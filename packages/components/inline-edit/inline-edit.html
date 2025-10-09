@@ -36,12 +36,12 @@
             <div class="kbq-inline-edit__panel">
                 <div
                     class="kbq-inline-edit__control-container"
+                    kbqFocusRegionItem
                     [kbqTooltipColor]="colors.Error"
                     [kbqTooltip]="validationTooltip() ?? ''"
                     [kbqTooltipArrow]="false"
                     [kbqTrigger]="'manual'"
                     [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
-                    (keydown)="onEditModeContainerKeydown($event)"
                 >
                     <ng-content select="[kbqInlineEditEditMode]" />
                 </div>
@@ -51,12 +51,7 @@
                         <button kbq-button [color]="'contrast'" (click)="save()">
                             <i kbq-icon="kbq-check_16"></i>
                         </button>
-                        <button
-                            kbq-button
-                            [color]="'contrast-fade'"
-                            (click)="cancel()"
-                            (keydown)="onTerminalButtonKeydown($event)"
-                        >
+                        <button kbqFocusRegionItem kbq-button [color]="'contrast-fade'" (click)="cancel()">
                             <i kbq-icon="kbq-xmark_16"></i>
                         </button>
                     </div>
