@@ -1,0 +1,143 @@
+@if (trigger.withSearch) {
+    <div class="kbq-app-switcher__search-container" (mouseenter)="otherSites?.close()">
+        <kbq-form-field noBorders>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <input
+                autocomplete="off"
+                kbqInput
+                placeholder="{{ localeData.searchPlaceholder }}"
+                [formControl]="searchControl"
+                (keydown.escape)="escapeHandler()"
+            />
+            <kbq-cleaner />
+        </kbq-form-field>
+    </div>
+
+    <kbq-divider />
+}
+
+<div kbq-scrollbar>
+    @if (!searchControl.getRawValue()) {
+        <div class="kbq-app-switcher__app-container" (mouseenter)="otherSites?.close()">
+            @if (trigger.sitesMode) {
+                <div class="kbq-app-switcher-group-header">
+                    <div class="kbq-app-switcher-group-header__text">{{ trigger.selectedSite?.name }}</div>
+                    @if (trigger.selectedSite?.status) {
+                        <kbq-badge class="kbq-app-switcher-group-header__badge" [compact]="true">
+                            {{ trigger.selectedSite.status }}
+                        </kbq-badge>
+                    }
+                </div>
+            }
+
+            <kbq-dropdown [class]="'kbq-app-switcher-sites'">
+                <div kbqDropdownStaticContent class="kbq-app-switcher-site">
+                    @for (app of trigger.currentApps; track app) {
+                        @if (!app.aliases) {
+                            <a
+                                kbq-app-switcher-list-item
+                                href="{{ app.link }}"
+                                [class.kbq-selected]="app.id === trigger.selectedApp?.id"
+                                [app]="app"
+                                [toggle]="!!app.aliases"
+                            ></a>
+                        } @else {
+                            <div
+                                #appSwitcherApp="kbqAppSwitcherApp"
+                                kbq-app-switcher-list-item
+                                [app]="app"
+                                [toggle]="!!app.aliases"
+                            ></div>
+
+                            @if (!appSwitcherApp.collapsed) {
+                                @for (alias of app.aliases; track alias) {
+                                    <a
+                                        class="kbq-app-switcher-site_nested"
+                                        kbq-app-switcher-list-item
+                                        href="{{ alias.link }}"
+                                        [class.kbq-selected]="alias.id === trigger.selectedApp?.id"
+                                        [app]="alias"
+                                    ></a>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </kbq-dropdown>
+        </div>
+
+        @if (trigger.sitesMode) {
+            <kbq-divider />
+
+            <div class="kbq-app-switcher__sites-container">
+                <div class="kbq-app-switcher-group-header">
+                    <div class="kbq-app-switcher-group-header__text">{{ localeData.sitesHeader }}</div>
+                </div>
+
+                <kbq-dropdown #otherSites="kbqDropdown">
+                    <div kbqDropdownStaticContent class="kbq-app-switcher-sites">
+                        @for (site of trigger.sites; track site) {
+                            @if (site.id !== trigger.selectedSite?.id) {
+                                <div
+                                    [kbq-app-switcher-dropdown-site]="site"
+                                    [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
+                                    [offsetX]="0"
+                                    (mouseenter)="activeSite = site"
+                                ></div>
+                            }
+                        }
+                    </div>
+                </kbq-dropdown>
+            </div>
+
+            <kbq-dropdown #dropdownWithSelectedSite="kbqDropdown" [class]="'kbq-app-switcher-sites'">
+                @for (app of activeSite?.apps; track app) {
+                    @if (app.aliases) {
+                        <div
+                            #dropdownWithGroupedAppsTrigger="kbqDropdownTrigger"
+                            [kbq-app-switcher-dropdown-app]="app"
+                            [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
+                            [offsetX]="0"
+                            [class.kbq-pressed]="dropdownWithGroupedAppsTrigger.opened"
+                            (mouseenter)="activeApp = app"
+                        ></div>
+                    } @else {
+                        <a
+                            href="{{ app.link }}"
+                            [kbq-app-switcher-dropdown-app]="app"
+                            (click)="selectAppInSite(activeSite, app)"
+                        ></a>
+                    }
+                }
+            </kbq-dropdown>
+
+            <kbq-dropdown #dropdownWithGroupedApps="kbqDropdown" [class]="'kbq-app-switcher-sites'">
+                @for (alias of activeApp?.aliases; track alias) {
+                    <a
+                        href="{{ alias.link }}"
+                        [kbq-app-switcher-dropdown-app]="alias"
+                        (click)="selectAppInSite(activeSite, alias)"
+                    ></a>
+                }
+            </kbq-dropdown>
+        }
+    } @else {
+        <div class="kbq-app-switcher__search-result">
+            <kbq-dropdown [class]="'kbq-app-switcher-sites'">
+                <div kbqDropdownStaticContent class="kbq-app-switcher-site">
+                    @for (site of filteredSites; track site) {
+                        @if (site.apps) {
+                            <kbq-optgroup label="{{ site.name }}" />
+                        }
+
+                        @for (app of site.apps; track app) {
+                            <a kbq-app-switcher-list-item href="{{ app.link }}" [app]="app"></a>
+                        }
+                    } @empty {
+                        <div class="kbq-app-switcher__empty-search-result">{{ localeData.searchEmptyResult }}</div>
+                    }
+                </div>
+            </kbq-dropdown>
+        </div>
+    }
+</div>

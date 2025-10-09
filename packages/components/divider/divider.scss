@@ -5,6 +5,7 @@
     margin: 0;
 
     &.kbq-divider_horizontal {
+        min-height: var(--kbq-divider-size-horizontal-width);
         height: var(--kbq-divider-size-horizontal-width);
 
         &.kbq-divider_paddings {

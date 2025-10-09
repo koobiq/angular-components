@@ -6,6 +6,7 @@
     ],
     "components": [
         "actions-panel",
+        "app-switcher",
         "autocomplete",
         "button",
         "button-toggle",

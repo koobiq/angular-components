@@ -42,7 +42,7 @@ import { NEVER, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
-const defaultOffsetYWithArrow = 8;
+export const defaultOffsetYWithArrow = 8;
 
 @Component({
     selector: 'kbq-popover-component',
@@ -155,8 +155,8 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
-        '(keydown)': 'handleKeydown($event)',
-        '(touchend)': 'handleTouchend()'
+        '(keydown)': 'keydownHandler($event)',
+        '(touchend)': 'touchendHandler()'
     }
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {

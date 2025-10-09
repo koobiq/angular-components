@@ -73,6 +73,18 @@
 		<loc>https://koobiq.io/ru/components/actions-panel/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/app-switcher/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/app-switcher/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/app-switcher/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/app-switcher/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/ag-grid/overview</loc>
 	</url>
 	<url>

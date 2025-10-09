@@ -106,6 +106,11 @@ export const esLALocaleData = {
         tooltip: 'Búsqueda',
         placeholder: 'Búsqueda'
     },
+    appSwitcher: {
+        searchPlaceholder: 'Búsqueda',
+        searchEmptyResult: 'No se encontró nada',
+        sitesHeader: 'Otros sitios'
+    },
     timeRange: {
         title: {
             for: 'para',

@@ -1,0 +1,53 @@
+@use '../core/styles/common';
+@use '../core/styles/common/tokens';
+
+.kbq-app-switcher-dropdown-site {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+
+    width: 100%;
+    min-height: var(--kbq-size-3xl);
+
+    text-decoration: none;
+
+    border-radius: var(--kbq-size-xs);
+
+    @include common.user-select(none);
+    @include common.kbq-list-item-base();
+
+    padding: var(--kbq-size-xxs) var(--kbq-size-m);
+
+    & .kbq-app-switcher-dropdown-item-trigger__icon,
+    & .kbq-badge {
+        margin-top: var(--kbq-size-3xs);
+
+        align-self: flex-start;
+    }
+}
+
+@mixin _kbq-app-switcher-dropdown-site-theme() {
+    .kbq-app-switcher-dropdown-site {
+        background: var(--kbq-list-default-container-background);
+        color: var(--kbq-list-default-text-color);
+
+        &.kbq-dropdown-item_highlighted,
+        &:hover {
+            background: var(--kbq-states-background-transparent-active);
+        }
+
+        &.cdk-keyboard-focused {
+            border-color: var(--kbq-list-states-focused-focus-outline-color);
+        }
+    }
+}
+
+@mixin _kbq-app-switcher-dropdown-site-typography() {
+    .kbq-app-switcher-dropdown-site {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    }
+}
+
+@include _kbq-app-switcher-dropdown-site-theme();
+@include _kbq-app-switcher-dropdown-site-typography();

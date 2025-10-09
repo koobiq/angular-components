@@ -381,6 +381,11 @@ export const enUSLocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    appSwitcher: {
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        sitesHeader: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -586,6 +591,11 @@ export const esLALocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    appSwitcher: {
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        sitesHeader: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -780,6 +790,11 @@ export const faIRLocaleData: {
     searchExpandable: {
         tooltip: string;
         placeholder: string;
+    };
+    appSwitcher: {
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        sitesHeader: string;
     };
     timeRange: {
         title: {
@@ -1059,6 +1074,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        appSwitcher: {
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            sitesHeader: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1239,6 +1259,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         searchExpandable: {
             tooltip: string;
             placeholder: string;
+        };
+        appSwitcher: {
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            sitesHeader: string;
         };
         timeRange: {
             title: {
@@ -1426,6 +1451,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        appSwitcher: {
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            sitesHeader: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1607,6 +1637,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         searchExpandable: {
             tooltip: string;
             placeholder: string;
+        };
+        appSwitcher: {
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            sitesHeader: string;
         };
         timeRange: {
             title: {
@@ -1796,6 +1831,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        appSwitcher: {
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            sitesHeader: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -1979,6 +2019,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             tooltip: string;
             placeholder: string;
         };
+        appSwitcher: {
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            sitesHeader: string;
+        };
         timeRange: {
             title: {
                 for: string;
@@ -2161,6 +2206,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         searchExpandable: {
             tooltip: string;
             placeholder: string;
+        };
+        appSwitcher: {
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            sitesHeader: string;
         };
         timeRange: {
             title: {
@@ -3022,10 +3072,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
     // (undocumented)
-    handleKeydown(event: KeyboardEvent): void;
-    // (undocumented)
-    handleTouchend(): void;
-    // (undocumented)
     hide: (delay?: number) => void;
     protected hideWithTimeout: boolean;
     // (undocumented)
@@ -3037,6 +3083,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected instance: any | null;
     // (undocumented)
     isOpen: boolean;
+    // (undocumented)
+    keydownHandler(event: KeyboardEvent): void;
     // (undocumented)
     leaveDelay: number;
     // (undocumented)
@@ -3082,6 +3130,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     show(delay?: number): void;
     // (undocumented)
     protected strategy: FlexibleConnectedPositionStrategy;
+    // (undocumented)
+    touchendHandler(): void;
     // (undocumented)
     abstract trigger: string;
     // (undocumented)
@@ -3658,6 +3708,11 @@ export const ptBRLocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    appSwitcher: {
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        sitesHeader: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -4026,6 +4081,11 @@ export const ruRULocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    appSwitcher: {
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        sitesHeader: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -4305,6 +4365,11 @@ export const tkTMLocaleData: {
         tooltip: string;
         placeholder: string;
     };
+    appSwitcher: {
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        sitesHeader: string;
+    };
     timeRange: {
         title: {
             for: string;
@@ -4512,6 +4577,11 @@ export const zhCNLocaleData: {
     searchExpandable: {
         tooltip: string;
         placeholder: string;
+    };
+    appSwitcher: {
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        sitesHeader: string;
     };
     timeRange: {
         title: {

@@ -106,6 +106,11 @@ export const ptBRLocaleData = {
         tooltip: 'Pesquisar',
         placeholder: 'Pesquisar'
     },
+    appSwitcher: {
+        searchPlaceholder: 'Pesquisar',
+        searchEmptyResult: 'Nada encontrado',
+        sitesHeader: 'Outros sites'
+    },
     timeRange: {
         title: {
             for: 'para',

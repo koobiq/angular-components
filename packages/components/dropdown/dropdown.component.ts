@@ -9,6 +9,7 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    Directive,
     ElementRef,
     EventEmitter,
     Inject,
@@ -38,6 +39,12 @@ import {
     KbqDropdownDefaultOptions,
     KbqDropdownPanel
 } from './dropdown.types';
+
+@Directive({
+    standalone: true,
+    selector: '[kbqDropdownStaticContent]'
+})
+export class KbqDropdownStaticContent {}
 
 @Component({
     selector: 'kbq-dropdown',

@@ -1,0 +1,180 @@
+@use '../core/styles/common';
+@use '../core/styles/common/tokens';
+
+.kbq-app-switcher-list-item {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+
+    max-width: 100%;
+    min-height: 38px;
+
+    border-radius: var(--kbq-size-s);
+
+    padding: var(--kbq-size-xxs) var(--kbq-size-m) var(--kbq-size-xs) var(--kbq-size-m);
+
+    @include common.user-select(none);
+
+    text-decoration: none;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+
+    &.kbq-app-switcher-site_nested {
+        margin-left: var(--kbq-size-xxl);
+
+        border-top-left-radius: unset;
+        border-bottom-left-radius: unset;
+
+        &:after {
+            content: '';
+
+            position: absolute;
+            left: -1px;
+            top: 0;
+
+            height: 100%;
+
+            border-left-width: 1px;
+            border-left-style: solid;
+        }
+
+        &:has(+ :not(.kbq-app-switcher-site_nested)),
+        &:last-child {
+            border-bottom-left-radius: var(--kbq-size-s);
+
+            &:after {
+                top: 0;
+
+                width: var(--kbq-size-m);
+                height: var(--kbq-size-xxl);
+
+                border-bottom-left-radius: var(--kbq-size-s);
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
+            }
+        }
+    }
+}
+
+.kbq-app-switcher-list-item__toggle {
+    position: absolute;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    top: var(--kbq-size-m);
+    left: var(--kbq-size-m);
+
+    width: var(--kbq-size-xxl);
+    height: var(--kbq-size-xxl);
+
+    border-radius: var(--kbq-size-xxs);
+
+    & .kbq-icon {
+        transform: rotate(0deg);
+    }
+
+    &.kbq-expanded {
+        & .kbq-icon {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.kbq-app-switcher-list-item__icon {
+    padding-top: var(--kbq-size-s);
+    padding-right: var(--kbq-size-m);
+}
+
+.kbq-app-switcher-list-item__container {
+    max-width: 100%;
+    min-width: 0;
+
+    align-self: center;
+
+    & .kbq-app-switcher-list-item__name {
+        @include common.kbq-truncate-line();
+    }
+
+    & .kbq-app-switcher-list-item__caption {
+        @include common.kbq-truncate-line();
+    }
+}
+
+@mixin _kbq-app-switcher-list-item-theme() {
+    .kbq-app-switcher-site_nested:after {
+        border-left-color: var(--kbq-line-contrast-less);
+        border-bottom-color: var(--kbq-line-contrast-less);
+    }
+
+    .kbq-app-switcher-list-item__caption {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    .kbq-app-switcher-list-item {
+        &:hover,
+        &.kbq-hover,
+        &.kbq-focused {
+            &:has(.kbq-app-switcher-list-item__toggle) .kbq-app-switcher-list-item__icon {
+                visibility: hidden;
+            }
+
+            & .kbq-app-switcher-list-item__toggle {
+                display: flex;
+            }
+        }
+
+        &:hover,
+        &.kbq-hover {
+            background: var(--kbq-states-background-transparent-hover);
+
+            & .kbq-app-switcher-list-item__toggle {
+                background: var(--kbq-states-background-transparent-hover);
+            }
+        }
+
+        &:active,
+        &.kbq-active {
+            background: var(--kbq-states-background-transparent-active);
+        }
+
+        &.kbq-selected {
+            background: var(--kbq-background-theme-less);
+
+            &:hover,
+            &.kbq-hover {
+                background: var(--kbq-states-background-theme-less-hover);
+            }
+
+            &:active,
+            &.kbq-active {
+                background: var(--kbq-states-background-theme-less-active);
+            }
+        }
+
+        background: var(--kbq-list-default-container-background);
+        color: var(--kbq-list-default-text-color);
+
+        &.cdk-keyboard-focused {
+            outline: none;
+            border-color: var(--kbq-list-states-focused-focus-outline-color);
+        }
+    }
+}
+
+@mixin _kbq-app-switcher-list-item-typography() {
+    .kbq-app-switcher-list-item__name {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+    }
+
+    .kbq-app-switcher-list-item__caption {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+    }
+}
+
+@include _kbq-app-switcher-list-item-theme();
+@include _kbq-app-switcher-list-item-typography();
