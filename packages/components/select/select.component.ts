@@ -158,6 +158,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
 
+        // @TODO: turn event listener only for specific conditions (#DS-4253)
         '(window:resize)': 'calculateHiddenItems()'
     },
     animations: [
@@ -1013,7 +1014,15 @@ export class KbqSelect
     }
 
     calculateHiddenItems(): void {
-        if (!this.isBrowser || this.customTrigger || this.empty || !this.multiple || this.customMatcher) return;
+        if (
+            !this.isBrowser ||
+            this.customTrigger ||
+            this.empty ||
+            !this.multiple ||
+            this.customMatcher ||
+            this.multiline
+        )
+            return;
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
