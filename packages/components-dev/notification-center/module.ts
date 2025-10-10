@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
-import {
-    KbqLuxonDateModule,
-} from '@koobiq/angular-luxon-adapter/adapter';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -219,5 +217,15 @@ export class DevApp {
 
     constructor() {
         this.notificationService.items = this.items;
+    }
+
+    pushNotification() {
+        this.notificationService.push({
+            title: 'title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1',
+            caption: 'caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1',
+            icon: true,
+            style: KbqToastStyle.Success,
+            date: new Date().toISOString()
+        });
     }
 }

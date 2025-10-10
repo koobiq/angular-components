@@ -55,7 +55,7 @@
                 <p>{{ data.title }}</p>
             }
 
-            <div class="kbq-notification-item-time">
+            <div class="kbq-notification-item-time" [class.kbq-notification-item-time_read]="data.read">
                 <div class="kbq-notification-item-time__value">{{ time }}</div>
                 <i class="kbq-notification-item-time__state" kbq-icon="kbq-circle-xs_16" [color]="'theme'"></i>
             </div>

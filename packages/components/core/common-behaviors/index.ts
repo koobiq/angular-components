@@ -9,6 +9,7 @@ export { CanUpdateErrorState, CanUpdateErrorStateCtor, KbqErrorStateTracker, mix
 export * from './focus-monitor';
 export * from './hovered';
 export * from './orientation';
+export * from './read-state';
 export { KbqDefaultSizes } from './size';
 export { HasTabIndex, HasTabIndexCtor, mixinTabIndex } from './tabindex';
 

@@ -18,6 +18,7 @@ export enum KbqToastPosition {
 }
 
 export class KbqToastData {
+    id?: string;
     title?: string | TemplateRef<any>;
     style?: KbqToastStyle | string;
 

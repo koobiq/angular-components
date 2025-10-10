@@ -1,18 +1,11 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    inject,
-    Inject,
-    Input,
-    TemplateRef,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { DateAdapter, ThemePalette } from '@koobiq/components/core';
+import { DateAdapter, KbqReadStateDirective, ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { filter } from 'rxjs/operators';
 import { KbqNotificationCenterService, KbqNotificationItem } from './notification-center.service';
 
 let id = 0;
@@ -34,11 +27,14 @@ let id = 0;
         '[class]': 'style',
         '[class.kbq-notification-item_dismissible]': 'true'
     },
+    hostDirectives: [KbqReadStateDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqNotificationItemComponent<D> {
     private readonly adapter = inject(DateAdapter<D>);
+    protected readonly service = inject(KbqNotificationCenterService<D>);
+    protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
 
     themePalette = ThemePalette;
     id = id++;
@@ -61,16 +57,20 @@ export class KbqNotificationItemComponent<D> {
     set data(value: KbqNotificationItem) {
         this._data = value;
 
-        this.time = this.adapter.format(this.adapter.parse(value.date, ''), 'hh:mm');
+        this.time = this.adapter.format(this.adapter.parse(value.date, ''), 'HH:mm');
     }
 
     private _data: KbqNotificationItem;
 
-    constructor(
-        @Inject(KbqNotificationCenterService<D>) readonly service: KbqNotificationCenterService<D>,
-        public elementRef: ElementRef<HTMLElement>
-    ) {
+    constructor() {
         this.$implicit = this;
+
+        this.readStateDirective.read
+            .pipe(
+                filter((value) => value),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => (this.data.read = true));
     }
 
     isTemplateRef(value): boolean {

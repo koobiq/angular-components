@@ -1,10 +1,12 @@
 import { EventEmitter, inject, Injectable, TemplateRef } from '@angular/core';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
-import { KbqToastStyle } from '@koobiq/components/toast';
+import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BehaviorSubject, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface KbqNotificationItem {
+export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
+    id?: string;
+
     title?: string | TemplateRef<unknown>;
     style?: string | KbqToastStyle;
 
@@ -16,6 +18,7 @@ export interface KbqNotificationItem {
     actions?: TemplateRef<unknown>;
 
     date: string;
+    read?: boolean;
 }
 
 type KbqNotificationsGroup = { title: string; items: KbqNotificationItem[] };
@@ -26,6 +29,7 @@ type KbqNotificationsGroups = Record<string, KbqNotificationsGroup>;
 export class KbqNotificationCenterService<D> {
     private readonly adapter = inject(DateAdapter<D>);
     private readonly formatter = inject(DateFormatter<D>);
+    private readonly toastService = inject(KbqToastService);
 
     readonly silentMode = new BehaviorSubject(false);
     readonly loadingMode = new BehaviorSubject(false);
@@ -52,11 +56,21 @@ export class KbqNotificationCenterService<D> {
     }
 
     set items(values: KbqNotificationItem[]) {
-        this.originalItems.next(values);
+        this.originalItems.next(this.setReadState(this.setIds(values)));
     }
 
     get isEmpty() {
         return this.originalItems.value.length === 0;
+    }
+
+    constructor() {
+        this.toastService.read.subscribe((toastData) => {
+            const item = this.originalItems.value.find((item) => item.id === toastData?.id);
+
+            if (item) {
+                item.read = true;
+            }
+        });
     }
 
     setSilentMode(value: boolean) {
@@ -72,6 +86,12 @@ export class KbqNotificationCenterService<D> {
     }
 
     push(item: KbqNotificationItem) {
+        this.setReadState(this.setIds([item]));
+
+        if (!this.silentMode.value) {
+            this.toastService.show(item);
+        }
+
         return this.originalItems.next([...this.originalItems.value, item]);
     }
 
@@ -93,7 +113,7 @@ export class KbqNotificationCenterService<D> {
         const groupTitle = this.formatter.absoluteLongDate(parsedDate);
 
         if (groups[groupId]) {
-            groups[groupId].items.push(item);
+            groups[groupId].items.unshift(item);
         } else {
             groups[groupId] = {
                 title: groupTitle,
@@ -101,4 +121,16 @@ export class KbqNotificationCenterService<D> {
             };
         }
     };
+
+    private setIds(items: KbqNotificationItem[]) {
+        items.forEach((item) => (item.id = item.id ?? new Date().getTime().toString()));
+
+        return items;
+    }
+
+    private setReadState(items: KbqNotificationItem[]) {
+        items.forEach((item) => (item.read = item.read ?? false));
+
+        return items;
+    }
 }

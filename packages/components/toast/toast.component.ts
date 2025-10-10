@@ -10,10 +10,11 @@ import {
     OnDestroy,
     TemplateRef,
     ViewEncapsulation,
-    forwardRef
+    forwardRef,
+    inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqReadStateDirective, ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BehaviorSubject, merge } from 'rxjs';
@@ -59,10 +60,13 @@ let id = 0;
         '(keydown.esc)': 'close()'
     },
     animations: [kbqToastAnimations.toastState],
+    hostDirectives: [KbqReadStateDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqToastComponent implements OnDestroy {
+    protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
+
     themePalette = ThemePalette;
 
     animationState = 'void';
@@ -118,6 +122,13 @@ export class KbqToastComponent implements OnDestroy {
 
                 this.ttl = this.ttl < this.delay ? this.delay : this.ttl;
             });
+
+        this.readStateDirective.read
+            .pipe(
+                filter((value) => value),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => this.service.read.next(this.data));
     }
 
     ngOnDestroy() {
@@ -128,6 +139,7 @@ export class KbqToastComponent implements OnDestroy {
     }
 
     close(): void {
+        this.service.read.next(this.data);
         this.service.hide(this.id);
     }
 
