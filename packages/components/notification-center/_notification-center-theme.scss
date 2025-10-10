@@ -1,10 +1,10 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-notification-center-theme() {
-    .kbq-notification-center {
+    .kbq-notification-center,
+    .kbq-notification-center-sub-header {
         background: var(--kbq-background-card);
     }
-
 }
 
 @mixin kbq-notification-center-typography() {

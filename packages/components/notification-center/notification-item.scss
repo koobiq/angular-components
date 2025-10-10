@@ -84,6 +84,10 @@
     & .kbq-notification-item-time__value {
         margin-right: var(--kbq-size-3xs);
     }
+
+    &.kbq-notification-item-time_read .kbq-notification-item-time__state {
+        display: none;
+    }
 }
 
 .kbq-notification-item__text {
@@ -124,7 +128,7 @@
             color: var(--kbq-foreground-contrast);
         }
 
-        .kbq-notification-item-time__value,
+        &:has(&:not(.kbq-notification-item-time_read)) .kbq-notification-item-time__value,
         .kbq-notification-item__text {
             color: var(--kbq-foreground-contrast-secondary);
         }

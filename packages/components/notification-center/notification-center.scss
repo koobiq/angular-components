@@ -6,12 +6,10 @@
     display: flex;
     flex-direction: column;
 
-    margin-top: var(--kbq-size-xxs);
-    margin-bottom: var(--kbq-size-xxs);
-
     width: 400px;
+    height: 100vh;
 
-    border-radius: var(--kbq-size-xs);
+    //border-radius: var(--kbq-size-xs);
 
     box-shadow: var(--kbq-shadow-popup);
 
@@ -50,14 +48,14 @@
 }
 
 .kbq-notification-center-sub-header {
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 
     display: flex;
     flex-direction: row;
 
     padding: var(--kbq-size-s) var(--kbq-size-xxl);
-
-    & .kbq-notification-center-sub-header__date {}
 
     & .kbq-notification-center-sub-header__button {
         position: absolute;
