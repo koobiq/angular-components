@@ -722,7 +722,7 @@ export class KbqTreeSelect
 
         this.tree.treeControl.expansionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.setOverlayPosition());
+            .subscribe(() => this.overlayDir.overlayRef && this.setOverlayPosition());
     }
 
     ngOnDestroy() {
