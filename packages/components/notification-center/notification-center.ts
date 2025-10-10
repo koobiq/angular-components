@@ -11,6 +11,7 @@ import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     Directive,
     EventEmitter,
@@ -31,13 +32,15 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
+    KBQ_LOCALE_SERVICE,
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -51,6 +54,12 @@ import { KbqNotificationCenterService } from './notification-center.service';
 import { KbqNotificationItemComponent } from './notification-item';
 
 const defaultOffsetX = 8;
+
+/**default configuration of notification-center */
+export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.notificationCenter;
+
+/** Injection Token for providing configuration of notification-center */
+export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = new InjectionToken('KbqNotificationCenterConfiguration');
 
 /** @docs-private */
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -77,7 +86,8 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     styleUrls: ['./notification-center.scss'],
     preserveWhitespaces: false,
     host: {
-        class: 'kbq-notification-center'
+        class: 'kbq-notification-center',
+        '(keydown.escape)': 'escapeHandler()'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,8 +106,24 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     animations: [KbqNotificationCenterAnimations.state]
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit {
-    dateAdapter = inject(DateAdapter);
-    service = inject(KbqNotificationCenterService);
+    /** @docs-private */
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    /** @docs-private */
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    /** @docs-private */
+    protected readonly dateAdapter = inject(DateAdapter);
+    /** @docs-private */
+    protected readonly service = inject(KbqNotificationCenterService);
+
+    readonly externalConfiguration = inject(KBQ_NOTIFICATION_CENTER_CONFIGURATION, { optional: true });
+
+    configuration;
+
+    /** localized data
+     * @docs-private */
+    get localeData() {
+        return this.configuration;
+    }
 
     /** @docs-private */
     prefix = 'kbq-notification-center';
@@ -107,6 +133,16 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     isTrapFocus: boolean = false;
 
     @ViewChild('notificationSwitcher') switcher: KbqButton;
+
+    constructor() {
+        super();
+
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.initDefaultParams();
+        }
+    }
 
     ngAfterViewInit() {
         this.visibleChange.subscribe((state) => {
@@ -141,6 +177,16 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     escapeHandler() {
         this.hide(0);
+    }
+
+    private updateLocaleParams = () => {
+        this.configuration = this.externalConfiguration || this.localeService?.getParams('notificationCenter');
+
+        this.changeDetectorRef.markForCheck();
+    };
+
+    private initDefaultParams() {
+        this.configuration = KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION;
     }
 }
 

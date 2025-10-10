@@ -211,5 +211,14 @@ export const ruRULocaleData = {
                 MONTHS_FRACTION: `{months} месяцев`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig
+    } satisfies KbqTimeRangeLocaleConfig,
+    notificationCenter: {
+        notifications: 'Уведомления',
+        remove: 'Удалить',
+        doNotDisturb: 'Не беспокоить',
+        showPopUpNotifications: 'Show pop-up notifications',
+        noNotifications: 'Нет уведомлений',
+        failedToLoadNotifications: 'Не удалось загрузить уведомления',
+        repeat: 'Повторить'
+    }
 };

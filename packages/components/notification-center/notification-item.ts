@@ -5,7 +5,9 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqReadStateDirective, ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
+import { KbqNotificationCenterComponent } from './notification-center';
 import { KbqNotificationCenterService, KbqNotificationItem } from './notification-center.service';
 
 let id = 0;
@@ -17,15 +19,15 @@ let id = 0;
         KbqIconModule,
         NgClass,
         KbqTitleModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqTooltipTrigger
     ],
     selector: 'kbq-notification-item',
     templateUrl: './notification-item.html',
     styleUrls: ['./notification-item.scss'],
     host: {
         class: 'kbq-notification-item',
-        '[class]': 'style',
-        '[class.kbq-notification-item_dismissible]': 'true'
+        '[class]': 'style'
     },
     hostDirectives: [KbqReadStateDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +36,8 @@ let id = 0;
 export class KbqNotificationItemComponent<D> {
     private readonly adapter = inject(DateAdapter<D>);
     protected readonly service = inject(KbqNotificationCenterService<D>);
-    protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
+    protected readonly readStateDirective = inject<KbqReadStateDirective>(KbqReadStateDirective, { host: true });
+    protected readonly center = inject(KbqNotificationCenterComponent, { host: true });
 
     themePalette = ThemePalette;
     id = id++;
@@ -67,7 +70,7 @@ export class KbqNotificationItemComponent<D> {
 
         this.readStateDirective.read
             .pipe(
-                filter((value) => value),
+                filter((value: boolean) => value),
                 takeUntilDestroyed()
             )
             .subscribe(() => (this.data.read = true));
