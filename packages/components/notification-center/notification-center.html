@@ -1,13 +1,13 @@
 <div class="kbq-notification-center-header">
     <div class="kbq-notification-center-title">
-        <div class="kbq-notification-center-title__text">Уведомления</div>
+        <div class="kbq-notification-center-title__text">{{ localeData.notifications }}</div>
         <button
             #notificationSwitcher
             #dropdownTrigger="kbqDropdownTrigger"
             kbq-button
             class="kbq-notification-center-title__button"
             [kbqDropdownTriggerFor]="notificationSwitcherDropdown"
-            [kbqTooltip]="service.silentMode.value ? 'Не беспокоить' : 'Показывать всплывающие уведомления'"
+            [kbqTooltip]="service.silentMode.value ? localeData.doNotDisturb : localeData.showPopUpNotifications"
             [kbqTooltipArrow]="false"
             [kbqTooltipOffset]="4"
             [kbqTooltipDisabled]="dropdownTrigger.opened"
@@ -56,6 +56,7 @@
                         class="kbq-notification-center-sub-header__button"
                         [kbqStyle]="'transparent'"
                         [color]="'contrast'"
+                        [kbqTooltip]="localeData.remove"
                         (click)="service.removeGroup(group)"
                     >
                         <i kbq-icon="kbq-trash_16"></i>
@@ -68,7 +69,7 @@
             } @empty {
                 <div class="kbq-notification-center-empty-container">
                     <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
-                    Нет уведомлений
+                    {{ localeData.noNotifications }}
                 </div>
             }
         } @else {
@@ -77,9 +78,9 @@
     } @else {
         <div class="kbq-notification-center-error-container">
             <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
-            Не удалось загрузить уведомления
+            {{ localeData.failedToLoadNotifications }}
             <button kbq-button [kbqStyle]="'transparent'" [color]="'theme'" (click)="service.onReload.emit()">
-                Повторить
+                {{ localeData.repeat }}
             </button>
         </div>
     }
@@ -88,10 +89,10 @@
 <kbq-dropdown #notificationSwitcherDropdown="kbqDropdown">
     <button kbq-dropdown-item (click)="service.setSilentMode(false)">
         <i kbq-icon="{{ !service.silentMode.value ? 'kbq-circle-xs_16' : '' }}" [style.min-width.px]="16"></i>
-        Показывать всплывающие уведомления
+        {{ localeData.showPopUpNotifications }}
     </button>
     <button kbq-dropdown-item (click)="service.setSilentMode(true)">
         <i kbq-icon="{{ service.silentMode.value ? 'kbq-circle-xs_16' : '' }}" [style.min-width.px]="16"></i>
-        Не беспокоить
+        {{ localeData.doNotDisturb }}
     </button>
 </kbq-dropdown>

@@ -105,6 +105,8 @@
     class="kbq-notification-item__remove-button"
     [kbqStyle]="'transparent'"
     [color]="'contrast'"
+    [kbqTooltip]="center.localeData.remove"
+    [kbqTooltipColor]="'contrast-fade'"
     (click)="service.remove(data)"
 >
     <i kbq-icon="kbq-trash_16"></i>
