@@ -166,5 +166,14 @@ export const faIRLocaleData = {
             }`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig
+    } satisfies KbqTimeRangeLocaleConfig,
+    notificationCenter: {
+        notifications: 'اعلان‌ها',
+        remove: 'حذف',
+        doNotDisturb: 'مزاحم نشوید',
+        showPopUpNotifications: 'نمایش اعلان‌های پاپ‌آپ',
+        noNotifications: 'بدون اعلان',
+        failedToLoadNotifications: 'بارگیری اعلان‌ها ناموفق بود',
+        repeat: 'تکرار'
+    }
 };

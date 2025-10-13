@@ -197,5 +197,14 @@ export const tkTMLocaleData = {
                 MONTHS_FRACTION: `{months} aý`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig
+    } satisfies KbqTimeRangeLocaleConfig,
+    notificationCenter: {
+        notifications: 'Duýduryşlar',
+        remove: 'Aýyr',
+        doNotDisturb: 'Alada etme',
+        showPopUpNotifications: 'Açylýan bildirişleri görkeziň',
+        noNotifications: 'Duýduryş ýok',
+        failedToLoadNotifications: 'Duýduryşlary ýükläp bilmedi',
+        repeat: 'Gaýtalama'
+    }
 };

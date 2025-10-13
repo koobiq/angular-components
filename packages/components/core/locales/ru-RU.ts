@@ -216,7 +216,7 @@ export const ruRULocaleData = {
         notifications: 'Уведомления',
         remove: 'Удалить',
         doNotDisturb: 'Не беспокоить',
-        showPopUpNotifications: 'Show pop-up notifications',
+        showPopUpNotifications: 'Показывать всплывающие уведомления',
         noNotifications: 'Нет уведомлений',
         failedToLoadNotifications: 'Не удалось загрузить уведомления',
         repeat: 'Повторить'
