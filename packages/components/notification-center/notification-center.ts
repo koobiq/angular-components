@@ -157,10 +157,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             }
         });
 
-        this.service.changes.subscribe(() => {
-            console.log('this.service.changes: ');
-            this.changeDetectorRef.markForCheck();
-        });
+        this.service.changes.subscribe(() => this.changeDetectorRef.markForCheck());
 
         this.switcher.focus();
     }
@@ -193,8 +190,8 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
 @Directive({
     standalone: true,
-    selector: '[kbqNotificationCenter]',
-    exportAs: 'kbqNotificationCenter',
+    selector: '[kbqNotificationCenterTrigger]',
+    exportAs: 'kbqNotificationCenterTrigger',
     host: {
         '[class.kbq-notification-center_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen'
@@ -227,6 +224,7 @@ export class KbqNotificationCenterTrigger
     /** @docs-private */
     private closeOnScroll: null;
 
+    /** Number of unread notifications */
     get unreadItems() {
         return this.service.unreadItems;
     }

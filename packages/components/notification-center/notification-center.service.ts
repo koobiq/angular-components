@@ -35,17 +35,22 @@ export class KbqNotificationCenterService<D> {
     /** @docs-private */
     private readonly toastService = inject(KbqToastService);
 
+    /** @docs-private */
     readonly silentMode = new BehaviorSubject(false);
+    /** @docs-private */
     readonly loadingMode = new BehaviorSubject(false);
+    /** @docs-private */
     readonly errorMode = new BehaviorSubject(false);
-
+    /** @docs-private */
     readonly onRead = new BehaviorSubject<KbqNotificationItem | null>(null);
 
+    /** Triggers an event when the user presses the reload button. */
     readonly onReload = new EventEmitter<void>();
 
     private originalItems = new BehaviorSubject([] as KbqNotificationItem[]);
 
-    readonly itemsForView = this.originalItems.pipe(
+    /** @docs-private */
+    readonly groupedItems = this.originalItems.pipe(
         map((items) => {
             const result: KbqNotificationsGroups = {};
 
@@ -55,8 +60,10 @@ export class KbqNotificationCenterService<D> {
         })
     );
 
+    /** Emits an event whenever the changes. */
     readonly changes = merge(this.silentMode, this.loadingMode, this.errorMode, this.originalItems, this.onRead);
 
+    /** Notification items */
     get items() {
         return this.originalItems.value;
     }
@@ -65,6 +72,7 @@ export class KbqNotificationCenterService<D> {
         this.originalItems.next(this.setReadState(this.setIds(values)));
     }
 
+    /** Number of unread notifications */
     get unreadItems(): Observable<number> {
         return this.originalItems.pipe(map((items) => items.filter((item) => item.read === false).length)).pipe(
             combineLatestWith(this.onRead),
@@ -72,6 +80,7 @@ export class KbqNotificationCenterService<D> {
         );
     }
 
+    /** true if there are no notifications. */
     get isEmpty() {
         return this.originalItems.value.length === 0;
     }
@@ -88,18 +97,22 @@ export class KbqNotificationCenterService<D> {
         });
     }
 
+    /** Set silent mode */
     setSilentMode(value: boolean) {
         this.silentMode.next(value);
     }
 
+    /** Set loading mode */
     setLoadingMode(value: boolean) {
         this.loadingMode.next(value);
     }
 
+    /** Set error mode */
     setErrorMode(value: boolean) {
         this.errorMode.next(value);
     }
 
+    /** Push new notification item in center */
     push(item: KbqNotificationItem) {
         this.setReadState(this.setIds([item]));
 
@@ -110,14 +123,17 @@ export class KbqNotificationCenterService<D> {
         return this.originalItems.next([...this.originalItems.value, item]);
     }
 
+    /** Remove notification item */
     remove(removedItem: KbqNotificationItem) {
         this.originalItems.next(this.originalItems.value.filter((item) => removedItem !== item));
     }
 
+    /** Remove group of notification items */
     removeGroup(group: KbqNotificationsGroup) {
         this.originalItems.next(this.originalItems.value.filter((item) => !group.items.includes(item)));
     }
 
+    /** Remove all notification items */
     removeAll() {
         this.originalItems.next([]);
     }
