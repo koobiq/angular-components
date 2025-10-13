@@ -24,6 +24,20 @@ import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
+export class KbqFocusRegionItem {
+    // (undocumented)
+    protected isFocused: boolean;
+    // (undocumented)
+    protected onTabOut(event: KeyboardEvent): void;
+    // (undocumented)
+    readonly tabOut: OutputEmitterRef<KeyboardEvent>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusRegionItem, "[kbqFocusRegionItem]", ["kbqFocusRegionItem"], {}, { "tabOut": "tabOut"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusRegionItem, never>;
+}
+
+// @public
 export class KbqInlineEdit implements AfterContentInit {
     constructor();
     protected cancel(): void;
@@ -49,6 +63,7 @@ export class KbqInlineEdit implements AfterContentInit {
     protected readonly overlayOrigin: Signal<CdkOverlayOrigin | undefined>;
     protected readonly overlayWidth: WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
+    protected readonly regionItems: Signal<readonly KbqFocusRegionItem[]>;
     protected save($event?: Event): void;
     protected readonly saved: OutputEmitterRef<void>;
     protected readonly scrollStrategy: WritableSignal<ScrollStrategy>;

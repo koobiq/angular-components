@@ -22,20 +22,20 @@
         <ng-template
             cdkConnectedOverlay
             cdkConnectedOverlayLockPosition
-            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
             [cdkConnectedOverlayOpen]="isEditMode()"
             [cdkConnectedOverlayOrigin]="overlayOrigin"
             [cdkConnectedOverlayWidth]="overlayWidth()"
             [cdkConnectedOverlayDisableClose]="true"
             [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
-            [cdkConnectedOverlayHasBackdrop]="true"
+            [cdkConnectedOverlayHasBackdrop]="false"
             (attach)="onAttach()"
             (overlayOutsideClick)="save($event)"
             (overlayKeydown)="onOverlayKeydown($event)"
         >
-            <div class="kbq-inline-edit__panel" cdkTrapFocusAutoCapture cdkTrapFocus>
+            <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
                 <div
                     class="kbq-inline-edit__control-container"
+                    kbqFocusRegionItem
                     [kbqTooltipColor]="colors.Error"
                     [kbqTooltip]="validationTooltip() ?? ''"
                     [kbqTooltipArrow]="false"
@@ -47,10 +47,16 @@
 
                 @if (showActions()) {
                     <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
-                        <button kbq-button [color]="'contrast'" (click)="save()">
+                        <button kbq-button [color]="'contrast'" (click)="save($event)">
                             <i kbq-icon="kbq-check_16"></i>
                         </button>
-                        <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
+                        <button
+                            kbqFocusRegionItem
+                            kbq-button
+                            [color]="'contrast-fade'"
+                            (click)="cancel()"
+                            (keydown.enter)="cancel()"
+                        >
                             <i kbq-icon="kbq-xmark_16"></i>
                         </button>
                     </div>
