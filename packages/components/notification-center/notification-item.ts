@@ -73,7 +73,11 @@ export class KbqNotificationItemComponent<D> {
                 filter((value: boolean) => value),
                 takeUntilDestroyed()
             )
-            .subscribe(() => (this.data.read = true));
+            .subscribe(() => {
+                this.data.read = true;
+
+                this.service.onRead.next(this.data);
+            });
     }
 
     isTemplateRef(value): boolean {

@@ -87,6 +87,7 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     preserveWhitespaces: false,
     host: {
         class: 'kbq-notification-center',
+        '[class.kbq-notification-center_popover]': 'popoverMode',
         '(keydown.escape)': 'escapeHandler()'
     },
     encapsulation: ViewEncapsulation.None,
@@ -205,6 +206,8 @@ export class KbqNotificationCenterTrigger
 {
     /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
+    /** @docs-private */
+    protected readonly service = inject(KbqNotificationCenterService);
 
     // not used
     /** @docs-private */
@@ -224,14 +227,32 @@ export class KbqNotificationCenterTrigger
     /** @docs-private */
     private closeOnScroll: null;
 
+    get unreadItems() {
+        return this.service.unreadItems;
+    }
+
     /** Placement of popUp */
-    @Input('kbqNotificationCenterPlacement') placement: PopUpPlacements = PopUpPlacements.RightTop;
+    @Input('kbqNotificationCenterPlacement') placement: PopUpPlacements = PopUpPlacements.Right;
 
     /** Class that will be used in the background */
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Offset of popUp */
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetX;
+
+    /** Use popover or not */
+    @Input({ transform: booleanAttribute })
+    get popoverMode(): boolean {
+        return this._popoverMode;
+    }
+
+    set popoverMode(value: boolean) {
+        this._popoverMode = value;
+
+        this.placement = PopUpPlacements.Bottom;
+    }
+
+    private _popoverMode: boolean = false;
 
     /** Whether the trigger is disabled. */
     @Input({ transform: booleanAttribute })
@@ -324,6 +345,7 @@ export class KbqNotificationCenterTrigger
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
         this.instance.footer = this.footer;
+        this.instance.popoverMode = this.popoverMode;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 

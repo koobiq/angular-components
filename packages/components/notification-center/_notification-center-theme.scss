@@ -4,6 +4,15 @@
     .kbq-notification-center,
     .kbq-notification-center-sub-header {
         background: var(--kbq-background-card);
+
+        &:not(.kbq-notification-center_popover) {
+            border-right-color: var(--kbq-line-contrast-less);
+            border-left-color: var(--kbq-line-contrast-less);
+        }
+    }
+
+    .kbq-notification-center-error-container {
+        color: var(--kbq-foreground-error);
     }
 }
 

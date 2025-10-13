@@ -1,0 +1,141 @@
+<kbq-dropdown #issuesDropdown="kbqDropdown">
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Open</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">In Progress</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Complete</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Closed</a>
+</kbq-dropdown>
+
+<kbq-dropdown #securityDropdown="kbqDropdown">
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Identity</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Members and guests</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Data retension</a>
+</kbq-dropdown>
+
+<div class="layout-row" style="margin: -20px; height: 500px">
+    <kbq-navbar-ic #navbar="KbqNavbarIc">
+        <kbq-navbar-ic-container>
+            <a href="#" kbq-navbar-ic-header>
+                <div kbqNavbarIcLogo>
+                    <!-- prettier-ignore -->
+                    <svg fill="none" height="24" viewBox="0 0 32 32" width="24"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill-rule="evenodd" [attr.fill]="currentTheme() === 'light' ? '#212121' : 'white'"/>
+                        <path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" [attr.fill]="currentTheme() === 'light' ? 'white' : '#212121'"/></svg>
+                </div>
+
+                <div kbqNavbarIcTitle>Short App Name</div>
+            </a>
+
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Assets"
+                (click)="selected = items.Assets"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbqNavbarIcTitle>Assets</div>
+            </a>
+
+            <kbq-navbar-ic-item
+                #issuesDropdownTrigger="kbqDropdownTrigger"
+                [class.kbq-active]="selected === items.Issues"
+                [kbqDropdownTriggerFor]="issuesDropdown"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbqNavbarIcTitle>Issues</div>
+            </kbq-navbar-ic-item>
+
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Incidents"
+                (click)="selected = items.Incidents"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbqNavbarIcTitle>Incidents</div>
+            </a>
+
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Policies"
+                (click)="selected = items.Policies"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbqNavbarIcTitle>Policies</div>
+            </a>
+
+            <kbq-navbar-ic-item
+                #securityDropdownTrigger="kbqDropdownTrigger"
+                [class.kbq-active]="selected === items.Security"
+                [kbqDropdownTriggerFor]="securityDropdown"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbqNavbarIcTitle>Security</div>
+            </kbq-navbar-ic-item>
+        </kbq-navbar-ic-container>
+
+        <kbq-navbar-ic-container>
+            <div #notificationCenter="kbqNotificationCenter" kbq-navbar-ic-item kbqNotificationCenter>
+                <i kbq-icon="kbq-bell_16"></i>
+                <div kbqNavbarIcTitle>Notifications</div>
+                @if (notificationCenter.unreadItems | async; as unreadItems) {
+                    <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>
+                }
+            </div>
+
+            <a href="#" kbq-navbar-ic-item>
+                <i kbq-icon="kbq-circle_16" [color]="'success'"></i>
+                <div kbqNavbarIcTitle>System Monitor</div>
+            </a>
+
+            <a href="#" kbq-navbar-ic-item>
+                <i kbq-icon="kbq-user_16"></i>
+                <span kbqNavbarIcTitle>Administrator</span>
+            </a>
+
+            <kbq-navbar-ic-toggle />
+        </kbq-navbar-ic-container>
+    </kbq-navbar-ic>
+
+    <div class="layout-fill">
+        <kbq-top-bar>
+            <div
+                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
+                kbqTopBarContainer
+                placement="start"
+            >
+                <div class="kbq-title kbq-truncate-line">Page Title</div>
+            </div>
+
+            <div kbqTopBarSpacer></div>
+
+            <div kbqTopBarContainer [placement]="'end'">
+                @for (action of actions; track action.id) {
+                    <button kbq-button [kbqStyle]="action.style" [color]="action.color">
+                        @if (action.icon) {
+                            <i kbq-icon="" [class]="action.icon"></i>
+                        }
+                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                            {{ action.text }}
+                        }
+                    </button>
+                }
+            </div>
+        </kbq-top-bar>
+
+        <kbq-empty-state style="min-height: 216px">
+            <div kbq-empty-state-icon>
+                <img
+                    alt="Empty state"
+                    height="80"
+                    width="80"
+                    [srcset]="srcSet()"
+                    src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
+                />
+            </div>
+            <div kbq-empty-state-title>No items</div>
+            <div kbq-empty-state-text>No objects have been added here yet</div>
+        </kbq-empty-state>
+    </div>
+</div>

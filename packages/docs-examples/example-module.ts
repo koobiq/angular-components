@@ -3045,6 +3045,58 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "navbar-vertical-example.ts",
     "importPath": "components/navbar"
   },
+  "notification-center-empty": {
+    "packagePath": "components/notification-center/notification-center-empty",
+    "title": "notification-center-empty",
+    "componentName": "NotificationCenterEmptyExample",
+    "files": [
+      "notification-center-empty-example.ts",
+      "notification-center-empty-example.html"
+    ],
+    "selector": "notification-center-empty-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-empty-example.ts",
+    "importPath": "components/notification-center"
+  },
+  "notification-center-error": {
+    "packagePath": "components/notification-center/notification-center-error",
+    "title": "notification-center-error",
+    "componentName": "NotificationCenterErrorExample",
+    "files": [
+      "notification-center-error-example.ts",
+      "notification-center-error-example.html"
+    ],
+    "selector": "notification-center-error-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-error-example.ts",
+    "importPath": "components/notification-center"
+  },
+  "notification-center-overview": {
+    "packagePath": "components/notification-center/notification-center-overview",
+    "title": "notification-center",
+    "componentName": "NotificationCenterOverviewExample",
+    "files": [
+      "notification-center-overview-example.ts",
+      "notification-center-overview-example.html"
+    ],
+    "selector": "notification-center-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-overview-example.ts",
+    "importPath": "components/notification-center"
+  },
+  "notification-center-popover": {
+    "packagePath": "components/notification-center/notification-center-popover",
+    "title": "notification-center-popover",
+    "componentName": "NotificationCenterPopoverExample",
+    "files": [
+      "notification-center-popover-example.ts",
+      "notification-center-popover-example.html"
+    ],
+    "selector": "notification-center-popover-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-popover-example.ts",
+    "importPath": "components/notification-center"
+  },
   "number-formatter-overview": {
     "packagePath": "components/number-formatter/number-formatter-overview",
     "title": "Number-formatter",
@@ -4233,18 +4285,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-input-removable-example.ts",
     "importPath": "components/tag"
   },
-  "tag-input-selectable": {
-    "packagePath": "components/tag/tag-input-selectable",
-    "title": "Tag input selectable",
-    "componentName": "TagInputSelectableExample",
-    "files": [
-      "tag-input-selectable-example.ts"
-    ],
-    "selector": "tag-input-selectable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-input-selectable-example.ts",
-    "importPath": "components/tag"
-  },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tag/tag-input-with-form-control-validators",
     "title": "Tag input with form control validators.",
@@ -4305,18 +4345,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-list-removable-example.ts",
     "importPath": "components/tag"
   },
-  "tag-list-selectable": {
-    "packagePath": "components/tag/tag-list-selectable",
-    "title": "Tag list selectable",
-    "componentName": "TagListSelectableExample",
-    "files": [
-      "tag-list-selectable-example.ts"
-    ],
-    "selector": "tag-list-selectable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-list-selectable-example.ts",
-    "importPath": "components/tag"
-  },
   "tag-list": {
     "packagePath": "components/tag/tag-list",
     "title": "Tag list",
@@ -4363,18 +4391,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-removable-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-selectable": {
-    "packagePath": "components/tag/tag-selectable",
-    "title": "Tag selectable",
-    "componentName": "TagSelectableExample",
-    "files": [
-      "tag-selectable-example.ts"
-    ],
-    "selector": "tag-selectable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-selectable-example.ts",
     "importPath": "components/tag"
   },
   "tag-with-icon": {
@@ -4426,6 +4442,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "text-area-overview-example.ts",
     "importPath": "components/textarea"
+  },
+  "time-range-as-form-field": {
+    "packagePath": "components/time-range/time-range-as-form-field",
+    "title": "Time range as form field",
+    "componentName": "TimeRangeAsFormFieldExample",
+    "files": [
+      "time-range-as-form-field-example.ts"
+    ],
+    "selector": "time-range-as-form-field-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-as-form-field-example.ts",
+    "importPath": "components/time-range"
   },
   "time-range-custom-trigger": {
     "packagePath": "components/time-range/time-range-custom-trigger",
@@ -5905,6 +5933,14 @@ return import('@koobiq/docs-examples/components/navbar');
 return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-vertical':
 return import('@koobiq/docs-examples/components/navbar');
+  case 'notification-center-empty':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-error':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-overview':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-popover':
+return import('@koobiq/docs-examples/components/notification-center');
   case 'number-formatter-overview':
 return import('@koobiq/docs-examples/components/number-formatter');
   case 'overflow-items-justify-content':
@@ -6099,8 +6135,6 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-removable':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-input-selectable':
-return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input':
@@ -6111,8 +6145,6 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-removable':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-list-selectable':
-return import('@koobiq/docs-examples/components/tag');
   case 'tag-list':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-long-text':
@@ -6120,8 +6152,6 @@ return import('@koobiq/docs-examples/components/tag');
   case 'tag-overview':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-removable':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-selectable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-with-icon':
 return import('@koobiq/docs-examples/components/tag');
