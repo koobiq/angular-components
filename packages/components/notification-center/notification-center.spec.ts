@@ -1,8 +1,12 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, Provider, Type } from '@angular/core';
+import { Component, DebugElement, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqNotificationCenterModule } from '@koobiq/components/notification-center';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { KbqFormattersModule } from '@koobiq/components/core';
+import { KbqNotificationCenterModule, KbqNotificationCenterTrigger } from '@koobiq/components/notification-center';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 
@@ -11,12 +15,11 @@ describe('KbqNotificationCenter', () => {
     let componentInstance: KbqNotificationCenterSimple;
     let debugElement: DebugElement;
     let overlayContainer: OverlayContainer;
-    let overlayContainerElement: HTMLElement;
     let testScheduler: TestScheduler;
 
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
-            imports: [component, NoopAnimationsModule],
+            imports: [component, NoopAnimationsModule, KbqLuxonDateModule, KbqFormattersModule, KbqScrollbarModule],
             providers: [
                 { provide: AsyncScheduler, useValue: testScheduler },
                 ...providers
@@ -30,6 +33,14 @@ describe('KbqNotificationCenter', () => {
     };
 
     describe('Check test cases', () => {
+        beforeAll(() => {
+            Object.defineProperty(global.window, 'getComputedStyle', {
+                value: () => ({
+                    getPropertyValue: (_property: string) => ''
+                })
+            });
+        });
+
         beforeEach(() => {
             testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
             fixture = createComponent(KbqNotificationCenterSimple);
@@ -37,20 +48,24 @@ describe('KbqNotificationCenter', () => {
             debugElement = fixture.debugElement;
         });
 
-        beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
-            overlayContainer = oc;
-            overlayContainerElement = oc.getContainerElement();
-        }));
+        beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => (overlayContainer = oc)));
 
         afterEach(() => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('kbqTrigger = hover', fakeAsync(() => {
-            console.log('componentInstance: ', componentInstance);
-            console.log('debugElement: ', debugElement);
-            console.log('overlayContainerElement: ', overlayContainerElement);
-            expect(true).toBe(true);
+        it('default trigger is click', fakeAsync(() => {
+            let center = debugElement.query(By.css('.kbq-notification-center'));
+
+            expect(center).toBe(null);
+
+            componentInstance.trigger.show();
+            fixture.detectChanges();
+
+            center = debugElement.query(By.css('.kbq-notification-center'));
+
+            expect(center.nativeElement).toBeDefined();
+            expect(center.query(By.css('.kbq-notification-center-header')).nativeElement).toBeDefined();
         }));
     });
 });
@@ -59,10 +74,12 @@ describe('KbqNotificationCenter', () => {
     standalone: true,
     selector: 'notification-center-simple',
     template: `
-        <button kbqNotificationCenter>notification-center Trigger</button>
+        <button kbqNotificationCenterTrigger>notification-center Trigger</button>
     `,
     imports: [
         KbqNotificationCenterModule
     ]
 })
-export class KbqNotificationCenterSimple {}
+export class KbqNotificationCenterSimple {
+    @ViewChild(KbqNotificationCenterTrigger) trigger: KbqNotificationCenterTrigger;
+}

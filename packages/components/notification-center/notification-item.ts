@@ -12,6 +12,7 @@ import { KbqNotificationCenterService, KbqNotificationItem } from './notificatio
 
 let id = 0;
 
+/** @docs-private */
 @Component({
     standalone: true,
     imports: [
