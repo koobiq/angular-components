@@ -48,6 +48,7 @@ export enum DocsStructureItemId {
     Modal = 'modal',
     Navbar = 'navbar',
     NavbarIc = 'navbar-ic',
+    NotificationCenter = 'notification-center',
     OverflowItems = 'overflow-items',
     Popover = 'popover',
     ProgressBar = 'progress-bar',
@@ -658,6 +659,18 @@ const structure: DocsStructure = makeStructure({
                     apiId: 'navbar-ic',
                     hasExamples: false,
                     isNew: expiresAt('2025-09-20')
+                },
+                {
+                    id: DocsStructureItemId.NotificationCenter,
+                    name: {
+                        ru: 'Notification Center',
+                        en: 'Notification Center'
+                    },
+                    svgPreview: 'notification-center',
+                    hasApi: true,
+                    apiId: 'notification-center',
+                    hasExamples: false,
+                    isNew: expiresAt('2025-10-30')
                 },
                 {
                     id: DocsStructureItemId.OverflowItems,

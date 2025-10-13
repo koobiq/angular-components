@@ -6,10 +6,11 @@ import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
+import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
@@ -34,29 +35,32 @@ enum NavbarIcItems {
 }
 
 /**
- * @title notification-center
+ * @title notification-center-popover
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    selector: 'notification-center-overview-example',
-    templateUrl: 'notification-center-overview-example.html',
+    selector: 'notification-center-popover-example',
+    templateUrl: 'notification-center-popover-example.html',
     imports: [
         KbqNotificationCenterModule,
-        KbqNavbarIcModule,
         KbqBadgeModule,
         KbqIconModule,
         KbqEmptyStateModule,
         KbqTopBarModule,
         KbqButtonModule,
         KbqDropdownModule,
+        KbqNavbarModule,
         AsyncPipe,
+        KbqDividerModule,
         KbqLuxonDateModule,
         KbqFormattersModule
     ]
 })
-export class NotificationCenterOverviewExample {
+export class NotificationCenterPopoverExample {
     notificationService = inject(KbqNotificationCenterService);
+
+    popUpPlacements = PopUpPlacements;
 
     protected readonly currentTheme = toSignal(
         inject(ThemeService, { optional: true })?.current.pipe(

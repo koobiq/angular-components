@@ -9,13 +9,25 @@
     width: 400px;
     height: 100vh;
 
-    //border-radius: var(--kbq-size-xs);
-
-    box-shadow: var(--kbq-shadow-popup);
-
     box-sizing: border-box;
 
     z-index: 1;
+
+    &:not(.kbq-notification-center_popover) {
+        border-right: 1px solid;
+        border-left: 1px solid;
+    }
+
+    &.kbq-notification-center_popover {
+        margin-top: var(--kbq-size-xxs);
+        margin-bottom: var(--kbq-size-xxs);
+
+        border-radius: var(--kbq-size-xs);
+
+        height: calc(100vh - 96px);
+
+        box-shadow: var(--kbq-shadow-popup);
+    }
 }
 
 .kbq-notification-center-header {
@@ -72,11 +84,11 @@
 }
 
 .kbq-notification-center-container {
+    height: 100%;
+
     border-radius: inherit;
 
     padding-bottom: var(--kbq-size-m);
-
-    min-height: 412px;
 
     & .kbq-loader-overlay_parent {
         border-radius: inherit;

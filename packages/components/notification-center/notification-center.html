@@ -77,7 +77,7 @@
         }
     } @else {
         <div class="kbq-notification-center-error-container">
-            <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
+            <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'error'" [fade]="true"></i>
             {{ localeData.failedToLoadNotifications }}
             <button kbq-button [kbqStyle]="'transparent'" [color]="'theme'" (click)="service.onReload.emit()">
                 {{ localeData.repeat }}

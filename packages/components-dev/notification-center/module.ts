@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
@@ -12,7 +10,18 @@ import { DevThemeToggle } from '../theme-toggle';
     standalone: true,
     imports: [NotificationCenterExamplesModule],
     selector: 'dev-examples',
-    template: ``,
+    template: `
+        <notification-center-overview-example />
+        <br />
+        <br />
+        <notification-center-empty-example />
+        <br />
+        <br />
+        <notification-center-error-example />
+        <br />
+        <br />
+        <notification-center-popover-example />
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevExamples {}
@@ -24,9 +33,7 @@ export class DevExamples {}
         DevThemeToggle,
         KbqButtonModule,
         KbqNotificationCenterModule,
-        KbqIcon,
-        KbqLuxonDateModule,
-        KbqFormattersModule
+        KbqIcon
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

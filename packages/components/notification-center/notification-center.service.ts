@@ -1,7 +1,8 @@
 import { EventEmitter, inject, Injectable, TemplateRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BehaviorSubject, merge } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
@@ -27,13 +28,18 @@ type KbqNotificationsGroups = Record<string, KbqNotificationsGroup>;
 
 @Injectable({ providedIn: 'root' })
 export class KbqNotificationCenterService<D> {
+    /** @docs-private */
     private readonly adapter = inject(DateAdapter<D>);
+    /** @docs-private */
     private readonly formatter = inject(DateFormatter<D>);
+    /** @docs-private */
     private readonly toastService = inject(KbqToastService);
 
     readonly silentMode = new BehaviorSubject(false);
     readonly loadingMode = new BehaviorSubject(false);
     readonly errorMode = new BehaviorSubject(false);
+
+    readonly onRead = new BehaviorSubject<KbqNotificationItem | null>(null);
 
     readonly onReload = new EventEmitter<void>();
 
@@ -49,7 +55,7 @@ export class KbqNotificationCenterService<D> {
         })
     );
 
-    readonly changes = merge(this.silentMode, this.originalItems);
+    readonly changes = merge(this.silentMode, this.loadingMode, this.errorMode, this.originalItems, this.onRead);
 
     get items() {
         return this.originalItems.value;
@@ -59,16 +65,25 @@ export class KbqNotificationCenterService<D> {
         this.originalItems.next(this.setReadState(this.setIds(values)));
     }
 
+    get unreadItems(): Observable<number> {
+        return this.originalItems.pipe(map((items) => items.filter((item) => item.read === false).length)).pipe(
+            combineLatestWith(this.onRead),
+            map(([value]) => value)
+        );
+    }
+
     get isEmpty() {
         return this.originalItems.value.length === 0;
     }
 
     constructor() {
-        this.toastService.read.subscribe((toastData) => {
+        this.toastService?.read.pipe(takeUntilDestroyed()).subscribe((toastData) => {
             const item = this.originalItems.value.find((item) => item.id === toastData?.id);
 
-            if (item) {
+            if (item && !item.read) {
                 item.read = true;
+
+                this.onRead.next(toastData as KbqNotificationItem);
             }
         });
     }
