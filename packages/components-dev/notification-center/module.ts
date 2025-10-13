@@ -37,7 +37,6 @@ export class DevExamples {}
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

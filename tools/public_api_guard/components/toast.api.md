@@ -13,8 +13,10 @@ import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { KbqReadStateDirective } from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -74,6 +76,8 @@ export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     onAnimation($event: AnimationEvent_2): void;
     // (undocumented)
+    protected readonly readStateDirective: KbqReadStateDirective;
+    // (undocumented)
     readonly service: KbqToastService;
     // (undocumented)
     themePalette: typeof ThemePalette;
@@ -84,7 +88,7 @@ export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     ttl: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastComponent, "kbq-toast", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastComponent, "kbq-toast", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqReadStateDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastComponent, never>;
 }
@@ -146,6 +150,8 @@ export class KbqToastData {
     // (undocumented)
     iconClass?: string;
     // (undocumented)
+    id?: string;
+    // (undocumented)
     style?: KbqToastStyle | string;
     // (undocumented)
     title?: string | TemplateRef<any>;
@@ -157,11 +163,11 @@ export class KbqToastModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqToastModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, never, [typeof i1.KbqToastComponent, typeof i1.KbqToastCloseButton, typeof i2.KbqToastContainerComponent], [typeof i1.KbqToastComponent, typeof i1.KbqToastCloseButton, typeof i2.KbqToastContainerComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, never, [typeof i1_2.KbqToastComponent, typeof i1_2.KbqToastCloseButton, typeof i2.KbqToastContainerComponent], [typeof i1_2.KbqToastComponent, typeof i1_2.KbqToastCloseButton, typeof i2.KbqToastContainerComponent]>;
 }
 
 // @public (undocumented)
@@ -197,6 +203,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    readonly read: BehaviorSubject<KbqToastData | null>;
     // (undocumented)
     show(data: KbqToastData, duration?: number, onTop?: boolean): {
         ref: ComponentRef<T>;
