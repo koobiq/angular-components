@@ -257,6 +257,8 @@ export class KbqInlineEdit implements AfterContentInit {
 
         event.preventDefault();
         event.stopPropagation();
+        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'program');
+
         this.toggleMode();
     }
 
@@ -293,9 +295,8 @@ export class KbqInlineEdit implements AfterContentInit {
 
     /** @docs-private */
     protected save($event?: Event): void {
-        $event?.stopPropagation();
-
         if (this.isInvalid()) {
+            $event?.stopPropagation();
             this.showTooltipOnError() && this.tooltipTrigger()?.show();
         } else {
             this.toggleMode();

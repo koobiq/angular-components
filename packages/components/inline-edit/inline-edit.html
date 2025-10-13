@@ -22,13 +22,12 @@
         <ng-template
             cdkConnectedOverlay
             cdkConnectedOverlayLockPosition
-            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
             [cdkConnectedOverlayOpen]="isEditMode()"
             [cdkConnectedOverlayOrigin]="overlayOrigin"
             [cdkConnectedOverlayWidth]="overlayWidth()"
             [cdkConnectedOverlayDisableClose]="true"
             [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
-            [cdkConnectedOverlayHasBackdrop]="true"
+            [cdkConnectedOverlayHasBackdrop]="false"
             (attach)="onAttach()"
             (overlayOutsideClick)="save($event)"
             (overlayKeydown)="onOverlayKeydown($event)"
