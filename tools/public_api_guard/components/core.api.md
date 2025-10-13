@@ -430,6 +430,15 @@ export const enUSLocaleData: {
             };
         };
     };
+    notificationCenter: {
+        notifications: string;
+        remove: string;
+        doNotDisturb: string;
+        showPopUpNotifications: string;
+        noNotifications: string;
+        failedToLoadNotifications: string;
+        repeat: string;
+    };
 };
 
 // @public
@@ -640,6 +649,15 @@ export const esLALocaleData: {
             };
         };
     };
+    notificationCenter: {
+        notifications: string;
+        remove: string;
+        doNotDisturb: string;
+        showPopUpNotifications: string;
+        noNotifications: string;
+        failedToLoadNotifications: string;
+        repeat: string;
+    };
 };
 
 // @public (undocumented)
@@ -839,6 +857,15 @@ export const faIRLocaleData: {
                 MONTHS_FRACTION: string;
             };
         };
+    };
+    notificationCenter: {
+        notifications: string;
+        remove: string;
+        doNotDisturb: string;
+        showPopUpNotifications: string;
+        noNotifications: string;
+        failedToLoadNotifications: string;
+        repeat: string;
     };
 };
 
@@ -1123,6 +1150,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        notificationCenter: {
+            notifications: string;
+            remove: string;
+            doNotDisturb: string;
+            showPopUpNotifications: string;
+            noNotifications: string;
+            failedToLoadNotifications: string;
+            repeat: string;
+        };
     };
     'zh-CN': {
         formatters: {
@@ -1308,6 +1344,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     MONTHS_FRACTION: string;
                 };
             };
+        };
+        notificationCenter: {
+            notifications: string;
+            remove: string;
+            doNotDisturb: string;
+            showPopUpNotifications: string;
+            noNotifications: string;
+            failedToLoadNotifications: string;
+            repeat: string;
         };
     };
     'es-LA': {
@@ -1500,6 +1545,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        notificationCenter: {
+            notifications: string;
+            remove: string;
+            doNotDisturb: string;
+            showPopUpNotifications: string;
+            noNotifications: string;
+            failedToLoadNotifications: string;
+            repeat: string;
+        };
     };
     'pt-BR': {
         formatters: {
@@ -1686,6 +1740,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     MONTHS_FRACTION: string;
                 };
             };
+        };
+        notificationCenter: {
+            notifications: string;
+            remove: string;
+            doNotDisturb: string;
+            showPopUpNotifications: string;
+            noNotifications: string;
+            failedToLoadNotifications: string;
+            repeat: string;
         };
     };
     'ru-RU': {
@@ -1880,6 +1943,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        notificationCenter: {
+            notifications: string;
+            remove: string;
+            doNotDisturb: string;
+            showPopUpNotifications: string;
+            noNotifications: string;
+            failedToLoadNotifications: string;
+            repeat: string;
+        };
     };
     'fa-IR': {
         formatters: {
@@ -2068,6 +2140,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        notificationCenter: {
+            notifications: string;
+            remove: string;
+            doNotDisturb: string;
+            showPopUpNotifications: string;
+            noNotifications: string;
+            failedToLoadNotifications: string;
+            repeat: string;
+        };
     };
     'tk-TM': {
         formatters: {
@@ -2255,6 +2336,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     MONTHS_FRACTION: string;
                 };
             };
+        };
+        notificationCenter: {
+            notifications: string;
+            remove: string;
+            doNotDisturb: string;
+            showPopUpNotifications: string;
+            noNotifications: string;
+            failedToLoadNotifications: string;
+            repeat: string;
         };
     };
 };
@@ -3189,6 +3279,24 @@ export class KbqPseudoCheckboxModule {
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 // @public (undocumented)
+export class KbqReadStateDirective {
+    // (undocumented)
+    mouseenterHandler(): void;
+    // (undocumented)
+    mouseleaveHandler(): void;
+    // (undocumented)
+    readonly read: BehaviorSubject<boolean>;
+    // (undocumented)
+    timestamp: number;
+    // (undocumented)
+    timeToRead: number;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqReadStateDirective, never, never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqReadStateDirective, never>;
+}
+
+// @public (undocumented)
 export class KbqRectangleItem {
     // (undocumented)
     get collapsed(): boolean;
@@ -3759,6 +3867,15 @@ export const ptBRLocaleData: {
             };
         };
     };
+    notificationCenter: {
+        notifications: string;
+        remove: string;
+        doNotDisturb: string;
+        showPopUpNotifications: string;
+        noNotifications: string;
+        failedToLoadNotifications: string;
+        repeat: string;
+    };
 };
 
 // @public (undocumented)
@@ -4132,6 +4249,15 @@ export const ruRULocaleData: {
             };
         };
     };
+    notificationCenter: {
+        notifications: string;
+        remove: string;
+        doNotDisturb: string;
+        showPopUpNotifications: string;
+        noNotifications: string;
+        failedToLoadNotifications: string;
+        repeat: string;
+    };
 };
 
 // @public
@@ -4416,6 +4542,15 @@ export const tkTMLocaleData: {
             };
         };
     };
+    notificationCenter: {
+        notifications: string;
+        remove: string;
+        doNotDisturb: string;
+        showPopUpNotifications: string;
+        noNotifications: string;
+        failedToLoadNotifications: string;
+        repeat: string;
+    };
 };
 
 // @public @deprecated
@@ -4628,6 +4763,15 @@ export const zhCNLocaleData: {
                 MONTHS_FRACTION: string;
             };
         };
+    };
+    notificationCenter: {
+        notifications: string;
+        remove: string;
+        doNotDisturb: string;
+        showPopUpNotifications: string;
+        noNotifications: string;
+        failedToLoadNotifications: string;
+        repeat: string;
     };
 };
 

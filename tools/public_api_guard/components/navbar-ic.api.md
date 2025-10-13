@@ -155,6 +155,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     // (undocumented)
     static ngAcceptInputType_pinned: unknown;
     ngAfterContentInit(): void;
+    notificationCenterTrigger: Signal<readonly any[]>;
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     pinned: boolean;
@@ -170,7 +171,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     // (undocumented)
     protected updateTooltipForItems: () => void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIc, "kbq-navbar-ic", ["KbqNavbarIc"], { "pinned": { "alias": "pinned"; "required": false; }; "collapsedWidth": { "alias": "collapsedWidth"; "required": false; }; "expandedWidth": { "alias": "expandedWidth"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "items", "toggleElement", "dropdownTrigger", "popoverTrigger"], ["[kbq-navbar-ic-container], kbq-navbar-ic-container", "[kbq-navbar-ic-toggle], kbq-navbar-ic-toggle"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIc, "kbq-navbar-ic", ["KbqNavbarIc"], { "pinned": { "alias": "pinned"; "required": false; }; "collapsedWidth": { "alias": "collapsedWidth"; "required": false; }; "expandedWidth": { "alias": "expandedWidth"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "items", "toggleElement", "dropdownTrigger", "popoverTrigger", "notificationCenterTrigger"], ["[kbq-navbar-ic-container], kbq-navbar-ic-container", "[kbq-navbar-ic-toggle], kbq-navbar-ic-toggle"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIc, never>;
 }
