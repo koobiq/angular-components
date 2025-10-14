@@ -7,9 +7,11 @@ import { PopoverContentExample } from './popover-content/popover-content-example
 import { PopoverHeaderExample } from './popover-header/popover-header-example';
 import { PopoverHeightExample } from './popover-height/popover-height-example';
 import { PopoverHoverExample } from './popover-hover/popover-hover-example';
+import { PopoverPaddingsExample } from './popover-paddings/popover-paddings-example';
 import { PopoverPlacementCenterExample } from './popover-placement-center/popover-placement-center-example';
 import { PopoverPlacementEdgesExample } from './popover-placement-edges/popover-placement-edges-example';
 import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
+import { PopoverSmallExample } from './popover-small/popover-small-example';
 import { PopoverWidthExample } from './popover-width/popover-width-example';
 
 export {
@@ -21,9 +23,11 @@ export {
     PopoverHeaderExample,
     PopoverHeightExample,
     PopoverHoverExample,
+    PopoverPaddingsExample,
     PopoverPlacementCenterExample,
     PopoverPlacementEdgesExample,
     PopoverScrollExample,
+    PopoverSmallExample,
     PopoverWidthExample
 };
 
@@ -39,7 +43,9 @@ const EXAMPLES = [
     PopoverScrollExample,
     PopoverPlacementCenterExample,
     PopoverPlacementEdgesExample,
-    PopoverHoverExample
+    PopoverHoverExample,
+    PopoverSmallExample,
+    PopoverPaddingsExample
 ];
 
 @NgModule({

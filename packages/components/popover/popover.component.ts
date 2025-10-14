@@ -165,6 +165,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     /** prevents closure by any event */
     @Input({ alias: 'kbqPopoverPreventClose', transform: booleanAttribute }) override preventClose: boolean = false;
 
+    /** disables padding for all popover elements (header, content and footer) */
+    @Input({ transform: booleanAttribute }) noPaddings = false;
+
     @Input('kbqPopoverVisible')
     get popoverVisible(): boolean {
         return this.visible;
@@ -382,9 +385,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     updateData() {
-        if (!this.instance) {
-            return;
-        }
+        if (!this.instance) return;
 
         this.instance.header = this.header;
         this.instance.content = this.content;
@@ -392,6 +393,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.instance.offset = this.offset;
         this.instance.footer = this.footer;
         this.instance.hasCloseButton = this.hasCloseButton;
+        this.instance.noPaddings = this.noPaddings;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 

@@ -21,10 +21,13 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
     imports: [PopoverExamplesModule],
     selector: 'dev-examples',
     template: `
-        <popover-common-example />
-        <popover-hover-example />
-        <popover-arrowless-example />
-        <popover-arrow-and-offset-example />
+        <!--        <popover-paddings-example />-->
+        <popover-small-example />
+        <!--        <popover-width-example />-->
+        <!--        <popover-common-example />-->
+        <!--        <popover-hover-example />-->
+        <!--        <popover-arrowless-example />-->
+        <!--        <popover-arrow-and-offset-example />-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -2999,6 +2999,8 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
+    noPaddings: boolean;
+    // (undocumented)
     offset: number | null;
     protected readonly onHideSubject: Subject<void>;
     // (undocumented)

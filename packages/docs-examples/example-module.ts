@@ -3220,6 +3220,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "popover-hover-example.ts",
     "importPath": "components/popover"
   },
+  "popover-paddings": {
+    "packagePath": "components/popover/popover-paddings",
+    "title": "popover-paddings",
+    "componentName": "PopoverPaddingsExample",
+    "files": [
+      "popover-paddings-example.ts",
+      "popover-paddings-example.html"
+    ],
+    "selector": "popover-paddings-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-paddings-example.ts",
+    "importPath": "components/popover"
+  },
   "popover-placement-center": {
     "packagePath": "components/popover/popover-placement-center",
     "title": "Popover placement center",
@@ -3256,6 +3269,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-scroll-example",
     "additionalComponents": [],
     "primaryFile": "popover-scroll-example.ts",
+    "importPath": "components/popover"
+  },
+  "popover-small": {
+    "packagePath": "components/popover/popover-small",
+    "title": "popover-small",
+    "componentName": "PopoverSmallExample",
+    "files": [
+      "popover-small-example.ts",
+      "popover-small-example.html"
+    ],
+    "selector": "popover-small-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-small-example.ts",
     "importPath": "components/popover"
   },
   "popover-width": {
@@ -5933,11 +5959,15 @@ return import('@koobiq/docs-examples/components/popover');
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-hover':
 return import('@koobiq/docs-examples/components/popover');
+  case 'popover-paddings':
+return import('@koobiq/docs-examples/components/popover');
   case 'popover-placement-center':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-placement-edges':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-scroll':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-small':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-width':
 return import('@koobiq/docs-examples/components/popover');
