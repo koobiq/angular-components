@@ -1,11 +1,4 @@
-<div
-    #element
-    #focusTrap="cdkTrapFocus"
-    class="kbq-inline-edit__view-focus-region"
-    tabindex="0"
-    [cdkTrapFocus]="false"
-    (focus)="afterFocus($event, focusTrap)"
->
+<div #focusRegion class="kbq-inline-edit__view-focus-region" tabindex="0" [cdkTrapFocus]="false">
     @if (label()) {
         <div class="kbq-inline-edit__label">
             <ng-content select="kbq-label" />
@@ -40,7 +33,7 @@
                 (overlayOutsideClick)="save($event)"
                 (overlayKeydown)="onOverlayKeydown($event)"
             >
-                <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
+                <div #focusTrapInstance="cdkTrapFocus" class="kbq-inline-edit__panel" cdkTrapFocus>
                     <div
                         class="kbq-inline-edit__control-container"
                         kbqFocusRegionItem

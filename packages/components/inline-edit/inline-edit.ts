@@ -132,6 +132,8 @@ export class KbqInlineEditMenu {
         '[tabindex]': 'tabIndex()',
         '[class]': 'className()',
         '[class.kbq-inline-edit_disabled]': 'disabled()',
+        '(focus)': 'onFocus($event)',
+        '(blur)': 'onBlur($event)',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
@@ -205,6 +207,10 @@ export class KbqInlineEdit implements AfterContentInit {
     protected readonly overlayDir = viewChild(CdkConnectedOverlay);
     /** @docs-private */
     protected readonly regionItems = viewChildren(KbqFocusRegionItem);
+    /** @docs-private */
+    protected readonly viewModeFocusTrapRegion = viewChild.required<ElementRef<HTMLElement>>('focusRegion');
+    protected readonly viewModeFocusTrap = viewChild.required('focusRegion', { read: CdkTrapFocus });
+    protected readonly focusTrapInstance = viewChild<CdkTrapFocus>('focusTrapInstance');
 
     /** @docs-private */
     protected readonly mode = signal<'view' | 'edit'>('view');
@@ -286,6 +292,10 @@ export class KbqInlineEdit implements AfterContentInit {
             const input = this.getInputNativeElement();
 
             if (this.initialValue) input?.select();
+
+            if (!formFieldRef) {
+                this.focusTrapInstance()?.focusTrap.focusFirstTabbableElement();
+            }
 
             if (formFieldRef) {
                 this.openPanel(formFieldRef);
@@ -463,5 +473,53 @@ export class KbqInlineEdit implements AfterContentInit {
 
     private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {
         return this.overlayDir()?.overlayRef.overlayElement.querySelector('input:not([type="file"]),textarea') ?? null;
+    }
+
+    hasFocus = signal(false);
+
+    onFocus(event: FocusEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const hasFocus = this.hasFocus();
+
+        if (!hasFocus) {
+            this.hasFocus.set(true);
+            setTimeout(() => {
+                if (this.mode() !== 'edit') {
+                    this.viewModeFocusTrapRegion().nativeElement.tabIndex = -1;
+                    const focusMoved = this.viewModeFocusTrap().focusTrap.focusFirstTabbableElement();
+
+                    if (!focusMoved) {
+                        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
+                    }
+                }
+            });
+        }
+    }
+
+    // afterFocus($event: FocusEvent, focusTrapInstance: CdkTrapFocus) {
+    //     if ($event.target instanceof HTMLElement) {
+    //         $event.target.tabIndex = -1;
+    //     }
+    //
+    //     const focusMoved = focusTrapInstance.focusTrap.focusFirstTabbableElement();
+    //
+    //     if (!focusMoved) {
+    //         $event.preventDefault();
+    //         $event.stopPropagation();
+    //         this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
+    //     }
+    // }
+
+    onBlur($event: FocusEvent) {
+        if (
+            $event.relatedTarget instanceof HTMLElement &&
+            !this.elementRef.nativeElement.contains($event.relatedTarget)
+        ) {
+            this.hasFocus.set(false);
+
+            this.viewModeFocusTrapRegion().nativeElement.tabIndex = 0;
+        }
     }
 }
