@@ -124,6 +124,8 @@ export abstract class KbqAbstractSelect {
     protected readonly overlayPanelClass = 'kbq-select-overlay';
 
     protected setOverlayPosition() {
+        if (!this.overlayDir.overlayRef) return;
+
         this.resetOverlay();
 
         const overlayRect = this.getOverlayRect();

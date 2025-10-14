@@ -715,14 +715,14 @@ export class KbqTreeSelect
         this.tags.changes.pipe(startWith(null)).subscribe(() => {
             this.calculateHiddenItems();
 
-            if (this.multiline && this.overlayDir.overlayRef) {
+            if (this.multiline) {
                 this.setOverlayPosition();
             }
         });
 
         this.tree.treeControl.expansionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.overlayDir.overlayRef && this.setOverlayPosition());
+            .subscribe(() => this.setOverlayPosition());
     }
 
     ngOnDestroy() {
