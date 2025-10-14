@@ -695,7 +695,7 @@ export class KbqSelect
                 setTimeout(() => {
                     this.calculateHiddenItems();
 
-                    if (this.multiline && this.overlayDir.overlayRef) {
+                    if (this.multiline) {
                         this.setOverlayPosition();
                     }
                 }, 0)

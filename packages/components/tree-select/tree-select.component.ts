@@ -715,7 +715,7 @@ export class KbqTreeSelect
         this.tags.changes.pipe(startWith(null)).subscribe(() => {
             this.calculateHiddenItems();
 
-            if (this.multiline && this.overlayDir.overlayRef) {
+            if (this.multiline) {
                 this.setOverlayPosition();
             }
         });
