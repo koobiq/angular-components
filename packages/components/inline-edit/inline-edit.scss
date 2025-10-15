@@ -39,8 +39,6 @@
 }
 
 @mixin _inline-edit-theme {
-    background: var(--kbq-inline-edit-background);
-
     &.kbq-inline-edit_view {
         &:not(.kbq-inline-edit_disabled) {
             &:hover {
@@ -70,6 +68,9 @@
     }
 
     .kbq-inline-edit__focus_container {
+        background: var(--kbq-inline-edit-background);
+        border-color: var(--kbq-inline-edit-background);
+
         &:focus-visible {
             outline: none;
         }
@@ -136,14 +137,14 @@
 
     @include _mask(
         (
-            'top': calc(-1 * var(--kbq-size-border-width)),
-            'right': calc(-1 * var(--kbq-size-border-width))
+            'top': 0,
+            'right': 0
         )
     );
 
     .kbq-inline-edit__menu-mask {
         opacity: 0;
-        height: calc(100% + 2 * var(--kbq-size-border-width));
+        height: 100%;
         justify-content: flex-end;
         border-top-right-radius: var(--kbq-size-border-radius);
         border-bottom-right-radius: var(--kbq-size-border-radius);
@@ -178,6 +179,8 @@
         height: calc(100% - 2 * var(--kbq-size-border-width));
         border: var(--kbq-size-border-width) solid transparent;
         border-radius: var(--kbq-size-border-radius);
+        // set z-index to hide mask borders
+        z-index: 1;
     }
 }
 
