@@ -44,7 +44,12 @@
 
 <div class="kbq-toast__container">
     @if (data.title) {
-        <div kbq-title class="kbq-toast__title" [class.kbq-toast__title_with-content]="data.caption || data.content">
+        <div
+            kbq-title
+            class="kbq-toast__title"
+            [class.kbq-toast__title_only-text]="!isTemplateRef(data.title)"
+            [class.kbq-toast__title_with-content]="data.caption || data.content"
+        >
             @if (isTemplateRef(data.title)) {
                 <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="{ $implicit }" />
             }
@@ -55,24 +60,27 @@
     }
 
     @if (data.caption) {
-        <div kbq-title [class.kbq-toast__text]="data.title" [class.kbq-toast__title]="!data.title">
+        <div
+            kbq-title
+            [class.kbq-toast__text]="data.title"
+            [class.kbq-toast__text_only-text]="!isTemplateRef(data.caption)"
+            [class.kbq-toast__title]="!data.title"
+        >
             @if (isTemplateRef(data.caption)) {
                 <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="{ $implicit }" />
             }
-            @if (!isTemplateRef(data.caption)) {
-                {{ data.caption }}
-            }
+            <!-- prettier-ignore -->
+            @if (!isTemplateRef(data.caption)) {{{ data.caption }}}
         </div>
     }
 
     @if (data.content) {
-        <div class="kbq-toast__content">
+        <div class="kbq-toast__content" [class.kbq-toast__content_only-text]="!isTemplateRef(data.content)">
             @if (isTemplateRef(data.content)) {
                 <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="{ $implicit }" />
             }
-            @if (!isTemplateRef(data.content)) {
-                {{ data.content }}
-            }
+            <!-- prettier-ignore -->
+            @if (!isTemplateRef(data.content)) {{{ data.content }}}
         </div>
     }
 

@@ -4589,6 +4589,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toast-link-overview-example.ts",
     "importPath": "components/toast"
   },
+  "toast-multiline": {
+    "packagePath": "components/toast/toast-multiline",
+    "title": "toast-multiline",
+    "componentName": "ToastMultilineExample",
+    "files": [
+      "toast-multiline-example.ts"
+    ],
+    "selector": "toast-multiline-example",
+    "additionalComponents": [],
+    "primaryFile": "toast-multiline-example.ts",
+    "importPath": "components/toast"
+  },
   "toast-overview": {
     "packagePath": "components/toast/toast-overview",
     "title": "Basic Toast",
@@ -6158,6 +6170,8 @@ return import('@koobiq/docs-examples/components/toast');
   case 'toast-hide-overview':
 return import('@koobiq/docs-examples/components/toast');
   case 'toast-link-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-multiline':
 return import('@koobiq/docs-examples/components/toast');
   case 'toast-overview':
 return import('@koobiq/docs-examples/components/toast');

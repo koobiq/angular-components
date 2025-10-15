@@ -1,16 +1,6 @@
-body {
-    overflow: hidden;
-    margin: 0;
-}
-
-p {
-    margin: 0;
-}
-
 .dev-container {
-    position: absolute;
-    top: 0;
-    left: 0;
+    margin-top: 50px;
+
     height: 100%;
     width: 100%;
     display: flex;

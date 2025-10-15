@@ -55,6 +55,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    &.kbq-toast__title_only-text {
+        white-space: pre-wrap;
+    }
 }
 
 .kbq-toast__title_with-content {
@@ -65,13 +69,19 @@
     display: flex;
     flex: 1;
     align-items: center;
+
+    &.kbq-toast__text_only-text {
+        white-space: pre-wrap;
+    }
 }
 
 .kbq-toast__content {
     display: flex;
     flex-direction: column;
 
-    white-space: pre-wrap;
+    &.kbq-toast__content_only-text {
+        white-space: pre-wrap;
+    }
 }
 
 .kbq-toast__actions {
