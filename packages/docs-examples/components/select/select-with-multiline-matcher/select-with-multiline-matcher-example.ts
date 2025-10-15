@@ -32,8 +32,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 align-items: center;
             }
 
-            div {
-                width: 300px;
+            .kbq-form-field {
+                width: 320px;
             }
 
             div:not(:last-child) {
