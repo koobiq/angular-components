@@ -202,9 +202,9 @@ export class KbqInlineEdit {
     protected readonly formFieldRef = contentChild(KbqFormField);
 
     /** @docs-private */
-    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
+    protected readonly overlayOrigin = viewChild.required(CdkOverlayOrigin);
     /** @docs-private */
-    protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
+    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
     /** @docs-private */
     protected readonly overlayDir = viewChild(CdkConnectedOverlay);
     /** @docs-private */
