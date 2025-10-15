@@ -41,10 +41,6 @@
 @mixin _inline-edit-theme {
     background: var(--kbq-inline-edit-background);
 
-    &:focus-visible {
-        outline: none;
-    }
-
     &.kbq-inline-edit_view {
         &:not(.kbq-inline-edit_disabled) {
             &:hover {
@@ -67,17 +63,22 @@
                 --kbq-mask-background: var(--kbq-background-bg);
             }
         }
+    }
+
+    .kbq-label {
+        color: var(--kbq-inline-edit-label-color);
+    }
+
+    .kbq-inline-edit__focus_container {
+        &:focus-visible {
+            outline: none;
+        }
 
         &.cdk-keyboard-focused {
             $focused-color: var(--kbq-states-line-focus-theme);
             outline: 1px solid $focused-color;
             border-color: $focused-color;
-            overflow: hidden;
         }
-    }
-
-    .kbq-label {
-        color: var(--kbq-inline-edit-label-color);
     }
 }
 
@@ -89,7 +90,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: var(--kbq-size-border-width) solid transparent;
     border-radius: var(--kbq-size-border-radius);
     padding: var(--kbq-inline-edit-padding-vertical) var(--kbq-inline-edit-padding-horizontal);
     box-sizing: border-box;
@@ -126,6 +126,13 @@
 
         .kbq-inline-edit__view-container {
             text-overflow: ellipsis;
+        }
+    }
+
+    &:hover,
+    &.cdk-keyboard-focused {
+        .kbq-inline-edit__menu-mask {
+            opacity: 1;
         }
     }
 
@@ -169,11 +176,14 @@
         }
     }
 
-    &:hover,
-    &.cdk-keyboard-focused {
-        .kbq-inline-edit__menu-mask {
-            opacity: 1;
-        }
+    .kbq-inline-edit__focus_container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: var(--kbq-size-border-width) solid transparent;
+        border-radius: var(--kbq-size-border-radius);
     }
 
     .kbq-inline-edit__overlay-origin {

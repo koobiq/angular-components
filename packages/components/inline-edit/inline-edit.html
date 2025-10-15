@@ -1,69 +1,75 @@
-<div #focusRegion class="kbq-inline-edit__view-focus-region" tabindex="0" [cdkTrapFocus]="false">
-    @if (label()) {
-        <div class="kbq-inline-edit__label">
-            <ng-content select="kbq-label" />
+@if (label()) {
+    <div class="kbq-inline-edit__label">
+        <ng-content select="kbq-label" />
+    </div>
+}
+
+<div class="kbq-inline-edit__view-container">
+    <ng-content select="[kbqInlineEditViewMode]" />
+
+    <div
+        class="kbq-inline-edit__focus_container"
+        style=""
+        cdkMonitorElementFocus
+        [tabIndex]="tabIndex()"
+        (keydown.enter)="onClick($event)"
+    ></div>
+
+    @if (menu() && mode() === 'view') {
+        <div class="kbq-inline-edit__menu-mask kbq-mask">
+            <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
+            <div class="kbq-inline-edit__menu-mask-container kbq-mask__container">
+                <ng-content select="[kbqInlineEditMenu]" />
+            </div>
         </div>
     }
 
-    <div class="kbq-inline-edit__view-container">
-        <ng-content select="[kbqInlineEditViewMode]" />
+    @if (mode() === 'edit') {
+        <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
 
-        @if (menu() && mode() === 'view') {
-            <div class="kbq-inline-edit__menu-mask kbq-mask">
-                <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
-                <div class="kbq-inline-edit__menu-mask-container kbq-mask__container">
-                    <ng-content select="[kbqInlineEditMenu]" />
+        <ng-template
+            cdkConnectedOverlay
+            cdkConnectedOverlayLockPosition
+            [cdkConnectedOverlayOpen]="isEditMode()"
+            [cdkConnectedOverlayOrigin]="overlayOrigin"
+            [cdkConnectedOverlayWidth]="overlayWidth()"
+            [cdkConnectedOverlayDisableClose]="true"
+            [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
+            [cdkConnectedOverlayHasBackdrop]="false"
+            (attach)="onAttach()"
+            (overlayOutsideClick)="save($event)"
+            (overlayKeydown)="onOverlayKeydown($event)"
+        >
+            <div #focusTrapInstance="cdkTrapFocus" class="kbq-inline-edit__panel" cdkTrapFocus>
+                <div
+                    class="kbq-inline-edit__control-container"
+                    kbqFocusRegionItem
+                    [kbqTooltipColor]="colors.Error"
+                    [kbqTooltip]="validationTooltip() ?? ''"
+                    [kbqTooltipArrow]="false"
+                    [kbqTrigger]="'manual'"
+                    [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
+                >
+                    <ng-content select="[kbqInlineEditEditMode]" />
                 </div>
-            </div>
-        }
 
-        @if (mode() === 'edit') {
-            <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
-
-            <ng-template
-                cdkConnectedOverlay
-                cdkConnectedOverlayLockPosition
-                [cdkConnectedOverlayOpen]="isEditMode()"
-                [cdkConnectedOverlayOrigin]="overlayOrigin"
-                [cdkConnectedOverlayWidth]="overlayWidth()"
-                [cdkConnectedOverlayDisableClose]="true"
-                [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
-                [cdkConnectedOverlayHasBackdrop]="false"
-                (attach)="onAttach()"
-                (overlayOutsideClick)="save($event)"
-                (overlayKeydown)="onOverlayKeydown($event)"
-            >
-                <div #focusTrapInstance="cdkTrapFocus" class="kbq-inline-edit__panel" cdkTrapFocus>
-                    <div
-                        class="kbq-inline-edit__control-container"
-                        kbqFocusRegionItem
-                        [kbqTooltipColor]="colors.Error"
-                        [kbqTooltip]="validationTooltip() ?? ''"
-                        [kbqTooltipArrow]="false"
-                        [kbqTrigger]="'manual'"
-                        [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
-                    >
-                        <ng-content select="[kbqInlineEditEditMode]" />
+                @if (showActions()) {
+                    <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
+                        <button kbq-button [color]="'contrast'" (click)="save($event)">
+                            <i kbq-icon="kbq-check_16"></i>
+                        </button>
+                        <button
+                            kbqFocusRegionItem
+                            kbq-button
+                            [color]="'contrast-fade'"
+                            (click)="cancel()"
+                            (keydown.enter)="cancel()"
+                        >
+                            <i kbq-icon="kbq-xmark_16"></i>
+                        </button>
                     </div>
-
-                    @if (showActions()) {
-                        <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
-                            <button kbq-button [color]="'contrast'" (click)="save($event)">
-                                <i kbq-icon="kbq-check_16"></i>
-                            </button>
-                            <button
-                                kbqFocusRegionItem
-                                kbq-button
-                                [color]="'contrast-fade'"
-                                (click)="cancel()"
-                                (keydown.enter)="cancel()"
-                            >
-                                <i kbq-icon="kbq-xmark_16"></i>
-                            </button>
-                        </div>
-                    }
-                </div>
-            </ng-template>
-        }
-    </div>
+                }
+            </div>
+        </ng-template>
+    }
 </div>
