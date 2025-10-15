@@ -8,6 +8,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
@@ -25,7 +26,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqTextareaModule,
         KbqOptionModule,
         KbqSelectModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqTagsModule
     ],
     selector: 'inline-edit-controls-example',
     template: `
@@ -77,9 +79,13 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                             style="flex-wrap: wrap"
                         >
                             @if (form.controls.selectMultiple.value!.length > 0) {
-                                @for (badge of form.controls.selectMultiple.value; track badge) {
-                                    <kbq-badge>{{ badge }}</kbq-badge>
-                                }
+                                <kbq-tag-list>
+                                    @for (tag of form.controls.selectMultiple.value; track tag) {
+                                        <kbq-tag [value]="tag">
+                                            {{ tag }}
+                                        </kbq-tag>
+                                    }
+                                </kbq-tag-list>
                             } @else {
                                 <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                             }
