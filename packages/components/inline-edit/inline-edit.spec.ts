@@ -30,6 +30,7 @@ const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixt
 
 const componentCssClasses = {
     panel: '.kbq-inline-edit__panel',
+    focusContainer: '.kbq-inline-edit__focus_container',
     terminalButtons: '.kbq-inline-edit__action-buttons',
     menuMask: '.kbq-inline-edit__menu-mask',
     menu: '.kbq-inline-edit__menu',
@@ -45,6 +46,10 @@ const simulateKeyboardFocus = <T>(fixture: ComponentFixture<T>, debugElement: De
 
 const getInlineEditDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqInlineEdit));
+};
+
+const getInlineEditFocusContainerDebugElement = (debugElement: DebugElement): DebugElement => {
+    return debugElement.query(By.css(componentCssClasses.focusContainer));
 };
 
 const getMaskDebugElement = (debugElement: DebugElement): DebugElement => {
@@ -116,11 +121,11 @@ describe('KbqInlineEdit', () => {
     it('should add css class on keyboard focus', () => {
         const fixture = setup(TestComponent);
         const { debugElement } = fixture;
-        const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+        const focusContainer: DebugElement = getInlineEditFocusContainerDebugElement(debugElement);
 
-        simulateKeyboardFocus(fixture, inlineEditDebugElement);
+        simulateKeyboardFocus(fixture, focusContainer);
 
-        expect(inlineEditDebugElement.classes['cdk-keyboard-focused']).toBeTruthy();
+        expect(focusContainer.classes['cdk-keyboard-focused']).toBeTruthy();
     });
 
     it('should have terminal buttons when provided', () => {
