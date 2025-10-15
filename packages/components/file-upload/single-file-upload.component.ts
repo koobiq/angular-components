@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -142,6 +143,8 @@ export class KbqSingleFileUploadComponent
         optional: true
     });
 
+    private readonly focusMonitor = inject(FocusMonitor);
+
     constructor() {
         super();
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
@@ -245,6 +248,14 @@ export class KbqSingleFileUploadComponent
         this.errors = [];
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
+
+        if (this.file === null) {
+            setTimeout(() => {
+                this.focusMonitor.focusVia(this.input.nativeElement, 'keyboard');
+            });
+
+            return;
+        }
     }
 
     /** @docs-private */

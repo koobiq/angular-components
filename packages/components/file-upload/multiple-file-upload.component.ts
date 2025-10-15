@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -193,6 +194,8 @@ export class KbqMultipleFileUploadComponent
         optional: true
     });
 
+    private readonly focusMonitor = inject(FocusMonitor);
+
     constructor() {
         super();
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
@@ -297,9 +300,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     deleteFile(index: number, event?: MouseEvent) {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         event?.stopPropagation();
         const removedFile = this.files.splice(index, 1)[0];
@@ -309,7 +310,15 @@ export class KbqMultipleFileUploadComponent
         this.filesChange.emit(this.files);
         this.onTouched();
 
-        this.listSelection?.keyManager.setActiveItem(-1);
+        if (this.files.length === 0) {
+            setTimeout(() => {
+                this.focusMonitor.focusVia(this.input.nativeElement, 'keyboard');
+            });
+
+            return;
+        }
+
+        this.listSelection?.keyManager.setActiveItem(index + 1 > this.files.length ? this.files.length : index + 1);
     }
 
     private updateLocaleParams = () => {
