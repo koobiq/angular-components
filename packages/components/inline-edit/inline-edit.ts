@@ -112,13 +112,6 @@ export class KbqInlineEditMenu {
     protected readonly dropdownTrigger = inject(KbqDropdownTrigger, { optional: true });
 }
 
-@Directive({
-    standalone: true,
-    selector: '[kbqInlineEditViewModeInteractive]',
-    exportAs: 'kbqInlineEditViewModeInteractive'
-})
-export class KbqInlineEditViewModeInteractive {}
-
 /**
  * Customizable component that enables edit-in-place logic for specified control and it's view.
  * This component is projecting edit/view mode templates and adds keyboard/pointer handlers.
@@ -209,8 +202,6 @@ export class KbqInlineEdit {
     protected readonly overlayDir = viewChild(CdkConnectedOverlay);
     /** @docs-private */
     protected readonly regionItems = viewChildren(KbqFocusRegionItem);
-    /** @docs-private */
-    protected readonly focusTrapInstance = viewChild<CdkTrapFocus>('focusTrapInstance');
 
     /** @docs-private */
     protected readonly mode = signal<'view' | 'edit'>('view');
@@ -253,7 +244,7 @@ export class KbqInlineEdit {
 
         event.preventDefault();
         event.stopPropagation();
-        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'program');
+        this.kbqFocusMonitor.focusVia(this.overlayOrigin().elementRef, 'program');
 
         this.toggleMode();
     }
@@ -282,10 +273,6 @@ export class KbqInlineEdit {
             const input = this.getInputNativeElement();
 
             if (this.initialValue) input?.select();
-
-            if (!formFieldRef) {
-                this.focusTrapInstance()?.focusTrap.focusFirstTabbableElement();
-            }
 
             if (formFieldRef) {
                 this.openPanel(formFieldRef);
@@ -373,10 +360,7 @@ export class KbqInlineEdit {
     private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
         this.save(event);
         if (this.isInvalid()) return;
-        this.kbqFocusMonitor.focusVia(
-            this.elementRef.nativeElement.querySelector('.kbq-inline-edit__focus_container') as HTMLElement,
-            'keyboard'
-        );
+        this.kbqFocusMonitor.focusVia(this.overlayOrigin().elementRef, 'keyboard');
 
         setTimeout(() => {
             const activeElement = this.document.activeElement;
@@ -447,7 +431,7 @@ export class KbqInlineEdit {
         }
 
         const elementRef: ElementRef<HTMLElement> | undefined = this.label()
-            ? this.overlayOrigin()?.elementRef
+            ? this.overlayOrigin().elementRef
             : this.elementRef;
 
         this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
