@@ -16,7 +16,7 @@
         @if (header) {
             <div
                 class="kbq-popover__header"
-                [class.kbq-popover__header_paddings]="!noPaddings"
+                [class.kbq-popover__header_default-paddings]="defaultPaddings"
                 [class.kbq-popover__header_top-overflow]="isContentTopOverflow"
                 [class.kbq-popover__header_with-close-button]="hasCloseButton"
             >
@@ -33,7 +33,7 @@
             <div
                 #popoverContent
                 class="kbq-popover__content kbq-scrollbar"
-                [class.kbq-popover__content_paddings]="!noPaddings"
+                [class.kbq-popover__content_default-paddings]="defaultPaddings"
                 (cdkObserveContent)="onContentChange()"
             >
                 @if (hasCloseButton && !header) {
@@ -53,7 +53,7 @@
         @if (footer) {
             <div
                 class="kbq-popover__footer"
-                [class.kbq-popover__footer_paddings]="!noPaddings"
+                [class.kbq-popover__footer_default-paddings]="defaultPaddings"
                 [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow"
             >
                 @if (isTemplateRef(footer)) {

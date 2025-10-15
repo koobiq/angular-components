@@ -38,7 +38,7 @@ export abstract class KbqPopUp implements OnDestroy {
 
     warning: boolean;
     arrow: boolean;
-    noPaddings: boolean;
+    defaultPaddings: boolean;
 
     offset: number | null;
 

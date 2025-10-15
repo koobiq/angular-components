@@ -21,7 +21,7 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
     imports: [PopoverExamplesModule],
     selector: 'dev-examples',
     template: `
-        <!--        <popover-paddings-example />-->
+        <popover-paddings-example />
         <popover-small-example />
         <!--        <popover-width-example />-->
         <!--        <popover-common-example />-->

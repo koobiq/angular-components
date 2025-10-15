@@ -18,7 +18,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqListModule
     ],
     styles: `
-        ::ng-deep .popover-custom-paddings-example .kbq-list-selection {
+        ::ng-deep .popover-custom-paddings-example .kbq-popover__content {
             margin: 4px;
             width: 376px;
         }

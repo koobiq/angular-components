@@ -2979,6 +2979,8 @@ export abstract class KbqPopUp implements OnDestroy {
         $implicit: any;
     } | null;
     // (undocumented)
+    defaultPaddings: boolean;
+    // (undocumented)
     readonly destroyRef: DestroyRef;
     // (undocumented)
     detectChanges(): void;
@@ -2998,8 +3000,6 @@ export abstract class KbqPopUp implements OnDestroy {
     markForCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    noPaddings: boolean;
     // (undocumented)
     offset: number | null;
     protected readonly onHideSubject: Subject<void>;
