@@ -160,7 +160,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
     selector: 'basic-select',
     template: `
         <div [style.height.px]="heightAbove"></div>
-        <kbq-form-field style="width: 300px">
+        <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control" [panelClass]="panelClass">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -626,26 +626,26 @@ describe(KbqTreeSelect.name, () => {
         describe('overlay panel', () => {
             let fixture: ComponentFixture<BasicTreeSelect>;
             let trigger: HTMLElement;
+            let formField: HTMLElement;
 
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(BasicTreeSelect);
                 fixture.detectChanges();
                 fixture.detectChanges();
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+                formField = fixture.debugElement.query(By.css('.kbq-form-field')).nativeElement;
 
                 tick(10);
             }));
 
             it('should set the width of the overlay based on the trigger', fakeAsync(() => {
-                trigger.style.width = '200px';
-
                 trigger.click();
                 fixture.detectChanges();
                 flush();
 
                 const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-                expect(pane.style.minWidth).toBe('200px');
+                expect(parseInt(pane.style.minWidth)).toBe(formField.getBoundingClientRect().width);
             }));
         });
 
@@ -767,8 +767,6 @@ describe(KbqTreeSelect.name, () => {
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
-            trigger.style.width = '300px';
-
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -778,10 +776,6 @@ describe(KbqTreeSelect.name, () => {
             expect(value.nativeElement.textContent)
                 .withContext(`Expected trigger to be populated by the control's initial value.`)
                 .toContain('rootNode_1');
-
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-
-            expect(pane.style.minWidth).toEqual('300px');
 
             expect(fixture.componentInstance.select.panelOpen).toBe(true);
             expect(overlayContainerElement.textContent).toContain('rootNode_1');
@@ -799,8 +793,8 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const formField = fixture.debugElement.query(By.css('.kbq-form-field')).nativeElement;
 
-            trigger.style.width = '200px';
             fixture.componentInstance.isVisible = true;
             fixture.detectChanges();
 
@@ -810,7 +804,7 @@ describe(KbqTreeSelect.name, () => {
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-            expect(pane.style.minWidth).toBe('200px');
+            expect(parseInt(pane.style.minWidth)).toBe(formField.getBoundingClientRect().width);
         }));
     });
 
