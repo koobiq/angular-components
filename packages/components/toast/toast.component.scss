@@ -50,12 +50,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    white-space: pre-wrap;
-
     & > p {
         margin: 0;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    &.kbq-toast__title_only-text {
+        white-space: pre-wrap;
     }
 }
 
@@ -68,14 +70,18 @@
     flex: 1;
     align-items: center;
 
-    white-space: pre-wrap;
+    &.kbq-toast__text_only-text {
+        white-space: pre-wrap;
+    }
 }
 
 .kbq-toast__content {
     display: flex;
     flex-direction: column;
 
-    white-space: pre-wrap;
+    &.kbq-toast__content_only-text {
+        white-space: pre-wrap;
+    }
 }
 
 .kbq-toast__actions {

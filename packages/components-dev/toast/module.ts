@@ -23,6 +23,46 @@ import {
     KbqToastService,
     KbqToastStyle
 } from '@koobiq/components/toast';
+import { ToastExamplesModule } from '../../docs-examples/components/toast';
+
+@Component({
+    standalone: true,
+    selector: 'dev-examples',
+    template: `
+        <toast-overview-example />
+        <br />
+        <br />
+        <toast-actions-overview-example />
+        <br />
+        <br />
+        <toast-hide-overview-example />
+        <br />
+        <br />
+        <toast-link-overview-example />
+        <br />
+        <br />
+        <toast-multiline-example />
+        <br />
+        <br />
+        <toast-user-data-example />
+        <br />
+        <br />
+        <toast-progress-bar-overview-example />
+        <br />
+        <br />
+        <toast-report-overview-example />
+        <br />
+        <br />
+        <toast-types-overview-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        ToastExamplesModule,
+        KbqToastModule
+    ]
+})
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -58,7 +98,9 @@ export class DevToastComponent extends KbqToastComponent {
         KbqDropdownModule,
         KbqModalModule,
         KbqSidepanelModule,
-        KbqScrollbarModule
+        KbqScrollbarModule,
+        DevToastComponent,
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
