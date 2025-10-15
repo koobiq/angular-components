@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ToastActionsOverviewExample } from './toast-actions-overview/toast-actions-overview-example';
 import { ToastHideOverviewExample } from './toast-hide-overview/toast-hide-overview-example';
 import { ToastLinkOverviewExample } from './toast-link-overview/toast-link-overview-example';
+import { ToastMultilineExample } from './toast-multiline/toast-multiline-example';
 import { ToastOverviewExample } from './toast-overview/toast-overview-example';
 import { ToastProgressBarOverviewExample } from './toast-progress-bar-overview/toast-progress-bar-overview-example';
 import { ToastReportOverviewExample } from './toast-report-overview/toast-report-overview-example';
@@ -13,6 +14,7 @@ export {
     ToastActionsOverviewExample,
     ToastHideOverviewExample,
     ToastLinkOverviewExample,
+    ToastMultilineExample,
     ToastOverviewExample,
     ToastProgressBarOverviewExample,
     ToastReportOverviewExample,
@@ -28,7 +30,8 @@ const EXAMPLES = [
     ToastReportOverviewExample,
     ToastTypesOverviewExample,
     ToastHideOverviewExample,
-    ToastUserDataExample
+    ToastUserDataExample,
+    ToastMultilineExample
 ];
 
 @NgModule({
