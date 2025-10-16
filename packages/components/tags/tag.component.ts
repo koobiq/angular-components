@@ -528,12 +528,18 @@ export class KbqTag
 
         switch (event.keyCode) {
             case DELETE:
-            case BACKSPACE:
-                this.tagList ? this.tagList.removeSelected() : this.remove();
+            case BACKSPACE: {
+                const hasSelectedTags =
+                    this.tagList &&
+                    (Array.isArray(this.tagList.selected) ? this.tagList.selected.length > 0 : !!this.tagList.selected);
+
+                // If there is a tag list and it has selected tags, remove them, otherwise remove focused tag.
+                hasSelectedTags ? this.tagList.removeSelected() : this.remove();
 
                 // Always prevent so page navigation does not occur
                 event.preventDefault();
                 break;
+            }
             case F2:
             case ENTER:
                 this.startEditing(event.key);
