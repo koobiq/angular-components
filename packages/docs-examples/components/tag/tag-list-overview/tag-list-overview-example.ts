@@ -3,7 +3,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Tag ${i}`);
+const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }));
 
 /**
  * @title Tag list overview
@@ -14,9 +14,9 @@ const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Tag ${i}`);
     imports: [KbqTagsModule, KbqIconModule],
     template: `
         <kbq-tag-list removable multiple draggable>
-            @for (tag of tags(); track $index) {
+            @for (tag of tags(); track tag) {
                 <kbq-tag [value]="tag" (removed)="remove($event)">
-                    {{ tag }}
+                    {{ tag.value }}
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
             } @empty {

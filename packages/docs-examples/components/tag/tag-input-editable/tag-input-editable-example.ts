@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
@@ -7,22 +6,24 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
+const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable tag ${i}` }));
+
 /**
  * @title Tag input editable
  */
 @Component({
     standalone: true,
     selector: 'tag-input-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, JsonPipe, KbqFormFieldModule, FormsModule, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, FormsModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" editable multiple [(ngModel)]="tags">
-                @for (tag of tags(); track $index) {
+            <kbq-tag-list #tagList="kbqTagList" editable multiple>
+                @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
-                        {{ tag }}
-                        <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
-                        @if (tag.length === 0) {
+                        {{ tag.value }}
+                        <input kbqInput kbqTagEditInput [(ngModel)]="editInputModel" />
+                        @if (editInputModel().length === 0) {
                             <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                         } @else {
                             <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
@@ -42,10 +43,6 @@ import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsMo
                 <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
             </kbq-tag-list>
         </kbq-form-field>
-
-        <small>
-            <code>{{ tags() | json }}</code>
-        </small>
     `,
     styles: `
         :host {
@@ -55,18 +52,14 @@ import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsMo
             gap: var(--kbq-size-xl);
             margin: var(--kbq-size-xl);
         }
-
-        small {
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputEditableExample {
     protected readonly color = KbqComponentColors;
-    protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
-    private prevTags = this.tags().slice();
+    protected readonly tags = model(getTags());
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+    protected readonly editInputModel = model<string>('');
 
     protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
         const input = this.input().nativeElement as HTMLInputElement;
@@ -75,18 +68,14 @@ export class TagInputEditableExample {
             case 'start': {
                 console.info(`Tag #${index} edit was started. Reason: "${reason}".`);
 
-                this.prevTags = this.tags().slice();
+                this.editInputModel.set(tag.value.value);
 
                 break;
             }
             case 'cancel': {
                 console.info(`Tag #${index} edit was canceled. Reason: "${reason}".`);
 
-                this.tags.update((tags) => {
-                    tags[index] = this.prevTags[index];
-
-                    return tags;
-                });
+                this.editInputModel.set('');
 
                 input.focus();
 
@@ -95,7 +84,16 @@ export class TagInputEditableExample {
             case 'submit': {
                 console.info(`Tag #${index} edit was submitted. Reason: "${reason}".`);
 
-                if (!tag.value) tag.remove();
+                if (!this.editInputModel()) {
+                    tag.remove();
+                } else {
+                    this.tags.update((tags) => {
+                        tags[index].value = this.editInputModel();
+
+                        return tags;
+                    });
+                    this.editInputModel.set('');
+                }
 
                 input.focus();
 
@@ -113,14 +111,14 @@ export class TagInputEditableExample {
 
             console.info(`Tag #${index} was removed.`);
 
-            return tags;
+            return [...tags];
         });
     }
 
     protected create({ input, value = '' }: KbqTagInputEvent): void {
         if (value) {
             this.tags.update((tags) => {
-                tags.push(value);
+                tags.push({ value });
 
                 return tags;
             });

@@ -5,6 +5,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
+const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable tag ${i}` }));
+
 /**
  * @title Tag input removable
  */
@@ -16,9 +18,9 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" removable multiple>
-                @for (tag of tags(); track $index) {
+                @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
-                        {{ tag }}
+                        {{ tag.value }}
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 }
@@ -50,7 +52,7 @@ import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
 export class TagInputRemovableExample {
     protected readonly colors = KbqComponentColors;
     protected readonly removable = model(true);
-    protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Removable tag ${i}`));
+    protected readonly tags = model(getTags());
 
     protected remove(event: KbqTagEvent): void {
         this.tags.update((tags) => {
@@ -67,7 +69,7 @@ export class TagInputRemovableExample {
     protected create({ input, value = '' }: KbqTagInputEvent): void {
         if (value) {
             this.tags.update((tags) => {
-                tags.push(value);
+                tags.push({ value });
 
                 return tags;
             });
