@@ -134,7 +134,11 @@ export class KbqTagList
         return merge(...this.tags.map((tag) => tag.editChange));
     }
 
-    /** The array of selected tags inside tag list. */
+    /**
+     * The array of selected tags inside tag list.
+     *
+     * @docs-private
+     */
     get selected(): KbqTag[] | KbqTag {
         const selected = this.tags.filter(({ selected }) => selected);
 
