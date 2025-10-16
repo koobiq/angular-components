@@ -143,7 +143,6 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
             fixture.detectChanges();
-            flush();
         };
 
         it('should add files via input click', (done) => {
@@ -201,7 +200,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             });
         });
 
-        it('should remove file via button click in a row', fakeAsync(() => {
+        it('should remove file via button click in a row', async () => {
             expect(component.files).toBeUndefined();
 
             component.disabled = false;
@@ -213,9 +212,9 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 expect(component.onChange).toHaveBeenCalledTimes(2);
                 expect(component.files).toHaveLength(0);
             });
-        }));
+        });
 
-        it('should focus label after file removed', fakeAsync(() => {
+        it('should focus label after file removed', async () => {
             expect(component.files).toBeUndefined();
 
             component.disabled = false;
@@ -223,22 +222,22 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             emitRemoveEvent();
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(2);
-                expect(component.files).toHaveLength(0);
-            });
-        }));
+            await fixture.whenStable();
 
-        it('should focus label after file removed', fakeAsync(() => {
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+            expect(component.files).toHaveLength(0);
+        });
+
+        it('should focus label after file removed', async () => {
             component.disabled = false;
             fixture.detectChanges();
 
             emitRemoveEvent();
 
-            setTimeout(() => {
-                expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
-            });
-        }));
+            await fixture.whenStable();
+
+            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
+        });
 
         it('should NOT throw error on detectChanges in handler', () => {
             component.onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
@@ -423,7 +422,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
             fixture.detectChanges();
-            flush();
         };
 
         it('should add file via input click', (done) => {
@@ -485,7 +483,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             });
         });
 
-        it('should remove file via button click', fakeAsync(() => {
+        it('should remove file via button click', async () => {
             expect(component.file).toBeUndefined();
 
             component.disabled = false;
@@ -493,22 +491,22 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             emitRemoveEvent();
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(2);
-                expect(component.file).toBeNull();
-            });
-        }));
+            await fixture.whenStable();
 
-        it('should focus label after file removed', fakeAsync(() => {
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+            expect(component.file).toBeNull();
+        });
+
+        it('should focus label after file removed', async () => {
             component.disabled = false;
             fixture.detectChanges();
 
             emitRemoveEvent();
 
-            setTimeout(() => {
-                expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
-            });
-        }));
+            await fixture.whenStable();
+
+            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
+        });
     });
 
     describe('with ellipsis in the center', () => {
