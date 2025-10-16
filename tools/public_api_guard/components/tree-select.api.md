@@ -55,6 +55,7 @@ import { TemplateRef } from '@angular/core';
 // @public
 export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
     panelWidth: KbqTreeSelectPanelWidth;
+    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, "auto">;
     searchMinOptionsThreshold: "auto" | number;
 }>>;
 
@@ -135,6 +136,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;
     // (undocumented)
+    static ngAcceptInputType_panelMinWidth: unknown;
+    // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -175,6 +178,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
         [key: string]: any;
     };
     panelDoneAnimatingStream: Subject<string>;
+    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
     // (undocumented)
     get panelOpen(): boolean;
     panelWidth: KbqTreeSelectPanelWidth;
@@ -234,7 +238,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, { optional: true; }]>;
 }
@@ -265,6 +269,7 @@ export class KbqTreeSelectModule {
 // @public
 export type KbqTreeSelectOptions = Partial<{
     panelWidth: KbqTreeSelectPanelWidth;
+    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
     searchMinOptionsThreshold: 'auto' | number;
 }>;
 

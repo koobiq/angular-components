@@ -100,6 +100,10 @@ export type KbqTreeSelectOptions = Partial<{
      */
     panelWidth: KbqTreeSelectPanelWidth;
     /**
+     * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
+     */
+    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
+    /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
      * - `'auto'` uses `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` as min value.
@@ -512,6 +516,13 @@ export class KbqTreeSelect
     /** Min width of the overlay panel. */
     protected overlayMinWidth: string | number;
 
+    /**
+     * Minimum width of the panel.
+     * If minWidth is larger than window width, it will be ignored.
+     */
+    @Input({ transform: numberAttribute }) panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'> =
+        this.defaultOptions?.panelMinWidth ?? 200;
+
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
@@ -781,11 +792,13 @@ export class KbqTreeSelect
     }
 
     open(): void {
-        if (this.disabled || !this.options || !this.options.length || this._panelOpen) {
-            return;
-        }
+        if (this.disabled || !this.options || !this.options.length || this._panelOpen) return;
 
-        this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+        // add check for form-field bounding rectangles, since it adds extra padding around the trigger
+        this.triggerRect = (
+            this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
+        ).getBoundingClientRect();
+
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
         this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger.nativeElement)['font-size']);
@@ -798,7 +811,13 @@ export class KbqTreeSelect
         }
 
         this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
-        this.overlayMinWidth = this.overlayWidth ? '' : this.triggerRect.width;
+        // set overlayMinWidth to the largest of `panelMinWidth` and `triggerRect.width`
+        // only if `overlayWidth` falsy and `panelMinWidth` not provided.
+        // This ensures panel isn't narrow.
+        this.overlayMinWidth =
+            this.panelMinWidth !== null && !this.overlayWidth
+                ? Math.max(this.panelMinWidth, this.triggerRect.width)
+                : '';
 
         this._panelOpen = true;
 

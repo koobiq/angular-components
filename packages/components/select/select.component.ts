@@ -478,7 +478,7 @@ export class KbqSelect
      * If minWidth is larger than window width, it will be ignored.
      */
     @Input({ transform: numberAttribute }) panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'> =
-        this.defaultOptions?.panelMinWidth !== undefined ? this.defaultOptions.panelMinWidth : 200;
+        this.defaultOptions?.panelMinWidth ?? 200;
 
     /** Value of the select control. */
     @Input()
