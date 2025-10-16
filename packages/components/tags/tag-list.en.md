@@ -1,4 +1,4 @@
-<!-- example(tag-list) -->
+<!-- example(tag-list-overview) -->
 
 ### Tag removal
 

@@ -1,0 +1,82 @@
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+
+/**
+ * @title Tag input overview
+ */
+@Component({
+    standalone: true,
+    selector: 'tag-input-overview-example',
+    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList="kbqTagList" removable multiple draggable>
+                @for (tag of tags(); track $index) {
+                    <kbq-tag [value]="tag" (removed)="remove($event)">
+                        {{ tag }}
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                    </kbq-tag>
+                }
+
+                <input
+                    autocomplete="off"
+                    kbqInput
+                    placeholder="New tag"
+                    [kbqTagInputFor]="tagList"
+                    (kbqTagInputTokenEnd)="create($event)"
+                />
+
+                <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--kbq-size-m);
+            min-height: var(--kbq-size-xxl);
+            margin: var(--kbq-size-5xl);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TagInputOverviewExample {
+    protected readonly colors = KbqComponentColors;
+    protected readonly removable = model(true);
+    protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Tag ${i}`));
+
+    protected remove(event: KbqTagEvent): void {
+        this.tags.update((tags) => {
+            const index = tags.indexOf(event.tag.value);
+
+            tags.splice(index, 1);
+
+            console.log(`Tag #${index} was removed:`, event);
+
+            return tags;
+        });
+    }
+
+    protected create({ input, value = '' }: KbqTagInputEvent): void {
+        if (value) {
+            this.tags.update((tags) => {
+                tags.push(value);
+
+                return tags;
+            });
+
+            input.value = '';
+        }
+    }
+
+    protected clear(): void {
+        this.tags.update(() => []);
+    }
+}

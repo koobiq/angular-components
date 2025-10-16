@@ -1,4 +1,4 @@
-<!-- example(tag-input) -->
+<!-- example(tag-input-overview) -->
 
 ### Tag removal
 

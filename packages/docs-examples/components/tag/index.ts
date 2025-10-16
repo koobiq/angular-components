@@ -7,13 +7,13 @@ import { TagEditableExample } from './tag-editable/tag-editable-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
 import { TagInputDraggableExample } from './tag-input-draggable/tag-input-draggable-example';
 import { TagInputEditableExample } from './tag-input-editable/tag-input-editable-example';
+import { TagInputOverviewExample } from './tag-input-overview/tag-input-overview-example';
 import { TagInputRemovableExample } from './tag-input-removable/tag-input-removable-example';
 import { TagInputWithFormControlValidatorsExample } from './tag-input-with-form-control-validators/tag-input-with-form-control-validators-example';
-import { TagInputExample } from './tag-input/tag-input-example';
 import { TagListDraggableExample } from './tag-list-draggable/tag-list-draggable-example';
 import { TagListEditableExample } from './tag-list-editable/tag-list-editable-example';
+import { TagListOverviewExample } from './tag-list-overview/tag-list-overview-example';
 import { TagListRemovableExample } from './tag-list-removable/tag-list-removable-example';
-import { TagListExample } from './tag-list/tag-list-example';
 import { TagLongTextExample } from './tag-long-text/tag-long-text-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
 import { TagRemovableExample } from './tag-removable/tag-removable-example';
@@ -30,12 +30,12 @@ export {
     TagFillAndStyleExample,
     TagInputDraggableExample,
     TagInputEditableExample,
-    TagInputExample,
+    TagInputOverviewExample,
     TagInputRemovableExample,
     TagInputWithFormControlValidatorsExample,
     TagListDraggableExample,
     TagListEditableExample,
-    TagListExample,
+    TagListOverviewExample,
     TagListRemovableExample,
     TagLongTextExample,
     TagOverviewExample,
@@ -49,8 +49,8 @@ const EXAMPLES = [
     TagOverviewExample,
     TagFillAndStyleExample,
     TagLongTextExample,
-    TagInputExample,
-    TagListExample,
+    TagInputOverviewExample,
+    TagListOverviewExample,
     TagAutocompleteExample,
     TagAutocompleteOptionOperationsExample,
     TagsInputOnpasteOffExample,
