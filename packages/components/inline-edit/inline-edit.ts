@@ -360,7 +360,6 @@ export class KbqInlineEdit {
     private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
         this.save(event);
         if (this.isInvalid()) return;
-        this.kbqFocusMonitor.focusVia(this.overlayOrigin().elementRef, 'keyboard');
 
         setTimeout(() => {
             const activeElement = this.document.activeElement;
