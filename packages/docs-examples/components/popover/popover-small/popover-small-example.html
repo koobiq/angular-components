@@ -1,0 +1,21 @@
+<ng-template #customSmallContent>
+    Schatz, Daniel; Bashroush, Rabih; Wall, Julie (2017). 
+    <a href="">"Towards a More Representative Definition of Cyber Security"</a>
+    . Journal of Digital Forensics, Security and Law. 12 (2). 
+    <a href="">ISSN 1558-7215</a>
+    .
+</ng-template>
+
+<div style="gap: 16px" class="layout-row layout-wrap layout-align-center">
+    <div
+        kbq-link
+        kbqPopover
+        [pseudo]="true"
+        [kbqPopoverClass]="'popover-small-example'"
+        [kbqPopoverContent]="customSmallContent"
+        [kbqPopoverSize]="popUpSizes.Small"
+    >
+        Small Size
+        <i kbq-icon="kbq-question-circle_16"></i>
+    </div>
+</div>

@@ -1,5 +1,3 @@
-<ng-template #customSmallContent>В Windows есть вещи, известные как системные переменные.</ng-template>
-
 <ng-template #customContent>
     В Windows есть вещи, известные как системные переменные. Это переменные, от которых зависит функционирование
     Windows, потому что Windows всегда будет знать, что означают переменные и где они находятся, даже когда
@@ -21,19 +19,7 @@
     </p>
 </ng-template>
 
-<div style="gap: 16px" class="layout-row layout-wrap">
-    <button
-        kbq-button
-        kbqPopover
-        [hasCloseButton]="true"
-        [kbqPopoverClass]="'popover-width-example'"
-        [kbqPopoverContent]="customSmallContent"
-        [kbqPopoverHeader]="'Small'"
-        [kbqPopoverSize]="selectedSize"
-        (click)="selectedSize = popUpSizes.Small"
-    >
-        Small
-    </button>
+<div style="gap: 16px" class="layout-row layout-wrap layout-align-center">
     <button
         kbq-button
         kbqPopover

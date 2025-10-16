@@ -2979,6 +2979,8 @@ export abstract class KbqPopUp implements OnDestroy {
         $implicit: any;
     } | null;
     // (undocumented)
+    defaultPaddings: boolean;
+    // (undocumented)
     readonly destroyRef: DestroyRef;
     // (undocumented)
     detectChanges(): void;
