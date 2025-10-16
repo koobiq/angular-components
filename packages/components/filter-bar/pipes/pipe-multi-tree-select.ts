@@ -264,7 +264,11 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     };
 
     private emitChangePipeEvent() {
-        this.filterBar?.onChangePipe.emit(this.data);
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
+            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
+        } else {
+            this.filterBar?.onChangePipe.emit(this.data);
+        }
     }
 
     private toggleParents(parent) {

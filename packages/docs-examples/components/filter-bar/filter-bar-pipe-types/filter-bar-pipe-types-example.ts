@@ -191,7 +191,7 @@ export class FilterBarPipeTypesExample {
                     name: 'TreeSelect Multiple',
                     id: 'MultiTreeSelect',
                     type: KbqPipeTypes.MultiTreeSelect,
-                    value: null,
+                    value: [],
 
                     cleanable: true,
                     removable: false,
