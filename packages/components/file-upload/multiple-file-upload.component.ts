@@ -312,7 +312,7 @@ export class KbqMultipleFileUploadComponent
 
         if (this.files.length === 0) {
             setTimeout(() => {
-                this.focusMonitor.focusVia(this.input.nativeElement, 'keyboard');
+                this.focusMonitor.focusVia(this.input, 'keyboard');
             });
 
             return;

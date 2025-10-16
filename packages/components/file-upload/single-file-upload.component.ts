@@ -251,7 +251,7 @@ export class KbqSingleFileUploadComponent
 
         if (this.file === null) {
             setTimeout(() => {
-                this.focusMonitor.focusVia(this.input.nativeElement, 'keyboard');
+                this.focusMonitor.focusVia(this.input, 'keyboard');
             });
 
             return;
