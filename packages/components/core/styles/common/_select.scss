@@ -131,6 +131,11 @@
         }
     }
 
+    & kbq-select-trigger,
+    & [kbq-select-trigger] {
+        width: 100%;
+    }
+
     .kbq-select__arrow-wrapper {
         display: flex;
         align-self: center;
