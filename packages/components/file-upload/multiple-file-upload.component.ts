@@ -318,7 +318,11 @@ export class KbqMultipleFileUploadComponent
             return;
         }
 
-        this.listSelection?.keyManager.setActiveItem(index + 1 > this.files.length ? this.files.length : index + 1);
+        // listSelection will handle case when first element removed.
+        // manually override other cases for proper focus order.
+        if (this.listSelection && index > 0) {
+            this.listSelection.keyManager.setNextItemActive();
+        }
     }
 
     private updateLocaleParams = () => {
