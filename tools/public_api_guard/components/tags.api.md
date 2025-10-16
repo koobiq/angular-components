@@ -114,7 +114,10 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     set selected(value: boolean);
     readonly selectionChange: EventEmitter<KbqTagSelectionChange>;
     selectViaInteraction(): void;
-    setSelectedState(isSelected: boolean, isUserInput: boolean, emitEvent: boolean): void;
+    setSelectedState(selected: boolean, options?: Partial<{
+        isUserInput: boolean;
+        emitEvent: boolean;
+    }>): void;
     submitEditing(reason: string): void;
     // (undocumented)
     get tabindex(): any;
@@ -303,7 +306,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get required(): boolean;
     set required(value: boolean);
     selectable: boolean;
-    get selected(): KbqTag[];
+    get selected(): KbqTag[] | KbqTag;
     // @deprecated
     selectionModel: SelectionModel<KbqTag>;
     setDisabledState(isDisabled: boolean): void;

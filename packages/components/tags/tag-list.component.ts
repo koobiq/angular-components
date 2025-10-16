@@ -135,8 +135,10 @@ export class KbqTagList
     }
 
     /** The array of selected tags inside tag list. */
-    get selected(): KbqTag[] {
-        return this.tags.filter(({ selected }) => selected);
+    get selected(): KbqTag[] | KbqTag {
+        const selected = this.tags.filter(({ selected }) => selected);
+
+        return this.multiple ? selected : selected[0];
     }
 
     /** @docs-private */
@@ -727,7 +729,7 @@ export class KbqTagList
      * @docs-private
      */
     removeSelected(): void {
-        this.selected.forEach((tag) => tag.remove());
+        Array.isArray(this.selected) ? this.selected.forEach((tag) => tag.remove()) : this.selected.remove();
     }
 
     private propagateTagsChanges(): void {
@@ -780,7 +782,7 @@ export class KbqTagList
         this.tagSelectionSubscription = this.tagSelectionChanges.subscribe((event) => {
             if (!this.multiple) {
                 this.tags.forEach((tag) => {
-                    if (tag !== event.source) tag.setSelectedState(false, false, false);
+                    if (tag !== event.source) tag.setSelectedState(false);
                 });
             }
         });

@@ -307,7 +307,7 @@ export class KbqTag
     }
 
     set selected(value: boolean) {
-        this.setSelectedState(value, false, true);
+        this.setSelectedState(value, { emitEvent: true });
     }
 
     private _selected: boolean = false;
@@ -460,7 +460,7 @@ export class KbqTag
     select(): void {
         if (this.disabled || !this.selectable) return;
 
-        this.setSelectedState(true, false, true);
+        this.setSelectedState(true, { emitEvent: true });
     }
 
     /**
@@ -469,7 +469,7 @@ export class KbqTag
     deselect(): void {
         if (this.disabled || !this.selectable) return;
 
-        this.setSelectedState(false, false, true);
+        this.setSelectedState(false, { emitEvent: true });
     }
 
     /**
@@ -480,7 +480,7 @@ export class KbqTag
     selectViaInteraction(): void {
         if (this.disabled || !this.selectable) return;
 
-        this.setSelectedState(true, true, true);
+        this.setSelectedState(true, { isUserInput: true, emitEvent: true });
     }
 
     /**
@@ -489,7 +489,7 @@ export class KbqTag
     toggleSelected(isUserInput: boolean = false): boolean {
         if (this.disabled || !this.selectable) return this.selected;
 
-        this.setSelectedState(!this.selected, isUserInput, true);
+        this.setSelectedState(!this.selected, { isUserInput, emitEvent: true });
 
         return this.selected;
     }
@@ -529,9 +529,7 @@ export class KbqTag
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE:
-                console.log('before delete', this.tagList?.selected.length);
-                // If tag list has selected tags, remove them all. Otherwise remove the focused tag.
-                this.tagList?.selected.length ? this.tagList.removeSelected() : this.remove();
+                this.tagList ? this.tagList.removeSelected() : this.remove();
 
                 // Always prevent so page navigation does not occur
                 event.preventDefault();
@@ -597,9 +595,11 @@ export class KbqTag
      *
      * @docs-private
      */
-    setSelectedState(isSelected: boolean, isUserInput: boolean, emitEvent: boolean): void {
-        if (isSelected !== this.selected) {
-            this._selected = isSelected;
+    setSelectedState(selected: boolean, options: Partial<{ isUserInput: boolean; emitEvent: boolean }> = {}): void {
+        const { isUserInput = false, emitEvent = false } = options;
+
+        if (selected !== this.selected) {
+            this._selected = selected;
 
             if (emitEvent) {
                 this.selectionChange.emit({
