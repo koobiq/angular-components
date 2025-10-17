@@ -98,7 +98,7 @@
             background-color: var(--kbq-file-upload-multiple-default-container-background);
             border-color: var(--kbq-file-upload-multiple-default-container-border) !important;
 
-            .kbq-focused,
+            .kbq-focused:not(.kbq-list-option),
             .kbq-link.kbq-focused {
                 border: 2px solid var(--kbq-file-upload-multiple-states-focused-focus-outline-color);
             }
