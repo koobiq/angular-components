@@ -469,6 +469,18 @@
 		<loc>https://koobiq.io/ru/components/navbar-ic/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/notification-center/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/notification-center/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/notification-center/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/notification-center/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/overflow-items/overview</loc>
 	</url>
 	<url>

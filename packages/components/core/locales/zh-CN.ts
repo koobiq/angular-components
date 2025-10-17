@@ -154,5 +154,14 @@ export const zhCNLocaleData = {
                 MONTHS_FRACTION: `{months} 个月`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig
+    } satisfies KbqTimeRangeLocaleConfig,
+    notificationCenter: {
+        notifications: '通知',
+        remove: '移除',
+        doNotDisturb: '请勿打扰',
+        showPopUpNotifications: '显示弹出通知',
+        noNotifications: '无通知',
+        failedToLoadNotifications: '加载通知失败',
+        repeat: '重复'
+    }
 };

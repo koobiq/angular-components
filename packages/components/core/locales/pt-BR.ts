@@ -196,5 +196,14 @@ export const ptBRLocaleData = {
                 MONTHS_FRACTION: `{months} meses`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig
+    } satisfies KbqTimeRangeLocaleConfig,
+    notificationCenter: {
+        notifications: 'Notificações',
+        remove: 'Remover',
+        doNotDisturb: 'Não perturbe',
+        showPopUpNotifications: 'Mostrar notificações pop-up',
+        noNotifications: 'Sem notificações',
+        failedToLoadNotifications: 'Falha ao carregar notificações',
+        repeat: 'Repetir'
+    }
 };

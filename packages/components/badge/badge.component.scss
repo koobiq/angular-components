@@ -37,6 +37,7 @@
     }
 
     &.kbq-badge_compact {
+        min-height: var(--kbq-badge-size-compact-height);
         height: var(--kbq-badge-size-compact-height);
 
         padding-right: var(--kbq-badge-size-compact-horizontal-padding);

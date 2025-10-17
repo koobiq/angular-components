@@ -196,5 +196,14 @@ export const esLALocaleData = {
                 MONTHS_FRACTION: `{months} meses`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig
+    } satisfies KbqTimeRangeLocaleConfig,
+    notificationCenter: {
+        notifications: 'Notificaciones',
+        remove: 'Eliminar',
+        doNotDisturb: 'No molestar',
+        showPopUpNotifications: 'Mostrar notificaciones emergentes',
+        noNotifications: 'Sin notificaciones',
+        failedToLoadNotifications: 'Error al cargar las notificaciones',
+        repeat: 'Repetir'
+    }
 };

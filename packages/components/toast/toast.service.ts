@@ -36,6 +36,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         return Object.values(this.templatesDict);
     }
 
+    readonly read = new BehaviorSubject<KbqToastData | null>(null);
     readonly hovered = new BehaviorSubject<boolean>(false);
     readonly focused = new BehaviorSubject<boolean>(false);
     readonly animation = new BehaviorSubject<AnimationEvent | null>(null);
