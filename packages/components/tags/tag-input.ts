@@ -297,8 +297,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }
     }
 
-    onFocus() {
+    /** @docs-private */
+    onFocus(): void {
         this.focused = true;
+        this._tagList.unselectAll();
         this._tagList.stateChanges.next();
     }
 
