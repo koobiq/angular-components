@@ -6,7 +6,8 @@ test.describe('KbqFileUploadModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFileUploadStateAndStyle');
         const getSingleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eSingleFileUploadTable');
         const getMultipleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eMultipleFileUploadTable');
-        const focusFileItem = (locator: Locator) => locator.locator('.dev-focused .kbq-list-selection')?.focus();
+        const focusFileItemViaClick = (locator: Locator) =>
+            locator.locator('.dev-focused .kbq-list-selection')?.focus();
 
         test('KbqSingleFileUploadComponent states', async ({ page }) => {
             await devGoToRootPage(page);
@@ -45,7 +46,7 @@ test.describe('KbqFileUploadModule', () => {
 
             const screenshotTarget = getMultipleFileUploadTable(locator);
 
-            await focusFileItem(screenshotTarget);
+            await focusFileItemViaClick(screenshotTarget);
 
             await expect(screenshotTarget).toHaveScreenshot();
         });
