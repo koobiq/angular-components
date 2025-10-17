@@ -1,15 +1,24 @@
 import { InjectionToken } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqTimeRangeType } from './types';
+import { KbqCustomTimeRangeType, KbqTimeRangeType } from './types';
 
 /** Preset of selectable time ranges, provided by DI. */
 export const KBQ_DEFAULT_TIME_RANGE_TYPES = new InjectionToken<KbqTimeRangeType[]>('KBQ_DEFAULT_TIME_RANGE_TYPES');
 
+/** Preset of custom time ranges, provided by DI. */
+export const KBQ_CUSTOM_TIME_RANGE_TYPES = new InjectionToken<KbqCustomTimeRangeType[]>('KBQ_CUSTOM_TIME_RANGE_TYPES');
+
+/**
+ * Creates an error for missing date implementation provider.
+ * @param componentName - Component requiring the provider
+ * @param provider - Missing provider name
+ * @returns Configured error with descriptive message
+ */
 export function createMissingDateImplError(componentName: string, provider: string): Error {
     return Error(
         `${componentName}: No provider found for ${provider}. You must import one of the existing ` +
-            `modules at your application root or provide a custom implementation or use exists ones.`
+            `modules at your application root or provide a custom implementation or use existing ones.`
     );
 }
 

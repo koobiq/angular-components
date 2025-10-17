@@ -19,3 +19,9 @@ When there are no preset values, only the From and To fields remain in the dialo
 It is possible to configure the minimum and maximum date:
 
 <!-- example(time-range-min-max) -->
+
+### Custom time ranges
+
+The option to configure interval selection is available:
+
+<!-- example(time-range-custom-range-types) -->
