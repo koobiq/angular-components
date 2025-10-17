@@ -53,7 +53,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <tag-autocomplete-option-operations-example />
         <hr />
-        <tag-input-example />
+        <tag-input-overview-example />
         <hr />
         <tag-autocomplete-example />
         <hr />
@@ -66,6 +66,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <tag-with-icon-example />
         <hr />
         <tag-input-with-form-control-validators-example />
+        <hr />
+        <tag-list-overview-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

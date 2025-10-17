@@ -51,7 +51,7 @@ export class TagListDraggableExample {
 
     protected remove(event: KbqTagEvent): void {
         this.tags.update((tags) => {
-            const index = tags.indexOf(event.tag.value);
+            const index = tags.findIndex(({ value }) => value === event.tag.value);
 
             tags.splice(index, 1);
 

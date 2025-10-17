@@ -37,7 +37,6 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -115,6 +114,10 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     set selected(value: boolean);
     readonly selectionChange: EventEmitter<KbqTagSelectionChange>;
     selectViaInteraction(): void;
+    setSelectedState(selected: boolean, options?: Partial<{
+        isUserInput: boolean;
+        emitEvent: boolean;
+    }>): void;
     submitEditing(reason: string): void;
     // (undocumented)
     get tabindex(): any;
@@ -232,15 +235,14 @@ export interface KbqTagInputEvent {
 }
 
 // @public (undocumented)
-export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
+export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, defaultErrorStateMatcher: ErrorStateMatcher, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
     blur(): void;
-    // (undocumented)
     get canShowCleaner(): boolean;
     readonly change: EventEmitter<KbqTagListChange>;
     cleaner: KbqCleaner;
-    get compareWith(): (o1: any, o2: any) => boolean;
-    set compareWith(fn: (o1: any, o2: any) => boolean);
+    // @deprecated
+    compareWith: (o1: any, o2: any) => boolean;
     readonly controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -284,8 +286,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     onChange: (value: any) => void;
     onContainerClick(event: MouseEvent): void;
     onTouched: () => void;
@@ -307,15 +307,18 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     set required(value: boolean);
     selectable: boolean;
     get selected(): KbqTag[] | KbqTag;
+    // @deprecated
     selectionModel: SelectionModel<KbqTag>;
     setDisabledState(isDisabled: boolean): void;
-    setSelectionByValue(value: any, isUserInput?: boolean): void;
+    // @deprecated
+    setSelectionByValue(_value: any, _isUserInput?: boolean): void;
     get shouldLabelFloat(): boolean;
     readonly stateChanges: Subject<void>;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     get tagBlurChanges(): Observable<KbqTagEvent>;
+    // @deprecated
     tagChanges: EventEmitter<any>;
     get tagEditChanges(): Observable<KbqTagEditChange>;
     get tagFocusChanges(): Observable<KbqTagEvent>;

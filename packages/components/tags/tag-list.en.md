@@ -1,4 +1,4 @@
-<!-- example(tag-list) -->
+<!-- example(tag-list-overview) -->
 
 ### Tag removal
 
@@ -22,7 +22,7 @@ The removal option is configured using the `removable` attribute (enabled by def
 Tags can be selected in several ways:
 
 - Click on a tag or set focus on it (only in NON `multiple` mode, disabled by default).
-- Click on a tag while holding `Ctrl` or `Shift`.
+- Click on a tag while holding `Ctrl`.
 - Press `Ctrl+A` key combination (only in `multiple` mode, disabled by default).
 - Programmatic selection through the component [API](/en/components/tag/api).
 

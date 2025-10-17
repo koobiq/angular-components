@@ -5,19 +5,19 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable tag ${i}` }));
+const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }));
 
 /**
- * @title Tag input removable
+ * @title Tag input overview
  */
 @Component({
     standalone: true,
-    selector: 'tag-input-removable-example',
+    selector: 'tag-input-overview-example',
     imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" removable multiple>
+            <kbq-tag-list #tagList="kbqTagList" removable multiple draggable>
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
                         {{ tag.value }}
@@ -49,7 +49,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagInputRemovableExample {
+export class TagInputOverviewExample {
     protected readonly colors = KbqComponentColors;
     protected readonly removable = model(true);
     protected readonly tags = model(getTags());

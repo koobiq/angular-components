@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -6,7 +5,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`);
+const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable tag ${i}` }));
 
 /**
  * @title Tag list editable
@@ -14,14 +13,14 @@ const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Editable ta
 @Component({
     standalone: true,
     selector: 'tag-list-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule, JsonPipe],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
     template: `
-        <kbq-tag-list editable>
-            @for (tag of tags(); track $index) {
+        <kbq-tag-list editable multiple>
+            @for (tag of tags(); track tag) {
                 <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
-                    {{ tag }}
-                    <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
-                    @if (tag.length === 0) {
+                    {{ tag.value }}
+                    <input kbqInput kbqTagEditInput [(ngModel)]="editInputModel" />
+                    @if (editInputModel().length === 0) {
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                     } @else {
                         <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
@@ -32,10 +31,6 @@ const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Editable ta
                 <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="color.ContrastFade" (click)="restart()"></i>
             }
         </kbq-tag-list>
-
-        <small>
-            <code>{{ tags() | json }}</code>
-        </small>
     `,
     styles: `
         :host {
@@ -50,42 +45,43 @@ const getTags = (): string[] => Array.from({ length: 3 }, (_, i) => `Editable ta
         .kbq-tag-list {
             max-width: 100%;
         }
-
-        small {
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagListEditableExample {
     protected readonly color = KbqComponentColors;
     protected readonly tags = model(getTags());
-    private prevTags = this.tags().slice();
+    protected readonly editInputModel = model<string>('');
 
     protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
         switch (type) {
             case 'start': {
                 console.info(`Tag #${index} edit was started. Reason: "${reason}".`);
 
-                this.prevTags = this.tags().slice();
+                this.editInputModel.set(tag.value.value);
 
                 break;
             }
             case 'cancel': {
                 console.info(`Tag #${index} edit was canceled. Reason: "${reason}".`);
 
-                this.tags.update((tags) => {
-                    tags[index] = this.prevTags[index];
-
-                    return tags;
-                });
+                this.editInputModel.set('');
 
                 break;
             }
             case 'submit': {
                 console.info(`Tag #${index} edit was submitted. Reason: "${reason}".`);
 
-                if (!tag.value) tag.remove();
+                if (!this.editInputModel()) {
+                    tag.remove();
+                } else {
+                    this.tags.update((tags) => {
+                        tags[index].value = this.editInputModel();
+
+                        return tags;
+                    });
+                    this.editInputModel.set('');
+                }
 
                 break;
             }
@@ -101,7 +97,7 @@ export class TagListEditableExample {
 
             console.info(`Tag #${index} was removed.`);
 
-            return tags;
+            return [...tags];
         });
     }
 

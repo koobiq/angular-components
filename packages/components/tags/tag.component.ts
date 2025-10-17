@@ -307,10 +307,7 @@ export class KbqTag
     }
 
     set selected(value: boolean) {
-        if (value !== this._selected) {
-            this._selected = value;
-            this.dispatchSelectionChange();
-        }
+        this.setSelectedState(value, { emitEvent: true });
     }
 
     private _selected: boolean = false;
@@ -463,10 +460,7 @@ export class KbqTag
     select(): void {
         if (this.disabled || !this.selectable) return;
 
-        if (!this._selected) {
-            this._selected = true;
-            this.dispatchSelectionChange();
-        }
+        this.setSelectedState(true, { emitEvent: true });
     }
 
     /**
@@ -475,10 +469,7 @@ export class KbqTag
     deselect(): void {
         if (this.disabled || !this.selectable) return;
 
-        if (this._selected) {
-            this._selected = false;
-            this.dispatchSelectionChange();
-        }
+        this.setSelectedState(false, { emitEvent: true });
     }
 
     /**
@@ -489,10 +480,7 @@ export class KbqTag
     selectViaInteraction(): void {
         if (this.disabled || !this.selectable) return;
 
-        if (!this._selected) {
-            this._selected = true;
-            this.dispatchSelectionChange(true);
-        }
+        this.setSelectedState(true, { isUserInput: true, emitEvent: true });
     }
 
     /**
@@ -501,8 +489,7 @@ export class KbqTag
     toggleSelected(isUserInput: boolean = false): boolean {
         if (this.disabled || !this.selectable) return this.selected;
 
-        this._selected = !this.selected;
-        this.dispatchSelectionChange(isUserInput);
+        this.setSelectedState(!this.selected, { isUserInput, emitEvent: true });
 
         return this.selected;
     }
@@ -541,12 +528,18 @@ export class KbqTag
 
         switch (event.keyCode) {
             case DELETE:
-            case BACKSPACE:
-                this.tagList?.selectionModel.selected.length ? this.tagList.removeSelected() : this.remove();
+            case BACKSPACE: {
+                const hasSelectedTags =
+                    this.tagList &&
+                    (Array.isArray(this.tagList.selected) ? this.tagList.selected.length > 0 : !!this.tagList.selected);
+
+                // If there is a tag list and it has selected tags, remove them, otherwise remove focused tag.
+                hasSelectedTags ? this.tagList.removeSelected() : this.remove();
 
                 // Always prevent so page navigation does not occur
                 event.preventDefault();
                 break;
+            }
             case F2:
             case ENTER:
                 this.startEditing(event.key);
@@ -603,12 +596,27 @@ export class KbqTag
         this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
     }
 
-    private dispatchSelectionChange(isUserInput = false) {
-        this.selectionChange.emit({
-            source: this,
-            isUserInput,
-            selected: this.selected
-        });
+    /**
+     * Sets the selected state of the tag.
+     *
+     * @docs-private
+     */
+    setSelectedState(selected: boolean, options: Partial<{ isUserInput: boolean; emitEvent: boolean }> = {}): void {
+        const { isUserInput = false, emitEvent = false } = options;
+
+        if (selected !== this.selected) {
+            this._selected = selected;
+
+            if (emitEvent) {
+                this.selectionChange.emit({
+                    source: this,
+                    isUserInput,
+                    selected: this.selected
+                });
+            }
+
+            this.changeDetectorRef.markForCheck();
+        }
     }
 
     private setupDragInitialProperties(): void {

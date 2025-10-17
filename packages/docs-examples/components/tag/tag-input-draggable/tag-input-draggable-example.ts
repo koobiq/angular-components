@@ -15,7 +15,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
     imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" draggable (dropped)="dropped($event)">
+            <kbq-tag-list #tagList="kbqTagList" draggable multiple (dropped)="dropped($event)">
                 @for (tag of tags(); track tag.id) {
                     <kbq-tag [value]="tag.value" (removed)="remove($event)">
                         {{ tag.value }}
@@ -65,7 +65,7 @@ export class TagInputDraggableExample {
 
     protected remove(event: KbqTagEvent): void {
         this.tags.update((tags) => {
-            const index = tags.indexOf(event.tag.value);
+            const index = tags.findIndex(({ value }) => value === event.tag.value);
 
             tags.splice(index, 1);
 

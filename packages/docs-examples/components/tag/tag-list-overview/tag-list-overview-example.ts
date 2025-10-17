@@ -3,17 +3,17 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable tag ${i}` }));
+const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }));
 
 /**
- * @title Tag list removable
+ * @title Tag list overview
  */
 @Component({
     standalone: true,
-    selector: 'tag-list-removable-example',
+    selector: 'tag-list-overview-example',
     imports: [KbqTagsModule, KbqIconModule],
     template: `
-        <kbq-tag-list removable multiple>
+        <kbq-tag-list removable multiple draggable>
             @for (tag of tags(); track tag) {
                 <kbq-tag [value]="tag" (removed)="remove($event)">
                     {{ tag.value }}
@@ -36,7 +36,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagListRemovableExample {
+export class TagListOverviewExample {
     protected readonly colors = KbqComponentColors;
     protected readonly tags = model(getTags());
 
