@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import { TimeRangeExamplesModule } from '../../docs-examples/components/time-range';
 import { DevLocaleSelector } from '../locale-selector';
@@ -15,6 +16,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <time-range-min-max-example />
 
         <time-range-as-form-field-example />
+
+        <time-range-custom-range-types-example />
     `,
     styles: `
         :host {
@@ -44,7 +47,8 @@ export class DevExamples {}
         DevLocaleSelector,
         DevThemeToggle,
         DevExamples,
-        KbqLocaleServiceModule
+        KbqLocaleServiceModule,
+        LuxonDateModule
     ],
     selector: 'dev-app',
     styleUrls: ['styles.scss'],
