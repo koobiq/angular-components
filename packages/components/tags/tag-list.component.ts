@@ -6,6 +6,7 @@ import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
+    AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -89,7 +90,14 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     hostDirectives: [CdkDropList]
 })
 export class KbqTagList
-    implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState
+    implements
+        KbqFormFieldControl<any>,
+        ControlValueAccessor,
+        AfterContentInit,
+        DoCheck,
+        OnDestroy,
+        CanUpdateErrorState,
+        AfterViewInit
 {
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
@@ -478,9 +486,13 @@ export class KbqTagList
             });
     }
 
+    ngAfterViewInit(): void {
+        this.setupFocusMonitor();
+    }
+
     ngOnDestroy() {
         this.stateChanges.complete();
-
+        this.focusMonitor.stopMonitoring(this.elementRef);
         this.dropSubscriptions();
     }
 
@@ -728,6 +740,15 @@ export class KbqTagList
     }
 
     /**
+     * Unselects all tags in the list.
+     *
+     * @docs-private
+     */
+    unselectAll(): void {
+        this.tags.forEach((tag) => tag.setSelectedState(false));
+    }
+
+    /**
      * Removes all selected tags from the list.
      *
      * @docs-private
@@ -892,5 +913,11 @@ export class KbqTagList
 
     private syncDropListDisabledState(): void {
         this.dropList.disabled = !this.draggable;
+    }
+
+    private setupFocusMonitor(): void {
+        this.focusMonitor.monitor(this.elementRef, true).subscribe((origin) => {
+            if (!origin) this.unselectAll();
+        });
     }
 }

@@ -1,13 +1,16 @@
 import { animate, style, transition, trigger } from '@angular/animations';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { A } from '@angular/cdk/keycodes';
 import {
     ChangeDetectionStrategy,
     Component,
     DebugElement,
+    ElementRef,
     NgZone,
     Provider,
     QueryList,
+    Signal,
     Type,
     ViewChild,
     ViewChildren,
@@ -31,7 +34,7 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { Subject } from 'rxjs';
 import { KbqInputModule } from '../input/index';
 import { KbqTagList, KbqTagsModule } from './index';
-import { KbqTagInputEvent } from './tag-input';
+import { KbqTagInput, KbqTagInputEvent } from './tag-input';
 import { KbqTag } from './tag.component';
 
 const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -65,6 +68,8 @@ const getFirstTagElement = (debugElement: DebugElement): HTMLElement => {
 const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
     return getTagElements(debugElement).filter((tag) => tag.classList.contains('kbq-selected'));
 };
+
+const getFocusMonitor = () => TestBed.inject(FocusMonitor);
 
 @Component({
     standalone: true,
@@ -134,6 +139,39 @@ export class TestTagList {
 
     readonly selectionChange = jest.fn();
     readonly removedChange = jest.fn();
+}
+
+@Component({
+    standalone: true,
+    selector: 'test-form-field-tag-list',
+    imports: [KbqTagsModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList="kbqTagList" multiple>
+                @for (tag of tags(); track tag) {
+                    <kbq-tag [selected]="tag.selected" [attr.id]="tag.id" [value]="tag">
+                        {{ tag.value }}
+                    </kbq-tag>
+                }
+
+                <input [kbqTagInputFor]="tagList" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+export class TestFormFieldTagList {
+    readonly tags = model<Array<{ id: string; value: string; selected: boolean }>>(
+        Array.from({ length: 4 }, (_, i) => ({
+            id: `tag${i}`,
+            value: `tag${i}`,
+            selected: false
+        }))
+    );
+
+    readonly tagInputElementRef: Signal<ElementRef<HTMLInputElement>> = viewChild.required(KbqTagInput, {
+        read: ElementRef
+    });
 }
 
 describe(KbqTagList.name, () => {
@@ -1415,6 +1453,44 @@ describe(KbqTagList.name, () => {
 
         expect(getTagListElement(debugElement).classList.contains('kbq-tag-list_draggable')).toBeFalsy();
         expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBeFalsy();
+    });
+
+    it('should unselect tags when focus move to tag input', () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.tags.update((tags) => {
+            tags[0].selected = true;
+            tags[1].selected = true;
+
+            return tags;
+        });
+        fixture.detectChanges();
+
+        expect(getSelectedTags(debugElement).length).toBe(2);
+
+        getFocusMonitor().focusVia(componentInstance.tagInputElementRef().nativeElement, 'mouse');
+
+        expect(getSelectedTags(debugElement).length).toBe(0);
+    });
+
+    it('should unselect tags on blur', () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.tags.update((tags) => {
+            tags[0].selected = true;
+            tags[1].selected = true;
+
+            return tags;
+        });
+        fixture.detectChanges();
+
+        expect(getSelectedTags(debugElement).length).toBe(2);
+
+        getTagListElement(debugElement).dispatchEvent(new Event('blur'));
+
+        expect(getSelectedTags(debugElement).length).toBe(0);
     });
 });
 
