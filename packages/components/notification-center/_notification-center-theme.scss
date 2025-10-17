@@ -20,4 +20,8 @@
     .kbq-notification-center {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
+
+    .kbq-notification-center-title__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+    }
 }

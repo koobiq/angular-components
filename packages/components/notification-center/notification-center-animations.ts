@@ -1,4 +1,5 @@
 import { animate, AnimationTriggerMetadata, state, style, transition, trigger } from '@angular/animations';
+import { KbqAnimationDurations } from '@koobiq/components/core';
 
 /** @docs-private */
 export const KbqNotificationCenterAnimations: {
@@ -23,6 +24,6 @@ export const KbqNotificationCenterAnimations: {
                 })
             )
         ),
-        transition('* => hidden', animate('100ms linear', style({ opacity: 0 })))
+        transition('* => hidden', animate(`${KbqAnimationDurations.Rapid} linear`, style({ opacity: 0 })))
     ])
 };

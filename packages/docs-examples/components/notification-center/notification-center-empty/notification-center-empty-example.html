@@ -79,7 +79,7 @@
             <div #trigger="kbqNotificationCenterTrigger" kbq-navbar-ic-item kbqNotificationCenterTrigger>
                 <i kbq-icon="kbq-bell_16"></i>
                 <div kbqNavbarIcTitle>Notifications</div>
-                @if (trigger.unreadItems | async; as unreadItems) {
+                @if (trigger.unreadItemsCounter | async; as unreadItems) {
                     <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>
                 }
             </div>

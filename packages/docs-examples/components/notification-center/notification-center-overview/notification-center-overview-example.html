@@ -11,6 +11,11 @@
     <a href="#" kbq-dropdown-item (click)="selected = items.Security">Data retension</a>
 </kbq-dropdown>
 
+<ng-template #actionsTemplate>
+    <a kbq-link pseudo class="layout-margin-right-m">Action 1</a>
+    <a kbq-link pseudo class="layout-margin-right-m">Action 2</a>
+</ng-template>
+
 <div class="layout-row" style="margin: -20px; height: 500px">
     <kbq-navbar-ic #navbar="KbqNavbarIc">
         <kbq-navbar-ic-container>
@@ -79,7 +84,7 @@
             <div #trigger="kbqNotificationCenterTrigger" kbq-navbar-ic-item kbqNotificationCenterTrigger>
                 <i kbq-icon="kbq-bell_16"></i>
                 <div kbqNavbarIcTitle>Notifications</div>
-                @if (trigger.unreadItems | async; as unreadItems) {
+                @if (trigger.unreadItemsCounter | async; as unreadItems) {
                     <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>
                 }
             </div>

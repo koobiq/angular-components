@@ -22,6 +22,8 @@ export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
     read?: boolean;
 }
 
+export const maxUnreadItemsLength = 99;
+
 type KbqNotificationsGroup = { title: string; items: KbqNotificationItem[] };
 
 type KbqNotificationsGroups = Record<string, KbqNotificationsGroup>;
@@ -73,10 +75,10 @@ export class KbqNotificationCenterService<D> {
     }
 
     /** Number of unread notifications */
-    get unreadItems(): Observable<number> {
+    get unreadItemsCounter(): Observable<string> {
         return this.originalItems.pipe(map((items) => items.filter((item) => item.read === false).length)).pipe(
             combineLatestWith(this.onRead),
-            map(([value]) => value)
+            map(([value]) => (value < maxUnreadItemsLength ? value.toString() : '99+'))
         );
     }
 
@@ -87,7 +89,7 @@ export class KbqNotificationCenterService<D> {
 
     constructor() {
         this.toastService?.read.pipe(takeUntilDestroyed()).subscribe((toastData) => {
-            const item = this.originalItems.value.find((item) => item.id === toastData?.id);
+            const item = this.items.find((item) => item.id === toastData?.id);
 
             if (item && !item.read) {
                 item.read = true;
