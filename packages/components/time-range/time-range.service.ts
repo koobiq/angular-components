@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
-import { createMissingDateImplError, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
+import { createMissingDateImplError, KBQ_CUSTOM_TIME_RANGE_TYPES, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
 import {
+    KbqCustomTimeRangeType,
     KbqRange,
     KbqRangeValue,
     KbqTimeRangeRange,
@@ -30,6 +31,8 @@ export class KbqTimeRangeService<T> {
 
     readonly providedDefaultTimeRangeTypes =
         inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true }) || this.defaultTimeRangeTypes;
+
+    readonly customTimeRangeTypes = inject(KBQ_CUSTOM_TIME_RANGE_TYPES, { optional: true });
 
     static readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
@@ -87,11 +90,24 @@ export class KbqTimeRangeService<T> {
         if (!this.dateAdapter) {
             throw createMissingDateImplError('KbqTimeRange', 'DateAdapter');
         }
+
+        if (this.customTimeRangeTypes) {
+            for (const type of this.customTimeRangeTypes) {
+                if (KbqTimeRangeService.timeRangeMap[type.type]) continue;
+
+                this.add(type);
+            }
+        }
     }
 
     static range = (dateTimeISOString: string): KbqRange => ({
         startDateTime: dateTimeISOString
     });
+
+    add({ type, units, translationType }: KbqCustomTimeRangeType): void {
+        KbqTimeRangeService.timeRangeMap[type] = units;
+        KbqTimeRangeService.timeRangeTranslationMap[type] = translationType;
+    }
 
     getTimeRangeTypeUnits(type: KbqTimeRangeType): KbqTimeRangeUnits {
         return KbqTimeRangeService.timeRangeMap[type];
@@ -167,6 +183,9 @@ export class KbqTimeRangeService<T> {
             }
             case 'days': {
                 return this.lastDaysRange(this.getTimeRangeTypeUnits(type).days!);
+            }
+            case 'weeks': {
+                return this.lastWeeksRange(this.getTimeRangeTypeUnits(type).weeks!);
             }
             // @TODO: implement weeks range after date adapter update (#DS-4226)
             case 'months': {
@@ -263,6 +282,11 @@ export class KbqTimeRangeService<T> {
     lastDaysRange = (days: number): KbqRange =>
         KbqTimeRangeService.range(
             this.dateAdapter.toIso8601(this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -days))
+        );
+
+    lastWeeksRange = (weeks: number): KbqRange =>
+        KbqTimeRangeService.range(
+            this.dateAdapter.toIso8601(this.dateAdapter?.addCalendarDays(this.dateAdapter!.today(), -(weeks * 7)))
         );
 
     lastMonthsRange = (months: number): KbqRange =>

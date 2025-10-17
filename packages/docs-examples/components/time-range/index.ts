@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { TimeRangeAsFormFieldExample } from './time-range-as-form-field/time-range-as-form-field-example';
+import { TimeRangeCustomRangeTypesExample } from './time-range-custom-range-types/time-range-custom-range-types-example';
 import { TimeRangeCustomTriggerExample } from './time-range-custom-trigger/time-range-custom-trigger-example';
 import { TimeRangeEmptyTypeListExample } from './time-range-empty-type-list/time-range-empty-type-list-example';
 import { TimeRangeMinMaxExample } from './time-range-min-max/time-range-min-max-example';
@@ -7,6 +8,7 @@ import { TimeRangeOverviewExample } from './time-range-overview/time-range-overv
 
 export {
     TimeRangeAsFormFieldExample,
+    TimeRangeCustomRangeTypesExample,
     TimeRangeCustomTriggerExample,
     TimeRangeEmptyTypeListExample,
     TimeRangeMinMaxExample,
@@ -18,7 +20,8 @@ const EXAMPLES = [
     TimeRangeCustomTriggerExample,
     TimeRangeEmptyTypeListExample,
     TimeRangeMinMaxExample,
-    TimeRangeAsFormFieldExample
+    TimeRangeAsFormFieldExample,
+    TimeRangeCustomRangeTypesExample
 ];
 
 @NgModule({

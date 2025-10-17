@@ -15,6 +15,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <time-range-min-max-example />
 
         <time-range-as-form-field-example />
+
+        <time-range-custom-range-types-example />
     `,
     styles: `
         :host {

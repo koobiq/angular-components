@@ -38,7 +38,8 @@ export type KbqTimeRangeType =
     | 'allTime'
     | 'currentQuarter'
     | 'currentYear'
-    | 'range';
+    | 'range'
+    | string;
 
 export type KbqTimeRangeTranslationType =
     | Extract<DurationUnit, 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months'>
@@ -52,6 +53,12 @@ export interface KbqTimeRangeUnits {
     weeks?: number;
     months?: number;
 }
+
+export type KbqCustomTimeRangeType = {
+    type: KbqTimeRangeType;
+    units: KbqTimeRangeUnits;
+    translationType: KbqTimeRangeTranslationType;
+};
 
 export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
 export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleContext> & {
