@@ -2,7 +2,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { DateAdapter, KbqReadStateDirective, ThemePalette } from '@koobiq/components/core';
+import { DateAdapter, KbqReadStateDirective, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -40,6 +40,8 @@ export class KbqNotificationItemComponent<D> {
     protected readonly readStateDirective = inject<KbqReadStateDirective>(KbqReadStateDirective, { host: true });
     protected readonly center = inject(KbqNotificationCenterComponent, { host: true });
 
+    protected popUpPlacements = PopUpPlacements;
+
     themePalette = ThemePalette;
     id = id++;
 
@@ -49,7 +51,7 @@ export class KbqNotificationItemComponent<D> {
 
     get style() {
         return {
-            [`kbq-notification-item_${this._data?.style}`]: true
+            [`kbq-notification-item_${this.data.style}`]: !!this.data.style
         };
     }
 

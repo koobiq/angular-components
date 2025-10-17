@@ -124,7 +124,7 @@ export class KbqNotificationCenterService<D> {
     setLoadingMode(value: boolean): void;
     setSilentMode(value: boolean): void;
     readonly silentMode: BehaviorSubject<boolean>;
-    get unreadItems(): Observable<number>;
+    get unreadItemsCounter(): Observable<string>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterService<any>, never>;
     // (undocumented)
@@ -165,7 +165,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService<any>;
     trigger: string;
-    get unreadItems(): Observable<number>;
+    get unreadItemsCounter(): Observable<string>;
     updateClassMap(newPlacement?: string): void;
     updateData(): void;
     updatePosition(reapplyPosition?: boolean): void;
@@ -199,6 +199,9 @@ export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
     // (undocumented)
     title?: string | TemplateRef<unknown>;
 }
+
+// @public (undocumented)
+export const maxUnreadItemsLength = 99;
 
 // (No @packageDocumentation comment for this package)
 

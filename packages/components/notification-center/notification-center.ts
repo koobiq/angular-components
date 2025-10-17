@@ -225,8 +225,8 @@ export class KbqNotificationCenterTrigger
     private closeOnScroll: null;
 
     /** Number of unread notifications */
-    get unreadItems() {
-        return this.service.unreadItems;
+    get unreadItemsCounter() {
+        return this.service.unreadItemsCounter;
     }
 
     /** Placement of popUp */

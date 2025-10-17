@@ -1,3 +1,8 @@
+<ng-template #actionsTemplate>
+    <a kbq-link pseudo class="layout-margin-right-m">Action 1</a>
+    <a kbq-link pseudo class="layout-margin-right-m">Action 2</a>
+</ng-template>
+
 <kbq-navbar style="margin: -20px -20px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px">
     <kbq-navbar-container>
         <kbq-navbar-item bento>
@@ -28,7 +33,7 @@
     <kbq-navbar-container>
         <kbq-navbar-item #trigger="kbqNotificationCenterTrigger" kbqNotificationCenterTrigger [popoverMode]="true">
             <i kbq-icon="kbq-bell_16"></i>
-            @if (trigger.unreadItems | async; as unreadItems) {
+            @if (trigger.unreadItemsCounter | async; as unreadItems) {
                 <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>
             }
         </kbq-navbar-item>

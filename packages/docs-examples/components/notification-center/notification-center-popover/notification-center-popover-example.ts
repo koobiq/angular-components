@@ -1,6 +1,14 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -10,6 +18,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
@@ -54,11 +63,14 @@ enum NavbarIcItems {
         AsyncPipe,
         KbqDividerModule,
         KbqLuxonDateModule,
-        KbqFormattersModule
+        KbqFormattersModule,
+        KbqLinkModule
     ]
 })
-export class NotificationCenterPopoverExample {
+export class NotificationCenterPopoverExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);
+
+    @ViewChild('actionsTemplate') actionsTemplateRef: TemplateRef<any>;
 
     popUpPlacements = PopUpPlacements;
 
@@ -107,182 +119,239 @@ export class NotificationCenterPopoverExample {
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
 
-    constructor() {
+    ngAfterViewInit() {
         this.notificationService.items = [
             {
-                title: 'title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1, title_1',
-                caption: 'caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1, caption_1',
+                title: 'Security team successfully prevented major cyber attack',
                 icon: true,
+                date: '2025-10-03T10:30:00Z',
                 style: KbqToastStyle.Success,
-                date: '2025-10-08T11:43:32.944Z'
+                caption:
+                    'Advanced threat detection system blocked sophisticated APT attack targeting [Server-CRIT-01](https://siem.example/hosts/server-crit-01)',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_2',
-                caption: 'caption_2',
+                title: 'Suspicious login detected from [192.168.1.45](https://siem.example/incidents/1001)',
                 icon: true,
+                date: '2025-10-03T09:01:00Z',
                 style: KbqToastStyle.Warning,
-                date: '2025-10-08T11:43:32.944Z'
+                caption: 'User [admin](https://siem.example/users/admin) attempted login from unusual location',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_3',
-                caption: 'caption_3',
+                title: 'High CPU usage on [Server-DB-01](https://siem.example/hosts/server-db-01)',
                 icon: true,
+                date: '2025-10-03T09:10:00Z',
+                style: KbqToastStyle.Warning,
+                caption: 'Process **mysqld** exceeded 90% CPU',
+                actions: this.actionsTemplateRef
+            },
+            {
+                title: 'New rule triggered: [Malware beaconing](https://siem.example/rules/42)',
+                icon: true,
+                date: '2025-10-03T09:15:00Z',
+                read: false,
+                style: KbqToastStyle.Error,
+                caption: 'Detected suspicious traffic to known C2 server'
+            },
+            {
+                title: 'Critical: Unauthorized file access attempt',
+                icon: true,
+                date: '2025-10-02T23:45:00Z',
+                style: KbqToastStyle.Error,
+                caption: 'File **/etc/shadow** accessed on [Server-LNX-07](https://siem.example/hosts/server-lnx-07)',
+                actions: this.actionsTemplateRef
+            },
+            {
+                title: 'New admin account created',
+                icon: true,
+                date: '2025-10-02T20:30:00Z',
+                style: KbqToastStyle.Warning,
+                caption: 'Account [sec-admin](https://siem.example/users/sec-admin) was added',
+                actions: this.actionsTemplateRef
+            },
+            {
+                title: 'Firewall rule updated',
+                icon: true,
+                date: '2025-10-02T18:10:00Z',
+                read: false,
                 style: KbqToastStyle.Contrast,
-                date: '2025-10-08T11:43:32.944Z'
+                caption: 'Rule **Allow RDP** modified by [ops-team](https://siem.example/users/ops-team)'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Failed login attempts exceeded threshold',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-08T11:43:32.944Z'
+                date: '2025-10-02T14:22:00Z',
+                style: KbqToastStyle.Warning,
+                caption: 'User [john.doe](https://siem.example/users/john.doe) failed 15 times',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Vulnerability scan completed',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-07T11:43:32.944Z'
+                date: '2025-10-02T12:00:00Z',
+                read: false,
+                style: KbqToastStyle.Contrast,
+                caption: 'Report available: [Scan #884](https://siem.example/scans/884)'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Brute-force attack blocked',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-07T11:43:32.944Z'
+                date: '2025-10-01T23:50:00Z',
+                style: KbqToastStyle.Warning,
+                caption: 'IP [203.0.113.55](https://siem.example/ips/203.0.113.55) automatically blacklisted',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'SIEM correlation rule update applied',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-10-01T20:15:00Z',
+                read: false,
+                style: KbqToastStyle.Contrast
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Critical: Ransomware pattern detected',
                 icon: true,
+                date: '2025-10-01T17:40:00Z',
                 style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                caption: 'Suspicious encryption on [Server-FS-03](https://siem.example/hosts/server-fs-03)',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Backup job completed successfully',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-10-01T06:15:00Z',
+                read: false,
+                style: KbqToastStyle.Success,
+                caption: 'Job ID [BKP-20251001-06](https://siem.example/backups/20251001-06)'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'User password reset request',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-30T23:59:00Z',
+                style: KbqToastStyle.Contrast,
+                caption: 'User [alex.smith](https://siem.example/users/alex.smith) requested password reset'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'SIEM system update installed',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-30T21:20:00Z',
+                read: false,
+                style: KbqToastStyle.Success
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Critical: Lateral movement detected',
                 icon: true,
+                date: '2025-09-30T19:05:00Z',
                 style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                caption: 'Suspicious Kerberos ticket use by [srv-ops](https://siem.example/users/srv-ops)'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Disk usage exceeded 90%',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-30T13:45:00Z',
+                read: false,
+                style: KbqToastStyle.Warning,
+                caption: '[Server-DB-02](https://siem.example/hosts/server-db-02) partition **/var** almost full'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'New device connected: USB storage',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-30T09:18:00Z',
+                style: KbqToastStyle.Warning,
+                caption: 'Device ID [USB-7782](https://siem.example/devices/usb-7782) on workstation **PC-004**'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Suspicious outbound traffic',
                 icon: true,
+                date: '2025-09-29T23:15:00Z',
                 style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                caption:
+                    'Connection to blacklisted domain [bad-domain.com](https://siem.example/domains/bad-domain.com)'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'SIEM license will expire in 30 days',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-29T21:10:00Z',
+                read: false,
+                style: KbqToastStyle.Warning,
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'User added to privileged group',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-29T18:40:00Z',
+                style: KbqToastStyle.Warning,
+                caption: '[mike.ross](https://siem.example/users/mike.ross) added to **Domain Admins**',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Policy compliance scan started',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-29T15:00:00Z',
+                read: false,
+                style: KbqToastStyle.Contrast
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Suspicious PowerShell command executed',
                 icon: true,
+                date: '2025-09-29T09:45:00Z',
                 style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                caption: 'Command: **Invoke-WebRequest -Uri http://malicious.example/file.ps1**'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Email phishing attempt detected',
                 icon: true,
+                date: '2025-09-29T07:20:00Z',
                 style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                caption: 'Sender: attacker@phishmail.com',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'SIEM system health check passed',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-28T22:30:00Z',
+                read: false,
+                style: KbqToastStyle.Success
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Unusual data transfer volume',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-28T19:15:00Z',
+                style: KbqToastStyle.Warning,
+                caption: 'Workstation **PC-112** uploaded 8 GB in 10 min'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Critical patch missing',
                 icon: true,
+                date: '2025-09-28T14:00:00Z',
                 style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                caption: '[Server-APP-09](https://siem.example/hosts/server-app-09) missing MS patch KB500822'
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Account locked due to suspicious activity',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-28T08:55:00Z',
+                style: KbqToastStyle.Warning,
+                caption: 'User [linda.j](https://siem.example/users/linda.j) locked after abnormal behavior',
+                actions: this.actionsTemplateRef
             },
             {
-                title: 'title_4',
-                caption: 'caption_4',
+                title: 'Low disk space resolved',
                 icon: true,
-                style: KbqToastStyle.Error,
-                date: '2025-10-01T11:43:32.944Z'
+                date: '2025-09-27T21:40:00Z',
+                read: false,
+                style: KbqToastStyle.Success,
+                caption: 'Cleanup performed on [Server-BCK-02](https://siem.example/hosts/server-bck-02)'
+            },
+            {
+                title: 'SIEM daily report generated',
+                icon: true,
+                date: '2025-09-27T08:00:00Z',
+                read: false,
+                style: KbqToastStyle.Contrast,
+                caption: 'Report available: [Daily #20250927](https://siem.example/reports/20250927)',
+                actions: this.actionsTemplateRef
             }
         ];
     }

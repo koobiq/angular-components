@@ -670,7 +670,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'notification-center',
                     hasExamples: false,
-                    isNew: expiresAt('2025-10-30')
+                    isNew: expiresAt('2025-11-10')
                 },
                 {
                     id: DocsStructureItemId.OverflowItems,
