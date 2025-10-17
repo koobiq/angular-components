@@ -79,13 +79,9 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                             style="flex-wrap: wrap"
                         >
                             @if (form.controls.selectMultiple.value!.length > 0) {
-                                <kbq-tag-list>
-                                    @for (tag of form.controls.selectMultiple.value; track tag) {
-                                        <kbq-tag [value]="tag">
-                                            {{ tag }}
-                                        </kbq-tag>
-                                    }
-                                </kbq-tag-list>
+                                @for (badge of form.controls.selectMultiple.value; track badge) {
+                                    <kbq-badge>{{ badge }}</kbq-badge>
+                                }
                             } @else {
                                 <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                             }
