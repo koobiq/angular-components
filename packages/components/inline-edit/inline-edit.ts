@@ -1,16 +1,14 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
-    DestroyRef,
     Directive,
     ElementRef,
     inject,
@@ -40,8 +38,8 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
-import { pairwise, skip } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { skip } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
     transition(':enter', [
@@ -127,10 +125,9 @@ export class KbqInlineEditMenu {
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
     host: {
         class: baseClass,
+        '[class]': 'className()',
         '[class.kbq-inline-edit_with-label]': '!!label()',
         '[class.kbq-inline-edit_with-menu]': '!!menu()',
-        '[tabindex]': 'tabIndex()',
-        '[class]': 'className()',
         '[class.kbq-inline-edit_disabled]': 'disabled()',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
@@ -144,15 +141,15 @@ export class KbqInlineEditMenu {
         KbqIcon,
         KbqTooltipTrigger,
         KbqFocusRegionItem,
-        CdkTrapFocus
+        CdkTrapFocus,
+        CdkMonitorFocus
     ],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqInlineEdit implements AfterContentInit {
+export class KbqInlineEdit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly kbqFocusMonitor = inject(KbqFocusMonitor, { host: true });
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
@@ -198,9 +195,9 @@ export class KbqInlineEdit implements AfterContentInit {
     protected readonly formFieldRef = contentChild(KbqFormField);
 
     /** @docs-private */
-    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
+    protected readonly overlayOrigin = viewChild.required(CdkOverlayOrigin);
     /** @docs-private */
-    protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
+    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
     /** @docs-private */
     protected readonly overlayDir = viewChild(CdkConnectedOverlay);
     /** @docs-private */
@@ -236,16 +233,6 @@ export class KbqInlineEdit implements AfterContentInit {
             .subscribe((currentMode) => this.modeChange.emit(currentMode));
     }
 
-    ngAfterContentInit(): void {
-        this.kbqFocusMonitor.focusChange
-            ?.pipe(filter(Boolean), pairwise(), takeUntilDestroyed(this.destroyRef))
-            .subscribe(([prev, current]) => {
-                if (prev === 'mouse' && current === 'keyboard') {
-                    this.kbqFocusMonitor.focusVia(this.elementRef, 'program');
-                }
-            });
-    }
-
     /** @docs-private */
     protected toggleMode(): void {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
@@ -257,7 +244,7 @@ export class KbqInlineEdit implements AfterContentInit {
 
         event.preventDefault();
         event.stopPropagation();
-        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'program');
+        this.kbqFocusMonitor.focusVia(this.overlayOrigin().elementRef, 'program');
 
         this.toggleMode();
     }
@@ -373,12 +360,11 @@ export class KbqInlineEdit implements AfterContentInit {
     private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
         this.save(event);
         if (this.isInvalid()) return;
-        this.kbqFocusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
 
         setTimeout(() => {
             const activeElement = this.document.activeElement;
 
-            if (activeElement?.tagName.toLowerCase() === 'kbq-inline-edit') {
+            if (activeElement?.classList?.contains('kbq-inline-edit__focus_container')) {
                 activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
             }
         });
@@ -444,7 +430,7 @@ export class KbqInlineEdit implements AfterContentInit {
         }
 
         const elementRef: ElementRef<HTMLElement> | undefined = this.label()
-            ? this.overlayOrigin()?.elementRef
+            ? this.overlayOrigin().elementRef
             : this.elementRef;
 
         this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');

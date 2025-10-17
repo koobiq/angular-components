@@ -7,6 +7,15 @@
 <div class="kbq-inline-edit__view-container">
     <ng-content select="[kbqInlineEditViewMode]" />
 
+    <div
+        #overlayOrigin
+        class="kbq-inline-edit__focus_container kbq-inline-edit__overlay-origin"
+        cdkMonitorElementFocus
+        cdkOverlayOrigin
+        [tabIndex]="tabIndex()"
+        (keydown.enter)="onClick($event)"
+    ></div>
+
     @if (menu() && mode() === 'view') {
         <div class="kbq-inline-edit__menu-mask kbq-mask">
             <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
@@ -16,52 +25,49 @@
         </div>
     }
 
-    @if (mode() === 'edit') {
-        <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
-
-        <ng-template
-            cdkConnectedOverlay
-            cdkConnectedOverlayLockPosition
-            [cdkConnectedOverlayOpen]="isEditMode()"
-            [cdkConnectedOverlayOrigin]="overlayOrigin"
-            [cdkConnectedOverlayWidth]="overlayWidth()"
-            [cdkConnectedOverlayDisableClose]="true"
-            [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
-            [cdkConnectedOverlayHasBackdrop]="false"
-            (attach)="onAttach()"
-            (overlayOutsideClick)="save($event)"
-            (overlayKeydown)="onOverlayKeydown($event)"
-        >
-            <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
-                <div
-                    class="kbq-inline-edit__control-container"
-                    kbqFocusRegionItem
-                    [kbqTooltipColor]="colors.Error"
-                    [kbqTooltip]="validationTooltip() ?? ''"
-                    [kbqTooltipArrow]="false"
-                    [kbqTrigger]="'manual'"
-                    [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
-                >
-                    <ng-content select="[kbqInlineEditEditMode]" />
-                </div>
-
-                @if (showActions()) {
-                    <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
-                        <button kbq-button [color]="'contrast'" (click)="save($event)">
-                            <i kbq-icon="kbq-check_16"></i>
-                        </button>
-                        <button
-                            kbqFocusRegionItem
-                            kbq-button
-                            [color]="'contrast-fade'"
-                            (click)="cancel()"
-                            (keydown.enter)="cancel()"
-                        >
-                            <i kbq-icon="kbq-xmark_16"></i>
-                        </button>
-                    </div>
-                }
+    <ng-template
+        cdkConnectedOverlay
+        cdkConnectedOverlayLockPosition
+        [cdkConnectedOverlayOpen]="isEditMode()"
+        [cdkConnectedOverlayOrigin]="overlayOrigin"
+        [cdkConnectedOverlayOffsetY]="-overlayOrigin.offsetHeight"
+        [cdkConnectedOverlayWidth]="overlayWidth()"
+        [cdkConnectedOverlayDisableClose]="true"
+        [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
+        [cdkConnectedOverlayHasBackdrop]="false"
+        (attach)="onAttach()"
+        (overlayOutsideClick)="save($event)"
+        (overlayKeydown)="onOverlayKeydown($event)"
+    >
+        <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
+            <div
+                class="kbq-inline-edit__control-container"
+                kbqFocusRegionItem
+                [kbqTooltipColor]="colors.Error"
+                [kbqTooltip]="validationTooltip() ?? ''"
+                [kbqTooltipArrow]="false"
+                [kbqTrigger]="'manual'"
+                [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
+            >
+                <ng-content select="[kbqInlineEditEditMode]" />
             </div>
-        </ng-template>
-    }
+
+            @if (showActions()) {
+                <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
+                    <button kbq-button [color]="'contrast'" (click)="save($event)">
+                        <i kbq-icon="kbq-check_16"></i>
+                    </button>
+                    <button
+                        kbqFocusRegionItem
+                        kbq-button
+                        [color]="'contrast-fade'"
+                        (click)="cancel()"
+                        (keydown.enter)="cancel()"
+                    >
+                        <i kbq-icon="kbq-xmark_16"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </ng-template>
 </div>

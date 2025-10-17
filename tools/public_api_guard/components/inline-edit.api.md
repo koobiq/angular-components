@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import * as i0 from '@angular/core';
@@ -38,7 +37,7 @@ export class KbqFocusRegionItem {
 }
 
 // @public
-export class KbqInlineEdit implements AfterContentInit {
+export class KbqInlineEdit {
     constructor();
     protected cancel(): void;
     protected readonly canceled: OutputEmitterRef<void>;
@@ -54,13 +53,11 @@ export class KbqInlineEdit implements AfterContentInit {
     protected readonly mode: WritableSignal<"view" | "edit">;
     readonly modeAsReadonly: Signal<"view" | "edit">;
     protected readonly modeChange: OutputEmitterRef<"view" | "edit">;
-    // (undocumented)
-    ngAfterContentInit(): void;
     protected onAttach(): void;
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
     protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
-    protected readonly overlayOrigin: Signal<CdkOverlayOrigin | undefined>;
+    protected readonly overlayOrigin: Signal<CdkOverlayOrigin>;
     protected readonly overlayWidth: WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
     protected readonly regionItems: Signal<readonly KbqFocusRegionItem[]>;

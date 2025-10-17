@@ -8,6 +8,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
@@ -25,7 +26,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqTextareaModule,
         KbqOptionModule,
         KbqSelectModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqTagsModule
     ],
     selector: 'inline-edit-controls-example',
     template: `
