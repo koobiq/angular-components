@@ -11,7 +11,9 @@ import {
     KbqSelectSearchEmptyResult,
     KbqSelectTrigger
 } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqOptionTooltip } from './select-option.directive';
@@ -41,7 +43,9 @@ import { KbqSelect } from './select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult
+        KbqSelectSearchEmptyResult,
+        KbqFormFieldModule,
+        KbqInputModule
     ],
     declarations: [
         KbqSelect,
