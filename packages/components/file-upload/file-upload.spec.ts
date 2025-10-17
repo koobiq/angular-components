@@ -137,6 +137,14 @@ describe(KbqMultipleFileUploadComponent.name, () => {
     });
 
     describe('with file queue change', () => {
+        const emitRemoveEvent = () => {
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            fixture.detectChanges();
+
+            fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
+            fixture.detectChanges();
+        };
+
         it('should add files via input click', (done) => {
             expect(component.files).toBeUndefined();
 
@@ -192,22 +200,43 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             });
         });
 
-        it('should remove file via button click in a row', (done) => {
+        it('should remove file via button click in a row', async () => {
             expect(component.files).toBeUndefined();
 
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
-            fixture.detectChanges();
-
-            fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
+            emitRemoveEvent();
 
             setTimeout(() => {
                 expect(component.onChange).toHaveBeenCalledTimes(2);
                 expect(component.files).toHaveLength(0);
-                done();
             });
+        });
+
+        it('should focus label after file removed', async () => {
+            expect(component.files).toBeUndefined();
+
+            component.disabled = false;
+            fixture.detectChanges();
+
+            emitRemoveEvent();
+
+            await fixture.whenStable();
+
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+            expect(component.files).toHaveLength(0);
+        });
+
+        it('should focus label after file removed', async () => {
+            component.disabled = false;
+            fixture.detectChanges();
+
+            emitRemoveEvent();
+
+            await fixture.whenStable();
+
+            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
         });
 
         it('should NOT throw error on detectChanges in handler', () => {
@@ -387,6 +416,14 @@ describe(KbqSingleFileUploadComponent.name, () => {
     });
 
     describe('with file queue change', () => {
+        const emitRemoveEvent = () => {
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            fixture.detectChanges();
+
+            component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
+            fixture.detectChanges();
+        };
+
         it('should add file via input click', (done) => {
             component.disabled = false;
             fixture.detectChanges();
@@ -446,22 +483,29 @@ describe(KbqSingleFileUploadComponent.name, () => {
             });
         });
 
-        it('should remove file via button click', (done) => {
+        it('should remove file via button click', async () => {
             expect(component.file).toBeUndefined();
 
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            emitRemoveEvent();
+
+            await fixture.whenStable();
+
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+            expect(component.file).toBeNull();
+        });
+
+        it('should focus label after file removed', async () => {
+            component.disabled = false;
             fixture.detectChanges();
 
-            component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
+            emitRemoveEvent();
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(2);
-                expect(component.file).toBeNull();
-                done();
-            });
+            await fixture.whenStable();
+
+            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
         });
     });
 
