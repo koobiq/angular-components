@@ -6,7 +6,6 @@ import {
     KbqRange,
     KbqRangeValue,
     KbqTimeRangeRange,
-    KbqTimeRangeTranslateTypeMap,
     KbqTimeRangeTranslationType,
     KbqTimeRangeType,
     KbqTimeRangeUnits
@@ -36,54 +35,27 @@ export class KbqTimeRangeService<T> {
 
     static readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
-    static readonly timeRangeMap: Record<KbqTimeRangeType, KbqTimeRangeUnits> = {
-        // minutes
-        lastMinute: { minutes: 1 },
-        last5Minutes: { minutes: 5 },
-        last15Minutes: { minutes: 15 },
-        last30Minutes: { minutes: 30 },
+    static readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> = {
+        lastMinute: { units: { minutes: 1 }, translationType: 'minutes' },
+        last5Minutes: { units: { minutes: 5 }, translationType: 'minutes' },
+        last15Minutes: { units: { minutes: 15 }, translationType: 'minutes' },
+        last30Minutes: { units: { minutes: 30 }, translationType: 'minutes' },
 
-        // hours
-        lastHour: { hours: 1 },
-        last24Hours: { hours: 24 },
+        lastHour: { units: { hours: 1 }, translationType: 'hours' },
+        last24Hours: { units: { hours: 24 }, translationType: 'hours' },
 
-        // days
-        last3Days: { days: 3 },
-        last7Days: { days: 7 },
-        last14Days: { days: 14 },
-        last30Days: { days: 30 },
+        last3Days: { units: { days: 3 }, translationType: 'days' },
+        last7Days: { units: { days: 7 }, translationType: 'days' },
+        last14Days: { units: { days: 14 }, translationType: 'days' },
+        last30Days: { units: { days: 30 }, translationType: 'days' },
 
-        // months
-        last3Months: { months: 3 },
-        last12Months: { months: 12 },
-        allTime: {},
-        currentQuarter: {},
-        currentYear: {},
-        range: {}
-    };
+        last3Months: { units: { months: 3 }, translationType: 'months' },
+        last12Months: { units: { months: 12 }, translationType: 'months' },
 
-    static readonly timeRangeTranslationMap: KbqTimeRangeTranslateTypeMap = {
-        // minutes
-        lastMinute: 'minutes',
-        last5Minutes: 'minutes',
-        last15Minutes: 'minutes',
-        last30Minutes: 'minutes',
-        // hours
-        lastHour: 'hours',
-        last24Hours: 'hours',
-        // days
-        last3Days: 'days',
-        last7Days: 'days',
-        last14Days: 'days',
-        last30Days: 'days',
-        // months
-        last3Months: 'months',
-        last12Months: 'months',
-        // other
-        allTime: 'other',
-        currentYear: 'other',
-        currentQuarter: 'other',
-        range: 'other'
+        allTime: { units: {}, translationType: 'other' },
+        currentQuarter: { units: {}, translationType: 'other' },
+        currentYear: { units: {}, translationType: 'other' },
+        range: { units: {}, translationType: 'other' }
     };
 
     constructor() {
@@ -93,7 +65,7 @@ export class KbqTimeRangeService<T> {
 
         if (this.customTimeRangeTypes) {
             for (const type of this.customTimeRangeTypes) {
-                if (KbqTimeRangeService.timeRangeMap[type.type]) continue;
+                if (KbqTimeRangeService.timeRangeConfig[type.type]) continue;
 
                 this.add(type);
             }
@@ -105,16 +77,15 @@ export class KbqTimeRangeService<T> {
     });
 
     add({ type, units, translationType }: KbqCustomTimeRangeType): void {
-        KbqTimeRangeService.timeRangeMap[type] = units;
-        KbqTimeRangeService.timeRangeTranslationMap[type] = translationType;
+        KbqTimeRangeService.timeRangeConfig[type] = { units, translationType };
     }
 
     getTimeRangeTypeUnits(type: KbqTimeRangeType): KbqTimeRangeUnits {
-        return KbqTimeRangeService.timeRangeMap[type];
+        return KbqTimeRangeService.timeRangeConfig[type].units;
     }
 
     getTimeRangeUnitByType(type: KbqTimeRangeType): KbqTimeRangeTranslationType {
-        return KbqTimeRangeService.timeRangeTranslationMap[type];
+        return KbqTimeRangeService.timeRangeConfig[type].translationType;
     }
 
     getDefaultRangeValue(): Required<KbqRangeValue<T>> {

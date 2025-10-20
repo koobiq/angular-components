@@ -1,18 +1,25 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KBQ_CUSTOM_TIME_RANGE_TYPES, KbqCustomTimeRangeType, KbqTimeRangeModule } from '@koobiq/components/time-range';
+import {
+    KBQ_CUSTOM_TIME_RANGE_TYPES,
+    KBQ_DEFAULT_TIME_RANGE_TYPES,
+    KbqCustomTimeRangeType,
+    KbqTimeRangeModule
+} from '@koobiq/components/time-range';
 
-export const customTypes: KbqCustomTimeRangeType[] = [
-    { type: 'last3Seconds', units: { seconds: 3 }, translationType: 'seconds' },
+const customTypes: KbqCustomTimeRangeType[] = [
     { type: 'last3Minutes', units: { minutes: 3 }, translationType: 'minutes' },
+    { type: 'last3Days', units: { days: 3 }, translationType: 'days' },
     { type: 'last3Weeks', units: { weeks: 3 }, translationType: 'weeks' },
     { type: 'last2Months', units: { months: 2 }, translationType: 'months' }
 ];
+
+const customDefaultTypes = customTypes.map(({ type }) => type);
 
 /**
  * @title Time range custom range types
@@ -31,7 +38,8 @@ export const customTypes: KbqCustomTimeRangeType[] = [
     ],
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
-        { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, useValue: customTypes }
+        { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, useValue: customTypes },
+        { provide: KBQ_DEFAULT_TIME_RANGE_TYPES, useValue: customDefaultTypes }
     ],
     template: `
         <ng-template #titleAsFormField let-context>
@@ -47,22 +55,10 @@ export const customTypes: KbqCustomTimeRangeType[] = [
             </kbq-form-field>
         </ng-template>
 
-        <kbq-time-range
-            [titleTemplate]="titleAsFormField"
-            [arrow]="false"
-            [nonNullable]="false"
-            [availableTimeRangeTypes]="availableTimeRangeTypes()"
-        />
+        <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [nonNullable]="false" />
     `,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeCustomRangeTypesExample {
-    availableTimeRangeTypes = signal([
-        'last3Seconds',
-        'last3Minutes',
-        'last3Weeks',
-        'last2Months'
-    ]);
-}
+export class TimeRangeCustomRangeTypesExample {}
