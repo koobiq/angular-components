@@ -4151,6 +4151,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-with-scroll-example.ts",
     "importPath": "components/tabs"
   },
+  "tag-autocomplete-draggable": {
+    "packagePath": "components/tag/tag-autocomplete-draggable",
+    "title": "Tag autocomplete draggable",
+    "componentName": "TagAutocompleteDraggableExample",
+    "files": [
+      "tag-autocomplete-draggable-example.ts"
+    ],
+    "selector": "tag-autocomplete-draggable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-draggable-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-autocomplete-editable": {
+    "packagePath": "components/tag/tag-autocomplete-editable",
+    "title": "Tag autocomplete editable",
+    "componentName": "TagAutocompleteEditableExample",
+    "files": [
+      "tag-autocomplete-editable-example.ts"
+    ],
+    "selector": "tag-autocomplete-editable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-editable-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-autocomplete-option-operations": {
     "packagePath": "components/tag/tag-autocomplete-option-operations",
     "title": "Tag autocomplete option operations",
@@ -4163,16 +4187,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-option-operations-example.ts",
     "importPath": "components/tag"
   },
-  "tag-autocomplete": {
-    "packagePath": "components/tag/tag-autocomplete",
-    "title": "Tag autocomplete",
-    "componentName": "TagAutocompleteExample",
+  "tag-autocomplete-overview": {
+    "packagePath": "components/tag/tag-autocomplete-overview",
+    "title": "Tag autocomplete overview",
+    "componentName": "TagAutocompleteOverviewExample",
     "files": [
-      "tag-autocomplete-example.ts"
+      "tag-autocomplete-overview-example.ts"
     ],
-    "selector": "tag-autocomplete-example",
+    "selector": "tag-autocomplete-overview-example",
     "additionalComponents": [],
-    "primaryFile": "tag-autocomplete-example.ts",
+    "primaryFile": "tag-autocomplete-overview-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-autocomplete-removable": {
+    "packagePath": "components/tag/tag-autocomplete-removable",
+    "title": "Tag autocomplete removable",
+    "componentName": "TagAutocompleteRemovableExample",
+    "files": [
+      "tag-autocomplete-removable-example.ts"
+    ],
+    "selector": "tag-autocomplete-removable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-removable-example.ts",
     "importPath": "components/tag"
   },
   "tag-disabled": {
@@ -4247,6 +4283,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-input-editable-example.ts",
     "importPath": "components/tag"
   },
+  "tag-input-overview": {
+    "packagePath": "components/tag/tag-input-overview",
+    "title": "Tag input overview",
+    "componentName": "TagInputOverviewExample",
+    "files": [
+      "tag-input-overview-example.ts"
+    ],
+    "selector": "tag-input-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-overview-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-input-removable": {
     "packagePath": "components/tag/tag-input-removable",
     "title": "Tag input removable",
@@ -4259,18 +4307,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-input-removable-example.ts",
     "importPath": "components/tag"
   },
-  "tag-input-selectable": {
-    "packagePath": "components/tag/tag-input-selectable",
-    "title": "Tag input selectable",
-    "componentName": "TagInputSelectableExample",
-    "files": [
-      "tag-input-selectable-example.ts"
-    ],
-    "selector": "tag-input-selectable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-input-selectable-example.ts",
-    "importPath": "components/tag"
-  },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tag/tag-input-with-form-control-validators",
     "title": "Tag input with form control validators.",
@@ -4281,18 +4317,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-with-form-control-validators-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-with-form-control-validators-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-input": {
-    "packagePath": "components/tag/tag-input",
-    "title": "Tag input",
-    "componentName": "TagInputExample",
-    "files": [
-      "tag-input-example.ts"
-    ],
-    "selector": "tag-input-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-input-example.ts",
     "importPath": "components/tag"
   },
   "tag-list-draggable": {
@@ -4319,6 +4343,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-list-editable-example.ts",
     "importPath": "components/tag"
   },
+  "tag-list-overview": {
+    "packagePath": "components/tag/tag-list-overview",
+    "title": "Tag list overview",
+    "componentName": "TagListOverviewExample",
+    "files": [
+      "tag-list-overview-example.ts"
+    ],
+    "selector": "tag-list-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-list-overview-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-list-removable": {
     "packagePath": "components/tag/tag-list-removable",
     "title": "Tag list removable",
@@ -4329,30 +4365,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-list-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-removable-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-list-selectable": {
-    "packagePath": "components/tag/tag-list-selectable",
-    "title": "Tag list selectable",
-    "componentName": "TagListSelectableExample",
-    "files": [
-      "tag-list-selectable-example.ts"
-    ],
-    "selector": "tag-list-selectable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-list-selectable-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-list": {
-    "packagePath": "components/tag/tag-list",
-    "title": "Tag list",
-    "componentName": "TagListExample",
-    "files": [
-      "tag-list-example.ts"
-    ],
-    "selector": "tag-list-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-list-example.ts",
     "importPath": "components/tag"
   },
   "tag-long-text": {
@@ -4389,18 +4401,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-removable-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-selectable": {
-    "packagePath": "components/tag/tag-selectable",
-    "title": "Tag selectable",
-    "componentName": "TagSelectableExample",
-    "files": [
-      "tag-selectable-example.ts"
-    ],
-    "selector": "tag-selectable-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-selectable-example.ts",
     "importPath": "components/tag"
   },
   "tag-with-icon": {
@@ -4452,6 +4452,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "text-area-overview-example.ts",
     "importPath": "components/textarea"
+  },
+  "time-range-as-form-field": {
+    "packagePath": "components/time-range/time-range-as-form-field",
+    "title": "Time range as form field",
+    "componentName": "TimeRangeAsFormFieldExample",
+    "files": [
+      "time-range-as-form-field-example.ts"
+    ],
+    "selector": "time-range-as-form-field-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-as-form-field-example.ts",
+    "importPath": "components/time-range"
   },
   "time-range-custom-trigger": {
     "packagePath": "components/time-range/time-range-custom-trigger",
@@ -6123,9 +6135,15 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-with-scroll':
 return import('@koobiq/docs-examples/components/tabs');
+  case 'tag-autocomplete-draggable':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-autocomplete-editable':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-autocomplete-option-operations':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-autocomplete':
+  case 'tag-autocomplete-overview':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-autocomplete-removable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tag');
@@ -6139,31 +6157,25 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-editable':
 return import('@koobiq/docs-examples/components/tag');
+  case 'tag-input-overview':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-removable':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-input-selectable':
-return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-input':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-draggable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-editable':
 return import('@koobiq/docs-examples/components/tag');
+  case 'tag-list-overview':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-removable':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-list-selectable':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-list':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-long-text':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-overview':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-removable':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-selectable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-with-icon':
 return import('@koobiq/docs-examples/components/tag');

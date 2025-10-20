@@ -67,6 +67,15 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                 }
             </kbq-autocomplete>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--kbq-size-m);
+            margin: var(--kbq-size-5xl);
+        }
     `
 })
 export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
