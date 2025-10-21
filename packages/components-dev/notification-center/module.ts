@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
@@ -33,7 +35,9 @@ export class DevExamples {}
         DevThemeToggle,
         KbqButtonModule,
         KbqNotificationCenterModule,
-        KbqIcon
+        KbqIcon,
+        KbqLuxonDateModule,
+        KbqFormattersModule
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

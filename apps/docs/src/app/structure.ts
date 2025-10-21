@@ -754,7 +754,6 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Search expandable',
                         en: 'Search expandable'
                     },
-                    svgPreview: 'SearchExpandable',
                     hasApi: true,
                     apiId: 'search-expandable',
                     hasExamples: false,
@@ -800,7 +799,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Split button',
                         en: 'Split button'
                     },
-                    svgPreview: 'SplitButton',
+                    svgPreview: 'split-button',
                     hasApi: true,
                     apiId: 'split-button',
                     hasExamples: false,

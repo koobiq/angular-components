@@ -2,7 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, TemplateRef, ViewChild } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
@@ -42,6 +42,11 @@ enum NavbarIcItems {
     standalone: true,
     selector: 'notification-center-error-example',
     templateUrl: 'notification-center-error-example.html',
+    styles: `
+        ::ng-deep .example-notification-center-panel {
+            margin-top: -98px;
+        }
+    `,
     imports: [
         KbqNotificationCenterModule,
         KbqNavbarIcModule,
@@ -52,9 +57,9 @@ enum NavbarIcItems {
         KbqButtonModule,
         KbqDropdownModule,
         AsyncPipe,
-        KbqLuxonDateModule,
-        KbqFormattersModule,
-        KbqLinkModule
+        KbqLinkModule,
+        LuxonDateModule,
+        KbqFormattersModule
     ],
     providers: [
         { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
@@ -74,7 +79,7 @@ export class NotificationCenterErrorExample {
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();
 
-        return `assets/images/${currentTheme}/empty_192.png 1x, assets/images/${currentTheme}/empty_192@2x.png 2x`;
+        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, assets/images/${currentTheme}/empty_192@2x.png 2x`;
     });
 
     readonly isDesktop = toSignal(

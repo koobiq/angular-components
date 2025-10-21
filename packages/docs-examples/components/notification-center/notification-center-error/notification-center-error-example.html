@@ -81,7 +81,13 @@
         </kbq-navbar-ic-container>
 
         <kbq-navbar-ic-container>
-            <div #trigger="kbqNotificationCenterTrigger" kbq-navbar-ic-item kbqNotificationCenterTrigger>
+            <div
+                #trigger="kbqNotificationCenterTrigger"
+                kbq-navbar-ic-item
+                kbqNotificationCenterTrigger
+                [popoverHeight]="'500px'"
+                [kbqNotificationCenterPanelClass]="'example-notification-center-panel'"
+            >
                 <i kbq-icon="kbq-bell_16"></i>
                 <div kbqNavbarIcTitle>Notifications</div>
                 @if (trigger.unreadItemsCounter | async; as unreadItems) {

@@ -75,6 +75,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected readonly localeService: KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    get popoverHeight(): string;
+    set popoverHeight(value: string);
+    popoverMode: boolean;
     prefix: string;
     protected readonly service: KbqNotificationCenterService<any>;
     // (undocumented)
@@ -133,6 +137,7 @@ export class KbqNotificationCenterService<D> {
 
 // @public (undocumented)
 export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> implements AfterContentInit, OnInit {
+    constructor();
     arrow: boolean;
     backdropClass: string;
     closingActions(): Observable<void | CdkScrollable | MouseEvent>;
@@ -157,8 +162,11 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     offset: number | null;
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
+    panelClass: string;
     placement: PopUpPlacements;
     readonly placementChange: EventEmitter<any>;
+    get popoverHeight(): string;
+    set popoverHeight(value: string);
     get popoverMode(): boolean;
     set popoverMode(value: boolean);
     protected preventClosingByInnerScrollSubscription: Subscription;
@@ -171,7 +179,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     updatePosition(reapplyPosition?: boolean): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterTrigger, never>;
 }

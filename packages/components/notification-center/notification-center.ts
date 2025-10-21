@@ -120,6 +120,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     configuration;
 
+    /** @docs-private */
+    popoverMode: boolean;
+
     /** localized data
      * @docs-private */
     get localeData() {
@@ -134,6 +137,18 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     isTrapFocus: boolean = false;
 
     @ViewChild('notificationSwitcher') switcher: KbqButton;
+
+    get popoverHeight(): string {
+        return this._popoverHeight;
+    }
+
+    set popoverHeight(value: string) {
+        this._popoverHeight = value;
+
+        this.elementRef.nativeElement.style.height = value;
+    }
+
+    private _popoverHeight: string;
 
     constructor() {
         super();
@@ -235,6 +250,9 @@ export class KbqNotificationCenterTrigger
     /** Class that will be used in the background */
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
+    /** Class that will be used in the panel */
+    @Input('kbqNotificationCenterPanelClass') panelClass: string;
+
     /** Offset of popUp */
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetX;
 
@@ -248,9 +266,26 @@ export class KbqNotificationCenterTrigger
         this._popoverMode = value;
 
         this.placement = PopUpPlacements.Bottom;
+        this.updatePlacementPriority(['bottomCenter', 'bottomLeft', 'bottomRight']);
     }
 
     private _popoverMode: boolean = false;
+
+    /** Set height of popover. Default is calc(100vh - 48px). 48px - height of navbar */
+    @Input()
+    get popoverHeight(): string {
+        return this._popoverHeight;
+    }
+
+    set popoverHeight(value: string) {
+        this._popoverHeight = value;
+
+        if (this.instance?.popoverHeight) {
+            this.instance.popoverHeight = value;
+        }
+    }
+
+    private _popoverHeight: string;
 
     /** Whether the trigger is disabled. */
     @Input({ transform: booleanAttribute })
@@ -285,8 +320,10 @@ export class KbqNotificationCenterTrigger
 
     /** @docs-private */
     protected get overlayConfig(): OverlayConfig {
+        const defaultPanelClass = 'kbq-notification-center__panel';
+
         return {
-            panelClass: 'kbq-notification-center__panel',
+            panelClass: this.panelClass ? [defaultPanelClass, this.panelClass] : defaultPanelClass,
             hasBackdrop: this.hasBackdrop,
             backdropClass: this.backdropClass
         };
@@ -294,6 +331,12 @@ export class KbqNotificationCenterTrigger
 
     /** @docs-private */
     protected preventClosingByInnerScrollSubscription: Subscription;
+
+    constructor() {
+        super();
+
+        this.updatePlacementPriority(['right', 'rightBottom', 'rightTop']);
+    }
 
     ngOnInit(): void {
         super.ngOnInit();
@@ -344,6 +387,7 @@ export class KbqNotificationCenterTrigger
         this.instance.offset = this.offset;
         this.instance.footer = this.footer;
         this.instance.popoverMode = this.popoverMode;
+        this.instance.popoverHeight = this.popoverHeight;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 

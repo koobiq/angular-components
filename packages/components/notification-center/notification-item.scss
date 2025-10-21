@@ -68,7 +68,7 @@
     }
 
     &.kbq-notification-item__title_with-content {
-        padding-bottom: var(--kbq-size-xxs);
+        margin-bottom: var(--kbq-size-xxs);
     }
 }
 
@@ -76,9 +76,10 @@
     display: flex;
     flex-direction: row;
 
-    align-items: baseline;
+    height: var(--kbq-size-xl);
 
-    padding-top: var(--kbq-size-3xs);
+    align-items: center;
+
     padding-left: 22px;
 
     & .kbq-notification-item-time__value {
@@ -128,8 +129,11 @@
             color: var(--kbq-foreground-contrast);
         }
 
-        &:has(&:not(.kbq-notification-item-time_read)) .kbq-notification-item-time__value,
         .kbq-notification-item__text {
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+
+        & .kbq-notification-item-time.kbq-notification-item-time_read .kbq-notification-item-time__value {
             color: var(--kbq-foreground-contrast-secondary);
         }
 
@@ -142,6 +146,10 @@
 @mixin _kbq-notification-item-typography() {
     .kbq-notification-item {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+        & .kbq-notification-item-time {
+            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        }
     }
 }
 

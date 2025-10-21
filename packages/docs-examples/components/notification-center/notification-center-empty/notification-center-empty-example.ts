@@ -2,7 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
@@ -40,6 +40,11 @@ enum NavbarIcItems {
     standalone: true,
     selector: 'notification-center-empty-example',
     templateUrl: 'notification-center-empty-example.html',
+    styles: `
+        ::ng-deep .example-notification-center-panel {
+            margin-top: -98px;
+        }
+    `,
     imports: [
         KbqNotificationCenterModule,
         KbqNavbarIcModule,
@@ -50,13 +55,15 @@ enum NavbarIcItems {
         KbqButtonModule,
         KbqDropdownModule,
         AsyncPipe,
-        KbqLuxonDateModule,
+        LuxonDateModule,
         KbqFormattersModule
     ],
     providers: [
         { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
 })
 export class NotificationCenterEmptyExample {
+    readonly notificationCenterService = inject(KbqNotificationCenterService);
+
     protected readonly currentTheme = toSignal(
         inject(ThemeService, { optional: true })?.current.pipe(
             map((theme) => theme && theme.className.replace('kbq-', ''))
@@ -67,7 +74,7 @@ export class NotificationCenterEmptyExample {
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();
 
-        return `assets/images/${currentTheme}/empty_192.png 1x, assets/images/${currentTheme}/empty_192@2x.png 2x`;
+        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, assets/images/${currentTheme}/empty_192@2x.png 2x`;
     });
 
     readonly isDesktop = toSignal(

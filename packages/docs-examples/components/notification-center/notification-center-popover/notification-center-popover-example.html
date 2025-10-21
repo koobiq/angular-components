@@ -31,7 +31,12 @@
     </kbq-navbar-container>
 
     <kbq-navbar-container>
-        <kbq-navbar-item #trigger="kbqNotificationCenterTrigger" kbqNotificationCenterTrigger [popoverMode]="true">
+        <kbq-navbar-item
+            #trigger="kbqNotificationCenterTrigger"
+            kbqNotificationCenterTrigger
+            [popoverMode]="true"
+            [popoverHeight]="'430px'"
+        >
             <i kbq-icon="kbq-bell_16"></i>
             @if (trigger.unreadItemsCounter | async; as unreadItems) {
                 <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>

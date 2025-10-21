@@ -78,7 +78,13 @@ export class KbqNotificationCenterService<D> {
     get unreadItemsCounter(): Observable<string> {
         return this.originalItems.pipe(map((items) => items.filter((item) => item.read === false).length)).pipe(
             combineLatestWith(this.onRead),
-            map(([value]) => (value < maxUnreadItemsLength ? value.toString() : '99+'))
+            map(([value]) => {
+                if (value < maxUnreadItemsLength) {
+                    return value ? value.toString() : '';
+                } else {
+                    return '99+';
+                }
+            })
         );
     }
 
