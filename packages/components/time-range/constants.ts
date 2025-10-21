@@ -9,6 +9,19 @@ export const KBQ_DEFAULT_TIME_RANGE_TYPES = new InjectionToken<KbqTimeRangeType[
 /** Preset of custom time ranges, provided by DI. */
 export const KBQ_CUSTOM_TIME_RANGE_TYPES = new InjectionToken<KbqCustomTimeRangeType[]>('KBQ_CUSTOM_TIME_RANGE_TYPES');
 
+/** Time range types in range editor if nothing provided */
+export const defaultTimeRangeTypes: KbqTimeRangeType[] = [
+    'lastHour',
+    'last24Hours',
+    'last3Days',
+    'last7Days',
+    'last14Days',
+    'currentQuarter',
+    'currentYear',
+    'allTime',
+    'range'
+];
+
 export function createMissingDateImplError(componentName: string, provider: string): Error {
     return Error(
         `${componentName}: No provider found for ${provider}. You must import one of the existing ` +

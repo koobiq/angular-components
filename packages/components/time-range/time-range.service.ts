@@ -1,6 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
-import { createMissingDateImplError, KBQ_CUSTOM_TIME_RANGE_TYPES, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
+import {
+    createMissingDateImplError,
+    defaultTimeRangeTypes,
+    KBQ_CUSTOM_TIME_RANGE_TYPES,
+    KBQ_DEFAULT_TIME_RANGE_TYPES
+} from './constants';
 import {
     KbqCustomTimeRangeType,
     KbqRange,
@@ -16,26 +21,14 @@ export class KbqTimeRangeService<T> {
     readonly dateAdapter = inject<DateAdapter<T>>(DateAdapter);
     readonly dateFormatter = inject<DateFormatter<T>>(DateFormatter);
 
-    protected defaultTimeRangeTypes: KbqTimeRangeType[] = [
-        'lastHour',
-        'last24Hours',
-        'last3Days',
-        'last7Days',
-        'last14Days',
-        'currentQuarter',
-        'currentYear',
-        'allTime',
-        'range'
-    ];
-
     readonly providedDefaultTimeRangeTypes =
-        inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true }) || this.defaultTimeRangeTypes;
+        inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true }) || defaultTimeRangeTypes;
 
     readonly customTimeRangeTypes = inject(KBQ_CUSTOM_TIME_RANGE_TYPES, { optional: true });
 
-    static readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
+    readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
-    static readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> = {
+    readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> = {
         lastMinute: { units: { minutes: 1 }, translationType: 'minutes' },
         last5Minutes: { units: { minutes: 5 }, translationType: 'minutes' },
         last15Minutes: { units: { minutes: 15 }, translationType: 'minutes' },
@@ -65,7 +58,7 @@ export class KbqTimeRangeService<T> {
 
         if (this.customTimeRangeTypes) {
             for (const type of this.customTimeRangeTypes) {
-                if (KbqTimeRangeService.timeRangeConfig[type.type]) continue;
+                if (this.timeRangeConfig[type.type]) continue;
 
                 this.add(type);
             }
@@ -77,15 +70,15 @@ export class KbqTimeRangeService<T> {
     });
 
     add({ type, units, translationType }: KbqCustomTimeRangeType): void {
-        KbqTimeRangeService.timeRangeConfig[type] = { units, translationType };
+        this.timeRangeConfig[type] = { units, translationType };
     }
 
     getTimeRangeTypeUnits(type: KbqTimeRangeType): KbqTimeRangeUnits {
-        return KbqTimeRangeService.timeRangeConfig[type].units;
+        return this.timeRangeConfig[type].units;
     }
 
     getTimeRangeUnitByType(type: KbqTimeRangeType): KbqTimeRangeTranslationType {
-        return KbqTimeRangeService.timeRangeConfig[type].translationType;
+        return this.timeRangeConfig[type].translationType;
     }
 
     getDefaultRangeValue(): Required<KbqRangeValue<T>> {
@@ -105,9 +98,7 @@ export class KbqTimeRangeService<T> {
         availableTimeRangeTypes: KbqTimeRangeType[] = []
     ): KbqTimeRangeRange {
         const defaultType =
-            availableTimeRangeTypes[0] ??
-            this.providedDefaultTimeRangeTypes[0] ??
-            KbqTimeRangeService.DEFAULT_RANGE_TYPE;
+            availableTimeRangeTypes[0] ?? this.providedDefaultTimeRangeTypes[0] ?? this.DEFAULT_RANGE_TYPE;
 
         return {
             ...this.calculateTimeRange(defaultType, rangeValue || this.getDefaultRangeValue()),

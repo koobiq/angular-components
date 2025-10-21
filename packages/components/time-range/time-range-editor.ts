@@ -132,7 +132,9 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
         this.form = new FormGroup(
             {
-                type: new FormControl<KbqTimeRangeType>(KbqTimeRangeService.DEFAULT_RANGE_TYPE, { nonNullable: true }),
+                type: new FormControl<KbqTimeRangeType>(this.timeRangeService.DEFAULT_RANGE_TYPE, {
+                    nonNullable: true
+                }),
                 fromTime: new FormControl<T>(defaultRangeValue.fromTime, { nonNullable: true }),
                 fromDate: new FormControl<T>(defaultRangeValue.fromDate, { nonNullable: true }),
                 toTime: new FormControl<T>(defaultRangeValue.toTime, { nonNullable: true }),
