@@ -96,7 +96,11 @@ export class KbqFieldSizingContent {
         const computedStyle = this.window.getComputedStyle(this.element);
         const ruler = this.createRuler(computedStyle);
 
-        ruler.textContent = this.element.value || this.element.placeholder || '';
+        ruler.textContent =
+            this.element.value ||
+            // We should add space to prevent placeholder truncation in Safari/Firefox
+            this.element.placeholder + ' ' ||
+            '';
 
         this.renderer.appendChild(this.document.body, ruler);
 

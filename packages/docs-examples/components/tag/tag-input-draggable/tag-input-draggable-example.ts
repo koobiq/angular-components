@@ -1,7 +1,9 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEvent, KbqTagInputEvent, KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Draggable tag ${id}` }));
@@ -12,7 +14,8 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
 @Component({
     standalone: true,
     selector: 'tag-input-draggable-example',
-    imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule],
+    imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule, KbqInputModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" draggable multiple (dropped)="dropped($event)">
