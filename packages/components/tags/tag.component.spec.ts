@@ -792,7 +792,7 @@ describe(KbqTag.name, () => {
         expect(getTagRemoveElement(debugElement)).toBeUndefined();
     });
 
-    it('should select/unselect tag on focus/blur', fakeAsync(() => {
+    it('should toggle tag selection tag on focus/blur', fakeAsync(() => {
         const { debugElement } = createComponent(TestTag);
 
         expect(isTagFocused(debugElement)).toBeFalsy();
@@ -810,6 +810,34 @@ describe(KbqTag.name, () => {
         expect(isTagFocused(debugElement)).toBeFalsy();
         expect(isTagSelected(debugElement)).toBeFalsy();
     }));
+
+    it('should toggle tag selection on SPACE keydown', () => {
+        const { debugElement } = createComponent(TestTag);
+        const tag = getTagElement(debugElement);
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(isTagSelected(debugElement)).toBeTruthy();
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+    });
+
+    it('should emit KbqTagSelectionChange event on SPACE keydown', () => {
+        const { debugElement, componentInstance } = createComponent(TestTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledWith(expect.objectContaining({ selected: true }));
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledWith(expect.objectContaining({ selected: false }));
+    });
 });
 
 @Component({
