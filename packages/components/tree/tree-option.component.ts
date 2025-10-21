@@ -261,13 +261,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     focus(focusOrigin?: FocusOrigin) {
-        if (focusOrigin === 'program') {
-            return;
-        }
-
-        if (this.disabled || this.actionButton?.hasFocus) {
-            return;
-        }
+        if (focusOrigin === 'program' || this.disabled || this.actionButton?.hasFocus) return;
 
         this.elementRef.nativeElement.focus();
 

@@ -653,7 +653,6 @@ export class KbqTreeSelect
         if (!this.tree) return;
 
         this.tree.resetFocusedItemOnBlur = false;
-        this.tree.optionShouldHoldFocusOnBlur = true;
 
         this.selectionModel = this.tree.selectionModel = new SelectionModel<any>(this.multiSelection);
 
