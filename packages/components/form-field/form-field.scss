@@ -4,12 +4,8 @@
 @mixin kbq-form-field-hint-geometry {
     display: flex;
     flex-direction: column;
-    gap: var(--kbq-size-xxs);
+    gap: var(--kbq-size-s);
     margin-top: var(--kbq-form-field-hint-size-margin-top);
-
-    .kbq-password-hint:first-child {
-        margin-top: var(--kbq-size-s);
-    }
 }
 
 .kbq-form-field {
@@ -119,10 +115,6 @@
 
     .kbq-form-field__hint {
         @include kbq-form-field-hint-geometry();
-    }
-
-    .kbq-password-hint {
-        margin-top: var(--kbq-form-field-hint-size-gap);
     }
 }
 
