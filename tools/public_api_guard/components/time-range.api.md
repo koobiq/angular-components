@@ -39,10 +39,23 @@ import { WritableSignal } from '@angular/core';
 export function createMissingDateImplError(componentName: string, provider: string): Error;
 
 // @public
-export const KBQ_DEFAULT_TIME_RANGE_TYPES: InjectionToken<KbqTimeRangeType[]>;
+export const defaultTimeRangeTypes: KbqTimeRangeType[];
+
+// @public
+export const KBQ_CUSTOM_TIME_RANGE_TYPES: InjectionToken<KbqCustomTimeRangeType[]>;
+
+// @public
+export const KBQ_DEFAULT_TIME_RANGE_TYPES: InjectionToken<string[]>;
 
 // @public
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION: InjectionToken<KbqTimeRangeLocaleConfig>;
+
+// @public (undocumented)
+export type KbqCustomTimeRangeType = {
+    type: KbqTimeRangeType;
+    units: KbqTimeRangeUnits;
+    translationType: KbqTimeRangeTranslationType;
+};
 
 // @public (undocumented)
 export type KbqRange = {
@@ -66,7 +79,7 @@ export interface KbqRangeValue<T> {
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     constructor();
     readonly arrow: InputSignalWithTransform<boolean, unknown>;
-    readonly availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
+    readonly availableTimeRangeTypes: InputSignal<string[]>;
     readonly defaultRangeValue: InputSignal<KbqRangeValue<T> | undefined>;
     protected readonly localeConfiguration: WritableSignal<KbqTimeRangeLocaleConfig>;
     readonly maxDate: InputSignal<T | undefined>;
@@ -118,7 +131,7 @@ export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleCont
 // @public
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     constructor();
-    readonly availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
+    readonly availableTimeRangeTypes: InputSignal<string[]>;
     // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
     protected readonly form: FormGroup<FormValue<T>>;
     protected readonly isRangeVisible: Signal<boolean>;
@@ -140,7 +153,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     protected readonly timepickerFormat = TimeFormats.HHmmss;
     protected readonly timepickerList: Signal<readonly KbqTimepicker<T>[]>;
     protected readonly timeRangeTypesWithoutRange: Signal<    {
-    type: "lastMinute" | "last5Minutes" | "last15Minutes" | "last30Minutes" | "lastHour" | "last24Hours" | "last3Days" | "last7Days" | "last14Days" | "last30Days" | "last3Months" | "last12Months" | "allTime" | "currentQuarter" | "currentYear";
+    type: string;
     translationType: KbqTimeRangeTranslationType;
     formattedValue: string;
     }[]>;
@@ -240,7 +253,7 @@ export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRange
 export type KbqTimeRangeTranslationType = Extract<DurationUnit, 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months'> | 'other';
 
 // @public
-export type KbqTimeRangeType = 'lastMinute' | 'last5Minutes' | 'last15Minutes' | 'last30Minutes' | 'lastHour' | 'last24Hours' | 'last3Days' | 'last7Days' | 'last14Days' | 'last30Days' | 'last3Months' | 'last12Months' | 'allTime' | 'currentQuarter' | 'currentYear' | 'range';
+export type KbqTimeRangeType = 'lastMinute' | 'last5Minutes' | 'last15Minutes' | 'last30Minutes' | 'lastHour' | 'last24Hours' | 'last3Days' | 'last7Days' | 'last14Days' | 'last30Days' | 'last3Months' | 'last12Months' | 'allTime' | 'currentQuarter' | 'currentYear' | 'range' | string;
 
 // @public (undocumented)
 export type KbqTimeRangeTypeContext = {
