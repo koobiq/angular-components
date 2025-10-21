@@ -38,17 +38,17 @@ export type KbqTimeRangeType =
     | 'allTime'
     | 'currentQuarter'
     | 'currentYear'
-    | 'range'
-    | string;
+    | 'range';
 
 export type KbqTimeRangeTranslationType = Exclude<DurationUnit, 'quarters' | 'milliseconds'> | 'other';
 
 export interface KbqTimeRangeUnits extends DurationObjectUnits {}
 
 export type KbqCustomTimeRangeType = {
-    type: KbqTimeRangeType;
+    type: KbqTimeRangeType | string;
     units: KbqTimeRangeUnits;
     translationType: KbqTimeRangeTranslationType;
+    range?: KbqRange;
 };
 
 export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;

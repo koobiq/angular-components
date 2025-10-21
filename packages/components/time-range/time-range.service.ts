@@ -69,8 +69,8 @@ export class KbqTimeRangeService<T> {
         startDateTime: dateTimeISOString
     });
 
-    add({ type, units, translationType }: KbqCustomTimeRangeType): void {
-        this.timeRangeConfig[type] = { units, translationType };
+    add({ type, ...customTimeRangeConfig }: KbqCustomTimeRangeType): void {
+        this.timeRangeConfig[type] = customTimeRangeConfig;
     }
 
     getTimeRangeTypeUnits(type: KbqTimeRangeType): KbqTimeRangeUnits {
@@ -145,11 +145,14 @@ export class KbqTimeRangeService<T> {
                             this.dateAdapter.toIso8601(this.dateAdapter.startOf(this.dateAdapter.today(), 'year'))
                         );
                     case 'allTime':
-                    default:
-                        return {
-                            startDateTime: undefined,
-                            endDateTime: undefined
-                        };
+                    default: {
+                        return (
+                            this.timeRangeConfig[type].range ?? {
+                                startDateTime: undefined,
+                                endDateTime: undefined
+                            }
+                        );
+                    }
                 }
             }
             default: {

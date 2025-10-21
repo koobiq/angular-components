@@ -14,9 +14,8 @@ import {
 
 const customTypes: KbqCustomTimeRangeType[] = [
     { type: 'last3Minutes', units: { minutes: -3 }, translationType: 'minutes' },
-    { type: 'last3Days', units: { days: -3 }, translationType: 'days' },
     { type: 'last3Weeks', units: { weeks: -3 }, translationType: 'weeks' },
-    { type: 'last2Months', units: { months: -2 }, translationType: 'months' }
+    { type: 'last3Years', units: { years: -3 }, translationType: 'months' }
 ];
 
 const customDefaultTypes = customTypes.map(({ type }) => type);
@@ -42,13 +41,17 @@ const customDefaultTypes = customTypes.map(({ type }) => type);
         { provide: KBQ_DEFAULT_TIME_RANGE_TYPES, useValue: customDefaultTypes }
     ],
     template: `
+        <ng-template #customOption let-context>
+            {{ context.type | titlecase }}
+        </ng-template>
+
         <ng-template #titleAsFormField let-context>
             <kbq-form-field>
                 <kbq-time-range-title-as-control>
                     @if (!context.type) {
                         <span kbqTimeRangeTitlePlaceholder>{{ context.formattedDate }}</span>
                     } @else {
-                        {{ context.formattedDate[0] | titlecase }}{{ context.formattedDate.slice(1) }}
+                        {{ context.type | titlecase }}
                     }
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>

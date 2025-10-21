@@ -1,11 +1,59 @@
-import { JsonPipe, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRangeModule } from '@koobiq/components/time-range';
+import {
+    KBQ_CUSTOM_TIME_RANGE_TYPES,
+    KBQ_DEFAULT_TIME_RANGE_TYPES,
+    KbqCustomTimeRangeType,
+    KbqTimeRangeModule
+} from '@koobiq/components/time-range';
+
+export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRangeType[] {
+    const currentYear = adapter.startOf(adapter.today(), 'year');
+
+    return [
+        {
+            type: 'q1',
+            units: {},
+            translationType: 'other',
+            range: {
+                startDateTime: adapter.toIso8601(currentYear),
+                endDateTime: adapter.toIso8601(adapter.addCalendarUnits(currentYear, { quarters: 1 }))
+            }
+        },
+        {
+            type: 'q2',
+            units: {},
+            translationType: 'other',
+            range: {
+                startDateTime: adapter.toIso8601(adapter.addCalendarUnits(currentYear, { quarters: 1 })),
+                endDateTime: adapter.toIso8601(adapter.addCalendarUnits(currentYear, { quarters: 2 }))
+            }
+        },
+        {
+            type: 'q3',
+            units: {},
+            translationType: 'other',
+            range: {
+                startDateTime: adapter.toIso8601(adapter.addCalendarUnits(currentYear, { quarters: 2 })),
+                endDateTime: adapter.toIso8601(adapter.addCalendarUnits(currentYear, { quarters: 3 }))
+            }
+        },
+        {
+            type: 'q4',
+            units: {},
+            translationType: 'other',
+            range: {
+                startDateTime: adapter.toIso8601(adapter.addCalendarUnits(currentYear, { quarters: 3 })),
+                endDateTime: adapter.toIso8601(adapter.addCalendarUnits(currentYear, { quarters: 4 }))
+            }
+        }
+    ];
+}
 
 /**
  * @title Time range custom option
@@ -15,7 +63,6 @@ import { KbqTimeRangeModule } from '@koobiq/components/time-range';
     standalone: true,
     selector: 'time-range-custom-option-example',
     imports: [
-        JsonPipe,
         TitleCasePipe,
         ReactiveFormsModule,
         KbqTimeRangeModule,
@@ -24,10 +71,17 @@ import { KbqTimeRangeModule } from '@koobiq/components/time-range';
         KbqFormFieldModule
     ],
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
+        { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, deps: [DateAdapter], useFactory: customTypesFactory },
+        {
+            provide: KBQ_DEFAULT_TIME_RANGE_TYPES,
+            deps: [KBQ_CUSTOM_TIME_RANGE_TYPES],
+            useFactory: (customTypes: KbqCustomTimeRangeType[]) => customTypes.map(({ type }) => type)
+        }
+    ],
     template: `
         <ng-template #customOption let-context>
-            <span class="kbq-mono-compact">{{ context.units | json }}</span>
+            {{ context.type | titlecase }}
         </ng-template>
 
         <ng-template #titleAsFormField let-context>
@@ -36,7 +90,7 @@ import { KbqTimeRangeModule } from '@koobiq/components/time-range';
                     @if (!context.type) {
                         <span kbqTimeRangeTitlePlaceholder>{{ context.formattedDate }}</span>
                     } @else {
-                        {{ context.formattedDate[0] | titlecase }}{{ context.formattedDate.slice(1) }}
+                        {{ context.type | titlecase }}
                     }
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
