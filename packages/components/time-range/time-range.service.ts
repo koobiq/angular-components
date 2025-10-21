@@ -134,24 +134,13 @@ export class KbqTimeRangeService<T> {
         }
 
         switch (this.getTimeRangeUnitByType(type)) {
-            case 'seconds': {
-                return this.lastSecondsRange(this.getTimeRangeTypeUnits(type).seconds!);
-            }
-            case 'minutes': {
-                return this.lastMinutesRange(this.getTimeRangeTypeUnits(type).minutes!);
-            }
-            case 'hours': {
-                return this.lastHoursRange(this.getTimeRangeTypeUnits(type).hours!);
-            }
-            case 'days': {
-                return this.lastDaysRange(this.getTimeRangeTypeUnits(type).days!);
-            }
-            case 'weeks': {
-                return this.lastWeeksRange(this.getTimeRangeTypeUnits(type).weeks!);
-            }
-            // @TODO: implement weeks range after date adapter update (#DS-4226)
+            case 'seconds':
+            case 'minutes':
+            case 'hours':
+            case 'days':
+            case 'weeks':
             case 'months': {
-                return this.lastMonthsRange(this.getTimeRangeTypeUnits(type).months!);
+                return this.lastUnitsRange(this.getTimeRangeTypeUnits(type), this.getTimeRangeUnitByType(type));
             }
             case 'other':
             default: {
@@ -187,73 +176,11 @@ export class KbqTimeRangeService<T> {
         );
     }
 
-    lastSecondsRange = (seconds: number): KbqRange => {
-        const date = this.dateAdapter!.today();
-
-        return KbqTimeRangeService.range(
-            this.dateAdapter.toIso8601(
-                this.dateAdapter!.createDateTime(
-                    this.dateAdapter.getYear(date),
-                    this.dateAdapter.getMonth(date),
-                    this.dateAdapter.getDate(date),
-                    this.dateAdapter.getHours(date),
-                    this.dateAdapter.getMinutes(date),
-                    this.dateAdapter.getSeconds(date) - seconds,
-                    0
-                )
-            )
-        );
-    };
-
-    lastMinutesRange = (minutes: number): KbqRange => {
-        const date = this.dateAdapter!.today();
-
-        return KbqTimeRangeService.range(
-            this.dateAdapter.toIso8601(
-                this.dateAdapter!.createDateTime(
-                    this.dateAdapter.getYear(date),
-                    this.dateAdapter.getMonth(date),
-                    this.dateAdapter.getDate(date),
-                    this.dateAdapter.getHours(date),
-                    this.dateAdapter.getMinutes(date) - minutes,
-                    0,
-                    0
-                )
-            )
-        );
-    };
-
-    lastHoursRange = (hours: number): KbqRange => {
-        const date = this.dateAdapter!.today();
-
-        return KbqTimeRangeService.range(
-            this.dateAdapter.toIso8601(
-                this.dateAdapter!.createDateTime(
-                    this.dateAdapter.getYear(date),
-                    this.dateAdapter.getMonth(date),
-                    this.dateAdapter.getDate(date),
-                    this.dateAdapter.getHours(date) - hours,
-                    this.dateAdapter.getMinutes(date),
-                    0,
-                    0
-                )
-            )
-        );
-    };
-
-    lastDaysRange = (days: number): KbqRange =>
+    lastUnitsRange = (unitsInfo: KbqTimeRangeUnits, type: KbqTimeRangeTranslationType): KbqRange =>
         KbqTimeRangeService.range(
-            this.dateAdapter.toIso8601(this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -days))
-        );
-
-    lastWeeksRange = (weeks: number): KbqRange =>
-        KbqTimeRangeService.range(
-            this.dateAdapter.toIso8601(this.dateAdapter?.addCalendarDays(this.dateAdapter!.today(), -(weeks * 7)))
-        );
-
-    lastMonthsRange = (months: number): KbqRange =>
-        KbqTimeRangeService.range(
-            this.dateAdapter.toIso8601(this.dateAdapter?.addCalendarMonths(this.dateAdapter!.today(), -months))
+            this.dateAdapter.toIso8601(
+                this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), { [type]: -unitsInfo[type] })
+            )
         );
 
     checkAndCorrectTimeRangeValue(
