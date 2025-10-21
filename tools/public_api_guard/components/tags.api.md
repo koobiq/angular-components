@@ -204,7 +204,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     ngControl: NgControl;
     // (undocumented)
     ngOnChanges(): void;
-    // (undocumented)
     onFocus(): void;
     // (undocumented)
     onInput(): void;
@@ -235,7 +234,7 @@ export interface KbqTagInputEvent {
 }
 
 // @public (undocumented)
-export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState {
+export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, defaultErrorStateMatcher: ErrorStateMatcher, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
     blur(): void;
     get canShowCleaner(): boolean;
@@ -280,6 +279,8 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     static ngAcceptInputType_selectable: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngControl: NgControl;
     // (undocumented)
@@ -326,6 +327,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     tags: QueryList<KbqTag>;
     get tagSelectionChanges(): Observable<KbqTagSelectionChange>;
     uid: string;
+    unselectAll(): void;
     updateErrorState(): void;
     protected updateFocusForDestroyedTags(): void;
     protected updateTabIndex(): void;
