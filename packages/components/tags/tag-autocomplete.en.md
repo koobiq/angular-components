@@ -1,20 +1,16 @@
 Tags Autocomplete is used to select one or multiple values from a list and to input custom values.
 
-<!-- example(tag-autocomplete-overview) -->
-
-### Selection from dictionary
-
 When focusing on the field, the dictionary menu opens. Autocomplete changes as you type. Selecting an option from the list adds a tag, clears the text in the field, and closes the menu.
 
-<!-- example(tag-autocomplete-option-operations) -->
+<!-- example(tag-autocomplete-overview) -->
 
 ### Adding to dictionary
 
 The option to create a new tag is placed first in the autocomplete menu. It creates a new token from the entered text if it doesn't exist in the dictionary.
 
-Adding a tag also works with the **Tab** key.
+Adding a tag also works with the `Tab` key.
 
-Creating a duplicate of a selected tag is not allowed: the system will show the message **Nothing found**.
+Creating a duplicate of a selected tag is not allowed: the system will show the message `Nothing found`.
 
 <!-- example(tag-autocomplete-option-operations) -->
 
