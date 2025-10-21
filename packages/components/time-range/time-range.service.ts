@@ -134,16 +134,7 @@ export class KbqTimeRangeService<T> {
         }
 
         switch (this.getTimeRangeUnitByType(type)) {
-            case 'seconds':
-            case 'minutes':
-            case 'hours':
-            case 'days':
-            case 'weeks':
-            case 'months': {
-                return this.lastUnitsRange(this.getTimeRangeTypeUnits(type), this.getTimeRangeUnitByType(type));
-            }
-            case 'other':
-            default: {
+            case 'other': {
                 switch (type) {
                     case 'currentQuarter':
                         return KbqTimeRangeService.range(
@@ -161,6 +152,9 @@ export class KbqTimeRangeService<T> {
                         };
                 }
             }
+            default: {
+                return this.lastUnitsRange(this.getTimeRangeTypeUnits(type));
+            }
         }
     }
 
@@ -176,11 +170,9 @@ export class KbqTimeRangeService<T> {
         );
     }
 
-    lastUnitsRange = (unitsInfo: KbqTimeRangeUnits, type: KbqTimeRangeTranslationType): KbqRange =>
+    lastUnitsRange = (unitsInfo: KbqTimeRangeUnits): KbqRange =>
         KbqTimeRangeService.range(
-            this.dateAdapter.toIso8601(
-                this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), { [type]: unitsInfo[type] })
-            )
+            this.dateAdapter.toIso8601(this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), unitsInfo))
         );
 
     checkAndCorrectTimeRangeValue(

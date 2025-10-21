@@ -1,5 +1,5 @@
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { DurationUnit } from '@koobiq/date-adapter';
+import { DurationObjectUnits, DurationUnit } from '@koobiq/date-adapter';
 
 export interface KbqRangeValue<T> {
     fromTime?: T;
@@ -41,18 +41,9 @@ export type KbqTimeRangeType =
     | 'range'
     | string;
 
-export type KbqTimeRangeTranslationType =
-    | Extract<DurationUnit, 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months'>
-    | 'other';
+export type KbqTimeRangeTranslationType = Exclude<DurationUnit, 'quarters' | 'milliseconds'> | 'other';
 
-export interface KbqTimeRangeUnits {
-    seconds?: number;
-    minutes?: number;
-    hours?: number;
-    days?: number;
-    weeks?: number;
-    months?: number;
-}
+export interface KbqTimeRangeUnits extends DurationObjectUnits {}
 
 export type KbqCustomTimeRangeType = {
     type: KbqTimeRangeType;

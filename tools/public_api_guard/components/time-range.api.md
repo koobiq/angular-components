@@ -8,6 +8,7 @@ import { AbstractControl } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter } from '@koobiq/components/core';
 import { DateFormatter } from '@koobiq/components/core';
+import { DurationObjectUnits } from '@koobiq/date-adapter';
 import { DurationUnit } from '@koobiq/date-adapter';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
@@ -249,7 +250,7 @@ export class KbqTimeRangeTitlePlaceholder {
 export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
 
 // @public (undocumented)
-export type KbqTimeRangeTranslationType = Extract<DurationUnit, 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months'> | 'other';
+export type KbqTimeRangeTranslationType = Exclude<DurationUnit, 'quarters' | 'milliseconds'> | 'other';
 
 // @public
 export type KbqTimeRangeType = 'lastMinute' | 'last5Minutes' | 'last15Minutes' | 'last30Minutes' | 'lastHour' | 'last24Hours' | 'last3Days' | 'last7Days' | 'last14Days' | 'last30Days' | 'last3Months' | 'last12Months' | 'allTime' | 'currentQuarter' | 'currentYear' | 'range' | string;
@@ -260,19 +261,7 @@ export type KbqTimeRangeTypeContext = {
 };
 
 // @public (undocumented)
-export interface KbqTimeRangeUnits {
-    // (undocumented)
-    days?: number;
-    // (undocumented)
-    hours?: number;
-    // (undocumented)
-    minutes?: number;
-    // (undocumented)
-    months?: number;
-    // (undocumented)
-    seconds?: number;
-    // (undocumented)
-    weeks?: number;
+export interface KbqTimeRangeUnits extends DurationObjectUnits {
 }
 
 // Warning: (ae-forgotten-export) The symbol "KbqTimeRangeService" needs to be exported by the entry point index.d.ts
