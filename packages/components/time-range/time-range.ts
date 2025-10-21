@@ -28,7 +28,13 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqRangeValue, KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeType } from './types';
+import {
+    KbqRangeValue,
+    KbqTimeRangeCustomizableTitleContext,
+    KbqTimeRangeOptionContext,
+    KbqTimeRangeRange,
+    KbqTimeRangeType
+} from './types';
 
 /** Localization configuration provider. */
 export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfig>(
@@ -72,6 +78,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
                 [showRangeAsDefault]="showRangeAsDefault()"
                 [rangeValue]="normalizedDefaultRangeValue()"
                 [availableTimeRangeTypes]="availableTimeRangeTypes()"
+                [optionTemplate]="optionTemplate()"
             />
         </ng-template>
 
@@ -120,6 +127,8 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.providedDefaultTimeRangeTypes);
     /** Customizable trigger output */
     readonly titleTemplate = input<TemplateRef<KbqTimeRangeCustomizableTitleContext>>();
+    /** Customizable option output */
+    readonly optionTemplate = input<TemplateRef<KbqTimeRangeOptionContext>>();
     /** Whether to show popover with arrow */
     readonly arrow = input(true, { transform: booleanAttribute });
     /**

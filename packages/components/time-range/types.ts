@@ -67,4 +67,4 @@ export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleCont
 
 export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
 export type KbqTimeRangeOptionContext = KbqTimeRangeTypeContext &
-    KbqTimeRangeUnits & { translationType: KbqTimeRangeTranslationType };
+    KbqTimeRangeUnits & { translationType: KbqTimeRangeTranslationType; formattedValue: string };

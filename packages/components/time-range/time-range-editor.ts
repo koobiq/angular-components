@@ -6,6 +6,7 @@ import {
     inject,
     input,
     OnInit,
+    TemplateRef,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
@@ -33,7 +34,13 @@ import { merge } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { rangeValidator } from './constants';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqRangeValue, KbqTimeRangeRange, KbqTimeRangeType, KbqTimeRangeTypeContext } from './types';
+import {
+    KbqRangeValue,
+    KbqTimeRangeOptionContext,
+    KbqTimeRangeRange,
+    KbqTimeRangeType,
+    KbqTimeRangeTypeContext
+} from './types';
 
 interface FormValue<T> {
     type: FormControl<KbqTimeRangeType>;
@@ -96,6 +103,8 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     readonly rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
     readonly showRangeAsDefault = input.required<boolean>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfig>();
+    /** Customizable option output */
+    readonly optionTemplate = input<TemplateRef<KbqTimeRangeOptionContext>>();
 
     /** @docs-private */
     protected readonly isRangeVisible = computed(
@@ -103,7 +112,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     );
 
     /** @docs-private */
-    protected readonly timeRangeTypesWithoutRange = computed(() => {
+    protected readonly timeRangeTypesWithoutRange = computed<KbqTimeRangeOptionContext[]>(() => {
         const localeConfig = this.localeConfiguration();
 
         return this.availableTimeRangeTypes()
@@ -111,6 +120,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
             .map((type) => ({
                 type,
                 translationType: this.timeRangeService.getTimeRangeUnitByType(type),
+                units: this.timeRangeService.getTimeRangeTypeUnits(type),
                 formattedValue: this.getFormattedOption(type, localeConfig)
             }));
     });

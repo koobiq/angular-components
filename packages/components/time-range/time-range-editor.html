@@ -6,7 +6,9 @@
             <div class="kbq-time-range-editor__predefined">
                 @for (type of types; track type) {
                     <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type.type">
-                        <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: type }" />
+                        <ng-container
+                            *ngTemplateOutlet="optionTemplate() || defaultOptionTemplate; context: { $implicit: type }"
+                        />
                     </kbq-radio-button>
                 }
             </div>
@@ -72,7 +74,7 @@
     </kbq-radio-group>
 </form>
 
-<ng-template #optionTemplate let-context>
+<ng-template #defaultOptionTemplate let-context>
     @let localeConfig = localeConfiguration();
     @switch (context.translationType) {
         @case ('other') {
