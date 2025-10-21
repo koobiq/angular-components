@@ -81,6 +81,10 @@
     &:hover .kbq-notification-center-sub-header__button {
         display: flex;
     }
+
+    &:first-child.kbq-notification-center_top-overflow {
+        box-shadow: var(--kbq-shadow-overflow-normal-bottom);
+    }
 }
 
 .kbq-notification-center-container {
@@ -92,6 +96,10 @@
 
     & .kbq-loader-overlay_parent {
         border-radius: inherit;
+    }
+
+    &.kbq-notification-center_bottom-overflow {
+        box-shadow: var(--kbq-shadow-overflow-normal-bottom);
     }
 }
 

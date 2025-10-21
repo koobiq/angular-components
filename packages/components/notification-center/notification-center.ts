@@ -46,7 +46,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Subscription, merge } from 'rxjs';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
@@ -116,12 +116,19 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
 
+    @ViewChild(KbqScrollbar) private scrollContainer: KbqScrollbar;
+
     readonly externalConfiguration = inject(KBQ_NOTIFICATION_CENTER_CONFIGURATION, { optional: true });
 
     configuration;
 
     /** @docs-private */
-    popoverMode: boolean;
+    protected popoverMode: boolean;
+
+    /** @docs-private */
+    protected isTopOverflow: boolean = false;
+    /** @docs-private */
+    protected isBottomOverflow: boolean = false;
 
     /** localized data
      * @docs-private */
@@ -175,6 +182,8 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         this.service.changes.subscribe(() => this.changeDetectorRef.markForCheck());
 
         this.switcher.focus();
+
+        setTimeout(this.checkOverflow);
     }
 
     /** @docs-private */
@@ -191,6 +200,18 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     escapeHandler() {
         this.hide(0);
     }
+
+    protected checkOverflow = () => {
+        const nativeElement = this.scrollContainer.contentElement.nativeElement;
+
+        const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
+
+        this.isTopOverflow = scrollTop > 0;
+
+        this.isBottomOverflow = scrollTop + offsetHeight < scrollHeight;
+
+        this.changeDetectorRef.markForCheck();
+    };
 
     private updateLocaleParams = () => {
         this.configuration = this.externalConfiguration || this.localeService?.getParams('notificationCenter');

@@ -44,11 +44,19 @@
     </div>
 </div>
 
-<div kbq-scrollbar class="kbq-notification-center-container">
+<div
+    kbq-scrollbar
+    class="kbq-notification-center-container"
+    [class.kbq-notification-center_bottom-overflow]="isBottomOverflow"
+    (onScroll)="checkOverflow()"
+>
     @if (!service.errorMode.value) {
         @if (!service.loadingMode.value) {
             @for (group of service.groupedItems | async; track group) {
-                <div class="kbq-notification-center-sub-header">
+                <div
+                    class="kbq-notification-center-sub-header"
+                    [class.kbq-notification-center_top-overflow]="isTopOverflow"
+                >
                     <div class="kbq-notification-center-sub-header__date">{{ group.title }}</div>
 
                     <button
