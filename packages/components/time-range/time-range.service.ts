@@ -29,21 +29,21 @@ export class KbqTimeRangeService<T> {
     readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
     readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> = {
-        lastMinute: { units: { minutes: 1 }, translationType: 'minutes' },
-        last5Minutes: { units: { minutes: 5 }, translationType: 'minutes' },
-        last15Minutes: { units: { minutes: 15 }, translationType: 'minutes' },
-        last30Minutes: { units: { minutes: 30 }, translationType: 'minutes' },
+        lastMinute: { units: { minutes: -1 }, translationType: 'minutes' },
+        last5Minutes: { units: { minutes: -5 }, translationType: 'minutes' },
+        last15Minutes: { units: { minutes: -15 }, translationType: 'minutes' },
+        last30Minutes: { units: { minutes: -30 }, translationType: 'minutes' },
 
-        lastHour: { units: { hours: 1 }, translationType: 'hours' },
-        last24Hours: { units: { hours: 24 }, translationType: 'hours' },
+        lastHour: { units: { hours: -1 }, translationType: 'hours' },
+        last24Hours: { units: { hours: -24 }, translationType: 'hours' },
 
-        last3Days: { units: { days: 3 }, translationType: 'days' },
-        last7Days: { units: { days: 7 }, translationType: 'days' },
-        last14Days: { units: { days: 14 }, translationType: 'days' },
-        last30Days: { units: { days: 30 }, translationType: 'days' },
+        last3Days: { units: { days: -3 }, translationType: 'days' },
+        last7Days: { units: { days: -7 }, translationType: 'days' },
+        last14Days: { units: { days: -14 }, translationType: 'days' },
+        last30Days: { units: { days: -30 }, translationType: 'days' },
 
-        last3Months: { units: { months: 3 }, translationType: 'months' },
-        last12Months: { units: { months: 12 }, translationType: 'months' },
+        last3Months: { units: { months: -3 }, translationType: 'months' },
+        last12Months: { units: { months: -12 }, translationType: 'months' },
 
         allTime: { units: {}, translationType: 'other' },
         currentQuarter: { units: {}, translationType: 'other' },
@@ -82,7 +82,7 @@ export class KbqTimeRangeService<T> {
     }
 
     getDefaultRangeValue(): Required<KbqRangeValue<T>> {
-        const from = this.dateAdapter!.addCalendarDays(this.dateAdapter!.today(), -1);
+        const from = this.dateAdapter!.addCalendarUnits(this.dateAdapter!.today(), { days: -1 });
         const to = this.dateAdapter!.today();
 
         return {
@@ -179,7 +179,7 @@ export class KbqTimeRangeService<T> {
     lastUnitsRange = (unitsInfo: KbqTimeRangeUnits, type: KbqTimeRangeTranslationType): KbqRange =>
         KbqTimeRangeService.range(
             this.dateAdapter.toIso8601(
-                this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), { [type]: -unitsInfo[type] })
+                this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), { [type]: unitsInfo[type] })
             )
         );
 

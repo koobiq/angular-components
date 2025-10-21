@@ -13,10 +13,10 @@ import {
 } from '@koobiq/components/time-range';
 
 const customTypes: KbqCustomTimeRangeType[] = [
-    { type: 'last3Minutes', units: { minutes: 3 }, translationType: 'minutes' },
-    { type: 'last3Days', units: { days: 3 }, translationType: 'days' },
-    { type: 'last3Weeks', units: { weeks: 3 }, translationType: 'weeks' },
-    { type: 'last2Months', units: { months: 2 }, translationType: 'months' }
+    { type: 'last3Minutes', units: { minutes: -3 }, translationType: 'minutes' },
+    { type: 'last3Days', units: { days: -3 }, translationType: 'days' },
+    { type: 'last3Weeks', units: { weeks: -3 }, translationType: 'weeks' },
+    { type: 'last2Months', units: { months: -2 }, translationType: 'months' }
 ];
 
 const customDefaultTypes = customTypes.map(({ type }) => type);
