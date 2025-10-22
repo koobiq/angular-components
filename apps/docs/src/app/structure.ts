@@ -411,6 +411,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Content panel',
                         en: 'Content panel'
                     },
+                    svgPreview: 'content-panel',
                     hasApi: true,
                     apiId: 'content-panel',
                     hasExamples: false,
