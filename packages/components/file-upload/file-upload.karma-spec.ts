@@ -45,6 +45,8 @@ function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME
 
     dispatchEvent(fixture.debugElement.query(By.directive(KbqFileDropDirective)).nativeElement, fakeDropEvent);
     fixture.detectChanges();
+
+    tick();
 }
 
 const createMockFile = (fileName: string = FILE_NAME) => new File(['test'] satisfies BlobPart[], fileName);
@@ -105,8 +107,6 @@ describe('KbqMultipleFileUploadComponent', () => {
 
             dispatchDropEvent(fixture);
 
-            tick();
-
             expect(component.onChange).toHaveBeenCalledTimes(1);
             expect(component.files.length).toEqual(1);
             expect(component.files[0].file.name).toBe(FILE_NAME);
@@ -119,8 +119,6 @@ describe('KbqMultipleFileUploadComponent', () => {
             fixture.detectChanges();
 
             dispatchDropEvent(fixture);
-
-            tick();
 
             expect(component.onChange).toHaveBeenCalledTimes(0);
         }));
@@ -140,8 +138,6 @@ describe('KbqMultipleFileUploadComponent', () => {
                 expect(component.control.touched).toBeFalsy();
 
                 dispatchDropEvent(fixture);
-
-                tick();
 
                 expect(component.control.touched).toBeTruthy();
             }));
@@ -199,8 +195,6 @@ describe('KbqSingleFileUploadComponent', () => {
 
             dispatchDropEvent(fixture);
 
-            tick();
-
             expect(component.onChange).toHaveBeenCalledTimes(1);
             expect(component.file?.file.name).toBe(FILE_NAME);
         }));
@@ -213,8 +207,6 @@ describe('KbqSingleFileUploadComponent', () => {
             fixture.detectChanges();
 
             dispatchDropEvent(fixture);
-
-            tick();
 
             expect(component.onChange).toHaveBeenCalledTimes(0);
             expect(component.file).toBeUndefined();
@@ -236,8 +228,6 @@ describe('KbqSingleFileUploadComponent', () => {
 
                 dispatchDropEvent(fixture);
 
-                tick();
-
                 expect(component.control.touched).toBeTruthy();
             }));
         });
@@ -251,15 +241,12 @@ describe('KbqSingleFileUploadComponent', () => {
 
                 dispatchDropEvent(fixture, 'test.test');
                 fixture.detectChanges();
-                flush();
 
                 dispatchDropEvent(fixture, 'test.pdf');
                 fixture.detectChanges();
-                flush();
 
                 dispatchDropEvent(fixture, 'test.png');
                 fixture.detectChanges();
-                flush();
 
                 expect(component.onChange).toHaveBeenCalledTimes(2);
             }));
@@ -271,12 +258,10 @@ describe('KbqSingleFileUploadComponent', () => {
 
                 dispatchDropEvent(fixture, 'test.test');
                 fixture.detectChanges();
-                flush();
 
                 // in file system file type will be automatically provided
                 dispatchDropEvent(fixture, 'test.pdf', 'application/pdf');
                 fixture.detectChanges();
-                flush();
 
                 expect(component.onChange).toHaveBeenCalledTimes(1);
             }));
