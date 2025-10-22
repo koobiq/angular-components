@@ -754,6 +754,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Search expandable',
                         en: 'Search expandable'
                     },
+                    svgPreview: 'search-expandable',
                     hasApi: true,
                     apiId: 'search-expandable',
                     hasExamples: false,
