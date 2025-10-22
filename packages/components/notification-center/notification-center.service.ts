@@ -29,11 +29,11 @@ type KbqNotificationsGroup = { title: string; items: KbqNotificationItem[] };
 type KbqNotificationsGroups = Record<string, KbqNotificationsGroup>;
 
 @Injectable({ providedIn: 'root' })
-export class KbqNotificationCenterService<D> {
+export class KbqNotificationCenterService {
     /** @docs-private */
-    private readonly adapter = inject(DateAdapter<D>);
+    private readonly adapter = inject(DateAdapter);
     /** @docs-private */
-    private readonly formatter = inject(DateFormatter<D>);
+    private readonly formatter = inject(DateFormatter);
     /** @docs-private */
     private readonly toastService = inject(KbqToastService);
 

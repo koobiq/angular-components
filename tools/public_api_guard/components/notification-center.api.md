@@ -84,7 +84,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     set popoverHeight(value: string);
     protected popoverMode: boolean;
     prefix: string;
-    protected readonly service: KbqNotificationCenterService<any>;
+    protected readonly service: KbqNotificationCenterService;
     // (undocumented)
     switcher: KbqButton;
     trigger: KbqNotificationCenterTrigger;
@@ -112,7 +112,7 @@ export class KbqNotificationCenterModule {
 export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqNotificationCenterService<D> {
+export class KbqNotificationCenterService {
     constructor();
     readonly changes: Observable<boolean | KbqNotificationItem | KbqNotificationItem[] | null>;
     readonly errorMode: BehaviorSubject<boolean>;
@@ -134,9 +134,9 @@ export class KbqNotificationCenterService<D> {
     readonly silentMode: BehaviorSubject<boolean>;
     get unreadItemsCounter(): Observable<string>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterService<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqNotificationCenterService<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqNotificationCenterService>;
 }
 
 // @public (undocumented)
@@ -175,7 +175,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     set popoverMode(value: boolean);
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
-    protected readonly service: KbqNotificationCenterService<any>;
+    protected readonly service: KbqNotificationCenterService;
     trigger: string;
     get unreadItemsCounter(): Observable<string>;
     updateClassMap(newPlacement?: string): void;

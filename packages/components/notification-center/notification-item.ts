@@ -34,9 +34,9 @@ let id = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqNotificationItemComponent<D> {
-    private readonly adapter = inject(DateAdapter<D>);
-    protected readonly service = inject(KbqNotificationCenterService<D>);
+export class KbqNotificationItemComponent {
+    private readonly adapter = inject(DateAdapter);
+    protected readonly service = inject(KbqNotificationCenterService);
     protected readonly readStateDirective = inject<KbqReadStateDirective>(KbqReadStateDirective, { host: true });
     protected readonly center = inject(KbqNotificationCenterComponent, { host: true });
 
