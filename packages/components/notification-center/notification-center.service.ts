@@ -82,7 +82,7 @@ export class KbqNotificationCenterService<D> {
                 if (value < maxUnreadItemsLength) {
                     return value ? value.toString() : '';
                 } else {
-                    return '99+';
+                    return `${maxUnreadItemsLength}+`;
                 }
             })
         );
@@ -148,7 +148,7 @@ export class KbqNotificationCenterService<D> {
 
     private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {
         const parsedDate = this.adapter.parse(item.date, '');
-        const groupId = this.adapter.format(parsedDate, 'MMdd');
+        const groupId = this.adapter.format(parsedDate, 'yyyyMMdd');
         const groupTitle = this.formatter.absoluteLongDate(parsedDate);
 
         if (groups[groupId]) {

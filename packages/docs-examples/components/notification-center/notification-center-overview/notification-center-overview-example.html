@@ -11,6 +11,13 @@
     <a href="#" kbq-dropdown-item (click)="selected = items.Security">Data retension</a>
 </kbq-dropdown>
 
+<ng-template #captionTemplate>
+    <span>
+        Advanced threat detection system blocked sophisticated APT attack
+        <a kbq-link href="">Server-CRIT-01</a>
+    </span>
+</ng-template>
+
 <ng-template #actionsTemplate>
     <a kbq-link pseudo class="layout-margin-right-m">Action 1</a>
     <a kbq-link pseudo class="layout-margin-right-m">Action 2</a>
