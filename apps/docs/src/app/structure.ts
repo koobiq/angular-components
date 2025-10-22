@@ -523,6 +523,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Inline edit',
                         en: 'Inline edit'
                     },
+                    svgPreview: 'inline-edit',
                     hasApi: true,
                     apiId: 'inline-edit',
                     hasExamples: true,
