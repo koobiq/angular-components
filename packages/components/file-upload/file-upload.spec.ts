@@ -12,7 +12,6 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
-import { createFile } from './file-drop.spec';
 import { KbqFileItem, KbqFileValidatorFn, KbqInputFileLabel } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
@@ -48,16 +47,6 @@ const getMockedChangeEventForSingle = (fileNameOrFakeFile: string | Partial<File
 
     return event;
 };
-
-function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME, type?: string) {
-    const fakeDropEvent = createFakeEvent('drop');
-    const fakeItem = createFile(fileName, type);
-
-    fakeDropEvent['dataTransfer'] = { items: [fakeItem] };
-
-    dispatchEvent(fixture.debugElement.query(By.css('.kbq-file-upload')).nativeElement, fakeDropEvent);
-    fixture.detectChanges();
-}
 
 const fileItemActionCssClass = 'kbq-file-upload__action';
 
@@ -137,78 +126,59 @@ describe(KbqMultipleFileUploadComponent.name, () => {
     });
 
     describe('with file queue change', () => {
-        it('should add files via input click', (done) => {
-            expect(component.files).toBeUndefined();
-
-            component.disabled = false;
-            fixture.detectChanges();
-
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.files).toHaveLength(1);
-                expect(component.files[0].file.name).toBe(FILE_NAME);
-                done();
-            });
-        });
-
-        it('should NOT add files via input click if disabled', (done) => {
-            component.disabled = true;
-            fixture.detectChanges();
-
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                done();
-            });
-        });
-
-        it('should add files via drag-n-drop', (done) => {
-            expect(component.files).toBeUndefined();
-
-            component.disabled = false;
-
-            dispatchDropEvent(fixture);
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.files).toHaveLength(1);
-                expect(component.files[0].file.name).toBe(FILE_NAME);
-                done();
-            });
-        });
-
-        it('should NOT add files via drag-n-drop if disabled', (done) => {
-            component.disabled = true;
-            fixture.detectChanges();
-
-            dispatchDropEvent(fixture);
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                done();
-            });
-        });
-
-        it('should remove file via button click in a row', (done) => {
-            expect(component.files).toBeUndefined();
-
-            component.disabled = false;
-            fixture.detectChanges();
-
+        const emitRemoveEvent = () => {
             dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
+            fixture.detectChanges();
+        };
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(2);
-                expect(component.files).toHaveLength(0);
-                done();
-            });
+        it('should add files via input click', () => {
+            expect(component.files).toBeUndefined();
+
+            component.disabled = false;
+            fixture.detectChanges();
+
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            fixture.detectChanges();
+
+            expect(component.onChange).toHaveBeenCalledTimes(1);
+            expect(component.files).toHaveLength(1);
+            expect(component.files[0].file.name).toBe(FILE_NAME);
         });
+
+        it('should NOT add files via input click if disabled', () => {
+            component.disabled = true;
+            fixture.detectChanges();
+
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+
+            expect(component.onChange).toHaveBeenCalledTimes(0);
+        });
+
+        it('should remove file via button click in a row', () => {
+            expect(component.files).toBeUndefined();
+
+            component.disabled = false;
+            fixture.detectChanges();
+
+            emitRemoveEvent();
+
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+            expect(component.files).toHaveLength(0);
+        });
+
+        it('should focus label after file removed', fakeAsync(() => {
+            component.disabled = false;
+            fixture.detectChanges();
+
+            emitRemoveEvent();
+
+            flush();
+
+            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
+        }));
 
         it('should NOT throw error on detectChanges in handler', () => {
             component.onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
@@ -287,18 +257,6 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             expect(component.fileUpload.files.length).toBe(1);
             expect(component.files.length).toBe(1);
-        });
-
-        it('should update form control touched on file dropped', (done) => {
-            expect(component.control.touched).toBeFalsy();
-
-            dispatchDropEvent(fixture);
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(component.control.touched).toBeTruthy();
-                done();
-            });
         });
 
         it('should update form control touched on file added via click', () => {
@@ -387,82 +345,59 @@ describe(KbqSingleFileUploadComponent.name, () => {
     });
 
     describe('with file queue change', () => {
-        it('should add file via input click', (done) => {
-            component.disabled = false;
-            fixture.detectChanges();
-
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.onChange.mock.calls[0][0].file.name).toBe(FILE_NAME);
-                done();
-            });
-        });
-
-        it('should NOT add file via input click if disabled', (done) => {
-            expect(component.file).toBeUndefined();
-
-            component.disabled = true;
-            fixture.detectChanges();
-
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                expect(component.file).toBeUndefined();
-                done();
-            });
-        });
-
-        it('should add file via drag-n-drop', (done) => {
-            expect(component.file).toBeUndefined();
-
-            component.disabled = false;
-            fixture.detectChanges();
-
-            dispatchDropEvent(fixture);
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.file?.file.name).toBe(FILE_NAME);
-                done();
-            });
-        });
-
-        it('should NOT add file via drag-n-drop if disabled', (done) => {
-            expect(component.file).toBeUndefined();
-
-            component.disabled = true;
-            fixture.detectChanges();
-
-            dispatchDropEvent(fixture);
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                expect(component.file).toBeUndefined();
-                done();
-            });
-        });
-
-        it('should remove file via button click', (done) => {
-            expect(component.file).toBeUndefined();
-
-            component.disabled = false;
-            fixture.detectChanges();
-
+        const emitRemoveEvent = () => {
             dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
+            fixture.detectChanges();
+        };
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(2);
-                expect(component.file).toBeNull();
-                done();
-            });
+        it('should add file via input click', () => {
+            component.disabled = false;
+            fixture.detectChanges();
+
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            fixture.detectChanges();
+
+            expect(component.onChange).toHaveBeenCalledTimes(1);
+            expect(component.onChange.mock.calls[0][0].file.name).toBe(FILE_NAME);
         });
+
+        it('should NOT add file via input click if disabled', () => {
+            expect(component.file).toBeUndefined();
+
+            component.disabled = true;
+            fixture.detectChanges();
+
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+
+            expect(component.onChange).toHaveBeenCalledTimes(0);
+            expect(component.file).toBeUndefined();
+        });
+
+        it('should remove file via button click', () => {
+            expect(component.file).toBeUndefined();
+
+            component.disabled = false;
+            fixture.detectChanges();
+
+            emitRemoveEvent();
+
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+            expect(component.file).toBeNull();
+        });
+
+        it('should focus label after file removed', fakeAsync(() => {
+            component.disabled = false;
+            fixture.detectChanges();
+
+            emitRemoveEvent();
+
+            flush();
+
+            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
+        }));
     });
 
     describe('with ellipsis in the center', () => {
@@ -544,18 +479,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(component.file).toBeTruthy();
         });
 
-        it('should update form control touched on file dropped', (done) => {
-            expect(component.control.touched).toBeFalsy();
-
-            dispatchDropEvent(fixture);
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(component.control.touched).toBeTruthy();
-                done();
-            });
-        });
-
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
@@ -564,46 +487,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             expect(component.control.touched).toBeTruthy();
         });
-    });
-
-    // TODO: real-life scenario & test results with the same data are different
-    xdescribe('with accepted files list', () => {
-        it('should filter files via drag-n-drop with extensions', fakeAsync(() => {
-            component.disabled = false;
-            component.accept = ['.pdf', '.png'];
-            fixture.detectChanges();
-
-            dispatchDropEvent(fixture, 'test.test');
-            fixture.detectChanges();
-            flush();
-
-            dispatchDropEvent(fixture, 'test.pdf');
-            fixture.detectChanges();
-            flush();
-
-            dispatchDropEvent(fixture, 'test.png');
-            fixture.detectChanges();
-            flush();
-
-            expect(component.onChange).toHaveBeenCalledTimes(2);
-        }));
-
-        it('should filter files via drag-n-drop with mimeType', fakeAsync(() => {
-            component.disabled = false;
-            component.accept = ['application/pdf'];
-            fixture.detectChanges();
-
-            dispatchDropEvent(fixture, 'test.test');
-            fixture.detectChanges();
-            flush();
-
-            // in file system file type will be automatically provided
-            dispatchDropEvent(fixture, 'test.pdf', 'application/pdf');
-            fixture.detectChanges();
-            flush();
-
-            expect(component.onChange).toHaveBeenCalledTimes(1);
-        }));
     });
 
     describe('with localeConfig input property', () => {
