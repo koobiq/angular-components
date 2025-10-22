@@ -402,17 +402,13 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     template: `
         <div class="kbq-navbar-ic-item__inner">
             @if (navbar.pinned) {
-                <i kbq-icon [class.kbq-chevron-left_16]="navbar.expanded"></i>
+                <i kbq-icon [class.kbq-bars-arrow-left_16]="navbar.expanded"></i>
                 <ng-content select="[kbqNavbarIcTitle]">{{ localeData.collapseButton }}</ng-content>
             } @else if ((navbar.expandedByHoverOrFocus || navbar.expandedByToggle) && !navbar.pinned) {
-                <i
-                    kbq-icon
-                    [class.kbq-pin_16]="navbar.expanded"
-                    [class.kbq-chevron-left_16]="navbar.expanded && navbar.pinned"
-                ></i>
+                <i kbq-icon [class.kbq-bars-arrow-right_16]="navbar.expanded"></i>
                 {{ localeData.pinButton }}
             } @else {
-                <i kbq-icon [class.kbq-chevron-right_16]="!navbar.expanded"></i>
+                <i kbq-icon [class.kbq-bars-arrow-right_16]="!navbar.expanded"></i>
             }
         </div>
     `,
