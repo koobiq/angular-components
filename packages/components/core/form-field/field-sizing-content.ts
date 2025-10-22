@@ -51,7 +51,7 @@ const BOX_SIZING_BORDER_BOX_WIDTH_PROPERTIES = [
     'borderRightWidth'
 ] as const satisfies Array<keyof CSSStyleDeclaration>;
 
-const FIELD_RESIZE_EVENTS = ['input', 'change', 'focus'] as const;
+const FIELD_RESIZE_EVENTS = ['input', 'change', 'focus', 'blur'] as const;
 
 /**
  * Emulates [`field-sizing: content`](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) CSS property for
@@ -96,11 +96,11 @@ export class KbqFieldSizingContent {
         const computedStyle = this.window.getComputedStyle(this.element);
         const ruler = this.createRuler(computedStyle);
 
-        ruler.textContent =
-            this.element.value ||
-            // We should add space to prevent placeholder truncation in Safari/Firefox
-            this.element.placeholder + ' ' ||
-            '';
+        ruler.textContent = this.element.value || this.element.placeholder || '';
+        // We should add space to prevent text truncation in Safari/Firefox
+        if (ruler.textContent) ruler.textContent += ' ';
+
+        console.log('setupWidth', ruler.textContent);
 
         this.renderer.appendChild(this.document.body, ruler);
 
