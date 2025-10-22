@@ -12,6 +12,7 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
+import { KbqFileDropDirective } from './file-drop';
 import { createFile } from './file-drop.spec';
 import { KbqFileItem, KbqFileValidatorFn, KbqInputFileLabel } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
@@ -55,7 +56,7 @@ function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME
 
     fakeDropEvent['dataTransfer'] = { items: [fakeItem] };
 
-    dispatchEvent(fixture.debugElement.query(By.css('.kbq-file-upload')).nativeElement, fakeDropEvent);
+    dispatchEvent(fixture.debugElement.query(By.directive(KbqFileDropDirective)).nativeElement, fakeDropEvent);
     fixture.detectChanges();
 }
 
@@ -145,38 +146,34 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             fixture.detectChanges();
         };
 
-        it('should add files via input click', (done) => {
+        it('should add files via input click', () => {
             expect(component.files).toBeUndefined();
 
             component.disabled = false;
             fixture.detectChanges();
 
             dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            fixture.detectChanges();
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.files).toHaveLength(1);
-                expect(component.files[0].file.name).toBe(FILE_NAME);
-                done();
-            });
+            expect(component.onChange).toHaveBeenCalledTimes(1);
+            expect(component.files).toHaveLength(1);
+            expect(component.files[0].file.name).toBe(FILE_NAME);
         });
 
-        it('should NOT add files via input click if disabled', (done) => {
+        it('should NOT add files via input click if disabled', () => {
             component.disabled = true;
             fixture.detectChanges();
 
             dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                done();
-            });
+            expect(component.onChange).toHaveBeenCalledTimes(0);
         });
 
         it('should add files via drag-n-drop', (done) => {
             expect(component.files).toBeUndefined();
 
             component.disabled = false;
+            fixture.detectChanges();
 
             dispatchDropEvent(fixture);
 
@@ -200,7 +197,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             });
         });
 
-        it('should remove file via button click in a row', async () => {
+        it('should remove file via button click in a row', () => {
             expect(component.files).toBeUndefined();
 
             component.disabled = false;
@@ -212,30 +209,16 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.files).toHaveLength(0);
         });
 
-        it('should focus label after file removed', async () => {
-            expect(component.files).toBeUndefined();
-
+        it('should focus label after file removed', fakeAsync(() => {
             component.disabled = false;
             fixture.detectChanges();
 
             emitRemoveEvent();
 
-            await fixture.whenStable();
-
-            expect(component.onChange).toHaveBeenCalledTimes(2);
-            expect(component.files).toHaveLength(0);
-        });
-
-        it('should focus label after file removed', async () => {
-            component.disabled = false;
-            fixture.detectChanges();
-
-            emitRemoveEvent();
-
-            await fixture.whenStable();
+            flush();
 
             expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
-        });
+        }));
 
         it('should NOT throw error on detectChanges in handler', () => {
             component.onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
@@ -481,7 +464,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             });
         });
 
-        it('should remove file via button click', async () => {
+        it('should remove file via button click', () => {
             expect(component.file).toBeUndefined();
 
             component.disabled = false;
@@ -489,22 +472,20 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             emitRemoveEvent();
 
-            await fixture.whenStable();
-
             expect(component.onChange).toHaveBeenCalledTimes(2);
             expect(component.file).toBeNull();
         });
 
-        it('should focus label after file removed', async () => {
+        it('should focus label after file removed', fakeAsync(() => {
             component.disabled = false;
             fixture.detectChanges();
 
             emitRemoveEvent();
 
-            await fixture.whenStable();
+            flush();
 
             expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
-        });
+        }));
     });
 
     describe('with ellipsis in the center', () => {
