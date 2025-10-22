@@ -51,11 +51,17 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <tag-input-editable-example />
         <hr />
-        <tag-autocomplete-option-operations-example />
-        <hr />
         <tag-input-overview-example />
         <hr />
-        <tag-autocomplete-example />
+        <tag-autocomplete-option-operations-example />
+        <hr />
+        <tag-autocomplete-overview-example />
+        <hr />
+        <tag-autocomplete-draggable-example />
+        <hr />
+        <tag-autocomplete-editable-example />
+        <hr />
+        <tag-autocomplete-removable-example />
         <hr />
         <tag-overview-example />
         <hr />

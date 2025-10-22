@@ -1,9 +1,10 @@
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEvent, KbqTagInputEvent, KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }));
 
@@ -17,7 +18,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" removable multiple draggable>
+            <kbq-tag-list #tagList="kbqTagList" removable multiple draggable (dropped)="dropped($event)">
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
                         {{ tag.value }}
@@ -80,5 +81,9 @@ export class TagInputOverviewExample {
 
     protected clear(): void {
         this.tags.update(() => []);
+    }
+
+    protected dropped({ previousIndex, currentIndex }: KbqTagListDroppedEvent): void {
+        moveItemInArray(this.tags(), previousIndex, currentIndex);
     }
 }

@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
+import { TagAutocompleteDraggableExample } from './tag-autocomplete-draggable/tag-autocomplete-draggable-example';
+import { TagAutocompleteEditableExample } from './tag-autocomplete-editable/tag-autocomplete-editable-example';
 import { TagAutocompleteOptionOperationsExample } from './tag-autocomplete-option-operations/tag-autocomplete-option-operations-example';
-import { TagAutocompleteExample } from './tag-autocomplete/tag-autocomplete-example';
+import { TagAutocompleteOverviewExample } from './tag-autocomplete-overview/tag-autocomplete-overview-example';
+import { TagAutocompleteRemovableExample } from './tag-autocomplete-removable/tag-autocomplete-removable-example';
 import { TagDisabledExample } from './tag-disabled/tag-disabled-example';
 import { TagEditableWithValidationExample } from './tag-editable-with-validation/tag-editable-with-validation-example';
 import { TagEditableExample } from './tag-editable/tag-editable-example';
@@ -22,8 +25,11 @@ import { TagsAutocompleteOnpasteOffExample } from './tags-autocomplete-onpaste-o
 import { TagsInputOnpasteOffExample } from './tags-input-onpaste-off/tags-input-onpaste-off-example';
 
 export {
-    TagAutocompleteExample,
+    TagAutocompleteDraggableExample,
+    TagAutocompleteEditableExample,
     TagAutocompleteOptionOperationsExample,
+    TagAutocompleteOverviewExample,
+    TagAutocompleteRemovableExample,
     TagDisabledExample,
     TagEditableExample,
     TagEditableWithValidationExample,
@@ -51,7 +57,7 @@ const EXAMPLES = [
     TagLongTextExample,
     TagInputOverviewExample,
     TagListOverviewExample,
-    TagAutocompleteExample,
+    TagAutocompleteOverviewExample,
     TagAutocompleteOptionOperationsExample,
     TagsInputOnpasteOffExample,
     TagsAutocompleteOnpasteOffExample,
@@ -66,7 +72,10 @@ const EXAMPLES = [
     TagEditableWithValidationExample,
     TagInputRemovableExample,
     TagListDraggableExample,
-    TagInputDraggableExample
+    TagInputDraggableExample,
+    TagAutocompleteDraggableExample,
+    TagAutocompleteEditableExample,
+    TagAutocompleteRemovableExample
 ];
 
 @NgModule({

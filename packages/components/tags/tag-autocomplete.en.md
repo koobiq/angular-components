@@ -1,20 +1,16 @@
 Tags Autocomplete is used to select one or multiple values from a list and to input custom values.
 
-<!-- example(tag-autocomplete) -->
-
-### Selection from dictionary
-
 When focusing on the field, the dictionary menu opens. Autocomplete changes as you type. Selecting an option from the list adds a tag, clears the text in the field, and closes the menu.
 
-<!-- example(tag-autocomplete-option-operations) -->
+<!-- example(tag-autocomplete-overview) -->
 
 ### Adding to dictionary
 
 The option to create a new tag is placed first in the autocomplete menu. It creates a new token from the entered text if it doesn't exist in the dictionary.
 
-Adding a tag also works with the **Tab** key.
+Adding a tag also works with the `Tab` key.
 
-Creating a duplicate of a selected tag is not allowed: the system will show the message **Nothing found**.
+Creating a duplicate of a selected tag is not allowed: the system will show the message `Nothing found`.
 
 <!-- example(tag-autocomplete-option-operations) -->
 
@@ -33,6 +29,8 @@ Tags can be removed in several ways:
 
 The removal option is configured using the `removable` attribute (enabled by default).
 
+<!-- example(tag-autocomplete-removable) -->
+
 ### Tag selection
 
 Tags can be selected in several ways:
@@ -45,6 +43,31 @@ Tags can be selected in several ways:
 
 The selection option is configured using the `selectable` attribute (enabled by default).
 
+### Editing
+
+To enable editing mode, you need to set the `editable` property for `kbq-tag-list` or individual `kbq-tag`.
+
+Enter editing mode:
+
+- On double click on the tag.
+- On pressing `Enter` or `F2` key (when tag is focused).
+
+Save changes:
+
+- On pressing `Enter` key.
+- On clicking the confirmation button (`kbqTagEditSubmit` directive).
+
+Cancel changes:
+
+- On pressing `Escape` key.
+- On focus loss.
+
+In editing mode, the tag transforms into an input field and remains at the same position within the control.
+
+<!-- example(tag-autocomplete-editable) -->
+
 ### Drag and drop
 
 To enable tag reordering, you need to set the `draggable` property for `kbq-tag-list`.
+
+<!-- example(tag-autocomplete-draggable) -->
