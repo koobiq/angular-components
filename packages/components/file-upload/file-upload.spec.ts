@@ -405,21 +405,18 @@ describe(KbqSingleFileUploadComponent.name, () => {
             fixture.detectChanges();
         };
 
-        it('should add file via input click', (done) => {
+        it('should add file via input click', () => {
             component.disabled = false;
             fixture.detectChanges();
 
             dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.onChange.mock.calls[0][0].file.name).toBe(FILE_NAME);
-                done();
-            });
+            expect(component.onChange).toHaveBeenCalledTimes(1);
+            expect(component.onChange.mock.calls[0][0].file.name).toBe(FILE_NAME);
         });
 
-        it('should NOT add file via input click if disabled', (done) => {
+        it('should NOT add file via input click if disabled', () => {
             expect(component.file).toBeUndefined();
 
             component.disabled = true;
@@ -427,11 +424,8 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                expect(component.file).toBeUndefined();
-                done();
-            });
+            expect(component.onChange).toHaveBeenCalledTimes(0);
+            expect(component.file).toBeUndefined();
         });
 
         it('should add file via drag-n-drop', (done) => {
