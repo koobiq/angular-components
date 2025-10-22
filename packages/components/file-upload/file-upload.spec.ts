@@ -208,10 +208,8 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             emitRemoveEvent();
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(2);
-                expect(component.files).toHaveLength(0);
-            });
+            expect(component.onChange).toHaveBeenCalledTimes(2);
+            expect(component.files).toHaveLength(0);
         });
 
         it('should focus label after file removed', async () => {
