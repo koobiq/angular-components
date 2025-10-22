@@ -43,6 +43,7 @@ The removal option is configured using the `removable` attribute (enabled by def
 Tags can be selected in several ways:
 
 - Click on the tag or set focus on it.
+- `Space` when the tag is focused.
 - Programmatic selection through the component [API](/en/components/tag/api).
 
 The selection option is configured using the `selectable` attribute (enabled by default).

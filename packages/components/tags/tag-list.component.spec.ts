@@ -85,11 +85,11 @@ const getFocusMonitor = () => TestBed.inject(FocusMonitor);
                 [removable]="removable()"
                 [disabled]="disabled()"
             >
-                @for (tag of tags(); track $index) {
+                @for (tag of tags(); track tag) {
                     <kbq-tag
                         [selected]="tag.selected"
                         [attr.id]="tag.id"
-                        [value]="tag.value"
+                        [value]="tag"
                         (selectionChange)="selectionChange($event)"
                         (removed)="removedChange($event)"
                     >
@@ -105,11 +105,11 @@ const getFocusMonitor = () => TestBed.inject(FocusMonitor);
                 [removable]="removable()"
                 [disabled]="disabled()"
             >
-                @for (tag of tags(); track $index) {
+                @for (tag of tags(); track tag) {
                     <kbq-tag
                         [selected]="tag.selected"
                         [attr.id]="tag.id"
-                        [value]="tag.value"
+                        [value]="tag"
                         (selectionChange)="selectionChange($event)"
                         (removed)="removedChange($event)"
                     >
@@ -1400,7 +1400,9 @@ describe(KbqTagList.name, () => {
         getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
 
         expect(componentInstance.removedChange).toHaveBeenCalledWith(
-            expect.objectContaining({ tag: expect.objectContaining({ value: 'tag2' }) })
+            expect.objectContaining({
+                tag: expect.objectContaining({ value: expect.objectContaining({ value: 'tag2' }) })
+            })
         );
     });
 
@@ -1420,7 +1422,9 @@ describe(KbqTagList.name, () => {
         getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
 
         expect(componentInstance.removedChange).toHaveBeenCalledWith(
-            expect.objectContaining({ tag: expect.objectContaining({ value: 'tag0' }) })
+            expect.objectContaining({
+                tag: expect.objectContaining({ value: expect.objectContaining({ value: 'tag0' }) })
+            })
         );
     });
 
@@ -1491,6 +1495,41 @@ describe(KbqTagList.name, () => {
         getTagListElement(debugElement).dispatchEvent(new Event('blur'));
 
         expect(getSelectedTags(debugElement).length).toBe(0);
+    });
+
+    it('should select tags on SPACE keydown in multiple mode', () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.multiple.set(true);
+        fixture.detectChanges();
+
+        expect(getSelectedTags(debugElement).length).toBe(0);
+
+        getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(getSelectedTags(debugElement).length).toBe(1);
+
+        getFirstTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(getSelectedTags(debugElement).length).toBe(2);
+
+        getFirstTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(getSelectedTags(debugElement).length).toBe(1);
+    });
+
+    it('should emit KbqTagSelectionChange event on SPACE keydown', () => {
+        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+        const tag = getLastTagElement(debugElement);
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledWith(expect.objectContaining({ selected: true }));
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledWith(expect.objectContaining({ selected: false }));
     });
 });
 
