@@ -26,6 +26,7 @@ import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { KBQ_LOCALE_SERVICE, KbqRectangleItem, ruRULocaleData } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqNotificationCenterTrigger } from '@koobiq/components/notification-center';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -249,6 +250,12 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         { descendants: true }
     );
 
+    /** @docs-private */
+    notificationCenterTrigger = contentChildren(
+        forwardRef(() => KbqNotificationCenterTrigger),
+        { descendants: true }
+    );
+
     readonly hovered = new BehaviorSubject<boolean>(false);
     readonly focused = new BehaviorSubject<boolean>(false);
 
@@ -275,7 +282,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     private _expanded: boolean = true;
 
     get hasOpenedPopUp() {
-        return [...this.dropdownTrigger(), ...this.popoverTrigger()].some(
+        return [...this.dropdownTrigger(), ...this.popoverTrigger(), ...this.notificationCenterTrigger()].some(
             (instance) => instance?.isOpen || instance?.opened
         );
     }
@@ -364,8 +371,10 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     protected updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
 
     protected updateItemExpandedState = (item: KbqNavbarIcItem): void => {
-        item.collapsed = !this.expanded;
-        setTimeout(() => item.button?.updateClassModifierForIcons());
+        setTimeout(() => {
+            item.collapsed = !this.expanded;
+            item.button?.updateClassModifierForIcons();
+        });
     };
 
     private updateLocaleParams = () => {

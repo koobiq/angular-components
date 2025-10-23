@@ -48,6 +48,7 @@ export enum DocsStructureItemId {
     Modal = 'modal',
     Navbar = 'navbar',
     NavbarIc = 'navbar-ic',
+    NotificationCenter = 'notification-center',
     OverflowItems = 'overflow-items',
     Popover = 'popover',
     ProgressBar = 'progress-bar',
@@ -410,6 +411,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Content panel',
                         en: 'Content panel'
                     },
+                    svgPreview: 'content-panel',
                     hasApi: true,
                     apiId: 'content-panel',
                     hasExamples: false,
@@ -521,6 +523,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Inline edit',
                         en: 'Inline edit'
                     },
+                    svgPreview: 'inline-edit',
                     hasApi: true,
                     apiId: 'inline-edit',
                     hasExamples: true,
@@ -660,6 +663,18 @@ const structure: DocsStructure = makeStructure({
                     isNew: expiresAt('2025-09-20')
                 },
                 {
+                    id: DocsStructureItemId.NotificationCenter,
+                    name: {
+                        ru: 'Notification Center',
+                        en: 'Notification Center'
+                    },
+                    svgPreview: 'notification-center',
+                    hasApi: true,
+                    apiId: 'notification-center',
+                    hasExamples: false,
+                    isNew: expiresAt('2025-11-10')
+                },
+                {
                     id: DocsStructureItemId.OverflowItems,
                     name: {
                         ru: 'Overflow items',
@@ -741,7 +756,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Search expandable',
                         en: 'Search expandable'
                     },
-                    svgPreview: 'SearchExpandable',
+                    svgPreview: 'search-expandable',
                     hasApi: true,
                     apiId: 'search-expandable',
                     hasExamples: false,
@@ -787,7 +802,7 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Split button',
                         en: 'Split button'
                     },
-                    svgPreview: 'SplitButton',
+                    svgPreview: 'split-button',
                     hasApi: true,
                     apiId: 'split-button',
                     hasExamples: false,

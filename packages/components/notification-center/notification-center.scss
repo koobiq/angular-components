@@ -1,0 +1,126 @@
+@use './notification-center-theme' as *;
+
+.kbq-notification-center {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 400px;
+    height: 100vh;
+
+    box-sizing: border-box;
+
+    z-index: 1;
+
+    &:not(.kbq-notification-center_popover) {
+        border-right: 1px solid;
+        border-left: 1px solid;
+    }
+
+    &.kbq-notification-center_popover {
+        margin-top: var(--kbq-size-xxs);
+        margin-bottom: var(--kbq-size-xxs);
+
+        border-radius: var(--kbq-size-xs);
+
+        height: calc(100vh - 48px);
+
+        box-shadow: var(--kbq-shadow-popup);
+    }
+}
+
+.kbq-notification-center-header {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+
+    padding: var(--kbq-size-xl) var(--kbq-size-xl) var(--kbq-size-xxs) var(--kbq-size-xxl);
+}
+
+.kbq-notification-center-title {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: var(--kbq-size-xxs);
+}
+
+.kbq-notification-center-toolbar {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+
+    & .kbq-divider.kbq-divider_vertical {
+        height: var(--kbq-size-m);
+    }
+}
+
+.kbq-notification-center-sub-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    display: flex;
+    flex-direction: row;
+
+    padding: var(--kbq-size-s) var(--kbq-size-xxl);
+
+    & .kbq-notification-center-sub-header__button {
+        position: absolute;
+
+        top: 0;
+        right: var(--kbq-size-xl);
+
+        display: none;
+    }
+
+    &:hover .kbq-notification-center-sub-header__button {
+        display: flex;
+    }
+
+    &:first-child.kbq-notification-center_top-overflow {
+        box-shadow: var(--kbq-shadow-overflow-normal-bottom);
+    }
+}
+
+.kbq-notification-center-container {
+    height: 100%;
+
+    border-radius: inherit;
+
+    padding-bottom: var(--kbq-size-m);
+
+    & .kbq-loader-overlay_parent {
+        border-radius: inherit;
+    }
+
+    &.kbq-notification-center_bottom-overflow {
+        box-shadow: var(--kbq-shadow-overflow-normal-bottom);
+    }
+}
+
+.kbq-notification-center-empty-container,
+.kbq-notification-center-error-container {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+
+    & .kbq-icon {
+        margin-bottom: var(--kbq-size-xl);
+    }
+
+    & .kbq-button {
+        margin-top: var(--kbq-size-s);
+    }
+}
+
+@include kbq-notification-center-theme();
+@include kbq-notification-center-typography();

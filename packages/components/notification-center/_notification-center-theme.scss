@@ -1,0 +1,27 @@
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-notification-center-theme() {
+    .kbq-notification-center,
+    .kbq-notification-center-sub-header {
+        background: var(--kbq-background-card);
+
+        &:not(.kbq-notification-center_popover) {
+            border-right-color: var(--kbq-line-contrast-less);
+            border-left-color: var(--kbq-line-contrast-less);
+        }
+    }
+
+    .kbq-notification-center-error-container {
+        color: var(--kbq-foreground-error);
+    }
+}
+
+@mixin kbq-notification-center-typography() {
+    .kbq-notification-center {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+    }
+
+    .kbq-notification-center-title__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+    }
+}

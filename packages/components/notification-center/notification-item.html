@@ -1,0 +1,114 @@
+@if (data.icon) {
+    <div class="kbq-notification-item__icon-container layout-row layout-align-start-start">
+        @if (data.icon === true) {
+            @switch (data.style) {
+                @case ('contrast') {
+                    <i
+                        kbq-icon="kbq-info-circle_16"
+                        class="kbq-notification-item__icon"
+                        [color]="$any(data.style)"
+                        [ngClass]="data.iconClass"
+                    ></i>
+                }
+                @case ('success') {
+                    <i
+                        kbq-icon="kbq-check-circle_16"
+                        class="kbq-notification-item__icon"
+                        [color]="$any(data.style)"
+                        [ngClass]="data.iconClass"
+                    ></i>
+                }
+                @case ('warning') {
+                    <i
+                        kbq-icon="kbq-exclamation-triangle_16"
+                        class="kbq-notification-item__icon"
+                        [color]="$any(data.style)"
+                        [ngClass]="data.iconClass"
+                    ></i>
+                }
+                @case ('error') {
+                    <i
+                        kbq-icon="kbq-exclamation-triangle_16"
+                        class="kbq-notification-item__icon"
+                        [color]="$any(data.style)"
+                        [ngClass]="data.iconClass"
+                    ></i>
+                }
+            }
+        } @else if (isTemplateRef(data.icon)) {
+            <ng-container [ngTemplateOutlet]="$any(data.icon)" [ngTemplateOutletContext]="{ $implicit }" />
+        }
+    </div>
+}
+
+<div class="kbq-notification-item__container">
+    @if (data.title) {
+        <div
+            kbq-title
+            class="kbq-notification-item__title"
+            [class.kbq-notification-item__title_with-content]="data.caption || data.content"
+        >
+            @if (isTemplateRef(data.title)) {
+                <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="{ $implicit }" />
+            }
+            @if (!isTemplateRef(data.title)) {
+                <p>{{ data.title }}</p>
+            }
+
+            <div class="kbq-notification-item-time" [class.kbq-notification-item-time_read]="data.read">
+                <div class="kbq-notification-item-time__value">{{ time }}</div>
+                <i class="kbq-notification-item-time__state" kbq-icon="kbq-circle-xs_16" [color]="'theme'"></i>
+            </div>
+        </div>
+    }
+
+    @if (data.caption) {
+        <div
+            kbq-title
+            [class.kbq-notification-item__text]="data.title"
+            [class.kbq-notification-item__title]="!data.title"
+        >
+            @if (isTemplateRef(data.caption)) {
+                <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="{ $implicit }" />
+            }
+            @if (!isTemplateRef(data.caption)) {
+                {{ data.caption }}
+            }
+        </div>
+    }
+
+    @if (data.content) {
+        <div class="kbq-notification-item__content">
+            @if (isTemplateRef(data.content)) {
+                <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="{ $implicit }" />
+            }
+            @if (!isTemplateRef(data.content)) {
+                {{ data.content }}
+            }
+        </div>
+    }
+
+    @if (data.actions) {
+        <div class="kbq-notification-item__actions">
+            @if (isTemplateRef(data.actions)) {
+                <ng-container [ngTemplateOutlet]="$any(data.actions)" [ngTemplateOutletContext]="{ $implicit }" />
+            }
+            @if (!isTemplateRef(data.actions)) {
+                {{ data.actions }}
+            }
+        </div>
+    }
+</div>
+
+<button
+    kbq-button
+    class="kbq-notification-item__remove-button"
+    [kbqStyle]="'transparent'"
+    [color]="'contrast'"
+    [kbqTooltipArrow]="false"
+    [kbqTooltip]="center.localeData.remove"
+    [kbqPlacement]="popUpPlacements.Right"
+    (click)="service.remove(data)"
+>
+    <i kbq-icon="kbq-trash_16"></i>
+</button>

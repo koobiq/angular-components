@@ -3045,6 +3045,58 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "navbar-vertical-example.ts",
     "importPath": "components/navbar"
   },
+  "notification-center-empty": {
+    "packagePath": "components/notification-center/notification-center-empty",
+    "title": "notification-center-empty",
+    "componentName": "NotificationCenterEmptyExample",
+    "files": [
+      "notification-center-empty-example.ts",
+      "notification-center-empty-example.html"
+    ],
+    "selector": "notification-center-empty-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-empty-example.ts",
+    "importPath": "components/notification-center"
+  },
+  "notification-center-error": {
+    "packagePath": "components/notification-center/notification-center-error",
+    "title": "notification-center-error",
+    "componentName": "NotificationCenterErrorExample",
+    "files": [
+      "notification-center-error-example.ts",
+      "notification-center-error-example.html"
+    ],
+    "selector": "notification-center-error-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-error-example.ts",
+    "importPath": "components/notification-center"
+  },
+  "notification-center-overview": {
+    "packagePath": "components/notification-center/notification-center-overview",
+    "title": "notification-center",
+    "componentName": "NotificationCenterOverviewExample",
+    "files": [
+      "notification-center-overview-example.ts",
+      "notification-center-overview-example.html"
+    ],
+    "selector": "notification-center-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-overview-example.ts",
+    "importPath": "components/notification-center"
+  },
+  "notification-center-popover": {
+    "packagePath": "components/notification-center/notification-center-popover",
+    "title": "notification-center-popover",
+    "componentName": "NotificationCenterPopoverExample",
+    "files": [
+      "notification-center-popover-example.ts",
+      "notification-center-popover-example.html"
+    ],
+    "selector": "notification-center-popover-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-popover-example.ts",
+    "importPath": "components/notification-center"
+  },
   "number-formatter-overview": {
     "packagePath": "components/number-formatter/number-formatter-overview",
     "title": "Number-formatter",
@@ -5955,6 +6007,14 @@ return import('@koobiq/docs-examples/components/navbar');
 return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-vertical':
 return import('@koobiq/docs-examples/components/navbar');
+  case 'notification-center-empty':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-error':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-overview':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-popover':
+return import('@koobiq/docs-examples/components/notification-center');
   case 'number-formatter-overview':
 return import('@koobiq/docs-examples/components/number-formatter');
   case 'overflow-items-justify-content':

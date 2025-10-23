@@ -197,5 +197,14 @@ export const enUSLocaleData = {
                 MONTHS_FRACTION: `{months} months`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig
+    } satisfies KbqTimeRangeLocaleConfig,
+    notificationCenter: {
+        notifications: 'Notifications',
+        remove: 'Remove',
+        doNotDisturb: 'Do not disturb',
+        showPopUpNotifications: 'Show pop-up notifications',
+        noNotifications: 'No notifications',
+        failedToLoadNotifications: 'Failed to load notifications',
+        repeat: 'Repeat'
+    }
 };
