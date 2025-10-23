@@ -3,8 +3,11 @@ import { join } from 'path';
 import { DOCS_SUPPORTED_LOCALES } from '../apps/docs/src/app/constants/locale';
 import { docsGetItems, DocsStructureCategoryId, DocsStructureItemTab } from '../apps/docs/src/app/structure';
 
+const timeLabel = 'Runtime';
+
 try {
     console.info('🚀 Generating sitemap.xml');
+    console.time(timeLabel);
 
     const paths = docsGetItems()
         .map(({ categoryId, id, hasApi }) => {
@@ -35,6 +38,7 @@ try {
     );
 
     console.info('✅ sitemap.xml has been successfully generated!');
+    console.timeEnd(timeLabel);
 } catch (error) {
     console.info('❌ Error occurred while generating sitemap.xml! Details:\n', error);
 }
