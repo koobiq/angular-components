@@ -56,13 +56,11 @@ export class KbqTimeRangeService<T> {
             throw createMissingDateImplError('KbqTimeRange', 'DateAdapter');
         }
 
-        if (this.customTimeRangeTypes) {
-            for (const type of this.customTimeRangeTypes) {
-                if (this.timeRangeConfig[type.type]) continue;
-
-                this.add(type);
-            }
-        }
+        this.customTimeRangeTypes
+            ?.filter(({ type }) => {
+                return !this.timeRangeConfig[type];
+            })
+            .forEach((type) => this.add(type));
     }
 
     static range = (dateTimeISOString: string): KbqRange => ({
