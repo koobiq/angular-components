@@ -1,10 +1,26 @@
 import { InjectionToken } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqTimeRangeType } from './types';
+import { KbqCustomTimeRangeType, KbqTimeRangeType } from './types';
 
 /** Preset of selectable time ranges, provided by DI. */
 export const KBQ_DEFAULT_TIME_RANGE_TYPES = new InjectionToken<KbqTimeRangeType[]>('KBQ_DEFAULT_TIME_RANGE_TYPES');
+
+/** Preset of custom time ranges, provided by DI. */
+export const KBQ_CUSTOM_TIME_RANGE_TYPES = new InjectionToken<KbqCustomTimeRangeType[]>('KBQ_CUSTOM_TIME_RANGE_TYPES');
+
+/** Time range types in range editor if nothing provided */
+export const defaultTimeRangeTypes: KbqTimeRangeType[] = [
+    'lastHour',
+    'last24Hours',
+    'last3Days',
+    'last7Days',
+    'last14Days',
+    'currentQuarter',
+    'currentYear',
+    'allTime',
+    'range'
+];
 
 export function createMissingDateImplError(componentName: string, provider: string): Error {
     return Error(

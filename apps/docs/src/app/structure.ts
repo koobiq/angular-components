@@ -905,7 +905,7 @@ const structure: DocsStructure = makeStructure({
                     },
                     hasApi: true,
                     apiId: 'time-range',
-                    hasExamples: false,
+                    hasExamples: true,
                     isNew: expiresAt('2025-10-31')
                 },
                 {
