@@ -1,8 +1,11 @@
 @use '../core/styles/common/tokens';
 
 @mixin _kbq-dropdown-item-state($style-name) {
-    background: var(--kbq-list-#{$style-name}-container-background);
     color: var(--kbq-list-#{$style-name}-text-color);
+
+    .kbq-dropdown-item__wrapper {
+        background: var(--kbq-list-#{$style-name}-container-background);
+    }
 
     .kbq-icon.kbq-empty:not(.kbq-icon-button, .kbq-icon-item) {
         color: var(--kbq-list-#{$style-name}-text-color);
@@ -16,6 +19,8 @@
     }
 
     .kbq-dropdown-item {
+        background: transparent;
+
         @include _kbq-dropdown-item-state(default);
 
         .kbq-dropdown-item__caption {
@@ -28,7 +33,9 @@
         }
 
         &.cdk-keyboard-focused {
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
+            .kbq-dropdown-item__wrapper {
+                border-color: var(--kbq-list-states-focused-focus-outline-color);
+            }
         }
 
         &.kbq-selected {

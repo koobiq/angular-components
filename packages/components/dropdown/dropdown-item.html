@@ -1,11 +1,17 @@
-<ng-content select="[kbq-icon]" />
+<div class="kbq-dropdown-item__wrapper layout-fle layout-row" style="width: 100%">
+    <ng-content select="[kbq-icon]" />
 
-<div #kbqTitleText class="kbq-dropdown-item__text">
-    <ng-content />
+    <div #kbqTitleText class="kbq-dropdown-item__text">
+        <ng-content />
+    </div>
+
+    @if (isNested) {
+        <i
+            kbq-icon="kbq-chevron-right-s_16"
+            class="kbq-dropdown-trigger__icon"
+            [color]="componentColors.ContrastFade"
+        ></i>
+    }
 </div>
-
-@if (isNested) {
-    <i kbq-icon="kbq-chevron-right-s_16" class="kbq-dropdown-trigger__icon" [color]="componentColors.ContrastFade"></i>
-}
 
 <div class="kbq-dropdown-item-overlay" (click)="haltDisabledEvents($event)"></div>

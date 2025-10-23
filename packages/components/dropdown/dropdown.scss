@@ -37,7 +37,7 @@
     border-radius: var(--kbq-dropdown-size-container-border-radius);
 
     box-sizing: border-box;
-    padding: var(--kbq-size-xxs);
+    padding: var(--kbq-size-xxs) 0;
 
     // Prevent users from interacting with the panel while it's animating. Note that
     // people won't be able to click through it, because the overlay pane will catch the click.
@@ -68,11 +68,6 @@
         &:after {
             left: calc(100% + var(--kbq-size-3xs)); // outline size
         }
-    }
-
-    .kbq-divider {
-        margin-left: calc(var(--kbq-size-xxs) * -1);
-        margin-right: calc(var(--kbq-size-xxs) * -1);
     }
 }
 
