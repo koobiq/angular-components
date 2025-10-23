@@ -5,9 +5,10 @@ import { docsGetItems, DocsStructureCategoryId, DocsStructureItemTab } from '../
 
 const timeLabel = 'Runtime';
 
+console.time(timeLabel);
+
 try {
     console.info('🚀 Generating sitemap.xml');
-    console.time(timeLabel);
 
     const paths = docsGetItems()
         .map(({ categoryId, id, hasApi }) => {
@@ -38,7 +39,8 @@ try {
     );
 
     console.info('✅ sitemap.xml has been successfully generated!');
-    console.timeEnd(timeLabel);
 } catch (error) {
     console.info('❌ Error occurred while generating sitemap.xml! Details:\n', error);
+} finally {
+    console.timeEnd(timeLabel);
 }
