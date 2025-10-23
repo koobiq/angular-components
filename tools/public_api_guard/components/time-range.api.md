@@ -158,7 +158,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     protected readonly timepickerList: Signal<readonly KbqTimepicker<T>[]>;
     protected readonly timeRangeTypesWithoutRange: Signal<KbqTimeRangeOptionContext[]>;
     validate(): ValidationErrors | null;
-    writeValue(value: KbqTimeRangeRange | undefined): void;
+    writeValue(value?: KbqTimeRangeRange): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRangeEditor<any>, "kbq-time-range-editor", never, { "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "rangeValue": { "alias": "rangeValue"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": true; "isSignal": true; }; "localeConfiguration": { "alias": "localeConfiguration"; "required": true; "isSignal": true; }; "optionTemplate": { "alias": "optionTemplate"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
