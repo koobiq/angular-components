@@ -1,3 +1,3 @@
 Пример демонстрирует настройку отображения пункта выбора в диалоге
 
-<!-- example(time-range-custom-trigger) -->
+<!-- example(time-range-custom-option) -->
