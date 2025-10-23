@@ -6219,8 +6219,8 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-overview':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-input-selectable':
   case 'tag-input-removable':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-draggable':
@@ -6230,7 +6230,6 @@ return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-overview':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list-removable':
-  case 'tag-list-selectable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-long-text':
 return import('@koobiq/docs-examples/components/tag');
