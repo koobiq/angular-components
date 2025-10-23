@@ -115,6 +115,7 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    /** @docs-private */
     readonly ngControl = inject(NgControl, { optional: true, self: true });
 
     /** The minimum selectable date. */

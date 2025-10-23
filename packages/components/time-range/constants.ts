@@ -22,6 +22,7 @@ export const defaultTimeRangeTypes: KbqTimeRangeType[] = [
     'range'
 ];
 
+/** @docs-private */
 export function createMissingDateImplError(componentName: string, provider: string): Error {
     return Error(
         `${componentName}: No provider found for ${provider}. You must import one of the existing ` +
@@ -29,6 +30,12 @@ export function createMissingDateImplError(componentName: string, provider: stri
     );
 }
 
+/**
+ * Validates that the 'from' date-time is not greater than the 'to' date-time in a range form.
+ * Returns an error if the start date-time occurs after the end date-time.
+ *
+ * @param timeRangeService - Service used to manipulate date-time values.
+ */
 export const rangeValidator = <T>(timeRangeService: KbqTimeRangeService<T>): ValidatorFn => {
     return (control: AbstractControl) => {
         const form = control.value;
