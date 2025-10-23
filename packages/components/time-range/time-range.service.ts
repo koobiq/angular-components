@@ -104,12 +104,9 @@ export class KbqTimeRangeService<T> {
         };
     }
 
-    calculateTimeRange(type: KbqTimeRangeType | undefined, rangeValue?: KbqRangeValue<T>): KbqRange {
+    calculateTimeRange(type?: KbqTimeRangeType, rangeValue?: KbqRangeValue<T>): KbqRange {
         if (!type) {
-            return {
-                startDateTime: undefined,
-                endDateTime: undefined
-            };
+            return {};
         }
 
         if (type === 'range') {
@@ -144,12 +141,7 @@ export class KbqTimeRangeService<T> {
                         );
                     case 'allTime':
                     default: {
-                        return (
-                            this.timeRangeConfig[type].range ?? {
-                                startDateTime: undefined,
-                                endDateTime: undefined
-                            }
-                        );
+                        return this.timeRangeConfig[type].range ?? {};
                     }
                 }
             }

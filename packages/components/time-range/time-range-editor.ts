@@ -216,7 +216,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     }
 
     /** Implemented as part of ControlValueAccessor */
-    writeValue(value: KbqTimeRangeRange | undefined): void {
+    writeValue(value?: KbqTimeRangeRange): void {
         if (!value) return;
 
         const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
@@ -254,7 +254,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     }
 
     private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {
-        if (!type) return undefined;
+        if (!type) return;
 
         return {
             type,
