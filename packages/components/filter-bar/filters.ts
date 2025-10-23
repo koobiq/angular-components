@@ -79,6 +79,7 @@ export class KbqFilters implements OnInit {
     @ViewChild(KbqDropdownTrigger) private dropdown: KbqDropdownTrigger;
     @ViewChild('search') private search: ElementRef;
     @ViewChild('newFilterName') private newFilterName: ElementRef;
+    @ViewChild('saveFilterButton') private saveFilterButton: KbqButton;
 
     /** control for search filter */
     searchControl: UntypedFormControl = new UntypedFormControl();
@@ -298,6 +299,8 @@ export class KbqFilters implements OnInit {
         this.popover.preventClose = false;
 
         this.showError(error);
+        this.filterName.enable();
+        setTimeout(() => this.saveFilterButton.focus());
 
         this.changeDetectorRef.markForCheck();
     }
