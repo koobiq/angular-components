@@ -3,6 +3,10 @@ import { join } from 'path';
 import { DOCS_SUPPORTED_LOCALES } from '../apps/docs/src/app/constants/locale';
 import { docsGetItems, DocsStructureCategoryId, DocsStructureItemTab } from '../apps/docs/src/app/structure';
 
+const timeLabel = 'Runtime';
+
+console.time(timeLabel);
+
 try {
     console.info('🚀 Generating sitemap.xml');
 
@@ -37,4 +41,6 @@ try {
     console.info('✅ sitemap.xml has been successfully generated!');
 } catch (error) {
     console.info('❌ Error occurred while generating sitemap.xml! Details:\n', error);
+} finally {
+    console.timeEnd(timeLabel);
 }
