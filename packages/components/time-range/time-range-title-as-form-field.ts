@@ -45,6 +45,7 @@ export class KbqTimeRangeTitlePlaceholder {}
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     private timeRange = inject(KbqTimeRange);
 
+    /** @docs-private */
     controlType = 'select';
     /** @docs-private */
     stateChanges: Observable<void> = new Subject<void>();

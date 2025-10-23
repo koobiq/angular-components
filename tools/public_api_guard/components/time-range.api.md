@@ -36,7 +36,7 @@ import { Validator } from '@angular/forms';
 import { ValidatorFn } from '@angular/forms';
 import { WritableSignal } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export function createMissingDateImplError(componentName: string, provider: string): Error;
 
 // @public
@@ -59,13 +59,13 @@ export type KbqCustomTimeRangeType = {
     range?: KbqRange;
 };
 
-// @public (undocumented)
+// @public
 export type KbqRange = {
     startDateTime?: string;
     endDateTime?: string;
 };
 
-// @public (undocumented)
+// @public
 export interface KbqRangeValue<T> {
     // (undocumented)
     fromDate?: T;
@@ -86,7 +86,6 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly localeConfiguration: WritableSignal<KbqTimeRangeLocaleConfig>;
     readonly maxDate: InputSignal<T | undefined>;
     readonly minDate: InputSignal<T | undefined>;
-    // (undocumented)
     readonly ngControl: NgControl | null;
     // (undocumented)
     ngOnInit(): void;
@@ -120,7 +119,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRange<any>, never>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleContext> & {
     $implicit: Partial<KbqTimeRangeTitleContext> & {
         formattedDate: string;
@@ -183,13 +182,13 @@ export class KbqTimeRangeModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimeRangeModule, never, [typeof i1.KbqTimeRange, typeof i2.KbqTimeRangeTitle, typeof i3.KbqTimeRangeEditor, typeof i4.KbqTimeRangeTitlePlaceholder, typeof i4.KbqTimeRangeTitleAsControl], [typeof i1.KbqTimeRange, typeof i2.KbqTimeRangeTitle, typeof i3.KbqTimeRangeEditor, typeof i4.KbqTimeRangeTitlePlaceholder, typeof i4.KbqTimeRangeTitleAsControl]>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqTimeRangeOptionContext = KbqTimeRangeTypeContext & KbqTimeRangeUnits & {
     translationType: KbqTimeRangeTranslationType;
     formattedValue: string;
 };
 
-// @public (undocumented)
+// @public
 export type KbqTimeRangeRange = KbqRange & KbqTimeRangeTypeContext;
 
 // @public
@@ -216,7 +215,6 @@ export class KbqTimeRangeTitle {
 
 // @public
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
-    // (undocumented)
     controlType: string;
     disabled: boolean;
     empty: boolean;
@@ -236,7 +234,7 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeTitleAsControl, never>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
 
 // @public
@@ -247,27 +245,27 @@ export class KbqTimeRangeTitlePlaceholder {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeTitlePlaceholder, never>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
 
-// @public (undocumented)
+// @public
 export type KbqTimeRangeTranslationType = Exclude<DurationUnit, 'quarters' | 'milliseconds'> | 'other';
 
 // @public
 export type KbqTimeRangeType = 'lastMinute' | 'last5Minutes' | 'last15Minutes' | 'last30Minutes' | 'lastHour' | 'last24Hours' | 'last3Days' | 'last7Days' | 'last14Days' | 'last30Days' | 'last3Months' | 'last12Months' | 'allTime' | 'currentQuarter' | 'currentYear' | 'range';
 
-// @public (undocumented)
+// @public
 export type KbqTimeRangeTypeContext = {
     type: KbqTimeRangeType;
 };
 
-// @public (undocumented)
+// @public
 export interface KbqTimeRangeUnits extends DurationObjectUnits {
 }
 
 // Warning: (ae-forgotten-export) The symbol "KbqTimeRangeService" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
+// @public
 export const rangeValidator: <T>(timeRangeService: KbqTimeRangeService<T>) => ValidatorFn;
 
 // (No @packageDocumentation comment for this package)
