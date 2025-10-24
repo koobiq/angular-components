@@ -1,4 +1,5 @@
 @use '../../../styles/koobiq/default-theme/variables' as *;
+@use '../dist/components/core/styles/common/select';
 
 @mixin transition($transition) {
     -webkit-transition: $transition;
@@ -45,25 +46,10 @@
         padding-bottom: var(--kbq-size-xxl);
 
         .kbq-tree-option {
-            position: relative;
             padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
             padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
 
-            &:before,
-            &:after {
-                position: absolute;
-                content: '';
-                width: var(--kbq-size-m);
-                height: calc(100% + var(--kbq-size-3xs) * 2); // outline size * 2
-            }
-
-            &:before {
-                right: calc(100% + var(--kbq-size-3xs)); // outline size
-            }
-
-            &:after {
-                left: calc(100% + var(--kbq-size-3xs)); // outline size
-            }
+            @include select.item-active-area(var(--kbq-size-3xs));
         }
     }
 

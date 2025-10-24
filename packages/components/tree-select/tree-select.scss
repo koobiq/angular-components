@@ -19,6 +19,10 @@
 
     & .kbq-tree-selection {
         height: 100%;
+
+        .kbq-tree-option {
+            @include item-active-area(var(--kbq-size-3xs));
+        }
     }
 }
 
