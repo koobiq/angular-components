@@ -13,7 +13,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field class="layout-margin-bottom-xl">
-            <textarea kbqTextarea [placeholder]="placeholder"></textarea>
+            <textarea kbqTextarea [placeholder]="placeholder" [canGrow]="false"></textarea>
         </kbq-form-field>
         <kbq-form-field class="layout-margin-bottom-xl">
             <textarea kbqTextarea [disabled]="disabled" [placeholder]="placeholder"></textarea>
