@@ -42,7 +42,7 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
     template: `
         {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
         <ng-template let-htmlContent let-contentToCopy="textContent" let-language="language" cdkPortal>
-            <kbq-code-block filled lineNumbers [files]="[{ content: contentToCopy, language }]" />
+            <kbq-code-block filled [files]="[{ content: contentToCopy, language }]" />
         </ng-template>
         <ng-template #codeSnippet let-htmlContent cdkPortal>
             <span
