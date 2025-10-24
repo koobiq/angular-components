@@ -21,7 +21,7 @@
                 [class.kbq-popover__header_with-close-button]="hasCloseButton"
             >
                 @if (isTemplateRef(header)) {
-                    <ng-container [ngTemplateOutlet]="$any(header)" />
+                    <ng-container [ngTemplateOutlet]="$any(header)" [ngTemplateOutletContext]="context" />
                 }
                 @if (!isTemplateRef(header)) {
                     <div class="kbq-popover__header-text">{{ header }}</div>
@@ -38,11 +38,11 @@
             >
                 @if (hasCloseButton && !header) {
                     <div class="kbq-popover__close-container">
-                        <ng-container *ngTemplateOutlet="closeButton" />
+                        <ng-container [ngTemplateOutlet]="closeButton" />
                     </div>
                 }
                 @if (isTemplateRef(content)) {
-                    <ng-container [ngTemplateOutlet]="$any(content)" />
+                    <ng-container [ngTemplateOutlet]="$any(content)" [ngTemplateOutletContext]="context" />
                 }
                 @if (!isTemplateRef(content)) {
                     <div>{{ content }}</div>
@@ -57,7 +57,7 @@
                 [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow"
             >
                 @if (isTemplateRef(footer)) {
-                    <ng-container [ngTemplateOutlet]="$any(footer)" />
+                    <ng-container [ngTemplateOutlet]="$any(footer)" [ngTemplateOutletContext]="context" />
                 }
                 @if (!isTemplateRef(footer)) {
                     <div>{{ footer }}</div>
@@ -68,7 +68,7 @@
 
     @if (hasCloseButton && header) {
         <div class="kbq-popover__close-container">
-            <ng-container *ngTemplateOutlet="closeButton" />
+            <ng-container [ngTemplateOutlet]="closeButton" />
         </div>
     }
 

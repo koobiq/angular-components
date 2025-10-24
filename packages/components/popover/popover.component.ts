@@ -306,6 +306,19 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.updateClassMap();
     }
 
+    /** Context for popover templates (kbqPopoverHeader, kbqPopoverContent and kbqPopoverFooter). */
+    @Input('kbqPopoverContext')
+    get context() {
+        return this._context;
+    }
+
+    set context(ctx) {
+        this._context = ctx;
+        this.updateData();
+    }
+
+    private _context: unknown = null;
+
     @Input()
     get hasCloseButton() {
         return this._hasCloseButton;
@@ -389,6 +402,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
         this.instance.header = this.header;
         this.instance.content = this.content;
+        this.instance.context = this.context && { $implicit: this.context };
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
         this.instance.footer = this.footer;
