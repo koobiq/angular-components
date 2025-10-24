@@ -16,13 +16,19 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <textarea kbqTextarea [placeholder]="placeholder" [canGrow]="false"></textarea>
         </kbq-form-field>
         <kbq-form-field class="layout-margin-bottom-xl">
-            <textarea kbqTextarea [disabled]="disabled" [placeholder]="placeholder"></textarea>
+            <textarea kbqTextarea [disabled]="disabled" [placeholder]="placeholder" [canGrow]="false"></textarea>
         </kbq-form-field>
         <kbq-form-field class="layout-margin-bottom-xl">
-            <textarea kbqTextarea [placeholder]="placeholder" [required]="required" [(ngModel)]="value"></textarea>
+            <textarea
+                kbqTextarea
+                [placeholder]="placeholder"
+                [required]="required"
+                [canGrow]="false"
+                [(ngModel)]="value"
+            ></textarea>
         </kbq-form-field>
         <kbq-form-field kbqFormFieldWithoutBorders>
-            <textarea kbqTextarea placeholder="Placeholder" [(ngModel)]="value"></textarea>
+            <textarea kbqTextarea placeholder="Placeholder" [canGrow]="false" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `
 })
