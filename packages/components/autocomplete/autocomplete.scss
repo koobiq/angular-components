@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/select';
 
 @use './autocomplete-theme' as *;
 
@@ -29,23 +30,7 @@
     }
 
     .kbq-option {
-        position: relative;
-
-        &:before,
-        &:after {
-            position: absolute;
-            content: '';
-            width: var(--kbq-size-xxs);
-            height: calc(100% + var(--kbq-size-3xs) * 2); // outline size * 2
-        }
-
-        &:before {
-            right: calc(100% + var(--kbq-size-3xs)); // outline size
-        }
-
-        &:after {
-            left: calc(100% + var(--kbq-size-3xs)); // outline size
-        }
+        @include select.item-active-area(var(--kbq-size-3xs));
     }
 
     // We need to offset horizontal dividers by their height, because

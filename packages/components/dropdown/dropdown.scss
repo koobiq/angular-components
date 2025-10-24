@@ -1,4 +1,5 @@
 @use './dropdown-theme' as theme;
+@use '../core/styles/common/select';
 
 .kbq-dropdown-trigger {
     &.kbq-button {
@@ -50,23 +51,13 @@
         pointer-events: none;
     }
 
-    .kbq-option {
-        position: relative;
+    .kbq-dropdown-item {
+        @include select.item-active-area(var(--kbq-size-3xs));
 
         &:before,
         &:after {
-            position: absolute;
-            content: '';
-            width: var(--kbq-size-xxs);
-            height: calc(100% + var(--kbq-size-3xs) * 2); // outline size * 2
-        }
-
-        &:before {
-            right: calc(100% + var(--kbq-size-3xs)); // outline size
-        }
-
-        &:after {
-            left: calc(100% + var(--kbq-size-3xs)); // outline size
+            top: calc(-1 * var(--kbq-size-3xs));
+            bottom: calc(-1 * var(--kbq-size-3xs));
         }
     }
 
