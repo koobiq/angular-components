@@ -2,6 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { isPlatformServer } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -20,6 +21,7 @@ import {
     OnDestroy,
     Optional,
     Output,
+    PLATFORM_ID,
     QueryList,
     ViewChild,
     ViewContainerRef,
@@ -122,6 +124,7 @@ export class KbqTreeSelection
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
     protected readonly focusMonitor = inject(FocusMonitor);
+    protected readonly platformId = inject(PLATFORM_ID);
 
     renderedOptions = new QueryList<KbqTreeOption>();
 
@@ -609,6 +612,10 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
+        if (isPlatformServer(this.platformId)) {
+            return 0;
+        }
+
         const clientRects = this.elementRef.nativeElement.getClientRects();
 
         if (clientRects.length) {

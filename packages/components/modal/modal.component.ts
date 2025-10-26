@@ -34,7 +34,7 @@ import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
-import { modalUtilObject as ModalUtil } from './modal-util';
+import { ModalUtil } from './modal-util';
 import { IModalButtonOptions, ModalOptions, ModalSize, ModalType, OnClickCallback } from './modal.type';
 
 /**
@@ -61,6 +61,7 @@ export class KbqModalComponent<T = any, R = any>
     implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions
 {
     protected readonly document = inject<Document>(DOCUMENT);
+    private readonly modalUtil = inject(ModalUtil);
 
     componentColors = KbqComponentColors;
 
@@ -608,7 +609,7 @@ export class KbqModalComponent<T = any, R = any>
     // Update transform-origin to the last click position on document
     private updateTransformOrigin() {
         const modalElement = this.modalContainer.nativeElement as HTMLElement;
-        const lastPosition = ModalUtil.getLastClickPosition();
+        const lastPosition = this.modalUtil.getLastClickPosition();
 
         if (lastPosition) {
             this.transformOrigin = `${lastPosition.x - modalElement.offsetLeft}px ${lastPosition.y - modalElement.offsetTop}px 0px`;

@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KBQ_LOCAL_STORAGE } from '@koobiq/components/core';
 import { Observable, ReplaySubject } from 'rxjs';
 
 export interface DocsNavbarPropertyParameters {
@@ -35,13 +35,13 @@ export class DocsNavbarProperty {
 
     private _changes = new ReplaySubject<DocsNavbarPropertyChange>(1);
 
-    private readonly window = inject(KBQ_WINDOW);
+    private readonly localStorage = inject(KBQ_LOCAL_STORAGE);
 
     constructor(readonly parameters: DocsNavbarPropertyParameters) {
         this._data = parameters.data;
 
         const index =
-            parseInt(this.window.localStorage.getItem(this.parameters.property) || '') ||
+            parseInt(this.localStorage.getItem(this.parameters.property) || '') ||
             this.data.findIndex((item) => item.selected);
 
         this.setValue(index >= 0 ? index : 0);
@@ -53,7 +53,7 @@ export class DocsNavbarProperty {
         }
 
         this._currentValue = this.data[index];
-        this.window.localStorage.setItem(this.parameters.property, index.toString());
+        this.localStorage.setItem(this.parameters.property, index.toString());
 
         this._changes.next({ name: 'setValue', value: this.currentValue });
 

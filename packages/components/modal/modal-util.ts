@@ -1,12 +1,17 @@
+import { DOCUMENT } from '@angular/common';
+import { inject, Injectable } from '@angular/core';
+
 export interface IClickPosition {
     x: number;
     y: number;
 }
 
+@Injectable()
 export class ModalUtil {
     private lastPosition: IClickPosition;
+    private readonly document = inject(DOCUMENT);
 
-    constructor(private document: Document) {
+    constructor() {
         this.lastPosition = { x: -1, y: -1 };
         this.listenDocumentClick();
     }
@@ -21,6 +26,3 @@ export class ModalUtil {
         });
     }
 }
-
-// eslint-disable-next-line no-restricted-globals
-export const modalUtilObject = new ModalUtil(document);
