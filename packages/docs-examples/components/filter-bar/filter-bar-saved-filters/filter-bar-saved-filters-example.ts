@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -10,6 +9,7 @@ import {
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
@@ -22,7 +22,7 @@ import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components
     imports: [
         KbqFilterBarModule,
         LuxonDateModule,
-        KbqButtonModule
+        KbqLinkModule
     ],
     template: `
         <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates" (filterChange)="onFilterChange($event)">
@@ -52,7 +52,7 @@ import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components
         </ng-template>
 
         <ng-template #errorToastActions>
-            <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Повторить</button>
+            <a kbq-link [pseudo]="true">Повторить</a>
         </ng-template>
     `
 })
