@@ -51,8 +51,8 @@ import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components
             <span class="kbq-text-normal-strong">{{ toast.data.filter.name }}</span>
         </ng-template>
 
-        <ng-template #errorToastActions>
-            <a kbq-link [pseudo]="true">Повторить</a>
+        <ng-template #errorToastActions let-toast>
+            <a kbq-link [pseudo]="true" (click)="toast.close()">Повторить</a>
         </ng-template>
     `
 })
@@ -372,14 +372,6 @@ export class FilterBarSavedFiltersExample {
         setTimeout(() => {
             if (filter.name === 'Saved Filter 2 (save Error)') {
                 filterBar.filters.filterSavedUnsuccessfully({ text: `Не удалось сохранить фильтр: ${filter.name}` });
-                this.toastService.show({
-                    style: KbqToastStyle.Error,
-                    title: this.toastErrorTitleTemplate,
-                    closeButton: true,
-                    actions: this.errorToastActionsTemplate,
-                    text: 'Не удалось сохранить фильтр: ',
-                    filter
-                } as KbqToastData);
             } else if (status === KbqSaveFilterStatuses.NewFilter) {
                 this.saveNewFilter(filter, filterBar);
             } else if (status === KbqSaveFilterStatuses.NewName) {
