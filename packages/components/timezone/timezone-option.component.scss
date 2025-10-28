@@ -32,6 +32,12 @@
 
 .kbq-select__panel .kbq-timezone-option {
     height: var(--kbq-timezone-option-size-height);
+
+    &:before,
+    &:after {
+        top: calc(-1 * var(--kbq-size-3xs));
+        bottom: calc(-1 * var(--kbq-size-3xs));
+    }
 }
 
 @include kbq-timezone-option-theme();
