@@ -1367,19 +1367,6 @@ export class KbqSelect
 
             if (this.multiSelection) {
                 this.sortValues();
-
-                if (isUserInput) {
-                    // In case the user selected the option with their mouse, we
-                    // want to restore focus back to the trigger, in order to
-                    // prevent the select keyboard controls from clashing with
-                    // the ones from `kbq-option`.
-                    // If search is available then we focus search again.
-                    if (this.search) {
-                        this.search.focus();
-                    } else {
-                        this.focus();
-                    }
-                }
             }
         }
 
