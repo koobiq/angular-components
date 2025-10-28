@@ -20,7 +20,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" multiple editable>
+            <kbq-tag-list #tagList="kbqTagList" editable>
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index, input)" (removed)="remove($event)">
                         {{ tag }}

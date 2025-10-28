@@ -71,7 +71,6 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
-        '[class.kbq-tag-list_multiple]': 'multiple',
         '[class.kbq-tag-list_selectable]': 'selectable',
         '[class.kbq-tag-list_editable]': 'editable',
         '[class.kbq-tag-list_removable]': 'removable',
@@ -117,27 +116,47 @@ export class KbqTagList
      */
     readonly stateChanges = new Subject<void>();
 
-    /** Combined stream of all of the child tags' selection change events. */
+    /**
+     * Combined stream of all of the child tags' selection change events.
+     *
+     * @docs-private
+     */
     get tagSelectionChanges(): Observable<KbqTagSelectionChange> {
         return merge(...this.tags.map((tag) => tag.selectionChange));
     }
 
-    /** Combined stream of all of the child tags' focus change events. */
+    /**
+     * Combined stream of all of the child tags' focus change events.
+     *
+     * @docs-private
+     */
     get tagFocusChanges(): Observable<KbqTagEvent> {
         return merge(...this.tags.map((tag) => tag.onFocus));
     }
 
-    /** Combined stream of all of the child tags' blur change events. */
+    /**
+     * Combined stream of all of the child tags' blur change events.
+     *
+     * @docs-private
+     */
     get tagBlurChanges(): Observable<KbqTagEvent> {
         return merge(...this.tags.map((tag) => tag.onBlur));
     }
 
-    /** Combined stream of all of the child tags' remove change events. */
+    /**
+     * Combined stream of all of the child tags' remove change events.
+     *
+     * @docs-private
+     */
     get tagRemoveChanges(): Observable<KbqTagEvent> {
         return merge(...this.tags.map((tag) => tag.destroyed));
     }
 
-    /** Combined stream of all of the child tags' edit change events. */
+    /**
+     * Combined stream of all of the child tags' edit change events.
+     *
+     * @docs-private
+     */
     get tagEditChanges(): Observable<KbqTagEditChange> {
         return merge(...this.tags.map((tag) => tag.editChange));
     }
@@ -147,10 +166,8 @@ export class KbqTagList
      *
      * @docs-private
      */
-    get selected(): KbqTag[] | KbqTag {
-        const selected = this.tags.filter(({ selected }) => selected);
-
-        return this.multiple ? selected : selected[0];
+    get selected(): KbqTag[] {
+        return this.tags.filter(({ selected }) => selected);
     }
 
     /** @docs-private */
@@ -159,9 +176,9 @@ export class KbqTagList
     }
 
     /**
-     * Whether the user should be allowed to select multiple tags.
+     * @deprecated Unused. Will be removed in next major release.
      *
-     * NOTE! Component does not support dynamic multiple attribute changes.
+     * @docs-private
      */
     @Input({ transform: booleanAttribute }) multiple: boolean = false;
 
@@ -404,9 +421,6 @@ export class KbqTagList
     /** Subscription to blur changes in the tags. */
     private tagBlurSubscription: Subscription | null;
 
-    /** Subscription to selection changes in tags. */
-    private tagSelectionSubscription: Subscription | null;
-
     /** Subscription to remove changes in tags. */
     private tagRemoveSubscription: Subscription | null;
 
@@ -611,7 +625,7 @@ export class KbqTagList
 
         if (this.disabled || isNull(target)) return;
 
-        const _isSelectAll = this.multiple && this.selectable && isSelectAll(event);
+        const _isSelectAll = this.selectable && isSelectAll(event);
 
         if (this.isInputEmpty(target)) {
             if (event.keyCode === BACKSPACE) {
@@ -754,7 +768,7 @@ export class KbqTagList
      * @docs-private
      */
     removeSelected(): void {
-        Array.isArray(this.selected) ? this.selected.forEach((tag) => tag.remove()) : this.selected.remove();
+        this.selected.forEach((tag) => tag.remove());
     }
 
     private propagateTagsChanges(): void {
@@ -767,10 +781,9 @@ export class KbqTagList
         this.changeDetectorRef.markForCheck();
     }
 
-    private resetTags() {
+    private resetTags(): void {
         this.dropSubscriptions();
         this.listenToTagsFocus();
-        this.listenToTagsSelection();
         this.listenToTagsRemoved();
         this.listenToTagsEdit();
     }
@@ -786,11 +799,6 @@ export class KbqTagList
             this.tagBlurSubscription = null;
         }
 
-        if (this.tagSelectionSubscription) {
-            this.tagSelectionSubscription.unsubscribe();
-            this.tagSelectionSubscription = null;
-        }
-
         if (this.tagRemoveSubscription) {
             this.tagRemoveSubscription.unsubscribe();
             this.tagRemoveSubscription = null;
@@ -803,17 +811,6 @@ export class KbqTagList
     }
 
     /** Listens to user-generated selection events on each tag. */
-    private listenToTagsSelection(): void {
-        this.tagSelectionSubscription = this.tagSelectionChanges.subscribe((event) => {
-            if (!this.multiple) {
-                this.tags.forEach((tag) => {
-                    if (tag !== event.source) tag.setSelectedState(false);
-                });
-            }
-        });
-    }
-
-    /** Listens to user-generated selection events on each tag. */
     private listenToTagsFocus(): void {
         this.tagFocusSubscription = this.tagFocusChanges.subscribe((event) => {
             const tagIndex: number = this.tags.toArray().indexOf(event.tag);
@@ -822,15 +819,11 @@ export class KbqTagList
                 this.keyManager.updateActiveItem(tagIndex);
             }
 
-            if (!this.multiple) event.tag.select();
-
             this.stateChanges.next();
         });
 
-        this.tagBlurSubscription = this.tagBlurChanges.subscribe((event) => {
+        this.tagBlurSubscription = this.tagBlurChanges.subscribe(() => {
             this.blur();
-
-            if (!this.multiple) event.tag.deselect();
 
             this.stateChanges.next();
         });

@@ -264,6 +264,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     keydown(event: KeyboardEvent): void;
     keyManager: FocusKeyManager<KbqTag>;
     markAsTouched(): void;
+    // @deprecated (undocumented)
     multiple: boolean;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -307,7 +308,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get required(): boolean;
     set required(value: boolean);
     selectable: boolean;
-    get selected(): KbqTag[] | KbqTag;
+    get selected(): KbqTag[];
     // @deprecated
     selectionModel: SelectionModel<KbqTag>;
     setDisabledState(isDisabled: boolean): void;
