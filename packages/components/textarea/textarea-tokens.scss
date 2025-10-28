@@ -1,6 +1,11 @@
-.kbq-textarea {
+:where(.kbq-textarea) {
     --kbq-textarea-size-min-height: 64px;
     --kbq-textarea-size-max-height: 96px;
     --kbq-textarea-size-padding-vertical: 5px;
     --kbq-textarea-size-padding-horizontal: 11px;
+    --kbq-textarea-resizer-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" width="16" height="16" viewBox="0 0 16 16"><path fill="%238a8fa8" d="m13.354 5.354-8 8-.708-.707 8-8zm0 4-4 4-.708-.707 4-4z"/></svg>');
+}
+
+:where(.kbq-dark .kbq-textarea) {
+    --kbq-textarea-resizer-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" width="16" height="16" viewBox="0 0 16 16"><path fill="%23626884" d="m13.354 5.354-8 8-.708-.707 8-8zm0 4-4 4-.708-.707 4-4z"/></svg>');
 }
