@@ -12,6 +12,10 @@ import {
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
+interface ExampleFilter extends KbqFilter {
+    id?: number;
+}
+
 /**
  * @title filter-bar-saved-filters
  */
@@ -63,9 +67,10 @@ export class FilterBarSavedFiltersExample {
     @ViewChild('errorToastActions') errorToastActionsTemplate: TemplateRef<any>;
     @ViewChild('toastErrorTitleTemplate') toastErrorTitleTemplate: TemplateRef<any>;
 
-    filters: KbqFilter[] = [
+    filters: ExampleFilter[] = [
         {
             name: 'Saved Filter 1',
+            id: 1,
             readonly: false,
             disabled: false,
             changed: true,
@@ -106,6 +111,7 @@ export class FilterBarSavedFiltersExample {
         },
         {
             name: 'Saved Filter 2 (save Error)',
+            id: 2,
             readonly: false,
             disabled: false,
             changed: false,
@@ -154,6 +160,7 @@ export class FilterBarSavedFiltersExample {
         },
         {
             name: 'Saved Filter 3 (delete Error)',
+            id: 3,
             readonly: false,
             disabled: false,
             changed: false,
@@ -345,10 +352,10 @@ export class FilterBarSavedFiltersExample {
         this.activeFilter = defaultFilter;
     }
 
-    onDeleteFilter(filter: KbqFilter) {
+    onDeleteFilter(filter: ExampleFilter) {
         console.log('onDeleteFilter: ', filter);
 
-        if (filter.name === 'Saved Filter 3 (delete Error)') {
+        if (filter.id === 3) {
             this.toastService.show({
                 style: KbqToastStyle.Error,
                 title: this.toastErrorTitleTemplate,
@@ -366,11 +373,11 @@ export class FilterBarSavedFiltersExample {
         }
     }
 
-    onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
+    onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent & { filter: ExampleFilter }) {
         console.log('onSaveFilter: ', filter);
 
         setTimeout(() => {
-            if (filter.name === 'Saved Filter 2 (save Error)') {
+            if (filter.id === 2) {
                 filterBar.filters.filterSavedUnsuccessfully({ text: `Не удалось сохранить фильтр: ${filter.name}` });
             } else if (status === KbqSaveFilterStatuses.NewFilter) {
                 this.saveNewFilter(filter, filterBar);
