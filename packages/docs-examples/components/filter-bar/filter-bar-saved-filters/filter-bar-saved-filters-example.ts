@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
@@ -9,6 +9,12 @@ import {
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+
+interface ExampleFilter extends KbqFilter {
+    id?: number;
+}
 
 /**
  * @title filter-bar-saved-filters
@@ -19,7 +25,8 @@ import {
     selector: 'filter-bar-saved-filters-example',
     imports: [
         KbqFilterBarModule,
-        LuxonDateModule
+        LuxonDateModule,
+        KbqLinkModule
     ],
     template: `
         <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates" (filterChange)="onFilterChange($event)">
@@ -42,12 +49,28 @@ import {
 
             <kbq-filter-search />
         </kbq-filter-bar>
+
+        <ng-template #toastErrorTitleTemplate let-toast>
+            {{ toast.data.text }}
+            <span class="kbq-text-normal-strong">{{ toast.data.filter.name }}</span>
+        </ng-template>
+
+        <ng-template #errorToastActions let-toast>
+            <a kbq-link [pseudo]="true" (click)="toast.close()">Повторить</a>
+        </ng-template>
     `
 })
 export class FilterBarSavedFiltersExample {
-    filters: KbqFilter[] = [
+    readonly toastService = inject(KbqToastService);
+
+    @ViewChild(KbqFilterBar) filterBar: KbqFilterBar;
+    @ViewChild('errorToastActions') errorToastActionsTemplate: TemplateRef<any>;
+    @ViewChild('toastErrorTitleTemplate') toastErrorTitleTemplate: TemplateRef<any>;
+
+    filters: ExampleFilter[] = [
         {
             name: 'Saved Filter 1',
+            id: 1,
             readonly: false,
             disabled: false,
             changed: true,
@@ -87,7 +110,8 @@ export class FilterBarSavedFiltersExample {
             ]
         },
         {
-            name: 'Saved Filter 2',
+            name: 'Saved Filter 2 (save Error)',
+            id: 2,
             readonly: false,
             disabled: false,
             changed: false,
@@ -135,7 +159,8 @@ export class FilterBarSavedFiltersExample {
             ]
         },
         {
-            name: 'Saved Filter 3',
+            name: 'Saved Filter 3 (delete Error)',
+            id: 3,
             readonly: false,
             disabled: false,
             changed: false,
@@ -308,11 +333,14 @@ export class FilterBarSavedFiltersExample {
     }
 
     onResetFilter() {
+        console.log('onResetFilter');
+
         this.activeFilter = this.getDefaultFilter();
     }
 
     onResetFilterChanges(filter: KbqFilter | null) {
-        console.log('onResetFilterChanges: ');
+        console.log('onResetFilterChanges');
+
         const defaultFilter = this.getSavedFilter(filter);
 
         this.filters.splice(
@@ -324,24 +352,41 @@ export class FilterBarSavedFiltersExample {
         this.activeFilter = defaultFilter;
     }
 
-    onDeleteFilter(filter: KbqFilter) {
-        const currentFilterIndex = this.filters.findIndex(({ name }) => name === filter?.name);
+    onDeleteFilter(filter: ExampleFilter) {
+        console.log('onDeleteFilter: ', filter);
 
-        this.filters.splice(currentFilterIndex, 1);
+        if (filter.id === 3) {
+            this.toastService.show({
+                style: KbqToastStyle.Error,
+                title: this.toastErrorTitleTemplate,
+                closeButton: true,
+                actions: this.errorToastActionsTemplate,
+                text: 'Не удалось удалить фильтр: ',
+                filter
+            } as KbqToastData);
+        } else {
+            const currentFilterIndex = this.filters.findIndex(({ name }) => name === filter?.name);
 
-        this.activeFilter = this.getDefaultFilter();
+            this.filters.splice(currentFilterIndex, 1);
+
+            this.activeFilter = this.getDefaultFilter();
+        }
     }
 
-    onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
+    onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent & { filter: ExampleFilter }) {
+        console.log('onSaveFilter: ', filter);
+
         setTimeout(() => {
-            if (status === KbqSaveFilterStatuses.NewFilter) {
+            if (filter.id === 2) {
+                filterBar.filters.filterSavedUnsuccessfully({ text: `Не удалось сохранить фильтр: ${filter.name}` });
+            } else if (status === KbqSaveFilterStatuses.NewFilter) {
                 this.saveNewFilter(filter, filterBar);
             } else if (status === KbqSaveFilterStatuses.NewName) {
                 this.saveCurrentFilterWithNewName(filter, filterBar);
             } else if (status === KbqSaveFilterStatuses.OnlyChanges) {
                 this.saveCurrentFilterWithChangesInPipes(filter, filterBar);
             }
-        }, 5000);
+        }, 3000);
     }
 
     saveNewFilter(filter: KbqFilter, filterBar: KbqFilterBar) {
