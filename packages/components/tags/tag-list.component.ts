@@ -625,13 +625,13 @@ export class KbqTagList
 
         if (this.disabled || isNull(target)) return;
 
-        const _isSelectAll = this.selectable && isSelectAll(event);
+        const shouldSelectAll = this.selectable && isSelectAll(event);
 
         if (this.isInputEmpty(target)) {
             if (event.keyCode === BACKSPACE) {
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
-            } else if (_isSelectAll) {
+            } else if (shouldSelectAll) {
                 this.selectAll();
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
@@ -643,7 +643,7 @@ export class KbqTagList
             } else if (event.keyCode === END) {
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
-            } else if (_isSelectAll) {
+            } else if (shouldSelectAll) {
                 this.selectAll();
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
