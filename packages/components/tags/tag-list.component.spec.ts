@@ -76,48 +76,24 @@ const getFocusMonitor = () => TestBed.inject(FocusMonitor);
     selector: 'test-tag-list',
     imports: [KbqTagsModule],
     template: `
-        <!-- KbqTagList does not support dynamic multiple attribute changes -->
-        @if (multiple()) {
-            <kbq-tag-list
-                [multiple]="true"
-                [draggable]="draggable()"
-                [selectable]="selectable()"
-                [removable]="removable()"
-                [disabled]="disabled()"
-            >
-                @for (tag of tags(); track tag) {
-                    <kbq-tag
-                        [selected]="tag.selected"
-                        [attr.id]="tag.id"
-                        [value]="tag"
-                        (selectionChange)="selectionChange($event)"
-                        (removed)="removedChange($event)"
-                    >
-                        {{ tag.value }}
-                    </kbq-tag>
-                }
-            </kbq-tag-list>
-        } @else {
-            <kbq-tag-list
-                [multiple]="false"
-                [draggable]="draggable()"
-                [selectable]="selectable()"
-                [removable]="removable()"
-                [disabled]="disabled()"
-            >
-                @for (tag of tags(); track tag) {
-                    <kbq-tag
-                        [selected]="tag.selected"
-                        [attr.id]="tag.id"
-                        [value]="tag"
-                        (selectionChange)="selectionChange($event)"
-                        (removed)="removedChange($event)"
-                    >
-                        {{ tag.value }}
-                    </kbq-tag>
-                }
-            </kbq-tag-list>
-        }
+        <kbq-tag-list
+            [draggable]="draggable()"
+            [selectable]="selectable()"
+            [removable]="removable()"
+            [disabled]="disabled()"
+        >
+            @for (tag of tags(); track tag) {
+                <kbq-tag
+                    [selected]="tag.selected"
+                    [attr.id]="tag.id"
+                    [value]="tag"
+                    (selectionChange)="selectionChange($event)"
+                    (removed)="removedChange($event)"
+                >
+                    {{ tag.value }}
+                </kbq-tag>
+            }
+        </kbq-tag-list>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -131,7 +107,6 @@ export class TestTagList {
         }))
     );
 
-    readonly multiple = model(false);
     readonly selectable = model(true);
     readonly removable = model(true);
     readonly draggable = model(false);
@@ -147,7 +122,7 @@ export class TestTagList {
     imports: [KbqTagsModule, KbqFormFieldModule],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" multiple>
+            <kbq-tag-list #tagList="kbqTagList">
                 @for (tag of tags(); track tag) {
                     <kbq-tag [selected]="tag.selected" [attr.id]="tag.id" [value]="tag">
                         {{ tag.value }}
@@ -824,64 +799,6 @@ describe(KbqTagList.name, () => {
                 expect(formField.classList).not.toContain('cdk-focused');
             });
         });
-
-        xdescribe('multiple selection', () => {
-            beforeEach(() => {
-                fixture = createComponent(MultiSelectionTagList);
-                fixture.detectChanges();
-
-                nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
-                tags = fixture.componentInstance.tags;
-            });
-
-            it('should set the view value from the form', () => {
-                const tagList = fixture.componentInstance.tagList;
-                const array = tags.toArray();
-
-                expect(tagList.value).toBeFalsy();
-
-                fixture.componentInstance.control.setValue(['pizza-1']);
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeTruthy();
-            });
-
-            it('should update the form value when the view changes', () => {
-                expect(fixture.componentInstance.control.value).toEqual(null);
-
-                dispatchKeyboardEvent(nativeTags[0], 'keydown', SPACE);
-                fixture.detectChanges();
-
-                expect(fixture.componentInstance.control.value).toEqual(['steak-0']);
-            });
-
-            it('should clear the selection when a nonexistent option value is selected', () => {
-                const array = tags.toArray();
-
-                fixture.componentInstance.control.setValue(['pizza-1']);
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeTruthy();
-
-                fixture.componentInstance.control.setValue(['gibberish']);
-
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeFalsy();
-            });
-
-            it('should clear the selection when the control is reset', () => {
-                const array = tags.toArray();
-
-                fixture.componentInstance.control.setValue(['pizza-1']);
-                fixture.detectChanges();
-
-                fixture.componentInstance.control.reset();
-                fixture.detectChanges();
-
-                expect(array[1].selected).toBeFalsy();
-            });
-        });
     });
 
     describe('tag list with tag input', () => {
@@ -1162,12 +1079,9 @@ describe(KbqTagList.name, () => {
         tags = tagListInstance.tags;
     }
 
-    it('should select all on Ctrl + A when multiple is enabled', () => {
+    it('should select all on Ctrl + A', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(true);
-        fixture.detectChanges();
 
         const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
 
@@ -1180,9 +1094,6 @@ describe(KbqTagList.name, () => {
     it('should focus previous tag if last tag is removed', fakeAsync(() => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(false);
-        fixture.detectChanges();
 
         expect(getTagElements(debugElement).length).toBe(3);
 
@@ -1204,9 +1115,6 @@ describe(KbqTagList.name, () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
-        componentInstance.multiple.set(false);
-        fixture.detectChanges();
-
         expect(getTagElements(debugElement).length).toBe(3);
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(-1);
@@ -1223,27 +1131,9 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(0);
     }));
 
-    it('should select tag on focus when NOT multiple', fakeAsync(() => {
+    it('should NOT select tag on focus', fakeAsync(() => {
         const fixture = createStandaloneComponent(TestTagList);
-        const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(false);
-        fixture.detectChanges();
-
-        expect(getSelectedTags(debugElement).length).toBe(0);
-
-        getLastTagElement(debugElement).focus();
-        tick();
-
-        expect(getSelectedTags(debugElement).length).toBe(1);
-    }));
-
-    it('should NOT select tag on focus when multiple', fakeAsync(() => {
-        const fixture = createStandaloneComponent(TestTagList);
-        const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(true);
-        fixture.detectChanges();
+        const { debugElement } = fixture;
 
         expect(getSelectedTags(debugElement).length).toBe(0);
 
@@ -1268,26 +1158,9 @@ describe(KbqTagList.name, () => {
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
 
-    it('should NOT select all on Ctrl + A when not multiple', () => {
+    it('should emit KbqTagSelectionChange event on Ctrl + A', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
-        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
-
-        componentInstance.multiple.set(false);
-        fixture.detectChanges();
-
-        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
-        getTagListElement(debugElement).dispatchEvent(event);
-
-        expect(getSelectedTags(debugElement).length).toBe(0);
-    });
-
-    it('should emit KbqTagSelectionChange event on Ctrl + A when multiple is enabled', () => {
-        const fixture = createStandaloneComponent(TestTagList);
-        const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(true);
-        fixture.detectChanges();
 
         const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
 
@@ -1312,26 +1185,9 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.selectionChange).toHaveBeenCalledTimes(0);
     });
 
-    it('should NOT emit KbqTagSelectionChange event on Ctrl + A when not multiple', () => {
+    it('should remove all on DELETE keydown', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
-        const event = new KeyboardEvent('keydown', { ctrlKey: true, keyCode: A });
-
-        componentInstance.multiple.set(false);
-        fixture.detectChanges();
-
-        Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
-        getTagListElement(debugElement).dispatchEvent(event);
-
-        expect(componentInstance.selectionChange).toHaveBeenCalledTimes(0);
-    });
-
-    it('should remove all on DELETE keydown when multiple is enabled', () => {
-        const fixture = createStandaloneComponent(TestTagList);
-        const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(true);
-        fixture.detectChanges();
 
         componentInstance.tags.update((tags) =>
             tags.map((tag) => {
@@ -1349,12 +1205,9 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.removedChange).toHaveBeenCalledTimes(componentInstance.tags().length);
     });
 
-    it('should remove all on BACKSPACE keydown when multiple is enabled', () => {
+    it('should remove all on BACKSPACE keydown', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(true);
-        fixture.detectChanges();
 
         componentInstance.tags.update((tags) =>
             tags.map((tag) => {
@@ -1497,12 +1350,9 @@ describe(KbqTagList.name, () => {
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
 
-    it('should select tags on SPACE keydown in multiple mode', () => {
+    it('should select tags on SPACE keydown', () => {
         const fixture = createStandaloneComponent(TestTagList);
-        const { debugElement, componentInstance } = fixture;
-
-        componentInstance.multiple.set(true);
-        fixture.detectChanges();
+        const { debugElement } = fixture;
 
         expect(getSelectedTags(debugElement).length).toBe(0);
 
@@ -1535,7 +1385,7 @@ describe(KbqTagList.name, () => {
 
 @Component({
     template: `
-        <kbq-tag-list multiple [tabIndex]="tabIndex" [selectable]="selectable">
+        <kbq-tag-list [tabIndex]="tabIndex" [selectable]="selectable">
             @for (i of tags; track i) {
                 <kbq-tag (select)="chipSelect(i)" (deselect)="chipDeselect(i)">{{ name }} {{ i + 1 }}</kbq-tag>
             }
@@ -1555,7 +1405,7 @@ class StandardTagList {
 @Component({
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList multiple>
+            <kbq-tag-list #tagList>
                 @for (tag of tags; track tag) {
                     <kbq-tag (removed)="remove(tag)">
                         {{ tag }}
@@ -1620,57 +1470,10 @@ class BasicTagList {
 }
 
 @Component({
-    selector: 'multi-selection-tag-list',
-    template: `
-        <kbq-form-field>
-            <kbq-tag-list
-                placeholder="Food"
-                [multiple]="true"
-                [formControl]="control"
-                [required]="isRequired"
-                [tabIndex]="tabIndexOverride"
-                [selectable]="selectable"
-            >
-                @for (food of foods; track food) {
-                    <kbq-tag [value]="food.value" [disabled]="food.disabled">
-                        {{ food.viewValue }}
-                    </kbq-tag>
-                }
-            </kbq-tag-list>
-        </kbq-form-field>
-    `
-})
-class MultiSelectionTagList {
-    foods: any[] = [
-        { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos', disabled: true },
-        { value: 'sandwich-3', viewValue: 'Sandwich' },
-        { value: 'tags-4', viewValue: 'Chips' },
-        { value: 'eggs-5', viewValue: 'Eggs' },
-        { value: 'pasta-6', viewValue: 'Pasta' },
-        { value: 'sushi-7', viewValue: 'Sushi' }
-    ];
-    control = new UntypedFormControl();
-    isRequired: boolean;
-    tabIndexOverride: number;
-    selectable: boolean;
-
-    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
-}
-
-@Component({
     selector: 'input-tag-list',
     template: `
         <kbq-form-field>
-            <kbq-tag-list
-                #tagList1
-                placeholder="Food"
-                [multiple]="true"
-                [formControl]="control"
-                [required]="isRequired"
-            >
+            <kbq-tag-list #tagList1 placeholder="Food" [formControl]="control" [required]="isRequired">
                 @for (food of foods; track food) {
                     <kbq-tag [value]="food.value" (removed)="remove(food)">
                         {{ food.viewValue }}
@@ -1787,7 +1590,7 @@ class TagListWithFormErrorMessages {
 
 @Component({
     template: `
-        <kbq-tag-list multiple>
+        <kbq-tag-list>
             @for (i of numbers; track i) {
                 <kbq-tag (removed)="remove(i)">
                     {{ i }}

@@ -15,7 +15,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
     selector: 'tag-list-editable-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
     template: `
-        <kbq-tag-list editable multiple>
+        <kbq-tag-list editable>
             @for (tag of tags(); track tag) {
                 <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
                     {{ tag.value }}

@@ -530,12 +530,8 @@ export class KbqTag
         switch (event.keyCode) {
             case DELETE:
             case BACKSPACE: {
-                const hasSelectedTags =
-                    this.tagList &&
-                    (Array.isArray(this.tagList.selected) ? this.tagList.selected.length > 0 : !!this.tagList.selected);
-
                 // If there is a tag list and it has selected tags, remove them, otherwise remove focused tag.
-                hasSelectedTags ? this.tagList.removeSelected() : this.remove();
+                this.tagList?.selected.length ? this.tagList.removeSelected() : this.remove();
 
                 // Always prevent so page navigation does not occur
                 event.preventDefault();

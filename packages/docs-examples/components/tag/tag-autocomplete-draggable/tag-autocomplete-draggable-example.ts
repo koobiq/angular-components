@@ -21,7 +21,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Dragg
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" multiple draggable (dropped)="dropped($event)">
+            <kbq-tag-list #tagList="kbqTagList" draggable (dropped)="dropped($event)">
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
                         {{ tag }}

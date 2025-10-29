@@ -13,7 +13,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
     selector: 'tag-list-removable-example',
     imports: [KbqTagsModule, KbqIconModule],
     template: `
-        <kbq-tag-list removable multiple>
+        <kbq-tag-list removable>
             @for (tag of tags(); track tag) {
                 <kbq-tag [value]="tag" (removed)="remove($event)">
                     {{ tag.value }}

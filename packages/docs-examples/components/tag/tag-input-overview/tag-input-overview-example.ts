@@ -18,7 +18,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" removable multiple draggable (dropped)="dropped($event)">
+            <kbq-tag-list #tagList="kbqTagList" removable draggable (dropped)="dropped($event)">
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="remove($event)">
                         {{ tag.value }}
