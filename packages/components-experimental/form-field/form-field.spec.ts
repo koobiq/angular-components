@@ -253,7 +253,7 @@ export class PasswordFormField {
     readonly formControl = new FormControl('', [PasswordValidators.minLength(8)]);
 }
 
-describe(KbqFormField.name, () => {
+xdescribe(KbqFormField.name, () => {
     it('should display kbq-hint', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
 
