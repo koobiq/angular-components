@@ -19,6 +19,7 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
+import * as i10 from '@koobiq/components/input';
 import * as i2 from '@angular/cdk/overlay';
 import * as i3 from '@koobiq/components/tree';
 import * as i4 from '@koobiq/components/icon';
@@ -26,6 +27,7 @@ import * as i5 from '@koobiq/components/tags';
 import * as i6 from '@koobiq/components/core';
 import * as i7 from '@angular/common';
 import * as i8 from '@angular/cdk/a11y';
+import * as i9 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
@@ -263,7 +265,7 @@ export class KbqTreeSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.OverlayModule, typeof i3.KbqTreeModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqPseudoCheckboxModule, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult, typeof i7.NgClass, typeof i7.NgTemplateOutlet, typeof i8.A11yModule], [typeof i1.KbqTreeSelect, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.OverlayModule, typeof i3.KbqTreeModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqPseudoCheckboxModule, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult, typeof i7.NgClass, typeof i7.NgTemplateOutlet, typeof i8.A11yModule], [typeof i1.KbqTreeSelect, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult, typeof i9.KbqFormFieldModule, typeof i10.KbqInputModule]>;
 }
 
 // @public

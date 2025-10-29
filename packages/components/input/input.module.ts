@@ -1,6 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputMono } from './input';
 import { KbqNumberInput } from './input-number';
@@ -27,7 +28,8 @@ import { KbqInputPassword } from './input-password';
         KbqInputPassword,
         KbqInputMono,
         MinValidator,
-        MaxValidator
+        MaxValidator,
+        KbqFormFieldModule
     ]
 })
 export class KbqInputModule {}

@@ -22,6 +22,8 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
+import * as i10 from '@koobiq/components/form-field';
+import * as i11 from '@koobiq/components/input';
 import * as i3 from '@angular/cdk/overlay';
 import * as i4 from '@koobiq/components/core';
 import * as i5 from '@koobiq/components/icon';
@@ -309,7 +311,7 @@ export class KbqSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.OverlayModule, typeof i4.KbqOptionModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqToolTipModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i8.NgClass, typeof i8.NgTemplateOutlet, typeof i9.A11yModule], [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i4.KbqOptionModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.OverlayModule, typeof i4.KbqOptionModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqToolTipModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i8.NgClass, typeof i8.NgTemplateOutlet, typeof i9.A11yModule], [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i4.KbqOptionModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i10.KbqFormFieldModule, typeof i11.KbqInputModule]>;
 }
 
 // @public

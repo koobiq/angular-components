@@ -11,6 +11,7 @@ import {
     KbqSelectSearchEmptyResult,
     KbqSelectTrigger
 } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTreeModule } from '@koobiq/components/tree';
@@ -38,7 +39,8 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectFooter,
         KbqSelectMatcher,
         KbqSelectTrigger,
-        KbqSelectSearchEmptyResult
+        KbqSelectSearchEmptyResult,
+        KbqFormFieldModule
     ],
     declarations: [KbqTreeSelect],
     providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
