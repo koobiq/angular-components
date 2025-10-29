@@ -1,0 +1,15 @@
+name: License validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  license_validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/actions/setup-node
+      - run: yarn run validate:license

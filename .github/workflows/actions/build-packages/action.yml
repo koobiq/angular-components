@@ -1,5 +1,5 @@
 name: Build packages
-description: Common setup steps used by our workflows
+description: Build all koobiq packages
 runs:
   using: composite
   steps:
