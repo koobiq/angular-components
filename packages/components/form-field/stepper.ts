@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, ViewEncapsulation } from '@angular/core';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { concatMap, interval, Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { KbqFormFieldControl } from './form-field-control';
 
 // @TODO Temporary solution to resolve circular dependency (#DS-3893)
@@ -34,6 +36,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
             [autoColor]="true"
             [disabled]="control.disabled"
             (mousedown)="onStepUp($event)"
+            (mouseup)="mouseUp.next()"
         ></i>
         <i
             class="kbq-stepper-step-down"
@@ -43,6 +46,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
             [autoColor]="true"
             [disabled]="control.disabled"
             (mousedown)="onStepDown($event)"
+            (mouseup)="mouseUp.next()"
         ></i>
     `,
     styleUrls: ['stepper.scss'],
@@ -60,6 +64,15 @@ export class KbqStepper {
 
     /** Emitted when the stepper is decremented. */
     @Output() readonly stepDown: EventEmitter<void> = new EventEmitter<void>();
+
+    /** @docs-private */
+    protected readonly mouseUp = new Subject<void>();
+
+    /** @docs-private */
+    protected readonly mouseHoldInterval = timer(300).pipe(
+        concatMap(() => interval(75)),
+        takeUntil(this.mouseUp)
+    );
 
     /**
      * Form field number control.
@@ -97,6 +110,7 @@ export class KbqStepper {
      */
     onStepUp($event: MouseEvent): void {
         this.stepUp.emit();
+        this.mouseHoldInterval.subscribe(() => this.stepUp.emit());
         $event.preventDefault();
     }
 
@@ -105,6 +119,7 @@ export class KbqStepper {
      */
     onStepDown($event: MouseEvent): void {
         this.stepDown.emit();
+        this.mouseHoldInterval.subscribe(() => this.stepDown.emit());
         $event.preventDefault();
     }
 }

@@ -1,5 +1,5 @@
 import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -50,12 +50,15 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     template: `
         <kbq-form-field>
             <input kbqNumberInput [(ngModel)]="value" />
-            <kbq-stepper />
+            <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
         </kbq-form-field>
     `
 })
 class KbqNumberInputTestComponent {
     value: number | null = null;
+
+    stepUp = jest.fn().mockImplementation(() => true);
+    stepDown = jest.fn().mockImplementation(() => false);
 }
 
 @Component({
@@ -220,6 +223,88 @@ describe('KbqNumberInput', () => {
 
         expect(stepper).toBeNull();
     }));
+
+    describe('with long press on stepper', () => {
+        const initialDelay = 300;
+        const intervalDelay = 75;
+        const initialValue = 0;
+
+        it('should emit once before initial delay', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            fixture.componentInstance.value = initialValue;
+            fixture.detectChanges();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            const testLongPressFor = (icon, emitter) => {
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+
+                fixture.detectChanges();
+                tick(initialDelay - 1);
+
+                expect(emitter).toHaveBeenCalledTimes(1);
+
+                dispatchFakeEvent(icon.nativeElement, 'mouseup');
+            };
+
+            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        }));
+
+        it('should emit after initial delay + interval', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            fixture.componentInstance.value = initialValue;
+            fixture.detectChanges();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            const testLongPressFor = (icon, emitter) => {
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+                fixture.detectChanges();
+                tick(initialDelay);
+
+                tick(intervalDelay);
+                expect(emitter).toHaveBeenCalledTimes(2);
+
+                tick(intervalDelay);
+                expect(emitter).toHaveBeenCalledTimes(3);
+
+                dispatchFakeEvent(icon.nativeElement, 'mouseup');
+            };
+
+            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        }));
+
+        it('should stop emitting on mouseUp', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            fixture.componentInstance.value = initialValue;
+            fixture.detectChanges();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            const testLongPressFor = (icon, emitter) => {
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+                fixture.detectChanges();
+                tick(initialDelay);
+
+                dispatchFakeEvent(icon.nativeElement, 'mouseup');
+                fixture.detectChanges();
+                tick(intervalDelay);
+
+                expect(emitter).toHaveBeenCalledTimes(1);
+            };
+
+            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        }));
+    });
 
     describe('formControl', () => {
         it('should step up', fakeAsync(() => {
