@@ -4,6 +4,7 @@ import { PortalModule } from '@angular/cdk/portal';
 import { NgClass, TitleCasePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqCalendarBody } from './calendar-body.component';
@@ -45,7 +46,8 @@ import { KbqMonthView } from './month-view.component';
         KbqDatepickerToggleIcon,
         KbqDatepickerToggleIconComponent,
         KbqMonthView,
-        KbqCalendarHeader
+        KbqCalendarHeader,
+        KbqFormFieldModule
     ],
     declarations: [
         KbqCalendar,

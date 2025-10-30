@@ -22,6 +22,7 @@ import * as i11 from '@angular/cdk/portal';
 import * as i12 from '@koobiq/components/select';
 import * as i13 from '@koobiq/components/icon';
 import * as i14 from '@angular/common';
+import * as i15 from '@koobiq/components/form-field';
 import * as i8 from '@koobiq/components/button';
 import * as i9 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
@@ -431,7 +432,7 @@ export class KbqDatepickerModule {
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i5.KbqDatepickerToggleIconComponent, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i5.KbqDatepickerToggleIconComponent, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i5.KbqDatepickerToggleIconComponent, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i5.KbqDatepickerToggleIconComponent, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
 }
 
 // @public @deprecated (undocumented)
