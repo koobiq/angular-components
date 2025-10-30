@@ -72,7 +72,7 @@ export class KbqStepper {
      * Timing observable simulating long press in native input-number.
      * - Value increases/decreases by step immediately.
      * - Brief pause (`300ms`)
-     * - Numbers start running upward with selected speed
+     * - Numbers start running upward/downward with selected speed
      * (controlled by interval period `75ms`)
      * @docs-private
      */
