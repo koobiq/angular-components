@@ -29,6 +29,7 @@ import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Validator } from '@angular/forms';
 import { ValidatorFn } from '@angular/forms';
@@ -320,6 +321,8 @@ export class KbqStepper {
     connectTo(numberInput: KbqNumberInput): void;
     // Warning: (ae-forgotten-export) The symbol "KbqNumberInput" needs to be exported by the entry point index.d.ts
     protected get control(): KbqNumberInput;
+    protected readonly mouseHoldInterval: Observable<number>;
+    protected readonly mouseUp: Subject<void>;
     onStepDown($event: MouseEvent): void;
     onStepUp($event: MouseEvent): void;
     readonly stepDown: EventEmitter<void>;
