@@ -151,4 +151,8 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
         // Return the difference between filtered tags and selected tags
         return inputAndSelectionTagsDiff;
     };
+
+    protected remove(): void {
+        this.tagInput.nativeElement.focus();
+    }
 }

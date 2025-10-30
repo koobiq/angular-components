@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import {
     AbstractControl,
     FormControl,
@@ -11,7 +11,7 @@ import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const customMaxLengthValidator = (max: number): ValidatorFn => {
     return ({ value }: AbstractControl): ValidationErrors | null => {
@@ -41,7 +41,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
                 @for (tag of formControl.value; track $index) {
                     <kbq-tag [value]="tag" (removed)="removeTag(tag)">
                         {{ tag }}
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="remove()"></i>
                     </kbq-tag>
                 }
 
@@ -68,12 +68,13 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputWithFormControlValidatorsExample {
-    readonly formControl = new FormControl(
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+    protected readonly formControl = new FormControl(
         ['Koobiq', 'Angular', 'Design'],
         [Validators.required, customMaxLengthValidator(3)]
     );
 
-    removeTag(tag: string): void {
+    protected removeTag(tag: string): void {
         const tags = this.formControl.value || [];
         const index = tags.indexOf(tag);
 
@@ -83,7 +84,7 @@ export class TagInputWithFormControlValidatorsExample {
         }
     }
 
-    createTag({ value, input }: KbqTagInputEvent): void {
+    protected createTag({ value, input }: KbqTagInputEvent): void {
         if (value) {
             const tags = this.formControl.value || [];
 
@@ -92,5 +93,9 @@ export class TagInputWithFormControlValidatorsExample {
         }
 
         input.value = '';
+    }
+
+    protected remove(): void {
+        this.input().nativeElement.focus();
     }
 }

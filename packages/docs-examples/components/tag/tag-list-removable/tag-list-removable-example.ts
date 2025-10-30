@@ -15,7 +15,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
     template: `
         <kbq-tag-list removable>
             @for (tag of tags(); track tag) {
-                <kbq-tag [value]="tag" (removed)="remove($event)">
+                <kbq-tag [value]="tag" (removed)="removed($event)">
                     {{ tag.value }}
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
@@ -40,7 +40,7 @@ export class TagListRemovableExample {
     protected readonly colors = KbqComponentColors;
     protected readonly tags = model(getTags());
 
-    protected remove(event: KbqTagEvent): void {
+    protected removed(event: KbqTagEvent): void {
         this.tags.update((tags) => {
             const index = tags.indexOf(event.tag.value);
 

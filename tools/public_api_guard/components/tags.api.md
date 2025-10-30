@@ -16,7 +16,6 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
@@ -49,8 +48,6 @@ export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 // @public
 export type KbqDragData = {
     tag: KbqTag;
-    hasFocus: boolean;
-    focusOrigin: FocusOrigin;
 };
 
 // @public (undocumented)

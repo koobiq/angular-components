@@ -3,7 +3,7 @@
         @for (tag of selectedTags; track $index) {
             <kbq-tag [value]="tag" (removed)="onRemove(tag)">
                 {{ tag }}
-                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="remove()"></i>
             </kbq-tag>
         }
 

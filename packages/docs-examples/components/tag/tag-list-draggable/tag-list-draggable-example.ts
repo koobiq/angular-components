@@ -20,7 +20,7 @@ const getTags = () => Array.from({ length: 6 }, (_, id) => ({ id, value: `Dragga
 
         <kbq-tag-list [draggable]="draggable()" (dropped)="dropped($event)">
             @for (tag of tags(); track tag.id) {
-                <kbq-tag [value]="tag.value" (removed)="remove($event)">
+                <kbq-tag [value]="tag.value" (removed)="removed($event)">
                     {{ tag.value }}
                     <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
@@ -45,11 +45,12 @@ export class TagListDraggableExample {
     protected readonly draggable = model(true);
     protected readonly color = KbqComponentColors;
 
-    protected dropped(event: KbqTagListDroppedEvent): void {
-        moveItemInArray(this.tags(), event.previousIndex, event.currentIndex);
+    protected dropped({ previousIndex, currentIndex, tag }: KbqTagListDroppedEvent): void {
+        moveItemInArray(this.tags(), previousIndex, currentIndex);
+        setTimeout(() => tag.focus());
     }
 
-    protected remove(event: KbqTagEvent): void {
+    protected removed(event: KbqTagEvent): void {
         this.tags.update((tags) => {
             const index = tags.findIndex(({ value }) => value === event.tag.value);
 
