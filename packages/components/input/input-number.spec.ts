@@ -229,6 +229,24 @@ describe('KbqNumberInput', () => {
         const intervalDelay = 75;
         const initialValue = 0;
 
+        it('should not have timers assigned on init', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            jest.spyOn(global, 'setTimeout');
+
+            fixture.detectChanges();
+
+            expect(global.setTimeout).not.toHaveBeenCalled();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp] = stepper.queryAll(By.css('.kbq-icon'));
+
+            dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
+            fixture.detectChanges();
+
+            expect(global.setTimeout).toHaveBeenCalledTimes(1);
+        }));
+
         it('should emit once before initial delay', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputTestComponent);
 
