@@ -283,7 +283,7 @@ describe('KbqNumberInput', () => {
 
                 expect(emitter).toHaveBeenCalledTimes(1);
 
-                dispatchFakeEvent(icon.nativeElement, 'mouseup');
+                dispatchFakeEvent(document, 'mouseup');
             };
 
             testLongPressFor(iconUp, fixture.componentInstance.stepUp);
@@ -310,7 +310,7 @@ describe('KbqNumberInput', () => {
                 tick(KBQ_STEPPER_INTERVAL_DELAY);
                 expect(emitter).toHaveBeenCalledTimes(3);
 
-                dispatchFakeEvent(icon.nativeElement, 'mouseup');
+                dispatchFakeEvent(document, 'mouseup');
             };
 
             testLongPressFor(iconUp, fixture.componentInstance.stepUp);
@@ -331,7 +331,7 @@ describe('KbqNumberInput', () => {
                 fixture.detectChanges();
                 tick(KBQ_STEPPER_INITIAL_TIMEOUT);
 
-                dispatchFakeEvent(icon.nativeElement, 'mouseup');
+                dispatchFakeEvent(document, 'mouseup');
                 fixture.detectChanges();
                 tick(KBQ_STEPPER_INTERVAL_DELAY);
 
