@@ -1,8 +1,10 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { concatMap, interval, Subject, timer } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { concatMap, fromEvent, interval, Subject, timer } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { KbqFormFieldControl } from './form-field-control';
 
 // @TODO Temporary solution to resolve circular dependency (#DS-3893)
@@ -58,6 +60,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
 })
 export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
+    private readonly document = inject<Document>(DOCUMENT);
 
     /** Emitted when the stepper is incremented. */
     @Output() readonly stepUp: EventEmitter<void> = new EventEmitter<void>();
@@ -78,6 +81,7 @@ export class KbqStepper {
      */
     protected readonly mouseHoldInterval = timer(300).pipe(
         concatMap(() => interval(75)),
+        takeUntilDestroyed(),
         takeUntil(this.mouseUp)
     );
 
@@ -112,21 +116,23 @@ export class KbqStepper {
         });
     }
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     onStepUp($event: MouseEvent): void {
-        this.stepUp.emit();
-        this.mouseHoldInterval.subscribe(() => this.stepUp.emit());
-        $event.preventDefault();
+        this.handleStep($event, this.stepUp);
     }
 
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
     onStepDown($event: MouseEvent): void {
-        this.stepDown.emit();
-        this.mouseHoldInterval.subscribe(() => this.stepDown.emit());
+        this.handleStep($event, this.stepDown);
+    }
+
+    private handleStep($event: MouseEvent, emitter: EventEmitter<void>): void {
+        emitter.emit();
+        // handle case when cursor is out of viewport.
+        fromEvent(this.document, 'mouseup')
+            .pipe(take(1))
+            .subscribe(() => this.mouseUp.next());
+        this.mouseHoldInterval.subscribe(() => emitter.emit());
         $event.preventDefault();
     }
 }

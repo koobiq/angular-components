@@ -17,6 +17,7 @@ import {
     ruRUFormattersData
 } from '@koobiq/components/core';
 import {
+    KbqFormField,
     KbqFormFieldModule,
     getKbqFormFieldYouCanNotUseCleanerInNumberInputError
 } from '@koobiq/components/form-field';
@@ -55,6 +56,24 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     `
 })
 class KbqNumberInputTestComponent {
+    value: number | null = null;
+
+    stepUp = jest.fn().mockImplementation(() => true);
+    stepDown = jest.fn().mockImplementation(() => false);
+}
+
+@Component({
+    template: `
+        @if (isVisible) {
+            <kbq-form-field>
+                <input kbqNumberInput [(ngModel)]="value" />
+                <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
+            </kbq-form-field>
+        }
+    `
+})
+class TestNumberInputConditional {
+    isVisible = true;
     value: number | null = null;
 
     stepUp = jest.fn().mockImplementation(() => true);
@@ -321,6 +340,40 @@ describe('KbqNumberInput', () => {
 
             testLongPressFor(iconUp, fixture.componentInstance.stepUp);
             testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        }));
+
+        it('should stop emitting on component destroy', fakeAsync(() => {
+            const fixture = createComponent(TestNumberInputConditional);
+            const { debugElement } = fixture;
+
+            fixture.detectChanges();
+
+            expect(debugElement.query(By.directive(KbqFormField)).nativeElement).toBeTruthy();
+
+            const testLongPressFor = (queryIconFn, emitter: jest.Mock<any, any, any>) => {
+                const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+                const icon = queryIconFn(stepper.queryAll(By.css('.kbq-icon')));
+
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+                fixture.detectChanges();
+                tick(initialDelay);
+
+                fixture.componentInstance.isVisible = false;
+                fixture.detectChanges();
+                // this call is skipped
+                tick(intervalDelay);
+
+                expect(debugElement.query(By.directive(KbqFormField))).toBeFalsy();
+                // only immediate call counts
+                expect(emitter).toHaveBeenCalledTimes(1);
+            };
+
+            testLongPressFor((icons) => icons[0], fixture.componentInstance.stepUp);
+            // return back visible state
+            fixture.componentInstance.isVisible = true;
+            fixture.detectChanges();
+
+            testLongPressFor((icons) => icons[1], fixture.componentInstance.stepDown);
         }));
     });
 
