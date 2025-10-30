@@ -2,7 +2,7 @@
     <ng-content select="[kbq-icon]" />
 
     @if (title && !collapsed) {
-        <div class="kbq-navbar-ic-item__title-container">
+        <div class="kbq-navbar-ic-item__title-container" [@toggle]="navbar.state.value">
             <ng-content select="[kbqNavbarIcTitle]" />
 
             @if (showDropDownAngle) {

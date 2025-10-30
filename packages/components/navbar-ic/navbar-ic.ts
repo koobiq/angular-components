@@ -28,7 +28,7 @@ import { KBQ_LOCALE_SERVICE, KbqRectangleItem, ruRULocaleData } from '@koobiq/co
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqNotificationCenterTrigger } from '@koobiq/components/notification-center';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, merge, Observable, Subject, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItemEvent,
@@ -42,6 +42,12 @@ export enum KbqExpandEvents {
     toggle,
     hoverOrFocus
 }
+
+/** minimum timeout to use KBQ_ENTER_DELAY */
+export const KBQ_MIN_TIMEOUT_FOR_ENTER_DELAY = 2000;
+
+/** delay before open navbar-ic */
+export const KBQ_ENTER_DELAY = 400;
 
 /** default configuration of navbar-ic */
 /** @docs-private */
@@ -218,6 +224,8 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
 
     readonly externalConfiguration = inject(KBQ_NAVBAR_IC_CONFIGURATION, { optional: true });
 
+    readonly state = new BehaviorSubject<'expanded' | 'collapsed' | null>(null);
+
     configuration;
 
     /** @docs-private */
@@ -276,6 +284,8 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     set expanded(value: boolean) {
         this._expanded = value;
 
+        this.state.next(value || this.pinned || this.hasOpenedPopUp ? 'expanded' : 'collapsed');
+
         this.updateExpandedStateForItems();
     }
 
@@ -299,22 +309,54 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         return this.expanded ? this.expandedWidth : this.collapsedWidth;
     }
 
+    private lastOpeningTime: number;
+    private hideTimeoutId: number | null;
+
     constructor() {
         super();
 
-        this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
-
         effect(this.updateExpandedStateForItems);
 
-        combineLatest([this.hovered, this.focused])
-            .pipe(takeUntilDestroyed())
-            .subscribe(([hovered, focused]) => {
-                if (this.pinned) return;
+        this.focused
+            .pipe(
+                filter(() => !this.pinned || !this.hasOpenedPopUp),
+                takeUntilDestroyed()
+            )
+            .subscribe((focused) => {
+                if (this.hovered.value) return;
 
                 this.expandEvent = KbqExpandEvents.hoverOrFocus;
-                this.expanded = hovered || focused;
+                this.expanded = focused;
 
                 this.changeDetectorRef.markForCheck();
+            });
+
+        this.hovered
+            .pipe(
+                filter(() => !this.pinned),
+                takeUntilDestroyed()
+            )
+            .subscribe((hovered) => {
+                if (hovered) {
+                    const delay =
+                        Date.now() - this.lastOpeningTime < KBQ_MIN_TIMEOUT_FOR_ENTER_DELAY ? 0 : KBQ_ENTER_DELAY;
+
+                    this.hideTimeoutId = setTimeout(() => {
+                        this.hideTimeoutId = null;
+
+                        this.expandEvent = KbqExpandEvents.hoverOrFocus;
+                        this.expanded = hovered;
+                        this.changeDetectorRef.markForCheck();
+                    }, delay) as unknown as number;
+                } else {
+                    clearTimeout(this.hideTimeoutId!);
+
+                    if (this.expanded) {
+                        this.lastOpeningTime = Date.now();
+                    }
+
+                    this.expanded = hovered;
+                }
             });
 
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {

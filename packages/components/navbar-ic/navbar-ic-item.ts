@@ -34,6 +34,7 @@ import { KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqNavbarIc } from './navbar-ic';
+import { toggleNavbarIcItemAnimation } from './navbar-ic.animation';
 
 /**
  * The maximum number of characters that can be placed in a title without being wrapped.
@@ -261,10 +262,12 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     hostDirectives: [KbqRectangleItem],
-    imports: [KbqIcon]
+    imports: [KbqIcon],
+    animations: [toggleNavbarIcItemAnimation()]
 })
 export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentInit {
     readonly rectangleElement = inject(KbqRectangleItem);
+    readonly navbar = inject(KbqNavbarIc);
     readonly navbarFocusableItem = inject(KbqNavbarIcFocusableItem);
 
     private changeDetectorRef = inject(ChangeDetectorRef);
@@ -310,11 +313,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     }
 
     get disabled(): boolean {
-        if (this._disabled !== undefined) {
-            return this._disabled;
-        }
-
-        return !this.collapsed && !this.hasCroppedText;
+        return this.collapsed || !this.hasCroppedText || this._disabled;
     }
 
     set disabled(value) {
@@ -341,7 +340,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         }
 
         this.rectangleElement.state.subscribe(() => {
-            this.collapsed = this.rectangleElement.collapsed;
+            this.disabled = this.collapsed = this.rectangleElement.collapsed;
 
             this.changeDetectorRef.markForCheck();
         });
