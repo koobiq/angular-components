@@ -68,7 +68,14 @@ export class KbqStepper {
     /** @docs-private */
     protected readonly mouseUp = new Subject<void>();
 
-    /** @docs-private */
+    /**
+     * Timing observable simulating long press in native input-number.
+     * - Value increases/decreases by step immediately.
+     * - Brief pause (`300ms`)
+     * - Numbers start running upward with selected speed
+     * (controlled by interval period `75ms`)
+     * @docs-private
+     */
     protected readonly mouseHoldInterval = timer(300).pipe(
         concatMap(() => interval(75)),
         takeUntil(this.mouseUp)
