@@ -49,6 +49,12 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
 }>>;
 
 // @public
+export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
+
+// @public
+export const KBQ_STEPPER_INTERVAL_DELAY = 75;
+
+// @public
 export class KbqCleaner extends KbqIconButton {
     constructor();
     // (undocumented)
@@ -321,7 +327,7 @@ export class KbqStepper {
     connectTo(numberInput: KbqNumberInput): void;
     // Warning: (ae-forgotten-export) The symbol "KbqNumberInput" needs to be exported by the entry point index.d.ts
     protected get control(): KbqNumberInput;
-    protected readonly mouseHoldInterval: Observable<number>;
+    protected readonly longPress: Observable<number>;
     protected readonly mouseUp: Subject<void>;
     onStepDown($event: MouseEvent): void;
     onStepUp($event: MouseEvent): void;

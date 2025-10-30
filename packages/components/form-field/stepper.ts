@@ -23,6 +23,12 @@ const getKbqStepperToggleMissingControlError = (): Error => {
     return Error('kbq-stepper should use with kbqNumberInput');
 };
 
+/** Timeout duration when clicking the up/down arrow */
+export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
+
+/** Interval delay when clicking the up/down arrow */
+export const KBQ_STEPPER_INTERVAL_DELAY = 75;
+
 /** Component which allow to increment or decrement number value. */
 @Component({
     standalone: true,
@@ -76,11 +82,13 @@ export class KbqStepper {
      * - Value increases/decreases by step immediately.
      * - Brief pause (`300ms`)
      * - Numbers start running upward/downward with selected speed
-     * (controlled by interval period `75ms`)
+     * (controlled by interval period)
+     * @see KBQ_STEPPER_INTERVAL_DELAY
+     * @see KBQ_STEPPER_INITIAL_TIMEOUT
      * @docs-private
      */
-    protected readonly mouseHoldInterval = timer(300).pipe(
-        concatMap(() => interval(75)),
+    protected readonly longPress = timer(KBQ_STEPPER_INITIAL_TIMEOUT).pipe(
+        concatMap(() => interval(KBQ_STEPPER_INTERVAL_DELAY)),
         takeUntilDestroyed(),
         takeUntil(this.mouseUp)
     );
@@ -132,7 +140,7 @@ export class KbqStepper {
         fromEvent(this.document, 'mouseup')
             .pipe(take(1))
             .subscribe(() => this.mouseUp.next());
-        this.mouseHoldInterval.subscribe(() => emitter.emit());
+        this.longPress.subscribe(() => emitter.emit());
         $event.preventDefault();
     }
 }

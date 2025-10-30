@@ -17,6 +17,8 @@ import {
     ruRUFormattersData
 } from '@koobiq/components/core';
 import {
+    KBQ_STEPPER_INITIAL_TIMEOUT,
+    KBQ_STEPPER_INTERVAL_DELAY,
     KbqFormField,
     KbqFormFieldModule,
     getKbqFormFieldYouCanNotUseCleanerInNumberInputError
@@ -244,8 +246,6 @@ describe('KbqNumberInput', () => {
     }));
 
     describe('with long press on stepper', () => {
-        const initialDelay = 300;
-        const intervalDelay = 75;
         const initialValue = 0;
 
         it('should not have timers assigned on init', fakeAsync(() => {
@@ -279,7 +279,7 @@ describe('KbqNumberInput', () => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
 
                 fixture.detectChanges();
-                tick(initialDelay - 1);
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT - 1);
 
                 expect(emitter).toHaveBeenCalledTimes(1);
 
@@ -302,12 +302,12 @@ describe('KbqNumberInput', () => {
             const testLongPressFor = (icon, emitter) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
-                tick(initialDelay);
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
 
-                tick(intervalDelay);
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
                 expect(emitter).toHaveBeenCalledTimes(2);
 
-                tick(intervalDelay);
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
                 expect(emitter).toHaveBeenCalledTimes(3);
 
                 dispatchFakeEvent(icon.nativeElement, 'mouseup');
@@ -329,11 +329,11 @@ describe('KbqNumberInput', () => {
             const testLongPressFor = (icon, emitter) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
-                tick(initialDelay);
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
 
                 dispatchFakeEvent(icon.nativeElement, 'mouseup');
                 fixture.detectChanges();
-                tick(intervalDelay);
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
 
                 expect(emitter).toHaveBeenCalledTimes(1);
             };
@@ -356,12 +356,12 @@ describe('KbqNumberInput', () => {
 
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
-                tick(initialDelay);
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
 
                 fixture.componentInstance.isVisible = false;
                 fixture.detectChanges();
                 // this call is skipped
-                tick(intervalDelay);
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
 
                 expect(debugElement.query(By.directive(KbqFormField))).toBeFalsy();
                 // only immediate call counts
