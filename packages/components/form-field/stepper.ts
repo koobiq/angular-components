@@ -23,10 +23,16 @@ const getKbqStepperToggleMissingControlError = (): Error => {
     return Error('kbq-stepper should use with kbqNumberInput');
 };
 
-/** Timeout duration when clicking the up/down arrow */
+/**
+ * Timeout duration when clicking the up/down arrow
+ * @docs-private
+ */
 export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
 
-/** Interval delay when clicking the up/down arrow */
+/**
+ * Interval delay when clicking the up/down arrow
+ * @docs-private
+ */
 export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 /** Component which allow to increment or decrement number value. */
@@ -44,7 +50,6 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
             [autoColor]="true"
             [disabled]="control.disabled"
             (mousedown)="onStepUp($event)"
-            (mouseup)="mouseUp.next()"
         ></i>
         <i
             class="kbq-stepper-step-down"
@@ -54,7 +59,6 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
             [autoColor]="true"
             [disabled]="control.disabled"
             (mousedown)="onStepDown($event)"
-            (mouseup)="mouseUp.next()"
         ></i>
     `,
     styleUrls: ['stepper.scss'],
@@ -87,7 +91,7 @@ export class KbqStepper {
      * @see KBQ_STEPPER_INITIAL_TIMEOUT
      * @docs-private
      */
-    protected readonly longPress = timer(KBQ_STEPPER_INITIAL_TIMEOUT).pipe(
+    private readonly longPress = timer(KBQ_STEPPER_INITIAL_TIMEOUT).pipe(
         concatMap(() => interval(KBQ_STEPPER_INTERVAL_DELAY)),
         takeUntilDestroyed(),
         takeUntil(this.mouseUp)
