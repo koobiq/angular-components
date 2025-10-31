@@ -52,7 +52,7 @@ export const tkTMLocaleData = {
     } satisfies KbqActionsPanelLocaleConfiguration,
     filterBar: {
         reset: {
-            buttonName: 'Täzeden sazlamak'
+            buttonName: 'Täzeden düz'
         },
         search: {
             tooltip: 'Gözleg',
@@ -60,37 +60,37 @@ export const tkTMLocaleData = {
         },
         filters: {
             defaultName: 'Filtrler',
-            saveNewFilterTooltip: 'Täze filtri ýatda saklamak',
+            saveNewFilterTooltip: 'Täze filtri ýazdyr',
             searchPlaceholder: 'Gözleg',
             searchEmptyResult: 'Hiç zat tapylmady',
-            saveAsNewFilter: 'Täze filtr hökmünde ýatda saklamak',
-            saveChanges: 'Üýtgetmeleri ýatda saklamak',
-            saveAsNew: 'Täze hökmünde ýatda saklamak',
-            change: 'Üýtgetmek',
-            resetChanges: 'Üýtgetmeleri täzeden sazlamak',
-            remove: 'Pozmak',
-            name: 'Ady',
-            error: 'Beýle atly gözleg eýýäm bar',
-            errorHint: 'Filtri ýatda sakladyp bolmady. Täzeden synanyşyň ýa-da administratora habar beriň.',
-            saveButton: 'Ýatda saklamak',
-            cancelButton: 'Ýatyrmak'
+            saveAsNewFilter: 'Täze filtr hökmünde ýazdyr',
+            saveChanges: 'Üýtgetmeleri ýazdyr',
+            saveAsNew: 'Täze hökmünde ýazdyr',
+            change: 'Düzet',
+            resetChanges: 'Täzeden düz',
+            remove: 'Poz',
+            name: 'At',
+            error: 'Şeýle atly gözleg eýýäm bar',
+            errorHint: 'Filtri ýazdyryp bolmady. Täzeden synanyň ýa-da administratora ýüz tutuň.',
+            saveButton: 'Ýazdyr',
+            cancelButton: 'Ýatyr'
         },
         add: {
-            tooltip: 'Filtr goşmak'
+            tooltip: 'Filtr goş'
         },
         pipe: {
-            clearButtonTooltip: 'Arassalamak',
-            removeButtonTooltip: 'Pozmak',
-            applyButton: 'Ulanmak',
+            clearButtonTooltip: 'Arassala',
+            removeButtonTooltip: 'Ýokla',
+            applyButton: 'Ulan',
             emptySearchResult: 'Hiç zat tapylmady',
-            selectAll: 'Hemmesini saýlaň'
+            selectAll: 'Ählisini saýla'
         },
         datePipe: {
-            customPeriod: 'Erkin döwür',
-            customPeriodFrom: 'şundan',
-            customPeriodTo: 'şuňa',
-            customPeriodErrorHint: 'Döwrüň başlangyjy gutarýan wagtyndan soň bolup bilmeýär',
-            backToPeriodSelection: 'Döwür saýlamaga dolanmak'
+            customPeriod: 'Laýyk döwür',
+            customPeriodFrom: 'başy',
+            customPeriodTo: 'soňy',
+            customPeriodErrorHint: 'Döwür gutarýan wagtyndan soň başlap bilmeýär',
+            backToPeriodSelection: 'Döwri saýlamaga dolan'
         }
     },
     clampedText: {
