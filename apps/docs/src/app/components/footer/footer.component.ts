@@ -67,10 +67,7 @@ export class DocsFooterComponent extends DocsLocaleState {
 
         this.examplesLanguageSwitch = new DocsNavbarProperty({
             property: 'docs_examples-language',
-            data: this.localeService.locales.items
-                // exclude fa-IR (DS-2219)
-                .filter((item) => item.id !== 'fa-IR')
-                .map((item) => ({ id: item.id, value: item.name, selected: false })),
+            data: this.localeService.locales.items.map((item) => ({ id: item.id, value: item.name, selected: false })),
             updateSelected: true
         });
 

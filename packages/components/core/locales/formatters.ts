@@ -80,44 +80,6 @@ export const esLAFormattersData = {
     }
 };
 
-export const faIRFormattersData = {
-    formatters: {
-        number: {
-            rounding: {
-                separator: ' ',
-                groupSeparator: '٫',
-                thousand: 'هزار',
-                million: 'میلیون',
-                billion: 'م',
-                trillion: 'تریلیون',
-                rtl: true
-            }
-        }
-    },
-    input: {
-        number: {
-            groupSeparator: ['\u066C'],
-            fractionSeparator: '\u066B'
-        } satisfies KbqNumberInputLocaleConfig
-    },
-    sizeUnits: {
-        defaultUnitSystem: 'SI',
-        defaultPrecision: 2,
-        unitSystems: {
-            SI: {
-                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
-                base: 10,
-                power: 3
-            },
-            IEC: {
-                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
-                base: 2,
-                power: 10
-            }
-        }
-    }
-};
-
 export const ptBRFormattersData = {
     formatters: {
         number: {
@@ -191,42 +153,6 @@ export const ruRUFormattersData = {
             },
             IEC: {
                 abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
-                base: 2,
-                power: 10
-            }
-        }
-    }
-};
-
-export const zhCNFormattersData = {
-    formatters: {
-        number: {
-            rounding: {
-                separator: ' ',
-                groupSeparator: '.',
-                tenThousand: '万',
-                oneHundredMillions: '亿',
-                trillion: '兆'
-            }
-        }
-    },
-    input: {
-        number: {
-            groupSeparator: [','],
-            fractionSeparator: '.'
-        } satisfies KbqNumberInputLocaleConfig
-    },
-    sizeUnits: {
-        defaultUnitSystem: 'SI',
-        defaultPrecision: 2,
-        unitSystems: {
-            SI: {
-                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
-                base: 10,
-                power: 3
-            },
-            IEC: {
-                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
                 base: 2,
                 power: 10
             }

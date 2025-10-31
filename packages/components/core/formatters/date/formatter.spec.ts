@@ -2326,7 +2326,7 @@ describe('Date formatter (imports and providing)', () => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
-                    { provide: KBQ_LOCALE_ID, useValue: 'zh-CN' },
+                    { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
                     {
                         provide: KBQ_LOCALE_SERVICE,
                         useFactory: (locale: string) => new KbqLocaleService(locale, KBQ_DEFAULT_LOCALE_DATA_FACTORY()),
@@ -2342,8 +2342,8 @@ describe('Date formatter (imports and providing)', () => {
         }));
 
         it('Should set locale from KBQ_LOCALE_ID', () => {
-            expect(adapter.config.name).toBe('zh-CN');
-            expect(formatter.adapter.config.name).toBe('zh-CN');
+            expect(adapter.config.name).toBe('en-US');
+            expect(formatter.adapter.config.name).toBe('en-US');
             expect(adapter['localeService']).toBeDefined();
         });
     });
