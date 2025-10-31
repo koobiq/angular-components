@@ -19,7 +19,13 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KBQ_CHECKBOX_CLICK_ACTION, TransitionCheckState } from '@koobiq/components/checkbox';
-import { KbqAnimationCurves, KbqAnimationDurations, KbqCheckedState, KbqColorDirective } from '@koobiq/components/core';
+import {
+    KbqAnimationCurves,
+    KbqAnimationDurations,
+    KbqCheckedState,
+    KbqColorDirective,
+    KbqHovered
+} from '@koobiq/components/core';
 
 let nextUniqueId = 0;
 
@@ -46,6 +52,7 @@ export class KbqToggleChange {
         '[class.kbq-active]': 'checked',
         '[class.kbq-indeterminate]': 'indeterminate'
     },
+    hostDirectives: [KbqHovered],
     animations: [
         trigger('switch', [
             state(TransitionCheckState.Init, style({ left: '3px' })),

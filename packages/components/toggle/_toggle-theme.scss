@@ -16,18 +16,17 @@
 @mixin _kbq-toggle-color($type) {
     @include _kbq-toggle-state($type, default);
 
-    &:hover {
+    &:is(:hover, .kbq-hovered) {
         @include _kbq-toggle-state($type, states-hover);
     }
 
     &.kbq-active,
     &.kbq-indeterminate {
         @include _kbq-toggle-state($type, states-checked);
-    }
 
-    &.kbq-active:hover,
-    &.kbq-indeterminate:hover {
-        @include _kbq-toggle-state($type, states-checked-hover);
+        &:is(:hover, .kbq-hovered) {
+            @include _kbq-toggle-state($type, states-checked-hover);
+        }
     }
 
     &.cdk-keyboard-focused {
