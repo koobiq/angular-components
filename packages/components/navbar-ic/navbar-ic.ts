@@ -29,7 +29,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqNotificationCenterTrigger } from '@koobiq/components/notification-center';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { BehaviorSubject, filter, merge, Observable, Subject, Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { delay, startWith } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItemEvent,
     KbqNavbarIcFocusableItem,
@@ -319,6 +319,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
 
         this.focused
             .pipe(
+                delay(0),
                 filter(() => !this.pinned || !this.hasOpenedPopUp),
                 takeUntilDestroyed()
             )
