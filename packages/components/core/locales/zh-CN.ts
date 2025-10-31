@@ -64,32 +64,32 @@ export const zhCNLocaleData = {
             searchEmptyResult: '未找到任何内容',
             saveAsNewFilter: '另存为新筛选器',
             saveChanges: '保存更改',
-            saveAsNew: '另存为新的',
+            saveAsNew: '保存为新',
             change: '编辑',
             resetChanges: '重置',
             remove: '删除',
             name: '名称',
-            error: '已经使用此名称进行过搜索',
+            error: '搜索名称已存在',
             errorHint: '无法保存筛选器。请重试或联系管理员。',
             saveButton: '保存',
             cancelButton: '取消'
         },
         add: {
-            tooltip: '添加筛选器'
+            tooltip: '新增筛选器'
         },
         pipe: {
             clearButtonTooltip: '清除',
             removeButtonTooltip: '删除',
             applyButton: '应用',
             emptySearchResult: '未找到任何内容',
-            selectAll: '选择全部'
+            selectAll: '全选'
         },
         datePipe: {
-            customPeriod: '自定义时段',
+            customPeriod: '自定义时间段',
             customPeriodFrom: '从',
             customPeriodTo: '到',
-            customPeriodErrorHint: '时段开始时间不能晚于结束时间',
-            backToPeriodSelection: '返回以选择一个时段'
+            customPeriodErrorHint: '开始时间不得晚于结束时间',
+            backToPeriodSelection: '返回以选择时间段'
         }
     },
     clampedText: {

@@ -51,45 +51,45 @@ export const ptBRLocaleData = {
     } satisfies KbqActionsPanelLocaleConfiguration,
     filterBar: {
         reset: {
-            buttonName: 'Redefinir'
+            buttonName: 'Reconfigurar'
         },
         search: {
-            tooltip: 'Pesquisar',
-            placeholder: 'Pesquisar'
+            tooltip: 'Buscar',
+            placeholder: 'Buscar'
         },
         filters: {
             defaultName: 'Filtros',
-            saveNewFilterTooltip: 'Salvar o novo filtro',
-            searchPlaceholder: 'Pesquisar',
+            saveNewFilterTooltip: 'Salve o filtro novo',
+            searchPlaceholder: 'Buscar',
             searchEmptyResult: 'Nada encontrado',
-            saveAsNewFilter: 'Salvar como novo filtro',
-            saveChanges: 'Salvar alterações',
-            saveAsNew: 'Salvar como novo',
+            saveAsNewFilter: 'Salve o filtro novo',
+            saveChanges: 'Salve as mudanças',
+            saveAsNew: 'Salve como novo',
             change: 'Editar',
-            resetChanges: 'Redefinir',
-            remove: 'Excluir',
+            resetChanges: 'Reconfigurar',
+            remove: 'Deletar',
             name: 'Nome',
-            error: 'Já existe uma pesquisa com este nome',
-            errorHint: 'Não foi possível salvar o filtro. Tente novamente ou entre em contato com o administrador.',
+            error: 'A busca com esse nome já existe',
+            errorHint: 'O filtro não pôde ser salvo. Tente de novo ou entre em contato com o administrador.',
             saveButton: 'Salvar',
             cancelButton: 'Cancelar'
         },
         add: {
-            tooltip: 'Adicionar filtro'
+            tooltip: 'Adicionar filtros'
         },
         pipe: {
             clearButtonTooltip: 'Apagar',
-            removeButtonTooltip: 'Excluir',
+            removeButtonTooltip: 'Deletar',
             applyButton: 'Aplicar',
             emptySearchResult: 'Nada encontrado',
-            selectAll: 'Selecionar tudo'
+            selectAll: 'Selecionar todos'
         },
         datePipe: {
-            customPeriod: 'Período personalizado',
+            customPeriod: 'Selecionar período',
             customPeriodFrom: 'de',
             customPeriodTo: 'até',
-            customPeriodErrorHint: 'O início do período não pode ser posterior ao término do período',
-            backToPeriodSelection: 'Retornar à seleção do período'
+            customPeriodErrorHint: 'O período não pode começar depois de quando acaba',
+            backToPeriodSelection: 'Voltar à seleção de período'
         }
     },
     clampedText: {
