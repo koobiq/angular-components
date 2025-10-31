@@ -28,7 +28,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
                         } @else {
                             <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                         }
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="remove()"></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -129,7 +129,7 @@ export class TagInputEditableExample {
         this.tags.update(() => []);
     }
 
-    protected remove(): void {
+    protected afterRemove(): void {
         this.focusInput();
     }
 

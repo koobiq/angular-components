@@ -27,7 +27,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
                 @for (tag of tags(); track tag.id) {
                     <kbq-tag [value]="tag.value" (removed)="removed($event)">
                         {{ tag.value }}
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="remove()"></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -91,7 +91,7 @@ export class TagInputDraggableExample {
         this.tags.update(() => []);
     }
 
-    protected remove(): void {
+    protected afterRemove(): void {
         this.focusInput();
     }
 

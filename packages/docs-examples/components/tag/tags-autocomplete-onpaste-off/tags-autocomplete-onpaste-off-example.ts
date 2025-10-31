@@ -152,7 +152,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
         return inputAndSelectionTagsDiff;
     };
 
-    protected remove(): void {
+    protected afterRemove(): void {
         this.tagInput.nativeElement.focus();
     }
 }

@@ -31,7 +31,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Dragg
                 @for (tag of tags(); track tag) {
                     <kbq-tag [value]="tag" (removed)="removed($event)">
                         {{ tag }}
-                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="remove()"></i>
+                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -89,7 +89,7 @@ export class TagAutocompleteDraggableExample {
         }
     }
 
-    protected remove(): void {
+    protected afterRemove(): void {
         this.focusInput();
     }
 

@@ -41,7 +41,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
                 @for (tag of formControl.value; track $index) {
                     <kbq-tag [value]="tag" (removed)="removeTag(tag)">
                         {{ tag }}
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="remove()"></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -95,7 +95,7 @@ export class TagInputWithFormControlValidatorsExample {
         input.value = '';
     }
 
-    protected remove(): void {
+    protected afterRemove(): void {
         this.input().nativeElement.focus();
     }
 }

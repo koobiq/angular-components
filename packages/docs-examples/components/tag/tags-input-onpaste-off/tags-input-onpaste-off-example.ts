@@ -67,7 +67,7 @@ export class TagsInputOnpasteOffExample {
         this.tags.length = 0;
     }
 
-    protected remove(): void {
+    protected afterRemove(): void {
         this.input().nativeElement.focus();
     }
 }
