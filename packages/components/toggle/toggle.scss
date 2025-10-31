@@ -31,7 +31,7 @@ $toggle-thumb-offset: 8px;
             flex-direction: row-reverse;
         }
 
-        .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
+        &:has(.kbq-toggle-label:not(:empty)) .kbq-toggle-bar-container {
             padding-top: tokens.kbq-css-half-difference(typography-text-normal-line-height, toggle-size-normal-height);
         }
     }
@@ -104,12 +104,14 @@ $toggle-thumb-offset: 8px;
 
     flex: 1;
 
-    &.left {
-        margin-right: var(--kbq-toggle-size-normal-horizontal-content-padding);
-    }
+    &:has(.kbq-toggle-label:not(:empty)) {
+        &.left {
+            margin-right: var(--kbq-toggle-size-normal-horizontal-content-padding);
+        }
 
-    &.right {
-        margin-left: var(--kbq-toggle-size-normal-horizontal-content-padding);
+        &.right {
+            margin-left: var(--kbq-toggle-size-normal-horizontal-content-padding);
+        }
     }
 }
 
@@ -119,13 +121,9 @@ $toggle-thumb-offset: 8px;
         width: var(--kbq-toggle-size-big-width);
     }
 
-    & .kbq-hint {
-        margin-top: var(--kbq-toggle-size-big-vertical-content-padding);
-    }
-
     .kbq-toggle-layout {
-        .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
-            padding-top: tokens.kbq-css-half-difference(toggle-font-big-label-line-height, toggle-size-big-height);
+        &:has(.kbq-toggle-label:not(:empty)) .kbq-toggle-bar-container {
+            padding-top: tokens.kbq-css-half-difference(typography-text-big-line-height, toggle-size-big-height);
         }
     }
 }
