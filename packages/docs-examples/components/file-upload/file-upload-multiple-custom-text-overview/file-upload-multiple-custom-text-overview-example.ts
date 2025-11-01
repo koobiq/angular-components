@@ -8,18 +8,14 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { enUSLocaleData } from '../en-US';
 import { esLALocaleData } from '../es-LA';
-import { faIRLocaleData } from '../fa-IR';
 import { ptBRLocaleData } from '../pt-BR';
 import { ruRULocaleData } from '../ru-RU';
-import { zhCNLocaleData } from '../zh-CN';
 
 const localeData = {
     'en-US': enUSLocaleData,
-    'zh-CN': zhCNLocaleData,
     'es-LA': esLALocaleData,
     'pt-BR': ptBRLocaleData,
-    'ru-RU': ruRULocaleData,
-    'fa-IR': faIRLocaleData
+    'ru-RU': ruRULocaleData
 };
 
 class FileUploadConfiguration implements KbqInputFileMultipleLabel {

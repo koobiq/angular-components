@@ -22,22 +22,6 @@ const localeData = {
         } satisfies Partial<KbqInputFileMultipleLabel>
     },
 
-    'zh-CN': {
-        single: {
-            captionText: '将文件拖拽到这里或 {{ browseLink }}',
-            browseLink: '安全上传',
-            title: '提交安全文件'
-        } satisfies Partial<KbqInputFileLabel>,
-
-        multiple: {
-            captionText: '将报告拖拽到这里或 {{ browseLink }}',
-            captionTextWhenSelected: '添加更多证据或 {{ browseLink }}',
-            captionTextForCompactSize: '附加日志或 {{ browseLink }}',
-            browseLink: '安全上传',
-            title: '提交安全文件'
-        } satisfies Partial<KbqInputFileMultipleLabel>
-    },
-
     'es-LA': {
         single: {
             captionText: 'Arrastra archivo aquí o {{ browseLink }}',
@@ -83,22 +67,6 @@ const localeData = {
             captionTextForCompactSize: 'Прикрепите логи или {{ browseLink }}',
             browseLink: 'безопасная загрузка',
             title: 'Загрузка файлов безопасности'
-        } satisfies Partial<KbqInputFileMultipleLabel>
-    },
-
-    'fa-IR': {
-        single: {
-            captionText: 'فایل را اینجا بکشید یا {{ browseLink }}',
-            browseLink: 'بارگذاری امن',
-            title: 'ارسال فایل امنیتی'
-        } satisfies Partial<KbqInputFileLabel>,
-
-        multiple: {
-            captionText: 'گزارش‌ها را اینجا بکشید یا {{ browseLink }}',
-            captionTextWhenSelected: 'مدارک بیشتری اضافه کنید یا {{ browseLink }}',
-            captionTextForCompactSize: 'لاگ‌ها را پیوست کنید یا {{ browseLink }}',
-            browseLink: 'بارگذاری امن',
-            title: 'ارسال فایل‌های امنیتی'
         } satisfies Partial<KbqInputFileMultipleLabel>
     }
 };
