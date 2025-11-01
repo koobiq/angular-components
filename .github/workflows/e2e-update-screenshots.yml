@@ -19,8 +19,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup yarn
-        uses: ./.github/workflows/actions/setup-yarn
+      - name: Setup Node
+        uses: ./.github/workflows/actions/setup-node
 
       - name: Setup test environment
         run: yarn run e2e:setup

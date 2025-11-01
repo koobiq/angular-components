@@ -1,0 +1,19 @@
+name: Linters
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  linters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/actions/setup-node
+      - run: |
+          yarn run cspell --no-progress
+          yarn run prettier
+          yarn run stylelint --max-warnings=0
+          yarn run eslint --max-warnings=0
