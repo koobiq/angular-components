@@ -890,17 +890,9 @@ export class KbqTagList
         this.dropList.dropped
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(({ currentIndex, previousIndex, event, item }) => {
-                const { tag, hasFocus, focusOrigin }: KbqDragData = item.data;
+                const { tag }: KbqDragData = item.data;
 
                 this.dropped.emit({ currentIndex, previousIndex, event, tag });
-
-                if (this.tagInput) {
-                    return this.tagInput.focus();
-                }
-
-                if (hasFocus) {
-                    return setTimeout(() => this.focusMonitor.focusVia(tag.nativeElement, focusOrigin));
-                }
             });
     }
 

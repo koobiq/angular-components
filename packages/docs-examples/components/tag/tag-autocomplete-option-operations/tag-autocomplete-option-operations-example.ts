@@ -32,7 +32,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                 @for (tag of selectedTags; track $index) {
                     <kbq-tag [value]="tag" (removed)="onRemove(tag)">
                         {{ tag }}
-                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
                 <input
@@ -185,4 +185,8 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
         return inputAndSelectionTagsDiff;
     };
+
+    protected afterRemove(): void {
+        this.tagInputDirective.focus();
+    }
 }

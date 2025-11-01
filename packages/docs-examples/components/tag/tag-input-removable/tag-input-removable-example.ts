@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable tag ${i}` }));
 
@@ -19,9 +19,9 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" removable>
                 @for (tag of tags(); track tag) {
-                    <kbq-tag [value]="tag" (removed)="remove($event)">
+                    <kbq-tag [value]="tag" (removed)="removed($event)">
                         {{ tag.value }}
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -53,8 +53,9 @@ export class TagInputRemovableExample {
     protected readonly colors = KbqComponentColors;
     protected readonly removable = model(true);
     protected readonly tags = model(getTags());
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
-    protected remove(event: KbqTagEvent): void {
+    protected removed(event: KbqTagEvent): void {
         this.tags.update((tags) => {
             const index = tags.indexOf(event.tag.value);
 
@@ -80,5 +81,9 @@ export class TagInputRemovableExample {
 
     protected clear(): void {
         this.tags.update(() => []);
+    }
+
+    protected afterRemove(): void {
+        this.input().nativeElement.focus();
     }
 }

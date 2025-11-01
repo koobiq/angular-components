@@ -15,8 +15,8 @@ const TAG = 'Editable tag';
     selector: 'tag-editable-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
     template: `
-        @if (!removed()) {
-            <kbq-tag editable [value]="tag()" (editChange)="editChange($event)" (removed)="remove($event)">
+        @if (!isTagRemoved()) {
+            <kbq-tag editable [value]="tag()" (editChange)="editChange($event)" (removed)="removed($event)">
                 {{ tag() }}
                 <input kbqInput kbqTagEditInput [(ngModel)]="tag" />
                 @if (tag().length > 0) {
@@ -44,7 +44,7 @@ const TAG = 'Editable tag';
 })
 export class TagEditableExample {
     protected readonly tag = model(TAG);
-    protected readonly removed = signal(false);
+    protected readonly isTagRemoved = signal(false);
     protected readonly color = KbqComponentColors;
 
     protected editChange({ type, reason, tag }: KbqTagEditChange): void {
@@ -68,14 +68,14 @@ export class TagEditableExample {
         }
     }
 
-    protected remove(event: KbqTagEvent): void {
+    protected removed(event: KbqTagEvent): void {
         console.info('Tag was removed: ', event);
 
-        this.removed.set(true);
+        this.isTagRemoved.set(true);
     }
 
     protected restart(): void {
         this.tag.set(TAG);
-        this.removed.set(false);
+        this.isTagRemoved.set(false);
     }
 }

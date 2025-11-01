@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_TAGS_DEFAULT_OPTIONS,
+    KbqTagInput,
     KbqTagInputEvent,
     KbqTagsDefaultOptions,
     KbqTagsModule
@@ -33,6 +34,8 @@ import {
     ]
 })
 export class TagsInputOnpasteOffExample {
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+
     control = new FormControl();
 
     tags = ['tag', 'tag1', 'tag2', 'tag3', 'tag4'];
@@ -62,5 +65,9 @@ export class TagsInputOnpasteOffExample {
 
     onClear(): void {
         this.tags.length = 0;
+    }
+
+    protected afterRemove(): void {
+        this.input().nativeElement.focus();
     }
 }
