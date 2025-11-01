@@ -26,7 +26,7 @@ export class KbqBreadcrumbButton implements OnInit {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbButton, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof i1.RdxRovingFocusItemDirective; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbButton, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof i1.RdxRovingFocusItemDirective; inputs: { "focusable": "focusable"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbButton, never>;
 }

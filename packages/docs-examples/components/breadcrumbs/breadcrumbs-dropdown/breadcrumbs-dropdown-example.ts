@@ -50,8 +50,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </nav>
 
         <kbq-dropdown #siblingsListDropdown="kbqDropdown">
-            <button kbq-dropdown-item routerLink="./RBAC">RBAC</button>
-            <button kbq-dropdown-item routerLink="./ABAC">ABAC</button>
+            <a kbq-dropdown-item routerLink="./RBAC">RBAC</a>
+            <a kbq-dropdown-item routerLink="./ABAC">ABAC</a>
         </kbq-dropdown>
     `,
     imports: [
