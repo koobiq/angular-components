@@ -37,6 +37,12 @@ import { Subject } from 'rxjs';
 import { TooltipModifier } from '@koobiq/components/tooltip';
 
 // @public
+export const KBQ_ENTER_DELAY = 400;
+
+// @public
+export const KBQ_MIN_TIMEOUT_FOR_ENTER_DELAY = 2000;
+
+// @public
 export const KBQ_NAVBAR_IC_CONFIGURATION: InjectionToken<unknown>;
 
 // @public
@@ -162,6 +168,8 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     popoverTrigger: Signal<readonly any[]>;
     rectangleElements: Signal<readonly any[]>;
     // (undocumented)
+    readonly state: BehaviorSubject<"expanded" | "collapsed" | null>;
+    // (undocumented)
     toggle(): void;
     toggleElement: Signal<readonly any[]>;
     // (undocumented)
@@ -242,6 +250,8 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContentInit {
     constructor();
     // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
     get isLink(): boolean;
@@ -258,7 +268,7 @@ export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContent
     // (undocumented)
     get titleText(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcHeader, "kbq-navbar-ic-header, [kbq-navbar-ic-header]", ["kbqNavbarIcHeader"], {}, {}, ["logo", "title"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcHeader, "kbq-navbar-ic-header, [kbq-navbar-ic-header]", ["kbqNavbarIcHeader"], {}, {}, ["logo", "title"], ["[kbqNavbarIcLogo]", "[kbqNavbarIcTitle]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcHeader, never>;
 }
@@ -279,6 +289,8 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     // (undocumented)
     get hasDropDownTrigger(): boolean;
     icon: KbqIcon;
+    // (undocumented)
+    readonly navbar: KbqNavbarIc;
     // (undocumented)
     readonly navbarFocusableItem: KbqNavbarIcFocusableItem;
     // (undocumented)
