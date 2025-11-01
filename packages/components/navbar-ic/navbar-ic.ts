@@ -28,8 +28,8 @@ import { KBQ_LOCALE_SERVICE, KbqRectangleItem, ruRULocaleData } from '@koobiq/co
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqNotificationCenterTrigger } from '@koobiq/components/notification-center';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { BehaviorSubject, filter, merge, Observable, Subject, Subscription } from 'rxjs';
-import { delay, startWith } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, filter, merge, Observable, Subject, Subscription, timer } from 'rxjs';
+import { delay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItemEvent,
     KbqNavbarIcFocusableItem,
@@ -310,7 +310,6 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     }
 
     private lastOpeningTime: number;
-    private hideTimeoutId: number | null;
 
     constructor() {
         super();
@@ -335,30 +334,29 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         this.hovered
             .pipe(
                 filter(() => !this.pinned),
-                takeUntilDestroyed()
-            )
-            .subscribe((hovered) => {
-                if (hovered) {
-                    const delay =
-                        Date.now() - this.lastOpeningTime < KBQ_MIN_TIMEOUT_FOR_ENTER_DELAY ? 0 : KBQ_ENTER_DELAY;
+                switchMap((hovered) => {
+                    if (!hovered) {
+                        if (this.expanded) {
+                            this.lastOpeningTime = Date.now();
+                        }
 
-                    this.hideTimeoutId = setTimeout(() => {
-                        this.hideTimeoutId = null;
+                        this.expanded = false;
 
-                        this.expandEvent = KbqExpandEvents.hoverOrFocus;
-                        this.expanded = hovered;
-                        this.changeDetectorRef.markForCheck();
-                    }, delay) as unknown as number;
-                } else {
-                    clearTimeout(this.hideTimeoutId!);
-
-                    if (this.expanded) {
-                        this.lastOpeningTime = Date.now();
+                        return EMPTY;
                     }
 
-                    this.expanded = hovered;
-                }
-            });
+                    return timer(this.getExpandDelay()).pipe(
+                        tap(() => {
+                            this.expandEvent = KbqExpandEvents.hoverOrFocus;
+                            this.expanded = true;
+                            this.changeDetectorRef.markForCheck();
+                        }),
+                        takeUntil(this.hovered.pipe(filter((h) => !h)))
+                    );
+                }),
+                takeUntilDestroyed()
+            )
+            .subscribe();
 
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
             this.focused.next(focusOrigin === 'keyboard');
@@ -407,6 +405,10 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         } else {
             this.keyManager.onKeydown(event);
         }
+    }
+
+    private getExpandDelay() {
+        return Date.now() - this.lastOpeningTime < KBQ_MIN_TIMEOUT_FOR_ENTER_DELAY ? 0 : KBQ_ENTER_DELAY;
     }
 
     protected updateTooltipForItems = () => this.items().forEach((item) => item.updateTooltip());
