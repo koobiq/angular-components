@@ -29,6 +29,7 @@ import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Validator } from '@angular/forms';
 import { ValidatorFn } from '@angular/forms';
@@ -46,6 +47,12 @@ export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     noBorders: boolean;
 }>>;
+
+// @public
+export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
+
+// @public
+export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 // @public
 export class KbqCleaner extends KbqIconButton {
@@ -320,6 +327,7 @@ export class KbqStepper {
     connectTo(numberInput: KbqNumberInput): void;
     // Warning: (ae-forgotten-export) The symbol "KbqNumberInput" needs to be exported by the entry point index.d.ts
     protected get control(): KbqNumberInput;
+    protected readonly mouseUp: Subject<void>;
     onStepDown($event: MouseEvent): void;
     onStepUp($event: MouseEvent): void;
     readonly stepDown: EventEmitter<void>;
