@@ -45,5 +45,5 @@ global.DragEvent = class extends MouseEvent {
 } as typeof DragEvent;
 
 global.CSS = {
-    supports: (..._args: any[]) => false
+    supports: jest.fn().mockReturnValue(false) as typeof CSS.supports
 } as typeof CSS;

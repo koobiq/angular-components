@@ -37,7 +37,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
@@ -177,7 +176,7 @@ export interface KbqTagEvent {
 //
 // @public
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
-    constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, defaultOptions: KbqTagsDefaultOptions, trimDirective: KbqTrim, ngControl: NgControl, autocompleteTrigger?: KbqAutocompleteTrigger | undefined);
+    constructor(elementRef: ElementRef<HTMLInputElement>, defaultOptions: KbqTagsDefaultOptions, trimDirective: KbqTrim, ngControl: NgControl, autocompleteTrigger?: KbqAutocompleteTrigger | undefined);
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
     get addOnPaste(): boolean;
@@ -185,7 +184,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     // (undocumented)
     autocompleteTrigger?: KbqAutocompleteTrigger | undefined;
     blur(event: FocusEvent): void;
-    // (undocumented)
+    // @deprecated
     countOfSymbolsForUpdateWidth: number;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -216,12 +215,12 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     set tagList(value: KbqTagList);
     // (undocumented)
     triggerValidation(): void;
-    // (undocumented)
+    // @deprecated
     updateInputWidth(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, false, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagInput, [null, null, null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagInput, [null, null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; self: true; }]>;
 }
 
 // @public
