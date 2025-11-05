@@ -6,30 +6,36 @@ on:
       - main
   pull_request:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: ./.github/workflows/actions/setup-node
-
-      - name: Setup test environment
-        run: yarn run e2e:setup
-
-      - name: Run e2e tests
-        run: yarn run e2e:components
-
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/actions/setup-node
+      - run: yarn run e2e:setup
+      - id: run-e2e-tests
+        run: |
+          yarn run e2e:components
       - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+        if: ${{ always() }}
+        id: upload-report
         with:
           name: playwright-report
           path: playwright-report/
-          retention-days: 1
+          retention-days: 5
+      - uses: thollander/actions-comment-pull-request@v3
+        if: ${{ failure() && steps.run-e2e-tests.outcome == 'failure' }}
+        with:
+          message: |
+            ### 🚨 E2E tests failed
+
+            Review the [report](${{ steps.upload-report.outputs.artifact-url }}) for details.
+
+            ---
+
+            💡 Comment `/approve-snapshots` to approve snapshot changes.
