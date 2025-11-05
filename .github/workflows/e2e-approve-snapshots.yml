@@ -38,4 +38,4 @@ jobs:
       - uses: thollander/actions-comment-pull-request@v3
         if: ${{ steps.commit-and-push.outputs.changes_detected != 'true' }}
         with:
-          message: ⚠️ No snapshots changes detected.
+          message: ⚠️ No snapshot changes detected.
