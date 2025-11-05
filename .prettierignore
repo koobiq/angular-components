@@ -15,7 +15,7 @@
 /packages/docs-examples/example-module.ts
 
 # ignore nunjuck templates
-/tools/api-gen/rendering/templates/*.html
+/tools/api-gen/rendering/templates
 
 # ignores example markdown templates
 /packages/docs-examples/components/markdown/**/*.html
