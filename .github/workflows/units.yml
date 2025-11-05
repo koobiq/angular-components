@@ -1,0 +1,25 @@
+name: Unit tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/actions/setup-node
+      # Build styles which are required for karma/jasmine tests
+      - run: yarn run styles:build-all
+      - run: |
+          yarn run unit:cdk
+          yarn run unit:components
+          yarn run unit:angular-moment-adapter
+          yarn run unit:angular-luxon-adapter
+          yarn run unit:schematics
+          yarn run unit:koobiq-docs
+          yarn run unit:api-gen
+          yarn run unit:components-experimental
