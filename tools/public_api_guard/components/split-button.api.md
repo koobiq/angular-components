@@ -6,20 +6,25 @@
 
 import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
+import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { QueryList } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
 // @public (undocumented)
 export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
     constructor();
+    protected buttons: QueryList<KbqButton>;
     get color(): KbqComponentColors | ThemePalette | string;
     set color(value: KbqComponentColors | ThemePalette | string);
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     protected _disabled: boolean;
+    protected dropdownTrigger: KbqDropdownTrigger;
     get kbqStyle(): string;
     set kbqStyle(value: KbqButtonStyles | string);
     // (undocumented)
@@ -28,7 +33,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     ngAfterContentInit(): void;
     panelAutoWidth: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["dropdownTrigger", "buttons"], ["[kbq-button]", "[kbq-button]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["dropdownTrigger", "buttons"], ["[kbq-button]", "[kbq-button]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitButton, never>;
 }
