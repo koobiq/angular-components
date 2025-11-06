@@ -512,7 +512,11 @@ export class KbqTag
 
     /** @docs-private */
     handleClick(event: MouseEvent): void {
-        if (this.disabled || this.editing()) return;
+        if (this.disabled || this.editing()) {
+            event.preventDefault();
+
+            return;
+        }
 
         if (this.selectable && hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey')) {
             this.toggleSelected(true);
