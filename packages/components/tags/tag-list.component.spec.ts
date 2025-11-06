@@ -6,11 +6,9 @@ import {
     ChangeDetectionStrategy,
     Component,
     DebugElement,
-    ElementRef,
     NgZone,
     Provider,
     QueryList,
-    Signal,
     Type,
     ViewChild,
     ViewChildren,
@@ -32,6 +30,7 @@ import {
 } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
+import { KbqFocusMonitor } from '../core';
 import { KbqInputModule } from '../input/index';
 import { KbqTagList, KbqTagsModule } from './index';
 import { KbqTagInput, KbqTagInputEvent } from './tag-input';
@@ -67,6 +66,10 @@ const getFirstTagElement = (debugElement: DebugElement): HTMLElement => {
 
 const getSelectedTags = (debugElement: DebugElement): HTMLElement[] => {
     return getTagElements(debugElement).filter((tag) => tag.classList.contains('kbq-selected'));
+};
+
+const getTagInputElement = (debugElement: DebugElement): HTMLInputElement => {
+    return debugElement.query(By.directive(KbqTagInput)).nativeElement;
 };
 
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);
@@ -119,7 +122,7 @@ export class TestTagList {
 @Component({
     standalone: true,
     selector: 'test-form-field-tag-list',
-    imports: [KbqTagsModule, KbqFormFieldModule],
+    imports: [KbqTagsModule, KbqFormFieldModule, KbqFocusMonitor],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -129,7 +132,7 @@ export class TestTagList {
                     </kbq-tag>
                 }
 
-                <input [kbqTagInputFor]="tagList" />
+                <input kbqFocusMonitor [kbqTagInputFor]="tagList" />
             </kbq-tag-list>
         </kbq-form-field>
     `,
@@ -143,10 +146,6 @@ export class TestFormFieldTagList {
             selected: false
         }))
     );
-
-    readonly tagInputElementRef: Signal<ElementRef<HTMLInputElement>> = viewChild.required(KbqTagInput, {
-        read: ElementRef
-    });
 }
 
 describe(KbqTagList.name, () => {
@@ -168,10 +167,6 @@ describe(KbqTagList.name, () => {
 
             it('should add the `kbq-tag-list` class', () => {
                 expect(tagListNativeElement.classList).toContain('kbq-tag-list');
-            });
-
-            xit('height should be 24px', () => {
-                expect(tagListNativeElement.getBoundingClientRect().height).toBe(24);
             });
 
             it('should not have the aria-selected attribute when is not selectable', () => {
@@ -1326,7 +1321,7 @@ describe(KbqTagList.name, () => {
 
         expect(getSelectedTags(debugElement).length).toBe(2);
 
-        getFocusMonitor().focusVia(componentInstance.tagInputElementRef().nativeElement, 'mouse');
+        getFocusMonitor().focusVia(getTagInputElement(debugElement), 'mouse');
 
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
@@ -1380,6 +1375,63 @@ describe(KbqTagList.name, () => {
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
 
         expect(componentInstance.selectionChange).toHaveBeenCalledWith(expect.objectContaining({ selected: false }));
+    });
+
+    it('should focus tag input on container click', () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement } = fixture;
+        const input = getTagInputElement(debugElement);
+
+        expect(input.classList).not.toContain('cdk-focused');
+
+        getTagListElement(debugElement).click();
+
+        expect(input.classList).toContain('cdk-focused');
+    });
+
+    it('should focus tag input on tag click', async () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement } = fixture;
+        const input = getTagInputElement(debugElement);
+
+        expect(input.classList).not.toContain('cdk-focused');
+
+        getFirstTagElement(debugElement).click();
+
+        expect(input.classList).toContain('cdk-focused');
+    });
+
+    it('should NOT focus tag input on tag click with ctrl/meta/shift key', async () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement } = fixture;
+        const input = getTagInputElement(debugElement);
+        const tag = getFirstTagElement(debugElement);
+
+        expect(input.classList).not.toContain('cdk-focused');
+
+        tag.dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
+
+        expect(input.classList).not.toContain('cdk-focused');
+
+        tag.dispatchEvent(new MouseEvent('click', { metaKey: true }));
+
+        expect(input.classList).not.toContain('cdk-focused');
+
+        tag.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        expect(input.classList).not.toContain('cdk-focused');
+    });
+
+    it('should focus tag input on focus', () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement } = fixture;
+        const input = getTagInputElement(debugElement);
+
+        expect(input.classList).not.toContain('cdk-focused');
+
+        getTagListElement(debugElement).focus();
+
+        expect(input.classList).toContain('cdk-focused');
     });
 });
 

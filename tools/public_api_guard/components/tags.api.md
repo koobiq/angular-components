@@ -73,9 +73,9 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     protected readonly editing: WritableSignal<boolean>;
     readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
+    handleClick(event: MouseEvent): void;
     protected handleDblClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
-    handleMousedown(event: MouseEvent): void;
     hasFocus: boolean;
     readonly nativeElement: HTMLElement;
     // (undocumented)
@@ -286,7 +286,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: any) => void;
-    onContainerClick(event: MouseEvent): void;
+    onContainerClick(): void;
     onTouched: () => void;
     // @deprecated
     orientation: KbqOrientation;

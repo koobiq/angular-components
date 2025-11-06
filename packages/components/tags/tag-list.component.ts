@@ -580,35 +580,36 @@ export class KbqTagList
      *
      * @docs-private
      */
-    onContainerClick(event: MouseEvent) {
-        if (!this.originatesFromTag(event)) {
-            this.focus();
+    onContainerClick(): void {
+        this.focus();
+    }
+
+    /**
+     * Focuses the tag list. If there is a tag input, focuses that instead.
+     */
+    focus(): void {
+        if (this.disabled) return;
+
+        if (this.tagInput) {
+            this.focusInput();
+            this.stateChanges.next();
+
+            return;
+        }
+
+        if (this.tags.length > 0) {
+            this.keyManager.setFirstItemActive();
+            this.stateChanges.next();
+
+            return;
         }
     }
 
     /**
-     * Focuses the first non-disabled tag in this tag list, or the associated input when there
-     * are no eligible tags.
+     * Focuses the tag input inside the tag list.
+     *
+     * @docs-private
      */
-    focus(): void {
-        if (this.disabled) {
-            return;
-        }
-
-        // TODO: ARIA says this should focus the first `selected` tag if any are selected. (#DS-3740)
-        // Focus on first element if there's no tagInput inside tag-list
-        if (this.tagInput && this.tagInput.focused) {
-            // do nothing
-        } else if (this.tags.length > 0) {
-            this.keyManager.setFirstItemActive();
-            this.stateChanges.next();
-        } else {
-            this.focusInput();
-            this.stateChanges.next();
-        }
-    }
-
-    /** Attempt to focus an input if we have one. */
     focusInput() {
         if (this.tagInput) {
             this.tagInput.focus();
@@ -847,21 +848,6 @@ export class KbqTagList
         this.tagEditSubscription = this.tagEditChanges
             .pipe(filter(({ type }) => type === 'submit'))
             .subscribe(() => this.propagateTagsChanges());
-    }
-
-    /** Checks whether an event comes from inside a tag element. */
-    private originatesFromTag(event: Event): boolean {
-        let currentElement = event.target as HTMLElement | null;
-
-        while (currentElement && currentElement !== this.elementRef.nativeElement) {
-            if (this.isTagElement(currentElement)) {
-                return true;
-            }
-
-            currentElement = currentElement.parentElement;
-        }
-
-        return false;
     }
 
     /** Checks whether any of the tags is focused. */
