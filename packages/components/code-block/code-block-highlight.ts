@@ -56,6 +56,7 @@ export class KbqCodeBlockHighlight {
         let { language } = file;
 
         if (!language || !hljs.getLanguage(language)) {
+            // eslint-disable-next-line no-console
             console.warn(
                 `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
                 file
@@ -73,10 +74,12 @@ export class KbqCodeBlockHighlight {
         });
 
         if (illegal) {
+            // eslint-disable-next-line no-console
             console.warn('[KbqCodeBlock] File content contains illegal characters.', file);
         }
 
         if (relevance === 0) {
+            // eslint-disable-next-line no-console
             console.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 
@@ -137,6 +140,7 @@ export class KbqCodeBlockHighlight {
 
             addStyles();
         } else {
+            // eslint-disable-next-line no-console
             console.error('highlight.js not detected!');
         }
 
@@ -298,6 +302,7 @@ export class KbqCodeBlockHighlight {
                     }
                 }
             } catch (e) {
+                // eslint-disable-next-line no-console
                 console.error('LineNumbers error: ', e);
             }
         }

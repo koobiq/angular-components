@@ -41,6 +41,7 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T): 
         constructor(...args: any[]) {
             super(...args);
 
+            // eslint-disable-next-line no-console
             console.warn('mixinErrorState deprecated and will be deleted in next major release');
         }
 

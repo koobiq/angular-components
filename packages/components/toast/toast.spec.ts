@@ -168,7 +168,7 @@ describe('Standalone ToastService', () => {
 
         service = TestBed.inject(KbqToastService);
         service.timer = service.timer.pipe(
-            tap(() => console.log(NgZone.isInAngularZone())),
+            tap(() => {}),
             takeUntil(destroy$)
         );
 

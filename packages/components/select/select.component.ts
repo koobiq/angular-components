@@ -1273,6 +1273,7 @@ export class KbqSelect
             } catch (error) {
                 if (isDevMode()) {
                     // Notify developers of errors in their comparator.
+                    // eslint-disable-next-line no-console
                     console.warn(error);
                 }
 

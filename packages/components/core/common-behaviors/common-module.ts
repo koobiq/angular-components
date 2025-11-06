@@ -62,6 +62,7 @@ export class KbqCommonModule {
 
     private checkDoctypeIsDefined(): void {
         if (this.document && !this.document.doctype) {
+            // eslint-disable-next-line no-console
             console.warn(
                 'Current document does not have a doctype. This may cause ' +
                     'some koobiq components not to behave as expected.'

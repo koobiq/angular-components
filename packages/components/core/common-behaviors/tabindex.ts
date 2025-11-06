@@ -33,6 +33,7 @@ export function mixinTabIndex<T extends Constructor<CanDisable>>(base: T, defaul
         constructor(...args: any[]) {
             super(...args);
 
+            // eslint-disable-next-line no-console
             console.warn('mixinTabIndex deprecated and will be deleted in next major release');
         }
     };
