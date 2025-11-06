@@ -63,6 +63,17 @@ describe('KbqTitleDirective', () => {
 
             expect(tooltipInstance).toBeNull();
         }));
+
+        it('should open tooltip for overflown text with difference in pixel fraction', fakeAsync(() => {
+            dispatchMouseEvent(debugElement.query(By.css('#parent4')).nativeElement, 'mouseenter');
+
+            fixture.detectChanges();
+            flush();
+
+            const tooltipInstance = document.querySelector('.kbq-tooltip');
+
+            expect(tooltipInstance).not.toBeNull();
+        }));
     });
 
     describe('on html elements with complex structure and params', () => {
@@ -118,6 +129,13 @@ describe('KbqTitleDirective', () => {
         </div>
         <div class="parent" id="parent3" style="max-width: 600px;" kbq-title>
             <span>{{ longValue }}</span>
+        </div>
+        <div
+            id="parent4"
+            style="width: 121px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+            kbq-title
+        >
+            <span #kbqTitleText>Protocol: udp/nbns</span>
         </div>
     `
 })
