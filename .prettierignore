@@ -1,12 +1,8 @@
-.angular/
-.nx/
-node_modules/
-.yarn/
-/dist
-/tmp
-/temp
+# ignore handlebars templates
+**/*.hbs
 
-CHANGELOG.md
+# ignore changelog files
+**/CHANGELOG.md
 
 # ignore build tokens
 /apps/docs/src/styles/koobiq/default-theme/
