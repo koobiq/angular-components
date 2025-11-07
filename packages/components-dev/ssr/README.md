@@ -6,7 +6,7 @@ Based on [Angular SSR example](https://github.com/angular/angular/tree/18.2.14/a
 
 ## Development
 
-Make sure you have the [correct version](.nvmrc) of Node.js installed (we recommend use [nvm](https://github.com/nvm-sh/nvm)).
+Make sure you have the [correct version](.nvmrc) of Node.js installed (we recommend using [nvm](https://github.com/nvm-sh/nvm)).
 
 ```bash
 # Setup Node.js
