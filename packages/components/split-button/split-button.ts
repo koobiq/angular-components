@@ -15,19 +15,23 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 
 @Component({
     standalone: true,
-    selector: 'kbq-split-button',
+    selector: 'kbq-split-button, [kbq-split-button]',
     templateUrl: './split-button.html',
     styleUrls: ['./split-button.scss'],
     host: {
-        class: 'kbq-split-button'
+        class: 'kbq-split-button',
+        '[class.kbq-split-button_styles-for-nested]': 'buttons.length > 1'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
     private nativeElement = kbqInjectNativeElement();
-    @ContentChildren(KbqButton) private buttons: QueryList<KbqButton>;
-    @ContentChild(KbqDropdownTrigger) private dropdownTrigger: KbqDropdownTrigger;
+
+    /** @docs-private */
+    @ContentChildren(KbqButton) protected buttons: QueryList<KbqButton>;
+    /** @docs-private */
+    @ContentChild(KbqDropdownTrigger) protected dropdownTrigger: KbqDropdownTrigger;
 
     /** Sets the width of the dropdown to the width of the trigger. Default is false */
     @Input() panelAutoWidth: boolean = false;
