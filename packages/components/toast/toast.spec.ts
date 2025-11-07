@@ -3,7 +3,7 @@ import { Component, NgZone } from '@angular/core';
 import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { KbqToastModule } from './toast.module';
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
@@ -167,10 +167,7 @@ describe('Standalone ToastService', () => {
         const destroy$ = new Subject<void>();
 
         service = TestBed.inject(KbqToastService);
-        service.timer = service.timer.pipe(
-            tap(() => {}),
-            takeUntil(destroy$)
-        );
+        service.timer = service.timer.pipe(takeUntil(destroy$));
 
         service.show(MOCK_TOAST_DATA, 3000);
         expect(service.toasts.length).toEqual(1);
