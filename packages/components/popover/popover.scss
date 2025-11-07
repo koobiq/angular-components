@@ -6,7 +6,9 @@
 @use './popover-theme' as *;
 
 $arrow-size: 12px;
-$trigger-margin: 9px;
+
+$arrow-offset: calc(($arrow-size - 1px) / -2);
+$arrow-padding: 24px;
 
 .kbq-popover {
     position: relative;
@@ -129,9 +131,6 @@ $trigger-margin: 9px;
 
     transform: rotate(45deg);
 }
-
-$arrow-offset: calc(($arrow-size - 1px) / -2);
-$arrow-padding: calc(18px - $trigger-margin);
 
 @include pop-up.popup-arrow-positions(kbq-popover, $arrow-offset, $arrow-padding);
 
