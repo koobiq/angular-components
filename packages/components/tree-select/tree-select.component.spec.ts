@@ -3110,7 +3110,6 @@ describe(KbqTreeSelect.name, () => {
                 0
             );
             fixture.detectChanges();
-            console.log(componentInstance.select.options);
 
             tick();
 

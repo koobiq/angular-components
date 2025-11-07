@@ -27,6 +27,7 @@ export function mixinDisabled<T extends Constructor<{}>>(base: T): CanDisableCto
         constructor(...args: any[]) {
             super(...args);
 
+            // eslint-disable-next-line no-console
             console.warn('mixinDisabled deprecated and will be deleted in next major release');
         }
     };

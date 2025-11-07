@@ -2812,7 +2812,6 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             tick();
-            console.log(componentInstance.select.options.length);
 
             trigger.click();
             fixture.detectChanges();

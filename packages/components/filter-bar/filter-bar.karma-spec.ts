@@ -1083,8 +1083,6 @@ class BaseFunctions {
     }
 
     onDeleteFilter(filter: KbqFilter | null) {
-        console.log('filter to delete: ', filter);
-
         this.filters.splice(
             this.filters.findIndex(({ name }) => name === filter?.name),
             1

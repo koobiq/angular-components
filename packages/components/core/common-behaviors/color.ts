@@ -75,6 +75,7 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
 
             this.color = defaultColor;
 
+            // eslint-disable-next-line no-console
             console.warn('mixinColor deprecated and will be deleted in next major release');
         }
     };
