@@ -72,6 +72,10 @@
 
         &.kbq-disabled {
             color: var(--kbq-states-foreground-disabled);
+
+            .kbq-hint .kbq-hint__text {
+                color: inherit;
+            }
         }
 
         .kbq-toggle-bar {
