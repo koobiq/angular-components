@@ -1,14 +1,14 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
-export default <ApplicationConfig>{
+export default {
     providers: [
         provideRouter([]),
         provideHttpClient(withFetch()),
-        provideClientHydration(),
+        provideClientHydration(withEventReplay()),
         provideAnimations()
     ]
-};
+} satisfies ApplicationConfig;
