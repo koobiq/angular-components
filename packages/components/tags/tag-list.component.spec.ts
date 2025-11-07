@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { A } from '@angular/cdk/keycodes';
 import {
@@ -30,7 +30,6 @@ import {
 } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-import { KbqFocusMonitor } from '../core';
 import { KbqInputModule } from '../input/index';
 import { KbqTagList, KbqTagsModule } from './index';
 import { KbqTagInput, KbqTagInputEvent } from './tag-input';
@@ -122,7 +121,7 @@ export class TestTagList {
 @Component({
     standalone: true,
     selector: 'test-form-field-tag-list',
-    imports: [KbqTagsModule, KbqFormFieldModule, KbqFocusMonitor],
+    imports: [KbqTagsModule, KbqFormFieldModule, CdkMonitorFocus],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -132,7 +131,7 @@ export class TestTagList {
                     </kbq-tag>
                 }
 
-                <input kbqFocusMonitor [kbqTagInputFor]="tagList" />
+                <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
             </kbq-tag-list>
         </kbq-form-field>
     `,
