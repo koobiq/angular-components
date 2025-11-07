@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import {
     KbqTagEvent,
     KbqTagInput,
@@ -19,7 +20,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
 @Component({
     standalone: true,
     selector: 'tag-input-draggable-example',
-    imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule],
+    imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>

@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/input';
 
 .kbq-tag-list {
     display: flex;
@@ -17,22 +18,24 @@
 }
 
 .kbq-tag-input {
-    border: none;
-    outline: none;
-    background: transparent;
-
-    text-overflow: ellipsis;
-
-    min-height: unset;
+    @include input.kbq-reset-input();
 
     padding-top: var(--kbq-tag-size-padding-vertical);
     padding-bottom: var(--kbq-tag-size-padding-vertical);
-    padding-left: 4px;
+    padding-left: var(--kbq-size-xxs);
     padding-right: unset;
 
+    min-width: var(--kbq-size-3xl);
+    max-width: 100%;
+    flex-grow: 1;
+
     &.kbq-input {
-        padding: unset;
-        min-height: unset;
+        --kbq-input-size-padding-vertical: 0;
+        --kbq-form-field-size-border-radius: 0;
+
+        padding-left: var(--kbq-size-xxs);
+        min-height: unset !important;
+        width: auto;
     }
 }
 
@@ -48,10 +51,6 @@
     gap: var(--kbq-tag-list-size-content-gap);
 
     .kbq-tag-input {
-        max-width: 100%;
-
-        flex: 1 1 auto;
-
         // indicating tag list is empty
         &:first-child {
             padding-left: var(--kbq-size-s);
