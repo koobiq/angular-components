@@ -106,6 +106,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     set focused(value: boolean);
     getPanelTheme(): string;
     // (undocumented)
+    handleClick(): void;
+    // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     get hasBackdrop(): boolean;
@@ -138,8 +140,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     static ngAcceptInputType_multiple: unknown;
     // (undocumented)
     static ngAcceptInputType_panelMinWidth: unknown;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -179,6 +179,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
         [key: string]: any;
     };
     panelDoneAnimatingStream: Subject<string>;
+    // (undocumented)
+    panelKeydownHandler(event: KeyboardEvent): any;
     panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
     // (undocumented)
     get panelOpen(): boolean;
@@ -215,8 +217,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     sortComparator: (a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number;
     readonly stateChanges: Subject<void>;
     // (undocumented)
-    get tabIndex(): number;
-    set tabIndex(value: number);
+    get tabIndex(): number | null;
+    set tabIndex(value: number | null);
     // (undocumented)
     tags: QueryList<KbqTag>;
     // (undocumented)
@@ -226,6 +228,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     tree: KbqTreeSelection;
     trigger: ElementRef;
     triggerFontSize: number;
+    // (undocumented)
+    triggerKeydownHandler(event: KeyboardEvent): void;
     triggerRect: DOMRect;
     // (undocumented)
     get triggerValue(): string;

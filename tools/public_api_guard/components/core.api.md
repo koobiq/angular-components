@@ -2754,7 +2754,11 @@ export class KbqSelectFooter {
 // @public (undocumented)
 export class KbqSelectMatcher {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectMatcher, "kbq-select-matcher, [kbq-select-matcher]", never, {}, {}, never, never, true, never>;
+    static ngAcceptInputType_useDefaultHandlers: unknown;
+    // (undocumented)
+    useDefaultHandlers: boolean;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectMatcher, "kbq-select-matcher, [kbq-select-matcher]", never, { "useDefaultHandlers": { "alias": "useDefaultHandlers"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectMatcher, never>;
 }
