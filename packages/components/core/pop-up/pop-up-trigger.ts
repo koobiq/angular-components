@@ -112,6 +112,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     triggerName: string;
 
+    overlayRef: OverlayRef | null;
+
+    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
+
     abstract disabled: boolean;
     abstract arrow: boolean;
     abstract trigger: string;
@@ -133,7 +137,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected _disabled: boolean;
     protected _customClass: string;
 
-    protected overlayRef: OverlayRef | null;
     protected portal: ComponentPortal<T>;
     protected instance: any | null;
 

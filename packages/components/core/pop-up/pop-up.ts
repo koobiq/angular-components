@@ -11,7 +11,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { PopUpVisibility } from './constants';
+import { PopUpPlacements, PopUpVisibility } from './constants';
 import { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Directive({
@@ -161,5 +161,21 @@ export abstract class KbqPopUp implements OnDestroy {
 
     protected addEventListenerForHide() {
         this.elementRef.nativeElement.addEventListener('mouseleave', () => this.hide(0));
+    }
+
+    protected setStickPosition() {
+        const oppositeSide = {
+            [PopUpPlacements.Top]: PopUpPlacements.Bottom,
+            [PopUpPlacements.Bottom]: PopUpPlacements.Top,
+            [PopUpPlacements.Right]: PopUpPlacements.Left,
+            [PopUpPlacements.Left]: PopUpPlacements.Right
+        }[this.trigger.stickToWindow];
+
+        if (!this.trigger.stickToWindow || !oppositeSide) return;
+
+        this.arrow = false;
+
+        this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, this.trigger.stickToWindow, 0);
+        this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, oppositeSide, 'unset');
     }
 }
