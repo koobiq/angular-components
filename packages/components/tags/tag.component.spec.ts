@@ -255,7 +255,7 @@ describe(KbqTag.name, () => {
                 tagInstance.disabled = true;
                 fixture.detectChanges();
 
-                const event = dispatchFakeEvent(tagNativeElement, 'mousedown');
+                const event = dispatchFakeEvent(tagNativeElement, 'click');
 
                 fixture.detectChanges();
 
@@ -558,7 +558,7 @@ describe(KbqTag.name, () => {
         const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
-        tag.dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
+        tag.dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
 
         expect(isTagSelected(debugElement)).toBeTruthy();
     });
@@ -635,7 +635,7 @@ describe(KbqTag.name, () => {
         const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
-        tag.dispatchEvent(new MouseEvent('mousedown', { metaKey: true }));
+        tag.dispatchEvent(new MouseEvent('click', { metaKey: true }));
 
         expect(isTagSelected(debugElement)).toBeTruthy();
     });
@@ -644,7 +644,7 @@ describe(KbqTag.name, () => {
         const { debugElement } = createComponent(TestTag);
         const tag = getTagElement(debugElement);
 
-        tag.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true }));
+        tag.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
         expect(isTagSelected(debugElement)).toBeTruthy();
     });
@@ -657,7 +657,7 @@ describe(KbqTag.name, () => {
         componentInstance.selectable.set(false);
         fixture.detectChanges();
 
-        tag.dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
+        tag.dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
 
         expect(isTagSelected(debugElement)).toBeFalsy();
     });
@@ -665,7 +665,7 @@ describe(KbqTag.name, () => {
     it('should emit KbqTagSelectionChange event on Ctrl + click', () => {
         const { debugElement, componentInstance } = createComponent(TestTag);
 
-        getTagElement(debugElement).dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
+        getTagElement(debugElement).dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
 
         expect(componentInstance.selectionChange).toHaveBeenCalledWith(
             expect.objectContaining({ selected: true, isUserInput: true })

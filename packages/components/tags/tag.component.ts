@@ -201,7 +201,7 @@ export class KbqTagEditInput {
         '[class.kbq-tag_draggable]': 'draggable',
 
         '(dblclick)': 'handleDblClick($event)',
-        '(mousedown)': 'handleMousedown($event)',
+        '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -511,12 +511,21 @@ export class KbqTag
     }
 
     /** @docs-private */
-    handleMousedown(event: MouseEvent): void {
-        if (this.disabled || (!this.selectable && !this.editable) || this.editing()) return event.preventDefault();
+    handleClick(event: MouseEvent): void {
+        if (this.disabled || this.editing()) {
+            event.preventDefault();
 
-        if (hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey') && this.selectable) this.toggleSelected(true);
+            return;
+        }
 
-        event.stopPropagation();
+        if (this.selectable && hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey')) {
+            this.toggleSelected(true);
+
+            // We should stop event propagation to prevent the tag list from handling the click event.
+            event.stopPropagation();
+
+            return;
+        }
     }
 
     /** @docs-private */
