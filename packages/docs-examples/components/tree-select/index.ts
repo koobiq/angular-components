@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { TreeSelectChildSelectionOverviewExample } from './tree-select-child-selection-overview/tree-select-child-selection-overview-example';
+import { TreeSelectCustomMatcherWithInputExample } from './tree-select-custom-matcher-with-input/tree-select-custom-matcher-with-input-example';
 import { TreeSelectCustomMatcherExample } from './tree-select-custom-matcher/tree-select-custom-matcher-example';
 import { TreeSelectCustomTriggerExample } from './tree-select-custom-trigger/tree-select-custom-trigger-example';
 import { TreeSelectFooterOverviewExample } from './tree-select-footer-overview/tree-select-footer-overview-example';
@@ -12,6 +13,7 @@ import { TreeSelectWithMultilineMatcherExample } from './tree-select-with-multil
 export {
     TreeSelectChildSelectionOverviewExample,
     TreeSelectCustomMatcherExample,
+    TreeSelectCustomMatcherWithInputExample,
     TreeSelectCustomTriggerExample,
     TreeSelectFooterOverviewExample,
     TreeSelectLazyloadExample,
@@ -30,7 +32,8 @@ const EXAMPLES = [
     TreeSelectFooterOverviewExample,
     TreeSelectCustomTriggerExample,
     TreeSelectCustomMatcherExample,
-    TreeSelectWithMultilineMatcherExample
+    TreeSelectWithMultilineMatcherExample,
+    TreeSelectCustomMatcherWithInputExample
 ];
 
 @NgModule({
