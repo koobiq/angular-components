@@ -2502,6 +2502,8 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     protected readonly renderer: Renderer2;
     // (undocumented)
+    protected setStickPosition(): void;
+    // (undocumented)
     show(delay: number): void;
     // (undocumented)
     trigger: KbqPopUpTrigger<unknown>;
@@ -2533,6 +2535,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     abstract closingActions(): Observable<any>;
     // (undocumented)
     protected closingActionsSubscription: Subscription;
+    // (undocumented)
+    container: HTMLElement;
     // (undocumented)
     abstract content: string | TemplateRef<any>;
     // (undocumented)
@@ -2602,7 +2606,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected abstract overlayConfig: OverlayConfig;
     // (undocumented)
-    protected overlayRef: OverlayRef | null;
+    overlayRef: OverlayRef | null;
     // (undocumented)
     protected placement: PopUpPlacements;
     // (undocumented)
@@ -2624,6 +2628,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected abstract scrollStrategy: () => ScrollStrategy;
     // (undocumented)
     show(delay?: number): void;
+    // (undocumented)
+    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
     // (undocumented)
     protected strategy: FlexibleConnectedPositionStrategy;
     // (undocumented)

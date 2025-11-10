@@ -139,16 +139,19 @@
                 </kbq-form-field>
             </div>
 
-            <div
-                class="kbq-form__row"
-                [style.display]="selectedElement === ELEMENTS.CONFIRM_BUTTON ? 'initial' : 'none'"
-            >
-                <label for="layout" class="kbq-form__label">Set confirm button text</label>
+            <div class="kbq-form__row">
+                <label for="layout" class="kbq-form__label">Stick to window</label>
 
                 <kbq-form-field id="layout" class="kbq-form__control">
-                    <input kbqInput [(ngModel)]="confirmButtonText" />
+                    <kbq-select [placeholder]="'Select layout'" [(value)]="stickToWindow">
+                        <kbq-option [value]="popUpPlacements.Top">{{ popUpPlacements.Top }}</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Right">{{ popUpPlacements.Right }}</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Bottom">{{ popUpPlacements.Bottom }}</kbq-option>
+                        <kbq-option [value]="popUpPlacements.Left">{{ popUpPlacements.Left }}</kbq-option>
+                    </kbq-select>
                 </kbq-form-field>
             </div>
+            <br />
         </div>
         <div class="flex dev-left-padding layout-align-center-center">
             <label for="trigger" class="flex kbq-form__label">Choose kbqPlacement</label>
@@ -309,6 +312,7 @@
                         [kbqPopoverPlacementPriority]="multipleSelected"
                         [kbqPopoverSize]="selectedSize"
                         [kbqTrigger]="selectedTrigger"
+                        [kbqPopoverStickToWindow]="stickToWindow"
                         (kbqPopoverPlacementChange)="onStrategyPlacementChange($event)"
                         (kbqPopoverVisibleChange)="onPopoverVisibleChange($event)"
                     >
