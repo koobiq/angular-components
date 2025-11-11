@@ -16,6 +16,7 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
@@ -91,7 +92,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     // (undocumented)
     ngOnDestroy(): void;
     readonly onBlur: Subject<KbqTagEvent>;
-    readonly onFocus: Subject<KbqTagEvent>;
+    readonly onFocus: Subject<KbqTagFocusEvent>;
     preventEditSubmit: boolean;
     get removable(): boolean;
     set removable(value: boolean);
@@ -164,11 +165,15 @@ export class KbqTagEditSubmit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagEditSubmit, never>;
 }
 
-// @public (undocumented)
-export interface KbqTagEvent {
-    // (undocumented)
+// @public
+export type KbqTagEvent = {
     tag: KbqTag;
-}
+};
+
+// @public
+export type KbqTagFocusEvent = KbqTagEvent & {
+    origin: FocusOrigin;
+};
 
 // Warning: (ae-forgotten-export) The symbol "KbqTagTextControl" needs to be exported by the entry point index.d.ts
 //
@@ -317,7 +322,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     // @deprecated
     tagChanges: EventEmitter<any>;
     get tagEditChanges(): Observable<KbqTagEditChange>;
-    get tagFocusChanges(): Observable<KbqTagEvent>;
+    get tagFocusChanges(): Observable<KbqTagFocusEvent>;
     get tagRemoveChanges(): Observable<KbqTagEvent>;
     tags: QueryList<KbqTag>;
     get tagSelectionChanges(): Observable<KbqTagSelectionChange>;

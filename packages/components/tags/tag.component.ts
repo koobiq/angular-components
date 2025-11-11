@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
@@ -41,9 +41,12 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { KbqTagList } from './tag-list.component';
 
-export interface KbqTagEvent {
+/**
+ * Event object emitted by KbqTag.
+ */
+export type KbqTagEvent = {
     tag: KbqTag;
-}
+};
 
 /**
  * Event object emitted by KbqTag when the tag is edited.
@@ -64,6 +67,13 @@ export class KbqTagSelectionChange {
         public isUserInput = false
     ) {}
 }
+
+/**
+ * Event object emitted when the KbqTag is focused.
+ */
+export type KbqTagFocusEvent = KbqTagEvent & {
+    origin: FocusOrigin;
+};
 
 const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
 
@@ -227,7 +237,7 @@ export class KbqTag
      *
      * @docs-private
      */
-    readonly onFocus = new Subject<KbqTagEvent>();
+    readonly onFocus = new Subject<KbqTagFocusEvent>();
 
     /**
      * Emits when the tag is blurred.
@@ -545,6 +555,7 @@ export class KbqTag
                 break;
             }
             case SPACE: {
+                this.focusMonitor.focusVia(this.elementRef, 'keyboard');
                 this.toggleSelected(true);
 
                 // Always prevent space from scrolling the page since the list has focus
@@ -652,7 +663,7 @@ export class KbqTag
                 this.hasFocus = hasFocus;
 
                 if (this.hasFocus) {
-                    this.onFocus.next({ tag: this });
+                    this.onFocus.next({ tag: this, origin });
                     if (!this.tagList) this.select();
                 } else {
                     this.onBlur.next({ tag: this });

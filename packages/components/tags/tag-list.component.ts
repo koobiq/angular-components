@@ -130,7 +130,7 @@ export class KbqTagList
      *
      * @docs-private
      */
-    get tagFocusChanges(): Observable<KbqTagEvent> {
+    get tagFocusChanges(): Observable<KbqTagFocusEvent> {
         return merge(...this.tags.map((tag) => tag.onFocus));
     }
 
@@ -813,10 +813,11 @@ export class KbqTagList
 
     /** Listens to user-generated selection events on each tag. */
     private listenToTagsFocus(): void {
-        this.tagFocusSubscription = this.tagFocusChanges.subscribe((event) => {
-            const tagIndex: number = this.tags.toArray().indexOf(event.tag);
+        this.tagFocusSubscription = this.tagFocusChanges.subscribe(({ tag, origin }) => {
+            const tagIndex = this.tags.toArray().indexOf(tag);
 
             if (this.isValidIndex(tagIndex)) {
+                this.keyManager.setFocusOrigin(origin);
                 this.keyManager.updateActiveItem(tagIndex);
             }
 

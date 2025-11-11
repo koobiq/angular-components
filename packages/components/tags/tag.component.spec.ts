@@ -838,6 +838,17 @@ describe(KbqTag.name, () => {
 
         expect(componentInstance.selectionChange).toHaveBeenCalledWith(expect.objectContaining({ selected: false }));
     });
+
+    it('should focus tag on SPACE keydown', () => {
+        const { debugElement } = createComponent(TestTag);
+        const tag = getTagElement(debugElement);
+
+        expect(isTagFocused(debugElement)).toBeFalsy();
+
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        expect(isTagFocused(debugElement)).toBeTruthy();
+    });
 });
 
 @Component({
