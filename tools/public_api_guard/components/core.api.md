@@ -727,6 +727,9 @@ export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<Has
 export function isBoolean(value: unknown): value is boolean;
 
 // @public
+export const isFunction: (value: unknown) => value is Function;
+
+// @public
 export function isMac(): boolean;
 
 // @public
@@ -2287,7 +2290,7 @@ export class KbqOptgroup {
 
 // @public
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
-    constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: KbqOptionParentComponent, group: KbqOptgroup);
+    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: KbqOptionParentComponent, group: KbqOptgroup);
     get active(): boolean;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
@@ -2296,7 +2299,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     set disabled(value: any);
     // (undocumented)
     focus(): void;
-    // (undocumented)
     getHeight(): number;
     // (undocumented)
     getHostElement(): HTMLElement;

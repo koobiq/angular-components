@@ -100,7 +100,6 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     dropdownTrigger: KbqDropdownTrigger;
     // (undocumented)
     focus(): void;
-    // (undocumented)
     getHeight(): number;
     // (undocumented)
     getHostElement(): HTMLElement;
@@ -195,7 +194,6 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     focus(): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
-    // (undocumented)
     getHeight(): number;
     // (undocumented)
     getSelectedOptionValues(): string[];
