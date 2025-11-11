@@ -1080,6 +1080,53 @@ class SelectWithCustomTrigger {
 }
 
 @Component({
+    selector: 'select-with-custom-matcher',
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select #select="kbqTreeSelect" placeholder="Food" [formControl]="control">
+                <kbq-select-matcher class="custom-matcher" [useDefaultHandlers]="useDefaultHandlers">
+                    {{ select.triggerValue?.split('').reverse().join('') }}
+                </kbq-select-matcher>
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithCustomMatcher {
+    @ViewChild('select') select: KbqTreeSelect;
+
+    useDefaultHandlers: boolean = true;
+
+    control = new UntypedFormControl();
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+        // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
+        // file node as children.
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
+    }
+
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
+}
+
+@Component({
     selector: 'ng-model-compare-with',
     template: `
         <kbq-form-field>
@@ -3546,6 +3593,83 @@ describe(KbqTreeSelect.name, () => {
             const label = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
 
             expect(label.textContent).toContain('sdaolnwoD');
+        }));
+    });
+
+    describe('with custom matcher', () => {
+        beforeEach(() => {
+            configureKbqTreeSelectTestingModule([SelectWithCustomMatcher]);
+        });
+
+        it('should allow the user to customize matcher', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectWithCustomMatcher);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.control.setValue('Downloads');
+            fixture.detectChanges();
+            tick(1);
+            flush();
+
+            const label = fixture.debugElement.query(By.css('.custom-matcher')).nativeElement;
+
+            expect(label.textContent).toContain('sdaolnwoD');
+        }));
+
+        it('should allow to disable handlers for click with custom matcher', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectWithCustomMatcher);
+
+            fixture.autoDetectChanges();
+
+            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const toggleSpyFn = jest.spyOn(fixture.componentInstance.select, 'toggle');
+
+            expect(toggleSpyFn).toHaveBeenCalledTimes(0);
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(toggleSpyFn).toHaveBeenCalledTimes(1);
+
+            fixture.componentInstance.useDefaultHandlers = false;
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(toggleSpyFn).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should allow to disable handlers for keydown with custom matcher', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectWithCustomMatcher);
+
+            fixture.autoDetectChanges();
+
+            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
+            const triggerKeydownHandlerSpyFn = jest.spyOn(fixture.componentInstance.select, 'triggerKeydownHandler');
+            const panelKeydownHandlerSpyFn = jest.spyOn(fixture.componentInstance.select, 'panelKeydownHandler');
+
+            expect(triggerKeydownHandlerSpyFn).toHaveBeenCalledTimes(0);
+            expect(panelKeydownHandlerSpyFn).toHaveBeenCalledTimes(0);
+
+            dispatchKeyboardEvent(trigger, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(triggerKeydownHandlerSpyFn).toHaveBeenCalledTimes(1);
+            expect(panelKeydownHandlerSpyFn).toHaveBeenCalledTimes(0);
+
+            fixture.componentInstance.useDefaultHandlers = false;
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(trigger, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(triggerKeydownHandlerSpyFn).toHaveBeenCalledTimes(1);
+            expect(panelKeydownHandlerSpyFn).toHaveBeenCalledTimes(0);
         }));
     });
 
