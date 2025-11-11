@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 
 /**
@@ -9,10 +10,13 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     standalone: true,
     selector: 'search-expandable-overview-example',
     imports: [
-        KbqSearchExpandableModule
+        KbqSearchExpandableModule,
+        FormsModule
     ],
     template: `
-        <kbq-search-expandable />
+        <kbq-search-expandable [(ngModel)]="search" />
     `
 })
-export class SearchExpandableOverviewExample {}
+export class SearchExpandableOverviewExample {
+    search: string;
+}
