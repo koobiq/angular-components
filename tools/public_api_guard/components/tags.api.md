@@ -44,11 +44,6 @@ import { WritableSignal } from '@angular/core';
 // @public
 export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
-// @public
-export type KbqDragData = {
-    tag: KbqTag;
-};
-
 // @public (undocumented)
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef);
@@ -136,6 +131,9 @@ export class KbqTagAvatar {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagAvatar, never>;
 }
+
+// @public
+export type KbqTagDragData = KbqTagEvent;
 
 // @public
 export class KbqTagEditChange {
