@@ -25,7 +25,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
 import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
@@ -79,6 +79,7 @@ export class KbqFilters implements OnInit {
     @ViewChild(KbqDropdownTrigger) private dropdown: KbqDropdownTrigger;
     @ViewChild('search') private search: ElementRef;
     @ViewChild('newFilterName') private newFilterName: ElementRef;
+    @ViewChild('saveFilterButton') private saveFilterButton: KbqButton;
 
     /** control for search filter */
     searchControl: UntypedFormControl = new UntypedFormControl();
@@ -216,7 +217,7 @@ export class KbqFilters implements OnInit {
     preparePopover() {
         this.filterName = new FormControl<string>(this.filter?.name || '', Validators.required);
 
-        this.filterName.valueChanges.subscribe(() => (this.showFilterSavingError = false));
+        this.filterName.valueChanges.pipe(distinctUntilChanged()).subscribe(() => (this.showFilterSavingError = false));
 
         this.popover.show();
 
@@ -298,6 +299,8 @@ export class KbqFilters implements OnInit {
         this.popover.preventClose = false;
 
         this.showError(error);
+        this.filterName.enable();
+        setTimeout(() => this.saveFilterButton.focus());
 
         this.changeDetectorRef.markForCheck();
     }

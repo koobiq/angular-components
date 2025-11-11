@@ -138,6 +138,7 @@ export class KbqTreeSelection
 
     userTabIndex: number | null = null;
 
+    // this parameter used when select has a search field
     optionShouldHoldFocusOnBlur: boolean = false;
 
     @ViewChild(KbqTreeNodeOutlet, { static: true }) declare nodeOutlet: KbqTreeNodeOutlet;

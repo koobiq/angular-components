@@ -1,5 +1,5 @@
 import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -17,6 +17,9 @@ import {
     ruRUFormattersData
 } from '@koobiq/components/core';
 import {
+    KBQ_STEPPER_INITIAL_TIMEOUT,
+    KBQ_STEPPER_INTERVAL_DELAY,
+    KbqFormField,
     KbqFormFieldModule,
     getKbqFormFieldYouCanNotUseCleanerInNumberInputError
 } from '@koobiq/components/form-field';
@@ -50,12 +53,33 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     template: `
         <kbq-form-field>
             <input kbqNumberInput [(ngModel)]="value" />
-            <kbq-stepper />
+            <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
         </kbq-form-field>
     `
 })
 class KbqNumberInputTestComponent {
     value: number | null = null;
+
+    stepUp = jest.fn().mockImplementation(() => true);
+    stepDown = jest.fn().mockImplementation(() => false);
+}
+
+@Component({
+    template: `
+        @if (isVisible) {
+            <kbq-form-field>
+                <input kbqNumberInput [(ngModel)]="value" />
+                <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
+            </kbq-form-field>
+        }
+    `
+})
+class TestNumberInputConditional {
+    isVisible = true;
+    value: number | null = null;
+
+    stepUp = jest.fn().mockImplementation(() => true);
+    stepDown = jest.fn().mockImplementation(() => false);
 }
 
 @Component({
@@ -220,6 +244,138 @@ describe('KbqNumberInput', () => {
 
         expect(stepper).toBeNull();
     }));
+
+    describe('with long press on stepper', () => {
+        const initialValue = 0;
+
+        it('should not have timers assigned on init', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            jest.spyOn(global, 'setTimeout');
+
+            fixture.detectChanges();
+
+            expect(global.setTimeout).not.toHaveBeenCalled();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp] = stepper.queryAll(By.css('.kbq-icon'));
+
+            dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
+            fixture.detectChanges();
+
+            expect(global.setTimeout).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should emit once before initial delay', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            fixture.componentInstance.value = initialValue;
+            fixture.detectChanges();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            const testLongPressFor = (icon, emitter) => {
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+
+                fixture.detectChanges();
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT - 1);
+
+                expect(emitter).toHaveBeenCalledTimes(1);
+
+                dispatchFakeEvent(document, 'mouseup');
+            };
+
+            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        }));
+
+        it('should emit after initial delay + interval', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            fixture.componentInstance.value = initialValue;
+            fixture.detectChanges();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            const testLongPressFor = (icon, emitter) => {
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+                fixture.detectChanges();
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
+
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
+                expect(emitter).toHaveBeenCalledTimes(2);
+
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
+                expect(emitter).toHaveBeenCalledTimes(3);
+
+                dispatchFakeEvent(document, 'mouseup');
+            };
+
+            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        }));
+
+        it('should stop emitting on mouseUp', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputTestComponent);
+
+            fixture.componentInstance.value = initialValue;
+            fixture.detectChanges();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            const testLongPressFor = (icon, emitter) => {
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+                fixture.detectChanges();
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
+
+                dispatchFakeEvent(document, 'mouseup');
+                fixture.detectChanges();
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
+
+                expect(emitter).toHaveBeenCalledTimes(1);
+            };
+
+            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        }));
+
+        it('should stop emitting on component destroy', fakeAsync(() => {
+            const fixture = createComponent(TestNumberInputConditional);
+            const { debugElement } = fixture;
+
+            fixture.detectChanges();
+
+            expect(debugElement.query(By.directive(KbqFormField)).nativeElement).toBeTruthy();
+
+            const testLongPressFor = (queryIconFn, emitter: jest.Mock<any, any, any>) => {
+                const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+                const icon = queryIconFn(stepper.queryAll(By.css('.kbq-icon')));
+
+                dispatchFakeEvent(icon.nativeElement, 'mousedown');
+                fixture.detectChanges();
+                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
+
+                fixture.componentInstance.isVisible = false;
+                fixture.detectChanges();
+                // this call is skipped
+                tick(KBQ_STEPPER_INTERVAL_DELAY);
+
+                expect(debugElement.query(By.directive(KbqFormField))).toBeFalsy();
+                // only immediate call counts
+                expect(emitter).toHaveBeenCalledTimes(1);
+            };
+
+            testLongPressFor((icons) => icons[0], fixture.componentInstance.stepUp);
+            // return back visible state
+            fixture.componentInstance.isVisible = true;
+            fixture.detectChanges();
+
+            testLongPressFor((icons) => icons[1], fixture.componentInstance.stepDown);
+        }));
+    });
 
     describe('formControl', () => {
         it('should step up', fakeAsync(() => {

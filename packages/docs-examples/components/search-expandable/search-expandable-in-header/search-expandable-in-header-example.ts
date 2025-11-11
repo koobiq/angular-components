@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 
 /**
@@ -9,13 +10,14 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     standalone: true,
     selector: 'search-expandable-in-header-example',
     imports: [
-        KbqSearchExpandableModule
+        KbqSearchExpandableModule,
+        FormsModule
     ],
     template: `
         <div class="example-search-expandable-in-header-example__panel">
             <div class="example-search-expandable-in-header-example__header">
                 <div class="example-search-expandable-in-header-example__name kbq-subheading">Panel Title</div>
-                <kbq-search-expandable />
+                <kbq-search-expandable [(ngModel)]="search" />
             </div>
             <div class="example-search-expandable-in-header-example__body"></div>
         </div>
@@ -60,4 +62,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
         }
     `
 })
-export class SearchExpandableInHeaderExample {}
+export class SearchExpandableInHeaderExample {
+    search: string;
+}

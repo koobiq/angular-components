@@ -3110,7 +3110,6 @@ describe(KbqTreeSelect.name, () => {
                 0
             );
             fixture.detectChanges();
-            console.log(componentInstance.select.options);
 
             tick();
 
@@ -4576,7 +4575,7 @@ describe(KbqTreeSelect.name, () => {
             expect(testInstance.control.value).toEqual([null, 'pizza-1', null]);
         }));
 
-        xit('should select all options when pressing ctrl + a', () => {
+        it('should select all options when pressing CTRL + A', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
             const options = fixture.componentInstance.options.toArray();
 
@@ -4594,18 +4593,15 @@ describe(KbqTreeSelect.name, () => {
 
             expect(options.every((option) => option.selected)).toBe(true);
             expect(testInstance.control.value).toEqual([
-                'steak-0',
-                'pizza-1',
-                'tacos-2',
-                'sandwich-3',
-                'chips-4',
-                'eggs-5',
-                'pasta-6',
-                'sushi-7'
+                'rootNode_1',
+                'Pictures',
+                'Documents',
+                'Downloads',
+                'Applications'
             ]);
         });
 
-        xit('should skip disabled options when using ctrl + a', () => {
+        it('should skip disabled options when using CTRL + A', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
             const options = fixture.componentInstance.options.toArray();
 
@@ -4625,22 +4621,19 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             expect(testInstance.control.value).toEqual([
-                'sandwich-3',
-                'chips-4',
-                'eggs-5',
-                'pasta-6',
-                'sushi-7'
+                'Downloads',
+                'Applications'
             ]);
         });
 
-        xit('should select all options when pressing ctrl + a when some options are selected', () => {
+        it('should select all options when pressing CTRL + A when some options are selected', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
             const options = fixture.componentInstance.options.toArray();
 
-            options[0].select();
+            options[0].setSelected(true);
             fixture.detectChanges();
 
-            expect(testInstance.control.value).toEqual(['steak-0']);
+            expect(testInstance.control.value).toEqual(['rootNode_1']);
             expect(options.some((option) => option.selected)).toBe(true);
 
             fixture.componentInstance.select.open();
@@ -4654,33 +4647,27 @@ describe(KbqTreeSelect.name, () => {
 
             expect(options.every((option) => option.selected)).toBe(true);
             expect(testInstance.control.value).toEqual([
-                'steak-0',
-                'pizza-1',
-                'tacos-2',
-                'sandwich-3',
-                'chips-4',
-                'eggs-5',
-                'pasta-6',
-                'sushi-7'
+                'rootNode_1',
+                'Pictures',
+                'Documents',
+                'Downloads',
+                'Applications'
             ]);
         });
 
-        xit('should deselect all options with ctrl + a if all options are selected', () => {
+        it('should deselect all options with CTRL + A if all options are selected', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
             const options = fixture.componentInstance.options.toArray();
 
-            options.forEach((option) => option.select());
+            options.forEach((option) => option.setSelected(true));
             fixture.detectChanges();
 
             expect(testInstance.control.value).toEqual([
-                'steak-0',
-                'pizza-1',
-                'tacos-2',
-                'sandwich-3',
-                'chips-4',
-                'eggs-5',
-                'pasta-6',
-                'sushi-7'
+                'rootNode_1',
+                'Pictures',
+                'Documents',
+                'Downloads',
+                'Applications'
             ]);
             expect(options.every((option) => option.selected)).toBe(true);
 

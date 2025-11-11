@@ -69,6 +69,10 @@
             --kbq-button-size-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
             --kbq-button-size-border-radius: var(--kbq-breadcrumb-item-border-radius);
         }
+
+        &:focus-visible {
+            outline-offset: unset;
+        }
     }
 
     .kbq-breadcrumb__expand {
@@ -208,8 +212,4 @@
     @include _kbq-breadcrumbs-geometry();
     @include _kbq-breadcrumbs-theme();
     @include _kbq-breadcrumbs-typography();
-}
-
-.kbq-breadcrumb-item__link-behavior {
-    text-decoration: none;
 }

@@ -1,12 +1,12 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEditChange, KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Editable tag ${i}`);
 
@@ -20,9 +20,9 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" multiple editable>
+            <kbq-tag-list #tagList="kbqTagList" editable>
                 @for (tag of tags(); track tag) {
-                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index, input)" (removed)="remove($event)">
+                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index, input)" (removed)="removed($event)">
                         {{ tag }}
                         <input kbqInput kbqTagEditInput [(ngModel)]="editInputModel" />
                         @if (editInputModel().length === 0) {
@@ -30,7 +30,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
                         } @else {
                             <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                         }
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -80,6 +80,7 @@ export class TagAutocompleteEditableExample {
         return current ? options.filter((option) => option.toLowerCase().includes(current)) : options;
     });
     protected readonly editInputModel = model<string>('');
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     protected create({ input, value = '' }: KbqTagInputEvent): void {
         if (value) {
@@ -89,7 +90,7 @@ export class TagAutocompleteEditableExample {
         }
     }
 
-    protected remove({ tag }: KbqTagEvent): void {
+    protected removed({ tag }: KbqTagEvent): void {
         this.tags.update((tags) => {
             const index = tags.indexOf(tag.value);
 
@@ -138,5 +139,9 @@ export class TagAutocompleteEditableExample {
             }
             default:
         }
+    }
+
+    protected afterRemove(): void {
+        this.input().nativeElement.focus();
     }
 }

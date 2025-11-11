@@ -115,6 +115,7 @@ const javascriptAndTypescriptRules = {
         'no-useless-escape': 0,
         'no-self-assign': 0,
         'no-prototype-builtins': 0,
+        'no-console': 1,
 
         // plugin:promise
         'promise/catch-or-return': 0,
@@ -253,6 +254,7 @@ const componentsDevRules = {
             1,
             ...noRestrictedGlobalsOptionsForSSR
         ],
+        'no-console': 0,
 
         // plugin:@angular-eslint
         '@angular-eslint/directive-selector': [
@@ -295,6 +297,7 @@ const componentsExamplesRules = {
             1,
             ...noRestrictedGlobalsOptionsForSSR
         ],
+        'no-console': 0,
 
         // plugin:@angular-eslint
         '@angular-eslint/prefer-standalone': 1,
@@ -379,6 +382,45 @@ const specRules = {
     }
 };
 
+/**
+ * Override rules for /tools
+ *
+ * @type {import('eslint').Linter.ConfigOverride}
+ */
+const toolsRules = {
+    files: ['tools/**/*.ts', 'tools/**/*.js'],
+    rules: {
+        // plugin:eslint
+        'no-console': 0
+    }
+};
+
+/**
+ * Override rules for /packages/schematics/
+ *
+ * @type {import('eslint').Linter.ConfigOverride}
+ */
+const schematicsRules = {
+    files: ['packages/schematics/**/*.ts', 'packages/schematics/**/*.js'],
+    rules: {
+        // plugin:eslint
+        'no-console': 0
+    }
+};
+
+/**
+ * Override rules for /packages/cli/
+ *
+ * @type {import('eslint').Linter.ConfigOverride}
+ */
+const cliRules = {
+    files: ['packages/cli/**/*.ts', 'packages/cli/**/*.js'],
+    rules: {
+        // plugin:eslint
+        'no-console': 0
+    }
+};
+
 /** @type {import('eslint').Linter.ConfigOverride} */
 const prettierRules = {
     files: ['*.js', '*.ts', '*.html'],
@@ -416,6 +458,9 @@ const config = {
         componentsExamplesRules,
         componentsRules,
         specRules,
+        toolsRules,
+        schematicsRules,
+        cliRules,
         // should be last
         prettierRules
     ]

@@ -2,8 +2,10 @@ import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,21 +26,24 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         ReactiveFormsModule,
         KbqAutocompleteModule,
         KbqIconModule,
-        AsyncPipe
+        AsyncPipe,
+        KbqInputModule
     ],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
                 @for (tag of selectedTags; track $index) {
                     <kbq-tag [value]="tag" (removed)="onRemove(tag)">
                         {{ tag }}
-                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
                 <input
                     #tagInput
                     autocomplete="off"
-                    placeholder="Placeholder"
+                    placeholder="New tag"
+                    kbqInput
                     [distinct]="true"
                     [formControl]="control"
                     [kbqAutocomplete]="autocomplete"
@@ -185,4 +190,8 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
         return inputAndSelectionTagsDiff;
     };
+
+    protected afterRemove(): void {
+        this.tagInputDirective.focus();
+    }
 }

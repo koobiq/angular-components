@@ -2,6 +2,7 @@
 *                                                           @lskramarov
 
 /packages/components/accordion/*                            @lskramarov
+/packages/components/app-switcher/*                         @lskramarov
 /packages/components/button/*                               @lskramarov
 /packages/components/button-toggle/*                        @lskramarov
 /packages/components/datepicker/*                           @lskramarov
@@ -9,6 +10,8 @@
 /packages/components/form-field/*                           @lskramarov
 /packages/components/list/*                                 @lskramarov
 /packages/components/navbar/*                               @lskramarov
+/packages/components/navbar-ic/*                            @lskramarov
+/packages/components/notification-center/*                  @lskramarov
 /packages/components/popover/*                              @lskramarov
 /packages/components/select/*                               @lskramarov
 /packages/components/search-expandable/*                    @lskramarov
@@ -48,6 +51,7 @@
 /packages/components/code-block/*                           @artembelik
 /packages/components/dl/*                                   @artembelik
 /packages/components/dropdown/*                             @artembelik
+/packages/components/dynamic-translation/*                  @artembelik
 /packages/components/link/*                                 @artembelik
 /packages/components/loader-overlay/*                       @artembelik
 /packages/components/modal/*                                @artembelik

@@ -1,0 +1,16 @@
+name: Setup Node
+description: Setup Node.js environment and install dependencies
+runs:
+  using: composite
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+        cache: 'yarn'
+        cache-dependency-path: yarn.lock
+        registry-url: https://registry.npmjs.org/
+
+    - name: Install Dependencies
+      shell: bash
+      run: yarn install --immutable

@@ -1,20 +1,9 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    Directive,
-    ElementRef,
-    EventEmitter,
-    Inject,
-    Input,
-    OnChanges,
-    Optional,
-    Output,
-    Renderer2,
-    Self
-} from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Optional, Output, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import { isBoolean } from '@koobiq/components/core';
+import { isBoolean, KbqFieldSizingContent } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagList } from './tag-list.component';
@@ -63,7 +52,8 @@ let nextUniqueId = 0;
         '(focus)': 'onFocus()',
         '(input)': 'onInput()',
         '(paste)': 'onPaste($event)'
-    }
+    },
+    hostDirectives: [KbqFieldSizingContent]
 })
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Whether the control is focused. */
@@ -160,24 +150,24 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         return !this.inputElement.value;
     }
 
+    /**
+     * @docs-private
+     *
+     * @deprecated Unused. Will be removed in next major release.
+     */
     countOfSymbolsForUpdateWidth: number = 3;
-
-    private oneSymbolWidth: number;
 
     /** The native input element to which this directive is attached. */
     private inputElement: HTMLInputElement;
 
     constructor(
         private elementRef: ElementRef<HTMLInputElement>,
-        private renderer: Renderer2,
         @Inject(KBQ_TAGS_DEFAULT_OPTIONS) private defaultOptions: KbqTagsDefaultOptions,
         @Optional() @Self() private trimDirective: KbqTrim,
         @Optional() @Self() public ngControl: NgControl,
         @Optional() @Self() public autocompleteTrigger?: KbqAutocompleteTrigger
     ) {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
-
-        this.setDefaultInputWidth();
 
         this._separators = this.defaultOptions.separators || KbqTagInputDefaultSeparators;
         this._addOnPaste = isBoolean(this.defaultOptions.addOnPaste) ? this.defaultOptions.addOnPaste : true;
@@ -231,7 +221,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             if (this.distinct && this.hasDuplicates) return;
 
             this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
-            this.updateInputWidth();
         }
     }
 
@@ -242,7 +231,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     }
 
     onInput() {
-        this.updateInputWidth();
         // Let tag list know whenever the value changes.
         this._tagList.stateChanges.next();
     }
@@ -277,25 +265,16 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             .filter((item) => !tagValues.includes(item))
             .forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));
 
-        this.updateInputWidth();
-
         $event.preventDefault();
         $event.stopPropagation();
     }
 
-    updateInputWidth(): void {
-        const length = this.inputElement.value.length;
-
-        this.renderer.setStyle(this.inputElement, 'max-width', 0);
-        this.oneSymbolWidth = this.inputElement.scrollWidth / length;
-        this.renderer.setStyle(this.inputElement, 'max-width', '');
-
-        if (length > this.countOfSymbolsForUpdateWidth) {
-            this.renderer.setStyle(this.inputElement, 'width', `${length * this.oneSymbolWidth}px`);
-        } else {
-            this.setDefaultInputWidth();
-        }
-    }
+    /**
+     * @docs-private
+     *
+     * @deprecated Unused. Will be removed in next major release.
+     */
+    updateInputWidth(): void {}
 
     /** @docs-private */
     onFocus(): void {
@@ -331,10 +310,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     private hasControl(): boolean {
         return !!this.ngControl;
-    }
-
-    private setDefaultInputWidth() {
-        this.renderer.setStyle(this.inputElement, 'width', '30px');
     }
 
     /** Checks whether a keycode is one of the configured separators. */

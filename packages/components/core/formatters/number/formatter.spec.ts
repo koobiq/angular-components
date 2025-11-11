@@ -43,22 +43,6 @@ describe('KbqRoundDecimalPipe', () => {
         expect(pipe.transform(tenThousand)).toBe('10K');
     }));
 
-    it('should divide correctly for zh-CN localized dividers', fakeAsync(() => {
-        const tenThousand = 10000;
-        const million = 1e6;
-        const oneHundredMillions = million * 100;
-        const trillion = 1e12;
-
-        localeService.setLocale('zh-CN');
-        flush();
-
-        expect(pipe.transform(tenThousand)).toBe('1.0 万');
-        expect(pipe.transform(million)).toBe('100.0 万');
-        expect(pipe.transform(million * 10)).toBe('1000.0 万');
-        expect(pipe.transform(oneHundredMillions)).toBe('1.0 亿');
-        expect(pipe.transform(trillion)).toBe('1.0 兆');
-    }));
-
     it('should handle intervals in latin numbers', fakeAsync(() => {
         localeService.setLocale('en-US');
         flush();

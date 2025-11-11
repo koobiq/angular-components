@@ -12,6 +12,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/forms';
+import * as i4 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
@@ -106,7 +107,7 @@ export class KbqTextareaModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, [typeof i1.KbqTextarea], [typeof i2.A11yModule, typeof i3.FormsModule], [typeof i1.KbqTextarea]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, [typeof i1.KbqTextarea], [typeof i2.A11yModule, typeof i3.FormsModule], [typeof i1.KbqTextarea, typeof i4.KbqFormFieldModule]>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -15,9 +15,9 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
     selector: 'tag-list-editable-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
     template: `
-        <kbq-tag-list editable multiple>
+        <kbq-tag-list editable>
             @for (tag of tags(); track tag) {
-                <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
+                <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="removed($event)">
                     {{ tag.value }}
                     <input kbqInput kbqTagEditInput [(ngModel)]="editInputModel" />
                     @if (editInputModel().length === 0) {
@@ -89,7 +89,7 @@ export class TagListEditableExample {
         }
     }
 
-    protected remove(event: KbqTagEvent): void {
+    protected removed(event: KbqTagEvent): void {
         this.tags.update((tags) => {
             const index = tags.indexOf(event.tag.value);
 

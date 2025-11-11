@@ -39,6 +39,7 @@ export class KbqFileDropDirective {
     /** @docs-private */
     onDrop(event: DragEvent) {
         if (!isFolderCanBeDragged()) {
+            // eslint-disable-next-line no-console
             console.warn('Drag-and-drop functionality for folders is not supported by this browser.');
         }
 

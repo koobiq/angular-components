@@ -1,0 +1,41 @@
+name: E2E approve snapshots
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  approve_snapshots:
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/approve-snapshots') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: xt0rted/pull-request-comment-branch@v2
+        id: comment-branch
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.comment-branch.outputs.head_ref }}
+      - uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: 🔄 [Updating](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) snapshots.
+      - uses: ./.github/workflows/actions/setup-node
+      - run: yarn run e2e:setup
+      - run: |
+          yarn run e2e:components --update-snapshots
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        id: commit-and-push
+        with:
+          commit_message: 'test: updated e2e snapshots'
+          file_pattern: '**/*.png'
+      - uses: thollander/actions-comment-pull-request@v3
+        if: ${{ steps.commit-and-push.outputs.changes_detected == 'true' }}
+        with:
+          message: ✅ Snapshots [updated](https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }}/commits/${{ steps.commit-and-push.outputs.commit_hash }})!
+      - uses: thollander/actions-comment-pull-request@v3
+        if: ${{ steps.commit-and-push.outputs.changes_detected != 'true' }}
+        with:
+          message: ⚠️ No snapshot changes detected.

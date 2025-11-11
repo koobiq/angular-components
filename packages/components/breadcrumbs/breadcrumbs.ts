@@ -72,7 +72,12 @@ export class KbqBreadcrumbsSeparator {
     standalone: true,
     selector: '[kbq-button][kbqBreadcrumb]',
     host: { class: 'kbq-breadcrumb-item' },
-    hostDirectives: [RdxRovingFocusItemDirective]
+    hostDirectives: [
+        {
+            directive: RdxRovingFocusItemDirective,
+            inputs: ['focusable']
+        }
+    ]
 })
 export class KbqBreadcrumbButton implements OnInit {
     private readonly button = inject(KbqButton, { optional: true, self: true });
@@ -106,7 +111,10 @@ export class KbqBreadcrumbView {
     template: `
         <ng-content />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.tabIndex]': 'null'
+    }
 })
 export class KbqBreadcrumbItem {
     /**

@@ -78,7 +78,7 @@ import { KbqTag } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { Observable, Subject, Subscription, audit, defer, merge } from 'rxjs';
-import { distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
+import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -483,15 +483,24 @@ export class KbqTreeSelect
     private _selectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
         event.preventDefault();
 
-        const hasDeselectedOptions = select.options.some((option) => !option.selected);
+        const options = select.options.filter(({ disabled }) => !disabled);
+        const hasUnselectedOptions = options.some((option) => !option.selected);
 
-        select.options.forEach((option) => {
-            if (hasDeselectedOptions && !option.disabled) {
+        const toUnselect: unknown[] = [];
+        const toSelect: unknown[] = [];
+
+        options.forEach((option) => {
+            if (hasUnselectedOptions) {
                 option.select(false);
+                toSelect.push(option.data);
             } else {
                 option.deselect();
+                toUnselect.push(option.data);
             }
         });
+
+        this.selectionModel.deselect(...toUnselect);
+        this.selectionModel.select(...toSelect);
     }
 
     /** Whether the select is focused. */
@@ -653,6 +662,7 @@ export class KbqTreeSelect
         if (!this.tree) return;
 
         this.tree.resetFocusedItemOnBlur = false;
+        this.tree.optionShouldHoldFocusOnBlur = !!this.search;
 
         this.selectionModel = this.tree.selectionModel = new SelectionModel<any>(this.multiSelection);
 
@@ -663,6 +673,8 @@ export class KbqTreeSelect
                 this.refreshTriggerValues();
             }
         });
+
+        this.selectionModel.changed.pipe(delay(0)).subscribe(() => this.setOverlayPosition());
 
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.tree.ngAfterContentInit();
@@ -724,10 +736,6 @@ export class KbqTreeSelect
 
         this.tags.changes.pipe(startWith(null)).subscribe(() => {
             this.calculateHiddenItems();
-
-            if (this.multiline) {
-                this.setOverlayPosition();
-            }
         });
 
         this.tree.treeControl.expansionModel.changed

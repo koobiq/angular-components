@@ -138,6 +138,7 @@ export class KbqModalService {
         confirmType: ConfirmType = 'confirm'
     ): KbqModalRef<C, R> {
         if ('kbqFooter' in options) {
+            // eslint-disable-next-line no-console
             console.warn(`The Confirm-Modal doesn't support "kbqFooter", this property will be ignored.`);
         }
 

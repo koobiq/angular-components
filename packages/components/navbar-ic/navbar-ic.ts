@@ -28,8 +28,8 @@ import { KBQ_LOCALE_SERVICE, KbqRectangleItem, ruRULocaleData } from '@koobiq/co
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqNotificationCenterTrigger } from '@koobiq/components/notification-center';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, filter, merge, Observable, Subject, Subscription, timer } from 'rxjs';
+import { delay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItemEvent,
     KbqNavbarIcFocusableItem,
@@ -42,6 +42,12 @@ export enum KbqExpandEvents {
     toggle,
     hoverOrFocus
 }
+
+/** minimum timeout to use KBQ_ENTER_DELAY */
+export const KBQ_MIN_TIMEOUT_FOR_ENTER_DELAY = 2000;
+
+/** delay before open navbar-ic */
+export const KBQ_ENTER_DELAY = 400;
 
 /** default configuration of navbar-ic */
 /** @docs-private */
@@ -218,6 +224,8 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
 
     readonly externalConfiguration = inject(KBQ_NAVBAR_IC_CONFIGURATION, { optional: true });
 
+    readonly state = new BehaviorSubject<'expanded' | 'collapsed' | null>(null);
+
     configuration;
 
     /** @docs-private */
@@ -276,6 +284,8 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     set expanded(value: boolean) {
         this._expanded = value;
 
+        this.state.next(value || this.pinned || this.hasOpenedPopUp ? 'expanded' : 'collapsed');
+
         this.updateExpandedStateForItems();
     }
 
@@ -299,23 +309,54 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         return this.expanded ? this.expandedWidth : this.collapsedWidth;
     }
 
+    private lastOpeningTime: number;
+
     constructor() {
         super();
 
-        this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
-
         effect(this.updateExpandedStateForItems);
 
-        combineLatest([this.hovered, this.focused])
-            .pipe(takeUntilDestroyed())
-            .subscribe(([hovered, focused]) => {
-                if (this.pinned) return;
+        this.focused
+            .pipe(
+                delay(0),
+                filter(() => !this.pinned || !this.hasOpenedPopUp),
+                takeUntilDestroyed()
+            )
+            .subscribe((focused) => {
+                if (this.hovered.value) return;
 
                 this.expandEvent = KbqExpandEvents.hoverOrFocus;
-                this.expanded = hovered || focused;
+                this.expanded = focused;
 
                 this.changeDetectorRef.markForCheck();
             });
+
+        this.hovered
+            .pipe(
+                filter(() => !this.pinned),
+                switchMap((hovered) => {
+                    if (!hovered) {
+                        if (this.expanded) {
+                            this.lastOpeningTime = Date.now();
+                        }
+
+                        this.expanded = false;
+
+                        return EMPTY;
+                    }
+
+                    return timer(this.getExpandDelay()).pipe(
+                        tap(() => {
+                            this.expandEvent = KbqExpandEvents.hoverOrFocus;
+                            this.expanded = true;
+                            this.changeDetectorRef.markForCheck();
+                        }),
+                        takeUntil(this.hovered.pipe(filter((h) => !h)))
+                    );
+                }),
+                takeUntilDestroyed()
+            )
+            .subscribe();
 
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
             this.focused.next(focusOrigin === 'keyboard');
@@ -364,6 +405,10 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         } else {
             this.keyManager.onKeydown(event);
         }
+    }
+
+    private getExpandDelay() {
+        return Date.now() - this.lastOpeningTime < KBQ_MIN_TIMEOUT_FOR_ENTER_DELAY ? 0 : KBQ_ENTER_DELAY;
     }
 
     protected updateTooltipForItems = () => this.items().forEach((item) => item.updateTooltip());

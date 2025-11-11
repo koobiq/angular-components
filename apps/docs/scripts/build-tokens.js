@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const StyleDictionary = require('style-dictionary');
 const getPlatformConfig = require('@koobiq/tokens-builder/configs/index.js');
 

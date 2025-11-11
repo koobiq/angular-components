@@ -29,6 +29,10 @@
     &.kbq-textarea-resizable {
         resize: vertical;
         min-height: var(--kbq-textarea-size-min-height);
+
+        &::-webkit-resizer {
+            background: var(--kbq-textarea-resizer-icon) center no-repeat;
+        }
     }
 
     &.kbq-textarea_max-row-limit-reached {

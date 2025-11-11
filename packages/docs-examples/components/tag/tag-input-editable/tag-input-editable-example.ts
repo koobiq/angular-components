@@ -18,9 +18,9 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" editable multiple>
+            <kbq-tag-list #tagList="kbqTagList" editable>
                 @for (tag of tags(); track tag) {
-                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($event)">
+                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="removed($event)">
                         {{ tag.value }}
                         <input kbqInput kbqTagEditInput [(ngModel)]="editInputModel" />
                         @if (editInputModel().length === 0) {
@@ -28,7 +28,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
                         } @else {
                             <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                         }
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -62,8 +62,6 @@ export class TagInputEditableExample {
     protected readonly editInputModel = model<string>('');
 
     protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
-        const input = this.input().nativeElement as HTMLInputElement;
-
         switch (type) {
             case 'start': {
                 console.info(`Tag #${index} edit was started. Reason: "${reason}".`);
@@ -77,7 +75,7 @@ export class TagInputEditableExample {
 
                 this.editInputModel.set('');
 
-                input.focus();
+                this.focusInput();
 
                 break;
             }
@@ -95,7 +93,7 @@ export class TagInputEditableExample {
                     this.editInputModel.set('');
                 }
 
-                input.focus();
+                this.focusInput();
 
                 break;
             }
@@ -103,7 +101,7 @@ export class TagInputEditableExample {
         }
     }
 
-    protected remove(event: KbqTagEvent): void {
+    protected removed(event: KbqTagEvent): void {
         this.tags.update((tags) => {
             const index = tags.indexOf(event.tag.value);
 
@@ -129,5 +127,13 @@ export class TagInputEditableExample {
 
     protected clear(): void {
         this.tags.update(() => []);
+    }
+
+    protected afterRemove(): void {
+        this.focusInput();
+    }
+
+    private focusInput(): void {
+        this.input().nativeElement.focus();
     }
 }

@@ -3,14 +3,14 @@
         @for (tag of tags; track $index) {
             <kbq-tag [value]="tag" (removed)="onRemoveTag(tag)">
                 {{ tag }}
-                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
             </kbq-tag>
         }
 
         <!-- turn off tag add on paste with Input property -->
         <input
             autocomplete="off"
-            placeholder="New tag..."
+            placeholder="New tag"
             [formControl]="control"
             [kbqTagInputAddOnPaste]="false"
             [kbqTagInputFor]="tagList"

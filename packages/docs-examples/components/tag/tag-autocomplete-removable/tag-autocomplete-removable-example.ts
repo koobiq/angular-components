@@ -1,12 +1,12 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Removable tag ${i}`);
 
@@ -20,11 +20,11 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Remov
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" multiple removable>
+            <kbq-tag-list #tagList="kbqTagList" removable>
                 @for (tag of tags(); track tag) {
-                    <kbq-tag [value]="tag" (removed)="remove($event)">
+                    <kbq-tag [value]="tag" (removed)="removed($event)">
                         {{ tag }}
-                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="afterRemove()"></i>
                     </kbq-tag>
                 }
 
@@ -72,6 +72,7 @@ export class TagAutocompleteRemovableExample {
 
         return current ? options.filter((option) => option.toLowerCase().includes(current)) : options;
     });
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     protected create({ input, value = '' }: KbqTagInputEvent): void {
         if (value) {
@@ -81,7 +82,7 @@ export class TagAutocompleteRemovableExample {
         }
     }
 
-    protected remove({ tag }: KbqTagEvent): void {
+    protected removed({ tag }: KbqTagEvent): void {
         this.tags.update((tags) => {
             const index = tags.indexOf(tag.value);
 
@@ -100,5 +101,9 @@ export class TagAutocompleteRemovableExample {
 
     protected clear(): void {
         this.tags.update(() => []);
+    }
+
+    protected afterRemove(): void {
+        this.input().nativeElement.focus();
     }
 }

@@ -40,7 +40,8 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqTimezoneSelect,
         KbqTimezoneOption,
         KbqTimezoneOptionTooltip,
-        KbqTimezoneSelectTrigger
+        KbqTimezoneSelectTrigger,
+        KbqFormFieldModule
     ]
 })
 export class KbqTimezoneModule {}

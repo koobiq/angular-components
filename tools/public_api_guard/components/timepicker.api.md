@@ -13,6 +13,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/cdk/platform';
 import * as i4 from '@angular/forms';
+import * as i5 from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
@@ -142,7 +143,7 @@ export class KbqTimepickerModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, [typeof i1.KbqTimepicker], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.FormsModule], [typeof i1.KbqTimepicker]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, [typeof i1.KbqTimepicker], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.FormsModule], [typeof i1.KbqTimepicker, typeof i5.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)

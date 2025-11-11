@@ -23,7 +23,7 @@ const TAG = 'Editable tag with validation';
                 [preventEditSubmit]="!isModelValid()"
                 [color]="tagColor()"
                 (editChange)="editChange($event)"
-                (removed)="remove($event)"
+                (removed)="removed($event)"
             >
                 {{ tagValue() }}
                 <input
@@ -101,7 +101,7 @@ export class TagEditableWithValidationExample {
         }
     }
 
-    protected remove(event: KbqTagEvent): void {
+    protected removed(event: KbqTagEvent): void {
         console.info('Tag was removed: ', event);
 
         this.tagValue.set('');

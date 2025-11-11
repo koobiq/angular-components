@@ -4,7 +4,7 @@ import { fromEvent, map, merge } from 'rxjs';
 import { kbqInjectNativeElement } from '../utils';
 
 /**
- * Directive that adds a `kbq-hover` class to an element, based on its hover state.
+ * Directive that adds a `kbq-hovered` class to an element, based on its hover state.
  */
 @Directive({
     standalone: true,

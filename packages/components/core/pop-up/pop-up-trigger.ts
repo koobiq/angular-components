@@ -179,6 +179,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         } else {
             this.placement = PopUpPlacements.Top;
 
+            // eslint-disable-next-line no-console
             console.warn(`Unknown position: ${value}. Will used default position: ${this.placement}`);
         }
 

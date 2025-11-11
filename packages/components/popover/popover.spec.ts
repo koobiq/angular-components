@@ -357,6 +357,43 @@ describe('KbqPopover', () => {
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
         }));
     });
+
+    describe('with TemplateRef', () => {
+        let fixture: ComponentFixture<KbqPopoverWithTemplateRef>;
+        let componentInstance: KbqPopoverWithTemplateRef;
+
+        beforeEach(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+            fixture = createComponent(KbqPopoverWithTemplateRef);
+            componentInstance = fixture.componentInstance;
+            debugElement = fixture.debugElement;
+        });
+
+        beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
+            overlayContainer = oc;
+            overlayContainerElement = oc.getContainerElement();
+        }));
+
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
+
+        it('context for template', fakeAsync(() => {
+            const triggerElement = componentInstance.trigger.nativeElement;
+
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            tick();
+            fixture.detectChanges();
+
+            const header = overlayContainerElement.querySelector('.kbq-popover__header')?.textContent;
+            const content = overlayContainerElement.querySelector('.kbq-popover__content')?.textContent;
+            const footer = overlayContainerElement.querySelector('.kbq-popover__footer')?.textContent;
+
+            expect(header).toEqual(componentInstance.context.header);
+            expect(content).toEqual(componentInstance.context.content);
+            expect(footer).toEqual(componentInstance.context.footer);
+        }));
+    });
 });
 
 @Component({
@@ -449,4 +486,30 @@ class KbqPopoverConfirmTestComponent {
 })
 class KbqPopoverConfirmWithProvidersTestComponent {
     @ViewChild('test12', { static: false }) test12: ElementRef;
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqPopoverModule],
+    selector: 'kbq-popover-wih-template-ref',
+    template: `
+        <ng-template #popoverHeaderTemplate let-ctx>{{ ctx.header }}</ng-template>
+        <ng-template #popoverContentTemplate let-ctx>{{ ctx.content }}</ng-template>
+        <ng-template #popoverFooterTemplate let-ctx>{{ ctx.footer }}</ng-template>
+        <button
+            #trigger
+            kbqPopover
+            [kbqTrigger]="'hover'"
+            [kbqPopoverHeader]="popoverHeaderTemplate"
+            [kbqPopoverContent]="popoverContentTemplate"
+            [kbqPopoverFooter]="popoverFooterTemplate"
+            [kbqPopoverContext]="context"
+        >
+            Button
+        </button>
+    `
+})
+class KbqPopoverWithTemplateRef {
+    @ViewChild('trigger', { static: false }) trigger: ElementRef;
+    context = { header: 'header', content: 'content', footer: 'footer' };
 }

@@ -51,7 +51,7 @@ export const esLALocaleData = {
     } satisfies KbqActionsPanelLocaleConfiguration,
     filterBar: {
         reset: {
-            buttonName: 'Reiniciar'
+            buttonName: 'Restablecer'
         },
         search: {
             tooltip: 'Búsqueda',
@@ -59,18 +59,18 @@ export const esLALocaleData = {
         },
         filters: {
             defaultName: 'Filtros',
-            saveNewFilterTooltip: 'Guardar el nuevo filtro',
+            saveNewFilterTooltip: 'Guardar el filtro nuevo',
             searchPlaceholder: 'Búsqueda',
             searchEmptyResult: 'No se encontró nada',
-            saveAsNewFilter: 'Guardar como nuevo filtro',
-            saveChanges: 'Guardar los cambios',
+            saveAsNewFilter: 'Guardar como filtro nuevo',
+            saveChanges: 'Guardar cambios',
             saveAsNew: 'Guardar como nuevo',
             change: 'Editar',
-            resetChanges: 'Reiniciar',
+            resetChanges: 'Restablecer',
             remove: 'Eliminar',
             name: 'Nombre',
-            error: 'La búsqueda con ese nombre ya existe',
-            errorHint: 'No se pudo guardar el filtro. Intente de nuevo o póngase en contacto con el administrador.',
+            error: 'Ya existe una búsqueda con ese nombre',
+            errorHint: 'No se pudo guardar el filtro. Intente de nuevo o comuníquese con el administrador.',
             saveButton: 'Guardar',
             cancelButton: 'Cancelar'
         },
@@ -85,10 +85,10 @@ export const esLALocaleData = {
             selectAll: 'Seleccionar todo'
         },
         datePipe: {
-            customPeriod: 'Período personalizado',
+            customPeriod: 'Personalizar período',
             customPeriodFrom: 'desde',
             customPeriodTo: 'hasta',
-            customPeriodErrorHint: 'El período no puede empezar más tarde de lo que termina',
+            customPeriodErrorHint: 'El inicio del período no puede estar después del fin',
             backToPeriodSelection: 'Volver a la selección del período'
         }
     },
