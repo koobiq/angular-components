@@ -16,7 +16,11 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 @Component({
     standalone: true,
     selector: 'kbq-split-button, [kbq-split-button]',
-    templateUrl: './split-button.html',
+    template: `
+        <ng-content select="[kbq-button]" />
+
+        <ng-content select="[kbq-button]" />
+    `,
     styleUrls: ['./split-button.scss'],
     host: {
         class: 'kbq-split-button',

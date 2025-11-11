@@ -36,7 +36,7 @@
             border-bottom-left-radius: unset;
 
             &::before {
-                display: none;
+                display: block;
 
                 content: '';
                 position: absolute;
@@ -50,28 +50,24 @@
 
         & .kbq-button,
         & .kbq-button-icon {
-            &:not(:hover, .cdk-keyboard-focused, .kbq-active, .kbq-progress) {
-                & + .kbq-button,
-                & + .kbq-button-icon {
-                    &:not(:hover, .cdk-keyboard-focused, .kbq-active, .kbq-progress) {
+            &:not(.kbq-disabled) {
+                &:is(:hover, .cdk-keyboard-focused, .kbq-active) {
+                    & + .kbq-button,
+                    & + .kbq-button-icon {
                         &::before {
-                            display: block;
+                            display: none;
                         }
                     }
                 }
             }
 
-            &.kbq-progress {
-                & + .kbq-button,
-                & + .kbq-button-icon {
-                    &.kbq-progress::before {
-                        display: block;
+            & + .kbq-button,
+            & + .kbq-button-icon {
+                &:not(.kbq-disabled) {
+                    &:is(:hover, .cdk-keyboard-focused, .kbq-active)::before {
+                        display: none;
                     }
                 }
-            }
-
-            &[disabled] + [disabled]::before {
-                display: block;
             }
         }
 
