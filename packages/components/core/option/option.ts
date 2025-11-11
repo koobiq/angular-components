@@ -20,6 +20,7 @@ import {
 import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
+import { isFunction } from '../utils';
 import { KbqOptgroup } from './optgroup';
 
 /**
@@ -237,7 +238,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     private mostRecentViewValue = '';
 
     constructor(
-        private readonly element: ElementRef<HTMLElement>,
+        private readonly elementRef: ElementRef<HTMLElement>,
         private readonly changeDetectorRef: ChangeDetectorRef,
         @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) private readonly parent: KbqOptionParentComponent,
         @Optional() readonly group: KbqOptgroup
@@ -265,10 +266,14 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         this.stateChanges.complete();
     }
 
+    /** @docs-private */
     getHeight(): number {
-        const DOMRect: DOMRect = this.element.nativeElement.getClientRects()[0];
+        const element = this.elementRef.nativeElement;
 
-        return DOMRect ? DOMRect.height : 0;
+        // For SSR compatibility
+        if (!isFunction(element.getClientRects)) return 0;
+
+        return element.getClientRects()[0]?.height ?? 0;
     }
 
     select(emitEvent: boolean = true): void {
@@ -357,7 +362,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     getHostElement(): HTMLElement {
-        return this.element.nativeElement;
+        return this.elementRef.nativeElement;
     }
 }
 

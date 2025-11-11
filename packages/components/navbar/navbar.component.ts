@@ -21,6 +21,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
+import { isFunction } from '@koobiq/components/core';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {
@@ -205,7 +206,12 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
-        return this.elementRef.nativeElement.getBoundingClientRect().width;
+        const element = this.elementRef.nativeElement;
+
+        // For SSR compatibility
+        if (!isFunction(element.getBoundingClientRect)) return 0;
+
+        return element.getBoundingClientRect().width;
     }
 
     private get totalItemsWidth(): number {

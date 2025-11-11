@@ -54,8 +54,12 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     /** TemplateRef for selecting an option */
     protected valueTemplate?: TemplateRef<any> | string;
 
-    /** Whether the current platform is a Mac. */
-    isMac = isMac();
+    /**
+     * Whether the current platform is a Mac.
+     *
+     * @docs-private
+     */
+    isMac = false;
 
     /** Data for the pipe.
      *  @docs-private */
@@ -85,6 +89,10 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         });
 
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
+
+        afterNextRender(() => {
+            this.isMac = isMac();
+        });
     }
 
     ngAfterViewInit(): void {

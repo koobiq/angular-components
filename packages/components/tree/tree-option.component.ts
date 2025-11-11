@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
 import {
+    isFunction,
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqOptionActionComponent,
@@ -301,14 +302,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
             });
     }
 
+    /** @docs-private */
     getHeight(): number {
-        const clientRects = this.elementRef.nativeElement.getClientRects();
+        const element = this.elementRef.nativeElement;
 
-        if (clientRects.length) {
-            return clientRects[0].height;
-        }
+        // For SSR compatibility
+        if (!isFunction(element.getClientRects)) return 0;
 
-        return 0;
+        return element.getClientRects()[0]?.height ?? 0;
     }
 
     select(setFocus = true): void {

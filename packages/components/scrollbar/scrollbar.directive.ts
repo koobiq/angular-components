@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { Directive, Inject, Input, NgZone, OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
@@ -10,8 +9,9 @@ type Defer = [
 ];
 
 const createDefer = (): Defer => {
+    // For SSR compatibility
+    // eslint-disable-next-line no-restricted-globals
     if (typeof window === 'undefined') {
-        // mock ssr calls with "noop"
         const noop = () => {};
 
         return [noop, noop];
@@ -20,6 +20,7 @@ const createDefer = (): Defer => {
     let idleId: number;
     let rafId: number;
 
+    // eslint-disable-next-line no-restricted-globals
     const { requestIdleCallback, requestAnimationFrame, cancelAnimationFrame, cancelIdleCallback } = window;
 
     const idleSupported = typeof requestIdleCallback === 'function';

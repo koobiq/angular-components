@@ -45,7 +45,7 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
-import { getKbqSelectNonArrayValueError, MultipleMode } from '@koobiq/components/core';
+import { getKbqSelectNonArrayValueError, isFunction, MultipleMode } from '@koobiq/components/core';
 import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
@@ -610,13 +610,12 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        const clientRects = this.elementRef.nativeElement.getClientRects();
+        const element = this.elementRef.nativeElement;
 
-        if (clientRects.length) {
-            return clientRects[0].height;
-        }
+        // For SSR compatibility
+        if (!isFunction(element.getClientRects)) return 0;
 
-        return 0;
+        return element.getClientRects()[0]?.height ?? 0;
     }
 
     private updateTabIndex(): void {

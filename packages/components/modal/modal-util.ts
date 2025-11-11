@@ -1,12 +1,14 @@
+/** @docs-private */
 export interface IClickPosition {
     x: number;
     y: number;
 }
 
+/** @docs-private */
 export class ModalUtil {
     private lastPosition: IClickPosition;
 
-    constructor(private document: Document) {
+    constructor(private document?: Document) {
         this.lastPosition = { x: -1, y: -1 };
         this.listenDocumentClick();
     }
@@ -16,11 +18,15 @@ export class ModalUtil {
     }
 
     listenDocumentClick(): void {
-        this.document.addEventListener('click', (event: MouseEvent) => {
+        this.document?.addEventListener('click', (event: MouseEvent) => {
             this.lastPosition = { x: event.clientX, y: event.clientY };
         });
     }
 }
 
-// eslint-disable-next-line no-restricted-globals
-export const modalUtilObject = new ModalUtil(document);
+/** @docs-private */
+export const modalUtilObject = new ModalUtil(
+    // For SSR compatibility
+    // eslint-disable-next-line no-restricted-globals
+    typeof document === 'undefined' ? undefined : document
+);
