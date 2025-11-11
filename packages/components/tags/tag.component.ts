@@ -555,8 +555,8 @@ export class KbqTag
                 break;
             }
             case SPACE: {
-                this.focusMonitor.focusVia(this.elementRef, 'keyboard');
                 this.toggleSelected(true);
+                this.focusMonitor.focusVia(this.elementRef, 'keyboard');
 
                 // Always prevent space from scrolling the page since the list has focus
                 event.preventDefault();
