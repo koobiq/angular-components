@@ -1,5 +1,6 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { isPlatformServer } from '@angular/common';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -9,11 +10,13 @@ import {
     ContentChild,
     ElementRef,
     EventEmitter,
+    inject,
     Inject,
     InjectionToken,
     Input,
     NgZone,
     Output,
+    PLATFORM_ID,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -83,6 +86,8 @@ let uniqueIdCounter: number = 0;
     ]
 })
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
+    protected readonly platformId = inject(PLATFORM_ID);
+
     readonly onFocus = new Subject<KbqTreeOptionEvent>();
 
     readonly onBlur = new Subject<KbqTreeOptionEvent>();
@@ -302,6 +307,10 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     getHeight(): number {
+        if (isPlatformServer(this.platformId)) {
+            return 0;
+        }
+
         const clientRects = this.elementRef.nativeElement.getClientRects();
 
         if (clientRects.length) {

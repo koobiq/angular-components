@@ -1,4 +1,4 @@
-import { DOCUMENT, NgClass } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser, NgClass } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -8,11 +8,12 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    PLATFORM_ID,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
-import { KBQ_WINDOW, PopUpPlacements } from '@koobiq/components/core';
+import { KBQ_LOCAL_STORAGE, PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { filter, fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -83,7 +84,8 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private readonly destroyRef = inject(DestroyRef);
-    private readonly window = inject(KBQ_WINDOW);
+    private readonly localStorage = inject(KBQ_LOCAL_STORAGE);
+    protected readonly platformId = inject(PLATFORM_ID);
 
     constructor(
         private router: Router,
@@ -98,7 +100,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         }
 
         this.pathName = router.url.split('#')[0];
-        this.window.localStorage.setItem(NEXT_ROUTE_KEY, this.pathName);
+        this.localStorage.setItem(NEXT_ROUTE_KEY, this.pathName);
 
         this.router.events
             .pipe(
@@ -109,7 +111,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
                 const [rootUrl] = router.url.split('#');
 
                 if (rootUrl !== this.pathName) {
-                    this.window.localStorage.setItem(NEXT_ROUTE_KEY, rootUrl);
+                    this.localStorage.setItem(NEXT_ROUTE_KEY, rootUrl);
 
                     this.pathName = rootUrl;
                 }
@@ -142,7 +144,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
             target.scrollTop += this.headerHeight;
             // scroll after docs-sidepanel scrolled
             setTimeout(() => target.scrollIntoView());
-        } else {
+        } else if (isPlatformBrowser(this.platformId)) {
             this.scrollContainer.scroll(0, 0);
         }
 
@@ -210,9 +212,10 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private getHeaderTopOffset(header: HTMLElement) {
-        const bodyTop = this.document.body.getBoundingClientRect().top;
+        const bodyTop = isPlatformBrowser(this.platformId) ? this.document.body.getBoundingClientRect().top : 0;
+        const headerTop = isPlatformBrowser(this.platformId) ? header.getBoundingClientRect().top : 0;
 
-        return this.scrollContainer.scrollTop + header.getBoundingClientRect().top - bodyTop + this.headerHeight;
+        return this.scrollContainer.scrollTop + headerTop - bodyTop + this.headerHeight;
     }
 
     private getLevel(classList): number {

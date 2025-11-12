@@ -164,6 +164,83 @@
                         "configPath": "../../jest.config.js",
                         "tsConfig": "../../tsconfig.spec.json"
                     }
+                },
+                "server": {
+                    "builder": "@angular-devkit/build-angular:server",
+                    "options": {
+                        "outputPath": "dist/koobiq-docs/server",
+                        "main": "apps/docs/server.ts",
+                        "tsConfig": "apps/docs/tsconfig.server.json",
+                        "buildOptimizer": false,
+                        "optimization": false,
+                        "sourceMap": true,
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "dist",
+                                "apps/docs/src"
+                            ]
+                        },
+                        "extractLicenses": false,
+                        "vendorChunk": true
+                    },
+                    "configurations": {
+                        "development": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/docs/src/environments/environment.ts",
+                                    "with": "apps/docs/src/environments/environment.prod.ts"
+                                }
+                            ]
+                        },
+                        "production": {
+                            "buildOptimizer": true,
+                            "outputHashing": "media",
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/docs/src/environments/environment.ts",
+                                    "with": "apps/docs/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "sourceMap": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve-ssr": {
+                    "builder": "@angular-devkit/build-angular:ssr-dev-server",
+                    "configurations": {
+                        "development": {
+                            "browserTarget": "koobiq-docs:build:development",
+                            "serverTarget": "koobiq-docs:server:development"
+                        },
+                        "production": {
+                            "browserTarget": "koobiq-docs:build:production",
+                            "serverTarget": "koobiq-docs:server:production"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "prerender": {
+                    "builder": "@angular-devkit/build-angular:prerender",
+                    "options": {
+                        "routes": [
+                            "/"
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "koobiq-docs:build:production",
+                            "serverTarget": "koobiq-docs:server:production"
+                        },
+                        "development": {
+                            "browserTarget": "koobiq-docs:build:development",
+                            "serverTarget": "koobiq-docs:server:development"
+                        }
+                    },
+                    "defaultConfiguration": "production"
                 }
             }
         },
