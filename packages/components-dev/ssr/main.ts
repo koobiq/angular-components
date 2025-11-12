@@ -1,12 +1,5 @@
-import { bootstrapApplication, provideClientHydration } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { bootstrapApplication } from '@angular/platform-browser';
+import config from './config';
 import { DevApp } from './module';
 
-bootstrapApplication(DevApp, {
-    providers: [
-        provideRouter([]),
-        provideAnimations(),
-        provideClientHydration()
-    ]
-}).catch((error) => console.error(error));
+bootstrapApplication(DevApp, config).catch((err) => console.error(err));
