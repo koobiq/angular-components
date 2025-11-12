@@ -87,8 +87,7 @@
     --kbq-file-upload-multiple-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
 }
 
-/* stylelint-disable-next-line selector-class-pattern */
-:where(.kbq-file-upload.compact) {
+:where(.kbq-file-upload.kbq-file-upload_compact) {
     --kbq-file-upload-multiple-compact-container-content-gap-horizontal: var(--kbq-size-s);
     --kbq-file-upload-multiple-compact-text-block-padding-vertical: var(--kbq-size-3xs);
     --kbq-file-upload-multiple-compact-container-padding-vertical: 11px;
