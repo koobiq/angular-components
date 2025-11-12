@@ -35,7 +35,7 @@ import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
-import { KbqDragData, KbqTag, KbqTagEditChange, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
+import { KbqTag, KbqTagDragData, KbqTagEditChange, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
 
 // Increasing integer for generating unique ids for tag-list components.
 let nextUniqueId = 0;
@@ -876,7 +876,7 @@ export class KbqTagList
         this.dropList.dropped
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(({ currentIndex, previousIndex, event, item }) => {
-                const { tag }: KbqDragData = item.data;
+                const { tag }: KbqTagDragData = item.data;
 
                 this.dropped.emit({ currentIndex, previousIndex, event, tag });
             });

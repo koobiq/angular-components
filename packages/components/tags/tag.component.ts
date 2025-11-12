@@ -71,10 +71,12 @@ const getTagEditInputMissingError = (): Error => {
     return Error('Editable kbq-tag must contain a KbqTagEditInput.');
 };
 
-/** @docs-private */
-export type KbqDragData = {
-    tag: KbqTag;
-};
+/**
+ * Object passed to the drag data event when a tag is being dragged.
+ *
+ * @docs-private
+ */
+export type KbqTagDragData = KbqTagEvent;
 
 /**
  * Dummy directive to add CSS class to tag avatar.
@@ -214,7 +216,7 @@ export class KbqTag
 {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
-    private readonly drag: CdkDrag<KbqDragData> = inject(CdkDrag, { host: true });
+    private readonly drag: CdkDrag<KbqTagDragData> = inject(CdkDrag, { host: true });
     private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
