@@ -150,7 +150,7 @@ export class KbqTreeSelectChange {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
 
-        '(click)': 'toggle()',
+        '(click)': 'handleClick()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
@@ -430,16 +430,18 @@ export class KbqTreeSelect
 
     private _hasBackdrop: boolean = false;
 
-    @Input({ transform: numberAttribute })
-    get tabIndex(): number {
+    @Input()
+    get tabIndex(): number | null {
         return this.disabled ? -1 : this._tabIndex;
     }
 
-    set tabIndex(value: number) {
-        this._tabIndex = value;
+    set tabIndex(value: number | null) {
+        if (Number.isInteger(value) || value === null) {
+            this._tabIndex = value;
+        }
     }
 
-    private _tabIndex = 0;
+    private _tabIndex: number | null = 0;
 
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -790,6 +792,12 @@ export class KbqTreeSelect
     /** `View -> model callback called when select has been touched` */
     onTouched = () => {};
 
+    handleClick() {
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+
+        this.toggle();
+    }
+
     toggle(): void {
         if (this.panelOpen) {
             this.close();
@@ -939,16 +947,20 @@ export class KbqTreeSelect
     }
 
     handleKeydown(event: KeyboardEvent) {
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+
         if (!this.disabled) {
             if (this.panelOpen) {
-                this.handleOpenKeydown(event);
+                this.panelKeydownHandler(event);
             } else {
-                this.handleClosedKeydown(event);
+                this.triggerKeydownHandler(event);
             }
         }
     }
 
     onFocus() {
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+
         if (!this.disabled) {
             this._focused = true;
 
@@ -961,6 +973,8 @@ export class KbqTreeSelect
      * "blur" to the panel when it opens, causing a false positive.
      */
     onBlur() {
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+
         this._focused = false;
 
         if (!this.disabled && !this.panelOpen) {
@@ -1070,6 +1084,92 @@ export class KbqTreeSelect
         this.changeDetectorRef.markForCheck();
     }
 
+    triggerKeydownHandler(event: KeyboardEvent) {
+        const keyCode = event.keyCode;
+        const isArrowKey =
+            keyCode === DOWN_ARROW || keyCode === UP_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
+        const isOpenKey = keyCode === ENTER || keyCode === SPACE;
+
+        // Open the select on ALT + arrow key to match the native <select>
+        if (isOpenKey || ((this.multiSelection || event.altKey) && isArrowKey)) {
+            // prevents the page from scrolling down when pressing space
+            event.preventDefault();
+
+            this.open();
+        } else if (!this.multiSelection && this.tree.keyManager && this.tree.keyManager.onKeydown) {
+            this.tree.keyManager.onKeydown(event);
+        }
+    }
+
+    panelKeydownHandler(event: KeyboardEvent) {
+        const keyCode = event.keyCode;
+        const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
+
+        if ((isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB) {
+            // Close the select on ALT + arrow key to match the native <select>
+            event.preventDefault();
+            this.close();
+            this.focus();
+        } else if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
+            return this.originalOnKeyDown.call(this.tree, event);
+        } else if (keyCode === HOME) {
+            event.preventDefault();
+
+            this.tree.keyManager.setFirstItemActive();
+        } else if (keyCode === END) {
+            event.preventDefault();
+
+            this.tree.keyManager.setLastItemActive();
+        } else if (keyCode === PAGE_UP) {
+            event.preventDefault();
+
+            this.tree.keyManager.setPreviousPageItemActive();
+        } else if (keyCode === PAGE_DOWN) {
+            event.preventDefault();
+
+            this.tree.keyManager.setNextPageItemActive();
+        } else if ((keyCode === ENTER || keyCode === SPACE) && this.tree.keyManager.activeItem) {
+            event.preventDefault();
+
+            if (!this.autoSelect) {
+                this.originalOnKeyDown.call(this.tree, event);
+            } else {
+                this.close();
+                this.focus();
+            }
+        } else if (this.multiSelection && isSelectAll(event)) {
+            this.selectAllHandler(event, this);
+        } else {
+            const previouslyFocusedIndex = this.tree.keyManager.activeItemIndex;
+
+            this.tree.keyManager.setFocusOrigin('keyboard');
+            this.tree.keyManager.onKeydown(event);
+
+            if (
+                this.multiSelection &&
+                isArrowKey &&
+                event.shiftKey &&
+                this.tree.keyManager.activeItem &&
+                this.tree.keyManager.activeItemIndex !== previouslyFocusedIndex
+            ) {
+                this.tree.keyManager.activeItem.selectViaInteraction(event);
+            }
+
+            if (this.autoSelect && this.tree.keyManager.activeItem) {
+                this.tree.setSelectedOptionsByKey(
+                    this.tree.keyManager.activeItem,
+                    hasModifierKey(event, 'shiftKey'),
+                    // ctrlKey is for Windows, metaKey is for MacOS
+                    hasModifierKey(event, 'ctrlKey', 'metaKey')
+                );
+            }
+
+            if (this.search) {
+                this.search.focus();
+            }
+        }
+    }
+
     /** @docs-private */
     protected shouldShowSearch(): boolean {
         return isUndefined(this.searchMinOptionsThreshold) || this.options.length >= this.searchMinOptionsThreshold;
@@ -1158,92 +1258,6 @@ export class KbqTreeSelect
         const marginRight: number = parseInt(computedStyle.marginRight as string);
 
         return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
-    }
-
-    private handleClosedKeydown(event: KeyboardEvent) {
-        const keyCode = event.keyCode;
-        const isArrowKey =
-            keyCode === DOWN_ARROW || keyCode === UP_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
-        const isOpenKey = keyCode === ENTER || keyCode === SPACE;
-
-        // Open the select on ALT + arrow key to match the native <select>
-        if (isOpenKey || ((this.multiSelection || event.altKey) && isArrowKey)) {
-            // prevents the page from scrolling down when pressing space
-            event.preventDefault();
-
-            this.open();
-        } else if (!this.multiSelection && this.tree.keyManager && this.tree.keyManager.onKeydown) {
-            this.tree.keyManager.onKeydown(event);
-        }
-    }
-
-    private handleOpenKeydown(event: KeyboardEvent) {
-        const keyCode = event.keyCode;
-        const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
-
-        if ((isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB) {
-            // Close the select on ALT + arrow key to match the native <select>
-            event.preventDefault();
-            this.close();
-            this.focus();
-        } else if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
-            return this.originalOnKeyDown.call(this.tree, event);
-        } else if (keyCode === HOME) {
-            event.preventDefault();
-
-            this.tree.keyManager.setFirstItemActive();
-        } else if (keyCode === END) {
-            event.preventDefault();
-
-            this.tree.keyManager.setLastItemActive();
-        } else if (keyCode === PAGE_UP) {
-            event.preventDefault();
-
-            this.tree.keyManager.setPreviousPageItemActive();
-        } else if (keyCode === PAGE_DOWN) {
-            event.preventDefault();
-
-            this.tree.keyManager.setNextPageItemActive();
-        } else if ((keyCode === ENTER || keyCode === SPACE) && this.tree.keyManager.activeItem) {
-            event.preventDefault();
-
-            if (!this.autoSelect) {
-                this.originalOnKeyDown.call(this.tree, event);
-            } else {
-                this.close();
-                this.focus();
-            }
-        } else if (this.multiSelection && isSelectAll(event)) {
-            this.selectAllHandler(event, this);
-        } else {
-            const previouslyFocusedIndex = this.tree.keyManager.activeItemIndex;
-
-            this.tree.keyManager.setFocusOrigin('keyboard');
-            this.tree.keyManager.onKeydown(event);
-
-            if (
-                this.multiSelection &&
-                isArrowKey &&
-                event.shiftKey &&
-                this.tree.keyManager.activeItem &&
-                this.tree.keyManager.activeItemIndex !== previouslyFocusedIndex
-            ) {
-                this.tree.keyManager.activeItem.selectViaInteraction(event);
-            }
-
-            if (this.autoSelect && this.tree.keyManager.activeItem) {
-                this.tree.setSelectedOptionsByKey(
-                    this.tree.keyManager.activeItem,
-                    hasModifierKey(event, 'shiftKey'),
-                    // ctrlKey is for Windows, metaKey is for MacOS
-                    hasModifierKey(event, 'ctrlKey', 'metaKey')
-                );
-            }
-
-            if (this.search) {
-                this.search.focus();
-            }
-        }
     }
 
     private refreshTriggerValues(): void {

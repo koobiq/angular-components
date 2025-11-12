@@ -111,7 +111,7 @@
         [ngClass]="panelClass"
         [style.font-size.px]="triggerFontSize"
         [style.transformOrigin]="transformOrigin"
-        (keydown)="handleKeydown($event)"
+        (keydown)="panelKeydownHandler($event)"
     >
         @if (search && shouldShowSearch()) {
             <div class="kbq-select__search-container">

@@ -5071,6 +5071,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-child-selection-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-custom-matcher-with-input": {
+    "packagePath": "components/tree-select/tree-select-custom-matcher-with-input",
+    "title": "tree-select-custom-matcher-with-input",
+    "componentName": "TreeSelectCustomMatcherWithInputExample",
+    "files": [
+      "tree-select-custom-matcher-with-input-example.ts"
+    ],
+    "selector": "tree-select-custom-matcher-with-input-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-custom-matcher-with-input-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-custom-matcher": {
     "packagePath": "components/tree-select/tree-select-custom-matcher",
     "title": "tree-select-custom-matcher",
@@ -6336,6 +6348,8 @@ return import('@koobiq/docs-examples/components/top-bar');
   case 'top-bar-title-counter':
 return import('@koobiq/docs-examples/components/top-bar');
   case 'tree-select-child-selection-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-custom-matcher-with-input':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-custom-matcher':
 return import('@koobiq/docs-examples/components/tree-select');

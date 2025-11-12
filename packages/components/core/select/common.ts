@@ -1,5 +1,14 @@
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
-import { AfterContentInit, Directive, EventEmitter, Inject, OnDestroy, Optional } from '@angular/core';
+import {
+    AfterContentInit,
+    booleanAttribute,
+    Directive,
+    EventEmitter,
+    Inject,
+    Input,
+    OnDestroy,
+    Optional
+} from '@angular/core';
 import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
@@ -15,7 +24,9 @@ export class KbqSelectTrigger {}
     selector: 'kbq-select-matcher, [kbq-select-matcher]',
     standalone: true
 })
-export class KbqSelectMatcher {}
+export class KbqSelectMatcher {
+    @Input({ transform: booleanAttribute }) useDefaultHandlers: boolean = true;
+}
 
 @Directive({
     selector: 'kbq-select-footer, [kbq-select-footer]',

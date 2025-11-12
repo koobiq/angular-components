@@ -9,3 +9,7 @@ kbq-select-trigger - позволяет переопределить блок, �
 kbq-select-matcher - позволяет заменить все содержимое kbq-select, включая placeholder, cleaner и icon
 
 <!-- example(tree-select-custom-matcher) -->
+
+#### Пример с полем ввода
+
+<!-- example(tree-select-custom-matcher-with-input) -->
