@@ -1,5 +1,3 @@
-// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
-/* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/animation';
 @use './toggle-theme' as theme;
@@ -27,7 +25,7 @@ $toggle-thumb-offset: 8px;
 
         cursor: inherit;
 
-        &.left {
+        &.kbq-toggle_left {
             flex-direction: row-reverse;
         }
 
@@ -105,11 +103,11 @@ $toggle-thumb-offset: 8px;
     flex: 1;
 
     &:has(.kbq-toggle-label:not(:empty)) {
-        &.left {
+        &.kbq-toggle_left {
             margin-right: var(--kbq-toggle-size-normal-horizontal-content-padding);
         }
 
-        &.right {
+        &.kbq-toggle_right {
             margin-left: var(--kbq-toggle-size-normal-horizontal-content-padding);
         }
     }

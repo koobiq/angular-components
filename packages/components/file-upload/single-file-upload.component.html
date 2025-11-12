@@ -6,15 +6,15 @@
     (filesDropped)="onFileDropped($event)"
 >
     @if (!file) {
-        <div class="dropzone">
-            <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-dropzone__icon"></i>
+        <div class="kbq-file-dropzone">
+            <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
             <!-- prettier-ignore -->
-            <span class="dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<input #input type="file" class="cdk-visually-hidden" tabindex="0" [id]="inputId" [accept]="acceptedFiles" [disabled]="disabled" (change)="onFileSelectedViaClick($event)"></label>{{ separatedCaptionText[1] }}</span>
+            <span class="kbq-file-dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<input #input type="file" class="cdk-visually-hidden" tabindex="0" [id]="inputId" [accept]="acceptedFiles" [disabled]="disabled" (change)="onFileSelectedViaClick($event)"></label>{{ separatedCaptionText[1] }}</span>
         </div>
     } @else {
         @if (file) {
-            <div class="file-item">
-                <div class="file-item__text-wrapper">
+            <div class="kbq-file-item">
+                <div class="kbq-file-item__text-wrapper">
                     @if ({ loading: file.loading | async, progress: file.progress | async }; as asyncData) {
                         @if (!asyncData.loading) {
                             <ng-content select="[kbq-icon]" />
@@ -23,7 +23,7 @@
                             <kbq-progress-spinner [mode]="progressMode" [value]="asyncData.progress || 0" />
                         }
                     }
-                    <div class="file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></div>
+                    <div class="kbq-file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></div>
                 </div>
                 @if (showFileSize) {
                     <div class="kbq-file-item__size">

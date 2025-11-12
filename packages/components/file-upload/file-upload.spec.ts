@@ -50,8 +50,8 @@ const getMockedChangeEventForSingle = (fileNameOrFakeFile: string | Partial<File
 
 const fileItemActionCssClass = 'kbq-file-upload__action';
 
-const fileItemCssClass = 'file-item';
-const fileItemTextCssClass = 'file-item__text';
+const fileItemCssClass = 'kbq-file-item';
+const fileItemTextCssClass = 'kbq-file-item__text';
 
 const maxFileExceeded = (file: File): string | null => {
     const kilo = 1024;

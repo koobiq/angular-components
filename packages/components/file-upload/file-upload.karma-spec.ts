@@ -11,9 +11,9 @@ import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
-const fileItemRowCssClass = 'multiple__uploaded-item';
+const fileItemRowCssClass = 'kbq-file-multiple__uploaded-item';
 
-const fileItemCssClass = 'file-item';
+const fileItemCssClass = 'kbq-file-item';
 
 const FILE_NAME = 'test.file';
 
