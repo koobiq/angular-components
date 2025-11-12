@@ -18,8 +18,9 @@ export default defineConfig({
     retries: isCI ? 2 : 0,
     workers: isCI ? 1 : undefined,
     reporter: [
-        ['line'],
+        ['list', { printSteps: true }],
         ['html', { open: 'never' }]
+
     ],
     projects: [
         {
