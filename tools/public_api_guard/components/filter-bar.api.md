@@ -634,6 +634,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
 
 // @public (undocumented)
 export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+    constructor();
     // (undocumented)
     get child(): HTMLElement;
     // (undocumented)

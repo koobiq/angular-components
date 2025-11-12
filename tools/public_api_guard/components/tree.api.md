@@ -452,7 +452,6 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     get externalPseudoCheckbox(): boolean;
     // (undocumented)
     focus(focusOrigin?: FocusOrigin): void;
-    // (undocumented)
     getHeight(): number;
     // (undocumented)
     getHostElement(): HTMLElement;

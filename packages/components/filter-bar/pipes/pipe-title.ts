@@ -1,4 +1,5 @@
 import {
+    afterNextRender,
     AfterViewInit,
     ContentChild,
     ContentChildren,
@@ -62,6 +63,14 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     @ContentChild('kbqTitleContainer')
     private parentContainer: ElementRef;
 
+    constructor() {
+        super();
+
+        afterNextRender(() => {
+            this.listenToMutationObserver();
+        });
+    }
+
     ngAfterViewInit() {
         this.parentContainer = this.parentContainer || this.componentInstance?.parentTextElement || this.elementRef;
         this.childContainer = this.childContainer || this.componentInstance?.textElement || this.elementRef;
@@ -70,13 +79,6 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.debounceInterval))
             .subscribe(() => (this.disabled = !this.isOverflown));
-
-        this.mutationSubscription = this.createMutationObserver()
-            .pipe(throttleTime(this.debounceInterval))
-            .subscribe(() => {
-                this.disabled = !this.isOverflown;
-                this.content = this.viewValue;
-            });
 
         this.focusMonitorSubscription = this.focusMonitor
             .monitor(this.elementRef)
@@ -98,6 +100,15 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
 
     hideTooltip() {
         this.disabled = true;
+    }
+
+    private listenToMutationObserver(): void {
+        this.mutationSubscription = this.createMutationObserver()
+            .pipe(throttleTime(this.debounceInterval))
+            .subscribe(() => {
+                this.disabled = !this.isOverflown;
+                this.content = this.viewValue;
+            });
     }
 
     private createMutationObserver(): Observable<MutationRecord[]> {

@@ -205,7 +205,12 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
-        return this.elementRef.nativeElement.getBoundingClientRect().width;
+        const element = this.elementRef.nativeElement;
+
+        // For SSR compatibility
+        if (typeof element.getClientRects !== 'function') return 0;
+
+        return element.getBoundingClientRect().width;
     }
 
     private get totalItemsWidth(): number {

@@ -439,10 +439,14 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         return !(this.noUnselectLast && this.selectionModel.selected.length === 1 && listOption.selected);
     }
 
+    /** @docs-private */
     getHeight(): number {
-        const clientRects = this.elementRef.nativeElement.getClientRects();
+        const element = this.elementRef.nativeElement;
 
-        return clientRects.length ? clientRects[0].height : 0;
+        // For SSR compatibility
+        if (typeof element.getClientRects !== 'function') return 0;
+
+        return element.getClientRects()[0]?.height ?? 0;
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -822,10 +826,14 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         this.changeDetector.markForCheck();
     }
 
+    /** @docs-private */
     getHeight(): number {
-        const clientRects = this.elementRef.nativeElement.getClientRects();
+        const element = this.elementRef.nativeElement;
 
-        return clientRects.length ? clientRects[0].height : 0;
+        // For SSR compatibility
+        if (typeof element.getClientRects !== 'function') return 0;
+
+        return element.getClientRects()[0]?.height ?? 0;
     }
 
     /** Handles click events on the list option. */

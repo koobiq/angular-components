@@ -610,13 +610,12 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        const clientRects = this.elementRef.nativeElement.getClientRects();
+        const element = this.elementRef.nativeElement;
 
-        if (clientRects.length) {
-            return clientRects[0].height;
-        }
+        // For SSR compatibility
+        if (typeof element.getClientRects !== 'function') return 0;
 
-        return 0;
+        return element.getClientRects()[0]?.height ?? 0;
     }
 
     private updateTabIndex(): void {
