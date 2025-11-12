@@ -298,7 +298,7 @@
         "stylelint": "stylelint '**/*.{css,scss}'",
         "stylelint:fix": "yarn run stylelint --fix",
         "cspell": "cspell '**/*.md' --unique",
-        "prettier": "prettier --check .",
+        "prettier": "prettier --check . --ignore-unknown",
         "prettier:fix": "yarn run prettier --write"
     },
     "release": {
