@@ -53,7 +53,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     styleUrls: ['./component-viewer.scss'],
     host: {
         class: 'docs-component-viewer kbq-scrollbar',
-        '[attr.data-docsearch-category]': 'docCategory'
+        '[attr.data-docsearch-category]': 'structureCategoryId'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
