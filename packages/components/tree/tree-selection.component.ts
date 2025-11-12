@@ -45,7 +45,7 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
-import { getKbqSelectNonArrayValueError, isFunction, MultipleMode } from '@koobiq/components/core';
+import { getKbqSelectNonArrayValueError, MultipleMode } from '@koobiq/components/core';
 import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
@@ -613,7 +613,7 @@ export class KbqTreeSelection
         const element = this.elementRef.nativeElement;
 
         // For SSR compatibility
-        if (!isFunction(element.getClientRects)) return 0;
+        if (typeof element.getClientRects !== 'function') return 0;
 
         return element.getClientRects()[0]?.height ?? 0;
     }

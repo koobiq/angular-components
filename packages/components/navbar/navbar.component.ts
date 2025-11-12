@@ -21,7 +21,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
-import { isFunction } from '@koobiq/components/core';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {
@@ -209,7 +208,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         const element = this.elementRef.nativeElement;
 
         // For SSR compatibility
-        if (!isFunction(element.getBoundingClientRect)) return 0;
+        if (typeof element.getClientRects !== 'function') return 0;
 
         return element.getBoundingClientRect().width;
     }

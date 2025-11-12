@@ -727,9 +727,6 @@ export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<Has
 export function isBoolean(value: unknown): value is boolean;
 
 // @public
-export const isFunction: (value: unknown) => value is Function;
-
-// @public
 export function isMac(): boolean;
 
 // @public

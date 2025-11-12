@@ -50,7 +50,6 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
-    isFunction,
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqOptgroup,
@@ -445,7 +444,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         const element = this.elementRef.nativeElement;
 
         // For SSR compatibility
-        if (!isFunction(element.getClientRects)) return 0;
+        if (typeof element.getClientRects !== 'function') return 0;
 
         return element.getClientRects()[0]?.height ?? 0;
     }
@@ -832,7 +831,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         const element = this.elementRef.nativeElement;
 
         // For SSR compatibility
-        if (!isFunction(element.getClientRects)) return 0;
+        if (typeof element.getClientRects !== 'function') return 0;
 
         return element.getClientRects()[0]?.height ?? 0;
     }

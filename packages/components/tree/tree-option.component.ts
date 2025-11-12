@@ -19,7 +19,6 @@ import {
 } from '@angular/core';
 import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
 import {
-    isFunction,
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqOptionActionComponent,
@@ -307,7 +306,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         const element = this.elementRef.nativeElement;
 
         // For SSR compatibility
-        if (!isFunction(element.getClientRects)) return 0;
+        if (typeof element.getClientRects !== 'function') return 0;
 
         return element.getClientRects()[0]?.height ?? 0;
     }

@@ -20,7 +20,6 @@ import {
 import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
-import { isFunction } from '../utils';
 import { KbqOptgroup } from './optgroup';
 
 /**
@@ -271,7 +270,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         const element = this.elementRef.nativeElement;
 
         // For SSR compatibility
-        if (!isFunction(element.getClientRects)) return 0;
+        if (typeof element.getClientRects !== 'function') return 0;
 
         return element.getClientRects()[0]?.height ?? 0;
     }
