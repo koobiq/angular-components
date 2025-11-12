@@ -25,7 +25,7 @@ $toggle-thumb-offset: 8px;
 
         cursor: inherit;
 
-        &.kbq-toggle_left {
+        &.kbq-toggle-layout_left {
             flex-direction: row-reverse;
         }
 
@@ -103,11 +103,11 @@ $toggle-thumb-offset: 8px;
     flex: 1;
 
     &:has(.kbq-toggle-label:not(:empty)) {
-        &.kbq-toggle_left {
+        &.kbq-toggle__content_left {
             margin-right: var(--kbq-toggle-size-normal-horizontal-content-padding);
         }
 
-        &.kbq-toggle_right {
+        &.kbq-toggle__content_right {
             margin-left: var(--kbq-toggle-size-normal-horizontal-content-padding);
         }
     }
