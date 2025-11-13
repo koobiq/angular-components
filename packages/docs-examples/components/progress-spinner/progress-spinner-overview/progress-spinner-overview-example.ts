@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, OnDestroy, signal } from '@angular/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 
-const INTERVAL: number = 300;
+const DELAY: number = 300;
 const STEP: number = 4;
 const MAX_PERCENT: number = 100;
 
@@ -13,28 +12,26 @@ const MAX_PERCENT: number = 100;
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'progress-spinner-overview-example',
-    imports: [
-        KbqProgressSpinnerModule
-    ],
+    imports: [KbqProgressSpinnerModule],
     template: `
-        <div class="layout-row">
-            <div style="width: 40px">{{ percent }}%</div>
-            <kbq-progress-spinner class="layout-margin-right-s" [value]="percent" />
-        </div>
-        <div class="layout-row">
-            <div style="width: 40px">{{ percent }}%</div>
-            <kbq-progress-spinner class="layout-margin-right-s" [size]="'big'" [value]="percent" />
-        </div>
-    `
+        <small [style.width.px]="40">{{ percent() }}%</small>
+        <kbq-progress-spinner [value]="percent()" />
+    `,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ProgressSpinnerOverviewExample implements OnDestroy {
-    themePalette = ThemePalette;
-
-    percent: number = 0;
-    intervalId: number;
+    readonly percent = signal(0);
+    private intervalId: ReturnType<typeof setInterval>;
 
     constructor() {
-        setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
+        afterNextRender(() => {
+            this.intervalId = setInterval(
+                () => this.percent.update((value) => (value + STEP) % (MAX_PERCENT + STEP)),
+                DELAY
+            );
+        });
     }
 
     ngOnDestroy() {
