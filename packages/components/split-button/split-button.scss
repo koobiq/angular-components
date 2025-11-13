@@ -1,4 +1,4 @@
-@use '../core/styles/common';
+@use '../core/styles/common/list';
 @use './split-button-theme';
 
 .kbq-split-button {
@@ -24,7 +24,7 @@
             border-bottom-right-radius: unset;
 
             & .kbq-button-wrapper {
-                @include common.kbq-truncate-line();
+                @include list.kbq-truncate-line();
             }
         }
 

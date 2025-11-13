@@ -1,11 +1,12 @@
-@use '../core/styles/common';
+@use '../core/styles/common/list';
+@use '../core/styles/common/vendor-prefixes';
 
 .kbq-dropdown-item {
     width: 100%;
     border-radius: var(--kbq-dropdown-item-border-radius);
 
-    @include common.user-select(none);
-    @include common.kbq-list-item-base();
+    @include vendor-prefixes.user-select(none);
+    @include list.kbq-list-item-base();
 
     &:not(.kbq-disabled) {
         cursor: pointer;
@@ -29,7 +30,7 @@
 }
 
 .kbq-dropdown-item__text {
-    @include common.kbq-list-text();
+    @include list.kbq-list-text();
 }
 
 .kbq-dropdown-item-overlay {
@@ -44,11 +45,11 @@
 }
 
 .kbq-dropdown__group-header {
-    @include common.user-select(none);
-    @include common.kbq-list-header-base();
+    @include vendor-prefixes.user-select(none);
+    @include list.kbq-list-header-base();
 
     // @deprecated, use <kbq-optgroup label="Label" /> instead. Will be removed in the next major release
     &.kbq-dropdown__group-header_small {
-        @include common.kbq-list-subheading-base();
+        @include list.kbq-list-subheading-base();
     }
 }
