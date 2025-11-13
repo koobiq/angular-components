@@ -14,7 +14,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
             <a
                 *kbqDynamicTranslationSlot="'link'; let context"
                 kbq-link
-                href="https://koobiq.io/en/dynamic-translation"
+                href="https://koobiq.io/en/components/dynamic-translation"
                 target="_blank"
             >
                 {{ context }}
