@@ -5,7 +5,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqSplitButton } from '@koobiq/components/split-button';
+import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { combineLatest } from 'rxjs';
 
 type DevButtonState = Partial<{
@@ -31,7 +31,7 @@ type DevButton = DevButtonState & DevButtonStyle;
 
 @Component({
     standalone: true,
-    imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule, KbqSplitButton],
+    imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule, KbqSplitButtonModule],
     selector: 'dev-split-button-state-and-style',
     host: {
         'data-testid': 'e2eSplitButtonStateAndStyle'
