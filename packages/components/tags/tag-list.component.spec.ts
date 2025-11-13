@@ -270,11 +270,11 @@ describe(KbqTagList.name, () => {
                 expect(tagListNativeElement.hasAttribute('tabindex')).toBeFalsy();
             });
 
-            it('should focus next tag if first tag is not selectable', () => {
+            it('should focus next tag if first tag is disabled', () => {
                 const arr = tags.toArray();
                 const firstElementIndex = 0;
 
-                arr[firstElementIndex].selectable = false;
+                arr[firstElementIndex].disabled = true;
 
                 tagListInstance.focus();
                 fixture.detectChanges();
