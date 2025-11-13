@@ -4,12 +4,15 @@ import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { SplitButtonExamplesModule } from '../../docs-examples/components/split-button';
+import { DevSplitButtonStateAndStyle } from '../e2e/components/split-button';
 
 @Component({
     standalone: true,
-    imports: [SplitButtonExamplesModule],
+    imports: [SplitButtonExamplesModule, DevSplitButtonStateAndStyle],
     selector: 'dev-examples',
     template: `
+        <dev-split-button-state-and-style />
+        <br />
         <split-button-overview-example />
         <br />
         <split-button-styles-example />

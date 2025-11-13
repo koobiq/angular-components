@@ -33,6 +33,10 @@
                 & + .kbq-button,
                 & + .kbq-button-icon {
                     background: var(--kbq-button-filled-contrast-fade-on-states-disabled-background);
+
+                    &.kbq-contrast.kbq-button_filled .kbq-icon.kbq-empty {
+                        color: var(--kbq-button-filled-contrast-fade-off-states-disabled-left-icon);
+                    }
                 }
             }
 
