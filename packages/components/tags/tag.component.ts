@@ -334,21 +334,18 @@ export class KbqTag
     private _value: any;
 
     /**
-     * Whether or not the tag is selectable. When a tag is not selectable,
-     * changes to its selected state are always ignored. By default a tag is
-     * selectable, and it becomes non-selectable if its parent tag list is
-     * not selectable.
+     * Whether the tag is selectable.
      */
     @Input({ transform: booleanAttribute })
     get selectable(): boolean {
-        return this._selectable && (this.tagList?.selectable ?? true);
+        return this._selectable || !!this.tagList?.selectable;
     }
 
     set selectable(value: boolean) {
         this._selectable = value;
     }
 
-    private _selectable: boolean = true;
+    private _selectable: boolean = false;
 
     /**
      * Determines whether the tag is removable.
@@ -530,7 +527,13 @@ export class KbqTag
             return;
         }
 
-        if (this.selectable && hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey')) {
+        if (
+            // We should toggle selection only if tag inside of a tag list.
+            // Single tag can only be toggled on focus or blur.
+            this.tagList &&
+            this.selectable &&
+            hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey')
+        ) {
             this.toggleSelected(true);
 
             // We should stop event propagation to prevent the tag list from handling the click event.

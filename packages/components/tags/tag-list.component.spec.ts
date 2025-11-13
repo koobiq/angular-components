@@ -168,17 +168,6 @@ describe(KbqTagList.name, () => {
                 expect(tagListNativeElement.classList).toContain('kbq-tag-list');
             });
 
-            it('should not have the aria-selected attribute when is not selectable', () => {
-                testComponent.selectable = false;
-                fixture.detectChanges();
-
-                const tagsValid = tags
-                    .toArray()
-                    .every((tag) => !tag.selectable && !tag.elementRef.nativeElement.hasAttribute('aria-selected'));
-
-                expect(tagsValid).toBe(true);
-            });
-
             it('should toggle the tags disabled state based on whether it is disabled', () => {
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
 
