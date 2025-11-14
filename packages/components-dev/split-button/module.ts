@@ -8,11 +8,9 @@ import { DevSplitButtonStateAndStyle } from '../e2e/components/split-button';
 
 @Component({
     standalone: true,
-    imports: [SplitButtonExamplesModule, DevSplitButtonStateAndStyle],
+    imports: [SplitButtonExamplesModule],
     selector: 'dev-examples',
     template: `
-        <dev-split-button-state-and-style />
-        <br />
         <split-button-overview-example />
         <br />
         <split-button-styles-example />
@@ -38,7 +36,8 @@ export class DevExamples {}
         KbqSplitButtonModule,
         DevExamples,
         KbqButtonModule,
-        KbqIconModule
+        KbqIconModule,
+        DevSplitButtonStateAndStyle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

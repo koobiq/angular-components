@@ -4,8 +4,7 @@
             background: var(--kbq-states-background-transparent-hover, rgba(108, 115, 147, 0.08));
         }
 
-        & .kbq-button,
-        & .kbq-button-icon {
+        & .kbq-split-button_item {
             &.kbq-contrast.kbq-button_filled::before {
                 background: var(--kbq-foreground-on-contrast);
             }
@@ -25,25 +24,6 @@
                 }
             }
 
-            &[disabled] + [disabled]::before {
-                background: var(--kbq-line-contrast-fade);
-            }
-
-            &[disabled] {
-                & + .kbq-button,
-                & + .kbq-button-icon {
-                    background: var(--kbq-button-filled-contrast-fade-on-states-disabled-background);
-
-                    &.kbq-contrast.kbq-button_filled .kbq-icon.kbq-empty {
-                        color: var(--kbq-button-filled-contrast-fade-off-states-disabled-left-icon);
-                    }
-                }
-            }
-
-            &:not([disabled]) + [disabled] {
-                background: var(--kbq-button-filled-contrast-fade-on-background) !important;
-            }
-
             &:first-child.cdk-keyboard-focused {
                 box-shadow: inset -1px 0 0 0 var(--kbq-states-line-focus-theme);
             }
@@ -58,6 +38,65 @@
 
             & + .kbq-button_outline {
                 border-left: none;
+            }
+        }
+
+        &.kbq-split-button_first-disabled {
+            &.kbq-contrast-fade.kbq-button_filled,
+            &.kbq-contrast.kbq-button_filled {
+                & .kbq-split-button_item {
+                    background: var(--kbq-states-background-disabled);
+                }
+
+                & .kbq-split-button_second {
+                    &:hover {
+                        background: var(--kbq-states-background-contrast-fade-hover);
+                    }
+
+                    &:active {
+                        background: var(--kbq-states-background-contrast-fade-active);
+                    }
+
+                    & .kbq-icon.kbq-empty {
+                        color: var(--kbq-icon-contrast);
+                    }
+
+                    &:before {
+                        background: var(--kbq-line-contrast-fade);
+                    }
+                }
+            }
+
+            &.kbq-theme-fade.kbq-button_outline {
+                & .kbq-split-button_item {
+                    border-color: var(--kbq-button-outline-theme-fade-on-states-disabled-border);
+                }
+            }
+        }
+
+        &.kbq-split-button_second-disabled {
+            &.kbq-contrast.kbq-button_filled {
+                & .kbq-split-button_second {
+                    background: var(--kbq-button-filled-contrast-fade-off-background);
+                }
+            }
+
+            &.kbq-contrast-fade.kbq-button_filled {
+                & .kbq-split-button_first {
+                    background: var(--kbq-states-background-disabled);
+                }
+            }
+
+            &.kbq-theme-fade.kbq-button_outline {
+                & .kbq-split-button_item {
+                    border-color: var(--kbq-button-outline-theme-fade-on-states-disabled-border);
+                }
+            }
+
+            &.kbq-theme.kbq-button_transparent {
+                & .kbq-split-button_second:before {
+                    background: var(--kbq-states-line-disabled);
+                }
             }
         }
     }
