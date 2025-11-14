@@ -3,9 +3,6 @@
     "compilerOptions": {
         "baseUrl": "./",
         "outDir": "../../dist/out-tsc",
-        "declaration": false,
-        "downlevelIteration": true,
-        "allowSyntheticDefaultImports": true,
         "paths": {
             "@koobiq/cdk/*": ["../../packages/cdk/*"],
             "@koobiq/components/*": ["../../packages/components/*"],
