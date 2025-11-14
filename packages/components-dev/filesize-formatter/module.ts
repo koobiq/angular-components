@@ -11,19 +11,6 @@ import { DevLocaleSelector } from '../locale-selector';
         <filesize-formatter-overview-example />
         <filesize-formatter-table-number-example />
     `,
-    styles: `
-        :host {
-            display: flex;
-            gap: var(--kbq-size-l);
-            flex-wrap: wrap;
-        }
-        :host > * {
-            border-radius: var(--kbq-size-border-radius);
-            border: 1px solid var(--kbq-line-contrast-less);
-            margin-bottom: var(--kbq-size-l);
-            padding: var(--kbq-size-xl);
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevExamples {}
