@@ -86,11 +86,11 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     protected _disabled: boolean;
 
     get firstDisabled(): boolean {
-        return this.buttons.first.disabled;
+        return this.buttons.first?.disabled;
     }
 
     get secondDisabled(): boolean {
-        return this.buttons.length > 1 && this.buttons.last.disabled;
+        return this.buttons.length > 1 && this.buttons.last?.disabled;
     }
 
     constructor() {
@@ -105,12 +105,16 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         this.updateColor(this.color);
         this.updateDisabledState(this.disabled);
         this.updateDropdownParams();
+
+        if (!this.buttons.length) {
+            throw new Error(`kbq-split-button must contain at least one button`);
+        }
     }
 
     private addClasses() {
-        this.buttons.first.getHostElement().classList.add(`kbq-split-button_first`);
-        this.buttons.last.getHostElement().classList.add(`kbq-split-button_second`);
-        this.buttons?.forEach((button: KbqButton) => {
+        this.buttons.first?.getHostElement().classList.add(`kbq-split-button_first`);
+        this.buttons.last?.getHostElement().classList.add(`kbq-split-button_second`);
+        this.buttons.forEach((button: KbqButton) => {
             button.getHostElement().classList.add(`kbq-split-button_item`);
         });
     }
