@@ -158,7 +158,7 @@ export class DevFileUploadStateAndStyle {
         afterNextRender(() => {
             this.document
                 .querySelectorAll('.dev-dragover .kbq-file-upload')
-                .forEach((el) => this.renderer.addClass(el, 'dragover'));
+                .forEach((el) => this.renderer.addClass(el, 'kbq-file-drop_dragover'));
 
             this.document
                 .querySelectorAll('.dev-error .kbq-file-upload')

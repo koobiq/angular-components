@@ -6,7 +6,7 @@ DebugElement {
     class="kbq-markdown"
   >
     <pre
-      class="markdown-input"
+      class="kbq-markdown__input"
     >
       
 # H1
@@ -65,7 +65,7 @@ npm install jquery
 
     </pre>
     <div
-      class="markdown-output"
+      class="kbq-markdown__output"
     >
       <h1
         class="kbq-markdown__h1"
@@ -467,10 +467,10 @@ DebugElement {
     class="kbq-markdown"
   >
     <pre
-      class="markdown-input"
+      class="kbq-markdown__input"
     />
     <div
-      class="markdown-output"
+      class="kbq-markdown__output"
     >
       <h1
         class="kbq-markdown__h1"

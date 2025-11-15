@@ -1,7 +1,4 @@
-// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
-/* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens' as *;
-
 @use './scrollbar-component-theme' as *;
 
 .kbq-scrollbar-component {
@@ -143,11 +140,13 @@
     transform: scale(calc(1 / 0.1));
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .os-size-observer-listener.ltr {
     margin-right: -266px;
     margin-left: 0;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .os-size-observer-listener.rtl {
     margin-left: -266px;
     margin-right: 0;

@@ -53,14 +53,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             position: relative;
             display: flex;
 
-            .data-text-start {
+            .kbq-ellipsis-center_data-text-start {
                 flex: 0 1 auto;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: pre;
             }
 
-            .data-text-end {
+            .kbq-ellipsis-center_data-text-end {
                 flex: 1 0 auto;
                 overflow: hidden;
                 white-space: pre;

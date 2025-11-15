@@ -70,8 +70,8 @@ describe(KbqEllipsisCenterDirective.name, () => {
         componentInstance.ellipsisCenterDirective.refresh();
         tick(); // wait for setTimeout
 
-        const startEl: HTMLElement = nativeElement.querySelector('.data-text-start')!;
-        const endEl: HTMLElement = nativeElement.querySelector('.data-text-end')!;
+        const startEl: HTMLElement = nativeElement.querySelector('.kbq-ellipsis-center_data-text-start')!;
+        const endEl: HTMLElement = nativeElement.querySelector('.kbq-ellipsis-center_data-text-end')!;
 
         expect(startEl).toBeTruthy();
         expect(endEl).toBeTruthy();

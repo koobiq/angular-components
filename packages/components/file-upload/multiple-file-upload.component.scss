@@ -1,5 +1,3 @@
-// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
-/* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens' as *;
 
 // todo нужно рефакторить со стилями тут сложно
@@ -8,7 +6,7 @@
     border-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
     border-style: dashed;
 
-    &.default:not(.selected) {
+    &.kbq-file-upload_default:not(.kbq-selected) {
         justify-content: center;
 
         padding: var(--kbq-file-upload-size-multiple-big-container-padding-vertical)
@@ -18,25 +16,25 @@
 
         min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
 
-        .dropzone {
+        .kbq-file-dropzone {
             gap: var(--kbq-file-upload-size-multiple-big-container-content-gap-horizontal);
         }
 
-        .dropzone__text {
-            .multiple__caption {
+        .kbq-file-dropzone__text {
+            .kbq-file-multiple__caption {
                 padding-top: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-vertical);
             }
         }
     }
 
-    &.compact:not(.selected) {
+    &.kbq-file-upload_compact:not(.kbq-selected) {
         padding: var(--kbq-file-upload-multiple-compact-container-padding-vertical)
             var(--kbq-file-upload-multiple-compact-container-padding-horizontal);
 
-        .dropzone {
+        .kbq-file-dropzone {
             gap: var(--kbq-file-upload-multiple-compact-container-content-gap-horizontal);
 
-            .dropzone__text.multiple__caption {
+            .kbq-file-dropzone__text.kbq-file-multiple__caption {
                 padding-top: var(--kbq-file-upload-multiple-compact-text-block-padding-vertical);
 
                 padding-bottom: var(--kbq-file-upload-multiple-compact-text-block-padding-vertical);
@@ -44,7 +42,7 @@
         }
     }
 
-    .kbq-list-option.multiple__uploaded-item {
+    .kbq-list-option.kbq-file-multiple__uploaded-item {
         border-radius: 0;
         padding: 0 calc(var(--kbq-size-3xs) - var(--kbq-file-upload-size-multiple-big-container-border-width));
 
@@ -86,7 +84,7 @@
             align-items: center;
             gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
 
-            .file-item__text {
+            .kbq-file-item__text {
                 width: 90%;
             }
         }
@@ -134,7 +132,7 @@
         }
     }
 
-    .btn-upload {
+    .kbq-file-btn-upload {
         margin: -1px;
         padding: calc(var(--kbq-size-m) - var(--kbq-file-upload-size-multiple-big-container-border-width))
             var(--kbq-size-m) var(--kbq-size-m) var(--kbq-size-m);
@@ -142,12 +140,12 @@
         border-top-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
         border-top-style: dashed;
 
-        .dropzone {
+        .kbq-file-dropzone {
             gap: var(--kbq-file-upload-size-multiple-big-dropzone-content-gap-horizontal);
         }
     }
 
-    .file-upload__dropzone {
+    .kbq-file-upload__dropzone {
         width: 100%;
         height: 100%;
     }

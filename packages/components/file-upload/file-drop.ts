@@ -9,7 +9,8 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
     selector: '[kbqFileDrop]',
     exportAs: 'kbqFileDrop',
     host: {
-        '[class.dragover]': 'dragover',
+        class: 'kbq-file-drop',
+        '[class.kbq-file-drop_dragover]': 'dragover',
         '(dragover)': 'onDragOver($event)',
         '(dragleave)': 'onDragLeave($event)',
         '(drop)': 'onDrop($event)'

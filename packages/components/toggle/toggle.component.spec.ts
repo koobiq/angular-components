@@ -137,7 +137,7 @@ describe('KbqToggle', () => {
             testComponent.labelPos = 'left';
             fixture.detectChanges();
 
-            expect(toggleNativeElement.querySelector('.left')).not.toBeNull();
+            expect(toggleNativeElement.querySelector('.kbq-toggle-layout_left')).not.toBeNull();
         });
 
         it('should not trigger the click event multiple times', () => {
