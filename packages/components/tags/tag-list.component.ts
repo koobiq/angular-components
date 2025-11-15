@@ -35,7 +35,14 @@ import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
-import { KbqTag, KbqTagDragData, KbqTagEditChange, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
+import {
+    KbqTag,
+    KbqTagDragData,
+    KbqTagEditChange,
+    KbqTagEvent,
+    KbqTagFocusEvent,
+    KbqTagSelectionChange
+} from './tag.component';
 
 // Increasing integer for generating unique ids for tag-list components.
 let nextUniqueId = 0;
@@ -130,7 +137,7 @@ export class KbqTagList
      *
      * @docs-private
      */
-    get tagFocusChanges(): Observable<KbqTagEvent> {
+    get tagFocusChanges(): Observable<KbqTagFocusEvent> {
         return merge(...this.tags.map((tag) => tag.onFocus));
     }
 
@@ -456,7 +463,7 @@ export class KbqTagList
         this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
             .withVerticalOrientation()
             .withHorizontalOrientation(this.dir ? this.dir.value : 'ltr')
-            .skipPredicate((item) => item.disabled || !item.selectable);
+            .skipPredicate(({ disabled }) => disabled);
 
         if (this.dir) {
             this.dir.change
@@ -813,10 +820,11 @@ export class KbqTagList
 
     /** Listens to user-generated selection events on each tag. */
     private listenToTagsFocus(): void {
-        this.tagFocusSubscription = this.tagFocusChanges.subscribe((event) => {
-            const tagIndex: number = this.tags.toArray().indexOf(event.tag);
+        this.tagFocusSubscription = this.tagFocusChanges.subscribe(({ tag, origin }) => {
+            const tagIndex = this.tags.toArray().indexOf(tag);
 
             if (this.isValidIndex(tagIndex)) {
+                this.keyManager.setFocusOrigin(origin);
                 this.keyManager.updateActiveItem(tagIndex);
             }
 
