@@ -100,6 +100,7 @@ export class DevApp {
     selectedTrigger: string = this.TRIGGERS.CLICK;
     selectedSize: PopUpSizes = PopUpSizes.Medium;
     layoutClass: string = 'layout-row layout-align-center-center';
+    stickToWindow: PopUpPlacements;
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];

@@ -177,6 +177,8 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
                     `${this.offset!.toString()}px`
                 );
             }
+
+            this.setStickPosition();
         });
 
         this.service.changes.subscribe(() => this.changeDetectorRef.markForCheck());
@@ -321,6 +323,13 @@ export class KbqNotificationCenterTrigger
             this.hide();
         }
     }
+
+    @Input() stickToWindow:
+        | PopUpPlacements.Top
+        | PopUpPlacements.Right
+        | PopUpPlacements.Bottom
+        | PopUpPlacements.Left
+        | string;
 
     /** @docs-private */
     get hasClickTrigger(): boolean {
