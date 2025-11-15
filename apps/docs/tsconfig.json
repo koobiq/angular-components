@@ -10,7 +10,8 @@
             "@koobiq/cdk/*": ["../../packages/cdk/*"],
             "@koobiq/components/*": ["../../packages/components/*"],
             "@koobiq/angular-moment-adapter/*": ["../../packages/angular-moment-adapter/*"],
-            "@koobiq/angular-luxon-adapter/*": ["../../packages/angular-luxon-adapter/*"]
+            "@koobiq/angular-luxon-adapter/*": ["../../packages/angular-luxon-adapter/*"],
+            "@koobiq/docs-examples": ["../../packages/docs-examples"]
         }
     }
 }
