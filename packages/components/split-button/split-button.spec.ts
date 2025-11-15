@@ -2,6 +2,7 @@ import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSplitButton, KbqSplitButtonModule } from '@koobiq/components/split-button';
 
 describe('KbqSearchExpandable', () => {
@@ -11,7 +12,7 @@ describe('KbqSearchExpandable', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [KbqSplitButtonModule],
+            imports: [KbqSplitButtonModule, KbqButtonModule],
             declarations: [TestApp]
         }).compileComponents();
     });
@@ -31,7 +32,14 @@ describe('KbqSearchExpandable', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <kbq-split-button />
+        <kbq-split-button>
+            <button kbq-button [disabled]="true">
+                <i kbq-icon="kbq-plus_16"></i>
+            </button>
+            <button kbq-button>
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
+            </button>
+        </kbq-split-button>
     `
 })
 class TestApp {}

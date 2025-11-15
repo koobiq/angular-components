@@ -25,6 +25,8 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     // (undocumented)
     protected _disabled: boolean;
     protected dropdownTrigger: KbqDropdownTrigger;
+    // (undocumented)
+    get firstDisabled(): boolean;
     get kbqStyle(): string;
     set kbqStyle(value: KbqButtonStyles | string);
     // (undocumented)
@@ -32,6 +34,8 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     // (undocumented)
     ngAfterContentInit(): void;
     panelAutoWidth: boolean;
+    // (undocumented)
+    get secondDisabled(): boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["dropdownTrigger", "buttons"], ["[kbq-button]", "[kbq-button]"], true, never>;
     // (undocumented)
