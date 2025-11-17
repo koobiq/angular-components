@@ -1,4 +1,5 @@
 {
+    "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/v13.35.1/schema/firebase-config.json",
     "hosting": [
         {
             "target": "stable",
