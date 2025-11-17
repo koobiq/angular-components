@@ -299,27 +299,44 @@
 @mixin kbq-markdown-base-typography() {
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
+        // DEPRECATED: .md-h# class is deprecated, use .kbq-md-h# instead
+        .md-h#{$i},
         .kbq-md-h#{$i} {
             @include kbq-typography-level-to-styles-css-variables(md-typography, md-h#{$i});
         }
     }
 
+    // DEPRECATED: .md-body class is deprecated, use .kbq-md-body instead
+    /* stylelint-disable-next-line selector-class-pattern */
+    .md-body,
     .kbq-md-body {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);
     }
 
+    // DEPRECATED: .md-body-mono class is deprecated, use .kbq-md-body-mono instead
+    /* stylelint-disable-next-line selector-class-pattern */
+    .md-body-mono,
     .kbq-md-body-mono {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-body-mono);
     }
 
+    // DEPRECATED: .md-caption class is deprecated, use .kbq-md-caption instead
+    /* stylelint-disable-next-line selector-class-pattern */
+    .md-caption,
     .kbq-md-caption {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-caption);
     }
 
+    // DEPRECATED: .md-table-cell class is deprecated, use .kbq-md-table-cell instead
+    /* stylelint-disable-next-line selector-class-pattern */
+    .md-table-cell,
     .kbq-md-table-cell {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-cell);
     }
 
+    // DEPRECATED: .md-table-header class is deprecated, use .kbq-md-table-header instead
+    /* stylelint-disable-next-line selector-class-pattern */
+    .md-table-header,
     .kbq-md-table-header {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-header);
     }
