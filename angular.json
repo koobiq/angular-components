@@ -88,13 +88,19 @@
                         "server": "apps/docs/src/main.server.ts",
                         "prerender": true,
                         "ssr": {
-                            "entry": "apps/docs/server.ts"
+                            "entry": "apps/docs/src/server.ts"
                         }
                     },
                     "configurations": {
                         "production": {
                             "outputHashing": "all",
-                            "tsConfig": "apps/docs/tsconfig.build.json"
+                            "tsConfig": "apps/docs/tsconfig.build.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/docs/src/environments/environment.ts",
+                                    "with": "apps/docs/src/environments/environment.prod.ts"
+                                }
+                            ]
                         },
                         "development": {
                             "optimization": false,

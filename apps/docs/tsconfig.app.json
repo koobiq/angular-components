@@ -19,7 +19,7 @@
     "files": [
         "src/main.ts",
         "src/main.server.ts",
-        "server.ts"
+        "src/server.ts"
     ],
     "exclude": [
         "src/**/*.spec.ts",
