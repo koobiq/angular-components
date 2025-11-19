@@ -5,21 +5,19 @@ import ts from 'typescript';
 import { migrateTemplate, migrateTs } from '../../utils/angular-parsing';
 import { getParsingInfo } from '../../utils/package-config';
 import { canMigrateFile, MigrationData } from '../../utils/typescript';
+import { iconReplacementData } from './data';
 import { Schema } from './schema';
 
 export const migrationData: MigrationData = {
-    elementName: 'kbq-loader-overlay',
+    elementName: 'i',
     attrs: {
         key: {
-            from: 'compact',
-            to: 'size'
+            from: 'kbq-icon',
+            to: 'kbq-icon'
         },
         value: {
-            replacements: [
-                { from: 'true', to: 'compact' },
-                { from: 'false', to: 'big' }
-            ],
-            default: 'big'
+            replacements: iconReplacementData,
+            default: ''
         }
     }
 };

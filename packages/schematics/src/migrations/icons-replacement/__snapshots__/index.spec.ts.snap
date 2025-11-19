@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`loader-overlay-size-attr should run migration for external html: project app: after changes 1`] = `"<div><kbq-loader-overlay size="big"></kbq-loader-overlay><kbq-loader-overlay size="compact"></kbq-loader-overlay></div>"`;

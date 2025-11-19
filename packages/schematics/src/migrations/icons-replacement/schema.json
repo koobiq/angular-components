@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "$id": "koobiq-components-loader-overlay-size-attr",
-    "title": "koobiq-components loader-overlay-size-attr schematic",
+    "$id": "koobiq-components-icons-replacement",
+    "title": "koobiq-components icons-replacement schematic",
     "type": "object",
     "properties": {
         "project": {

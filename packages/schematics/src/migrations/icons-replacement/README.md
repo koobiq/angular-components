@@ -1,22 +1,21 @@
-### Loader Overlay Size Attr schematics
+### Icons replacement schematics
 
-This schematic provides migration for `KbqLoaderOverlay` new `size` attribute. It includes:
+This schematic provides migration for new icons naming attribute. It includes:
 
-- Removal of `compact` attribute usage
-- Replacement with `size` attribute
+- Replacement of old names with new based on info in `data.ts`;
 
 [Params](schema.ts)
 
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:loader-overlay-size-attr --project <your project>
+ng g @koobiq/components:icons-replacement --project <your project>
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:loader-overlay-size-attr --project <your project>
+nx g @koobiq/components:icons-replacement --project <your project>
 ```
 
 ### Run locally
@@ -30,7 +29,7 @@ yarn run build:schematics
 Run command (for example, for `koobiq-docs` project)
 
 ```shell
-ng g ./dist/components/schematics/collection.json:loader-overlay-size-attr --project koobiq-docs
+ng g ./dist/components/schematics/collection.json:icons-replacement --project koobiq-docs
 ```
 
 ### Result

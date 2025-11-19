@@ -8,7 +8,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
-const SCHEMATIC_NAME = 'loader-overlay-size-attr';
+const SCHEMATIC_NAME = 'icons-replacement';
 
 const getProjectContentPaths = (project: ProjectDefinition) => {
     return {

@@ -31,6 +31,11 @@
             "description": "Updates attr name and value in ts and html",
             "factory": "./migrations/loader-overlay-size-attr/index",
             "schema": "./migrations/loader-overlay-size-attr/schema.json"
+        },
+        "icons-replacement": {
+            "description": "Updates attr name and value in ts and html",
+            "factory": "./migrations/icons-replacement/index",
+            "schema": "./migrations/icons-replacement/schema.json"
         }
     }
 }
