@@ -197,6 +197,7 @@ export class KbqSingleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(file: File | KbqFileItem | null): void {
+        // @TODO: remove File from arguments since it redundant. It resolves SSR (#DS-4414)
         if (!isPlatformBrowser(this.platformId)) return;
 
         this.file = file instanceof File ? this.mapToFileItem(file) : file;

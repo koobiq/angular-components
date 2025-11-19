@@ -240,6 +240,7 @@ export class KbqMultipleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(files: FileList | KbqFileItem[] | null): void {
+        // @TODO: remove FileList from arguments since it redundant. It resolves SSR (#DS-4414)
         if (!isPlatformBrowser(this.platformId)) return;
 
         this.files = files instanceof FileList || !files ? this.mapToFileItem(files) : files;
