@@ -27,6 +27,7 @@ import {
     Optional,
     Provider,
     ViewContainerRef,
+    afterNextRender,
     forwardRef,
     inject
 } from '@angular/core';
@@ -220,9 +221,9 @@ export class KbqAutocompleteTrigger
         // @breaking-change 8.0.0 Make `_viewportRuler` required.
         private viewportRuler?: ViewportRuler
     ) {
-        if (this.window) {
+        afterNextRender(() => {
             zone.runOutsideAngular(() => this.window.addEventListener('blur', this.windowBlurHandler));
-        }
+        });
 
         this.scrollStrategy = scrollStrategy;
     }
