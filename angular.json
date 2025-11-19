@@ -2,33 +2,38 @@
     "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
     "version": 1,
     "newProjectRoot": "projects",
+    "schematics": {
+        "@schematics/angular:component": {
+            "style": "scss",
+            "changeDetection": "OnPush",
+            "standalone": true,
+            "inlineTemplate": true,
+            "inlineStyle": true,
+            "skipTests": true
+        },
+        "@schematics/angular:application": {
+            "strict": true,
+            "standalone": true,
+            "inlineTemplate": true,
+            "inlineStyle": true,
+            "skipTests": true,
+            "minimal": true
+        }
+    },
     "projects": {
         "koobiq-docs": {
             "projectType": "application",
-            "schematics": {
-                "@schematics/angular:component": {
-                    "style": "scss",
-                    "changeDetection": "OnPush",
-                    "standalone": true,
-                    "inlineTemplate": true,
-                    "inlineStyle": true,
-                    "skipTests": true
-                },
-                "@schematics/angular:application": {
-                    "strict": true
-                }
-            },
             "root": "apps/docs",
             "sourceRoot": "apps/docs",
-            "prefix": "app",
+            "prefix": "docs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "sourceMap": true,
-                        "outputPath": "./dist/releases/koobiq-docs",
+                        "outputPath": {
+                            "base": "dist/releases/koobiq-docs"
+                        },
                         "index": "apps/docs/src/index.html",
-                        "main": "apps/docs/src/main.ts",
                         "polyfills": ["zone.js"],
                         "tsConfig": "apps/docs/tsconfig.app.json",
                         "assets": [
@@ -76,86 +81,46 @@
                         "stylePreprocessorOptions": {
                             "includePaths": ["dist", "apps/docs/src"]
                         },
-                        "styles": [
-                            "apps/docs/src/main.scss"
-                        ],
+                        "styles": ["apps/docs/src/main.scss"],
                         "scripts": [],
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "optimization": false,
                         "namedChunks": true,
-                        "allowedCommonJsDependencies": [
-                            "highlight.js",
-                            "@messageformat/core",
-                            "path-normalize"
-                        ]
+                        "browser": "apps/docs/src/main.ts",
+                        "server": "apps/docs/src/main.server.ts",
+                        "prerender": true,
+                        "ssr": {
+                            "entry": "apps/docs/src/server.ts"
+                        }
                     },
                     "configurations": {
-                        "development": {
-                            "tsConfig": "apps/docs/tsconfig.app.json",
-                            "fileReplacements": [
-                                {
-                                    "replace": "apps/docs/src/environments/environment.ts",
-                                    "with": "apps/docs/src/environments/environment.prod.ts"
-                                }
-                            ],
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "2mb",
-                                    "maximumError": "5mb"
-                                }
-                            ]
-                        },
                         "production": {
+                            "outputHashing": "all",
                             "tsConfig": "apps/docs/tsconfig.build.json",
                             "fileReplacements": [
                                 {
                                     "replace": "apps/docs/src/environments/environment.ts",
                                     "with": "apps/docs/src/environments/environment.prod.ts"
                                 }
-                            ],
-                            "optimization": {
-                                "scripts": true,
-                                "styles": true,
-                                "fonts": false
-                            },
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
-                            "aot": true,
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "2mb",
-                                    "maximumError": "5mb"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb",
-                                    "maximumError": "10kb"
-                                }
                             ]
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
                         }
-                    }
+                    },
+                    "defaultConfiguration": "production"
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "koobiq-docs:build"
-                    },
                     "configurations": {
-                        "development": {
-                            "buildTarget": "koobiq-docs:build:development"
-                        },
                         "production": {
                             "buildTarget": "koobiq-docs:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "koobiq-docs:build:development"
                         }
-                    }
+                    },
+                    "defaultConfiguration": "development"
                 },
                 "test": {
                     "builder": "@angular-builders/jest:run",

@@ -6946,18 +6946,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:^4":
-  version: 4.17.22
-  resolution: "@types/express@npm:4.17.22"
-  dependencies:
-    "@types/body-parser": "npm:*"
-    "@types/express-serve-static-core": "npm:^4.17.33"
-    "@types/qs": "npm:*"
-    "@types/serve-static": "npm:*"
-  checksum: 10c0/15c10a5ebb40a0356baa95ed374a2150d862786c9fccbdd724df12acc9c8cb08fbe1d34b446b1bcef2dbe5305cb3013fb39fba791baa54ef6df8056482776abb
-  languageName: node
-  linkType: hard
-
 "@types/fs-extra@npm:^5.1.0":
   version: 5.1.0
   resolution: "@types/fs-extra@npm:5.1.0"
@@ -15718,7 +15706,7 @@ __metadata:
     "@types/conventional-changelog": "npm:^3.1.5"
     "@types/conventional-changelog-writer": "npm:^4.0.10"
     "@types/eslint": "npm:^8.56.12"
-    "@types/express": "npm:^4"
+    "@types/express": "npm:^4.17.21"
     "@types/fs-extra": "npm:^5.1.0"
     "@types/glob": "npm:^7.1.4"
     "@types/inquirer": "npm:^7.3.3"

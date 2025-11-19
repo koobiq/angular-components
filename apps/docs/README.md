@@ -1,51 +1,41 @@
-## [Production Build](../../.github/workflows/actions/build-docs/action.yml)
+# Documentation application
 
-Before building the documentation, you must first [build packages](#build-packages) and [generate sitemap](#generate-sitemapxml)
+This is the [Koobiq design system](https://koobiq.io/en) website application.
 
-```bash
-yarn run build:docs-examples-module &&
-yarn run build:docs-examples &&
-yarn run build:docs-content &&
-yarn run build:package-docs-content &&
-yarn run docs:build
-```
+## Development
 
-## Generate `sitemap.xml`
+Make sure you have the [correct version](.nvmrc) of Node.js installed (we recommend using [nvm](https://github.com/nvm-sh/nvm)).
 
 ```bash
-yarn run docs:generate-sitemap
-```
+# Setup Node.js
+nvm use
 
-## Build packages
+# Install dependencies
+yarn install
 
-```bash
-yarn run build:cdk &&
-yarn run build:components &&
-yarn run build:angular-luxon-adapter &&
-yarn run build:angular-moment-adapter &&
+# Build packages
+yarn run build:cdk
+yarn run build:angular-luxon-adapter
+yarn run build:angular-moment-adapter
 yarn run styles:build-all
-```
+yarn run build:components
+yarn run build:components-experimental
 
-## Generate `docs-content` folder (dgeni)
+# Generate content
+yarn run build:docs-content
+yarn run build:package-docs-content
 
-```bash
-yarn run build:docs-content && yarn run build:package-docs-content
-```
-
-## Generate basic module
-
-```bash
+# Generate examples
 yarn run build:docs-examples-module
-```
-
-## Generate examples
-
-```bash
 yarn run build:docs-examples
-```
 
-## Debugging
+# Generate sitemap
+yarn run docs:generate-sitemap
 
-```bash
+# Run application
 yarn run docs:start:dev
+# Then open http://localhost:4200
+
+# Build application
+yarn run docs:build
 ```

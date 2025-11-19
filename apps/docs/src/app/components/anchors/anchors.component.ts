@@ -131,7 +131,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         return this.anchors.find((anchor) => anchor.href === href) || this.firstAnchor;
     }
 
-    setScrollPosition() {
+    setScrollPosition(): void {
         this.anchors = this.createAnchors();
 
         this.updateActiveAnchor();
@@ -143,14 +143,18 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
             // scroll after docs-sidepanel scrolled
             setTimeout(() => target.scrollIntoView());
         } else {
-            this.scrollContainer.scroll(0, 0);
+            // For SSR compatibility
+            if (typeof this.scrollContainer.scroll === 'function') this.scrollContainer.scroll(0, 0);
         }
 
         this.scrollSubscription?.unsubscribe();
 
-        this.scrollSubscription = fromEvent(this.scrollContainer, 'scroll')
-            .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
-            .subscribe(this.onScroll);
+        // For SSR compatibility
+        if (typeof this.scrollContainer.scroll === 'function') {
+            this.scrollSubscription = fromEvent(this.scrollContainer, 'scroll')
+                .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
+                .subscribe(this.onScroll);
+        }
 
         this.ref.detectChanges();
     }
@@ -209,10 +213,16 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         );
     }
 
-    private getHeaderTopOffset(header: HTMLElement) {
-        const bodyTop = this.document.body.getBoundingClientRect().top;
+    private getHeaderTopOffset(header: HTMLElement): number {
+        // For SSR compatibility
+        if (typeof this.document.body.getBoundingClientRect !== 'function') return 0;
 
-        return this.scrollContainer.scrollTop + header.getBoundingClientRect().top - bodyTop + this.headerHeight;
+        return (
+            this.scrollContainer.scrollTop +
+            header.getBoundingClientRect().top -
+            this.document.body.getBoundingClientRect().top +
+            this.headerHeight
+        );
     }
 
     private getLevel(classList): number {

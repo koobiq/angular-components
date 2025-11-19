@@ -6,14 +6,20 @@
             "@koobiq/components/*": ["../../dist/components/*"],
             "@koobiq/components-experimental/*": ["../../dist/components-experimental/*"],
             "@koobiq/angular-moment-adapter/*": ["../../dist/angular-moment-adapter/*"],
-            "@koobiq/angular-luxon-adapter/*": ["../../dist/angular-luxon-adapter/*"]
-        }
+            "@koobiq/angular-luxon-adapter/*": ["../../dist/angular-luxon-adapter/*"],
+            "@koobiq/docs-examples": ["../../dist/docs-examples"]
+        },
+        "types": [
+            "node"
+        ]
     },
     "include": [
         "src/**/*.d.ts"
     ],
     "files": [
-        "src/main.ts"
+        "src/main.ts",
+        "src/main.server.ts",
+        "src/server.ts"
     ],
     "exclude": [
         "src/**/*.spec.ts",
