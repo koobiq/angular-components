@@ -70,6 +70,16 @@
             left: var(--kbq-size-s);
         }
 
+        &.kbq-navbar-bento {
+            padding-top: var(--kbq-size-xl);
+            padding-bottom: var(--kbq-size-m);
+
+            &:after {
+                top: var(--kbq-size-m);
+                bottom: var(--kbq-size-xxs);
+            }
+        }
+
         & .kbq-badge {
             position: absolute;
 
