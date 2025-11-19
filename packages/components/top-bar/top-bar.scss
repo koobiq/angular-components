@@ -45,6 +45,9 @@
         &:has(> .kbq-overflow-items) {
             gap: unset;
             overflow: hidden;
+            // reduce height added by overflow-items' padding
+            margin-top: calc(-1 * var(--kbq-size-border-width));
+            margin-bottom: calc(-1 * var(--kbq-size-border-width));
         }
 
         .kbq-overflow-items {
