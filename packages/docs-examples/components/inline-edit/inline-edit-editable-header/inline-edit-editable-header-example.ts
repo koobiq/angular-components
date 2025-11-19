@@ -22,7 +22,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 @if (!displayValue()) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <span class="kbq-headline">{{ displayValue() }}</span>
+                    <span class="kbq-headline example-inline-edit__display-value">{{ displayValue() }}</span>
                 }
             </div>
             <div class="example-textarea_editable-header" kbqInlineEditEditMode>
@@ -52,6 +52,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             margin-left: -6px;
             --kbq-inline-edit-padding-vertical: 3px;
             --kbq-inline-edit-padding-horizontal: 5px;
+        }
+
+        .example-inline-edit__display-value {
+            overflow-wrap: break-word;
         }
 
         .kbq-textarea {
