@@ -227,6 +227,10 @@ export class DevApp {
         console.log('onSelectAll', $event);
     }
 
+    onCopy($event) {
+        console.log('onCopy', $event);
+    }
+
     onNavigationChange($event) {
         console.log('onNavigationChange', $event);
     }

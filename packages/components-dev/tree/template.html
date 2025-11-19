@@ -54,6 +54,7 @@
     [(ngModel)]="modelValue"
     (ngModelChange)="onModelValueChange($event)"
     (onSelectAll)="onSelectAll($event)"
+    (onCopy)="onCopy($event)"
 >
     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
         <i kbq-icon="kbq-info-circle_16"></i>

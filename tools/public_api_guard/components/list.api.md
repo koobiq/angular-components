@@ -44,9 +44,11 @@ export class KbqList {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqList, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqListCopyEvent<T> {
-    constructor(source: KbqListSelection, option: T);
+    constructor(source: KbqListSelection, option: T, event?: KeyboardEvent | undefined);
+    // (undocumented)
+    event?: KeyboardEvent | undefined;
     // (undocumented)
     option: T;
     // (undocumented)
