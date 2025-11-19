@@ -34,7 +34,6 @@ import {
     KbqColorDirective,
     KbqComponentColors,
     KbqFieldSizingContent,
-    KbqHovered,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -174,7 +173,7 @@ export class KbqTagEditInput {
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
-    hostDirectives: [KbqHovered, CdkDrag],
+    hostDirectives: [CdkDrag],
     template: `
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />

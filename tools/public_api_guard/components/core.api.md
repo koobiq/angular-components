@@ -2145,12 +2145,12 @@ export class KbqHighlightPipe implements PipeTransform {
 }
 
 // @public
-export class KbqHovered {
+export class KbqHover {
     readonly hovered: Signal<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqHovered, "[kbqHovered]", ["kbqHovered"], {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqHover, "[kbqHover]", ["kbqHover"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqHovered, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqHover, never>;
 }
 
 // @public
