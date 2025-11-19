@@ -20,7 +20,10 @@ import { DlHorizontalOverviewExample } from 'packages/docs-examples/components/d
 import { DropdownOverviewExample } from 'packages/docs-examples/components/dropdown';
 import { DynamicTranslationOverviewExample } from 'packages/docs-examples/components/dynamic-translation';
 import { EmptyStateDefaultExample } from 'packages/docs-examples/components/empty-state';
-import { FileUploadMultipleDefaultValidationReactiveFormsOverviewExample } from 'packages/docs-examples/components/file-upload';
+import {
+    FileUploadCvaOverviewExample,
+    FileUploadMultipleDefaultValidationReactiveFormsOverviewExample
+} from 'packages/docs-examples/components/file-upload';
 import { FilterBarOverviewExample } from 'packages/docs-examples/components/filter-bar';
 import { FormFieldPasswordOverviewExample } from 'packages/docs-examples/components/form-field';
 import { FormFieldsetOverviewExample } from 'packages/docs-examples/components/forms';
@@ -93,7 +96,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         DynamicTranslationOverviewExample,
         EmptyStateDefaultExample,
         IconItemDefaultExample,
-        // FileUploadCvaOverviewExample,
+        FileUploadCvaOverviewExample,
         FileUploadMultipleDefaultValidationReactiveFormsOverviewExample,
         FilterBarOverviewExample,
         FormFieldPasswordOverviewExample,
@@ -180,7 +183,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <empty-state-default-example />
         <hr />
-        <!-- <file-upload-cva-overview-example /> -->
+        <file-upload-cva-overview-example />
         <hr />
         <file-upload-multiple-default-validation-reactive-forms-overview-example />
         <hr />
