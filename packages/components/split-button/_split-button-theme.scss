@@ -24,11 +24,12 @@
                 }
             }
 
-            &:first-child.cdk-keyboard-focused {
+            &.kbq-split-button_first.cdk-keyboard-focused {
+                z-index: 1;
                 box-shadow: inset -1px 0 0 0 var(--kbq-states-line-focus-theme);
             }
 
-            &:last-child.cdk-keyboard-focused {
+            &.kbq-split-button_second.cdk-keyboard-focused {
                 box-shadow: inset 1px 0 0 0 var(--kbq-states-line-focus-theme);
             }
         }
@@ -48,7 +49,7 @@
                     background: var(--kbq-states-background-disabled);
                 }
 
-                & .kbq-split-button_second {
+                & .kbq-split-button_second:not(.kbq-disabled) {
                     &:hover {
                         background: var(--kbq-states-background-contrast-fade-hover);
                     }
@@ -74,7 +75,7 @@
             }
         }
 
-        &.kbq-split-button_second-disabled {
+        &.kbq-split-button_second-disabled:not(.kbq-split-button_first-disabled) {
             &.kbq-contrast.kbq-button_filled {
                 & .kbq-split-button_second {
                     background: var(--kbq-button-filled-contrast-fade-off-background);
@@ -97,6 +98,16 @@
                 & .kbq-split-button_second:before {
                     background: var(--kbq-states-line-disabled);
                 }
+            }
+
+            & .kbq-split-button_second:before {
+                background: rgba(138, 143, 168, 0.6);
+            }
+        }
+
+        &.kbq-split-button_first-disabled.kbq-split-button_second-disabled {
+            & .kbq-split-button_second:before {
+                background: var(--kbq-line-contrast-fade);
             }
         }
     }

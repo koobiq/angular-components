@@ -46,13 +46,19 @@
             }
         }
 
-        & .kbq-split-button_first:not(.kbq-disabled):is(:hover, .cdk-keyboard-focused, .kbq-active) {
+        & .kbq-split-button_first:not(.kbq-disabled):is(:hover, .kbq-hover, .cdk-keyboard-focused, .kbq-active) {
             & + .kbq-split-button_second::before {
                 display: none;
             }
         }
 
-        & .kbq-split-button_second:not(.kbq-disabled):is(:hover, .cdk-keyboard-focused, .kbq-active)::before {
+        &
+            .kbq-split-button_second:not(.kbq-disabled):is(
+                :hover,
+                .kbq-hover,
+                .cdk-keyboard-focused,
+                .kbq-active
+            )::before {
             display: none;
         }
 

@@ -107,6 +107,7 @@ export class DevSplitButtonStateAndStyle {
     private readonly states: DevButtonState[] = [
         { title: 'disabled', disabled: true },
         { title: 'disabledSecond', disabledSecond: true },
+        { title: 'completelyDisabled', disabledSecond: true, disabled: true },
         { title: 'normal' },
         { title: 'hover', hover: true },
         { title: 'hoverSecond', hoverSecond: true },

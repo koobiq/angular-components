@@ -12,6 +12,7 @@ import {
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqColorDirective, KbqComponentColors, kbqInjectNativeElement, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { delay } from 'rxjs/operators';
 
 @Component({
     standalone: true,
@@ -100,7 +101,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     }
 
     ngAfterContentInit(): void {
-        this.addClasses();
+        this.updateClasses();
         this.updateStyle(this._kbqStyle);
         this.updateColor(this.color);
         this.updateDisabledState(this.disabled);
@@ -109,9 +110,20 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         if (!this.buttons.length) {
             throw new Error(`kbq-split-button must contain at least one button`);
         }
+
+        this.buttons.changes.pipe(delay(0)).subscribe(() => {
+            this.updateClasses();
+            this.updateStyle(this._kbqStyle);
+            this.updateColor(this.color);
+            this.updateDropdownParams();
+        });
     }
 
-    private addClasses() {
+    private updateClasses() {
+        this.buttons.forEach((button: KbqButton) => {
+            button.getHostElement().classList.remove(`kbq-split-button_first`, `kbq-split-button_second`);
+        });
+
         this.buttons.first?.getHostElement().classList.add(`kbq-split-button_first`);
         this.buttons.last?.getHostElement().classList.add(`kbq-split-button_second`);
         this.buttons.forEach((button: KbqButton) => {
