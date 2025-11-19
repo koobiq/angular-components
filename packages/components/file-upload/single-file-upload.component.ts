@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -12,6 +13,7 @@ import {
     input,
     Input,
     Output,
+    PLATFORM_ID,
     QueryList,
     ViewChild,
     ViewEncapsulation
@@ -144,6 +146,7 @@ export class KbqSingleFileUploadComponent
     });
 
     private readonly focusMonitor = inject(FocusMonitor);
+    private readonly platformId = inject(PLATFORM_ID);
 
     constructor() {
         super();
@@ -194,6 +197,9 @@ export class KbqSingleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(file: File | KbqFileItem | null): void {
+        // @TODO: remove File from arguments since it redundant. It resolves SSR (#DS-4414)
+        if (!isPlatformBrowser(this.platformId)) return;
+
         this.file = file instanceof File ? this.mapToFileItem(file) : file;
         this.fileChange.emit(this.file);
     }

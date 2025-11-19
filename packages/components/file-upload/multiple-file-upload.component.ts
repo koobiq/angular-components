@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -12,6 +13,7 @@ import {
     input,
     Input,
     Output,
+    PLATFORM_ID,
     QueryList,
     TemplateRef,
     ViewChild,
@@ -195,6 +197,7 @@ export class KbqMultipleFileUploadComponent
     });
 
     private readonly focusMonitor = inject(FocusMonitor);
+    private readonly platformId = inject(PLATFORM_ID);
 
     constructor() {
         super();
@@ -237,6 +240,9 @@ export class KbqMultipleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(files: FileList | KbqFileItem[] | null): void {
+        // @TODO: remove FileList from arguments since it redundant. It resolves SSR (#DS-4414)
+        if (!isPlatformBrowser(this.platformId)) return;
+
         this.files = files instanceof FileList || !files ? this.mapToFileItem(files) : files;
         this.filesChange.emit(this.files);
     }
