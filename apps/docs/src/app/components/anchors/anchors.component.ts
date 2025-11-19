@@ -214,10 +214,8 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private getHeaderTopOffset(header: HTMLElement): number {
-        const { body } = this.document;
-
         // For SSR compatibility
-        if (typeof body.getBoundingClientRect !== 'function') return 0;
+        if (typeof this.document.body.getBoundingClientRect !== 'function') return 0;
 
         return (
             this.scrollContainer.scrollTop +
