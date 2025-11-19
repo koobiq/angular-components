@@ -5,7 +5,8 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
 
-function app(): express.Express {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function app(): express.Express {
     const server = express();
     const serverDistFolder = dirname(fileURLToPath(import.meta.url));
     const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -43,15 +44,3 @@ function app(): express.Express {
 
     return server;
 }
-
-function run(): void {
-    const port = process.env['PORT'] || 4000;
-    const server = app();
-
-    server.listen(port, () => {
-        // eslint-disable-next-line no-console
-        console.info(`Node Express server listening on http://localhost:${port}`);
-    });
-}
-
-run();

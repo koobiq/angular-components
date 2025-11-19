@@ -3,12 +3,12 @@
     "hosting": [
         {
             "target": "stable",
-            "public": "dist/releases/koobiq-docs",
+            "public": "dist/releases/koobiq-docs/browser",
             "cleanUrls": true,
             "rewrites": [
                 {
                     "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
-                    "destination": "/index.html"
+                    "destination": "/index.csr.html"
                 }
             ],
             "headers": [
@@ -93,7 +93,7 @@
             "rewrites": [
                 {
                     "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
-                    "destination": "/index.html"
+                    "destination": "/index.csr.html"
                 }
             ],
             "headers": [
