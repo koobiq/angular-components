@@ -19,7 +19,7 @@ export const iconReplacementData: Replacement[] = [
     { from: 'bolt-rectangle-vertical_24', to: 'rectangle-vertical-bolt_24' },
     { from: 'bolt-rectangle-vertical-o_16', to: 'rectangle-vertical-bolt-o_16' },
     { from: 'bolt-rectangle-vertical-o_24', to: 'rectangle-vertical-bolt-o_24' },
-    { from: 'check-circle_', to: 'circle-check_16' },
+    { from: 'check-circle_16', to: 'circle-check_16' },
     { from: 'check-circle_24', to: 'circle-check_24' },
     { from: 'chevron-circle-down_16', to: 'circle-chevron-down_16' },
     { from: 'chevron-circle-down_24', to: 'circle-chevron-down_24' },

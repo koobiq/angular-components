@@ -10,6 +10,16 @@
             "$default": {
                 "$source": "projectName"
             }
+        },
+        "fix": {
+            "type": "boolean",
+            "description": "Whether overwrite icons prefixes or simply inform in console",
+            "default": false
+        },
+        "allowedExt": {
+            "type": "array",
+            "description": "Allowed file extensions to check",
+            "default": [".html", ".ts", ".scss"]
         }
     }
 }

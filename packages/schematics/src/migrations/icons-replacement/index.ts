@@ -1,57 +1,76 @@
+import { Path } from '@angular-devkit/core';
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import { resolve } from 'node:path';
-import * as process from 'node:process';
-import ts from 'typescript';
-import { migrateTemplate, migrateTs } from '../../utils/angular-parsing';
-import { getParsingInfo } from '../../utils/package-config';
-import { canMigrateFile, MigrationData } from '../../utils/typescript';
+import path from 'path';
+import { logMessage } from '../../utils/messages';
+import { setupOptions } from '../../utils/package-config';
+import { Replacement, TransformTemplateAttributesResult } from '../../utils/typescript';
 import { iconReplacementData } from './data';
 import { Schema } from './schema';
 
-export const migrationData: MigrationData = {
-    elementName: 'i',
-    attrs: {
-        key: {
-            from: 'kbq-icon',
-            to: 'kbq-icon'
-        },
-        value: {
-            replacements: iconReplacementData,
-            default: ''
-        }
+export const replaceIcons = (contentToBeUpdated: string, replacementData: Replacement[]) => {
+    let res = contentToBeUpdated;
+
+    for (const { from, to } of replacementData) {
+        res = res!.replace(new RegExp(`kbq-${from}`, 'g'), `kbq-${to}`);
+    }
+
+    return res;
+};
+
+export const logReplacement = ({ logger, replacementData, contentToBeUpdated, filePath }): void => {
+    const foundIcons = replacementData.filter(({ from }) => contentToBeUpdated!.indexOf(from) !== -1);
+
+    if (foundIcons.length) {
+        const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
+
+        logMessage(logger, [
+            `Please pay attention! Found deprecated icons in file: `,
+            parsedFilePath,
+            foundIcons.map(({ from, to }) => `\t${from} -> \t${to}`).join('\n')]);
+    }
+};
+
+const processIconReplacement = ({ fileContent, filePath, fix, logger }): TransformTemplateAttributesResult => {
+    if (fix) {
+        const updatedContent = replaceIcons(fileContent!, iconReplacementData);
+
+        return { fileContent: updatedContent, changed: updatedContent !== fileContent, errors: [] };
+    } else {
+        logReplacement({
+            logger,
+            replacementData: iconReplacementData,
+            contentToBeUpdated: fileContent,
+            filePath
+        });
+
+        return { fileContent, changed: false, errors: [] };
     }
 };
 
 export default function migrate(options: Schema) {
     return async (tree: Tree, context: SchematicContext) => {
-        const { project } = options;
-        const { tsPaths, templatePaths, projectDefinition } = await getParsingInfo(project, tree);
+        const { logger } = context;
+        const { project, allowedExt, fix } = options;
 
-        const program = ts.createProgram(
-            Array.from(tsPaths, (item) => resolve(projectDefinition.root, `.${item}`)),
-            {
-                baseUrl: projectDefinition.root,
-                rootDir: projectDefinition.root,
-                _enableTemplateTypeChecker: true, // Required for the template type checker to work.
-                compileNonExportedClasses: true, // We want to migrate non-exported classes too.
-                // Avoid checking libraries to speed up the migration.
-                skipLibCheck: true,
-                skipDefaultLibCheck: true
+        const projectDefinition = await setupOptions(project, tree);
+
+        tree.getDir(projectDefinition!.root).visit((filePath: Path, entry) => {
+            if (allowedExt.length === 0 || allowedExt.some((ext) => filePath.endsWith(ext))) {
+                const initialContent = entry?.content.toString();
+
+                if (!initialContent) return;
+
+                const { fileContent, changed } = processIconReplacement({
+                    fileContent: initialContent,
+                    filePath,
+                    fix,
+                    logger
+                });
+
+                if (changed) {
+                    tree.overwrite(filePath, fileContent);
+                }
             }
-        );
-
-        // Update external html
-        await migrateTemplate(tree, Array.from(templatePaths), context, migrationData);
-
-        // Update inline html
-        await migrateTs(
-            tree,
-            program.getSourceFiles().filter((sourceFile) => canMigrateFile(sourceFile, program)),
-            process.cwd(),
-            context,
-            migrationData
-        );
-
-        context.logger.warn('Warning! Run linter in updated files since line breaks or indents maybe be broken.');
+        });
     };
 }

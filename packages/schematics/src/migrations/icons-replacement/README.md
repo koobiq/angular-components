@@ -41,10 +41,18 @@ import { Component } from '@angular/core';
 
 @Component({
     template: `
-        <kbq-loader-overlay [compact]="true">...</kbq-loader-overlay>
+        <i kbq-icon="kbq-bolt-circle_16">...</i>
+    `
+    styles: `
+        .custom-icon {
+            <!-- cspell:ignore xmark -->
+            @extend .kbq-xmark-circle_16;
+        }
     `
 })
-export class MyComp {}
+export class MyComp {
+    iconName = 'kbq-bolt-circle_16';
+}
 ```
 
 #### After
@@ -54,8 +62,16 @@ import { Component } from '@angular/core';
 
 @Component({
     template: `
-        <kbq-loader-overlay size="compact">...</kbq-loader-overlay>
+        <i kbq-icon="kbq-circle-bolt_16">...</i>
+    `
+    styles: `
+        .custom-icon {
+            <!-- cspell:ignore xmark -->
+            @extend .kbq-circle-xmark_16;
+        }
     `
 })
-export class MyComp {}
+export class MyComp {
+    iconName = 'kbq-circle-bolt_16';
+}
 ```

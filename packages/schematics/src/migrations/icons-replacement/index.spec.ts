@@ -5,6 +5,7 @@ import { ProjectDefinition, WorkspaceDefinition } from '@schematics/angular/util
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
+import { iconReplacementData } from './data';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -34,48 +35,53 @@ describe(SCHEMATIC_NAME, () => {
     it('should run migration for specified project', async () => {
         const [firstProjectKey] = projects.keys();
 
-        await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey } satisfies Schema, appTree);
+        await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey, fix: true, allowedExt: [] } satisfies Schema,
+            appTree
+        );
     });
 
     it('should run migration for external html', async () => {
         const [firstProjectKey] = projects.keys();
         const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!);
 
-        const template =
-            '<div>' +
-            '<kbq-loader-overlay [compact]="false"></kbq-loader-overlay>' +
-            '<kbq-loader-overlay [compact]="true"></kbq-loader-overlay>' +
-            '</div>';
+        const iconsDataSlice = iconReplacementData.slice(0, 10);
+        const iconsToBeReplaced = iconsDataSlice.map(({ from }) => `<i kbq-icon="kbq-${from}"></i>`);
+        const template = iconsToBeReplaced.join('\n');
 
         appTree.overwrite(templatePath, template);
 
         const updatedTree = await runner.runSchematic(
             SCHEMATIC_NAME,
-            { project: firstProjectKey } satisfies Schema,
+            { project: firstProjectKey, fix: true, allowedExt: ['.html'] } satisfies Schema,
             appTree
         );
 
         expect(updatedTree.read(templatePath)?.toString()).toMatchSnapshot(`project ${firstProjectKey}: after changes`);
     });
 
-    it('should throw message if replaced attr value is not static', async () => {
-        const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+    it('should inform about deprecated icons for fix = false (default, without params)', (done) => {
         const [firstProjectKey] = projects.keys();
-        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!);
+        const iconsDataSlice = iconReplacementData.slice(0, 10);
+        const iconsToBeReplaced = iconsDataSlice.map(({ from }) => `<i kbq-icon="kbq-${from}"></i>`);
 
-        // Set up the template with a non-static attribute value
-        const nonStaticTemplate = '<div><kbq-loader-overlay [compact]="VARIABLE"></kbq-loader-overlay></div>';
+        projects.forEach((project) => {
+            const templatePath = `/${project.root}/src/app/app.component.html`;
 
-        appTree.overwrite(templatePath, nonStaticTemplate);
-        const templateBeforeUpdate = appTree.read(templatePath)?.toString();
+            appTree.overwrite(
+                templatePath,
+                `${appTree.read(templatePath)!.toString()}\n${iconsToBeReplaced.join('\n')}`
+            );
+        });
 
-        const updatedTree = await runner.runSchematic(
-            SCHEMATIC_NAME,
-            { project: firstProjectKey } satisfies Schema,
-            appTree
-        );
+        // simply check for messages to be sent
+        runner.logger.subscribe((logEntry) => {
+            expect(logEntry?.message).toBeTruthy();
+            runner.logger.complete();
+            done();
+        });
 
-        expect(templateBeforeUpdate).toBe(updatedTree.read(templatePath)?.toString());
-        expect(warnSpy.mock.calls.some(([msg]) => msg.includes(templatePath))).toBe(true);
+        runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
     });
 });
