@@ -50,12 +50,12 @@ const processIconReplacement = ({ fileContent, filePath, fix, logger }): Transfo
 export default function migrate(options: Schema) {
     return async (tree: Tree, context: SchematicContext) => {
         const { logger } = context;
-        const { project, allowedExt, fix } = options;
+        const { project, allowed, fix } = options;
 
         const projectDefinition = await setupOptions(project, tree);
 
         tree.getDir(projectDefinition!.root).visit((filePath: Path, entry) => {
-            if (allowedExt.length === 0 || allowedExt.some((ext) => filePath.endsWith(ext))) {
+            if (allowed.length === 0 || allowed.some((ext) => filePath.endsWith(ext))) {
                 const initialContent = entry?.content.toString();
 
                 if (!initialContent) return;

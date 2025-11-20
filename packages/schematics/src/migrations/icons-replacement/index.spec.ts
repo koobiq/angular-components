@@ -37,7 +37,7 @@ describe(SCHEMATIC_NAME, () => {
 
         await runner.runSchematic(
             SCHEMATIC_NAME,
-            { project: firstProjectKey, fix: true, allowedExt: [] } satisfies Schema,
+            { project: firstProjectKey, fix: true, allowed: [] } satisfies Schema,
             appTree
         );
     });
@@ -54,7 +54,7 @@ describe(SCHEMATIC_NAME, () => {
 
         const updatedTree = await runner.runSchematic(
             SCHEMATIC_NAME,
-            { project: firstProjectKey, fix: true, allowedExt: ['.html'] } satisfies Schema,
+            { project: firstProjectKey, fix: true, allowed: ['.html'] } satisfies Schema,
             appTree
         );
 

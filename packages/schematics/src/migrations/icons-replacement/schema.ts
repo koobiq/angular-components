@@ -7,7 +7,7 @@ export interface Schema {
      * File extension where schematics will be applied.
      * If provided empty array, will be applied to all files.
      */
-    allowedExt: string[];
+    allowed: string[];
     /**
      * Name of the project where Koobiq library should be installed
      */

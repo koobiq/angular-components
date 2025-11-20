@@ -13,13 +13,16 @@
         },
         "fix": {
             "type": "boolean",
-            "description": "Whether overwrite icons prefixes or simply inform in console",
-            "default": false
+            "default": false,
+            "description": "Whether overwrite icons prefixes or simply inform in console"
         },
-        "allowedExt": {
+        "allowed": {
             "type": "array",
-            "description": "Allowed file extensions to check",
-            "default": [".html", ".ts", ".scss"]
+            "default": [".html", ".ts", ".scss"],
+            "items": {
+                "type": "string"
+            },
+            "description": "Allowed file extensions to check"
         }
     }
 }
