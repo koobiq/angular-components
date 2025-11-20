@@ -67,10 +67,19 @@ export class KbqTreeSelectAllEvent<T> {
     ) {}
 }
 
+/**
+ * Event class that occurs when copying an item from the KbqTreeSelection.
+ * Used to pass data about the copied item and copy context.
+ *
+ * @param source - instance of KbqTreeSelection
+ * @param option - instance of KbqTreeOption
+ * @param event - original keyboard event (optional) that triggered the copy
+ */
 export class KbqTreeCopyEvent<T> {
     constructor(
         public source: KbqTreeSelection,
-        public option: T
+        public option: T,
+        public event?: KeyboardEvent
     ) {}
 }
 
@@ -354,7 +363,7 @@ export class KbqTreeSelection
 
             return;
         } else if (isCopy(event)) {
-            this.copyActiveOption();
+            this.copyActiveOption(event);
 
             return;
         } else if (keyCode === TAB) {
@@ -522,19 +531,19 @@ export class KbqTreeSelection
         this.onSelectAll.emit(new KbqTreeSelectAllEvent(this, optionsToSelect));
     }
 
-    copyActiveOption(): void {
-        if (!this.keyManager.activeItem) {
-            return;
-        }
+    copyActiveOption(event: KeyboardEvent): void {
+        if (!this.keyManager.activeItem) return;
 
         const option = this.keyManager.activeItem;
 
         option.preventBlur = true;
 
-        if (this.onCopy.observers.length) {
-            this.onCopy.emit(new KbqTreeCopyEvent(this, this.keyManager.activeItem as KbqTreeOption));
+        if (this.onCopy.observed) {
+            this.onCopy.emit(new KbqTreeCopyEvent(this, this.keyManager.activeItem as KbqTreeOption, event));
         } else {
             this.onCopyDefaultHandler();
+
+            event.preventDefault();
         }
 
         option.preventBlur = false;

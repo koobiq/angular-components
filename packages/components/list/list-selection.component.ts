@@ -85,10 +85,19 @@ export class KbqListSelectAllEvent<T> {
     ) {}
 }
 
+/**
+ * Event class that occurs when copying an item from the KbqListSelection.
+ * Used to pass data about the copied item and copy context.
+ *
+ * @param source - instance of KbqListSelection
+ * @param option - instance of KbqListOption
+ * @param event - original keyboard event (optional) that triggered the copy
+ */
 export class KbqListCopyEvent<T> {
     constructor(
         public source: KbqListSelection,
-        public option: T
+        public option: T,
+        public event?: KeyboardEvent
     ) {}
 }
 
@@ -482,8 +491,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
             return;
         } else if (isCopy(event)) {
-            this.copyActiveOption();
-            event.preventDefault();
+            this.copyActiveOption(event);
 
             return;
         } else if ([SPACE, ENTER].includes(keyCode)) {
@@ -615,19 +623,19 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         this.onSelectAll.emit(new KbqListSelectAllEvent(this, optionsToSelect));
     }
 
-    private copyActiveOption() {
-        if (!this.keyManager.activeItem) {
-            return;
-        }
+    private copyActiveOption(event: KeyboardEvent) {
+        if (!this.keyManager.activeItem) return;
 
         const option = this.keyManager.activeItem;
 
         option.preventBlur = true;
 
-        if (this.onCopy.observers.length) {
-            this.onCopy.emit(new KbqListCopyEvent(this, option));
+        if (this.onCopy.observed) {
+            this.onCopy.emit(new KbqListCopyEvent(this, option, event));
         } else {
             this.onCopyDefaultHandler();
+
+            event.preventDefault();
         }
 
         option.preventBlur = false;

@@ -201,9 +201,11 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeBase<any>, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqTreeCopyEvent<T> {
-    constructor(source: KbqTreeSelection, option: T);
+    constructor(source: KbqTreeSelection, option: T, event?: KeyboardEvent | undefined);
+    // (undocumented)
+    event?: KeyboardEvent | undefined;
     // (undocumented)
     option: T;
     // (undocumented)
@@ -562,7 +564,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     blur(): void;
     // (undocumented)
-    copyActiveOption(): void;
+    copyActiveOption(event: KeyboardEvent): void;
     // (undocumented)
     get disabled(): boolean;
     set disabled(rawValue: boolean);
