@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
  * @title Inline edit editable header
@@ -13,7 +13,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
-        KbqInputModule
+        KbqTextareaModule
     ],
     selector: 'inline-edit-editable-header-example',
     template: `
@@ -29,7 +29,14 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <!-- defer textarea render to calc inner styles correctly -->
                 @if (inlineEdit.modeAsReadonly() === 'edit') {
                     <kbq-form-field>
-                        <input kbqInput [placeholder]="placeholder" [formControl]="control" />
+                        <textarea
+                            kbqTextarea
+                            [rows]="1"
+                            [freeRowsHeight]="0"
+                            [maxRows]="maxRows"
+                            [placeholder]="placeholder"
+                            [formControl]="control"
+                        ></textarea>
                     </kbq-form-field>
                 }
             </div>
@@ -53,7 +60,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             }
         }
 
-        .kbq-input {
+        .kbq-textarea {
             font-size: var(--kbq-typography-headline-font-size);
             font-weight: var(--kbq-typography-headline-font-weight);
             line-height: var(--kbq-typography-headline-line-height);
@@ -61,13 +68,14 @@ import { KbqInputModule } from '@koobiq/components/input';
             text-transform: var(--kbq-typography-headline-text-transform);
             font-feature-settings: var(--kbq-typography-headline-font-feature-settings);
             letter-spacing: var(--kbq-typography-headline-letter-spacing);
-            --kbq-input-size-padding-vertical: 3px;
-            --kbq-input-size-padding-horizontal: 5px;
+            --kbq-textarea-size-padding-vertical: 3px;
+            --kbq-textarea-size-padding-horizontal: 5px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditEditableHeaderExample {
+    protected readonly maxRows = 5;
     protected readonly placeholder = 'Placeholder';
     protected readonly control = new FormControl('Spain', { nonNullable: true });
     protected readonly displayValue = signal(this.control.value);
