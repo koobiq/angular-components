@@ -17,7 +17,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     ],
     selector: 'inline-edit-editable-header-example',
     template: `
-        <kbq-inline-edit #inlineEdit (saved)="onSave()">
+        <kbq-inline-edit #inlineEdit [canSaveOnEnter]="canSaveOnEnterFn" (saved)="onSave()">
             <div kbqInlineEditViewMode>
                 @if (!displayValue()) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
@@ -89,4 +89,6 @@ export class InlineEditEditableHeaderExample {
 
         this.displayValue.set(this.control.value);
     }
+
+    protected canSaveOnEnterFn = () => true;
 }

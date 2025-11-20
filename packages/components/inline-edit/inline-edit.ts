@@ -179,6 +179,13 @@ export class KbqInlineEdit {
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */
     readonly setValueHandler = input<(value: any) => void>();
+    /**
+     * Customizable function that checks if saving on enter available.
+     */
+    readonly canSaveOnEnter = input(
+        (event: KeyboardEvent): boolean =>
+            hasModifierKey(event, 'ctrlKey', 'metaKey') || !(event.target instanceof HTMLTextAreaElement)
+    );
 
     /** Emitted when the inline edit is saved successfully. */
     protected readonly saved = output();
@@ -307,17 +314,16 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected onOverlayKeydown(event: KeyboardEvent): void {
-        const { target, key } = event;
-
         this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
+        const canSaveOnEnter = this.canSaveOnEnter();
 
-        switch (key) {
+        switch (event.key) {
             case 'Escape': {
                 this.cancel();
                 break;
             }
             case 'Enter': {
-                if (hasModifierKey(event, 'ctrlKey', 'metaKey') || !(target instanceof HTMLTextAreaElement)) {
+                if (canSaveOnEnter(event)) {
                     event.preventDefault();
                     this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
                     setTimeout(() => this.save(event));
