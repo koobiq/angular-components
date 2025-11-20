@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsStructureTokensTab } from '../../structure';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -49,35 +50,35 @@ export class DocsDesignTokensViewer extends DocsLocaleState {
                 ru: 'Цвета',
                 en: 'Colors'
             },
-            value: 'colors'
+            value: DocsStructureTokensTab.Colors
         },
         {
             title: {
                 ru: 'Тени',
                 en: 'Shadows'
             },
-            value: 'shadows'
+            value: DocsStructureTokensTab.Shadows
         },
         {
             title: {
                 ru: 'Скругления',
                 en: 'Border radius'
             },
-            value: 'border-radius'
+            value: DocsStructureTokensTab.BorderRadius
         },
         {
             title: {
                 ru: 'Размеры',
                 en: 'Sizes'
             },
-            value: 'sizes'
+            value: DocsStructureTokensTab.Sizes
         },
         {
             title: {
                 ru: 'Инженерная палитра',
                 en: 'Engineer palette'
             },
-            value: 'palette'
+            value: DocsStructureTokensTab.Palette
         }
     ];
 }

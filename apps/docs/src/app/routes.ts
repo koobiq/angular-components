@@ -9,15 +9,22 @@ import {
     DocsComponentViewerComponent
 } from './components/component-viewer/component-viewer.component';
 import { DocsDesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
+import { DocsTokensBorderRadius } from './components/design-tokens-viewers/tokens-border-radius';
 import { DocsTokensColors } from './components/design-tokens-viewers/tokens-colors';
-import { DocsTokensOverview } from './components/design-tokens-viewers/tokens-overview';
+import { DocsTokensPalette } from './components/design-tokens-viewers/tokens-palette';
 import { DocsTokensShadows } from './components/design-tokens-viewers/tokens-shadows';
+import { DocsTokensSizes } from './components/design-tokens-viewers/tokens-sizes';
 import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
 import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
-import { DocsStructureCategoryId, DocsStructureItemId, DocsStructureItemTab } from './structure';
+import {
+    DocsStructureCategoryId,
+    DocsStructureItemId,
+    DocsStructureItemTab,
+    DocsStructureTokensTab
+} from './structure';
 
 const http404Redirect = '404';
 
@@ -54,13 +61,13 @@ export const DOCS_ROUTES: Routes = [
                 path: `${DocsStructureCategoryId.Main}/${DocsStructureItemId.DesignTokens}`,
                 component: DocsDesignTokensViewer,
                 children: [
-                    { path: '', redirectTo: 'colors', pathMatch: 'full' },
-                    { path: 'colors', component: DocsTokensColors, pathMatch: 'full' },
-                    { path: 'shadows', component: DocsTokensShadows, pathMatch: 'full' },
-                    { path: 'border-radius', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: 'sizes', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: 'palette', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: '**', redirectTo: 'colors' }
+                    { path: '', redirectTo: DocsStructureTokensTab.Colors, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Colors, component: DocsTokensColors, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Shadows, component: DocsTokensShadows, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.BorderRadius, component: DocsTokensBorderRadius, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Sizes, component: DocsTokensSizes, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Palette, component: DocsTokensPalette, pathMatch: 'full' },
+                    { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]
             },
             {

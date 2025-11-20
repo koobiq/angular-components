@@ -9,7 +9,7 @@ import { DocsOverviewComponentBase } from './component-viewer.component';
     selector: 'docs-component-viewer-wrapper',
     template: `
         <div class="docs-component-viewer__article">
-            <ng-content select="[article]" />
+            <ng-content select="[docs-article]" />
 
             <kbq-divider class="docs-article__divider" />
 

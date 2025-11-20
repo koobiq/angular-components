@@ -6,7 +6,7 @@ import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
-import { docsData } from './data/shadows';
+import { docsData } from './data/border-radius';
 import { DocsTokensBase } from './tokens-base';
 
 interface SectionInfo {
@@ -22,7 +22,7 @@ interface DocsColorsInfo {
 
 @Component({
     standalone: true,
-    selector: 'docs-design-tokens-shadows',
+    selector: 'docs-design-tokens-border-radius',
     template: `
         <docs-component-viewer-wrapper>
             <div docs-article>
@@ -56,8 +56,8 @@ interface DocsColorsInfo {
                             <tr>
                                 <td align="left">
                                     <div
-                                        class="kbq-design-token-example__shadows"
-                                        [style.box-shadow]="'var(' + token.token + ')'"
+                                        class="kbq-design-token-example__dimensions"
+                                        [style.border-radius]="'var(' + token.token + ')'"
                                     ></div>
                                 </td>
                                 <td align="left">
@@ -88,7 +88,7 @@ interface DocsColorsInfo {
         </ng-template>
     `,
     host: {
-        class: 'docs-design-tokens-shadows'
+        class: 'docs-tokens-border-radius'
     },
     imports: [
         KbqDividerModule,
@@ -101,7 +101,7 @@ interface DocsColorsInfo {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsTokensShadows extends DocsTokensBase implements AfterViewInit {
+export class DocsTokensBorderRadius extends DocsTokensBase implements AfterViewInit {
     protected colors: DocsColorsInfo[];
 
     constructor() {
