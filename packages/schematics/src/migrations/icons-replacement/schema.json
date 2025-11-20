@@ -23,6 +23,10 @@
                 "type": "string"
             },
             "description": "Allowed file extensions to check"
+        },
+        "replacementDataPath": {
+            "type": "string",
+            "description": "Custom replacement data path. Will be used as relative to `project.root`"
         }
     }
 }

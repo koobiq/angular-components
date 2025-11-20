@@ -30,15 +30,21 @@ export const logReplacement = ({ logger, replacementData, contentToBeUpdated, fi
     }
 };
 
-const processIconReplacement = ({ fileContent, filePath, fix, logger }): TransformTemplateAttributesResult => {
+export const processIconReplacement = ({
+    fileContent,
+    filePath,
+    fix,
+    logger,
+    replacementData
+}): TransformTemplateAttributesResult => {
     if (fix) {
-        const updatedContent = replaceIcons(fileContent!, iconReplacementData);
+        const updatedContent = replaceIcons(fileContent!, replacementData);
 
         return { fileContent: updatedContent, changed: updatedContent !== fileContent, errors: [] };
     } else {
         logReplacement({
             logger,
-            replacementData: iconReplacementData,
+            replacementData,
             contentToBeUpdated: fileContent,
             filePath
         });
@@ -47,12 +53,26 @@ const processIconReplacement = ({ fileContent, filePath, fix, logger }): Transfo
     }
 };
 
+export const resolveReplacementData = (projectRootPath: string, tree: Tree, customReplacementDataPath?: string) => {
+    if (customReplacementDataPath) {
+        const replacementData = tree.get(`${projectRootPath}/${customReplacementDataPath}`);
+
+        if (!replacementData) return iconReplacementData;
+
+        return JSON.parse(replacementData.content.toString()) as Replacement[];
+    }
+
+    return iconReplacementData;
+};
+
 export default function migrate(options: Schema) {
     return async (tree: Tree, context: SchematicContext) => {
         const { logger } = context;
-        const { project, allowed, fix } = options;
+        const { project, allowed, fix, replacementDataPath } = options;
 
         const projectDefinition = await setupOptions(project, tree);
+
+        const replacementData = resolveReplacementData(projectDefinition!.root, tree, replacementDataPath);
 
         tree.getDir(projectDefinition!.root).visit((filePath: Path, entry) => {
             if (allowed.length === 0 || allowed.some((ext) => filePath.endsWith(ext))) {
@@ -64,7 +84,8 @@ export default function migrate(options: Schema) {
                     fileContent: initialContent,
                     filePath,
                     fix,
-                    logger
+                    logger,
+                    replacementData
                 });
 
                 if (changed) {

@@ -11,5 +11,11 @@ export interface Schema {
     /**
      * Name of the project where Koobiq library should be installed
      */
-    project?: string;
+    project: string;
+    /**
+     * Custom replacement data path. Will be used as relative to `project.root`.
+     * Default replacement data will be used instead
+     * @see https://github.com/koobiq/icons/pull/68
+     */
+    replacementDataPath?: string;
 }
