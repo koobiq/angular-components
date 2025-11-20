@@ -1,4 +1,4 @@
-@use '../core/styles/common';
+@use '../core/styles/common/list';
 @use './split-button-theme';
 
 .kbq-split-button {
@@ -10,12 +10,11 @@
     border-radius: var(--kbq-size-border-radius);
 
     &.kbq-split-button_styles-for-nested {
-        & .kbq-button:first-child {
-            padding-right: 10px;
-        }
+        & .kbq-split-button_first {
+            &.kbq-button {
+                padding-right: 10px;
+            }
 
-        & .kbq-button:first-child,
-        & .kbq-button-icon:first-child {
             min-width: 0;
 
             border-right: none;
@@ -24,19 +23,18 @@
             border-bottom-right-radius: unset;
 
             & .kbq-button-wrapper {
-                @include common.kbq-truncate-line();
+                @include list.kbq-truncate-line();
             }
         }
 
-        & .kbq-button:last-child,
-        & .kbq-button-icon:last-child {
+        & .kbq-split-button_second {
             border-left: none;
 
             border-top-left-radius: unset;
             border-bottom-left-radius: unset;
 
             &::before {
-                display: none;
+                display: block;
 
                 content: '';
                 position: absolute;
@@ -48,31 +46,20 @@
             }
         }
 
-        & .kbq-button,
-        & .kbq-button-icon {
-            &:not(:hover, .cdk-keyboard-focused, .kbq-active, .kbq-progress) {
-                & + .kbq-button,
-                & + .kbq-button-icon {
-                    &:not(:hover, .cdk-keyboard-focused, .kbq-active, .kbq-progress) {
-                        &::before {
-                            display: block;
-                        }
-                    }
-                }
+        & .kbq-split-button_first:not(.kbq-disabled):is(:hover, .kbq-hover, .cdk-keyboard-focused, .kbq-active) {
+            & + .kbq-split-button_second::before {
+                display: none;
             }
+        }
 
-            &.kbq-progress {
-                & + .kbq-button,
-                & + .kbq-button-icon {
-                    &.kbq-progress::before {
-                        display: block;
-                    }
-                }
-            }
-
-            &[disabled] + [disabled]::before {
-                display: block;
-            }
+        &
+            .kbq-split-button_second:not(.kbq-disabled):is(
+                :hover,
+                .kbq-hover,
+                .cdk-keyboard-focused,
+                .kbq-active
+            )::before {
+            display: none;
         }
 
         & .kbq-button-icon + .kbq-button-icon {

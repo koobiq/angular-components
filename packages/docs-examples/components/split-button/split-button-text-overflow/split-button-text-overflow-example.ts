@@ -20,11 +20,13 @@ import { KbqTitleModule } from '@koobiq/components/title';
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button kbq-title>
+            <button kbq-button>
                 <i kbq-icon="kbq-plus_16"></i>
-                Save engineering time with unified payments functionality. We obsess over the maze of gateways, payments
-                rails, and financial institutions that make up the global economic landscape so that your teams can
-                build what you need on one platform.
+                <span kbq-title class="kbq-truncate-line">
+                    Save engineering time with unified payments functionality. We obsess over the maze of gateways,
+                    payments rails, and financial institutions that make up the global economic landscape so that your
+                    teams can build what you need on one platform.
+                </span>
             </button>
             <button kbq-button [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>

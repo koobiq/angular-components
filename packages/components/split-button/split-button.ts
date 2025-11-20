@@ -12,15 +12,23 @@ import {
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqColorDirective, KbqComponentColors, kbqInjectNativeElement, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { delay } from 'rxjs/operators';
 
 @Component({
     standalone: true,
     selector: 'kbq-split-button, [kbq-split-button]',
-    templateUrl: './split-button.html',
+    template: `
+        <ng-content select="[kbq-button]" />
+
+        <ng-content select="[kbq-button]" />
+    `,
     styleUrls: ['./split-button.scss'],
     host: {
         class: 'kbq-split-button',
-        '[class.kbq-split-button_styles-for-nested]': 'buttons.length > 1'
+        '[class]': 'kbqStyle',
+        '[class.kbq-split-button_styles-for-nested]': 'buttons.length > 1',
+        '[class.kbq-split-button_first-disabled]': 'firstDisabled',
+        '[class.kbq-split-button_second-disabled]': 'secondDisabled'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -57,7 +65,9 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     }
 
     set color(value: KbqComponentColors | ThemePalette | string) {
-        this._color = value;
+        if (!value) return;
+
+        super.color = value;
 
         this.updateColor(this.color);
     }
@@ -76,6 +86,14 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
 
     protected _disabled: boolean;
 
+    get firstDisabled(): boolean {
+        return this.buttons.first?.disabled;
+    }
+
+    get secondDisabled(): boolean {
+        return this.buttons.length > 1 && this.buttons.last?.disabled;
+    }
+
     constructor() {
         super();
 
@@ -83,10 +101,34 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     }
 
     ngAfterContentInit(): void {
+        this.updateClasses();
         this.updateStyle(this._kbqStyle);
         this.updateColor(this.color);
         this.updateDisabledState(this.disabled);
         this.updateDropdownParams();
+
+        if (!this.buttons.length) {
+            throw new Error(`kbq-split-button must contain at least one button`);
+        }
+
+        this.buttons.changes.pipe(delay(0)).subscribe(() => {
+            this.updateClasses();
+            this.updateStyle(this._kbqStyle);
+            this.updateColor(this.color);
+            this.updateDropdownParams();
+        });
+    }
+
+    private updateClasses() {
+        this.buttons.forEach((button: KbqButton) => {
+            button.getHostElement().classList.remove(`kbq-split-button_first`, `kbq-split-button_second`);
+        });
+
+        this.buttons.first?.getHostElement().classList.add(`kbq-split-button_first`);
+        this.buttons.last?.getHostElement().classList.add(`kbq-split-button_second`);
+        this.buttons.forEach((button: KbqButton) => {
+            button.getHostElement().classList.add(`kbq-split-button_item`);
+        });
     }
 
     private updateColor(color: KbqComponentColors | ThemePalette | string) {

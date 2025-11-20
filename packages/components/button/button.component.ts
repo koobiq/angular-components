@@ -10,6 +10,7 @@ import {
     Directive,
     ElementRef,
     forwardRef,
+    inject,
     Input,
     numberAttribute,
     OnDestroy,
@@ -129,6 +130,8 @@ export class KbqButtonCssStyler implements AfterContentInit {
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     hasFocus: boolean = false;
 
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -140,6 +143,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     set kbqStyle(value: string | KbqButtonStyles) {
         this._kbqStyle = value || KbqButtonStyles.Filled;
+
+        this.changeDetectorRef.markForCheck();
     }
 
     private _kbqStyle: string | KbqButtonStyles = KbqButtonStyles.Filled;
