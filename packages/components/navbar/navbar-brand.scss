@@ -76,7 +76,10 @@ a.kbq-navbar-brand {
         height: var(--kbq-size-4xl);
         width: var(--kbq-size-4xl);
 
-        margin: var(--kbq-size-l) var(--kbq-size-l) var(--kbq-size-4xl);
+        margin-top: var(--kbq-size-s);
+        margin-right: var(--kbq-size-l);
+        margin-left: var(--kbq-size-l);
+        margin-bottom: 60px;
 
         flex-direction: column;
 
@@ -97,7 +100,7 @@ a.kbq-navbar-brand {
             position: absolute;
 
             left: var(--kbq-size-xxs);
-            top: var(--kbq-size-4xl);
+            top: var(--kbq-size-6xl);
             max-width: 200px;
         }
     }
