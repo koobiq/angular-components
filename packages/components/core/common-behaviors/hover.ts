@@ -5,16 +5,19 @@ import { kbqInjectNativeElement } from '../utils';
 
 /**
  * Directive that adds a `kbq-hovered` class to an element, based on its hover state.
+ *
+ * @docs-private
  */
 @Directive({
     standalone: true,
-    selector: '[kbqHovered]',
-    exportAs: 'kbqHovered',
+    selector: '[kbqHover]',
+    exportAs: 'kbqHover',
     host: {
+        class: 'kbq-hover',
         '[class.kbq-hovered]': 'hovered()'
     }
 })
-export class KbqHovered {
+export class KbqHover {
     private readonly element = kbqInjectNativeElement();
 
     /**

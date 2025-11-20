@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqHovered } from './hovered';
+import { KbqHover } from './hover';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -18,8 +18,8 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
 @Component({
     standalone: true,
     selector: 'test-by-attr-directive',
-    template: '<div kbqHovered>test</div>',
-    imports: [KbqHovered],
+    template: '<div kbqHover>test</div>',
+    imports: [KbqHover],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestByAttrDirective {}
@@ -27,13 +27,13 @@ class TestByAttrDirective {}
 @Component({
     standalone: true,
     selector: 'test-by-host-directive',
-    hostDirectives: [KbqHovered],
+    hostDirectives: [KbqHover],
     template: '<div>test</div>',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestByHostDirective {}
 
-describe(KbqHovered.name, () => {
+describe(KbqHover.name, () => {
     it('should toggle selector by attribute directive', () => {
         const { debugElement } = createComponent(TestByAttrDirective);
         const element = debugElement.query(By.css('div')).nativeElement as HTMLElement;
