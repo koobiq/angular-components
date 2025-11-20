@@ -4,8 +4,16 @@
 @mixin kbq-form-field-hint-geometry {
     display: flex;
     flex-direction: column;
-    gap: var(--kbq-size-s);
+    gap: var(--kbq-form-field-hint-size-gap);
     margin-top: var(--kbq-form-field-hint-size-margin-top);
+
+    &:has(.kbq-reactive-password-hint, .kbq-password-hint) {
+        --kbq-form-field-hint-size-gap: var(--kbq-size-s);
+    }
+
+    &:has(:is(.kbq-reactive-password-hint, .kbq-password-hint):first-child) {
+        --kbq-form-field-hint-size-margin-top: var(--kbq-size-m);
+    }
 }
 
 .kbq-form-field {
