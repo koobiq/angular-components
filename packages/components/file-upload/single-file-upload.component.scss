@@ -1,5 +1,3 @@
-// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
-/* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens' as *;
 
 .kbq-single-file-upload .kbq-file-upload {
@@ -17,7 +15,7 @@
     border-width: var(--kbq-file-upload-size-single-container-border-width);
     border-style: dashed;
 
-    & .dropzone__text {
+    & .kbq-file-dropzone__text {
         padding-top: var(--kbq-file-upload-size-single-text-block-padding-vertical);
 
         padding-bottom: var(--kbq-file-upload-size-single-text-block-padding-vertical);
@@ -25,21 +23,21 @@
         gap: var(--kbq-file-upload-size-single-text-block-content-gap-horizontal);
     }
 
-    & .dropzone {
+    & .kbq-file-dropzone {
         gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
     }
 
-    .file-item {
+    .kbq-file-item {
         width: 100%;
 
-        .file-item__text-wrapper {
+        .kbq-file-item__text-wrapper {
             display: flex;
             align-items: center;
             width: 100%;
 
             gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
 
-            .file-item__text {
+            .kbq-file-item__text {
                 width: 120px;
                 flex-grow: 1;
             }

@@ -1,15 +1,13 @@
-// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
-/* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens' as *;
 
 .kbq-markdown {
     display: block;
 
-    .markdown-input {
+    .kbq-markdown__input {
         display: none;
     }
 
-    .markdown-output {
+    .kbq-markdown__output {
         flex: 1;
 
         & > :first-child {

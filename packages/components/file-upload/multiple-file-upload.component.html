@@ -3,24 +3,25 @@
     class="kbq-file-upload"
     [class.kbq-disabled]="disabled"
     [class.kbq-error]="invalid"
-    [class.selected]="files?.length"
-    [ngClass]="size"
+    [class.kbq-selected]="files?.length"
+    [class.kbq-file-upload_default]="size === 'default'"
+    [class.kbq-file-upload_compact]="size === 'compact'"
     (filesDropped)="onFileDropped($event)"
 >
     @if (!files.length) {
-        <div class="dropzone">
+        <div class="kbq-file-dropzone">
             @if (size === 'default') {
-                <i kbq-icon="kbq-cloud-arrow-up-o_32" class="kbq-dropzone__icon"></i>
-                <div class="dropzone__text">
-                    <div class="multiple__header">{{ config.title }}</div>
+                <i kbq-icon="kbq-cloud-arrow-up-o_32" class="kbq-file-dropzone__icon"></i>
+                <div class="kbq-file-dropzone__text">
+                    <div class="kbq-file-multiple__header">{{ config.title }}</div>
                     <div>
                         <!-- prettier-ignore -->
-                        <div class="multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate" /></label>{{ separatedCaptionText[1] }}</div>
+                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate" /></label>{{ separatedCaptionText[1] }}</div>
                     </div>
                 </div>
             } @else {
-                <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-dropzone__icon"></i>
-                <span class="dropzone__text multiple__caption">
+                <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
+                <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
                     {{ separatedCaptionTextForCompactSize[0] }}
                     <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
                         {{ config.browseLink }}
@@ -31,7 +32,7 @@
             }
         </div>
     } @else {
-        <div class="file-upload__dropzone">
+        <div class="kbq-file-upload__dropzone">
             <div class="kbq-file-upload__grid">
                 <div class="kbq-file-multiple-uploaded__header">
                     <div class="kbq-file-multiple-uploaded__header-inner">
@@ -47,12 +48,12 @@
                 <kbq-list-selection [autoSelect]="false" [disabled]="disabled">
                     @for (file of files; track file; let index = $index) {
                         <kbq-list-option
-                            class="multiple__uploaded-item"
+                            class="kbq-file-multiple__uploaded-item"
                             [value]="file.file.name"
                             (keydown.backspace)="deleteFile(index)"
                             (keydown.delete)="deleteFile(index)"
                         >
-                            <div class="kbq-file-upload__row" [class.error]="file.hasError">
+                            <div class="kbq-file-upload__row" [class.kbq-error]="file.hasError">
                                 <div
                                     class="kbq-file-upload__file kbq-file-upload__grid-cell"
                                     [style.max-width.px]="fileSizeCellMaxWidth"
@@ -76,7 +77,7 @@
                                         }
                                     }
                                     <span
-                                        class="file-item__text"
+                                        class="kbq-file-item__text"
                                         [debounceInterval]="0"
                                         [kbqEllipsisCenter]="file.file.name"
                                     ></span>
@@ -95,10 +96,10 @@
                     }
                 </kbq-list-selection>
             </div>
-            <div class="btn-upload">
-                <div class="dropzone">
-                    <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-dropzone__icon"></i>
-                    <span class="dropzone__text multiple__caption">
+            <div class="kbq-file-btn-upload">
+                <div class="kbq-file-dropzone">
+                    <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
+                    <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
                         {{ separatedCaptionTextWhenSelected[0] }}
                         <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
                             {{ config.browseLink }}

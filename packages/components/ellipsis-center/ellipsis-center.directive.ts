@@ -79,7 +79,10 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
         this.content = this._kbqEllipsisCenter;
 
-        const [dataTextStart, dataTextEnd] = ['data-text-start', 'data-text-end'].map((querySelector) => {
+        const [dataTextStart, dataTextEnd] = [
+            'kbq-ellipsis-center_data-text-start',
+            'kbq-ellipsis-center_data-text-end'
+        ].map((querySelector) => {
             const element = this.elementRef.nativeElement.querySelector(`.${querySelector}`);
 
             if (element) {

@@ -1,9 +1,5 @@
-// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
-/* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens' as *;
-
 @use './modal-confirm';
-
 @use './modal-theme' as *;
 
 .kbq-modal-container {
@@ -21,8 +17,11 @@
 
     list-style: none;
 
+    // DEPRECATED: Unused. Will be removed in next major release.
+    /* stylelint-disable */
     &.zoom-enter,
     &.zoom-appear {
+        /* stylelint-enable */
         animation-duration: 0.3s;
         // reset scale avoid mousePosition bug
         transform: none;

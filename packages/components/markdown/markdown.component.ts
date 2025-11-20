@@ -32,8 +32,8 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
     template: `
-        <pre #contentWrapper class="markdown-input" ngPreserveWhitespaces><ng-content /></pre>
-        <div class="markdown-output" [innerHtml]="resultHtml"></div>
+        <pre #contentWrapper class="kbq-markdown__input" ngPreserveWhitespaces><ng-content /></pre>
+        <div class="kbq-markdown__output" [innerHtml]="resultHtml"></div>
     `,
     host: {
         class: 'kbq-markdown'

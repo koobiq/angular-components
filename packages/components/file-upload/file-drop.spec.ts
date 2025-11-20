@@ -46,17 +46,17 @@ describe('FileDropDirective', () => {
     });
 
     it('FileDropDirective: dragover/dragleave', () => {
-        expect(dndZone.classList.contains('dragover')).toBeFalsy();
+        expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
 
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
 
-        expect(dndZone.classList.contains('dragover')).toBeTruthy();
+        expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeTruthy();
 
         dispatchFakeEvent(dndZone, 'dragleave');
         fixture.detectChanges();
 
-        expect(dndZone.classList.contains('dragover')).toBeFalsy();
+        expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
     });
 
     it('FileDropDirective: drop with files', (done) => {
@@ -70,14 +70,14 @@ describe('FileDropDirective', () => {
         dispatchFakeEvent(dndZone, 'dragover');
         fixture.detectChanges();
 
-        expect(dndZone.classList.contains('dragover')).toBeTruthy();
+        expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeTruthy();
 
         dispatchEvent(dndZone, event);
         fixture.detectChanges();
 
         setTimeout(() => {
             expect(component.onDrop).toHaveBeenCalledWith(expect.objectContaining({ length: fakeFiles.length }));
-            expect(dndZone.classList.contains('dragover')).toBeFalsy();
+            expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
             done();
         });
     });
