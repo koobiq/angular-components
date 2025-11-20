@@ -79,7 +79,7 @@ a.kbq-navbar-brand {
         margin-top: var(--kbq-size-s);
         margin-right: var(--kbq-size-l);
         margin-left: var(--kbq-size-l);
-        margin-bottom: var(--kbq-size-4xl);
+        margin-bottom: 60px;
 
         flex-direction: column;
 
@@ -100,7 +100,7 @@ a.kbq-navbar-brand {
             position: absolute;
 
             left: var(--kbq-size-xxs);
-            top: var(--kbq-size-4xl);
+            top: var(--kbq-size-6xl);
             max-width: 200px;
         }
     }

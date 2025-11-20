@@ -13,6 +13,7 @@
 
     & .kbq-navbar-container + .kbq-navbar-container {
         padding-top: var(--kbq-size-xxl);
+        padding-bottom: var(--kbq-size-xxs);
     }
 
     & .kbq-vertical-navbar__container {
