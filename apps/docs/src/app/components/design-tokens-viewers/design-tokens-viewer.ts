@@ -7,11 +7,6 @@ import { DocsLocale } from 'src/app/constants/locale';
 import { DocsStructureTokensTab } from '../../structure';
 import { DocsComponentViewerComponent } from '../component-viewer/component-viewer.component';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
-import { docsData as borderRadius } from './data/border-radius';
-import { docsData as colors } from './data/colors';
-import { docsData as palette } from './data/palette';
-import { docsData as shadows } from './data/shadows';
-import { docsData as sizes } from './data/sizes';
 
 @Component({
     standalone: true,
@@ -60,46 +55,41 @@ export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
         super();
     }
 
-    readonly links: Array<{ title: Record<DocsLocale, string>; value: string; data: any }> = [
+    readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
         {
             title: {
                 ru: 'Цвета',
                 en: 'Colors'
             },
-            value: DocsStructureTokensTab.Colors,
-            data: colors
+            value: DocsStructureTokensTab.Colors
         },
         {
             title: {
                 ru: 'Тени',
                 en: 'Shadows'
             },
-            value: DocsStructureTokensTab.Shadows,
-            data: shadows
+            value: DocsStructureTokensTab.Shadows
         },
         {
             title: {
                 ru: 'Скругления',
                 en: 'Border radius'
             },
-            value: DocsStructureTokensTab.BorderRadius,
-            data: borderRadius
+            value: DocsStructureTokensTab.BorderRadius
         },
         {
             title: {
                 ru: 'Размеры',
                 en: 'Sizes'
             },
-            value: DocsStructureTokensTab.Sizes,
-            data: sizes
+            value: DocsStructureTokensTab.Sizes
         },
         {
             title: {
                 ru: 'Инженерная палитра',
                 en: 'Engineer palette'
             },
-            value: DocsStructureTokensTab.Palette,
-            data: palette
+            value: DocsStructureTokensTab.Palette
         }
     ];
 }

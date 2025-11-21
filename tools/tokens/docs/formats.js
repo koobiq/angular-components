@@ -1,8 +1,38 @@
-const { simpleMapColors } = require('./templates');
+const { simpleMapColors, outputTypographyTable, mapTypography } = require('./templates');
 const { updateObject, sortSections } = require('./utils');
 const { NO_HEADER } = require('./config');
 
 module.exports = (StyleDictionary) => {
+    StyleDictionary.registerFormat({
+        name: 'docs/typography',
+        formatter: function ({ dictionary }) {
+            const filtered = [];
+
+            for (const token of dictionary.allTokens) {
+                const isTypographyTypeMissing =
+                    filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
+
+                if (isTypographyTypeMissing && token.attributes.item === 'font-size') {
+                    filtered.push(token);
+                }
+            }
+
+            // Sort by font-size
+            filtered.sort((a, b) => {
+                const aFontSize = parseInt(a.value);
+                const bFontSize = parseInt(b.value);
+
+                if (aFontSize < bFontSize) return 1;
+                if (aFontSize > bFontSize) return -1;
+
+                return 0;
+            });
+            const mappedTokens = filtered.map(mapTypography);
+
+            return outputTypographyTable(mappedTokens);
+        }
+    });
+
     StyleDictionary.registerFormat({
         name: 'docs/colors-ts',
         formatter: function ({ dictionary }) {

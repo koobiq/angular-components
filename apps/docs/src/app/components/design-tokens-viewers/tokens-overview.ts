@@ -29,6 +29,17 @@ export interface DocsTokensInfo {
     tokens?: { token: string; value: string }[];
 }
 
+export interface DocsTokensSectionInfoRaw {
+    type: string;
+    tokens: string[];
+}
+
+export interface DocsTokensInfoRaw {
+    type: string;
+    sections?: DocsTokensSectionInfoRaw[];
+    tokens?: string[];
+}
+
 @Component({
     standalone: true,
     selector: 'docs-tokens-table',
@@ -179,7 +190,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly platformId = inject(PLATFORM_ID);
     protected readonly activatedRoute = inject(ActivatedRoute);
 
-    protected tokensInfo = signal<DocsTokensInfo[]>([]);
+    protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
         this.activatedRoute.url.pipe(
             map(([{ path: id }]: UrlSegment[]) => <DocsStructureTokensTab>id),
@@ -203,7 +214,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         }
     };
 
-    protected tokenDataMap: Record<DocsStructureTokensTab, unknown> = {
+    protected tokenDataMap: Record<DocsStructureTokensTab, DocsTokensInfoRaw[]> = {
         [DocsStructureTokensTab.Colors]: colors,
         [DocsStructureTokensTab.Shadows]: shadows,
         [DocsStructureTokensTab.BorderRadius]: borderRadius,
@@ -229,10 +240,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
 
         const getTokenValue = (token: string) => styles.getPropertyValue(token);
 
-        const resolvedData = this.tokenDataMap[this.activatedTab()] as any;
-
-        // ts-ignore
-        return resolvedData.map((section) => {
+        return this.tokenDataMap[this.activatedTab()].map((section) => {
             if (section.tokens && section.tokens.length > 0) {
                 return {
                     type: section.type,
