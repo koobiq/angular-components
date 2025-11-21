@@ -18,6 +18,7 @@ import {
     Optional,
     TemplateRef,
     ViewEncapsulation,
+    afterNextRender,
     booleanAttribute,
     inject
 } from '@angular/core';
@@ -606,11 +607,9 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
 
         this.placement = PopUpPlacements.Right;
 
-        if (this.window) {
-            this.ngZone.runOutsideAngular(() => {
-                this.window.addEventListener('keydown', this.windowToggleHandler);
-            });
-        }
+        afterNextRender(() => {
+            this.ngZone.runOutsideAngular(() => this.window.addEventListener('keydown', this.windowToggleHandler));
+        });
     }
 
     onKeydown($event: KeyboardEvent) {

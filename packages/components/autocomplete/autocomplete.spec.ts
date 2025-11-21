@@ -1802,10 +1802,11 @@ describe('KbqAutocomplete', () => {
         }));
     });
 
-    it('should not reopen a closed autocomplete when returning to a blurred tab', () => {
+    it('should not reopen a closed autocomplete when returning to a blurred tab', async () => {
         const fixture = createComponent(SimpleAutocomplete);
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const trigger = fixture.componentInstance.trigger;
         const input = fixture.debugElement.query(By.css('input')).nativeElement;
