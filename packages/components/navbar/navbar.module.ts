@@ -11,9 +11,9 @@ import {
     KbqNavbarItem,
     KbqNavbarLogo,
     KbqNavbarRectangleElement,
-    KbqNavbarTitle,
-    KbqNavbarToggle
+    KbqNavbarTitle
 } from './navbar-item.component';
+import { KbqNavbarToggle } from './navbar-toggle.component';
 import { KbqNavbar, KbqNavbarContainer } from './navbar.component';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
 

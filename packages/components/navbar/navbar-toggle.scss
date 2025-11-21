@@ -1,0 +1,63 @@
+@use '../core/styles/common/tokens' as *;
+
+@use './navbar-theme' as *;
+
+.kbq-navbar-toggle {
+    position: absolute;
+
+    z-index: 1;
+
+    top: var(--kbq-size-3xl);
+    right: calc(-1 * var(--kbq-size-l));
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: var(--kbq-size-3xl);
+    height: var(--kbq-size-3xl);
+
+    border-radius: 50%;
+}
+
+@mixin kbq-navbar-toggle-theme() {
+    .kbq-navbar-toggle {
+        outline: none;
+        border-color: transparent;
+
+        background: var(--kbq-background-card);
+
+        box-shadow:
+            0 3px 8px 0 rgba(13, 14, 18, 0.12),
+            0 2px 8px 0 rgba(13, 14, 18, 0.06),
+            0 0 0 1px rgba(13, 14, 18, 0.03);
+
+        & .kbq-icon {
+            color: rgba(138, 143, 168, 1);
+        }
+
+        &:hover,
+        &:active,
+        &.kbq-hover,
+        &.kbq-active {
+            & .kbq-icon {
+                color: var(--kbq-states-icon-contrast-hover);
+            }
+        }
+
+        &.cdk-keyboard-focused {
+            box-shadow: 0 0 0 2px var(--kbq-states-line-focus-theme);
+        }
+
+        &[disabled],
+        &.kbq-disabled {
+            opacity: var(--kbq-opacity-disabled);
+
+            & .kbq-icon {
+                color: var(--kbq-icon-contrast-fade);
+            }
+        }
+    }
+}
+
+@include kbq-navbar-toggle-theme();

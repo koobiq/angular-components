@@ -32,8 +32,7 @@
     }
 
     .kbq-navbar-item,
-    .kbq-navbar-brand,
-    .kbq-navbar-toggle {
+    .kbq-navbar-brand {
         cursor: pointer;
 
         @include kbq-navbar-item(default);
@@ -87,8 +86,7 @@
 
 button {
     &.kbq-navbar-item,
-    &.kbq-navbar-brand,
-    &.kbq-navbar-toggle {
+    &.kbq-navbar-brand {
         background: transparent;
         border: none;
     }
