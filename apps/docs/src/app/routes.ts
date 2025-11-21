@@ -10,12 +10,18 @@ import {
 } from './components/component-viewer/component-viewer.component';
 import { DocsDesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
 import { DocsTokensOverview } from './components/design-tokens-viewers/tokens-overview';
+import { DocsTypographyTable } from './components/design-tokens-viewers/typography-overview';
 import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
 import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
-import { DocsStructureCategoryId, DocsStructureItemId, DocsStructureItemTab } from './structure';
+import {
+    DocsStructureCategoryId,
+    DocsStructureItemId,
+    DocsStructureItemTab,
+    DocsStructureTokensTab
+} from './structure';
 
 const http404Redirect = '404';
 
@@ -52,13 +58,14 @@ export const DOCS_ROUTES: Routes = [
                 path: `${DocsStructureCategoryId.Main}/${DocsStructureItemId.DesignTokens}`,
                 component: DocsDesignTokensViewer,
                 children: [
-                    { path: '', redirectTo: 'colors', pathMatch: 'full' },
-                    { path: 'colors', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: 'shadows', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: 'border-radius', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: 'sizes', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: 'palette', component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: '**', redirectTo: 'colors' }
+                    { path: '', redirectTo: DocsStructureTokensTab.Colors, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Colors, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Typography, component: DocsTypographyTable, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Shadows, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.BorderRadius, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Sizes, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Palette, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]
             },
             {

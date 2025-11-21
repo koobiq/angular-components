@@ -113,6 +113,8 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
                     this.pathName = rootUrl;
                 }
+
+                this.ref.detectChanges();
             });
     }
 
@@ -155,8 +157,6 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
                 .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
                 .subscribe(this.onScroll);
         }
-
-        this.ref.detectChanges();
     }
 
     /* TODO Техдолг: при изменении ширины экрана должен переопределяться параметр top

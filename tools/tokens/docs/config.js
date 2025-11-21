@@ -2,7 +2,7 @@ const TYPOGRAPHY_TABLE_ID = 'font-classes-table';
 
 module.exports = {
     BASE_PATH: 'node_modules/@koobiq/design-tokens/web',
-    BUILD_PATH: 'docs/guides/design-tokens/',
+    BUILD_PATH: 'apps/docs/src/app/components/design-tokens-viewers/data/',
     LINE_SEP: '\r\n',
     DEFAULT_MARKDOWN_HEADER_LEVEL: 3,
     NO_HEADER: 'no-header',

@@ -130,6 +130,15 @@ export enum DocsStructureItemTab {
     Examples = 'examples'
 }
 
+export enum DocsStructureTokensTab {
+    Colors = 'colors',
+    Typography = 'typography',
+    Shadows = 'shadows',
+    BorderRadius = 'border-radius',
+    Sizes = 'sizes',
+    Palette = 'palette'
+}
+
 export type DocsStructure = Record<DocsStructureCategoryId, DocsStructureCategory[]>;
 
 const makeStructure = (structure: DocsStructure): DocsStructure => {
