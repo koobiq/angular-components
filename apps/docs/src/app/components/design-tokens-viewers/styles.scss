@@ -34,21 +34,21 @@
 }
 
 .kbq-table tr td {
-    vertical-align: baseline;
+    vertical-align: top;
 }
 
 // standard breakpoint
 @media (max-width: 768px) {
-    .kbq-markdown .kbq-table thead {
+    .kbq-table thead {
         display: none;
     }
 
-    .kbq-markdown .kbq-table tr {
+    .kbq-table tr {
         display: flex;
         flex-direction: column;
     }
 
-    .kbq-markdown .kbq-table td {
+    .kbq-table td {
         padding: 0 0 var(--kbq-size-s);
 
         &:last-child {
