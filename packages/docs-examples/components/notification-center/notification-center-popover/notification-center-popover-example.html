@@ -21,7 +21,7 @@
             <i kbq-icon="kbq-dashboard_16"></i>
         </button>
 
-        <kbq-navbar-item [collapsable]="false">
+        <kbq-navbar-item>
             <kbq-navbar-title>Issues</kbq-navbar-title>
         </kbq-navbar-item>
 
@@ -34,6 +34,8 @@
         <kbq-navbar-item
             #trigger="kbqNotificationCenterTrigger"
             kbqNotificationCenterTrigger
+            [stickToWindow]="'right'"
+            [container]="container"
             [popoverMode]="true"
             [popoverHeight]="'430px'"
         >

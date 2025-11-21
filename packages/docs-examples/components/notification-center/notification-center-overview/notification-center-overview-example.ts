@@ -13,11 +13,18 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    KbqFormattersModule,
+    kbqInjectNativeElement,
+    PopUpPlacements,
+    ThemeService
+} from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
@@ -50,11 +57,6 @@ enum NavbarIcItems {
     standalone: true,
     selector: 'notification-center-overview-example',
     templateUrl: 'notification-center-overview-example.html',
-    styles: `
-        ::ng-deep .example-notification-center-panel {
-            margin-top: -98px;
-        }
-    `,
     imports: [
         KbqNotificationCenterModule,
         KbqNavbarIcModule,
@@ -67,11 +69,13 @@ enum NavbarIcItems {
         AsyncPipe,
         KbqLinkModule,
         LuxonDateModule,
-        KbqFormattersModule
+        KbqFormattersModule,
+        KbqNavbarModule
     ]
 })
 export class NotificationCenterOverviewExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);
+    container = kbqInjectNativeElement();
 
     @ViewChild('actionsTemplate') actionsTemplateRef!: TemplateRef<any>;
     @ViewChild('captionTemplate') captionTemplateRef: TemplateRef<any>;

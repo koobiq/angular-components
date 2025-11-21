@@ -13,7 +13,13 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    KbqFormattersModule,
+    kbqInjectNativeElement,
+    PopUpPlacements,
+    ThemeService
+} from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -75,6 +81,7 @@ enum NavbarIcItems {
 })
 export class NotificationCenterPopoverExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);
+    container = kbqInjectNativeElement();
 
     @ViewChild('actionsTemplate') actionsTemplateRef: TemplateRef<any>;
 

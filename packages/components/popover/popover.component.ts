@@ -95,6 +95,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
                     this.prefix,
                     `${this.offset!.toString()}px`
                 );
+
+                this.setStickPosition();
             }
         });
     }
@@ -108,7 +110,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
         this.isContentTopOverflow = scrollTop > 0;
 
-        this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
+        this.isContentBottomOverflow = Math.round(scrollTop + offsetHeight) < scrollHeight;
 
         super.detectChanges();
     }
@@ -194,6 +196,13 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set popoverPlacementPriority(value) {
         super.updatePlacementPriority(value);
     }
+
+    @Input('kbqPopoverStickToWindow') stickToWindow:
+        | PopUpPlacements.Top
+        | PopUpPlacements.Right
+        | PopUpPlacements.Bottom
+        | PopUpPlacements.Left
+        | string;
 
     @Input()
     get hasBackdrop(): boolean {
