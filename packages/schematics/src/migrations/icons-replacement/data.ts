@@ -79,5 +79,12 @@ export const iconReplacementData: Replacement[] = [
     { from: 'wrap-text-slash_16', to: 'text-overflow_16' },
     { from: 'wrap-text-slash_24', to: 'text-overflow_24' },
     { from: 'xmark-circle_16', to: 'circle-xmark_16' },
-    { from: 'xmark-circle_24', to: 'circle-xmark_24' }
+    { from: 'xmark-circle_24', to: 'circle-xmark_24' },
+    { from: 'xmark-circle-s_16', to: 'circle-xmark-s_16' },
+    { from: 'xmark-circle-s_24', to: 'circle-xmark-s_24' },
+    { from: 'table-badge-arrow-down-circle_32', to: 'table-badge-circle-arrow-down_32' },
+    { from: 'question-circle-o_32', to: 'circle-question-o_32' },
+    { from: 'gear-badge-arrowtriangle-up-square_16', to: 'gear-badge-square-arrowtriangle-up_16' },
+    { from: 'gear-badge-arrowtriangle-up-square_24', to: 'gear-badge-square-arrowtriangle-up_24' },
+    { from: 'exclamation-triangle_32', to: 'triangle-exclamation_32' }
 ];
