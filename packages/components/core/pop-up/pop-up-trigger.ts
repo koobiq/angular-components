@@ -116,6 +116,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
 
+    container: HTMLElement;
+
     abstract disabled: boolean;
     abstract arrow: boolean;
     abstract trigger: string;

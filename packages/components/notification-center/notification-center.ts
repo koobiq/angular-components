@@ -331,6 +331,8 @@ export class KbqNotificationCenterTrigger
         | PopUpPlacements.Left
         | string;
 
+    @Input() container: HTMLElement;
+
     /** @docs-private */
     get hasClickTrigger(): boolean {
         return this.trigger.includes(PopUpTriggers.Click);

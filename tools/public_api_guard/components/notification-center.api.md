@@ -145,6 +145,8 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     arrow: boolean;
     backdropClass: string;
     closingActions(): Observable<void | CdkScrollable | MouseEvent>;
+    // (undocumented)
+    container: HTMLElement;
     content: string | TemplateRef<any>;
     customClass: string;
     get disabled(): boolean;
@@ -176,6 +178,8 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
+    // (undocumented)
+    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
     trigger: string;
     get unreadItemsCounter(): Observable<string>;
     updateClassMap(newPlacement?: string): void;
@@ -183,7 +187,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     updatePosition(reapplyPosition?: boolean): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterTrigger, never>;
 }
