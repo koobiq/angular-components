@@ -3,30 +3,9 @@ const { updateObject, sortSections } = require('./utils');
 const { NO_HEADER } = require('./config');
 
 module.exports = (StyleDictionary) => {
-    StyleDictionary.registerTransform({
-        type: 'name',
-        name: `name/themeable-token`,
-        transformer: (token) => token.name.replace(/(light|dark)-/, '')
-    });
-    StyleDictionary.registerTransformGroup({
-        name: 'kbq/css-extended',
-        transforms: [
-            'attribute/cti',
-            'kbq-attribute/palette',
-            'kbq-attribute/font',
-            'kbq-attribute/light',
-            'kbq-attribute/dark',
-            'name/cti/kebab',
-            'color/css',
-            'kbq/prefix',
-            'name/themeable-token'
-        ]
-    });
-
     StyleDictionary.registerFormat({
         name: 'docs/colors-ts',
         formatter: function ({ dictionary }) {
-            // filter duplicates (light/dark)
             // filter duplicates (light/dark)
             dictionary.allTokens = dictionary.allTokens.filter((token, pos, allTokens) => {
                 const foundIndex = allTokens.findIndex(({ name }) => name === token.name);
@@ -109,7 +88,7 @@ module.exports = (StyleDictionary) => {
         formatter: function ({ dictionary }) {
             const mappedTokens = dictionary.allTokens.map(simpleMapToken);
 
-            return `export const data = ${JSON.stringify(mappedTokens)}`;
+            return `export const docsData = ${JSON.stringify(mappedTokens)}`;
         }
     });
 };

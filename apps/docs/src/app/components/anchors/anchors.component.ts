@@ -113,6 +113,9 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
                     this.pathName = rootUrl;
                 }
+
+                // TODO: check why spy menu not changed
+                this.ref.detectChanges();
             });
     }
 

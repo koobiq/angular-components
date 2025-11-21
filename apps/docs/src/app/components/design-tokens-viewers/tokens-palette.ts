@@ -56,12 +56,12 @@ interface DocsColorsInfo {
                             <tr>
                                 <td align="left">
                                     <div
-                                        class="kbq-design-token-example__dimensions"
+                                        class="docs-design-token-example__dimensions"
                                         [style.background-color]="'var(' + token.token + ')'"
                                     ></div>
                                 </td>
                                 <td align="left">
-                                    <div class="kbq-design-token-example__var">
+                                    <div class="docs-design-token-example__var">
                                         <span
                                             docsCodeSnippet
                                             class="kbq-markdown__code"
@@ -69,13 +69,13 @@ interface DocsColorsInfo {
                                         >
                                             {{ token.token }}
                                         </span>
-                                        <div class="kbq-design-token-example__value kbq-mono-normal">
+                                        <div class="docs-design-token-example__value kbq-mono-normal">
                                             {{ token.value }}
                                         </div>
                                     </div>
                                 </td>
                                 <td align="left">
-                                    <div class="kbq-design-token-example__value kbq-mono-normal">
+                                    <div class="docs-design-token-example__value kbq-mono-normal">
                                         {{ token.value }}
                                     </div>
                                 </td>
@@ -86,6 +86,7 @@ interface DocsColorsInfo {
             }
         </ng-template>
     `,
+    styleUrls: ['./styles.scss'],
     host: {
         class: 'docs-design-tokens-palette'
     },

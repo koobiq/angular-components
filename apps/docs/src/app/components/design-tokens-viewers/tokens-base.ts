@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Directive, inject, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW, ThemeService } from '@koobiq/components/core';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
@@ -33,7 +34,7 @@ export class DocsTokensBase extends DocsLocaleState implements AfterViewInit {
 
     constructor() {
         super();
-        this.themeService.current.subscribe(() => {
+        this.themeService.current.pipe(takeUntilDestroyed()).subscribe(() => {
             this.calculateViewData();
         });
     }
