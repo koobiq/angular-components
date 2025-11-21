@@ -1,13 +1,6 @@
-const { LINE_SEP, TYPOGRAPHY_TABLE_ID } = require('./config');
 const { capitalize } = require('./utils');
 
-const varTypographyTemplate = (token) => `<code docsCodeSnippet>kbq-${token.attributes.type}</code>`;
-
-const simpleExampleTypographyTemplate = (typographyType) => {
-    const typographyTypeOutput = capitalize(typographyType, { separator: '-' });
-
-    return `<div class="kbq-${typographyType}">${typographyTypeOutput}</div>`;
-};
+const simpleMapTypography = (token) => token.attributes.type;
 
 const simpleMapToken = ({ name }) => `--${name}`;
 
@@ -30,30 +23,5 @@ const simpleMapColors = ([type, tokens]) => {
 module.exports = {
     simpleMapToken,
     simpleMapColors,
-
-    mapTypography: (token) => ({
-        varSnippet: varTypographyTemplate(token),
-        example: simpleExampleTypographyTemplate(token.attributes.type)
-    }),
-
-    outputTypographyTable: (tokens) => {
-        return `<table id="${TYPOGRAPHY_TABLE_ID}">
-                    <thead>
-                       <tr>
-                            <th>Typography Example</th>
-                            <th>CSS Class Name</th>
-                       </tr>
-                    </thead>
-                    <tbody>
-                        ${tokens
-                            .map(({ example, varSnippet }) => {
-                                return `<tr>
-                                            <td>${example}</td>
-                                            <td>${varSnippet}</td>
-                                        </tr>`;
-                            })
-                            .join(LINE_SEP)}
-                    </tbody>
-             </table>`;
-    }
+    simpleMapTypography
 };

@@ -101,7 +101,10 @@ export class DocsTokensTable extends DocsLocaleState {
     readonly section = input<DocsTokensSectionInfo>();
     readonly tab = input.required<DocsStructureTokensTab>();
 
-    readonly mapTabToType: Record<DocsStructureTokensTab, 'dimensions' | 'sizes' | 'shadows'> = {
+    readonly mapTabToType: Record<
+        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
+        'dimensions' | 'sizes' | 'shadows'
+    > = {
         [DocsStructureTokensTab.Colors]: 'dimensions',
         [DocsStructureTokensTab.BorderRadius]: 'dimensions',
         [DocsStructureTokensTab.Palette]: 'dimensions',
@@ -110,7 +113,7 @@ export class DocsTokensTable extends DocsLocaleState {
     };
 
     readonly mapTabToCssProp: Record<
-        DocsStructureTokensTab,
+        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
         'border-radius' | 'background-color' | 'box-shadow' | 'width'
     > = {
         [DocsStructureTokensTab.Colors]: 'background-color',
@@ -214,7 +217,10 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         }
     };
 
-    protected tokenDataMap: Record<DocsStructureTokensTab, DocsTokensInfoRaw[]> = {
+    protected tokenDataMap: Record<
+        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
+        DocsTokensInfoRaw[]
+    > = {
         [DocsStructureTokensTab.Colors]: colors,
         [DocsStructureTokensTab.Shadows]: shadows,
         [DocsStructureTokensTab.BorderRadius]: borderRadius,

@@ -65,6 +65,13 @@ export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
         },
         {
             title: {
+                ru: 'Типографика',
+                en: 'Typography'
+            },
+            value: DocsStructureTokensTab.Typography
+        },
+        {
+            title: {
                 ru: 'Тени',
                 en: 'Shadows'
             },

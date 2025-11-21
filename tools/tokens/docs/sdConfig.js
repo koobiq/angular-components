@@ -3,23 +3,16 @@ const { BASE_PATH, BUILD_PATH } = require('./config');
 module.exports = {
     source: [`${BASE_PATH}/properties/*.json5`],
     platforms: {
-        html: {
-            buildPath: 'packages/components/core/styles/typography/',
-            transformGroup: 'kbq/css-extended',
-            files: [
-                {
-                    filter: (token) => token.attributes.category === 'typography',
-                    destination: 'tmp.typography.html',
-                    format: 'docs/typography',
-                    prefix: 'kbq'
-                }
-            ],
-            actions: ['insert_table']
-        },
         css: {
             buildPath: BUILD_PATH,
             transformGroup: 'kbq/css-extended',
             files: [
+                {
+                    filter: (token) => token.attributes.category === 'typography',
+                    destination: 'typography.ts',
+                    format: 'docs/typography-ts',
+                    prefix: 'kbq'
+                },
                 {
                     filter: (token) =>
                         ['light', 'dark'].includes(token.attributes.category) &&

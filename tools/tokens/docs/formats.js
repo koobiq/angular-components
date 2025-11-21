@@ -1,10 +1,10 @@
-const { simpleMapColors, outputTypographyTable, mapTypography } = require('./templates');
+const { simpleMapColors, simpleMapTypography } = require('./templates');
 const { updateObject, sortSections } = require('./utils');
 const { NO_HEADER } = require('./config');
 
 module.exports = (StyleDictionary) => {
     StyleDictionary.registerFormat({
-        name: 'docs/typography',
+        name: 'docs/typography-ts',
         formatter: function ({ dictionary }) {
             const filtered = [];
 
@@ -27,9 +27,10 @@ module.exports = (StyleDictionary) => {
 
                 return 0;
             });
-            const mappedTokens = filtered.map(mapTypography);
 
-            return outputTypographyTable(mappedTokens);
+            const mappedTokens = filtered.map(simpleMapTypography);
+
+            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
         }
     });
 

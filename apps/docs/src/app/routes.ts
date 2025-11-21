@@ -10,6 +10,7 @@ import {
 } from './components/component-viewer/component-viewer.component';
 import { DocsDesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
 import { DocsTokensOverview } from './components/design-tokens-viewers/tokens-overview';
+import { DocsTypographyTable } from './components/design-tokens-viewers/typography-overview';
 import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
 import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
@@ -59,6 +60,7 @@ export const DOCS_ROUTES: Routes = [
                 children: [
                     { path: '', redirectTo: DocsStructureTokensTab.Colors, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Colors, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Typography, component: DocsTypographyTable, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Shadows, component: DocsTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.BorderRadius, component: DocsTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Sizes, component: DocsTokensOverview, pathMatch: 'full' },
