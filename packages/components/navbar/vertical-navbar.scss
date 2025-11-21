@@ -3,8 +3,14 @@
 @use './navbar-theme' as *;
 
 .kbq-vertical-navbar {
+    position: relative;
+
     min-width: 48px;
     height: 100%;
+
+    &:not(:hover, .cdk-keyboard-focused) .kbq-navbar-toggle {
+        display: none;
+    }
 
     & .kbq-navbar-container {
         flex-direction: column;
@@ -23,7 +29,7 @@
         height: 100%;
 
         &.kbq-collapsed {
-            width: var(--kbq-size-5xl);
+            width: var(--kbq-size-6xl);
         }
 
         &.kbq-expanded {

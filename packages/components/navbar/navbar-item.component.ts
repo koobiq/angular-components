@@ -1,7 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -16,21 +15,19 @@ import {
     NgZone,
     OnDestroy,
     Optional,
-    TemplateRef,
     ViewEncapsulation,
-    afterNextRender,
     booleanAttribute,
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { DOWN_ARROW, ENTER, NUMPAD_DIVIDE, RIGHT_ARROW, SLASH, SPACE } from '@koobiq/cdk/keycodes';
+import { DOWN_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { EMPTY, Subject, merge } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
@@ -541,103 +538,4 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
             $event.preventDefault();
         }
     }
-}
-
-@Component({
-    selector: 'kbq-navbar-toggle',
-    template: `
-        @if (!customIcon) {
-            <i
-                kbq-icon
-                [class.kbq-bars-arrow-left_16]="navbar.expanded"
-                [class.kbq-bars-arrow-right_16]="!navbar.expanded"
-            ></i>
-        }
-
-        <ng-content select="[kbq-icon]" />
-
-        @if (navbar.expanded) {
-            <div class="kbq-navbar-item__title">
-                <ng-content select="kbq-navbar-title" />
-            </div>
-        }
-    `,
-    styleUrls: ['./navbar.scss'],
-    host: {
-        class: 'kbq-navbar-item kbq-navbar-toggle kbq-vertical',
-        '[class.kbq-tooltip_open]': 'isOpen',
-        '[class.kbq-collapsed]': '!navbar.expanded',
-        '[class.kbq-expanded]': 'navbar.expanded',
-
-        '(keydown)': 'onKeydown($event)',
-        '(click)': 'toggle()',
-        '(touchend)': 'touchendHandler()'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
-})
-export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
-    protected readonly document = inject<Document>(DOCUMENT);
-    private readonly window = inject(KBQ_WINDOW);
-
-    @ContentChild(KbqIcon) customIcon: KbqIcon;
-
-    @Input('kbqCollapsedTooltip')
-    get content(): string | TemplateRef<any> {
-        return this._content;
-    }
-
-    set content(content: string | TemplateRef<any>) {
-        this._content = content;
-
-        this.updateData();
-    }
-
-    get disabled(): boolean {
-        return this.navbar.expanded;
-    }
-
-    protected modifier: TooltipModifier = TooltipModifier.Default;
-
-    constructor(
-        public navbar: KbqVerticalNavbar,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {
-        super();
-
-        this.placement = PopUpPlacements.Right;
-
-        afterNextRender(() => {
-            this.ngZone.runOutsideAngular(() => this.window.addEventListener('keydown', this.windowToggleHandler));
-        });
-    }
-
-    onKeydown($event: KeyboardEvent) {
-        if ([SPACE, ENTER].includes($event.keyCode)) {
-            this.toggle();
-
-            $event.stopPropagation();
-            $event.preventDefault();
-        }
-
-        super.keydownHandler($event);
-    }
-
-    ngOnDestroy(): void {
-        this.window.removeEventListener('keydown', this.windowToggleHandler);
-    }
-
-    toggle = () => {
-        this.navbar.toggle();
-
-        this.changeDetectorRef.markForCheck();
-
-        this.hide();
-    };
-
-    private windowToggleHandler = (event: KeyboardEvent) => {
-        if (event.ctrlKey && [NUMPAD_DIVIDE, SLASH].includes(event.keyCode)) {
-            this.ngZone.run(this.toggle);
-        }
-    };
 }

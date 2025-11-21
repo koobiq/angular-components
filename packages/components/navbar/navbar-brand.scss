@@ -50,6 +50,8 @@ a.kbq-navbar-brand {
 }
 
 .kbq-navbar-brand.kbq-vertical {
+    height: var(--kbq-size-4xl);
+
     & .kbq-navbar-logo {
         align-items: center;
     }
@@ -71,18 +73,6 @@ a.kbq-navbar-brand {
     }
 
     &.kbq-expanded {
-        position: relative;
-
-        height: var(--kbq-size-4xl);
-        width: var(--kbq-size-4xl);
-
-        margin-top: var(--kbq-size-s);
-        margin-right: var(--kbq-size-l);
-        margin-left: var(--kbq-size-l);
-        margin-bottom: 60px;
-
-        flex-direction: column;
-
         &:after {
             top: 0;
             right: 0;
@@ -97,10 +87,6 @@ a.kbq-navbar-brand {
         }
 
         & .kbq-navbar-title {
-            position: absolute;
-
-            left: var(--kbq-size-xxs);
-            top: var(--kbq-size-6xl);
             max-width: 200px;
         }
     }

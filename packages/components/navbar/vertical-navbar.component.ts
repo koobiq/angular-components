@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
@@ -27,8 +27,8 @@ import { KbqFocusableComponent } from './navbar.component';
     template: `
         <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
             <ng-content select="[kbq-navbar-container], kbq-navbar-container" />
-            <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle" />
         </div>
+        <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle" />
     `,
     styleUrls: [
         './vertical-navbar.scss',
@@ -41,6 +41,7 @@ import { KbqFocusableComponent } from './navbar.component';
         class: 'kbq-vertical-navbar',
         '[class.kbq-vertical-navbar_open-over]': 'openOver',
         '[attr.tabindex]': 'tabIndex',
+        '[attr.cdkMonitorSubtreeFocus]': 'true',
 
         '(focus)': 'focus()',
         '(blur)': 'blur()',
@@ -48,7 +49,8 @@ import { KbqFocusableComponent } from './navbar.component';
         '(keydown)': 'onKeyDown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    hostDirectives: [CdkMonitorFocus]
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     rectangleElements = contentChildren(
