@@ -2,7 +2,16 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
-import { ColDef, FirstDataRenderedEvent, ICellRendererParams } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ColDef,
+    FirstDataRenderedEvent,
+    ICellRendererParams,
+    ModuleRegistry,
+    RowSelectionOptions
+} from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 type ExampleRowData = {
     column0: string;
@@ -53,18 +62,17 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     selector: 'ag-grid-overview-example',
     template: `
         <ag-grid-angular
-            rowSelection="multiple"
             kbqAgGridTheme
             disableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
+            [rowSelection]="rowSelection"
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
-            [suppressRowClickSelection]="true"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
@@ -77,19 +85,14 @@ export class AgGridOverviewExample {
         width: 140
     };
 
+    protected readonly rowSelection: RowSelectionOptions = {
+        mode: 'multiRow',
+        headerCheckbox: true,
+        checkboxes: true,
+        hideDisabledCheckboxes: false
+    };
+
     protected readonly columnDefs: ColDef[] = [
-        {
-            headerCheckboxSelection: true,
-            checkboxSelection: true,
-            width: 34,
-            headerName: '',
-            sortable: false,
-            filter: false,
-            resizable: false,
-            suppressMovable: true,
-            editable: false,
-            lockPosition: true
-        },
         {
             field: 'column0',
             headerName: 'Link',
@@ -154,5 +157,7 @@ export class AgGridOverviewExample {
                 node.setSelected(true);
             }
         });
+
+        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
     }
 }

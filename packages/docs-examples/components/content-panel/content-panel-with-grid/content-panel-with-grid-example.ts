@@ -10,13 +10,18 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { AgGridModule } from 'ag-grid-angular';
 import {
+    AllCommunityModule,
     CellClickedEvent,
     CellFocusedEvent,
     CellKeyDownEvent,
     ColDef,
     FirstDataRenderedEvent,
-    FullWidthCellKeyDownEvent
+    FullWidthCellKeyDownEvent,
+    ModuleRegistry,
+    RowSelectionOptions
 } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 type ExampleRowData = Record<string, string>;
 
@@ -26,18 +31,17 @@ type ExampleRowData = Record<string, string>;
     selector: 'example-grid',
     template: `
         <ag-grid-angular
-            rowSelection="multiple"
             kbqAgGridTheme
             disableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
+            [rowSelection]="rowSelection"
             [style.height]="'100%'"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
-            [suppressRowClickSelection]="true"
             (firstDataRendered)="onFirstDataRendered($event)"
             (cellClicked)="cellClicked.emit($event)"
             (cellFocused)="cellFocused.emit($event)"
@@ -57,27 +61,19 @@ export class ExampleGrid {
         width: 140
     };
 
+    protected readonly rowSelection: RowSelectionOptions = {
+        mode: 'multiRow',
+        headerCheckbox: true,
+        checkboxes: true,
+        hideDisabledCheckboxes: false
+    };
+
     private readonly _columnDefs: ColDef[] = Array.from({ length: 20 }, (_, index) => ({
         headerName: 'Text ',
         field: 'column' + index
     }));
 
-    protected readonly columnDefs: ColDef[] = [
-        {
-            headerCheckboxSelection: true,
-            checkboxSelection: true,
-            width: 34,
-            headerName: '',
-            sortable: false,
-            filter: false,
-            resizable: false,
-            suppressMovable: true,
-            editable: false,
-            lockPosition: true
-        },
-        ...this._columnDefs
-
-    ];
+    protected readonly columnDefs: ColDef[] = this._columnDefs;
 
     protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
         return this._columnDefs.reduce((prev, _cur, i) => {
@@ -93,6 +89,8 @@ export class ExampleGrid {
                 node.setSelected(true);
             }
         });
+
+        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
     }
 }
 
