@@ -1,4 +1,4 @@
-const { simpleMapColors, simpleMapToken } = require('./templates');
+const { simpleMapColors } = require('./templates');
 const { updateObject, sortSections } = require('./utils');
 const { NO_HEADER } = require('./config');
 
@@ -50,45 +50,35 @@ module.exports = (StyleDictionary) => {
                 (token, pos, allTokens) => allTokens.indexOf(token) === pos
             );
 
-            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
-
-            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
+            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/globals-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
-
-            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
+            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
-
-            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
+            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
-
-            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
+            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/shadows-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(simpleMapToken);
-
-            return `export const docsData = ${JSON.stringify(mappedTokens)}`;
+            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
         }
     });
 };

@@ -1,1 +1,1 @@
-export const docsData = ['--kbq-size-border-radius'];
+export const docsData = [{ type: 'No-header', tokens: ['--kbq-size-border-radius'] }];
