@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { KbqModalModule } from '@koobiq/components/modal';
+import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { DocsLocale } from 'src/app/constants/locale';
-import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsStructureTokensTab } from '../../structure';
+import { DocsComponentViewerComponent } from '../component-viewer/component-viewer.component';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -13,8 +15,12 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
-        DocsRegisterHeaderDirective
+        DocsRegisterHeaderDirective,
+
+        // Prevents: "NullInjectorError: No provider for KbqModalService!"
+        KbqModalModule
     ],
+    providers: [KbqSidepanelService],
     selector: 'docs-component-viewer',
     template: `
         <div class="docs-component-header">
@@ -38,12 +44,17 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     `,
     styleUrls: ['../component-viewer/component-viewer.scss'],
     host: {
-        class: 'docs-component-viewer kbq-scrollbar'
+        class: 'docs-component-viewer kbq-scrollbar',
+        '[attr.data-docsearch-category]': 'structureItem.id'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsDesignTokensViewer extends DocsLocaleState {
+export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
+    constructor() {
+        super();
+    }
+
     readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
         {
             title: {

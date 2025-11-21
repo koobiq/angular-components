@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
@@ -7,18 +7,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
 import { docsData } from './data/colors';
-import { DocsTokensBase } from './tokens-base';
-
-interface SectionInfo {
-    type: string;
-    tokens: { token: string; value: string }[];
-}
-
-interface DocsColorsInfo {
-    type: string;
-    sections?: SectionInfo[];
-    tokens?: { token: string; value: string }[];
-}
+import { DocsTokensBase, DocsTokensInfo } from './tokens-base';
 
 @Component({
     standalone: true,
@@ -26,7 +15,7 @@ interface DocsColorsInfo {
     template: `
         <docs-component-viewer-wrapper>
             <div docs-article>
-                @for (section of colors; track section.type) {
+                @for (section of output(); track section.type) {
                     <ng-container *ngTemplateOutlet="sectionTemplate; context: { $implicit: section, level: 3 }" />
                 }
             </div>
@@ -109,19 +98,18 @@ interface DocsColorsInfo {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsTokensColors extends DocsTokensBase implements AfterViewInit {
-    protected colors: DocsColorsInfo[];
-
+export class DocsTokensColors extends DocsTokensBase {
     constructor() {
         super();
     }
 
-    override calculateViewData(): void {
+    override calculateViewData(): DocsTokensInfo[] {
+        super.calculateViewData();
         const styles = this.window.getComputedStyle(this.document.body);
 
         const getTokenValue = (token: string) => styles.getPropertyValue(token);
 
-        this.colors = docsData.map((section) => {
+        return docsData.map((section) => {
             if (section.tokens && section.tokens.length > 0) {
                 return {
                     type: section.type,

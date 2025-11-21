@@ -41,7 +41,7 @@ import { DocsOverviewComponentBase } from './component-viewer.component';
         </div>
     `,
     host: {
-        class: 'kbq-markdown docs-component-overview'
+        class: 'docs-component-overview'
     },
     imports: [
         DocsAnchorsComponent,
