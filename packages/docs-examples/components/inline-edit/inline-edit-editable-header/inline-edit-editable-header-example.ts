@@ -17,12 +17,12 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     ],
     selector: 'inline-edit-editable-header-example',
     template: `
-        <kbq-inline-edit #inlineEdit (saved)="onSave()">
+        <kbq-inline-edit #inlineEdit [canSaveOnEnter]="canSaveOnEnterFn" (saved)="onSave()">
             <div kbqInlineEditViewMode>
                 @if (!displayValue()) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <span class="kbq-headline">{{ displayValue() }}</span>
+                    <span class="kbq-headline example-inline-edit__display-value">{{ displayValue() }}</span>
                 }
             </div>
             <div class="example-textarea_editable-header" kbqInlineEditEditMode>
@@ -54,6 +54,12 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             --kbq-inline-edit-padding-horizontal: 5px;
         }
 
+        .kbq-inline-edit_view {
+            .example-inline-edit__display-value {
+                overflow-wrap: break-word;
+            }
+        }
+
         .kbq-textarea {
             font-size: var(--kbq-typography-headline-font-size);
             font-weight: var(--kbq-typography-headline-font-weight);
@@ -83,4 +89,6 @@ export class InlineEditEditableHeaderExample {
 
         this.displayValue.set(this.control.value);
     }
+
+    protected canSaveOnEnterFn = () => true;
 }
