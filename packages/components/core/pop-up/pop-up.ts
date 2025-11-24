@@ -1,4 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import {
     ChangeDetectorRef,
     DestroyRef,
@@ -176,25 +177,25 @@ export abstract class KbqPopUp implements OnDestroy {
         this.arrow = false;
 
         if (this.trigger.container) {
-            const width = this.elementRef.nativeElement.getBoundingClientRect().width;
-            const height = this.elementRef.nativeElement.getBoundingClientRect().height;
+            const { width, height } = this.elementRef.nativeElement.getBoundingClientRect();
+            const { right, left, top, bottom } = this.trigger.container.getBoundingClientRect();
 
             if (this.trigger.stickToWindow === PopUpPlacements.Right) {
-                const left = this.trigger.container.getBoundingClientRect().right - width;
-
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'left', `${left}px`);
+                this.renderer.setStyle(
+                    this.trigger.overlayRef?.overlayElement,
+                    'left',
+                    coerceCssPixelValue(right - width)
+                );
             } else if (this.trigger.stickToWindow === PopUpPlacements.Left) {
-                const left = this.trigger.container.getBoundingClientRect().left;
-
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'left', `${left}px`);
+                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(left));
             } else if (this.trigger.stickToWindow === PopUpPlacements.Top) {
-                const top = this.trigger.container.getBoundingClientRect().top;
-
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'top', `${top}px`);
+                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(top));
             } else if (this.trigger.stickToWindow === PopUpPlacements.Bottom) {
-                const top = this.trigger.container.getBoundingClientRect().bottom - height;
-
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'top', `${top}px`);
+                this.renderer.setStyle(
+                    this.trigger.overlayRef?.overlayElement,
+                    'top',
+                    coerceCssPixelValue(bottom - height)
+                );
             }
 
             this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'right', 'unset');
