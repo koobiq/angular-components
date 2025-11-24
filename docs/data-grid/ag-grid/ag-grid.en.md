@@ -1,4 +1,4 @@
-AG Grid is designed for working with large tables. The component supports sorting, virtual scrolling, resizing, and reordering of columns. It is based on the library [ag-grid-angular](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/).
+AG Grid is designed for working with large tables. The component supports sorting, virtual scrolling, resizing, and reordering of columns. It is based on the library [ag-grid-angular](https://www.ag-grid.com/angular-data-grid/).
 
 <!-- example(ag-grid-overview) -->
 
@@ -8,19 +8,10 @@ To maintain a consistent table style across projects, a theme [`@koobiq/ag-grid-
 
 #### Installation
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Note</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-The theme is compatible with AG Grid [version 30](https://github.com/ag-grid/ag-grid/tree/v30.2.1).
-
-</div>
-</div>
-
 Install the following packages:
 
 ```bash
-npm install @koobiq/ag-grid-angular-theme@^30 ag-grid-community@^30 ag-grid-angular@^30
+npm install @koobiq/ag-grid-angular-theme@^34 ag-grid-community@^34 ag-grid-angular@^34
 ```
 
 #### Applying the theme
@@ -68,7 +59,7 @@ You can apply custom keyboard shortcuts by adding the corresponding directives t
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Select all rows            | `kbqAgGridSelectAllRowsByCtrlA`   |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Select row                 | `kbqAgGridSelectRowsByCtrlClick`  |
 
-More information about keyboard shortcuts can be found in the [ag-grid-angular documentation](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/keyboard-navigation/).
+More information about keyboard shortcuts can be found in the [ag-grid-angular documentation](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 
 ### Recommendations
 
