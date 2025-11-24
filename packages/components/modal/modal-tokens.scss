@@ -8,6 +8,7 @@
     --kbq-modal-size-header-padding-right: var(--kbq-size-6xl);
     --kbq-modal-size-close-button-margin-left: var(--kbq-size-s);
     --kbq-modal-size-content-padding-horizontal: var(--kbq-size-xxl);
+    // Added top padding to prevent the outline of the first focused field from being clipped
     --kbq-modal-size-content-padding-top: 1px;
     --kbq-modal-size-content-padding-bottom: var(--kbq-size-s);
     --kbq-modal-size-content-padding-top-without-header: var(--kbq-size-xxl);
