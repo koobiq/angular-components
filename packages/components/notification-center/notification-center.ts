@@ -49,6 +49,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Subscription, merge } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
 import { KbqNotificationCenterService } from './notification-center.service';
 import { KbqNotificationItemComponent } from './notification-item';
@@ -393,20 +394,12 @@ export class KbqNotificationCenterTrigger
             });
         }
 
-        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible: boolean) => {
-            if (visible) {
-                // eslint-disable-next-line rxjs/no-nested-subscribe
-                this.preventClosingByInnerScrollSubscription = this.closingActions().subscribe((event) => {
-                    if (event['scrollDispatcher']) {
-                        event['kbqPopoverPreventHide'] = true;
-                        event['type'] = 'click';
-                    }
-                });
-            } else {
-                this.preventClosingByInnerScrollSubscription.unsubscribe();
-                this.focus();
-            }
-        });
+        this.visibleChange
+            .pipe(
+                filter((value) => !value),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => this.focus());
     }
 
     /** @docs-private */
