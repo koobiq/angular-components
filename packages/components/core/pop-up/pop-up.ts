@@ -198,7 +198,7 @@ export abstract class KbqPopUp implements OnDestroy {
             }
 
             this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'right', 'unset');
-            // this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'bottom', 'unset');
+            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'bottom', 'unset');
         } else {
             this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, this.trigger.stickToWindow, 0);
             this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, oppositeSide, 'unset');
