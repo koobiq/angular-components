@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-icons-replacement",
+    "title": "koobiq-components icons-replacement schematic",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project",
+            "$default": {
+                "$source": "projectName"
+            }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether overwrite icons prefixes or simply inform in console"
+        },
+        "allowed": {
+            "type": "array",
+            "default": [".html", ".ts", ".scss"],
+            "items": {
+                "type": "string"
+            },
+            "description": "Allowed file extensions to check"
+        },
+        "replacementDataPath": {
+            "type": "string",
+            "description": "Custom replacement data path. Will be used as relative to `project.root`"
+        }
+    }
+}

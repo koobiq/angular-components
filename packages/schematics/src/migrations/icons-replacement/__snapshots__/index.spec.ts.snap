@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`icons-replacement should run migration for external html: project app: after changes 1`] = `
+"<i kbq-icon="kbq-square-a_16"></i>
+<i kbq-icon="kbq-square-a_24"></i>
+<i kbq-icon="kbq-circle-arrow-down_16"></i>
+<i kbq-icon="kbq-circle-arrow-down_24"></i>
+<i kbq-icon="kbq-circle-arrow-left_16"></i>
+<i kbq-icon="kbq-circle-arrow-left_24"></i>
+<i kbq-icon="kbq-circle-arrow-right_16"></i>
+<i kbq-icon="kbq-circle-arrow-right_24"></i>
+<i kbq-icon="kbq-circle-arrow-up_16"></i>
+<i kbq-icon="kbq-circle-arrow-up_24"></i>"
+`;
