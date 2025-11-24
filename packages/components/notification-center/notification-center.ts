@@ -325,6 +325,10 @@ export class KbqNotificationCenterTrigger
         }
     }
 
+    /**
+     * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
+     * If container is specified, the positioning will be relative to it.
+     * */
     @Input() stickToWindow:
         | PopUpPlacements.Top
         | PopUpPlacements.Right
@@ -332,6 +336,7 @@ export class KbqNotificationCenterTrigger
         | PopUpPlacements.Left
         | string;
 
+    /** Container for additional positioning, used with stickToWindow */
     @Input() container: HTMLElement;
 
     /** @docs-private */

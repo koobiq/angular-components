@@ -145,7 +145,6 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     arrow: boolean;
     backdropClass: string;
     closingActions(): Observable<void | CdkScrollable | MouseEvent>;
-    // (undocumented)
     container: HTMLElement;
     content: string | TemplateRef<any>;
     customClass: string;
@@ -178,7 +177,6 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
-    // (undocumented)
     stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
     trigger: string;
     get unreadItemsCounter(): Observable<string>;
