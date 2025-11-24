@@ -54,7 +54,7 @@ export interface DocsTokensInfoRaw {
         @if (outputSection && outputSection.tokens && outputSection.tokens.length > 0) {
             <table kbq-table>
                 <thead>
-                    <tr>
+                    <tr class="kbq-caps-compact">
                         <th align="left"></th>
                         <th align="left">{{ localeData.token[locale()] }}</th>
                         <th align="left">{{ localeData.value[locale()] }}</th>
@@ -95,7 +95,7 @@ export interface DocsTokensInfoRaw {
             </table>
         }
     `,
-    styleUrls: ['styles.scss']
+    styleUrls: ['design-tokens.scss']
 })
 export class DocsTokensTable extends DocsLocaleState {
     readonly section = input<DocsTokensSectionInfo>();
@@ -246,7 +246,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
 
         const getTokenValue = (token: string) => styles.getPropertyValue(token);
 
-        return this.tokenDataMap[this.activatedTab()].map((section) => {
+        return this.tokenDataMap[this.activatedTab()].map((section: DocsTokensInfoRaw) => {
             if (section.tokens && section.tokens.length > 0) {
                 return {
                     type: section.type,
@@ -257,7 +257,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
             if (section.sections && section.sections.length > 0) {
                 return {
                     type: section.type,
-                    sections: section.sections.map((innerSection) => {
+                    sections: section.sections.map((innerSection: DocsTokensSectionInfoRaw) => {
                         if (innerSection.tokens && innerSection.tokens.length > 0) {
                             return {
                                 type: innerSection.type,

@@ -36,11 +36,11 @@ export interface DocsTokensSectionInfoRaw {
     ],
     template: `
         <docs-component-viewer-wrapper>
-            <table kbq-table id="font-classes-table" docs-article>
+            <table kbq-table class="docs-font-classes-table" docs-article [border]="true">
                 <thead>
-                    <tr>
-                        <th>Typography Example</th>
-                        <th>CSS Class Name</th>
+                    <tr class="kbq-caps-compact">
+                        <th>{{ localeData.typographyExample[locale()] }}</th>
+                        <th>{{ localeData.cssClassName[locale()] }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,7 +67,8 @@ export interface DocsTokensSectionInfoRaw {
     `,
     host: {
         class: 'kbq-markdown'
-    }
+    },
+    styleUrls: ['design-tokens.scss']
 })
 export class DocsTypographyTable extends DocsLocaleState {
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
@@ -75,6 +76,14 @@ export class DocsTypographyTable extends DocsLocaleState {
     protected readonly tokensInfo = signal<string[]>([]);
 
     protected readonly localeData = {
+        typographyExample: {
+            ru: 'Пример типографики',
+            en: 'Typography Example'
+        },
+        cssClassName: {
+            ru: 'Имя CSS-класса',
+            en: 'CSS Class Name'
+        },
         token: {
             ru: 'Токен',
             en: 'Token'
