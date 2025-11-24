@@ -7,45 +7,20 @@
         gap: var(--kbq-size-m);
     }
 
-    &.kbq-navbar-bento {
-        display: flex;
+    padding-right: var(--kbq-size-xl);
+    padding-left: var(--kbq-size-xl);
 
-        justify-content: center;
-        align-items: center;
+    &:after {
+        top: 0;
+        right: var(--kbq-size-s);
+        bottom: 1px;
+        left: var(--kbq-size-s);
     }
 
     &.kbq-expanded {
-        height: var(--kbq-size-5xl);
-
         align-items: center;
 
-        padding-right: var(--kbq-size-xl);
-        padding-left: var(--kbq-size-xl);
-
         gap: var(--kbq-size-m);
-
-        &:after {
-            top: var(--kbq-size-xxs);
-            right: var(--kbq-size-s);
-            bottom: var(--kbq-size-xxs);
-            left: var(--kbq-size-s);
-        }
-
-        &.kbq-navbar-bento {
-            z-index: 1;
-
-            padding: var(--kbq-size-s);
-
-            height: var(--kbq-size-6xl);
-            width: var(--kbq-size-6xl);
-
-            &:after {
-                top: var(--kbq-size-s);
-                right: var(--kbq-size-s);
-                bottom: var(--kbq-size-s);
-                left: var(--kbq-size-s);
-            }
-        }
 
         &.kbq-navbar-item_has-nested {
             align-items: center;
@@ -57,26 +32,7 @@
     &.kbq-collapsed {
         width: var(--kbq-size-6xl);
 
-        padding: 0 var(--kbq-size-s);
-
         justify-content: center;
-
-        &:after {
-            top: 0;
-            right: var(--kbq-size-xxs);
-            bottom: 1px;
-            left: var(--kbq-size-xxs);
-        }
-
-        &.kbq-navbar-bento {
-            padding-top: var(--kbq-size-xl);
-            padding-bottom: var(--kbq-size-m);
-
-            &:after {
-                top: var(--kbq-size-m);
-                bottom: var(--kbq-size-xxs);
-            }
-        }
 
         & .kbq-badge {
             position: absolute;
@@ -92,9 +48,29 @@
         }
     }
 
+    &.kbq-navbar-bento {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        height: var(--kbq-size-5xl);
+
+        padding-top: var(--kbq-size-s);
+
+        &:after {
+            top: var(--kbq-size-s);
+            bottom: 0;
+        }
+    }
+
     & > .kbq-icon {
         display: flex;
         justify-content: center;
         align-items: center;
     }
+}
+
+button.kbq-navbar-item.kbq-vertical {
+    width: 100%;
 }

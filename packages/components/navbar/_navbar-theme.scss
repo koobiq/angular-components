@@ -37,7 +37,7 @@
 
         @include kbq-navbar-item(default);
 
-        &:hover:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
+        &:hover:not(.kbq-disabled) {
             @include kbq-navbar-item(states-hover);
         }
 

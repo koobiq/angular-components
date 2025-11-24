@@ -18,6 +18,8 @@
     height: var(--kbq-size-3xl);
 
     border-radius: 50%;
+
+    cursor: pointer;
 }
 
 @mixin kbq-navbar-toggle-theme() {
@@ -51,6 +53,8 @@
 
         &[disabled],
         &.kbq-disabled {
+            cursor: unset;
+
             opacity: var(--kbq-opacity-disabled);
 
             & .kbq-icon {

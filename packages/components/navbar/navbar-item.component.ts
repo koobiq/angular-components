@@ -473,8 +473,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
         public navbarFocusableItem: KbqNavbarFocusableItem,
         private changeDetectorRef: ChangeDetectorRef,
         @Optional() private dropdownTrigger: KbqDropdownTrigger,
-        @Optional() private bento: KbqNavbarBento,
-        @Optional() private tooltip: KbqTooltipTrigger
+        @Optional() private bento: KbqNavbarBento
     ) {
         super();
 
@@ -492,12 +491,10 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
         this.navbarFocusableItem.setTooltip(this);
 
-        if (this.tooltip) {
-            this.tooltip.arrow = false;
-            this.tooltip.offset = 0;
+        this.arrow = false;
+        this.offset = 0;
 
-            this.tooltip['overlayConfig'].panelClass = 'kbq-tooltip-panel_horizontal-navbar';
-        }
+        this.overlayConfig.panelClass = 'kbq-tooltip-panel_horizontal-navbar';
     }
 
     ngAfterContentInit(): void {

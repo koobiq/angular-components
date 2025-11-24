@@ -103,6 +103,12 @@ export const enUSLocaleData = {
             collapseButton: 'Collapse'
         }
     },
+    navbar: {
+        toggle: {
+            expand: 'Expand',
+            collapse: 'Collapse'
+        }
+    },
     searchExpandable: {
         tooltip: 'Search',
         placeholder: 'Search'

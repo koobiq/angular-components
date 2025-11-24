@@ -8,8 +8,10 @@ import {
     OnDestroy,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, NUMPAD_DIVIDE, SLASH, SPACE } from '@koobiq/cdk/keycodes';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KBQ_WINDOW, PopUpPlacements } from '@koobiq/components/core';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
 
 @Component({
@@ -34,11 +36,13 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    hostDirectives: [CdkMonitorFocus]
+    hostDirectives: [CdkMonitorFocus, KbqTooltipTrigger]
 })
 export class KbqNavbarToggle implements OnDestroy {
     private readonly window = inject(KBQ_WINDOW);
     private readonly ngZone = inject(NgZone);
+
+    private readonly tooltip = inject(KbqTooltipTrigger, { self: true });
 
     protected readonly navbar = inject(KbqVerticalNavbar);
 
@@ -46,6 +50,12 @@ export class KbqNavbarToggle implements OnDestroy {
         afterNextRender(() => {
             this.ngZone.runOutsideAngular(() => this.window.addEventListener('keydown', this.windowToggleHandler));
         });
+
+        this.tooltip.arrow = false;
+        this.updateTooltipContent();
+        this.tooltip.tooltipPlacement = PopUpPlacements.Right;
+
+        this.tooltip.visibleChange.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipContent);
     }
 
     ngOnDestroy(): void {
@@ -60,6 +70,12 @@ export class KbqNavbarToggle implements OnDestroy {
             $event.preventDefault();
         }
     }
+
+    private updateTooltipContent = () => {
+        this.tooltip.content = this.navbar.expanded
+            ? this.navbar.configuration.toggle.collapse
+            : this.navbar.configuration.toggle.expand;
+    };
 
     private windowToggleHandler = (event: KeyboardEvent) => {
         if (event.ctrlKey && [NUMPAD_DIVIDE, SLASH].includes(event.keyCode)) {

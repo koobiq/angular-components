@@ -103,6 +103,12 @@ export const tkTMLocaleData = {
             collapseButton: 'Apseykylmak'
         }
     },
+    navbar: {
+        toggle: {
+            expand: 'Giňeltmek',
+            collapse: 'Ýykmak'
+        }
+    },
     searchExpandable: {
         tooltip: 'Gözleg',
         placeholder: 'Gözleg'
