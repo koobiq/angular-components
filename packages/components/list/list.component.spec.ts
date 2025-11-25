@@ -81,6 +81,7 @@ class BaseTestList {
 }
 
 @Component({
+    selector: 'ListWithOneAnchorItem',
     template: `
         <kbq-list>
             <a kbq-list-item>Paprika</a>
@@ -94,6 +95,7 @@ class ListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({
+    selector: 'ListWithOneItem',
     template: `
         <kbq-list>
             <kbq-list-item>Paprika</kbq-list-item>
@@ -103,6 +105,7 @@ class ListWithOneAnchorItem extends BaseTestList {
 class ListWithOneItem extends BaseTestList {}
 
 @Component({
+    selector: 'ListWithTwoLineItem',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -118,6 +121,7 @@ class ListWithOneItem extends BaseTestList {}
 class ListWithTwoLineItem extends BaseTestList {}
 
 @Component({
+    selector: 'ListWithThreeLineItem',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -135,6 +139,7 @@ class ListWithThreeLineItem extends BaseTestList {
 }
 
 @Component({
+    selector: 'ListWithManyLines',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -152,6 +157,7 @@ class ListWithManyLines extends BaseTestList {}
 
 @Component({
     template: `
+        selector: 'ListWithAvatar',
         <kbq-list>
             <kbq-list-item>
                 <img alt="" src="" kbq-list-avatar />
@@ -164,6 +170,7 @@ class ListWithManyLines extends BaseTestList {}
 class ListWithAvatar extends BaseTestList {}
 
 @Component({
+    selector: 'ListWithItemWithCssClass',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -178,6 +185,7 @@ class ListWithAvatar extends BaseTestList {}
 class ListWithItemWithCssClass extends BaseTestList {}
 
 @Component({
+    selector: 'ListWithDynamicNumberOfLines',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -195,6 +203,7 @@ class ListWithItemWithCssClass extends BaseTestList {}
 class ListWithDynamicNumberOfLines extends BaseTestList {}
 
 @Component({
+    selector: 'ListWithMultipleItems',
     template: `
         <kbq-list>
             @for (item of items; track item) {

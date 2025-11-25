@@ -947,13 +947,13 @@ describe('KbqListSelection keyboard interaction', () => {
 
 @Component({
     template: `
-        <mat-selection-list [compareWith]="compareWith" [(ngModel)]="selectedOptions">
+        <kbq-list-selection [compareWith]="compareWith" [(ngModel)]="selectedOptions">
             @for (option of options; track option) {
-                <mat-list-option [value]="option">
+                <kbq-list-option [value]="option">
                     {{ option.label }}
-                </mat-list-option>
+                </kbq-list-option>
             }
-        </mat-selection-list>
+        </kbq-list-selection>
     `
 })
 class SelectionListWithCustomComparator {
