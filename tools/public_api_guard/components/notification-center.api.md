@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
@@ -138,7 +139,7 @@ export class KbqNotificationCenterService {
 }
 
 // @public (undocumented)
-export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> {
+export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> implements AfterContentInit {
     constructor();
     arrow: boolean;
     backdropClass: string;
