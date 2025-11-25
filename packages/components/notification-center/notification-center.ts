@@ -229,8 +229,8 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 })
 export class KbqNotificationCenterTrigger
-    extends KbqPopUpTrigger
-    implements AfterContentInit<KbqNotificationCenterComponent>
+    extends KbqPopUpTrigger<KbqNotificationCenterComponent>
+    implements AfterContentInit
 {
     /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
