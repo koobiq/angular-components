@@ -125,34 +125,21 @@ export class KbqNavbarBento {
 // @public (undocumented)
 export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentInit {
     constructor();
-    // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    set collapsed(value: boolean);
-    // (undocumented)
     get collapsed(): boolean;
-    // (undocumented)
+    set collapsed(value: boolean);
     collapsedText: string;
-    // (undocumented)
     get croppedText(): string;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
-    // (undocumented)
     get hasCroppedText(): boolean;
-    // (undocumented)
     longTitle: boolean;
-    // (undocumented)
     protected readonly navbarFocusableItem: KbqNavbarFocusableItem;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
     protected readonly rectangleElement: KbqNavbarRectangleElement;
-    // (undocumented)
     title: KbqNavbarTitle;
-    // (undocumented)
     get titleText(): string | null;
-    // (undocumented)
-    updateTooltip(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; }; "collapsedText": { "alias": "collapsedText"; "required": false; }; }, {}, ["title"], ["*"], false, never>;
     // (undocumented)
@@ -368,13 +355,10 @@ export class KbqNavbarTitle implements AfterViewInit {
 // @public (undocumented)
 export class KbqNavbarToggle implements OnDestroy {
     constructor();
-    // (undocumented)
     keydownHandler($event: KeyboardEvent): void;
-    // (undocumented)
     protected readonly navbar: KbqVerticalNavbar;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     toggle(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarToggle, "kbq-navbar-toggle, [kbq-navbar-toggle]", never, {}, {}, never, ["[kbq-icon]"], false, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqTooltipTrigger; inputs: {}; outputs: {}; }]>;

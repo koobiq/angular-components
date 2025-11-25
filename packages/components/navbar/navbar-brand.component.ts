@@ -62,23 +62,21 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
         return !this.collapsed && !this.hasCroppedText;
     }
 
-    /** @docs-private */
     set disabled(value) {
         this._disabled = coerceBooleanProperty(value);
     }
 
     /** @docs-private */
+    get collapsed(): boolean {
+        return this._collapsed ?? this.rectangleElement.collapsed;
+    }
+
     set collapsed(value: boolean) {
         if (this._collapsed !== value) {
             this._collapsed = value;
 
             this.updateTooltip();
         }
-    }
-
-    /** @docs-private */
-    get collapsed(): boolean {
-        return this._collapsed ?? this.rectangleElement.collapsed;
     }
 
     private _collapsed = false;
