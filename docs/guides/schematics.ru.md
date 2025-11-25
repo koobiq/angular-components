@@ -62,6 +62,12 @@ ng generate @koobiq/components:empty-state-size-attr
 ng generate @koobiq/components:loader-overlay-size-attr
 ```
 
+#### icons-replacement
+
+Заменяет названия иконок на новые
+
+**Когда использовать:** после обновления версии библиотеки [`@koobiq/icons`](https://github.com/koobiq/icons) до версии `11.0.0` и выше.
+
 ### Как запустить схематик
 
 - Убедитесь, что установлен Angular CLI:

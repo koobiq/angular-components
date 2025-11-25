@@ -6,16 +6,32 @@ This schematic provides migration for new icons naming attribute. It includes:
 
 [Params](schema.ts)
 
-Usage for Angular Cli:
+#### Usage for Angular Cli:
 
 ```shell
 ng g @koobiq/components:icons-replacement --project <your project>
 ```
 
-Usage for Nx:
+- with custom icon replacement mapping:
+
+```shell
+ng g @koobiq/components:icons-replacement --project <your project> --replacement-data-path <path-as-json>
+```
+
+```shell
+ng g @koobiq/components:icons-replacement --project <your project>
+```
+
+#### Usage for Nx:
 
 ```shell
 nx g @koobiq/components:icons-replacement --project <your project>
+```
+
+- with custom icon replacement mapping:
+
+```shell
+nx g @koobiq/components:icons-replacement --project <your project> --replacement-data-path <path-as-json>
 ```
 
 ### Run locally
@@ -42,7 +58,7 @@ import { Component } from '@angular/core';
 @Component({
     template: `
         <i kbq-icon="kbq-bolt-circle_16">...</i>
-    `
+    `,
     styles: `
         .custom-icon {
             <!-- cspell:ignore xmark -->
@@ -63,7 +79,7 @@ import { Component } from '@angular/core';
 @Component({
     template: `
         <i kbq-icon="kbq-circle-bolt_16">...</i>
-    `
+    `,
     styles: `
         .custom-icon {
             <!-- cspell:ignore xmark -->
