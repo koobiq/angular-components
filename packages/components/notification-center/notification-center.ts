@@ -1,11 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    CdkScrollable,
-    FlexibleConnectedPositionStrategy,
-    Overlay,
-    OverlayConfig,
-    ScrollStrategy
-} from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import {
     AfterContentInit,
@@ -17,7 +11,6 @@ import {
     EventEmitter,
     InjectionToken,
     Input,
-    OnInit,
     Output,
     TemplateRef,
     Type,
@@ -49,7 +42,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Subscription, merge } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
 import { KbqNotificationCenterService } from './notification-center.service';
 import { KbqNotificationItemComponent } from './notification-item';
@@ -237,8 +229,8 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 })
 export class KbqNotificationCenterTrigger
-    extends KbqPopUpTrigger<KbqNotificationCenterComponent>
-    implements AfterContentInit, OnInit
+    extends KbqPopUpTrigger
+    implements AfterContentInit<KbqNotificationCenterComponent>
 {
     /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
@@ -260,8 +252,6 @@ export class KbqNotificationCenterTrigger
     header: string | TemplateRef<any>;
     /** @docs-private */
     footer: string | TemplateRef<any>;
-    /** @docs-private */
-    private closeOnScroll: null;
 
     /** Number of unread notifications */
     get unreadItemsCounter() {
@@ -376,35 +366,23 @@ export class KbqNotificationCenterTrigger
         this.updatePlacementPriority(['right', 'rightBottom', 'rightTop']);
     }
 
-    ngOnInit(): void {
-        super.ngOnInit();
-
-        this.scrollable
-            ?.elementScrolled()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(this.hideIfNotInViewPort);
-    }
-
     ngAfterContentInit(): void {
-        if (this.closeOnScroll === null) {
-            this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
-                if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible: boolean) => {
+            if (visible) {
+                // eslint-disable-next-line rxjs/no-nested-subscribe
+                this.preventClosingByInnerScrollSubscription = this.closingActions().subscribe((event) => {
+                    if (event && event['scrollDispatcher']) {
+                        this.instance.setStickPosition();
 
-                const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
-                const childRects = this.elementRef.nativeElement.getBoundingClientRect();
-
-                if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
-                    this.hide();
-                }
-            });
-        }
-
-        this.visibleChange
-            .pipe(
-                filter((value) => !value),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => this.focus());
+                        event['kbqPopoverPreventHide'] = true;
+                        event['type'] = 'click';
+                    }
+                });
+            } else {
+                this.preventClosingByInnerScrollSubscription.unsubscribe();
+                this.focus();
+            }
+        });
     }
 
     /** @docs-private */
@@ -462,22 +440,4 @@ export class KbqNotificationCenterTrigger
             this.scrollDispatcher.scrolled()
         );
     }
-
-    private hideIfNotInViewPort = () => {
-        if (!this.scrollable) return;
-
-        const rect = this.elementRef.nativeElement.getBoundingClientRect();
-        const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();
-
-        if (
-            !(
-                rect.bottom >= containerRect.top &&
-                rect.right >= containerRect.left &&
-                rect.top <= containerRect.bottom &&
-                rect.left <= containerRect.right
-            )
-        ) {
-            this.hide();
-        }
-    };
 }

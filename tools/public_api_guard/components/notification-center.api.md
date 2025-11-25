@@ -4,11 +4,10 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
-import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ChangeDetectorRef } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
@@ -21,7 +20,6 @@ import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { KbqToastData } from '@koobiq/components/toast';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { Observable } from 'rxjs';
-import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -140,7 +138,7 @@ export class KbqNotificationCenterService {
 }
 
 // @public (undocumented)
-export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> implements AfterContentInit, OnInit {
+export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> {
     constructor();
     arrow: boolean;
     backdropClass: string;
@@ -162,8 +160,6 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     static ngAcceptInputType_popoverMode: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnInit(): void;
     offset: number | null;
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
