@@ -1,7 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, FirstDataRenderedEvent } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ColDef,
+    FirstDataRenderedEvent,
+    ModuleRegistry,
+    RowSelectionOptions
+} from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 type ExampleRowData = {
     column0: string;
@@ -25,13 +33,13 @@ type ExampleRowData = {
     selector: 'ag-grid-row-dragging-example',
     template: `
         <ag-grid-angular
-            rowSelection="multiple"
             kbqAgGridTheme
             disableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
+            [rowSelection]="rowSelection"
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
@@ -39,7 +47,6 @@ type ExampleRowData = {
             [rowDragManaged]="true"
             [rowDragMultiRow]="true"
             [suppressMoveWhenRowDragging]="true"
-            [suppressRowClickSelection]="true"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
@@ -52,19 +59,14 @@ export class AgGridRowDraggingExample {
         width: 140
     };
 
-    readonly columnDefs: ColDef[] = [
-        {
-            headerCheckboxSelection: true,
-            checkboxSelection: true,
-            width: 34,
-            headerName: '',
-            sortable: false,
-            filter: false,
-            resizable: false,
-            suppressMovable: true,
-            editable: false,
-            lockPosition: true
-        },
+    protected readonly rowSelection: RowSelectionOptions = {
+        mode: 'multiRow',
+        headerCheckbox: true,
+        checkboxes: true,
+        hideDisabledCheckboxes: false
+    };
+
+    protected readonly columnDefs: ColDef[] = [
         {
             field: 'column0',
             headerName: 'Project name',
@@ -130,5 +132,7 @@ export class AgGridRowDraggingExample {
                 node.setSelected(true);
             }
         });
+
+        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
     }
 }

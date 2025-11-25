@@ -1,4 +1,4 @@
-AG grid предназначен для работы с большими таблицами. Компонент поддерживает сортировку, виртуальную прокрутку, изменение ширины и порядка колонок. Основан на библиотеке [ag-grid-angular](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/).
+AG grid предназначен для работы с большими таблицами. Компонент поддерживает сортировку, виртуальную прокрутку, изменение ширины и порядка колонок. Основан на библиотеке [ag-grid-angular](https://www.ag-grid.com/angular-data-grid/).
 
 <!-- example(ag-grid-overview) -->
 
@@ -8,19 +8,10 @@ AG grid предназначен для работы с большими таб�
 
 #### Установка
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Обратите внимание</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-Тема совместима с AG grid [версии 30](https://github.com/ag-grid/ag-grid/tree/v30.2.1).
-
-</div>
-</div>
-
 Установите следующие пакеты:
 
 ```bash
-npm install @koobiq/ag-grid-angular-theme@^30 ag-grid-community@^30 ag-grid-angular@^30
+npm install @koobiq/ag-grid-angular-theme@^34 ag-grid-community@^34 ag-grid-angular@^34
 ```
 
 #### Подключение темы
@@ -68,7 +59,7 @@ import { AgGridModule } from 'ag-grid-angular';
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Выделить все строки        | `kbqAgGridSelectAllRowsByCtrlA`   |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Выделить строку            | `kbqAgGridSelectRowsByCtrlClick`  |
 
-Больше информации о сочетаниях клавиш можно найти в [документации ag-grid-angular](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/keyboard-navigation/).
+Больше информации о сочетаниях клавиш можно найти в [документации ag-grid-angular](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 
 ### Рекомендации
 
