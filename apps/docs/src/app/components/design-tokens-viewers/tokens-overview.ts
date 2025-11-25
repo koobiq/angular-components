@@ -1,5 +1,5 @@
-import { DOCUMENT, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, inject, input, PLATFORM_ID, signal, viewChild } from '@angular/core';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { afterNextRender, AfterViewInit, Component, inject, input, signal, viewChild } from '@angular/core';
 import { KBQ_WINDOW, ThemeService } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -10,7 +10,7 @@ import { DocsComponentViewerWrapperComponent } from '../component-viewer/compone
 
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { map } from 'rxjs';
+import { map, skip } from 'rxjs';
 
 import { docsData as borderRadius } from './data/border-radius';
 import { docsData as colors } from './data/colors';
@@ -18,23 +18,23 @@ import { docsData as palette } from './data/palette';
 import { docsData as shadows } from './data/shadows';
 import { docsData as sizes } from './data/sizes';
 
-export interface DocsTokensSectionInfo {
+interface DocsTokensSectionInfo {
     type: string;
     tokens: { token: string; value: string }[];
 }
 
-export interface DocsTokensInfo {
+interface DocsTokensInfo {
     type: string;
     sections?: DocsTokensSectionInfo[];
     tokens?: { token: string; value: string }[];
 }
 
-export interface DocsTokensSectionInfoRaw {
+interface DocsTokensSectionInfoRaw {
     type: string;
     tokens: string[];
 }
 
-export interface DocsTokensInfoRaw {
+interface DocsTokensInfoRaw {
     type: string;
     sections?: DocsTokensSectionInfoRaw[];
     tokens?: string[];
@@ -190,7 +190,6 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly themeService = inject(ThemeService);
     protected readonly window = inject(KBQ_WINDOW);
     protected readonly document = inject(DOCUMENT);
-    protected readonly platformId = inject(PLATFORM_ID);
     protected readonly activatedRoute = inject(ActivatedRoute);
 
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
@@ -230,9 +229,11 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
 
     constructor() {
         super();
-        this.themeService.current.pipe(takeUntilDestroyed()).subscribe(() => {
+        this.themeService.current.pipe(skip(1), takeUntilDestroyed()).subscribe(() => {
             this.tokensInfo.set(this.calculateViewData());
         });
+
+        afterNextRender(() => this.tokensInfo.set(this.calculateViewData()));
     }
 
     ngAfterViewInit() {
@@ -240,24 +241,22 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     }
 
     protected calculateViewData(): DocsTokensInfo[] {
-        if (!isPlatformBrowser(this.platformId)) return [];
-
         const styles = this.window.getComputedStyle(this.document.body);
 
         const getTokenValue = (token: string) => styles.getPropertyValue(token);
 
-        return this.tokenDataMap[this.activatedTab()].map((section: DocsTokensInfoRaw) => {
-            if (section.tokens && section.tokens.length > 0) {
+        return this.tokenDataMap[this.activatedTab()].map(({ tokens, type, sections }) => {
+            if (tokens && tokens.length > 0) {
                 return {
-                    type: section.type,
-                    tokens: section.tokens.map((token) => ({ token, value: getTokenValue(token) }))
+                    type,
+                    tokens: tokens.map((token) => ({ token, value: getTokenValue(token) }))
                 };
             }
 
-            if (section.sections && section.sections.length > 0) {
+            if (sections && sections.length > 0) {
                 return {
-                    type: section.type,
-                    sections: section.sections.map((innerSection: DocsTokensSectionInfoRaw) => {
+                    type,
+                    sections: sections.map((innerSection) => {
                         if (innerSection.tokens && innerSection.tokens.length > 0) {
                             return {
                                 type: innerSection.type,
@@ -268,12 +267,12 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
                             };
                         }
 
-                        return { type: section.type, tokens: [] };
+                        return { type, tokens: [] };
                     })
                 };
             }
 
-            return { type: section.type };
+            return { type };
         });
     }
 }

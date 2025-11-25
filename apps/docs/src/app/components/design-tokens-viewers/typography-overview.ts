@@ -8,22 +8,6 @@ import { TitleCasePipe } from '@angular/common';
 import { KbqTableModule } from '@koobiq/components/table';
 import { docsData } from './data/typography';
 
-export interface DocsTokensSectionInfo {
-    type: string;
-    tokens: { token: string; value: string }[];
-}
-
-export interface DocsTokensInfo {
-    type: string;
-    sections?: DocsTokensSectionInfo[];
-    tokens?: { token: string; value: string }[];
-}
-
-export interface DocsTokensSectionInfoRaw {
-    type: string;
-    tokens: string[];
-}
-
 @Component({
     standalone: true,
     selector: 'docs-typography-table',
@@ -73,7 +57,7 @@ export interface DocsTokensSectionInfoRaw {
 export class DocsTypographyTable extends DocsLocaleState {
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
 
-    protected readonly tokensInfo = signal<string[]>([]);
+    protected readonly tokensInfo = signal(docsData);
 
     protected readonly localeData = {
         typographyExample: {
@@ -100,7 +84,5 @@ export class DocsTypographyTable extends DocsLocaleState {
 
     constructor() {
         super();
-
-        this.tokensInfo.set(docsData);
     }
 }

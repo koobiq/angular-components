@@ -1,4 +1,9 @@
 const { capitalize } = require('./utils');
+const { CUSTOM_HEADER, NO_HEADER } = require('./config');
+
+const getTokensOverviewData = ({ allTokens }) => {
+    return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, allTokens])])};`;
+};
 
 const simpleMapTypography = (token) => token.attributes.type;
 
@@ -23,5 +28,6 @@ const simpleMapColors = ([type, tokens]) => {
 module.exports = {
     simpleMapToken,
     simpleMapColors,
-    simpleMapTypography
+    simpleMapTypography,
+    getTokensOverviewData
 };

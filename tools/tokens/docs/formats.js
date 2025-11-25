@@ -1,6 +1,6 @@
-const { simpleMapColors, simpleMapTypography } = require('./templates');
+const { simpleMapColors, simpleMapTypography, getTokensOverviewData } = require('./templates');
 const { updateObject, sortSections } = require('./utils');
-const { NO_HEADER } = require('./config');
+const { NO_HEADER, CUSTOM_HEADER } = require('./config');
 
 module.exports = (StyleDictionary) => {
     StyleDictionary.registerFormat({
@@ -30,7 +30,7 @@ module.exports = (StyleDictionary) => {
 
             const mappedTokens = filtered.map(simpleMapTypography);
 
-            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
+            return `export const docsData = ${JSON.stringify(mappedTokens)} as const;`;
         }
     });
 
@@ -70,7 +70,7 @@ module.exports = (StyleDictionary) => {
             mappedTokens.sort(sortSections);
             mappedTokens.forEach(({ sections }) => sections?.sort(sortSections));
 
-            return `export const docsData = ${JSON.stringify(mappedTokens)};`;
+            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)};`;
         }
     });
 
@@ -81,35 +81,35 @@ module.exports = (StyleDictionary) => {
                 (token, pos, allTokens) => allTokens.indexOf(token) === pos
             );
 
-            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/globals-ts',
         formatter: function ({ dictionary }) {
-            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/shadows-ts',
         formatter: function ({ dictionary }) {
-            return `export const docsData = ${JSON.stringify([simpleMapColors([NO_HEADER, dictionary.allTokens])])};`;
+            return getTokensOverviewData(dictionary);
         }
     });
 };
