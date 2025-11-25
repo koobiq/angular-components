@@ -1,5 +1,6 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
+@use './navbar-theme';
 
 .kbq-navbar-logo {
     display: flex;
@@ -81,7 +82,72 @@ a.kbq-navbar-brand {
 
     &.kbq-collapsed {
         & .kbq-navbar-title {
-            display: none;
+            display: none !important;
+        }
+    }
+
+    &.kbq-navbar-brand_long-title .kbq-navbar-title {
+        display: -webkit-box;
+
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: normal;
+    }
+}
+
+@mixin kbq-navbar-brand-theme() {
+    .kbq-navbar-brand {
+        cursor: pointer;
+
+        @include navbar-theme.kbq-navbar-item(default);
+
+        &:hover:not(.kbq-disabled) {
+            @include navbar-theme.kbq-navbar-item(states-hover);
+        }
+
+        &.cdk-focused.cdk-keyboard-focused {
+            outline: none;
+
+            &:after {
+                display: block;
+                box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+            }
+        }
+
+        &:active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand),
+        &.kbq-active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
+            @include navbar-theme.kbq-navbar-item(states-selected);
+        }
+
+        &.kbq-navbar-focusable-item {
+            outline: none;
+        }
+    }
+
+    .kbq-navbar-brand.kbq-vertical:hover {
+        .kbq-navbar-logo {
+            transform: scale(1.06);
+        }
+    }
+
+    .kbq-navbar-brand.kbq-horizontal:hover {
+        .kbq-navbar-logo {
+            z-index: 1;
         }
     }
 }
+
+@mixin kbq-navbar-brand-typography() {
+    .kbq-navbar-brand {
+        & .kbq-navbar-title {
+            @include kbq-typography-level-to-styles-css-variables(typography, navbar-title);
+        }
+
+        &.kbq-navbar-brand_long-title .kbq-navbar-title {
+            @include kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+        }
+    }
+}
+
+@include kbq-navbar-brand-theme();
+@include kbq-navbar-brand-typography();

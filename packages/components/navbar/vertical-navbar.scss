@@ -5,7 +5,7 @@
 .kbq-vertical-navbar {
     position: relative;
 
-    min-width: 48px;
+    min-width: var(--kbq-size-5xl);
     height: 100%;
 
     &:not(:hover, .cdk-keyboard-focused) .kbq-navbar-toggle {
@@ -19,10 +19,12 @@
 
     & .kbq-navbar-container + .kbq-navbar-container {
         padding-top: var(--kbq-size-xxl);
-        padding-bottom: var(--kbq-size-xxs);
+        padding-bottom: var(--kbq-size-s);
     }
 
     & .kbq-vertical-navbar__container {
+        position: relative;
+
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -37,13 +39,9 @@
         }
     }
 
-    &.kbq-vertical-navbar_open-over {
-        position: relative;
-
-        & .kbq-vertical-navbar__container {
-            position: absolute;
-            z-index: 998;
-        }
+    &.kbq-vertical-navbar_open-over .kbq-vertical-navbar__container {
+        position: absolute;
+        z-index: 998;
     }
 }
 

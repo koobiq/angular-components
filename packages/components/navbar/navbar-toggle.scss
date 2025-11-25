@@ -1,25 +1,29 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './navbar-theme' as *;
-
 .kbq-navbar-toggle {
     position: absolute;
 
-    z-index: 1;
-
     top: var(--kbq-size-3xl);
     right: calc(-1 * var(--kbq-size-l));
+    z-index: 1;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    width: var(--kbq-size-3xl);
-    height: var(--kbq-size-3xl);
-
-    border-radius: 50%;
+    padding: var(--kbq-size-3xs);
+    border-width: 0;
 
     cursor: pointer;
+
+    & .kbq-navbar-toggle__circle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 28px;
+        height: 28px;
+
+        border-radius: 50%;
+    }
 }
 
 @mixin kbq-navbar-toggle-theme() {
@@ -27,15 +31,19 @@
         outline: none;
         border-color: transparent;
 
-        background: var(--kbq-background-card);
+        background: transparent;
 
-        box-shadow:
-            0 3px 8px 0 rgba(13, 14, 18, 0.12),
-            0 2px 8px 0 rgba(13, 14, 18, 0.06),
-            0 0 0 1px rgba(13, 14, 18, 0.03);
+        & .kbq-navbar-toggle__circle {
+            background: var(--kbq-background-card);
+
+            box-shadow:
+                0 3px 8px 0 var(--kbq-shadow-ambient),
+                0 2px 8px 0 var(--kbq-shadow-key),
+                0 0 0 1px var(--kbq-shadow-outline);
+        }
 
         & .kbq-icon {
-            color: rgba(138, 143, 168, 1);
+            color: var(--kbq-icon-contrast-fade);
         }
 
         &:hover,
@@ -47,19 +55,8 @@
             }
         }
 
-        &.cdk-keyboard-focused {
+        &.cdk-keyboard-focused .kbq-navbar-toggle__circle {
             box-shadow: 0 0 0 2px var(--kbq-states-line-focus-theme);
-        }
-
-        &[disabled],
-        &.kbq-disabled {
-            cursor: unset;
-
-            opacity: var(--kbq-opacity-disabled);
-
-            & .kbq-icon {
-                color: var(--kbq-icon-contrast-fade);
-            }
         }
     }
 }

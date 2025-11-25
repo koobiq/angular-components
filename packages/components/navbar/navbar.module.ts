@@ -3,9 +3,9 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqNavbarBrand } from './navbar-brand.component';
 import {
     KbqNavbarBento,
-    KbqNavbarBrand,
     KbqNavbarDivider,
     KbqNavbarFocusableItem,
     KbqNavbarItem,

@@ -38,8 +38,8 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
     template: `
         <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
             <ng-content select="[kbq-navbar-container], kbq-navbar-container" />
+            <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle" />
         </div>
-        <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle" />
     `,
     styleUrls: [
         './vertical-navbar.scss',

@@ -8,7 +8,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    DestroyRef,
     Directive,
     ElementRef,
     Input,
@@ -19,7 +18,6 @@ import {
     booleanAttribute,
     inject
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
@@ -28,9 +26,8 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { EMPTY, Subject, merge } from 'rxjs';
+import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KbqVerticalNavbar } from './vertical-navbar.component';
 
 export interface KbqNavbarFocusableItemEvent {
     item: KbqNavbarFocusableItem;
@@ -98,42 +95,6 @@ export class KbqNavbarTitle implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.outerElementWidth = this.getOuterElementWidth();
-    }
-}
-
-@Component({
-    selector: 'kbq-navbar-brand, [kbq-navbar-brand]',
-    exportAs: 'kbqNavbarBrand',
-    template: `
-        <ng-content />
-    `,
-    host: {
-        class: 'kbq-navbar-brand',
-        '[class.kbq-hovered]': 'hovered'
-    }
-})
-export class KbqNavbarBrand implements AfterContentInit {
-    @ContentChild(KbqNavbarLogo) logo: KbqNavbarLogo;
-    @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
-
-    hovered = false;
-
-    get hasBento(): boolean {
-        return !!this.navbar?.bento;
-    }
-
-    private readonly destroyRef = inject(DestroyRef);
-
-    constructor(@Optional() private navbar: KbqVerticalNavbar) {}
-
-    ngAfterContentInit(): void {
-        merge(this.logo ? this.logo.hovered : (EMPTY as any), this.title ? this.title.hovered : (EMPTY as any))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => (this.hovered = !!value));
-
-        this.navbar?.animationDone
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.title?.checkTextOverflown());
     }
 }
 

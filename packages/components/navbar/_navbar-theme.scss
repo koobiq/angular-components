@@ -21,6 +21,14 @@
     }
 }
 
+button {
+    &.kbq-navbar-item,
+    &.kbq-navbar-brand {
+        background: transparent;
+        border: none;
+    }
+}
+
 @mixin kbq-navbar-theme() {
     .kbq-navbar,
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
@@ -31,8 +39,7 @@
         border-right: 1px solid var(--kbq-navbar-border);
     }
 
-    .kbq-navbar-item,
-    .kbq-navbar-brand {
+    .kbq-navbar-item {
         cursor: pointer;
 
         @include kbq-navbar-item(default);
@@ -84,22 +91,8 @@
     }
 }
 
-button {
-    &.kbq-navbar-item,
-    &.kbq-navbar-brand {
-        background: transparent;
-        border: none;
-    }
-}
-
 @mixin kbq-navbar-typography() {
     .kbq-navbar-title {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
-    }
-
-    .kbq-navbar-brand {
-        .kbq-navbar-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, navbar-title);
-        }
     }
 }
