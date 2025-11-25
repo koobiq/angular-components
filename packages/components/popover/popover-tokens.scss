@@ -10,6 +10,7 @@
     --kbq-popover-size-header-padding-horizontal: var(--kbq-size-xxl);
     --kbq-popover-size-header-padding-top: var(--kbq-size-l);
     --kbq-popover-size-header-padding-bottom: var(--kbq-size-xs);
+    // Added top padding to prevent the outline of the first focused field from being clipped
     --kbq-popover-size-content-padding-top: var(--kbq-size-xxl);
     --kbq-popover-size-content-padding-bottom: var(--kbq-size-3xl);
     --kbq-popover-size-content-padding-horizontal: var(--kbq-size-xxl);

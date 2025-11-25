@@ -8,6 +8,8 @@
     --kbq-sidepanel-size-close-button-margin-left: var(--kbq-size-s);
     --kbq-sidepanel-size-content-padding-horizontal: var(--kbq-size-xxl);
     --kbq-sidepanel-size-content-padding-bottom: var(--kbq-size-xxl);
+    // Added top padding to prevent the outline of the first focused field from being clipped
+    --kbq-sidepanel-size-content-padding-top: 1px;
     --kbq-sidepanel-size-footer-padding-top: var(--kbq-size-s);
     --kbq-sidepanel-size-footer-padding-bottom: var(--kbq-size-3xl);
     --kbq-sidepanel-size-footer-padding-horizontal: var(--kbq-size-xxl);
