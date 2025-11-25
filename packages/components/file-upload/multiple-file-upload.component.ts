@@ -23,7 +23,6 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
-import { KbqListSelection } from '@koobiq/components/list';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
 import {
@@ -128,7 +127,6 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     @ViewChild('input') readonly input: ElementRef<HTMLInputElement>;
-    @ViewChild(KbqListSelection) private readonly listSelection?: KbqListSelection;
     @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
@@ -322,12 +320,6 @@ export class KbqMultipleFileUploadComponent
             });
 
             return;
-        }
-
-        // listSelection will handle case when first element removed.
-        // manually override other cases for proper focus order.
-        if (this.listSelection && index > 0) {
-            this.listSelection.keyManager.setNextItemActive();
         }
     }
 

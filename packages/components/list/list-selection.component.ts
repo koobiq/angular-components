@@ -461,9 +461,9 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         const optionIndex = this.getOptionIndex(option);
 
         // Check whether the option is the last item
-        if (optionIndex > 0) {
+        if (optionIndex === this.options.length - 1) {
             this.keyManager.setPreviousItemActive();
-        } else if (optionIndex === 0 && this.options.length > 1) {
+        } else {
             this.keyManager.setNextItemActive();
         }
     }

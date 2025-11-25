@@ -1,9 +1,22 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ChangeDetectionStrategy, Component, DebugElement, QueryList, ViewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DebugElement,
+    inject,
+    Provider,
+    QueryList,
+    Type,
+    viewChild,
+    ViewChildren
+} from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { C, DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { C, DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
     createMouseEvent,
@@ -12,6 +25,24 @@ import {
     dispatchKeyboardEvent
 } from '@koobiq/cdk/testing';
 import { KbqListModule, KbqListOption, KbqListSelection, KbqListSelectionChange } from './index';
+
+const simulateKeyboardFocus = <T>(fixture: ComponentFixture<T>, debugElement: DebugElement): void => {
+    dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
+    debugElement.nativeElement.focus();
+    fixture.detectChanges();
+};
+
+const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({
+        imports: [component, NoopAnimationsModule],
+        providers: [...providers]
+    });
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
 
 describe('KbqListSelection without forms', () => {
     describe('with list option', () => {
@@ -866,6 +897,54 @@ describe('should update model after keyboard interaction with multiple mode = ch
     });
 });
 
+describe('KbqListSelection keyboard interaction', () => {
+    it('should set focus on list-item removal properly', () => {
+        const fixture = setup(TestListSelectionWithDynamicList);
+        const initialOptions = fixture.componentInstance.opts.slice();
+        const manager: FocusKeyManager<KbqListOption> = fixture.componentInstance.listSelection().keyManager;
+
+        simulateKeyboardFocus(fixture, fixture.debugElement.query(By.directive(KbqListSelection)));
+        const activeIndex = manager.activeItemIndex;
+        const activeItemValue = manager.activeItem?.value;
+
+        expect(activeIndex).toEqual(0);
+
+        fixture.componentInstance.remove(manager.activeItemIndex);
+        fixture.detectChanges();
+
+        // active item index should stay the same
+        expect(activeIndex).toEqual(manager.activeItemIndex);
+        // but active item itself will change
+        expect(manager.activeItem?.value).not.toEqual(activeItemValue);
+        // active item index will be set to next
+        expect(initialOptions.findIndex((optionValue) => optionValue === manager.activeItem?.value)).toEqual(
+            manager.activeItemIndex + 1
+        );
+    });
+
+    it('should set focus on list-item removal from the end properly', () => {
+        const fixture = setup(TestListSelectionWithDynamicList);
+        const initialOptions = fixture.componentInstance.opts.slice();
+        const manager: FocusKeyManager<KbqListOption> = fixture.componentInstance.listSelection().keyManager;
+
+        simulateKeyboardFocus(fixture, fixture.debugElement.query(By.directive(KbqListSelection)));
+        fixture.detectChanges();
+        manager.setLastItemActive();
+
+        const initialActiveIndex = manager.activeItemIndex;
+
+        fixture.componentInstance.remove(manager.activeItemIndex);
+        fixture.detectChanges();
+
+        // active item index will change
+        expect(initialActiveIndex).not.toEqual(manager.activeItemIndex);
+        // active item index will be set to previous
+        expect(initialOptions.findIndex((optionValue) => optionValue === manager.activeItem?.value)).toEqual(
+            initialActiveIndex - 1
+        );
+    });
+});
+
 @Component({
     template: `
         <mat-selection-list [compareWith]="compareWith" [(ngModel)]="selectedOptions">
@@ -1067,4 +1146,29 @@ class SelectionListWithPreselectedOptionAndModel {
 class SelectionListWithPreselectedFormControlOnPush {
     opts = ['opt1', 'opt2', 'opt3'];
     formControl = new UntypedFormControl(['opt2']);
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqListModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
+        <kbq-list-selection>
+            @for (opt of opts; track opt) {
+                <kbq-list-option [value]="opt">
+                    {{ opt }}
+                </kbq-list-option>
+            }
+        </kbq-list-selection>
+    `
+})
+class TestListSelectionWithDynamicList {
+    listSelection = viewChild.required(KbqListSelection);
+    opts = Array.from({ length: 3 }, (_, i) => `opt${i}`);
+    changeDetectorRef = inject(ChangeDetectorRef);
+
+    remove(index: number) {
+        this.opts.splice(index, 1);
+        this.changeDetectorRef.detectChanges();
+    }
 }
