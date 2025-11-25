@@ -30,7 +30,7 @@ module.exports = (StyleDictionary) => {
 
             const mappedTokens = filtered.map(simpleMapTypography);
 
-            return `export const docsData = ${JSON.stringify(mappedTokens)} as const;`;
+            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)} as const;`;
         }
     });
 
