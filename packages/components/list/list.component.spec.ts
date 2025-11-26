@@ -14,9 +14,7 @@ describe('KbqList', () => {
                 TestListWithThreeLineItem,
                 TestListWithAvatar,
                 TestListWithItemWithCssClass,
-                TestListWithDynamicNumberOfLines,
-                TestListWithMultipleItems,
-                TestListWithManyLines
+                TestListWithMultipleItems
             ]
         }).compileComponents();
     });
@@ -81,7 +79,6 @@ class BaseTestList {
 }
 
 @Component({
-    selector: 'test-list-with-one-anchor-item',
     template: `
         <kbq-list>
             <a kbq-list-item>Paprika</a>
@@ -95,7 +92,6 @@ class TestListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({
-    selector: 'test-list-with-one-item',
     template: `
         <kbq-list>
             <kbq-list-item>Paprika</kbq-list-item>
@@ -105,7 +101,6 @@ class TestListWithOneAnchorItem extends BaseTestList {
 class TestListWithOneItem extends BaseTestList {}
 
 @Component({
-    selector: 'test-list-with-two-line-item',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -121,7 +116,6 @@ class TestListWithOneItem extends BaseTestList {}
 class TestListWithTwoLineItem extends BaseTestList {}
 
 @Component({
-    selector: 'test-list-with-three-line-item',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -139,24 +133,6 @@ class TestListWithThreeLineItem extends BaseTestList {
 }
 
 @Component({
-    selector: 'test-list-with-many-lines',
-    template: `
-        <kbq-list>
-            @for (item of items; track item) {
-                <kbq-list-item>
-                    <h3 kbq-line>Line 1</h3>
-                    <p kbq-line>Line 2</p>
-                    <p kbq-line>Line 3</p>
-                    <p kbq-line>Line 4</p>
-                </kbq-list-item>
-            }
-        </kbq-list>
-    `
-})
-class TestListWithManyLines extends BaseTestList {}
-
-@Component({
-    selector: 'test-list-with-avatar',
     template: `
         <kbq-list>
             <kbq-list-item>
@@ -170,7 +146,6 @@ class TestListWithManyLines extends BaseTestList {}
 class TestListWithAvatar extends BaseTestList {}
 
 @Component({
-    selector: 'test-list-with-item-with-css-class',
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -185,30 +160,11 @@ class TestListWithAvatar extends BaseTestList {}
 class TestListWithItemWithCssClass extends BaseTestList {}
 
 @Component({
-    selector: 'test-list-with-dynamic-number-of-lines',
     template: `
         <kbq-list>
             @for (item of items; track item) {
                 <kbq-list-item>
                     <h3 kbq-line>{{ item.name }}</h3>
-                    <p kbq-line>{{ item.description }}</p>
-                    @if (showThirdLine) {
-                        <p kbq-line>Some other text</p>
-                    }
-                </kbq-list-item>
-            }
-        </kbq-list>
-    `
-})
-class TestListWithDynamicNumberOfLines extends BaseTestList {}
-
-@Component({
-    selector: 'test-list-with-multiple-items',
-    template: `
-        <kbq-list>
-            @for (item of items; track item) {
-                <kbq-list-item>
-                    {{ item.name }}
                 </kbq-list-item>
             }
         </kbq-list>
