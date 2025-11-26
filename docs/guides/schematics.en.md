@@ -62,6 +62,12 @@ Updates size attribute names and values for the [`Overlay`](https://koobiq.io/en
 ng generate @koobiq/components:loader-overlay-size-attr
 ```
 
+#### icons-replacement
+
+Replaces icon names with new ones.
+
+**When to use:** after updating the [`@koobiq/icons`](https://github.com/koobiq/icons) library version to `11.0.0` and higher.
+
 ---
 
 ### How to run a schematic
