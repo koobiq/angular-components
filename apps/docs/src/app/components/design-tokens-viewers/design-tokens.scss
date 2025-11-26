@@ -25,8 +25,53 @@
     display: none;
 }
 
-.kbq-table tr td {
-    vertical-align: top;
+.kbq-table {
+    width: 100%;
+
+    tr td {
+        vertical-align: top;
+    }
+
+    @media (max-width: 768px) {
+        & {
+            thead {
+                display: none;
+            }
+
+            tr {
+                display: flex;
+                flex-direction: column;
+            }
+
+            td {
+                padding: 0 0 var(--kbq-size-s);
+
+                &:last-child {
+                    padding-bottom: var(--kbq-size-l);
+                }
+            }
+        }
+    }
+
+    @media (769px <= width <= 1560px) {
+        &:not(.docs-font-classes-table) {
+            thead {
+                display: none;
+            }
+
+            tbody tr {
+                td {
+                    &:first-child {
+                        width: 46px;
+                    }
+
+                    &:last-child {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .docs-design-token-example__dimensions {
@@ -68,7 +113,8 @@
 
     @media (max-width: 768px) {
         & tr td:first-child {
-            width: 90%;
+            width: 100%;
+            border-bottom-color: transparent;
         }
     }
 
@@ -81,26 +127,6 @@
     @media (1280px <= width <= 1920px) {
         & tr td:first-child > div {
             max-width: 394px;
-        }
-    }
-}
-
-// standard breakpoint
-@media (max-width: 768px) {
-    .kbq-table thead {
-        display: none;
-    }
-
-    .kbq-table tr {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .kbq-table td {
-        padding: 0 0 var(--kbq-size-s);
-
-        &:last-child {
-            padding-bottom: var(--kbq-size-l);
         }
     }
 }

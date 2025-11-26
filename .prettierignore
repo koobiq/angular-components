@@ -25,5 +25,3 @@ apps/docs/src/app/components/design-tokens-viewers/data/*.ts
 
 # ignore mocks
 **/mock.ts
-
-
