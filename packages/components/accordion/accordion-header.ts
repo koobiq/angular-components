@@ -1,9 +1,9 @@
 import { Directive } from '@angular/core';
-import { RdxAccordionHeaderDirective } from '@radix-ng/primitives/accordion';
+import { KbqAccordionHeaderDirective } from './accordion-header.directive';
 
 @Directive({
     selector: 'kbq-accordion-header, [kbq-accordion-header]',
-    hostDirectives: [RdxAccordionHeaderDirective],
+    hostDirectives: [KbqAccordionHeaderDirective],
     host: {
         class: 'kbq-accordion-header'
     }

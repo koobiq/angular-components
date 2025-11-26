@@ -1,5 +1,5 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
-import { RdxAccordionTriggerDirective } from '@radix-ng/primitives/accordion';
+import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
         <ng-content />
     `,
     styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
-    hostDirectives: [RdxAccordionTriggerDirective],
+    hostDirectives: [KbqAccordionTriggerDirective],
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion-trigger',
