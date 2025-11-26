@@ -6,14 +6,12 @@ import { KbqDdComponent, KbqDlComponent, KbqDtComponent } from './dl.component';
 @NgModule({
     imports: [
         A11yModule,
-        PlatformModule
-    ],
-    exports: [
+        PlatformModule,
         KbqDlComponent,
         KbqDtComponent,
         KbqDdComponent
     ],
-    declarations: [
+    exports: [
         KbqDlComponent,
         KbqDtComponent,
         KbqDdComponent

@@ -126,6 +126,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
 @NgModule({
     exports: [KbqEllipsisCenterDirective],
-    declarations: [KbqEllipsisCenterDirective]
+    imports: [KbqEllipsisCenterDirective]
 })
 export class KbqEllipsisCenterModule {}
