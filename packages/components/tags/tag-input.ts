@@ -177,9 +177,13 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         this._tagList.stateChanges.next();
     }
 
+    /** @docs-private */
     onKeydown(event: KeyboardEvent) {
         if (!this.inputElement.value) {
             this._tagList.keydown(event);
+            event.stopPropagation();
+
+            return;
         }
 
         if (this.isSeparatorKey(event) && this.inputElement.value) {

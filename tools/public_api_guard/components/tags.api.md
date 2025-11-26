@@ -206,7 +206,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     onFocus(): void;
     // (undocumented)
     onInput(): void;
-    // (undocumented)
     onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     onPaste($event: ClipboardEvent): void;
@@ -315,8 +314,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     setSelectionByValue(_value: any, _isUserInput?: boolean): void;
     get shouldLabelFloat(): boolean;
     readonly stateChanges: Subject<void>;
-    // (undocumented)
-    get tabIndex(): number;
+    get tabIndex(): number | null;
     set tabIndex(value: number);
     get tagBlurChanges(): Observable<KbqTagEvent>;
     // @deprecated
