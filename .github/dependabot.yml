@@ -16,8 +16,6 @@ updates:
       # semantic version number
       - dependency-name: '@angular-devkit/architect-cli'
         update-types: ['version-update:semver-major', 'version-update:semver-minor']
-      # Fix current version of @radix-ng/primitives
-      - dependency-name: '@radix-ng/primitives'
     groups:
       eslint:
         patterns:
