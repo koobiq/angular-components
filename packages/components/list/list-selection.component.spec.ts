@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
     ChangeDetectionStrategy,
@@ -16,7 +17,7 @@ import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { C, DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { C, DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
     createMouseEvent,
@@ -26,11 +27,7 @@ import {
 } from '@koobiq/cdk/testing';
 import { KbqListModule, KbqListOption, KbqListSelection, KbqListSelectionChange } from './index';
 
-const simulateKeyboardFocus = <T>(fixture: ComponentFixture<T>, debugElement: DebugElement): void => {
-    dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
-    debugElement.nativeElement.focus();
-    fixture.detectChanges();
-};
+const getFocusMonitor = () => TestBed.inject(FocusMonitor);
 
 const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -903,7 +900,11 @@ describe('KbqListSelection keyboard interaction', () => {
         const initialOptions = fixture.componentInstance.opts.slice();
         const manager: FocusKeyManager<KbqListOption> = fixture.componentInstance.listSelection().keyManager;
 
-        simulateKeyboardFocus(fixture, fixture.debugElement.query(By.directive(KbqListSelection)));
+        getFocusMonitor().focusVia(
+            fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement,
+            'keyboard'
+        );
+        fixture.detectChanges();
         const activeIndex = manager.activeItemIndex;
         const activeItemValue = manager.activeItem?.value;
 
@@ -927,7 +928,10 @@ describe('KbqListSelection keyboard interaction', () => {
         const initialOptions = fixture.componentInstance.opts.slice();
         const manager: FocusKeyManager<KbqListOption> = fixture.componentInstance.listSelection().keyManager;
 
-        simulateKeyboardFocus(fixture, fixture.debugElement.query(By.directive(KbqListSelection)));
+        getFocusMonitor().focusVia(
+            fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement,
+            'keyboard'
+        );
         fixture.detectChanges();
         manager.setLastItemActive();
 
