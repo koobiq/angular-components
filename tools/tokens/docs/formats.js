@@ -30,7 +30,7 @@ module.exports = (StyleDictionary) => {
 
             const mappedTokens = filtered.map(simpleMapTypography);
 
-            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)} as const;`;
+            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)} as const;\n`;
         }
     });
 
@@ -70,7 +70,7 @@ module.exports = (StyleDictionary) => {
             mappedTokens.sort(sortSections);
             mappedTokens.forEach(({ sections }) => sections?.sort(sortSections));
 
-            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)};`;
+            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)};\n`;
         }
     });
 
