@@ -3,8 +3,7 @@ import { NgModule } from '@angular/core';
 import { KbqPseudoCheckbox } from './pseudo-checkbox';
 
 @NgModule({
-    imports: [CommonModule],
-    exports: [KbqPseudoCheckbox],
-    declarations: [KbqPseudoCheckbox]
+    imports: [CommonModule, KbqPseudoCheckbox],
+    exports: [KbqPseudoCheckbox]
 })
 export class KbqPseudoCheckboxModule {}

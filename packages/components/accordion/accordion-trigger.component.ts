@@ -1,4 +1,5 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 
@@ -16,6 +17,9 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
     styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
     hostDirectives: [KbqAccordionTriggerDirective],
     encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqIcon
+    ],
     host: {
         class: 'kbq-accordion-trigger',
         '[class.kbq-accordion-trigger_fill]': 'isFill',

@@ -60,9 +60,7 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         RangeDateTimeFormatterImpurePipe,
         RangeShortDateTimeFormatterImpurePipe,
         RangeMiddleDateTimeFormatterImpurePipe,
-        KbqDataSizePipe
-    ],
-    declarations: [
+        KbqDataSizePipe,
         KbqDecimalPipe,
         KbqRoundDecimalPipe,
         KbqTableNumberPipe

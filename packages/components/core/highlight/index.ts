@@ -3,9 +3,8 @@ import { NgModule } from '@angular/core';
 import { KbqHighlightPipe } from './highlight.pipe';
 
 @NgModule({
-    imports: [CommonModule],
-    exports: [KbqHighlightPipe],
-    declarations: [KbqHighlightPipe]
+    imports: [CommonModule, KbqHighlightPipe],
+    exports: [KbqHighlightPipe]
 })
 export class KbqHighlightModule {}
 

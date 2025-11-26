@@ -5,8 +5,7 @@ import { KbqOptgroup } from './optgroup';
 import { KbqOption } from './option';
 
 @NgModule({
-    imports: [KbqPseudoCheckboxModule],
-    declarations: [KbqOption, KbqOptgroup, KbqOptionActionComponent],
+    imports: [KbqPseudoCheckboxModule, KbqOption, KbqOptgroup, KbqOptionActionComponent],
     exports: [KbqOption, KbqOptgroup, KbqOptionActionComponent]
 })
 export class KbqOptionModule {}
