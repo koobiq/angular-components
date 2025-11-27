@@ -106,6 +106,7 @@ export class KbqResizer {
     protected readonly cursor = computed(() => {
         const [x, y] = this.direction();
 
+        if (x === 0 && y === 0) return 'default';
         if (!x) return 'ns-resize';
         if (!y) return 'ew-resize';
         if (x * y > 0) return 'nwse-resize';

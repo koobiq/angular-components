@@ -37,30 +37,75 @@ export class TestResizer {
 }
 
 describe(KbqResizer.name, () => {
-    it('should apply correct cursor for horizontal (right) resize', () => {
+    it.each<{ direction: KbqResizerDirection; cursor: string; description: string }>([
+        { direction: [1, 0], cursor: 'ew-resize', description: 'right' },
+        { direction: [-1, 0], cursor: 'ew-resize', description: 'left' },
+        { direction: [0, 1], cursor: 'ns-resize', description: 'down' },
+        { direction: [0, -1], cursor: 'ns-resize', description: 'up' },
+        { direction: [1, 1], cursor: 'nwse-resize', description: 'right-down' },
+        { direction: [-1, -1], cursor: 'nwse-resize', description: 'left-up' },
+        { direction: [1, -1], cursor: 'nesw-resize', description: 'right-up' },
+        { direction: [-1, 1], cursor: 'nesw-resize', description: 'left-down' },
+        { direction: [0, 0], cursor: 'default', description: 'no resize' }
+    ])('should apply correct cursor for $description resize', ({ direction, cursor }) => {
         const fixture = createComponent(TestResizer);
 
-        fixture.componentInstance.direction.set([1, 0]);
+        fixture.componentInstance.direction.set(direction);
         fixture.detectChanges();
 
-        expect(getResizerElement(fixture).style.cursor).toBe('ew-resize');
+        expect(getResizerElement(fixture).style.cursor).toBe(cursor);
     });
 
-    it('should apply correct cursor for vertical (down) resize', () => {
+    it('should emit sizeChange event when resizing', async () => {
         const fixture = createComponent(TestResizer);
 
-        fixture.componentInstance.direction.set([0, 1]);
-        fixture.detectChanges();
+        getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
 
-        expect(getResizerElement(fixture).style.cursor).toBe('ns-resize');
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+
+        expect(fixture.componentInstance.sizeChange).toHaveBeenCalledTimes(3);
     });
 
-    it('should apply correct cursor for diagonal (right-down) resize', () => {
+    it('should NOT emit sizeChange event when no pointerdown', async () => {
         const fixture = createComponent(TestResizer);
 
-        fixture.componentInstance.direction.set([1, 1]);
-        fixture.detectChanges();
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
 
-        expect(getResizerElement(fixture).style.cursor).toBe('nwse-resize');
+        expect(fixture.componentInstance.sizeChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('should NOT emit sizeChange event when mouse button is released (buttons = 0)', async () => {
+        const fixture = createComponent(TestResizer);
+
+        getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
+
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 0 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 0 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 0 }));
+
+        expect(fixture.componentInstance.sizeChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('should stop resizing on pointerup event', async () => {
+        const fixture = createComponent(TestResizer);
+
+        getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
+
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+
+        expect(fixture.componentInstance.sizeChange).toHaveBeenCalledTimes(2);
+
+        document.dispatchEvent(new MouseEvent('pointerup'));
+
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1 }));
+
+        expect(fixture.componentInstance.sizeChange).toHaveBeenCalledTimes(2);
     });
 });

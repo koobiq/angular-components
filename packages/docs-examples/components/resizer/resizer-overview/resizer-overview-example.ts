@@ -11,21 +11,36 @@ import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/com
     imports: [KbqResizer, KbqResizable, KbqIcon],
     template: `
         <div kbqResizable>
-            <div></div>
-            <div></div>
-            <div></div>
+            <!-- disabled -->
+            <div [kbqResizer]="[0, 0]" (sizeChange)="sizeChanged($event)"></div>
 
-            <div></div>
-            <div></div>
-            <div class="layout-align-end-center" [kbqResizer]="[1, 0]" (sizeChange)="sizeChanged($event)">
+            <!-- disabled -->
+            <div [kbqResizer]="[0, 0]" (sizeChange)="sizeChanged($event)"></div>
+
+            <!-- disabled -->
+            <div [kbqResizer]="[0, 0]" (sizeChange)="sizeChanged($event)"></div>
+
+            <!-- disabled -->
+            <div [kbqResizer]="[0, 0]" (sizeChange)="sizeChanged($event)"></div>
+
+            <!-- disabled -->
+            <div [kbqResizer]="[0, 0]" (sizeChange)="sizeChanged($event)"></div>
+
+            <!-- right -->
+            <div class="layout-row layout-align-end-center" [kbqResizer]="[1, 0]" (sizeChange)="sizeChanged($event)">
                 <i kbq-icon="kbq-arrow-right_16"></i>
             </div>
 
-            <div></div>
-            <div class="layout-align-center-end" [kbqResizer]="[0, 1]" (sizeChange)="sizeChanged($event)">
+            <!-- disabled -->
+            <div [kbqResizer]="[0, 0]" (sizeChange)="sizeChanged($event)"></div>
+
+            <!-- down -->
+            <div class="layout-row layout-align-center-end" [kbqResizer]="[0, 1]" (sizeChange)="sizeChanged($event)">
                 <i kbq-icon="kbq-arrow-down_16"></i>
             </div>
-            <div class="layout-align-end-end" [kbqResizer]="[1, 1]" (sizeChange)="sizeChanged($event)">
+
+            <!-- right-down -->
+            <div class="layout-row layout-align-end-end" [kbqResizer]="[1, 1]" (sizeChange)="sizeChanged($event)">
                 <i kbq-icon="kbq-arrow-down-right_16"></i>
             </div>
         </div>
@@ -39,8 +54,8 @@ import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/com
 
         .kbq-resizable {
             display: grid;
-            grid-template-columns: repeat(3, auto);
-            grid-template-rows: repeat(3, auto);
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
             justify-content: space-between;
 
             max-height: 100%;
