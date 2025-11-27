@@ -1,29 +1,37 @@
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     computed,
     DestroyRef,
     Directive,
-    ElementRef,
     inject,
     input,
     NgZone,
-    output
+    output,
+    Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { fromEvent } from 'rxjs';
 
 /**
- * @docs-private
+ * Directions for resizing.
  *
- * Array of two numbers [x, y], where:
- * - x: horizontal direction (left: -1, unchanged: 0, right: 1)
- * - y: vertical direction (up: -1, unchanged: 0, down: 1)
+ * Horizontal direction (x):
+ * - Left: -1
+ * - None: 0
+ * - Right: 1
+ *
+ * Vertical direction (y):
+ * - Up: -1
+ * - None: 0
+ * - Down: 1
  */
 export type KbqResizerDirection = [x: -1 | 0 | 1, y: -1 | 0 | 1];
 
-/*
- * @docs-private
+/**
+ * Event emitted when the size of the resizable element changes.
  */
 export type KbqResizerSizeChangeEvent = {
     width: number;
@@ -31,15 +39,13 @@ export type KbqResizerSizeChangeEvent = {
 };
 
 /**
- * @docs-private
- *
  * Directive (container) sets whether the element is resizable.
  *
  * @example
  *
  * ```html
  * <div kbqResizable>
- *     <div [kbqResizer]="[1, 0]"></div>
+ *     <div [kbqResizer]="[-1, 0]"></div>
  * </div>
  * ```
  */
@@ -55,12 +61,10 @@ export class KbqResizable {
     /**
      * @docs-private
      */
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    readonly element = kbqInjectNativeElement();
 }
 
 /**
- * @docs-private
- *
  * Directive which defines element resizing direction.
  */
 @Directive({
@@ -73,11 +77,12 @@ export class KbqResizable {
     }
 })
 export class KbqResizer {
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly element = kbqInjectNativeElement();
     private readonly resizable = inject(KbqResizable);
     private readonly zone = inject(NgZone);
     private readonly document = inject<Document>(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly renderer = inject(Renderer2);
 
     private x = NaN;
     private y = NaN;
@@ -101,17 +106,9 @@ export class KbqResizer {
     protected readonly cursor = computed(() => {
         const [x, y] = this.direction();
 
-        if (!x) {
-            return 'ns-resize';
-        }
-
-        if (!y) {
-            return 'ew-resize';
-        }
-
-        if (x * y > 0) {
-            return 'nwse-resize';
-        }
+        if (!x) return 'ns-resize';
+        if (!y) return 'ew-resize';
+        if (x * y > 0) return 'nwse-resize';
 
         return 'nesw-resize';
     });
@@ -119,7 +116,7 @@ export class KbqResizer {
     constructor() {
         afterNextRender(() => {
             this.zone.runOutsideAngular(() => {
-                fromEvent<PointerEvent>(this.elementRef.nativeElement, 'pointerdown')
+                fromEvent<PointerEvent>(this.element, 'pointerdown')
                     .pipe(takeUntilDestroyed(this.destroyRef))
                     .subscribe((event) => this.handleElementPointerDown(event));
 
@@ -140,10 +137,10 @@ export class KbqResizer {
         this.x = event.x;
         this.y = event.y;
 
-        const element = this.resizable.elementRef.nativeElement;
+        const { clientWidth, clientHeight } = this.resizable.element;
 
-        this.width = element.clientWidth;
-        this.height = element.clientHeight;
+        this.width = clientWidth;
+        this.height = clientHeight;
     }
 
     private handleDocumentPointerMove(event: PointerEvent): void {
@@ -159,14 +156,12 @@ export class KbqResizer {
     private updateSize({ x, y }: PointerEvent): void {
         if (Number.isNaN(this.x)) return;
 
-        const { style } = this.resizable.elementRef.nativeElement;
-
         const [directionX, directionY] = this.direction();
         const width = this.width + directionX * (x - this.x);
         const height = this.height + directionY * (y - this.y);
 
-        if (directionX) style.width = `${width}px`;
-        if (directionY) style.height = `${height}px`;
+        if (directionX) this.renderer.setStyle(this.resizable.element, 'width', coerceCssPixelValue(width));
+        if (directionY) this.renderer.setStyle(this.resizable.element, 'height', coerceCssPixelValue(height));
 
         this.sizeChange.emit({ width, height });
     }

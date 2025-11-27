@@ -42,6 +42,7 @@
         "progress-bar",
         "progress-spinner",
         "radio",
+        "resizer",
         "scrollbar",
         "select",
         "search-expandable",

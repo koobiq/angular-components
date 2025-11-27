@@ -68,6 +68,7 @@
             "@koobiq/components/progress-bar": ["packages/components/progress-bar/index.ts"],
             "@koobiq/components/progress-spinner": ["packages/components/progress-spinner/index.ts"],
             "@koobiq/components/radio": ["packages/components/radio/index.ts"],
+            "@koobiq/components/resizer": ["packages/components/resizer/index.ts"],
             "@koobiq/components/risk-level": ["packages/components/risk-level/index.ts"],
             "@koobiq/components/search-expandable": ["packages/components/search-expandable/index.ts"],
             "@koobiq/components/select": ["packages/components/select/index.ts"],
