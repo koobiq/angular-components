@@ -3,6 +3,7 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DOWN_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
+import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -57,6 +58,9 @@ export class KbqDropdownStaticContent {}
     animations: [
         kbqDropdownAnimations.transformDropdown,
         kbqDropdownAnimations.fadeInItems
+    ],
+    imports: [
+        NgClass
     ],
     providers: [
         { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }]

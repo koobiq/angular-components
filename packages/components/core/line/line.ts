@@ -56,8 +56,7 @@ export class KbqLineSetter {
 }
 
 @NgModule({
-    imports: [],
-    exports: [KbqLine],
-    declarations: [KbqLine]
+    imports: [KbqLine],
+    exports: [KbqLine]
 })
 export class KbqLineModule {}

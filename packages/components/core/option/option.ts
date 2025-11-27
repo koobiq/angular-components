@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
+import { KbqPseudoCheckbox } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';
 
@@ -144,6 +145,9 @@ export class KbqVirtualOption extends KbqOptionBase {
     templateUrl: 'option.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        KbqPseudoCheckbox
+    ],
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,

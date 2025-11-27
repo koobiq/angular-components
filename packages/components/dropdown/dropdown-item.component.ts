@@ -40,6 +40,9 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqIcon
+    ],
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }]
 })

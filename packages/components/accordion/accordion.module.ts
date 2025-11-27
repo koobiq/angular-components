@@ -15,9 +15,7 @@ import { KbqAccordion } from './accordion.component';
         KbqAccordionTrigger
     ],
     imports: [
-        KbqIcon
-    ],
-    declarations: [
+        KbqIcon,
         KbqAccordion,
         KbqAccordionContent,
         KbqAccordionHeader,
