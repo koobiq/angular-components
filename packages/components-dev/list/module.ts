@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -48,6 +48,7 @@ export class DevExamples {}
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {
+    list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
     popUpPlacements = PopUpPlacements;
 
     typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
@@ -79,5 +80,9 @@ export class DevApp {
     onCopy($event) {
         console.log('onCopy', $event);
         this.clipboard.copy($event.option.value);
+    }
+
+    onRemove(item: string) {
+        this.list.update((list) => list.filter((listItem) => listItem !== item));
     }
 }
