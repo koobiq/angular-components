@@ -72,3 +72,21 @@
 ### Рекомендации
 
 Используйте [`Badge`](/ru/components/badge), если нужно создать цветной маркер в таблице или списке ключ-значение. Теги используются только в качестве токенов внутри контролов.
+
+### Навигация с клавиатуры
+
+#### Фокус на теге
+
+| <div style="min-width: 200px;">Клавиша</div>                                                         | Действие                  |
+| ---------------------------------------------------------------------------------------------------- | ------------------------- |
+| <span class="docs-hot-key-button">Space</span>                                                       | Выбрать/снять выбор тега. |
+| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Удалить тег.              |
+| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>         | Начать редактирование.    |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>           | Выделить все теги.        |
+
+#### Режим редактирования тега
+
+| <div style="min-width: 200px;">Клавиша</div>   | Действие             |
+| ---------------------------------------------- | -------------------- |
+| <span class="docs-hot-key-button">Enter</span> | Сохранить изменения. |
+| <span class="docs-hot-key-button">Esc</span>   | Отменить изменения.  |

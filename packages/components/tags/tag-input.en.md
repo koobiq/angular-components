@@ -56,3 +56,30 @@ In editing mode, the tag transforms into an input field and remains at the same 
 To enable tag reordering, you need to set the `draggable` property for `kbq-tag-list`.
 
 <!-- example(tag-input-draggable) -->
+
+### Keyboard navigation
+
+#### Focus in empty input area
+
+| <div style="min-width: 200px;">Key</div>                                                                                                                                                        | Action                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| <span class="docs-hot-key-button">Backspace</span> / <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">Tab</span> | Move focus to the last tag.                    |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>                                                                                                      | Select all tags and set focus to the last one. |
+
+#### Focus on tag
+
+| <div style="min-width: 200px;">Key</div>                                                             | Action                           |
+| ---------------------------------------------------------------------------------------------------- | -------------------------------- |
+| <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>              | Move focus to previous/next tag. |
+| <span class="docs-hot-key-button">Space</span>                                                       | Select/deselect tag.             |
+| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Remove tag.                      |
+| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>         | Start editing.                   |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>           | Select all tags.                 |
+| <span class="docs-hot-key-button">Home</span> / <span class="docs-hot-key-button">End</span>         | Move focus to first/last tag.    |
+
+#### Tag editing mode
+
+| <div style="min-width: 200px;">Key</div>       | Action          |
+| ---------------------------------------------- | --------------- |
+| <span class="docs-hot-key-button">Enter</span> | Save changes.   |
+| <span class="docs-hot-key-button">Esc</span>   | Cancel changes. |
