@@ -8,7 +8,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'text-area-overview-example',
     imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule],
     template: `

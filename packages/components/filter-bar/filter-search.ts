@@ -19,7 +19,6 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 import { KbqFilterBar } from './filter-bar';
 
 @Component({
-    standalone: true,
     selector: 'kbq-filter-search, [kbq-filter-search]',
     template: `
         <button

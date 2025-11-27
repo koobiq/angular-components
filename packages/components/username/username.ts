@@ -79,7 +79,6 @@ export class KbqUsernameCustomView {}
  */
 @Component({
     selector: 'kbq-username',
-    standalone: true,
     exportAs: 'kbqUsername',
     imports: [
         KbqTitleModule,

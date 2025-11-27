@@ -7,7 +7,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs vertical icons
  */
 @Component({
-    standalone: true,
     selector: 'tabs-vertical-icons-example',
     styleUrls: ['tabs-vertical-icons-example.css'],
     imports: [

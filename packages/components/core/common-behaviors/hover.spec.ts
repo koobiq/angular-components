@@ -16,7 +16,6 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
 };
 
 @Component({
-    standalone: true,
     selector: 'test-by-attr-directive',
     template: '<div kbqHover>test</div>',
     imports: [KbqHover],

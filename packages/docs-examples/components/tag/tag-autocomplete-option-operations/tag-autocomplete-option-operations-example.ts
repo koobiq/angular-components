@@ -17,7 +17,6 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tag-autocomplete-option-operations-example',
     imports: [
         FormsModule,

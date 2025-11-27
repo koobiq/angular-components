@@ -8,7 +8,6 @@ import { KbqTagsModule } from '@koobiq/components/tags';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tag-with-icon-example',
     imports: [
         KbqTagsModule,

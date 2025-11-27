@@ -21,7 +21,8 @@ const MIN_VISIBLE_LENGTH = 50;
     host: {
         class: 'kbq-ellipsis-center',
         '(window:resize)': 'resizeStream.next($event)'
-    }
+    },
+    standalone: false
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2 = inject(Renderer2);

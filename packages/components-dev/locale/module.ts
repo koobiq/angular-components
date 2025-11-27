@@ -15,7 +15,6 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 @Component({
-    standalone: true,
     imports: [
         KbqLocaleServiceModule,
         KbqNavbarModule,

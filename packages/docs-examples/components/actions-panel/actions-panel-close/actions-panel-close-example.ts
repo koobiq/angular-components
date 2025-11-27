@@ -16,7 +16,6 @@ import { KbqToastService } from '@koobiq/components/toast';
  * @title Actions panel close
  */
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule],
     providers: [KbqActionsPanel],
     selector: 'actions-panel-close-example',

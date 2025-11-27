@@ -9,7 +9,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'loader-overlay-size-example',
     imports: [KbqLoaderOverlayModule, KbqButtonToggleModule, FormsModule],
     template: `

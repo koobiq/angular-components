@@ -13,7 +13,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'navbar-overview-example',
     templateUrl: 'navbar-overview-example.html',
     imports: [

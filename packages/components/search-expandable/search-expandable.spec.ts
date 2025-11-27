@@ -57,7 +57,6 @@ describe('KbqSearchExpandable', () => {
     template: `
         <kbq-search-expandable [isOpened]="openedState" />
     `,
-    standalone: true,
     imports: [KbqSearchExpandableModule]
 })
 class TestApp {

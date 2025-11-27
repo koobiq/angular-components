@@ -863,7 +863,8 @@ describe('should update model after keyboard interaction with multiple mode = ch
                 </mat-list-option>
             }
         </mat-selection-list>
-    `
+    `,
+    standalone: false
 })
 class SelectionListWithCustomComparator {
     @ViewChildren(KbqListOption) optionInstances: QueryList<KbqListOption>;
@@ -900,7 +901,6 @@ class SelectionListWithCustomComparator {
             }
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class SelectionListWithListOptions {
@@ -919,7 +919,6 @@ class SelectionListWithListOptions {
             <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule]
 })
 class SelectionListMultipleCheckbox {
@@ -935,7 +934,6 @@ class SelectionListMultipleCheckbox {
             <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class SelectionListWithCheckboxPositionAfter {}
@@ -949,7 +947,6 @@ class SelectionListWithCheckboxPositionAfter {}
             <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class SelectionListWithListDisabled {}
@@ -960,7 +957,6 @@ class SelectionListWithListDisabled {}
             <kbq-list-option [selected]="true">Item</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class SelectionListWithSelectedOption {}
@@ -975,7 +971,6 @@ class SelectionListWithSelectedOption {}
             <kbq-list-option [value]="'option_5'">Option 5</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule]
 })
 class SelectionListFocusStates {
@@ -986,7 +981,6 @@ class SelectionListFocusStates {
     template: `
         <kbq-list-selection [tabIndex]="5" />
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class SelectionListWithTabindexAttr {}
@@ -995,7 +989,6 @@ class SelectionListWithTabindexAttr {}
     template: `
         <kbq-list-selection [disabled]="disabled" />
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class SelectionListWithTabindexInDisabledState {
@@ -1013,7 +1006,6 @@ class SelectionListWithTabindexInDisabledState {
             }
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithModel {
@@ -1029,7 +1021,6 @@ class SelectionListWithModel {
             <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithFormControl {
@@ -1043,7 +1034,6 @@ class SelectionListWithFormControl {
             <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithPreselectedOption {
@@ -1057,7 +1047,6 @@ class SelectionListWithPreselectedOption {
             <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithPreselectedOptionAndModel {
@@ -1075,7 +1064,6 @@ class SelectionListWithPreselectedOptionAndModel {
             }
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithPreselectedFormControlOnPush {

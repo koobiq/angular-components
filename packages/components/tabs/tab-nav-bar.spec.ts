@@ -122,7 +122,6 @@ describe(KbqTabNavBar.name, () => {
             }
         </nav>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class SimpleTabNavBarTestApp {
@@ -144,7 +143,6 @@ class SimpleTabNavBarTestApp {
             }
         </nav>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class TabLinkWithNgIf {
@@ -157,7 +155,6 @@ class TabLinkWithNgIf {
             <a kbqTabLink [tabIndex]="tabIndex">TabIndex Link</a>
         </nav>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class TabLinkWithTabIndexBinding {

@@ -38,7 +38,6 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
 }
 
 @Component({
-    standalone: true,
     imports: [ValidationExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -59,7 +58,6 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         FormsModule,

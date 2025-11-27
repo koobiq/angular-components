@@ -46,7 +46,6 @@ const DEV_DATA_OBJECT = {
 };
 
 @Component({
-    standalone: true,
     imports: [FilterBarExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -99,7 +98,6 @@ const DEV_DATA_OBJECT = {
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

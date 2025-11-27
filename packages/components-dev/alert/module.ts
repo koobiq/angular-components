@@ -6,7 +6,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 @Component({
-    standalone: true,
     imports: [KbqAlertModule, KbqIconModule, KbqButtonModule, KbqLinkModule],
     selector: 'dev-app',
     templateUrl: './template.html',

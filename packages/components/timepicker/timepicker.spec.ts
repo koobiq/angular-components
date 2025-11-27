@@ -34,7 +34,6 @@ import {
             />
         </kbq-form-field>
     `,
-    standalone: true,
     imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule]
 })
 class TestApp {
@@ -582,7 +581,6 @@ describe('KbqTimepicker', () => {
             <input kbqTimepicker [format]="timeFormat" [formControl]="formControl" />
         </kbq-form-field>
     `,
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -669,7 +667,6 @@ describe('KbqTimepicker with null formControl value', () => {
             <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
         </kbq-form-field>
     `,
-    standalone: true,
     imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule]
 })
 class TimePickerWithNullModelValue {
@@ -748,7 +745,6 @@ describe('KbqTimepicker with null model value', () => {
             <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
         </kbq-form-field>
     `,
-    standalone: true,
     imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule]
 })
 class TimepickerWithLocaleChange {

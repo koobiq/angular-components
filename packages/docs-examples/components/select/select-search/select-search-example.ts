@@ -12,7 +12,6 @@ import { map, startWith } from 'rxjs/operators';
  * @title Select search
  */
 @Component({
-    standalone: true,
     selector: 'select-search-example',
     imports: [
         KbqFormFieldModule,

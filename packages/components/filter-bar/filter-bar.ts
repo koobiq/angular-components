@@ -26,7 +26,6 @@ import { KbqFilters } from './filters';
 import { getId } from './pipes/base-pipe';
 
 @Component({
-    standalone: true,
     selector: 'kbq-filter-bar, [kbq-filter-bar]',
     template: `
         <div class="kbq-filter-bar__left">

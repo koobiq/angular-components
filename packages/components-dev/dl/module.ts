@@ -3,7 +3,6 @@ import { ThemePalette } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 
 @Component({
-    standalone: true,
     imports: [KbqDlModule],
     selector: 'dev-app',
     templateUrl: './template.html',

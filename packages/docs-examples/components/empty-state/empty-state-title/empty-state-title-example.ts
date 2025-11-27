@@ -6,7 +6,6 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-title-example',
     imports: [
         KbqEmptyStateModule

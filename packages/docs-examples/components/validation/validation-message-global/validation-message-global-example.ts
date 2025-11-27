@@ -29,7 +29,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  */
 @Component({
     selector: 'validation-message-global-example',
-    standalone: true,
     imports: [
         KbqAlertModule,
         KbqIconModule,
@@ -131,7 +130,8 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {

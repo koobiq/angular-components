@@ -100,7 +100,6 @@ export const DATA_OBJECT = {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-multiple-checkbox-example',
     imports: [
         KbqTreeModule,

@@ -63,7 +63,6 @@ describe('KbqNavbarIc', () => {
 @Component({
     selector: 'test-app',
     templateUrl: './navbar-ic.spec.html',
-    standalone: true,
     imports: [KbqNavbarIcModule, KbqIconModule]
 })
 class TestApp {

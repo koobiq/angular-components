@@ -9,7 +9,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-paddings-example',
     templateUrl: 'popover-paddings-example.html',
     imports: [

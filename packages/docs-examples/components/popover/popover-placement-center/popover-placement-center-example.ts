@@ -10,7 +10,6 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-placement-center-example',
     templateUrl: 'popover-placement-center-example.html',
     imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule],

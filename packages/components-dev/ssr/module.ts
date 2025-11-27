@@ -74,7 +74,6 @@ import { DevThemeToggle } from '../theme-toggle';
 import { DevBreadcrumbsHydration } from './components/breadcrumbs';
 
 @Component({
-    standalone: true,
     imports: [
         AccordionOverviewExample,
         ActionsPanelOverviewExample,
@@ -276,7 +275,6 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [DevExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
     hostDirectives: [
         // Required for components with overlays that use scrolling strategies

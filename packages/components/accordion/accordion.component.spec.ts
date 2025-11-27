@@ -273,7 +273,6 @@ describe('KbqAccordion', () => {
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class TestApp {}
@@ -290,7 +289,6 @@ class TestApp {}
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class AccordionVariants {
@@ -309,7 +307,6 @@ class AccordionVariants {
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class AccordionDefaultValue {
@@ -334,7 +331,6 @@ class AccordionDefaultValue {
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class AccordionValue {
@@ -359,7 +355,6 @@ class AccordionValue {
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class AccordionDisabled {
@@ -384,7 +379,6 @@ class AccordionDisabled {
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class AccordionDisabledItem {
@@ -409,7 +403,6 @@ class AccordionDisabledItem {
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class AccordionType {
@@ -434,7 +427,6 @@ class AccordionType {
             </kbq-accordion-item>
         </kbq-accordion>
     `,
-    standalone: true,
     imports: [KbqAccordionModule]
 })
 class AccordionCollapsible {}

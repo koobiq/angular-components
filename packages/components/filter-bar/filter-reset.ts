@@ -4,7 +4,6 @@ import { KbqFilterBar } from './filter-bar';
 import { KbqFilter } from './filter-bar.types';
 
 @Component({
-    standalone: true,
     selector: 'kbq-filter-reset',
     template: `
         <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()">

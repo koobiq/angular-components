@@ -9,7 +9,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  * @title split-button-text-overflow
  */
 @Component({
-    standalone: true,
     selector: 'split-button-text-overflow-example',
     imports: [
         KbqSplitButtonModule,

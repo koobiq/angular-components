@@ -60,7 +60,6 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-custom-option-example',
     imports: [
         TitleCasePipe,

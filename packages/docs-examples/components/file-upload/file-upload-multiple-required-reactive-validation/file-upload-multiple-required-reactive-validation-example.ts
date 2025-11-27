@@ -10,7 +10,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File upload multiple required reactive validation example
  */
 @Component({
-    standalone: true,
     selector: 'file-upload-multiple-required-reactive-validation-example',
     template: `
         <form [formGroup]="formMultiple" (ngSubmit)="onSubmit()">

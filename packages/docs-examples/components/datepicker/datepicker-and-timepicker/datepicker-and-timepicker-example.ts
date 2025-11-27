@@ -13,7 +13,6 @@ import { DateTime } from 'luxon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'datepicker-and-timepicker-example',
     imports: [
         FormsModule,

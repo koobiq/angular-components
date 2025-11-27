@@ -49,7 +49,6 @@ type ExampleAction = {
 };
 
 @Component({
-    standalone: true,
     selector: 'example-top-bar',
     imports: [
         KbqTopBarModule,
@@ -184,7 +183,6 @@ export class ExampleTopBar {
  * @title Top Bar Title And Counter Adaptive
  */
 @Component({
-    standalone: true,
     imports: [ExampleTopBar],
     selector: 'top-bar-title-counter-adaptive-example',
     template: `

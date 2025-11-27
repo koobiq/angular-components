@@ -7,7 +7,6 @@ import { DocsOverviewComponentBase } from '../component-viewer/component-viewer.
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 
 @Component({
-    standalone: true,
     imports: [
         DocsLiveExampleComponent,
         DocsAnchorsComponent,

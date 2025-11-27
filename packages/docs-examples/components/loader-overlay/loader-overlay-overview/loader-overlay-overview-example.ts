@@ -7,7 +7,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'loader-overlay-overview-example',
     imports: [KbqLoaderOverlayModule],
     template: `

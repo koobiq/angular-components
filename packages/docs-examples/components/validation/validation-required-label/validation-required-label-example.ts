@@ -18,7 +18,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  */
 @Component({
     selector: 'validation-required-label-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -128,7 +127,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationRequiredLabelExample {

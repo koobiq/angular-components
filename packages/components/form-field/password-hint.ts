@@ -40,7 +40,6 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
 };
 
 @Component({
-    standalone: true,
     imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
     template: `

@@ -5,7 +5,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle Indeterminate
  */
 @Component({
-    standalone: true,
     selector: 'toggle-indeterminate-example',
     imports: [KbqToggleModule],
     host: {

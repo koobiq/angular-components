@@ -8,14 +8,14 @@ import { KbqTableModule } from '@koobiq/components/table';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filesize-formatter-table-number-example',
     imports: [
         KbqDataSizePipe,
         KbqTableModule
     ],
     providers: [
-        { provide: KbqDecimalPipe, useClass: KbqTableNumberPipe }],
+        { provide: KbqDecimalPipe, useClass: KbqTableNumberPipe }
+    ],
     template: `
         <table kbq-table>
             <thead>

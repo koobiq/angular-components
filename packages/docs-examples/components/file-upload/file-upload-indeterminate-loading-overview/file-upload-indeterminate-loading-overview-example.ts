@@ -9,7 +9,6 @@ import { take } from 'rxjs/operators';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-indeterminate-loading-overview-example',
     imports: [
         KbqFileUploadModule,

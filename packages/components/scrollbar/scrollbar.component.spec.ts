@@ -199,7 +199,8 @@ describe(KbqScrollbarModule.name, () => {
                 ligula.
             </div>
         </div>
-    `
+    `,
+    standalone: false
 })
 class ScrollEventListener {
     options: KbqScrollbarOptions;

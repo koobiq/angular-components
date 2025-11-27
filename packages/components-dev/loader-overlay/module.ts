@@ -6,7 +6,6 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { LoaderOverlayExamplesModule } from '../../docs-examples/components/loader-overlay';
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule, LoaderOverlayExamplesModule],
     selector: 'dev-app',
     templateUrl: 'template.html',

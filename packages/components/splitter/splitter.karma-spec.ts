@@ -29,7 +29,8 @@ function createTestComponent<T>(component: Type<T>) {
             <div #areaA kbq-splitter-area style="flex: 1">first</div>
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
-    `
+    `,
+    standalone: false
 })
 class KbqSplitterGhost {
     direction: Direction = Direction.Horizontal;

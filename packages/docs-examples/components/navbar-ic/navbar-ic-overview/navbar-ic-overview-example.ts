@@ -35,7 +35,6 @@ enum NavbarIcItems {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'navbar-ic-overview-example',
     templateUrl: 'navbar-ic-overview-example.html',
     imports: [

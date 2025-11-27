@@ -121,7 +121,6 @@ type MultipleUploadState = {
 };
 
 @Component({
-    standalone: true,
     imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
     selector: 'dev-file-upload-state-and-style',
     template: `
@@ -263,7 +262,6 @@ export class DevFileUploadStateAndStyle {
 }
 
 @Component({
-    standalone: true,
     imports: [FileUploadExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -311,7 +309,6 @@ export class DevFileUploadStateAndStyle {
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [KbqFileUploadModule, KbqIconModule, KbqFormFieldModule],
     selector: 'dev-file-upload-compact',
     template: `
@@ -352,7 +349,6 @@ export class DevMultipleFileUploadCompact {
 }
 
 @Component({
-    standalone: true,
     imports: [
         DevExamples,
         FileUploadExamplesModule,

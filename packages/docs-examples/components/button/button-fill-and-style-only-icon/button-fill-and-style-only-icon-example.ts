@@ -8,7 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-fill-and-style-only-icon-example',
     templateUrl: 'button-fill-and-style-only-icon-example.html',
     styleUrls: ['button-fill-and-style-only-icon-example.css'],

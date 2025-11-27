@@ -830,7 +830,8 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    standalone: false
 })
 class SimpleKbqTreeApp {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -931,7 +932,6 @@ abstract class TreeParams {
             </kbq-tree-option>
         </kbq-tree-selection>
     `,
-    standalone: true,
     imports: [KbqTreeModule, FormsModule]
 })
 class TreeSelectionFocusStates extends TreeParams {}
@@ -954,7 +954,8 @@ class TreeSelectionFocusStates extends TreeParams {}
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    standalone: false
 })
 class KbqTreeAppMultiple extends TreeParams {
     modelValue = [];
@@ -980,7 +981,8 @@ class KbqTreeAppMultiple extends TreeParams {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    standalone: false
 })
 class KbqTreeAppMultipleCheckbox extends TreeParams {
     modelValue: any[] = ['Pictures'];
@@ -1019,7 +1021,8 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    standalone: false
 })
 class KbqTreeAppWithToggle {
     toggleRecursively: boolean = true;
@@ -1087,7 +1090,8 @@ class KbqTreeAppWithToggle {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    standalone: false
 })
 class WhenNodeKbqTreeApp {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -1148,7 +1152,8 @@ class WhenNodeKbqTreeApp {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    standalone: false
 })
 class FiltrationKbqTreeApp {
     treeControl: FlatTreeControl<FileFlatNode>;

@@ -9,7 +9,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Tag removable
  */
 @Component({
-    standalone: true,
     selector: 'tag-removable-example',
     imports: [KbqTagsModule, KbqIconModule, KbqToggleModule, FormsModule],
     template: `

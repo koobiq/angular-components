@@ -30,7 +30,6 @@ import { startWith } from 'rxjs';
 import { InputExamplesModule } from '../../docs-examples/components/input';
 
 @Component({
-    standalone: true,
     imports: [InputExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -45,7 +44,6 @@ import { InputExamplesModule } from '../../docs-examples/components/input';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,

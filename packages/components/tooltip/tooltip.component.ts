@@ -55,7 +55,6 @@ export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
 export const MIN_TIME_FOR_DELAY = 2000;
 
 @Component({
-    standalone: true,
     imports: [
         NgClass,
         NgTemplateOutlet

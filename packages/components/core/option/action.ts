@@ -47,15 +47,14 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         class: 'kbq-option-action',
         '[class.kbq-expanded]': 'false',
         '[class.kbq-disabled]': 'disabled',
-
         '[attr.disabled]': 'disabled || null',
         '[attr.tabIndex]': '-1',
-
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     @Input({ transform: booleanAttribute })

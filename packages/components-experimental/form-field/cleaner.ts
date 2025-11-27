@@ -8,7 +8,6 @@ import { KbqFormField } from './form-field';
  * Resets form control by click.
  */
 @Component({
-    standalone: true,
     imports: [KbqIconModule],
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',

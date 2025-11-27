@@ -13,7 +13,6 @@ import { DocsNavbarProperty } from '../navbar/navbar-property';
 import { DocsVersionPickerDirective } from '../version-picker/version-picker.directive';
 
 @Component({
-    standalone: true,
     imports: [
         KbqIconModule,
         KbqLinkModule,

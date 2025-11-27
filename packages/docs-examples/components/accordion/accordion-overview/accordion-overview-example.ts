@@ -6,7 +6,6 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-overview-example',
     templateUrl: 'accordion-overview-example.html',
     imports: [KbqAccordionModule]

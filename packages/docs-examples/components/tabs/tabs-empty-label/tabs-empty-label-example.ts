@@ -6,7 +6,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs empty label
  */
 @Component({
-    standalone: true,
     selector: 'tabs-empty-label-example',
     styleUrls: ['tabs-empty-label-example.css'],
     imports: [KbqTabsModule],

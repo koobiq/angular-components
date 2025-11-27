@@ -10,7 +10,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'alert-size-example',
     templateUrl: 'alert-size-example.html',
     styleUrls: ['alert-size-example.css'],
@@ -19,8 +18,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
             state('true', style({ opacity: 1, display: '' })),
             state('false', style({ opacity: 0, display: 'none' })),
             transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))])
-
+            transition('true => false', animate('.2s'))
+        ])
     ],
     imports: [
         KbqAlertModule,

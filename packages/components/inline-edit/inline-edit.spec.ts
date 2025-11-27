@@ -365,7 +365,6 @@ export class BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -429,7 +428,6 @@ export class TestComponent extends BaseTestComponent {
     cancel = jest.fn();
 }
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -496,7 +494,6 @@ export class TestWithMenu extends BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -557,7 +554,6 @@ export class TestWithTextareaControl extends BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -622,7 +618,6 @@ export class TestWithValidatedControl extends BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,

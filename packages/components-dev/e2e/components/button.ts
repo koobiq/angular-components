@@ -24,7 +24,6 @@ type DevButtonStyle = Partial<{
 type DevButton = DevButtonState & DevButtonStyle;
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule],
     selector: 'dev-button-state-and-style',
     host: {

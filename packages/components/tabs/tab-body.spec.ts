@@ -177,7 +177,6 @@ describe('KbqTabBody', () => {
         <ng-template>Tab Body Content</ng-template>
         <kbq-tab-body [content]="content" [position]="position" [origin]="origin" />
     `,
-    standalone: true,
     imports: [PortalModule]
 })
 class SimpleTabBodyApp implements AfterContentInit {

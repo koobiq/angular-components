@@ -98,7 +98,6 @@ describe('KbqTooltip', () => {
             Show
         </span>
     `,
-    standalone: true,
     imports: [KbqToolTipModule]
 })
 class KbqTooltipTestWrapperComponent {

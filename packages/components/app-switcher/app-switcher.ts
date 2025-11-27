@@ -126,7 +126,6 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: 'kbq-app-switcher',
     templateUrl: './app-switcher.html',
     preserveWhitespaces: false,

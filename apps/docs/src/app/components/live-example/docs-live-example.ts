@@ -29,7 +29,6 @@ import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
 @Component({
-    standalone: true,
     imports: [
         KbqCodeBlockModule,
         DocsCodeSnippetDirective,

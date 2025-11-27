@@ -102,7 +102,6 @@ export const DATA_OBJECT = {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-select-custom-matcher-example',
     imports: [FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule, KbqButtonModule],
     template: `

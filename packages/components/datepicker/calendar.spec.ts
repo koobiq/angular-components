@@ -348,7 +348,6 @@ describe('KbqCalendar', () => {
             (monthSelected)="selectedMonth = $event"
         />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class StandardCalendar {
@@ -364,7 +363,6 @@ class StandardCalendar {
     template: `
         <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate" />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class CalendarWithMinMax {
@@ -379,7 +377,6 @@ class CalendarWithMinMax {
     template: `
         <kbq-calendar [startAt]="startDate" [dateFilter]="dateFilter" [(selected)]="selected" />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class CalendarWithDateFilter {
@@ -402,7 +399,6 @@ class CalendarWithDateFilter {
             (selectedChange)="select($event)"
         />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class CalendarWithSelectableMinDate {

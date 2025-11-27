@@ -41,7 +41,6 @@ describe(KbqTopBar.name, () => {
 @Component({
     selector: 'test-app',
     template: '<kbq-top-bar [withShadow]="withShadow" />',
-    standalone: true,
     imports: [KbqTopBarModule]
 })
 class TestApp {

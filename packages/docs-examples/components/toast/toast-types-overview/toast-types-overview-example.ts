@@ -9,7 +9,6 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  * @title Toast types
  */
 @Component({
-    standalone: true,
     imports: [
         KbqLinkModule,
         NgTemplateOutlet,

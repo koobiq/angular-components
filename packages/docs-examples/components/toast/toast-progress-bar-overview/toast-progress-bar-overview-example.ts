@@ -8,7 +8,6 @@ import { KbqToastService } from '@koobiq/components/toast';
  * @title Toast progress bar
  */
 @Component({
-    standalone: true,
     imports: [
         KbqProgressBarModule,
         KbqLinkModule,

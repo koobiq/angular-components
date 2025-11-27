@@ -99,7 +99,6 @@ export class KbqError extends KbqHint {
 
 /** Password hint to be shown below the password form field control. */
 @Component({
-    standalone: true,
     imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
     template: `

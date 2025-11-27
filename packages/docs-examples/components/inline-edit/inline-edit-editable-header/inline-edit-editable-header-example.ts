@@ -8,7 +8,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Inline edit editable header
  */
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,

@@ -6,7 +6,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
  * @title Breadcrumbs Routing
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-routing-example',
     template: `
         <nav kbq-breadcrumbs>

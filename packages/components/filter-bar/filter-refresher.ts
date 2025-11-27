@@ -3,7 +3,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
-    standalone: true,
     selector: 'kbq-filter-refresher, [kbq-filter-refresher]',
     template: `
         <button kbq-button [color]="'contrast'" [kbqStyle]="'transparent'">

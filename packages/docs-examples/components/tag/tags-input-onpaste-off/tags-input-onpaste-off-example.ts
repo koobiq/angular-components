@@ -16,7 +16,6 @@ import {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tags-input-onpaste-off-example',
     templateUrl: 'tags-input-onpaste-off-example.html',
     imports: [

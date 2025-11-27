@@ -9,7 +9,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Overflow items justify content
  */
 @Component({
-    standalone: true,
     imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqSelectModule, FormsModule, KbqFormFieldModule],
     selector: 'overflow-items-justify-content-example',
     template: `

@@ -11,7 +11,6 @@ import { DropdownExamplesModule } from 'packages/docs-examples/components/dropdo
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [DropdownExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -41,7 +40,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqLinkModule,

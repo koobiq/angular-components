@@ -9,7 +9,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover arrowless
  */
 @Component({
-    standalone: true,
     selector: 'popover-arrowless-example',
     imports: [
         KbqButtonModule,

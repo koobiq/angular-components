@@ -10,7 +10,6 @@ import { take } from 'rxjs/operators';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'sidepanel-normal-mode-example',
     templateUrl: 'sidepanel-normal-mode-example.html',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule]

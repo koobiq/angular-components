@@ -8,7 +8,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Overflow items with vertical orientation
  */
 @Component({
-    standalone: true,
     imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-with-vertical-orientation-example',
     template: `

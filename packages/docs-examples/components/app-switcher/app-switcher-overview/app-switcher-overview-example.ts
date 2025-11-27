@@ -8,7 +8,6 @@ import { KbqIcon } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'app-switcher-overview-example',
     imports: [
         KbqAppSwitcherModule,

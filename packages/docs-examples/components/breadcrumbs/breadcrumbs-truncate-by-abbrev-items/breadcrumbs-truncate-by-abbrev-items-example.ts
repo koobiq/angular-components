@@ -9,7 +9,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Breadcrumbs Truncate By Abbreviation Items
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-truncate-by-abbrev-items-example',
     template: `
         <nav kbq-breadcrumbs>

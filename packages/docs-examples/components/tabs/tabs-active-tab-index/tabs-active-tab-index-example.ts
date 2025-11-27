@@ -7,7 +7,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tab list with selection by index
  */
 @Component({
-    standalone: true,
     selector: 'tabs-active-tab-index-example',
     imports: [
         KbqTabsModule,

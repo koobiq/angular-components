@@ -5,7 +5,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field with kbq-label */
 @Component({
-    standalone: true,
     selector: 'form-field-with-label-example',
     imports: [KbqFormFieldModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

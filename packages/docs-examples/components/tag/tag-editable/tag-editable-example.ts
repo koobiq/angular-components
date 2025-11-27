@@ -11,7 +11,6 @@ const TAG = 'Editable tag';
  * @title Tag editable
  */
 @Component({
-    standalone: true,
     selector: 'tag-editable-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
     template: `

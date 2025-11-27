@@ -8,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Form fieldset
  */
 @Component({
-    standalone: true,
     selector: 'form-fieldset-invalid-example',
     template: `
         <form [formGroup]="form">

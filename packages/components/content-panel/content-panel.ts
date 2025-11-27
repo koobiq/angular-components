@@ -85,7 +85,6 @@ export class KbqContentPanelHeaderTitle {}
 export class KbqContentPanelHeaderActions {}
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule],
     selector: 'kbq-content-panel-header',
     host: {
@@ -132,7 +131,6 @@ export class KbqContentPanelHeader {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqScrollbarModule],
     selector: 'kbq-content-panel-body',
     exportAs: 'kbqContentPanelBody',
@@ -239,7 +237,6 @@ export class KbqContentPanel {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqResizable, KbqResizer, KbqScrollbarModule],
     selector: 'kbq-content-panel-container',
     exportAs: 'kbqContentPanelContainer',

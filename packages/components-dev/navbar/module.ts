@@ -17,7 +17,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { map, timer } from 'rxjs';
 
 @Component({
-    standalone: true,
     imports: [
         KbqNavbarModule,
         KbqIconModule,

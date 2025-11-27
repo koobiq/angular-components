@@ -42,7 +42,6 @@ export type ScrollDirection = 'after' | 'before';
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
     },
-    standalone: true,
     imports: [KbqIcon, CdkObserveContent]
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {

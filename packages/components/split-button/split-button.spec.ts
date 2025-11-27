@@ -40,7 +40,6 @@ describe('KbqSearchExpandable', () => {
             </button>
         </kbq-split-button>
     `,
-    standalone: true,
     imports: [KbqSplitButtonModule, KbqButtonModule]
 })
 class TestApp {}

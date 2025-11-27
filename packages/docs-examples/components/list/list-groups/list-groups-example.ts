@@ -6,7 +6,6 @@ import { KbqListModule } from '@koobiq/components/list';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'list-groups-example',
     imports: [KbqListModule],
     template: `

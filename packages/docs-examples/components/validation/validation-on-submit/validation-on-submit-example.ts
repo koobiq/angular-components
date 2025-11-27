@@ -28,7 +28,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     selector: 'validation-on-submit-example',
-    standalone: true,
     imports: [
         KbqAlertModule,
         KbqIconModule,
@@ -133,7 +132,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {

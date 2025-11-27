@@ -46,7 +46,6 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-custom-text-overview-example',
     template: `
         <kbq-multiple-file-upload>

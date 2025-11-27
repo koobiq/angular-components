@@ -59,7 +59,6 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
 /** @docs-private */
 @Component({
     selector: 'kbq-time-range-editor',
-    standalone: true,
     imports: [
         NgTemplateOutlet,
         ReactiveFormsModule,

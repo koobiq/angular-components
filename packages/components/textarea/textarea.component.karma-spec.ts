@@ -33,7 +33,8 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <textarea kbqTextarea [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"></textarea>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqTextareaForBehaviors {
     value: string = 'test\ntest\ntest';
@@ -46,7 +47,8 @@ class KbqTextareaForBehaviors {
         <kbq-form-field>
             <textarea kbqTextarea [canGrow]="false" [(ngModel)]="value"></textarea>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqTextareaGrowOff {
     value: string = 'test\ntest\ntest';

@@ -27,7 +27,6 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-multi-tree-select',
     templateUrl: 'pipe-multi-tree-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],

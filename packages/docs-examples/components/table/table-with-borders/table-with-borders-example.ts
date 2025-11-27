@@ -6,7 +6,6 @@ import { KbqTableModule } from '@koobiq/components/table';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'table-with-borders-example',
     imports: [
         KbqTableModule

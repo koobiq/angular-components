@@ -5,7 +5,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule, FormsModule],
     selector: 'dev-toggle-state-and-style',
     host: {
@@ -66,7 +65,6 @@ export class DevToggleStateAndStyle {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule, KbqFormFieldModule, FormsModule],
     selector: 'dev-toggle-with-text-and-caption',
     host: {

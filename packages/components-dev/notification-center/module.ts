@@ -9,7 +9,6 @@ import { NotificationCenterExamplesModule } from '../../docs-examples/components
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [NotificationCenterExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -29,7 +28,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         DevExamples,
         DevThemeToggle,

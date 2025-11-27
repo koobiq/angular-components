@@ -3,7 +3,6 @@ import { MarkdownExamplesModule } from 'packages/docs-examples/components/markdo
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [MarkdownExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -42,7 +41,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [DevExamples, DevThemeToggle],
     selector: 'dev-app',
     templateUrl: './template.html',

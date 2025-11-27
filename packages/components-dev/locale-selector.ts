@@ -6,7 +6,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 @Component({
-    standalone: true,
     imports: [KbqFormFieldModule, KbqSelectModule, FormsModule],
     selector: 'dev-locale-selector',
     template: `

@@ -10,7 +10,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-accept-validation-example',
     template: `
         <kbq-file-upload multiple (fileRemoved)="onFileRemoved($event)" (filesAdded)="onFilesAdded($event)">

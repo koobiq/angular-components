@@ -5,7 +5,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 
 @Component({
-    standalone: true,
     imports: [KbqTagsModule, KbqIconModule],
     selector: 'dev-tag-state-and-style',
     host: {
@@ -62,7 +61,6 @@ export class DevTagStateAndStyle {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqTagsModule, KbqIconModule, FormsModule],
     selector: 'dev-tag-editable',
     host: {

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqDividerModule } from '@koobiq/components/divider';
 
 @Component({
-    standalone: true,
     imports: [KbqDividerModule],
     selector: 'dev-app',
     templateUrl: './template.html',

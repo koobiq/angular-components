@@ -14,7 +14,6 @@ import { DateTime } from 'luxon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'timepicker-variations-example',
     templateUrl: 'timepicker-variations-example.html',
     imports: [

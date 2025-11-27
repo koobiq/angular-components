@@ -12,7 +12,6 @@ import { map } from 'rxjs/operators';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-content-example',
     imports: [
         KbqEmptyStateModule,

@@ -7,7 +7,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Code-block with maxHeight attribute
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-max-height-example',
     imports: [
         KbqCodeBlockModule,

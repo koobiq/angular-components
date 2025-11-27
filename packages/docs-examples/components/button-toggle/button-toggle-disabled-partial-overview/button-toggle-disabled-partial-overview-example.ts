@@ -7,7 +7,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-toggle-disabled-partial-overview-example',
     templateUrl: 'button-toggle-disabled-partial-overview-example.html',
     imports: [

@@ -21,7 +21,6 @@ import { KbqHint } from './hint';
 
 /** Password hint to be shown below the password form field control. */
 @Component({
-    standalone: true,
     imports: [NgClass, KbqIconModule],
     selector: 'kbq-reactive-password-hint',
     exportAs: 'kbqReactivePasswordHint',

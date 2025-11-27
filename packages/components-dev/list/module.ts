@@ -14,7 +14,6 @@ import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [ListExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -28,7 +27,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqListModule,

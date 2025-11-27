@@ -8,7 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-toggle-tooltip-overview-example',
     styleUrls: ['button-toggle-tooltip-overview-example.css'],
     imports: [

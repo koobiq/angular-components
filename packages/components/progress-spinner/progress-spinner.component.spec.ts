@@ -123,7 +123,6 @@ describe('KbqProgressSpinner', () => {
         <kbq-progress-spinner class="first" [id]="id" [color]="color" [value]="value" [mode]="mode" />
         <kbq-progress-spinner class="default" />
     `,
-    standalone: true,
     imports: [KbqProgressSpinnerModule]
 })
 class TestApp {

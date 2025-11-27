@@ -47,7 +47,6 @@ export class ExampleDropdownPortal implements OnInit {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-recursive-template-example',
     imports: [
         NgTemplateOutlet,

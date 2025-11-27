@@ -28,7 +28,6 @@ import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
 
 @Component({
-    standalone: true,
     imports: [
         TitleCasePipe,
         KbqIconModule,

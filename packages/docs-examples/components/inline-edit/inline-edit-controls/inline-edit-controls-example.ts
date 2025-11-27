@@ -15,7 +15,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Inline edit controls
  */
 @Component({
-    standalone: true,
     imports: [
         NgTemplateOutlet,
         ReactiveFormsModule,

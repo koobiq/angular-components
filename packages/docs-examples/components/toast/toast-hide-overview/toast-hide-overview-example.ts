@@ -11,7 +11,6 @@ import { switchMap, timer } from 'rxjs';
  * @title Toast hide
  */
 @Component({
-    standalone: true,
     imports: [
         KbqButtonModule,
         KbqLinkModule,

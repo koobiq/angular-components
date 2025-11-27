@@ -625,7 +625,6 @@ describe('nested KbqTabGroup with enabled animations', () => {
             </kbq-tab>
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class SimpleTabsTestApp {
@@ -662,7 +661,6 @@ class SimpleTabsTestApp {
             }
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class SimpleDynamicTabsTestApp {
@@ -694,7 +692,6 @@ class SimpleDynamicTabsTestApp {
             }
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class BindedTabsTestApp {
@@ -731,7 +728,6 @@ class BindedTabsTestApp {
             </kbq-tab>
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class DisabledTabsTestApp {
@@ -750,7 +746,6 @@ class DisabledTabsTestApp {
             }
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class AsyncTabsTestApp implements OnInit {
@@ -777,7 +772,6 @@ class AsyncTabsTestApp implements OnInit {
             <kbq-tab label="Legumes"><p #legumes>Peanuts</p></kbq-tab>
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class TabGroupWithSimpleApi {
@@ -800,7 +794,6 @@ class TabGroupWithSimpleApi {
             </kbq-tab>
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class NestedTabs {}
@@ -817,7 +810,6 @@ class NestedTabs {}
             </kbq-tab>
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class TemplateTabs {}
@@ -833,7 +825,6 @@ class TemplateTabs {}
             <div>pizza is active</div>
         }
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class TabGroupWithIsActiveBinding {}
@@ -857,7 +848,6 @@ class TabGroupWithIsActiveBinding {}
             </kbq-tab>
         </kbq-tab-group>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class TestSelectionByIndexOrTabIdApp {

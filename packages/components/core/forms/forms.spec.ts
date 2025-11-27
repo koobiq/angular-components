@@ -38,7 +38,6 @@ const classWithMargin = 'kbq-form-row_margin';
             </div>
         </form>
     `,
-    standalone: true,
     imports: [KbqFormsModule, KbqInputModule, KbqFormFieldModule]
 })
 class HorizontalForm {}
@@ -74,7 +73,6 @@ class HorizontalForm {}
             </div>
         </form>
     `,
-    standalone: true,
     imports: [KbqFormsModule, KbqInputModule, KbqFormFieldModule]
 })
 class VerticalForm {}

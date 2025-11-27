@@ -7,7 +7,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'toggle-error-example',
     imports: [KbqToggleModule],
     host: {

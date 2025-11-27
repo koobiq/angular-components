@@ -77,7 +77,6 @@ describe('KbqCalendarHeader', () => {
             (monthSelected)="selectedMonth = $event"
         />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class StandardCalendar {

@@ -10,7 +10,6 @@ import { DateTime } from 'luxon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-min-max-example',
     imports: [
         ReactiveFormsModule,
@@ -18,7 +17,8 @@ import { DateTime } from 'luxon';
         LuxonDateModule
     ],
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ],
     template: `
         <div>
             <div style="color: var(--kbq-foreground-contrast-secondary)">From 2017 to 2025</div>

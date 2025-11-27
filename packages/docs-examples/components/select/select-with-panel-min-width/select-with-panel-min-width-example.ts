@@ -6,7 +6,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select with panelWidth min-width
  */
 @Component({
-    standalone: true,
     imports: [
         KbqFormFieldModule,
         KbqSelectModule

@@ -11,7 +11,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-lazyload-data-example',
     imports: [
         KbqDropdownModule,

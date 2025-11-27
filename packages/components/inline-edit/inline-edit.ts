@@ -118,7 +118,6 @@ export class KbqInlineEditMenu {
  * Edit mode opens in a positioned overlay that matches the view mode width or can be customized.
  */
 @Component({
-    standalone: true,
     selector: 'kbq-inline-edit',
     exportAs: 'kbqInlineEdit',
     templateUrl: './inline-edit.html',

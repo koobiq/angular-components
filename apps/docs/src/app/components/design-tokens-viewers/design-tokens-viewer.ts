@@ -6,7 +6,6 @@ import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
-    standalone: true,
     imports: [
         KbqTabsModule,
         RouterOutlet,

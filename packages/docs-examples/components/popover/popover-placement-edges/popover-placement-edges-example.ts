@@ -10,7 +10,6 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-placement-edges-example',
     templateUrl: 'popover-placement-edges-example.html',
     imports: [

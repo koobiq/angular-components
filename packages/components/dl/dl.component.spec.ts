@@ -46,7 +46,6 @@ describe('KbqDl', () => {
             </kbq-dd>
         </kbq-dl>
     `,
-    standalone: true,
     imports: [KbqDlModule]
 })
 class TestApp {}

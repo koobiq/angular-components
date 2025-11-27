@@ -7,7 +7,6 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-content-example',
     templateUrl: 'accordion-content-example.html',
     styleUrls: ['accordion-content-example.css'],

@@ -6,6 +6,7 @@ import { KbqAccordionHeaderDirective } from './accordion-header.directive';
     hostDirectives: [KbqAccordionHeaderDirective],
     host: {
         class: 'kbq-accordion-header'
-    }
+    },
+    standalone: false
 })
 export class KbqAccordionHeader {}

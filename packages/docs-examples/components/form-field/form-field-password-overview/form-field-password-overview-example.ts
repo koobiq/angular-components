@@ -6,7 +6,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field password overview */
 @Component({
-    standalone: true,
     selector: 'form-field-password-overview-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

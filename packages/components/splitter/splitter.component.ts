@@ -230,7 +230,6 @@ export class KbqGutterGhostDirective {
     templateUrl: './splitter.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [KbqGutterDirective, KbqGutterGhostDirective]
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {

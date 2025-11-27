@@ -6,7 +6,6 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
  * @title filter-bar-cleanable
  */
 @Component({
-    standalone: true,
     selector: 'filter-bar-cleanable-example',
     imports: [
         KbqFilterBarModule,

@@ -10,7 +10,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit on clean
  */
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,

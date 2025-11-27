@@ -15,7 +15,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Inline edit menu
  */
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,

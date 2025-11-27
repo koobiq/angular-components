@@ -19,7 +19,6 @@ import { DateTime } from 'luxon';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqTimepickerModule,

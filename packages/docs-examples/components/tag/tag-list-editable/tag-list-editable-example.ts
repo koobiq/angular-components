@@ -11,7 +11,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
  * @title Tag list editable
  */
 @Component({
-    standalone: true,
     selector: 'tag-list-editable-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
     template: `

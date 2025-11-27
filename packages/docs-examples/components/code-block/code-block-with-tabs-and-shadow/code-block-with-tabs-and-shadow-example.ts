@@ -5,7 +5,6 @@ import { KbqCodeBlock, KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/comp
  * @title Code-block with tabs and shadow
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-tabs-and-shadow-example',
     imports: [KbqCodeBlockModule],
     template: `

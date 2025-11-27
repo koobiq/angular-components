@@ -30,7 +30,6 @@ describe('kbq-risk-level', () => {
     template: `
         <kbq-risk-level />
     `,
-    standalone: true,
     imports: [KbqRiskLevelModule]
 })
 class TestApp {}

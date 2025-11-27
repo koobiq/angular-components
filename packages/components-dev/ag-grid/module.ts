@@ -3,7 +3,6 @@ import { AgGridExamplesModule } from 'packages/docs-examples/components/ag-grid'
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [AgGridExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -18,7 +17,6 @@ export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    standalone: true,
     imports: [DevExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

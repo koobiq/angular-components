@@ -7,7 +7,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-icon-example',
     imports: [
         KbqEmptyStateModule,

@@ -91,7 +91,6 @@ describe('KbqProgressBar', () => {
         <kbq-progress-bar class="first" [id]="id" [value]="value" [mode]="mode" />
         <kbq-progress-bar class="default" />
     `,
-    standalone: true,
     imports: [KbqProgressBarModule]
 })
 class TestApp {

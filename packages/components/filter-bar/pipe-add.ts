@@ -21,7 +21,6 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-add',
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">

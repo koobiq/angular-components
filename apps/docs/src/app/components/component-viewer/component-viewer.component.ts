@@ -35,14 +35,12 @@ import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
-    standalone: true,
     imports: [
         KbqTabsModule,
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
         DocsRegisterHeaderDirective,
-
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule
     ],
@@ -154,7 +152,6 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
 }
 
 @Component({
-    standalone: true,
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
@@ -180,7 +177,6 @@ export class DocsCdkOverviewComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
@@ -206,7 +202,6 @@ export class DocsComponentOverviewComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
@@ -232,7 +227,6 @@ export class DocsComponentApiComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
@@ -258,7 +252,6 @@ export class DocsCdkApiComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
     imports: [
         DocsExampleViewerComponent,
         DocsAnchorsComponent

@@ -6,7 +6,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field without borders */
 @Component({
-    standalone: true,
     selector: 'form-field-without-borders-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

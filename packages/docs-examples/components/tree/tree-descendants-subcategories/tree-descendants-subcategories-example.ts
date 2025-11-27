@@ -157,7 +157,6 @@ abstract class TreeParams {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-descendants-subcategories-example',
     imports: [
         KbqTreeModule,

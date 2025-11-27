@@ -11,7 +11,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File upload multiple mixed validation example
  */
 @Component({
-    standalone: true,
     selector: 'file-upload-multiple-mixed-validation-example',
     template: `
         <form [formGroup]="formMultiple">

@@ -17,7 +17,6 @@ import { KbqBasePipe } from './base-pipe';
 import { KbqPipeState } from './pipe-state';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-button',
     template: `
         <button

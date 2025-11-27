@@ -3,7 +3,6 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadcrumbs';
 
 @Component({
-    standalone: true,
     imports: [BreadcrumbsExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -34,7 +33,6 @@ import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadc
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     selector: 'dev-products-page',
     imports: [
         RouterOutlet,
@@ -66,7 +64,6 @@ export class DevProductDetailsPage {}
 export class DevAboutPage {}
 
 @Component({
-    standalone: true,
     imports: [RouterOutlet, RouterLink, DevExamples],
     selector: 'dev-app',
     templateUrl: './template.html',

@@ -7,7 +7,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'badge-content-example',
     imports: [
         KbqBadgeModule,

@@ -7,7 +7,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-placement-edges-example',
     styleUrls: ['tooltip-placement-edges-example.css'],
     imports: [KbqToolTipModule],

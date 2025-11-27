@@ -3,7 +3,6 @@ import { KbqBadgeColors } from '@koobiq/components/badge';
 import { KbqRiskLevelModule } from '@koobiq/components/risk-level';
 
 @Component({
-    standalone: true,
     imports: [KbqRiskLevelModule],
     selector: 'dev-app',
     templateUrl: './template.html',

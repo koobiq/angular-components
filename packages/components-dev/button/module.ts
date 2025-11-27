@@ -9,7 +9,6 @@ import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
 import { combineLatest } from 'rxjs';
 
 @Component({
-    standalone: true,
     imports: [ButtonExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -37,7 +36,6 @@ type DevButtonStyle = Partial<{
 type DevButton = DevButtonState & DevButtonStyle;
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule],
     selector: 'dev-button-state-and-style',
     template: `
@@ -131,7 +129,6 @@ export class DevButtonStateAndStyle {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule, DevExamples, DevButtonStateAndStyle],
     selector: 'dev-app',
     templateUrl: 'template.html',

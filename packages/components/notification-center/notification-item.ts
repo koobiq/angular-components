@@ -14,7 +14,6 @@ let id = 0;
 
 /** @docs-private */
 @Component({
-    standalone: true,
     imports: [
         NgTemplateOutlet,
         KbqIconModule,

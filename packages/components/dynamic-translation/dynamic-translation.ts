@@ -59,7 +59,6 @@ export class KbqDynamicTranslationSlot {
  * Component for dynamic translation.
  */
 @Component({
-    standalone: true,
     imports: [NgTemplateOutlet],
     selector: 'kbq-dynamic-translation',
     template: `
@@ -139,7 +138,6 @@ export class KbqDynamicTranslation {
  * @docs-private
  */
 @Component({
-    standalone: true,
     imports: [KbqDynamicTranslation, KbqDynamicTranslationSlot],
     selector: 'kbq-dynamic-translation-with-dynamic-component-creation',
     template: `

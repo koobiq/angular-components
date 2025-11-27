@@ -15,7 +15,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     selector: 'validation-no-message-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -57,7 +56,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationNoMessageExample {

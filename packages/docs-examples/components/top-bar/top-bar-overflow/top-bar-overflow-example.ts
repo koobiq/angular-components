@@ -35,7 +35,6 @@ type ExampleAction = {
  * @title TopBar Overflow
  */
 @Component({
-    standalone: true,
     selector: 'top-bar-overflow-example',
     imports: [
         CdkScrollable,

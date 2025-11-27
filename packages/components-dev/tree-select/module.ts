@@ -27,7 +27,6 @@ import { TreeSelectExamplesModule } from '../../docs-examples/components/tree-se
 import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
-    standalone: true,
     imports: [TreeSelectExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -42,7 +41,6 @@ class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    standalone: true,
     imports: [
         FormsModule,
         KbqTreeModule,
@@ -60,9 +58,8 @@ class DevExamples {}
     ],
     providers: [
         kbqTreeSelectOptionsProvider({
-            // panelWidth: 700
+        // panelWidth: 700
         })
-
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

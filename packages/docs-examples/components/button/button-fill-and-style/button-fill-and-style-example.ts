@@ -7,7 +7,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-fill-and-style-example',
     templateUrl: 'button-fill-and-style-example.html',
     styleUrls: ['button-fill-and-style-example.css'],

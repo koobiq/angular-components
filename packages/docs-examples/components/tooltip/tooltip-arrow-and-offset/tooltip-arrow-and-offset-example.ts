@@ -11,7 +11,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-arrow-and-offset-example',
     imports: [
         KbqButtonModule,

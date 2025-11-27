@@ -26,7 +26,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 type ExampleRowData = Record<string, string>;
 
 @Component({
-    standalone: true,
     imports: [AgGridModule, KbqAgGridThemeModule],
     selector: 'example-grid',
     template: `
@@ -95,7 +94,6 @@ export class ExampleGrid {
 }
 
 @Component({
-    standalone: true,
     imports: [
         KbqButtonModule,
         KbqBadgeModule,
@@ -292,7 +290,6 @@ export class ExampleContentPanel {
  * @title Content panel with grid
  */
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqModalModule],
     selector: 'content-panel-with-grid-example',
     template: `

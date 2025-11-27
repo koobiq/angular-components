@@ -8,7 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-cva-overview-example',
     template: `
         <div class="kbq-form-horizontal">

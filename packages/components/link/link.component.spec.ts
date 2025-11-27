@@ -87,7 +87,6 @@ describe('KbqLink', () => {
     template: `
         <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
     `,
-    standalone: true,
     imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkBaseTestApp {}
@@ -97,7 +96,6 @@ class KbqLinkBaseTestApp {}
     template: `
         <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a>
     `,
-    standalone: true,
     imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkPrintTestApp {
@@ -112,7 +110,6 @@ class KbqLinkPrintTestApp {
             <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
         </a>
     `,
-    standalone: true,
     imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkIconTestApp {}
@@ -122,7 +119,6 @@ class KbqLinkIconTestApp {}
     template: `
         <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a>
     `,
-    standalone: true,
     imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkPseudoTestApp {}
@@ -132,7 +128,6 @@ class KbqLinkPseudoTestApp {}
     template: `
         <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a>
     `,
-    standalone: true,
     imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkNoUnderlineTestApp {}

@@ -165,7 +165,6 @@ describe('KbqTimeRange', () => {
 });
 
 @Component({
-    standalone: true,
     template: `
         <kbq-time-range />
     `,
@@ -175,7 +174,6 @@ describe('KbqTimeRange', () => {
 export class TestComponent {}
 
 @Component({
-    standalone: true,
     template: `
         <kbq-time-range [formControl]="control" />
     `,
@@ -187,7 +185,6 @@ export class TestComponentWithInitial {
 }
 
 @Component({
-    standalone: true,
     template: `
         <kbq-time-range [availableTimeRangeTypes]="availableTimeRangeTypes()" [formControl]="control" />
     `,
@@ -218,7 +215,6 @@ export class TestComponentWithInputs {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-custom-range-types-example',
     imports: [
         ReactiveFormsModule,

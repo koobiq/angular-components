@@ -7,7 +7,6 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'radio-content-example',
     imports: [
         KbqRadioModule,

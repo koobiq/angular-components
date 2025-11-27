@@ -11,7 +11,6 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 
 /** Component which changes password visibility. */
 @Component({
-    standalone: true,
     imports: [NgClass, KbqIconModule],
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
@@ -21,10 +20,8 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     styleUrl: './password-toggle.scss',
     host: {
         class: 'kbq-password-toggle___EXPERIMENTAL',
-
         '[style.visibility]': 'visible ? "visible" : "hidden"',
         '[attr.aria-hidden]': '!visible',
-
         '(click)': 'toggleType($event)',
         '(keydown.ENTER)': 'toggleType($event)',
         '(keydown.SPACE)': 'toggleType($event)'

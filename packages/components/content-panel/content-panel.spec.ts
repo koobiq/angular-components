@@ -28,7 +28,6 @@ const getContentPanelContainerPanelElement = (debugElement: DebugElement): HTMLE
 const ESCAPE_KEY_EVENT = new KeyboardEvent('keydown', { key: 'Escape' });
 
 @Component({
-    standalone: true,
     imports: [KbqContentPanelModule],
     selector: 'test-content-panel',
     template: `

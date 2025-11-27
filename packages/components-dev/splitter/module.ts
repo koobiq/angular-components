@@ -4,7 +4,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqSplitterModule, KbqIconModule],
     selector: 'dev-app',
     templateUrl: './template.html',

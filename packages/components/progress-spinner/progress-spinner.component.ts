@@ -44,7 +44,6 @@ const MAX_DASH_ARRAY = 295;
         '[class.kbq-progress-spinner_indeterminate]': `mode === 'indeterminate'`,
         '[attr.id]': 'id'
     },
-    standalone: true,
     imports: [NgStyle]
 })
 export class KbqProgressSpinner extends KbqColorDirective {

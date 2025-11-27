@@ -301,7 +301,6 @@ describe('Button with icon', () => {
         <button kbq-button type="button" [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></button>
         <a href="#" kbq-button [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></a>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqDropdownModule]
 })
 class TestApp {
@@ -323,7 +322,6 @@ class TestApp {
             <!-- comment-after -->
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonCommentCaseTestApp {}
@@ -336,7 +334,6 @@ class KbqButtonCommentCaseTestApp {}
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonHtmlIconRightCaseTestApp {}
@@ -349,7 +346,6 @@ class KbqButtonHtmlIconRightCaseTestApp {}
             <span>Some text</span>
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonHtmlIconLeftCaseTestApp {
@@ -365,7 +361,6 @@ class KbqButtonHtmlIconLeftCaseTestApp {
             Some text
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconCaseTestApp {}
@@ -380,7 +375,6 @@ class KbqButtonTextIconCaseTestApp {}
             Some text
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconLeftNgIfCaseTestApp {
@@ -399,7 +393,6 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
             }
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconRightNgIfCaseTestApp {
@@ -417,7 +410,6 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
             Some text
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconLeftRightNgIfCaseTestApp {
@@ -439,7 +431,6 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
             <span>Some text</span>
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
@@ -454,7 +445,6 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
             <i id="icon2" kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTwoIconsCaseTestApp {}
@@ -468,7 +458,6 @@ class KbqButtonTwoIconsCaseTestApp {}
             }
         </button>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonIconNgIfCaseTestApp {
@@ -487,7 +476,6 @@ class KbqButtonIconNgIfCaseTestApp {
             <button kbq-dropdown-item>Item</button>
         </kbq-dropdown>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqDropdownModule]
 })
 class ButtonDropdownTrigger {

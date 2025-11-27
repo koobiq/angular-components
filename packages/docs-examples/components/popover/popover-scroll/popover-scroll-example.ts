@@ -9,7 +9,6 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-scroll-example',
     imports: [
         KbqButtonModule,

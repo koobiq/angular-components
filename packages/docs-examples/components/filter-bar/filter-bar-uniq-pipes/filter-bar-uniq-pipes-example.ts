@@ -15,7 +15,6 @@ import {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-uniq-pipes-example',
     imports: [
         KbqFilterBarModule,

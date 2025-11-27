@@ -31,7 +31,6 @@ interface KbqDocsAnchor {
 const NEXT_ROUTE_KEY = 'KBQ_nextRoute';
 
 @Component({
-    standalone: true,
     imports: [
         RouterLink,
         NgClass,

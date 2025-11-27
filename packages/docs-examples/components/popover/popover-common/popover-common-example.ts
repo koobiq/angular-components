@@ -9,7 +9,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-common-example',
     imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],
     styles: `

@@ -532,7 +532,6 @@ class TestComponentLevelService {
 }
 
 @Component({
-    standalone: true,
     selector: 'custom-modal-component',
     imports: [KbqModalModule],
     template: `
@@ -547,7 +546,6 @@ export class CustomModalComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'custom-component',
     providers: [
         TestComponentLevelService

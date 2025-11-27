@@ -14,7 +14,6 @@ const maxFileExceeded = (file: File): string | null => {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-error-overview-example',
     template: `
         <kbq-multiple-file-upload inputId="file-upload-multiple-error-overview" (fileQueueChanged)="onChange($event)">

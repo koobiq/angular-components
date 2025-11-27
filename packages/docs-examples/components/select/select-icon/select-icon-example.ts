@@ -7,7 +7,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select icon
  */
 @Component({
-    standalone: true,
     selector: 'select-icon-example',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush,

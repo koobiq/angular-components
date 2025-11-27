@@ -9,7 +9,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-overview-example',
     styleUrls: ['button-overview-example.css'],
     imports: [

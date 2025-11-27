@@ -17,7 +17,6 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  * @title Actions panel with dropdown and popover
  */
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule, KbqDropdownModule, KbqPopoverModule],
     providers: [KbqActionsPanel],
     selector: 'actions-panel-with-dropdown-and-popover-example',

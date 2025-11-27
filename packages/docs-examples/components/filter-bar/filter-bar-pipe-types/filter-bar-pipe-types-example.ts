@@ -32,7 +32,6 @@ const DATA_OBJECT = {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-pipe-types-example',
     imports: [
         KbqFilterBarModule,

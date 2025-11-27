@@ -125,7 +125,6 @@ describe(KbqSidebarModule.name, () => {
             </div>
         }
     `,
-    standalone: true,
     imports: [KbqSidebarModule]
 })
 class TestSidebar {

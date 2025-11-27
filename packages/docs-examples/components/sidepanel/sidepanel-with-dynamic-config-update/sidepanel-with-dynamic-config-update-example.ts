@@ -15,7 +15,6 @@ type ExampleComponentData = {
 };
 
 @Component({
-    standalone: true,
     imports: [KbqSidepanelModule, KbqButtonModule, KbqToggleModule, FormsModule],
     selector: 'example-sidepanel-component',
     template: `
@@ -71,7 +70,6 @@ export class ExampleSidepanelComponent {
  * @title Sidepanel with dynamic config update example
  */
 @Component({
-    standalone: true,
     imports: [FormsModule, KbqButtonModule],
     selector: 'sidepanel-with-dynamic-config-update-example',
     template: `

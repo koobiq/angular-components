@@ -60,7 +60,6 @@ describe('KbqEmptyState', () => {
             </div>
         </kbq-empty-state>
     `,
-    standalone: true,
     imports: [BrowserModule, KbqEmptyStateModule, KbqIconModule, KbqButtonModule]
 })
 class EmptyStateWithParams {

@@ -8,7 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Breadcrumbs custom-template
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-custom-template-example',
     template: `
         <nav kbq-breadcrumbs>

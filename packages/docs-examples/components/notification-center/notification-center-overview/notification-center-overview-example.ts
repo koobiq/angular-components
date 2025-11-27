@@ -47,7 +47,6 @@ enum NavbarIcItems {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'notification-center-overview-example',
     templateUrl: 'notification-center-overview-example.html',
     styles: `

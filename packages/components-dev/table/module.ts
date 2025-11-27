@@ -4,7 +4,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
-    standalone: true,
     imports: [KbqTableModule, KbqButtonModule],
     selector: 'dev-app',
     templateUrl: './template.html',

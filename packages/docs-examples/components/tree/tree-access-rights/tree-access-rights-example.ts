@@ -190,7 +190,6 @@ abstract class TreeParams {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-access-rights-example',
     imports: [
         KbqTreeModule,

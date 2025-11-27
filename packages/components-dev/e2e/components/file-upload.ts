@@ -26,7 +26,6 @@ type MultipleUploadState = {
 };
 
 @Component({
-    standalone: true,
     imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
     selector: 'dev-file-upload-state-and-style',
     template: `

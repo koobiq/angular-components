@@ -24,7 +24,6 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tags-autocomplete-onpaste-off-example',
     templateUrl: 'tags-autocomplete-onpaste-off-example.html',
     imports: [

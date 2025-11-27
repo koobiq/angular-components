@@ -8,7 +8,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Overflow items result offset
  */
 @Component({
-    standalone: true,
     imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-with-order-example',
     template: `

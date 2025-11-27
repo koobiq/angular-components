@@ -10,7 +10,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File upload single required reactive validation example
  */
 @Component({
-    standalone: true,
     selector: 'file-upload-single-required-reactive-validation-example',
     template: `
         <form [formGroup]="form" (ngSubmit)="onSubmit()">

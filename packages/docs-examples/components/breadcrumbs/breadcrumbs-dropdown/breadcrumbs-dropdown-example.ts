@@ -9,7 +9,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Breadcrumbs sizes
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-dropdown-example',
     template: `
         <nav kbq-breadcrumbs>

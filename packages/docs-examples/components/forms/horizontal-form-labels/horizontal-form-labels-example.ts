@@ -9,7 +9,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'horizontal-form-labels-example',
     templateUrl: 'horizontal-form-labels-example.html',
     styleUrls: ['horizontal-form-labels-example.css'],

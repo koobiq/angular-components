@@ -625,7 +625,6 @@ describe('KbqButtonToggle without forms', () => {
             <kbq-button-toggle [value]="'test3'">Test3</kbq-button-toggle>
         </kbq-button-toggle-group>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule]
 })
 class ButtonTogglesInsideButtonToggleGroup {
@@ -645,7 +644,6 @@ class ButtonTogglesInsideButtonToggleGroup {
             }
         </kbq-button-toggle-group>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule]
 })
 class ButtonToggleGroupWithNgModel {
@@ -667,7 +665,6 @@ class ButtonToggleGroupWithNgModel {
             <kbq-button-toggle [value]="'sugar'">Sugar</kbq-button-toggle>
         </kbq-button-toggle-group>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule]
 })
 class ButtonTogglesInsideButtonToggleGroupMultiple {
@@ -684,7 +681,6 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
             <kbq-button-toggle>Sugar</kbq-button-toggle>
         </kbq-button-toggle-group>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule]
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
@@ -696,7 +692,6 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
     template: `
         <kbq-button-toggle>Yes</kbq-button-toggle>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule]
 })
 class StandaloneButtonToggle {}
@@ -708,7 +703,6 @@ class StandaloneButtonToggle {}
             <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
         </kbq-button-toggle-group>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule]
 })
 class ButtonToggleGroupWithInitialValue {
@@ -723,7 +717,6 @@ class ButtonToggleGroupWithInitialValue {
             <kbq-button-toggle [value]="'blue'">Value Blue</kbq-button-toggle>
         </kbq-button-toggle-group>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule]
 })
 class ButtonToggleGroupWithFormControl {
@@ -740,7 +733,6 @@ class ButtonToggleGroupWithFormControl {
             }
         </kbq-button-toggle-group>
     `,
-    standalone: true,
     imports: [KbqButtonModule, KbqButtonToggleModule]
 })
 class RepeatedButtonTogglesWithPreselectedValue {

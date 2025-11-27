@@ -7,7 +7,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'search-expandable-overview-example',
     imports: [
         KbqSearchExpandableModule,

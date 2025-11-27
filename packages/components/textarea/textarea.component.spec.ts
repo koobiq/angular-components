@@ -32,7 +32,8 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <textarea kbqTextarea required [(ngModel)]="value"></textarea>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqTextareaInvalid {
     value: string = '';
@@ -47,7 +48,8 @@ class KbqTextareaInvalid {
 
             <button type="submit"></button>
         </form>
-    `
+    `,
+    standalone: false
 })
 class KbqFormFieldWithNgModelInForm {
     @ViewChild('form', { static: false }) form: NgForm;
@@ -60,7 +62,8 @@ class KbqFormFieldWithNgModelInForm {
         <kbq-form-field>
             <textarea class="kbq-textarea_monospace" kbqTextarea [(ngModel)]="value"></textarea>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqTextareaWithMonospace {
     value: string = 'test';
@@ -71,7 +74,8 @@ class KbqTextareaWithMonospace {
         <kbq-form-field>
             <textarea kbqTextarea [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"></textarea>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqTextareaForBehaviors {
     value: string = 'test\ntest\ntest';
@@ -84,7 +88,8 @@ class KbqTextareaForBehaviors {
         <kbq-form-field kbqFormFieldWithoutBorders>
             <textarea kbqTextarea></textarea>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqFormFieldWithoutBorders {}
 

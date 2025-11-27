@@ -181,7 +181,6 @@ describe(KbqBreadcrumbs.name, () => {
             }
         </kbq-breadcrumbs>
     `,
-    standalone: true,
     imports: [
         KbqBreadcrumbs,
         KbqBreadcrumbItem
@@ -213,7 +212,6 @@ class SimpleBreadcrumbs {
             }
         </kbq-breadcrumbs>
     `,
-    standalone: true,
     imports: [
         KbqBreadcrumbs,
         KbqBreadcrumbItem,

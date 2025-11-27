@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/overflow-items';
 
 @Component({
-    standalone: true,
     imports: [OverflowItemsExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -22,7 +21,6 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         DevExamples
     ],

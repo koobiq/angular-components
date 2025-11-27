@@ -63,7 +63,6 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
 }
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqIconModule,

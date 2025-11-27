@@ -9,7 +9,6 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
  * @title split-button-styles
  */
 @Component({
-    standalone: true,
     selector: 'split-button-styles-example',
     imports: [
         KbqSplitButtonModule,

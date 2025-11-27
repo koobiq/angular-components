@@ -5,7 +5,6 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [TopBarExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -22,7 +21,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     selector: 'dev-app',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

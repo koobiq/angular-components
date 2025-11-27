@@ -9,7 +9,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select footer
  */
 @Component({
-    standalone: true,
     imports: [
         KbqFormFieldModule,
         KbqSelectModule,

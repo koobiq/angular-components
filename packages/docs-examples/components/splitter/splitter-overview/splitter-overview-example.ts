@@ -6,7 +6,6 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'splitter-overview-example',
     imports: [
         KbqSplitterModule

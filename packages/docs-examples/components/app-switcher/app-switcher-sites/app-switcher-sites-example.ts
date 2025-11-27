@@ -6,7 +6,6 @@ import { KbqIcon } from '@koobiq/components/icon';
 /** @title app-switcher-sites */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'app-switcher-sites-example',
     imports: [
         KbqAppSwitcherModule,

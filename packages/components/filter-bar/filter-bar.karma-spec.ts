@@ -518,7 +518,6 @@ describe('KbqFilterBar', () => {
             <kbq-filter-search (onSearch)="onSearchFilter()" />
         </kbq-filter-bar>
     `,
-    standalone: true,
     imports: [KbqFilterBarModule, KbqLuxonDateModule]
 })
 class BaseFunctions {

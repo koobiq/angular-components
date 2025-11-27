@@ -8,7 +8,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-width-example',
     templateUrl: 'popover-width-example.html',
     imports: [

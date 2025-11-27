@@ -8,7 +8,6 @@ import { KbqAppSwitcherApp } from './app-switcher';
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: '[kbq-app-switcher-list-item]',
     exportAs: 'kbqAppSwitcherApp',
     template: `

@@ -27,7 +27,6 @@ type ExampleRowData = {
 };
 
 @Component({
-    standalone: true,
     imports: [KbqLinkModule],
     selector: 'example-link-cell-renderer',
     template: `
@@ -57,7 +56,6 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
  * @title AG Grid overview
  */
 @Component({
-    standalone: true,
     imports: [AgGridModule, KbqAgGridThemeModule],
     selector: 'ag-grid-overview-example',
     template: `

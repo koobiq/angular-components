@@ -55,7 +55,6 @@ export class KbqLoaderOverlayCaption {}
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [KbqProgressSpinner]
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {

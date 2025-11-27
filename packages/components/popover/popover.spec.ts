@@ -397,7 +397,6 @@ describe('KbqPopover', () => {
 });
 
 @Component({
-    standalone: true,
     selector: 'popover-simple',
     template: `
         <button kbqPopover [kbqPopoverContent]="'test'">Popover Trigger</button>
@@ -413,7 +412,6 @@ export class PopoverSimple {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqPopoverModule],
     selector: 'kbq-popover-test-component',
     template: `
@@ -451,7 +449,6 @@ class KbqPopoverTestComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqPopoverModule],
     selector: 'kbq-popover-test-component',
     template: `
@@ -473,7 +470,6 @@ class KbqPopoverConfirmTestComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqPopoverModule],
     selector: 'kbq-popover-test-with-providers-component',
     template: `
@@ -489,7 +485,6 @@ class KbqPopoverConfirmWithProvidersTestComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqPopoverModule],
     selector: 'kbq-popover-wih-template-ref',
     template: `

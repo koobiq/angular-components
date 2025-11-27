@@ -8,7 +8,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select validation
  */
 @Component({
-    standalone: true,
     selector: 'select-validation-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

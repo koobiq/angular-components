@@ -15,7 +15,6 @@ import {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-overview-example',
     imports: [
         KbqFilterBarModule,

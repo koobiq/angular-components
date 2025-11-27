@@ -92,7 +92,6 @@ describe('KbqNavbar', () => {
 @Component({
     selector: 'test-app',
     templateUrl: './navbar.component.html',
-    standalone: true,
     imports: [KbqNavbarModule, KbqIconModule]
 })
 class TestApp {

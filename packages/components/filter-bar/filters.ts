@@ -31,7 +31,6 @@ import { KbqFilterBarButton } from './filter-bar-button';
 import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
 
 @Component({
-    standalone: true,
     exportAs: 'kbqFilters',
     selector: 'kbq-filters',
     templateUrl: 'filters.html',

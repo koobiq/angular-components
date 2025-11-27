@@ -59,7 +59,6 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     host: {
         class: 'kbq-tab-body'
     },
-    standalone: true,
     imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)]
 })
 export class KbqTabBody implements OnInit, OnDestroy {

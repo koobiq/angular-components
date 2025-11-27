@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { ExperimentalFormFieldExamplesModule } from 'packages/docs-examples/components/experimental-form-field';
 
 @Component({
-    standalone: true,
     imports: [ExperimentalFormFieldExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -30,7 +29,6 @@ import { ExperimentalFormFieldExamplesModule } from 'packages/docs-examples/comp
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         DevExamples
     ],

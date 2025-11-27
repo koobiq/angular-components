@@ -13,7 +13,6 @@ import { docsGetCategories, DocsStructureCategory } from '../../structure';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
-    standalone: true,
     imports: [
         KbqIconModule,
         KbqLinkModule,

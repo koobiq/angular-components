@@ -10,7 +10,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'input-overview-example',
     imports: [
         KbqFormFieldModule,

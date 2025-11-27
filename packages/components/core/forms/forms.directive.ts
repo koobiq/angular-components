@@ -5,7 +5,8 @@ import { AfterContentInit, ContentChildren, Directive, ElementRef, QueryList } f
     exportAs: 'kbqFormElement',
     host: {
         '[class.kbq-form-row_margin]': 'margin'
-    }
+    },
+    standalone: false
 })
 export class KbqFormElement implements AfterContentInit {
     margin = false;
@@ -38,7 +39,8 @@ export class KbqFormElement implements AfterContentInit {
     exportAs: 'kbqForm',
     host: {
         class: 'kbq-form'
-    }
+    },
+    standalone: false
 })
 export class KbqForm implements AfterContentInit {
     @ContentChildren(KbqFormElement) elements: QueryList<KbqFormElement>;

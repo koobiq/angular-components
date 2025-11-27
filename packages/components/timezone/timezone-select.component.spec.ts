@@ -102,7 +102,8 @@ const groupedZones: KbqTimezoneGroup[] = [
             </kbq-timezone-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `
+    `,
+    standalone: false
 })
 class BasicTimezoneSelect {
     zones: KbqTimezoneGroup[] = groupedZones;
@@ -140,7 +141,8 @@ class BasicTimezoneSelect {
                 }
             </kbq-timezone-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class TimezoneSelectWithSearch implements OnInit {
     @ViewChild(KbqTimezoneSelect, { static: true }) select: KbqTimezoneSelect;

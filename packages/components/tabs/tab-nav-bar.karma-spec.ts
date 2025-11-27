@@ -45,7 +45,6 @@ describe(KbqTabNavBar.name, () => {
             }
         </nav>
     `,
-    standalone: true,
     imports: [KbqTabsModule]
 })
 class SimpleTabNavBarTestApp {

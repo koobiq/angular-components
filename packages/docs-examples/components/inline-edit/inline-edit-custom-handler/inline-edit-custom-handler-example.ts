@@ -12,7 +12,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Inline edit custom handler
  */
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,

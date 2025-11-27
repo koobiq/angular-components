@@ -45,7 +45,8 @@ export const buttonRightIconClassName = 'kbq-button-icon_right';
     host: {
         '[class.kbq-button]': '!isIconButton',
         '[class.kbq-button-icon]': 'isIconButton'
-    }
+    },
+    standalone: false
 })
 export class KbqButtonCssStyler implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
@@ -122,12 +123,13 @@ export class KbqButtonCssStyler implements AfterContentInit {
         '[class.kbq-disabled]': 'disabled',
         '[attr.tabIndex]': 'tabIndex',
         '[class]': 'kbqStyle',
-
         '(focus)': 'onFocus($event)',
         '(blur)': 'onBlur()'
     },
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
+    ],
+    standalone: false
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);

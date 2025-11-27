@@ -67,7 +67,6 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
  * Component which highlights blocks of code.
  */
 @Component({
-    standalone: true,
     imports: [
         KbqTabsModule,
         KbqButtonModule,

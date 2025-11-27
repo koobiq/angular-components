@@ -9,7 +9,6 @@ import { ContentPanelExamplesModule } from 'packages/docs-examples/components/co
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [
         KbqButtonModule,
         KbqBadgeModule,
@@ -140,7 +139,6 @@ export class DevContentPanelOverview {
 }
 
 @Component({
-    standalone: true,
     imports: [ContentPanelExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -154,7 +152,6 @@ export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    standalone: true,
     imports: [
         DevExamples,
         DevThemeToggle,

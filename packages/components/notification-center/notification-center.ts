@@ -80,7 +80,6 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: 'kbq-notification-center',
     templateUrl: './notification-center.html',
     styleUrls: ['./notification-center.scss'],

@@ -10,7 +10,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { ButtonToggleExamplesModule } from '../../docs-examples/components/button-toggle';
 
 @Component({
-    standalone: true,
     imports: [
         ButtonToggleExamplesModule,
         KbqButtonModule,

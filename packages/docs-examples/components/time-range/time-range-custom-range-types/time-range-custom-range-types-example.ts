@@ -25,7 +25,6 @@ const customDefaultTypes = customTypes.map(({ type }) => type);
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-custom-range-types-example',
     imports: [
         ReactiveFormsModule,

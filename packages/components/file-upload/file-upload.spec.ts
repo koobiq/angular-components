@@ -511,7 +511,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
             />
         </div>
     `,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicSingleFileUpload {
@@ -543,7 +542,6 @@ class BasicSingleFileUpload {
             />
         </div>
     `,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorSingleFileUpload {
@@ -573,7 +571,6 @@ class ControlValueAccessorSingleFileUpload {
             />
         </div>
     `,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicMultipleFileUpload {
@@ -607,7 +604,6 @@ class BasicMultipleFileUpload {
             />
         </div>
     `,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorMultipleFileUpload {

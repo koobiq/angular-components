@@ -29,7 +29,6 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [TagExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -81,7 +80,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqFormFieldModule,

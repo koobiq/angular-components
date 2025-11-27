@@ -10,7 +10,6 @@ interface ICheckbox {
  * @title Checkbox indeterminate
  */
 @Component({
-    standalone: true,
     selector: 'checkbox-indeterminate-example',
     imports: [
         KbqCheckboxModule

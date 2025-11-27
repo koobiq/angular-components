@@ -15,7 +15,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-open-by-arrow-down-example',
     imports: [
         KbqDropdownModule,

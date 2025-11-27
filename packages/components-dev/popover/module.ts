@@ -17,7 +17,6 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
 import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
 
 @Component({
-    standalone: true,
     imports: [PopoverExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -34,7 +33,6 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
 class DevExamples {}
 
 @Component({
-    standalone: true,
     selector: 'dev-app',
     styleUrls: ['./styles.scss'],
     templateUrl: './template.html',

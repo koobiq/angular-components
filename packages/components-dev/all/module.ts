@@ -42,7 +42,6 @@ const STEP: number = 4;
 const MAX_PERCENT: number = 100;
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,

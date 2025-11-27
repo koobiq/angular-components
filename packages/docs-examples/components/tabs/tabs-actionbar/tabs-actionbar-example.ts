@@ -7,7 +7,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs actionbar
  */
 @Component({
-    standalone: true,
     imports: [
         KbqTabsModule,
         KbqButtonModule,

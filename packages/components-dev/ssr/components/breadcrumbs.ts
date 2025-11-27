@@ -8,7 +8,6 @@ import { of, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-    standalone: true,
     selector: 'dev-breadcrumbs-hydration',
     template: `
         <kbq-top-bar>

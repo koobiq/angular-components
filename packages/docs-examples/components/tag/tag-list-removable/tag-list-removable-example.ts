@@ -9,7 +9,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
  * @title Tag list removable
  */
 @Component({
-    standalone: true,
     selector: 'tag-list-removable-example',
     imports: [KbqTagsModule, KbqIconModule],
     template: `

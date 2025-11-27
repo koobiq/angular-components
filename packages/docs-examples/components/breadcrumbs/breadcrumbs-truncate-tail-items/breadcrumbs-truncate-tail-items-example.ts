@@ -7,7 +7,6 @@ import { PopUpPlacements } from '@koobiq/components/core';
  * @title Breadcrumbs Truncate Tail Items
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-truncate-tail-items-example',
     template: `
         <nav class="kbq-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>

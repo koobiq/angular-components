@@ -7,7 +7,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Selected preselected values
  */
 @Component({
-    standalone: true,
     selector: 'select-preselected-values-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
     changeDetection: ChangeDetectionStrategy.OnPush,

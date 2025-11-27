@@ -13,7 +13,6 @@ import { map, startWith } from 'rxjs/operators';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'autocomplete-overview-example',
     imports: [
         KbqFormFieldModule,

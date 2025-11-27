@@ -74,7 +74,6 @@ class ExampleResetTouchedOnFirstInput {
  * @title Inline edit validation
  */
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,

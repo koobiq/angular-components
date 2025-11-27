@@ -26,7 +26,6 @@ import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
-    standalone: true,
     imports: [FormFieldExamplesModule, FormsExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -140,7 +139,6 @@ const DATA_OBJECT = {
 };
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqSelectModule,

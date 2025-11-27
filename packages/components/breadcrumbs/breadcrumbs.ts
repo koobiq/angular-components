@@ -145,7 +145,6 @@ export class KbqBreadcrumbItem {
 }
 
 @Component({
-    standalone: true,
     selector: 'kbq-breadcrumbs,[kbq-breadcrumbs]',
     templateUrl: './breadcrumbs.html',
     styleUrls: ['./breadcrumbs.scss', './breadcrumbs-tokens.scss'],

@@ -8,7 +8,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Overflow items with always visible item
  */
 @Component({
-    standalone: true,
     imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-with-always-visible-item-example',
     template: `

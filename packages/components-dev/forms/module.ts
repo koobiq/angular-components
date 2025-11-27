@@ -5,7 +5,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqInputModule,

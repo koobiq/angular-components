@@ -9,7 +9,6 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-header-example',
     templateUrl: 'accordion-header-example.html',
     imports: [KbqAccordionModule, KbqBadgeModule, KbqCheckboxModule, KbqIcon, KbqIconButton]

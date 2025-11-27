@@ -53,7 +53,8 @@ function checkDirection<T>(
             <div kbq-splitter-area>second</div>
             <div kbq-splitter-area>third</div>
         </kbq-splitter>
-    `
+    `,
+    standalone: false
 })
 class KbqSplitterDefaultDirection {}
 
@@ -65,7 +66,8 @@ class KbqSplitterDefaultDirection {}
             <div kbq-splitter-area>second</div>
             <div kbq-splitter-area>third</div>
         </kbq-splitter>
-    `
+    `,
+    standalone: false
 })
 class KbqSplitterDirection {
     direction: Direction = Direction.Vertical;
@@ -78,7 +80,8 @@ class KbqSplitterDirection {
             <div #areaA kbq-splitter-area (sizeChange)="areaASizeChange($event)">first</div>
             <div #areaB kbq-splitter-area (sizeChange)="areaBSizeChange($event)">second</div>
         </kbq-splitter>
-    `
+    `,
+    standalone: false
 })
 class KbqSplitterEvents {
     gutterPositionChange = jest.fn();
@@ -95,7 +98,8 @@ class KbqSplitterEvents {
             <div #areaA kbq-splitter-area style="flex: 1">first</div>
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
-    `
+    `,
+    standalone: false
 })
 class KbqSplitterGhost {
     direction: Direction = Direction.Horizontal;
@@ -113,7 +117,8 @@ class KbqSplitterGhost {
             }
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
-    `
+    `,
+    standalone: false
 })
 class DynamicData {
     direction: Direction = Direction.Horizontal;

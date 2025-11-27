@@ -255,7 +255,6 @@ describe('KbqTagInput', () => {
             />
         </kbq-form-field>
     `,
-    standalone: true,
     imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule]
 })
 class TestTagInput {

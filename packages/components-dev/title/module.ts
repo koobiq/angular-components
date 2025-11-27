@@ -50,7 +50,6 @@ const options = [
 ];
 
 @Component({
-    standalone: true,
     imports: [TitleExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -63,7 +62,6 @@ const options = [
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         KbqTitleModule,
         KbqButtonModule,

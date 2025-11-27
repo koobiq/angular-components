@@ -6,7 +6,6 @@ import { KbqDividerModule } from '@koobiq/components/divider';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'divider-overview-example',
     imports: [
         KbqDividerModule

@@ -200,7 +200,6 @@ describe('Standalone ToastService', () => {
     template: `
         <button (click)="show()">Show</button>
     `,
-    standalone: true,
     imports: [KbqToastModule]
 })
 class KbqToastButtonWrapperComponent {

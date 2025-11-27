@@ -21,7 +21,6 @@ type ExampleAction = {
 };
 
 @Component({
-    standalone: true,
     imports: [
         KbqOverflowItemsModule,
         KbqButtonModule,
@@ -165,7 +164,6 @@ export class ExampleActionsPanel {
  * @title Actions panel adaptive
  */
 @Component({
-    standalone: true,
     imports: [ExampleActionsPanel],
     selector: 'actions-panel-adaptive-example',
     template: `

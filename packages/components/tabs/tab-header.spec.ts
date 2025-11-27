@@ -318,9 +318,7 @@ interface ITab {
                 width: 130px;
             }
         `
-
     ],
-    standalone: true,
     imports: [PortalModule, ScrollingModule]
 })
 class SimpleTabHeaderApp {

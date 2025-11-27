@@ -12,7 +12,6 @@ import { KbqInputModule } from '@koobiq/components/input';
             <input kbqInput type="text" [formControl]="testControl" />
         </kbq-form-field>
     `,
-    standalone: true,
     imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInputModule]
 })
 class TestApp {

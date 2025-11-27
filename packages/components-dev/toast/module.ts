@@ -26,7 +26,6 @@ import {
 import { ToastExamplesModule } from '../../docs-examples/components/toast';
 
 @Component({
-    standalone: true,
     selector: 'dev-examples',
     template: `
         <toast-overview-example />
@@ -88,7 +87,6 @@ export class DevToastComponent extends KbqToastComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [
         KbqButtonModule,
         KbqIconModule,

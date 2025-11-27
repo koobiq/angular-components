@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { SidebarExamplesModule } from 'packages/docs-examples/components/sidebar';
 
 @Component({
-    standalone: true,
     imports: [SidebarExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -16,7 +15,6 @@ import { SidebarExamplesModule } from 'packages/docs-examples/components/sidebar
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         DevExamples
     ],

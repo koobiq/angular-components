@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqAutocompleteModule,

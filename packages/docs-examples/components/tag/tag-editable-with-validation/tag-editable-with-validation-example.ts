@@ -13,7 +13,6 @@ const TAG = 'Editable tag with validation';
  * @title Tag editable with validation
  */
 @Component({
-    standalone: true,
     selector: 'tag-editable-with-validation-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqToolTipModule],
     template: `

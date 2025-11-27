@@ -3,7 +3,6 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
-    standalone: true,
     imports: [KbqAccordionModule, KbqIconModule],
     selector: 'dev-app',
     templateUrl: './template.html',

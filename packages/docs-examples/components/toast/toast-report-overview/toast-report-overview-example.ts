@@ -7,7 +7,6 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  * @title Toast report
  */
 @Component({
-    standalone: true,
     imports: [
         KbqLinkModule,
         KbqButtonModule

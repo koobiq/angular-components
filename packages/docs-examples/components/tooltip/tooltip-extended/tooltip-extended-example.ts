@@ -7,7 +7,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-extended-example',
     styles: `
         .custom-tooltip {

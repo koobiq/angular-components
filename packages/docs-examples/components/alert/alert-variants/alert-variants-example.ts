@@ -10,7 +10,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'alert-variants-example',
     styleUrls: ['alert-variants-example.css'],
     animations: [
@@ -18,8 +17,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
             state('true', style({ opacity: 1, display: '' })),
             state('false', style({ opacity: 0, display: 'none' })),
             transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))])
-
+            transition('true => false', animate('.2s'))
+        ])
     ],
     imports: [
         KbqAlertModule,

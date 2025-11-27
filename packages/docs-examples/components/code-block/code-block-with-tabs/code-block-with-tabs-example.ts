@@ -7,7 +7,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Code-block with tabs
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-tabs-example',
     imports: [
         KbqCodeBlockModule,

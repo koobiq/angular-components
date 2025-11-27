@@ -8,7 +8,6 @@ import {
 } from '@koobiq/components/scrollbar';
 
 @Component({
-    standalone: true,
     imports: [KbqScrollbarModule],
     selector: 'dev-scrollbar-with-options',
     template: `
@@ -32,7 +31,6 @@ export class DevScrollbarWithOptions {
 }
 
 @Component({
-    standalone: true,
     selector: 'dev-scrollbar-with-custom-config',
     imports: [KbqScrollbarModule],
     providers: [
@@ -61,7 +59,6 @@ export class DevScrollbarWithCustomConfig {
 }
 
 @Component({
-    standalone: true,
     selector: 'dev-scrollbar-scroll-to-top',
     imports: [
         KbqScrollbarModule,
@@ -94,11 +91,9 @@ export class DevScrollbarScrollToTop {
 }
 
 @Component({
-    standalone: true,
     imports: [
         KbqScrollbarModule,
         KbqButtonModule,
-
         // components
         DevScrollbarWithOptions,
         DevScrollbarWithCustomConfig,

@@ -21,7 +21,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag $
  * @title Tag autocomplete overview
  */
 @Component({
-    standalone: true,
     selector: 'tag-autocomplete-overview-example',
     imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

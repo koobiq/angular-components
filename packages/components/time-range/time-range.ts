@@ -49,7 +49,6 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
 });
 
 @Component({
-    standalone: true,
     selector: 'kbq-time-range',
     template: `
         @let localeConfig = localeConfiguration();

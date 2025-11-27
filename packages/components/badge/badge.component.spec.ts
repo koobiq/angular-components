@@ -34,7 +34,6 @@ describe('MсAlert', () => {
     template: `
         <kbq-badge />
     `,
-    standalone: true,
     imports: [KbqBadgeModule]
 })
 class TestApp {}

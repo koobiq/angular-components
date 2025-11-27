@@ -15,7 +15,6 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [DatepickerExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -39,7 +38,6 @@ import { DevThemeToggle } from '../theme-toggle';
 class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,

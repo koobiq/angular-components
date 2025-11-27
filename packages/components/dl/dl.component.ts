@@ -21,7 +21,8 @@ import { debounceTime, startWith } from 'rxjs/operators';
         '[class.kbq-dl_wide]': 'wide',
         '(window:resize)': 'resizeStream.next($event)'
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
     @Input() minWidth: number = 400;
@@ -66,7 +67,8 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     host: {
         class: 'kbq-dt'
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class KbqDtComponent {}
 
@@ -76,6 +78,7 @@ export class KbqDtComponent {}
     host: {
         class: 'kbq-dd'
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class KbqDdComponent {}

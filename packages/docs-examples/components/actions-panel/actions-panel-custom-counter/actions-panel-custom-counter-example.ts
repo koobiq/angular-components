@@ -26,7 +26,6 @@ type ExampleAction = {
  * @title Actions panel custom counter
  */
 @Component({
-    standalone: true,
     imports: [
         KbqOverflowItemsModule,
         KbqButtonModule,

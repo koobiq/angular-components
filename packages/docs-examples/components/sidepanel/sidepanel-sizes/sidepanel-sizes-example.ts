@@ -12,7 +12,6 @@ import {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'sidepanel-sizes-example',
     templateUrl: 'sidepanel-sizes-example.html',
     imports: [

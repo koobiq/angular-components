@@ -55,7 +55,8 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             <input kbqNumberInput [(ngModel)]="value" />
             <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputTestComponent {
     value: number | null = null;
@@ -72,7 +73,8 @@ class KbqNumberInputTestComponent {
                 <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
             </kbq-form-field>
         }
-    `
+    `,
+    standalone: false
 })
 class TestNumberInputConditional {
     isVisible = true;
@@ -88,7 +90,8 @@ class TestNumberInputConditional {
             <input kbqNumberInput [formControl]="formControl" />
             <kbq-stepper />
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputWithFormControl {
     formControl = new UntypedFormControl(10);
@@ -102,7 +105,8 @@ class KbqNumberInputWithFormControl {
                 <kbq-stepper />
             </kbq-form-field>
         </form>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputWithFormControlName {
     reactiveForm: UntypedFormGroup;
@@ -120,7 +124,8 @@ class KbqNumberInputWithFormControlName {
             <input kbqNumberInput max="10" min="3" step="0.5" big-step="2" [(ngModel)]="value" />
             <kbq-stepper />
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputMaxMinStep {
     value: number | null = null;
@@ -132,7 +137,8 @@ class KbqNumberInputMaxMinStep {
             <input kbqNumberInput [max]="max" [min]="min" [step]="step" [bigStep]="bigStep" [(ngModel)]="value" />
             <kbq-stepper />
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputMaxMinStepInput {
     value: number | null = null;
@@ -148,7 +154,8 @@ class KbqNumberInputMaxMinStepInput {
             <input kbqNumberInput [(ngModel)]="value" />
             <kbq-cleaner />
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputWithCleaner {
     value: number = 0;
@@ -168,7 +175,8 @@ class KbqNumberInputWithCleaner {
             />
             <kbq-stepper />
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputWithMask {
     value: number | null = null;
@@ -189,7 +197,8 @@ class KbqNumberInputWithMask {
             <input kbqNumberInput [step]="step" [bigStep]="bigStep" [integer]="true" [(ngModel)]="value" />
             <kbq-stepper />
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqNumberInputWithInteger {
     value: number | null = null;

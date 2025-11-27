@@ -13,7 +13,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  */
 @Component({
     selector: 'validation-message-global-with-links-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqAlertModule,

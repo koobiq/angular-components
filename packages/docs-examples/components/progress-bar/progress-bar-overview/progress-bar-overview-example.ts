@@ -9,7 +9,6 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'progress-bar-overview-example',
     styles: `
         .example-progress-bar {

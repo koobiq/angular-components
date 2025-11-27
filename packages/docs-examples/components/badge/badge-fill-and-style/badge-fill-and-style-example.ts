@@ -6,7 +6,6 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'badge-fill-and-style-example',
     templateUrl: 'badge-fill-and-style-example.html',
     styleUrls: ['badge-fill-and-style-example.css'],

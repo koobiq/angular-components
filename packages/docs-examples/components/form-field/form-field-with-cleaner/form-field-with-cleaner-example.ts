@@ -7,7 +7,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 
 /** @title Form field with kbq-cleaner */
 @Component({
-    standalone: true,
     selector: 'form-field-with-cleaner-example',
     imports: [KbqFormFieldModule, KbqInputModule, KbqSelectModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

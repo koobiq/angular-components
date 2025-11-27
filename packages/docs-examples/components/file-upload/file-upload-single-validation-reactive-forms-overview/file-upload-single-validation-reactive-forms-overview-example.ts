@@ -12,7 +12,6 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-single-validation-reactive-forms-overview-example',
     template: `
         <form [formGroup]="formGroup">

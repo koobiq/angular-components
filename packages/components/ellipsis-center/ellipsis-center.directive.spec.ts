@@ -18,7 +18,6 @@ const getEllipsisDirectiveDebugElement = (debugElement: DebugElement): DebugElem
 };
 
 @Component({
-    standalone: true,
     template: `
         <div [kbqEllipsisCenter]="text" [charWidth]="charWidth" [minVisibleLength]="minLength"></div>
     `,

@@ -10,7 +10,6 @@ const MAX_PERCENT: number = 100;
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'progress-spinner-overview-example',
     imports: [KbqProgressSpinnerModule],
     template: `

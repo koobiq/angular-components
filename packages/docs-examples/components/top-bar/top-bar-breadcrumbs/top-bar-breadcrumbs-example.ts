@@ -16,7 +16,6 @@ import { map } from 'rxjs/operators';
  * @title TopBar Breadcrumbs
  */
 @Component({
-    standalone: true,
     selector: 'top-bar-breadcrumbs-example',
     providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     imports: [

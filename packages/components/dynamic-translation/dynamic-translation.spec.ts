@@ -23,7 +23,6 @@ const getDynamicTranslationDebugElement = (debugElement: DebugElement): DebugEle
 };
 
 @Component({
-    standalone: true,
     imports: [KbqDynamicTranslationModule, KbqLinkModule],
     selector: 'test-dynamic-translation',
     template: `

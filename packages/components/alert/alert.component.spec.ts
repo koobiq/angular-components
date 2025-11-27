@@ -30,7 +30,6 @@ describe('MсAlert', () => {
     template: `
         <kbq-alert />
     `,
-    standalone: true,
     imports: [KbqAlertModule]
 })
 class TestApp {}

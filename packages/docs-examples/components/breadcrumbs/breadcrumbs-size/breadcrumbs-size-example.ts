@@ -9,7 +9,6 @@ import { KbqDlModule } from '@koobiq/components/dl';
  * @title Breadcrumbs sizes
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-size-example',
     template: `
         <kbq-dl [vertical]="true">

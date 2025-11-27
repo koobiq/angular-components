@@ -7,7 +7,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'title-overview-example',
     imports: [
         KbqTitleModule,

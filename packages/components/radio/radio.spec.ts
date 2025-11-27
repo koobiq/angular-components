@@ -325,7 +325,6 @@ describe('MсRadio', () => {
             <kbq-radio-button [value]="'leaf'" [color]="color">Bulbasaur</kbq-radio-button>
         </kbq-radio-group>
     `,
-    standalone: true,
     imports: [KbqRadioModule, FormsModule, ReactiveFormsModule]
 })
 class RadiosInsideRadioGroup {
@@ -341,7 +340,6 @@ class RadiosInsideRadioGroup {
     template: `
         <kbq-radio-button>One</kbq-radio-button>
     `,
-    standalone: true,
     imports: [KbqRadioModule, FormsModule, ReactiveFormsModule]
 })
 class DisableableRadioButton {

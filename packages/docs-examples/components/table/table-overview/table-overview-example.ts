@@ -7,7 +7,6 @@ import { KbqTableModule } from '@koobiq/components/table';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'table-overview-example',
     imports: [
         KbqTableModule

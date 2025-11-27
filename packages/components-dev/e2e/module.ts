@@ -8,7 +8,6 @@ import { DevTagEditable, DevTagStateAndStyle } from './components/tag';
 import { DevToggleStateAndStyle, DevToggleWithTextAndCaption } from './components/toggle';
 
 @Component({
-    standalone: true,
     imports: [
         DevThemeToggle,
         DevButtonStateAndStyle,

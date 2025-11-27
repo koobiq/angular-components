@@ -7,7 +7,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    standalone: true,
     imports: [
         KbqLocaleServiceModule,
         KbqButtonModule,

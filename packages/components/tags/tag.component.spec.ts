@@ -75,7 +75,6 @@ const getTagRemoveElement = (debugElement: DebugElement): HTMLElement => {
 };
 
 @Component({
-    standalone: true,
     selector: 'test-tag',
     imports: [KbqTagsModule, FormsModule],
     template: `
@@ -115,7 +114,6 @@ export class TestTag {
 }
 
 @Component({
-    standalone: true,
     selector: 'test-tag',
     imports: [KbqTagsModule, FormsModule],
     template: `
@@ -955,7 +953,6 @@ describe(KbqTag.name, () => {
             }
         </kbq-tag-list>
     `,
-    standalone: true,
     imports: [KbqTagsModule]
 })
 class SingleTag {
@@ -979,7 +976,6 @@ class SingleTag {
     template: `
         <kbq-basic-tag>{{ name }}</kbq-basic-tag>
     `,
-    standalone: true,
     imports: [KbqTagsModule]
 })
 class BasicTag {}

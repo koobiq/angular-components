@@ -5,7 +5,6 @@ import { kbqMarkdownMarkedOptionsProvider, KbqMarkdownModule } from '@koobiq/com
  * @title Markdown line break
  */
 @Component({
-    standalone: true,
     selector: 'markdown-line-break-with-markdown-text-input-example',
     imports: [KbqMarkdownModule],
     providers: [kbqMarkdownMarkedOptionsProvider({ breaks: true })],

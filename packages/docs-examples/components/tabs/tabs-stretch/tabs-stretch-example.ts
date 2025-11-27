@@ -5,7 +5,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs stretch
  */
 @Component({
-    standalone: true,
     selector: 'tabs-stretch-example',
     imports: [KbqTabsModule],
     template: `

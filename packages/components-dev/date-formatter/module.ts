@@ -13,7 +13,6 @@ import { delay, distinctUntilChanged } from 'rxjs';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    standalone: true,
     imports: [
         KbqLocaleServiceModule,
         KbqFormattersModule,

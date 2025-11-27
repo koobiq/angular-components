@@ -5,7 +5,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs overview
  */
 @Component({
-    standalone: true,
     selector: 'tabs-overview-example',
     imports: [KbqTabsModule],
     template: `

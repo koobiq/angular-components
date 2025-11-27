@@ -155,7 +155,6 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-custom-filtering-example',
     imports: [KbqFormFieldModule, KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
     template: `

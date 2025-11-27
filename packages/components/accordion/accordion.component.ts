@@ -32,7 +32,8 @@ export enum KbqAccordionVariant {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion'
-    }
+    },
+    standalone: false
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit {
     protected readonly focusMonitor = inject(FocusMonitor);

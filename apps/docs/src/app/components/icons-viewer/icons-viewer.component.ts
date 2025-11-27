@@ -30,7 +30,6 @@ import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview
 const SEARCH_DEBOUNCE_TIME = 300;
 
 @Component({
-    standalone: true,
     imports: [
         AsyncPipe,
         KbqFormFieldModule,
@@ -42,7 +41,6 @@ const SEARCH_DEBOUNCE_TIME = 300;
         KbqEmptyStateModule,
         NgClass,
         KbqToolTipModule,
-
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule
     ],

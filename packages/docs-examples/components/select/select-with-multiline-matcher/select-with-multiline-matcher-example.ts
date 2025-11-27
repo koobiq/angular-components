@@ -6,7 +6,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select with panelWidth attribute
  */
 @Component({
-    standalone: true,
     imports: [
         KbqFormFieldModule,
         KbqSelectModule
@@ -40,7 +39,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 margin-bottom: var(--kbq-size-xl);
             }
         `
-
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

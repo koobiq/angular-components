@@ -32,7 +32,6 @@ let nextUniqueId = 0;
  * Navigation component matching the styles of the tab group header.
  */
 @Component({
-    standalone: true,
     imports: [
         KbqIconModule,
         CdkObserveContent
@@ -53,9 +52,7 @@ let nextUniqueId = 0;
         '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
         '[class.kbq-tab-nav-bar_on-surface]': 'onSurface',
         '[class.kbq-tab-header_underlined]': 'underlined',
-
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
-
         '[attr.role]': 'role'
     },
     encapsulation: ViewEncapsulation.None,

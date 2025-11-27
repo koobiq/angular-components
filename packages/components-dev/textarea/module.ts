@@ -6,7 +6,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { TextAreaExamplesModule } from '../../docs-examples/components/textarea';
 
 @Component({
-    standalone: true,
     imports: [TextAreaExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -17,7 +16,6 @@ import { TextAreaExamplesModule } from '../../docs-examples/components/textarea'
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevExamples, KbqIcon],
     selector: 'dev-app',
     templateUrl: './template.html',

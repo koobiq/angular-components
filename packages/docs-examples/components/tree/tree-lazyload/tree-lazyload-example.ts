@@ -166,7 +166,6 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-lazyload-example',
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">

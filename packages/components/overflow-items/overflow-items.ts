@@ -27,7 +27,8 @@ import { debounceTime, merge, skip, switchMap } from 'rxjs';
         '[attr.aria-hidden]': 'hidden()',
         // @TODO should be refactored (#DS-3834)
         '[class.kbq-overflow-item-hidden]': 'hidden()'
-    }
+    },
+    standalone: false
 })
 export class ElementVisibilityManager {
     private readonly renderer = inject(Renderer2);

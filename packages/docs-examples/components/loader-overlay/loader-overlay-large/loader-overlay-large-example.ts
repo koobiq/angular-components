@@ -8,7 +8,6 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'loader-overlay-large-example',
     imports: [KbqLoaderOverlayModule, KbqProgressSpinnerModule],
     template: `

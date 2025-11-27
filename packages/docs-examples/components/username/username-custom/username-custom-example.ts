@@ -33,7 +33,6 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
  */
 @Component({
     selector: 'username-custom-example',
-    standalone: true,
     imports: [
         FormsModule,
         KbqUsernameModule,
@@ -87,7 +86,8 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
         }
     `,
     providers: [
-        { provide: KBQ_PROFILE_MAPPING, useValue: mapping }],
+        { provide: KBQ_PROFILE_MAPPING, useValue: mapping }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernameCustomExample {

@@ -22,7 +22,6 @@ import { timezones } from '../mock';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'timezone-search-overview-example',
     imports: [
         KbqFormFieldModule,

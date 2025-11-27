@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
 @Component({
-    standalone: true,
     selector: 'example-breadcrumbs',
     template: `
         <nav wrapMode="auto" kbq-breadcrumbs [max]="null">
@@ -43,7 +42,6 @@ export class ExampleBreadcrumbs {
  * @title Breadcrumbs Auto Wrap Adaptive
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-with-auto-wrap-adaptive-example',
     template: `
         <example-breadcrumbs class="layout-margin-bottom-3xl" />

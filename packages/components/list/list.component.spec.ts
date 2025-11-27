@@ -86,7 +86,6 @@ class BaseTestList {
             <a kbq-list-item>Paprika</a>
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithOneAnchorItem extends BaseTestList {
@@ -101,7 +100,6 @@ class ListWithOneAnchorItem extends BaseTestList {
             <kbq-list-item>Paprika</kbq-list-item>
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithOneItem extends BaseTestList {}
@@ -118,7 +116,6 @@ class ListWithOneItem extends BaseTestList {}
             }
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithTwoLineItem extends BaseTestList {}
@@ -135,7 +132,6 @@ class ListWithTwoLineItem extends BaseTestList {}
             }
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithThreeLineItem extends BaseTestList {
@@ -155,7 +151,6 @@ class ListWithThreeLineItem extends BaseTestList {
             }
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithManyLines extends BaseTestList {}
@@ -170,7 +165,6 @@ class ListWithManyLines extends BaseTestList {}
             <kbq-list-item>Pepper</kbq-list-item>
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithAvatar extends BaseTestList {}
@@ -186,7 +180,6 @@ class ListWithAvatar extends BaseTestList {}
             }
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithItemWithCssClass extends BaseTestList {}
@@ -205,7 +198,6 @@ class ListWithItemWithCssClass extends BaseTestList {}
             }
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithDynamicNumberOfLines extends BaseTestList {}
@@ -220,7 +212,6 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
             }
         </kbq-list>
     `,
-    standalone: true,
     imports: [KbqListModule]
 })
 class ListWithMultipleItems extends BaseTestList {}

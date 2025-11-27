@@ -25,7 +25,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
 
 @Component({
-    standalone: true,
     selector: 'color-pipe',
     template: `
         <button
@@ -132,7 +131,6 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-custom-pipe-example',
     imports: [
         KbqFilterBarModule,

@@ -8,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'input-password-overview-example',
     imports: [
         KbqFormFieldModule,

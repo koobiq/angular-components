@@ -361,7 +361,8 @@ describe('KbqSidepanelService', () => {
                 </button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
-    `
+    `,
+    standalone: false
 })
 class ComponentForSidepanel {}
 

@@ -6,7 +6,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
 
 @Component({
-    standalone: true,
     imports: [
         KbqIconModule,
         KbqTabsModule,

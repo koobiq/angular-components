@@ -11,7 +11,6 @@ import { DateTime } from 'luxon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'datepicker-required-example',
     imports: [
         FormsModule,

@@ -8,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Form fieldset with button
  */
 @Component({
-    standalone: true,
     selector: 'form-fieldset-with-button-example',
     template: `
         <kbq-fieldset>

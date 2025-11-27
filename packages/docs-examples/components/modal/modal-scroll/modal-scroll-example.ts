@@ -20,7 +20,6 @@ export class CustomModalComponent {
  * @title Modal scroll
  */
 @Component({
-    standalone: true,
     selector: 'modal-scroll-example',
     imports: [
         KbqModalModule,

@@ -8,7 +8,6 @@ type ExampleOption = { label: string; hint: string };
  * @title Radio multiline example
  */
 @Component({
-    standalone: true,
     selector: 'radio-multiline-example',
     imports: [KbqRadioModule, KbqFormFieldModule],
     template: `

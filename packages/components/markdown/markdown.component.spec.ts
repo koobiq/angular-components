@@ -17,7 +17,6 @@ const getMarkdownDebugElement = (debugElement: DebugElement): DebugElement => {
 };
 
 @Component({
-    standalone: true,
     imports: [KbqMarkdownModule],
     selector: 'generate-html-from-markdown-string',
     template: `
@@ -84,7 +83,6 @@ npm install jquery
 }
 
 @Component({
-    standalone: true,
     imports: [KbqMarkdownModule],
     selector: 'generate-html-from-markdown-inline-template',
     // prettier-ignore

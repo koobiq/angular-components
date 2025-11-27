@@ -37,7 +37,6 @@ enum NavbarIcItems {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'notification-center-empty-example',
     templateUrl: 'notification-center-empty-example.html',
     styles: `
@@ -59,7 +58,8 @@ enum NavbarIcItems {
         KbqFormattersModule
     ],
     providers: [
-        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
+        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }
+    ]
 })
 export class NotificationCenterEmptyExample {
     readonly notificationCenterService = inject(KbqNotificationCenterService);

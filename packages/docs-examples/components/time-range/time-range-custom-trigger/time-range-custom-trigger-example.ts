@@ -13,7 +13,6 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-custom-trigger-example',
     imports: [
         ReactiveFormsModule,
@@ -27,7 +26,8 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
         TitleCasePipe
     ],
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ],
     template: `
         <ng-template #titleTemplate let-context>
             <button kbq-button aria-label="time range trigger" [class.kbq-active]="context.popover.isOpen">

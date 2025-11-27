@@ -15,7 +15,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     selector: 'validation-optional-label-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -64,7 +63,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOptionalLabelExample {

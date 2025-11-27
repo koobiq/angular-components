@@ -7,7 +7,6 @@ import { map } from 'rxjs';
 
 /** @title Form field with kbq-hint */
 @Component({
-    standalone: true,
     selector: 'experimental-form-field-with-hint-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
     template: `

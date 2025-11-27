@@ -7,7 +7,6 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
  * @title Code-block with noBorder attribute
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-no-border-example',
     imports: [
         KbqCodeBlockModule,

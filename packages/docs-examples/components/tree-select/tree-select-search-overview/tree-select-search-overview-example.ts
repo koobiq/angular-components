@@ -104,7 +104,6 @@ export const DATA_OBJECT = {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-select-search-overview-example',
     imports: [
         KbqFormFieldModule,

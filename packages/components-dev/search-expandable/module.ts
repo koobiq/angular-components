@@ -5,7 +5,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
 import { SearchExpandableExamplesModule } from '../../docs-examples/components/search-expandable';
 
 @Component({
-    standalone: true,
     imports: [SearchExpandableExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -18,7 +17,6 @@ import { SearchExpandableExamplesModule } from '../../docs-examples/components/s
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         KbqLocaleServiceModule,
         KbqSearchExpandableModule,

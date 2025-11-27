@@ -12,7 +12,6 @@ import { KbqTimeRangeModule } from '@koobiq/components/time-range';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-as-form-field-example',
     imports: [
         ReactiveFormsModule,
@@ -23,7 +22,8 @@ import { KbqTimeRangeModule } from '@koobiq/components/time-range';
         TitleCasePipe
     ],
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ],
     template: `
         <ng-template #titleAsFormField let-context>
             <kbq-form-field>

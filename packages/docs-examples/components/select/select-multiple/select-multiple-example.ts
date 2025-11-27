@@ -6,7 +6,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select multiple
  */
 @Component({
-    standalone: true,
     selector: 'select-multiple-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,

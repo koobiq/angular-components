@@ -9,7 +9,6 @@ import { DocsSidenavComponent } from './components/sidenav/sidenav.component';
 import { DocsDocStates, DocsNavbarState } from './services/doc-states';
 
 @Component({
-    standalone: true,
     imports: [
         RouterOutlet,
         KbqDividerModule,
@@ -32,27 +31,21 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
             transition('closed => open', [animate('300ms ease-out')])
         ]),
         trigger('fadeInOutSidenav', [
-            state(
-                'fadeIn',
-                style({
-                    opacity: '1',
-                    display: 'block'
-                })
-            ),
-            state(
-                'fadeOut',
-                style({
-                    opacity: '0',
-                    display: 'none'
-                })
-            ),
+            state('fadeIn', style({
+                opacity: '1',
+                display: 'block'
+            })),
+            state('fadeOut', style({
+                opacity: '0',
+                display: 'none'
+            })),
             transition('fadeIn => fadeOut', [
-                animate('300ms ease-out')]),
+                animate('300ms ease-out')
+            ]),
             transition('fadeOut => fadeIn', [
-                animate('300ms ease-out')])
-
+                animate('300ms ease-out')
+            ])
         ])
-
     ]
 })
 export class DocsAppComponent {

@@ -7,7 +7,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select virtual scroll
  */
 @Component({
-    standalone: true,
     selector: 'select-virtual-scroll-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -40,7 +40,6 @@ export const defaultValue = '';
 export const defaultEmitValueTimeout = 200;
 
 @Component({
-    standalone: true,
     selector: 'kbq-search-expandable',
     templateUrl: './search-expandable.html',
     styleUrls: ['./search-expandable.scss'],

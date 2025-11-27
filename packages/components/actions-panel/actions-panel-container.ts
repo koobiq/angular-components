@@ -80,7 +80,6 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
  * @docs-private
  */
 @Component({
-    standalone: true,
     imports: [
         CdkPortalOutlet,
         KbqDividerModule,

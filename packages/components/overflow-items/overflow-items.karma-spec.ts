@@ -37,7 +37,6 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
 };
 
 @Component({
-    standalone: true,
     imports: [KbqOverflowItemsModule],
     selector: 'overflow-items-test',
     template: `
@@ -81,7 +80,6 @@ export class TestOverflowItems {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqOverflowItemsModule],
     selector: 'overflow-items-with-vertical-orientation',
     template: `
@@ -124,7 +122,6 @@ export class TestOverflowItemsWithVerticalOrientation {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqOverflowItemsModule],
     selector: 'overflow-items-test',
     template: `

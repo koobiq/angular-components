@@ -10,7 +10,6 @@ import { DateTime } from 'luxon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-complete-functions-example',
     imports: [
         KbqFilterBarModule,

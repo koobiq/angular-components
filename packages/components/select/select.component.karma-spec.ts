@@ -257,7 +257,8 @@ const OPTIONS = [
             </kbq-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `
+    `,
+    standalone: false
 })
 class BasicSelect {
     foods: any[] = [
@@ -292,7 +293,8 @@ class BasicSelect {
                 }
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class NgModelSelect {
     foods: any[] = [
@@ -322,7 +324,8 @@ class NgModelSelect {
                 </kbq-form-field>
             </div>
         }
-    `
+    `,
+    standalone: false
 })
 class NgIfSelect {
     isShowing = false;
@@ -344,7 +347,8 @@ class NgIfSelect {
                 <kbq-option [value]="'value'">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class BasicSelectInitiallyHidden {
     isVisible = false;
@@ -359,7 +363,8 @@ class BasicSelectInitiallyHidden {
                 <kbq-option [value]="'value'">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class BasicSelectNoPlaceholder {}
 
@@ -380,7 +385,8 @@ class BasicSelectNoPlaceholder {}
                 <kbq-option [value]="'mime' - 11">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class SelectWithGroups {
     control = new UntypedFormControl();
@@ -450,7 +456,8 @@ class SelectWithGroups {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class SelectWithLongOptionText {
     changingLabel: string =
@@ -477,7 +484,6 @@ class SelectWithLongOptionText {
             </kbq-select>
         </kbq-form-field>
     `,
-    standalone: true,
     imports: [
         KbqFormFieldModule,
         KbqSelectModule,
@@ -504,7 +510,6 @@ class CdkVirtualScrollViewportSelect<T = string> {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
         <kbq-form-field style="width: 300px">
@@ -526,7 +531,6 @@ export class SelectWithPanelWidth {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
         <kbq-form-field style="width: 300px">

@@ -5,7 +5,6 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [TimeRangeExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -25,7 +24,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         DevLocaleSelector,
         DevThemeToggle,

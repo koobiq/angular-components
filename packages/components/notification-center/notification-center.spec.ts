@@ -71,7 +71,6 @@ describe('KbqNotificationCenter', () => {
 });
 
 @Component({
-    standalone: true,
     selector: 'notification-center-simple',
     template: `
         <button kbqNotificationCenterTrigger>notification-center Trigger</button>

@@ -25,7 +25,6 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
 
 /** @title Tag input with form control validators. */
 @Component({
-    standalone: true,
     imports: [
         KbqFormFieldModule,
         KbqInputModule,

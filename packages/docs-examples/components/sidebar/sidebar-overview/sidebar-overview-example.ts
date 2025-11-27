@@ -6,7 +6,6 @@ import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
  * @title Sidebar overview
  */
 @Component({
-    standalone: true,
     imports: [KbqSidebarModule, KbqButtonModule],
     selector: 'sidebar-overview-example',
     template: `

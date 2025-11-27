@@ -20,7 +20,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filesize-formatter-overview-example',
     imports: [
         ReactiveFormsModule,

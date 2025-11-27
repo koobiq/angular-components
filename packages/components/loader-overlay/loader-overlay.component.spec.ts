@@ -95,7 +95,6 @@ describe('KbqLoaderOverlay', () => {
             <kbq-loader-overlay [text]="'Создание отчета'" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" />
         </div>
     `,
-    standalone: true,
     imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule]
 })
 class OverlayWithParams {
@@ -111,7 +110,6 @@ class OverlayWithParams {
             <kbq-loader-overlay />
         </div>
     `,
-    standalone: true,
     imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule]
 })
 class OverlayNoParams {}
@@ -134,7 +132,6 @@ class OverlayNoParams {}
             </kbq-loader-overlay>
         </div>
     `,
-    standalone: true,
     imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule]
 })
 class OverlayWithExternalParams {

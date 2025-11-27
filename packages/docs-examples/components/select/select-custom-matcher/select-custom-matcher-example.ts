@@ -6,7 +6,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title select-custom-trigger
  */
 @Component({
-    standalone: true,
     selector: 'select-custom-matcher-example',
     imports: [KbqSelectModule, KbqButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -36,7 +36,6 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-datetime',
     templateUrl: 'pipe-datetime.html',
     styleUrls: ['base-pipe.scss', 'pipe-date.scss'],

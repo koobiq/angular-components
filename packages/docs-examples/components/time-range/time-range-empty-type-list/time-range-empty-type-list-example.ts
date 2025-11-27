@@ -9,7 +9,6 @@ import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-empty-type-list-example',
     imports: [
         ReactiveFormsModule,
@@ -17,7 +16,8 @@ import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
         LuxonDateModule
     ],
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ],
     template: `
         <kbq-time-range [availableTimeRangeTypes]="availableTimeRangeTypes" />
     `,

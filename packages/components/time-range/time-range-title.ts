@@ -9,7 +9,6 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: 'kbq-time-range-title',
     imports: [
         NgTemplateOutlet,

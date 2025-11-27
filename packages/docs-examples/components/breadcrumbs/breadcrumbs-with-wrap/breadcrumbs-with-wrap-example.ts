@@ -5,7 +5,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
  * @title Breadcrumbs Wrap
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-with-wrap-example',
     template: `
         <div [style.max-width.px]="320">

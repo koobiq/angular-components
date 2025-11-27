@@ -50,7 +50,6 @@ describe('KbqDivider', () => {
     template: `
         <kbq-divider [vertical]="vertical" [inset]="inset" />
     `,
-    standalone: true,
     imports: [KbqDividerModule]
 })
 class KbqDividerTestComponent {

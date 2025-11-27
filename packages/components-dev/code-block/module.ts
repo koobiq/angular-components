@@ -5,7 +5,6 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [CodeBlockExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -33,7 +32,6 @@ export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    standalone: true,
     imports: [
         KbqCodeBlockModule,
         DevExamples,
@@ -51,7 +49,6 @@ export class DevExamples {}
             viewLessText: '*dev* Show less',
             openExternalSystemTooltip: '*dev* Open in the external system'
         })
-
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

@@ -7,7 +7,6 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  * @title toast-multiline
  */
 @Component({
-    standalone: true,
     imports: [
         KbqLinkModule,
         KbqButtonModule

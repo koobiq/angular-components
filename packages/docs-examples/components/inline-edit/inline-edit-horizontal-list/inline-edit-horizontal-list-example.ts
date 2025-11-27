@@ -11,7 +11,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit horizontal list
  */
 @Component({
-    standalone: true,
     imports: [
         NgTemplateOutlet,
         ReactiveFormsModule,

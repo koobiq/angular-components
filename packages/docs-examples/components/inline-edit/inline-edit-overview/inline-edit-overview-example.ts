@@ -11,7 +11,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Inline edit overview
  */
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqInlineEditModule,

@@ -5,7 +5,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field with kbq-error */
 @Component({
-    standalone: true,
     selector: 'experimental-form-field-with-error-example',
     imports: [
         KbqFormFieldModule,

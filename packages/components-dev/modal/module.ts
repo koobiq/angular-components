@@ -8,7 +8,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
 
 @Component({
-    standalone: true,
     imports: [ModalExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -32,7 +31,6 @@ import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [],
     selector: 'dev-modal-custom-long-component',
     template: `
@@ -53,7 +51,6 @@ export class DevModalLongCustomComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule],
     selector: 'dev-modal-custom-component',
     template: `
@@ -88,7 +85,6 @@ export class DevModalCustomComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqModalModule, KbqButtonModule],
     selector: 'dev-modal-full-custom-component',
     template: `
@@ -129,7 +125,6 @@ export class DevModalFullCustomComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [
         KbqModalModule,
         KbqIconModule,

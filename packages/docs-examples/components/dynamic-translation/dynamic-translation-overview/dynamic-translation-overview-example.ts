@@ -6,7 +6,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Dynamic translation overview example
  */
 @Component({
-    standalone: true,
     imports: [KbqDynamicTranslationModule, KbqLinkModule],
     selector: 'dynamic-translation-overview-example',
     template: `

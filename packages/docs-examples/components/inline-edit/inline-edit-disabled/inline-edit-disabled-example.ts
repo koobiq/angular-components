@@ -12,7 +12,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit disabled
  */
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqInlineEditModule,

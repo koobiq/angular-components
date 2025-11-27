@@ -6,7 +6,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
  * @title Breadcrumbs Truncate Head Items
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-truncate-head-items-example',
     styles: `
         .kbq-breadcrumbs_truncate-by-length {

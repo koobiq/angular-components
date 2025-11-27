@@ -34,7 +34,6 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'input-change-password-example',
     imports: [
         ReactiveFormsModule,
@@ -86,7 +85,8 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
     `,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(RequiredErrorStateMatcher)]
+        kbqErrorStateMatcherProvider(RequiredErrorStateMatcher)
+    ]
 })
 export class InputChangePasswordExample {
     protected readonly destroyRef = inject(DestroyRef);

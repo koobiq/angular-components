@@ -5,7 +5,6 @@ import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-bl
  * @title Code-block with link
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-link-example',
     imports: [KbqCodeBlockModule],
     template: `

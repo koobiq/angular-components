@@ -7,7 +7,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-fixed-content-example',
     styleUrls: ['button-fixed-content-example.css'],
     imports: [

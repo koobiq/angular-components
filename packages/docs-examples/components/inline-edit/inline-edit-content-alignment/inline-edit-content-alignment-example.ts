@@ -11,7 +11,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit content alignment
  */
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,

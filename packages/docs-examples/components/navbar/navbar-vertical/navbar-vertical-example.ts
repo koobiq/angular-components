@@ -10,7 +10,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Navbar vertical
  */
 @Component({
-    standalone: true,
     selector: 'navbar-vertical-example',
     templateUrl: 'navbar-vertical-example.html',
     styles: `

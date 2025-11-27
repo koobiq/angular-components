@@ -5,7 +5,6 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [ActionsPanelExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -24,7 +23,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         RouterLink,
         DevExamples
@@ -43,7 +41,6 @@ export class DevExamples {}
 export class DevPage1 {}
 
 @Component({
-    standalone: true,
     imports: [RouterLink],
     selector: 'dev-page-2',
     template: `
@@ -57,7 +54,6 @@ export class DevPage1 {}
 export class DevPage2 {}
 
 @Component({
-    standalone: true,
     imports: [
         DevThemeToggle,
         DevLocaleSelector,

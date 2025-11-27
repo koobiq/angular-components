@@ -548,7 +548,6 @@ describe('KbqToggle', () => {
 });
 
 @Component({
-    standalone: true,
     imports: [
         KbqToggleModule
     ],
@@ -574,7 +573,6 @@ class LoadingToggle {
 }
 
 @Component({
-    standalone: true,
     imports: [
         KbqToggleModule
     ],
@@ -612,7 +610,6 @@ class SingleToggle {
 }
 
 @Component({
-    standalone: true,
     imports: [
         KbqToggleModule,
         FormsModule
@@ -628,7 +625,6 @@ class ToggleWithFormDirectives {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule],
     template: `
         <kbq-toggle>Option 1</kbq-toggle>
@@ -638,7 +634,6 @@ class ToggleWithFormDirectives {
 class MultipleToggles {}
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule],
     template: `
         <kbq-toggle [tabIndex]="customTabIndex" [disabled]="isDisabled" />
@@ -650,7 +645,6 @@ class ToggleWithTabIndex {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule],
     template: `
         <kbq-toggle />
@@ -665,7 +659,6 @@ class ToggleUsingViewChild {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule],
     template: `
         <kbq-toggle aria-label="Super effective" />
@@ -674,7 +667,6 @@ class ToggleUsingViewChild {
 class ToggleWithAriaLabel {}
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule],
     template: `
         <kbq-toggle aria-labelledby="some-id" />
@@ -683,7 +675,6 @@ class ToggleWithAriaLabel {}
 class ToggleWithAriaLabelledby {}
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule],
     template: `
         <kbq-toggle name="test-name" />
@@ -692,7 +683,6 @@ class ToggleWithAriaLabelledby {}
 class ToggleWithNameAttribute {}
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule, ReactiveFormsModule],
     template: `
         <kbq-toggle [formControl]="formControl" />
@@ -703,7 +693,6 @@ class ToggleWithFormControl {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqToggleModule],
     template: `
         <kbq-toggle>{{ label }}</kbq-toggle>

@@ -6,7 +6,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule, KbqOverflowItemsModule, KbqDropdownModule],
     providers: [KbqActionsPanel],
     selector: 'dev-actions-panel-with-overlay-container',

@@ -7,7 +7,6 @@ import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
  * Resets form control by click.
  */
 @Component({
-    standalone: true,
     imports: [KbqIconModule],
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',

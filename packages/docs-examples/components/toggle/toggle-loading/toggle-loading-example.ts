@@ -6,7 +6,6 @@ import { timer } from 'rxjs';
  * @title Toggle Loading
  */
 @Component({
-    standalone: true,
     selector: 'toggle-loading-example',
     imports: [KbqToggleModule],
     template: `

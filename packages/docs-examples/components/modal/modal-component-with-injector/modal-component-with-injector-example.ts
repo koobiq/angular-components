@@ -10,7 +10,6 @@ export class ComponentLevelService {
 }
 
 @Component({
-    standalone: true,
     selector: 'custom-modal',
     imports: [
         KbqModalModule,
@@ -42,7 +41,6 @@ export class CustomModalComponent {
  * @title Modal component With Injector
  */
 @Component({
-    standalone: true,
     selector: 'modal-component-with-injector-example',
     imports: [
         KbqModalModule,

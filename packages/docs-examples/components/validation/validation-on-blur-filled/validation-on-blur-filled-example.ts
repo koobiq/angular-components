@@ -73,7 +73,6 @@ class ExampleResetTouchedOnFirstInput {
  */
 @Component({
     selector: 'validation-on-blur-filled-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -106,7 +105,8 @@ class ExampleResetTouchedOnFirstInput {
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnBlurFilledExample {

@@ -7,7 +7,6 @@ import { KbqOption, KbqOptionModule } from './index';
     template: `
         <kbq-option [disabled]="disabled" />
     `,
-    standalone: true,
     imports: [KbqOptionModule]
 })
 class OptionWithDisable {

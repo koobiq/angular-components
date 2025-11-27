@@ -5,7 +5,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs with scroll vertical
  */
 @Component({
-    standalone: true,
     selector: 'tabs-with-scroll-vertical-example',
     imports: [KbqTabsModule],
     template: `

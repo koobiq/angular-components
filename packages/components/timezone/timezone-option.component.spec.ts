@@ -8,7 +8,6 @@ import { KbqTimezoneModule } from './timezone.module';
     template: `
         <kbq-timezone-option [timezone]="zone" />
     `,
-    standalone: true,
     imports: [KbqTimezoneModule]
 })
 class TimezoneOptionComponent {

@@ -309,7 +309,6 @@ describe('KbqSingleFileUploadComponent', () => {
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicSingleFileUpload {
@@ -339,7 +338,6 @@ class BasicSingleFileUpload {
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicMultipleFileUpload {
@@ -369,7 +367,6 @@ class BasicMultipleFileUpload {
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorMultipleFileUpload {
@@ -400,7 +397,6 @@ class ControlValueAccessorMultipleFileUpload {
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorSingleFileUpload {

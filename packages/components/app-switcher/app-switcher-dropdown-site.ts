@@ -7,7 +7,6 @@ import { KbqAppSwitcherSite } from './app-switcher';
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: '[kbq-app-switcher-dropdown-site]',
     exportAs: 'kbqAppSwitcherDropdownSite',
     template: `

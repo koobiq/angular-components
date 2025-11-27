@@ -13,7 +13,6 @@ import {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-in-panel-example',
     templateUrl: 'accordion-in-panel-example.html',
     imports: [KbqAccordionModule, KbqSidepanelModule, KbqButtonModule]

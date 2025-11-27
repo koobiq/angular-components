@@ -831,7 +831,6 @@ describe('KbqCheckbox', () => {
             </kbq-checkbox>
         </div>
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class SingleCheckbox {
@@ -857,7 +856,6 @@ class SingleCheckbox {
             <kbq-checkbox name="cb" [(ngModel)]="isGood">Be good</kbq-checkbox>
         </form>
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithFormDirectives {
@@ -869,7 +867,6 @@ class CheckboxWithFormDirectives {
     template: `
         <kbq-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</kbq-checkbox>
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithNgModel {
@@ -883,7 +880,6 @@ class CheckboxWithNgModel {
         <kbq-checkbox>Option 1</kbq-checkbox>
         <kbq-checkbox>Option 2</kbq-checkbox>
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class MultipleCheckboxes {}
@@ -893,7 +889,6 @@ class MultipleCheckboxes {}
     template: `
         <kbq-checkbox [tabIndex]="customTabIndex" [disabled]="isDisabled" />
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithTabIndex {
@@ -906,7 +901,6 @@ class CheckboxWithTabIndex {
     template: `
         <kbq-checkbox />
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxUsingViewChild {
@@ -922,7 +916,6 @@ class CheckboxUsingViewChild {
     template: `
         <kbq-checkbox aria-label="Super effective" />
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithAriaLabel {}
@@ -932,7 +925,6 @@ class CheckboxWithAriaLabel {}
     template: `
         <kbq-checkbox aria-labelledby="some-id" />
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithAriaLabelledby {}
@@ -942,7 +934,6 @@ class CheckboxWithAriaLabelledby {}
     template: `
         <kbq-checkbox name="test-name" />
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithNameAttribute {}
@@ -952,7 +943,6 @@ class CheckboxWithNameAttribute {}
     template: `
         <kbq-checkbox (change)="lastEvent = $event" />
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithChangeEvent {
@@ -964,7 +954,6 @@ class CheckboxWithChangeEvent {
     template: `
         <kbq-checkbox [formControl]="formControl" />
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithFormControl {
@@ -976,7 +965,6 @@ class CheckboxWithFormControl {
     template: `
         <kbq-checkbox>{{ label }}</kbq-checkbox>
     `,
-    standalone: true,
     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithoutLabel {

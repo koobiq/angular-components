@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
-    standalone: true,
     imports: [KbqTableModule],
     selector: 'dev-app',
     templateUrl: './template.html',

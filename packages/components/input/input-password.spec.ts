@@ -53,7 +53,8 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
                 Только латинские буквы, цифры, пробелы и спецсимволы
             </kbq-password-hint>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqPasswordInputDefault {
     disabled = false;
@@ -72,7 +73,8 @@ class KbqPasswordInputDefault {
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqPasswordInputCustomPasswordRulesUndefined {
     value = '1';
@@ -91,7 +93,8 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>
-    `
+    `,
+    standalone: false
 })
 class KbqPasswordInputCustomPasswordRule {
     @ViewChild(KbqPasswordHint) passwordHint: KbqPasswordHint;
@@ -118,7 +121,8 @@ class KbqPasswordInputCustomPasswordRule {
                 <input kbqInputPassword [formControl]="form.controls.control" />
             </kbq-form-field>
         </form>
-    `
+    `,
+    standalone: false
 })
 class PasswordInputWithReactiveControl {
     form = new FormGroup({

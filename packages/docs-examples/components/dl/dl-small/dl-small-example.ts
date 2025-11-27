@@ -6,7 +6,6 @@ import { KbqDlModule } from '@koobiq/components/dl';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dl-small-example',
     imports: [
         KbqDlModule

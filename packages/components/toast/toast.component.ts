@@ -35,7 +35,6 @@ export class KbqToastCloseButton {}
 let id = 0;
 
 @Component({
-    standalone: true,
     imports: [
         NgTemplateOutlet,
         KbqIconModule,
@@ -53,10 +52,8 @@ let id = 0;
         '[@state]': 'animationState',
         '(@state.start)': 'onAnimation($event)',
         '(@state.done)': 'onAnimation($event)',
-
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)',
-
         '(keydown.esc)': 'close()'
     },
     animations: [kbqToastAnimations.toastState],

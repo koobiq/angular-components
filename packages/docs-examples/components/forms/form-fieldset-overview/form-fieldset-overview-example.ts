@@ -10,7 +10,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Form fieldset
  */
 @Component({
-    standalone: true,
     selector: 'form-fieldset-overview-example',
     template: `
         <kbq-fieldset>

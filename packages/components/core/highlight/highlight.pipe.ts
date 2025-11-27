@@ -8,7 +8,10 @@ export function escapeRegExp(value: string) {
     return value;
 }
 
-@Pipe({ name: 'mcHighlight' })
+@Pipe({
+    name: 'mcHighlight',
+    standalone: false
+})
 export class KbqHighlightPipe implements PipeTransform {
     transform(value: any, args: any): any {
         if (!args || typeof args !== 'string') {

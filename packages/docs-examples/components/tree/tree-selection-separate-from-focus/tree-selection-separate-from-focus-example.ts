@@ -111,7 +111,6 @@ export const DATA_OBJECT = [
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-selection-separate-from-focus-example',
     imports: [
         KbqTreeModule,

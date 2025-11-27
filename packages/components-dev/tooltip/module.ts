@@ -14,7 +14,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
-    standalone: true,
     imports: [
         A11yModule,
         FormsModule,

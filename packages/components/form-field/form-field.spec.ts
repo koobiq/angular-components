@@ -95,7 +95,6 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
 
 @Component({
     selector: 'input-form-field-with-hint-and-error',
-    standalone: true,
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -112,7 +111,6 @@ export class InputFormFieldWithHintAndError {
 
 @Component({
     selector: 'input-form-field-with-prefix-and-suffix',
-    standalone: true,
     imports: [KbqFormFieldModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -127,7 +125,6 @@ export class InputFormFieldWithPrefixAndSuffix {}
 
 @Component({
     selector: 'input-form-field-with-cleaner',
-    standalone: true,
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -143,7 +140,6 @@ export class InputFormFieldWithCleaner {
 
 @Component({
     selector: 'input-form-field-without-form-field-control',
-    standalone: true,
     imports: [KbqFormFieldModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -158,7 +154,6 @@ export class InputFormFieldWithoutFormFieldControl {
 
 @Component({
     selector: 'input-form-field-with-label',
-    standalone: true,
     imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -180,7 +175,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
     selector: 'input-form-field-with-custom-error-state-matcher',
-    standalone: true,
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -202,7 +196,6 @@ export class InputFormFieldWithCustomErrorStateMatcher {
 
 @Component({
     selector: 'input-form-field-with-border-customization',
-    standalone: true,
     imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -217,7 +210,6 @@ export class InputFormFieldWithBorderCustomization {
 
 @Component({
     selector: 'password-form-field',
-    standalone: true,
     imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -243,7 +235,6 @@ export class PasswordFormField {
 
 @Component({
     selector: 'input-form-field-with-legacy-validation-directive',
-    standalone: true,
     imports: [KbqFormFieldModule, KbqInputModule],
     template: `
         <kbq-form-field>

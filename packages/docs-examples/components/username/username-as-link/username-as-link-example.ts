@@ -7,7 +7,6 @@ import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
  */
 @Component({
     selector: 'username-as-link-example',
-    standalone: true,
     imports: [KbqUsername, KbqLinkModule],
     template: `
         <a kbq-link><kbq-username [userInfo]="userInfo" [type]="'inherit'" /></a>

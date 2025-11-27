@@ -21,7 +21,6 @@ interface ExampleFilter extends KbqFilter {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-saved-filters-example',
     imports: [
         KbqFilterBarModule,

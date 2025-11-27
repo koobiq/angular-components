@@ -8,7 +8,6 @@ import { KbqTableModule } from '@koobiq/components/table';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'badge-table-example',
     templateUrl: 'badge-table-example.html',
     imports: [

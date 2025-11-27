@@ -99,7 +99,6 @@ export const DATA_OBJECT = {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-overview-example',
     imports: [
         KbqTreeModule,

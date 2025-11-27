@@ -48,7 +48,6 @@ export class DevToastComponent extends KbqToastComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [
         CdkScrollableModule,
         KbqButtonModule,

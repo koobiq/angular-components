@@ -7,7 +7,6 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-readonly',
     template: `
         <button kbq-button [disabled]="data.disabled" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip">

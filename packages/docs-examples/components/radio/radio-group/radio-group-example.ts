@@ -5,7 +5,6 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  * @title Radio group
  */
 @Component({
-    standalone: true,
     selector: 'radio-group-example',
     imports: [
         KbqRadioModule

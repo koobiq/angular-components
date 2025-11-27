@@ -163,7 +163,6 @@ abstract class TreeParams {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-checked-filtering-example',
     imports: [
         KbqFormFieldModule,

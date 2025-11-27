@@ -7,7 +7,8 @@ import { Directive, ElementRef, NgModule, QueryList } from '@angular/core';
  */
 @Directive({
     selector: '[kbq-line], [mcLine]',
-    host: { class: 'kbq-line' }
+    host: { class: 'kbq-line' },
+    standalone: false
 })
 export class KbqLine {}
 

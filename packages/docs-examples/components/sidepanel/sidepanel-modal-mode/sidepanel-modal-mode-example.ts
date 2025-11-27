@@ -9,7 +9,6 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'sidepanel-modal-mode-example',
     templateUrl: 'sidepanel-modal-mode-example.html',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule]

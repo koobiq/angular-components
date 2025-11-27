@@ -16,7 +16,6 @@ import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
 import { DocsNavbarProperty } from './navbar-property';
 
 @Component({
-    standalone: true,
     imports: [
         RouterLink,
         KbqButtonModule,

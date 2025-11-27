@@ -4,7 +4,6 @@ import { ClampedTextExamplesModule } from '../../docs-examples/components/clampe
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    standalone: true,
     imports: [ClampedTextExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -15,7 +14,6 @@ import { DevLocaleSelector } from '../locale-selector';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         DevExamples,
         DevLocaleSelector,

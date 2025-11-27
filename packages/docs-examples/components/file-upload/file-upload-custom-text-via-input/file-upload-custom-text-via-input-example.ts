@@ -76,7 +76,6 @@ const localeData = {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-custom-text-via-input-example',
     template: `
         <kbq-file-upload multiple [localeConfig]="multipleLocaleConfig()">

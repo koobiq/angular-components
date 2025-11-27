@@ -39,7 +39,6 @@ enum NavbarIcItems {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'notification-center-error-example',
     templateUrl: 'notification-center-error-example.html',
     styles: `
@@ -62,7 +61,8 @@ enum NavbarIcItems {
         KbqFormattersModule
     ],
     providers: [
-        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
+        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }
+    ]
 })
 export class NotificationCenterErrorExample {
     notificationService = inject(KbqNotificationCenterService);

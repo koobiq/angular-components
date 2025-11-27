@@ -11,7 +11,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'navbar-vertical-open-over-example',
     templateUrl: 'navbar-vertical-open-over-example.html',
     styles: `

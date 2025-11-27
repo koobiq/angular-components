@@ -70,7 +70,6 @@ describe('should update model after keyboard interaction with multiple mode = ch
             <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
         </kbq-list-selection>
     `,
-    standalone: true,
     imports: [KbqListModule, FormsModule]
 })
 class SelectionListMultipleCheckbox {

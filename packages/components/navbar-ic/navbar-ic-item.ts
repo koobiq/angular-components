@@ -248,7 +248,6 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 }
 
 @Component({
-    standalone: true,
     selector: 'kbq-navbar-ic-item, [kbq-navbar-ic-item]',
     exportAs: 'kbqNavbarIcItem',
     templateUrl: './navbar-ic-item.html',
@@ -256,7 +255,6 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     host: {
         class: 'kbq-navbar-ic-item',
         '[class.kbq-navbar-ic-item_with-title]': '!!title',
-
         '(keydown)': 'onKeyDown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -396,7 +394,6 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
 }
 
 @Component({
-    standalone: true,
     selector: 'kbq-navbar-ic-toggle',
     template: `
         <div class="kbq-navbar-ic-item__inner">
@@ -416,7 +413,6 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         class: 'kbq-navbar-ic-item kbq-navbar-ic-toggle',
         '[class.kbq-collapsed]': '!navbar.expanded',
         '[class.kbq-expanded]': 'navbar.expanded',
-
         '(keydown)': 'onKeydown($event)',
         '(click)': 'toggle()'
     },

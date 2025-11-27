@@ -25,7 +25,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 /** @title Form field with CustomErrorStateMatcher which set by DI provider */
 @Component({
-    standalone: true,
     selector: 'experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example',
     imports: [
         KbqFormFieldModule,

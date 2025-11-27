@@ -11,7 +11,6 @@ import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@ko
  */
 @Component({
     selector: 'username-playground-example',
-    standalone: true,
     imports: [
         FormsModule,
         KbqUsername,

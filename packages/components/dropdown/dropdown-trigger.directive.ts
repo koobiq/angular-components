@@ -72,7 +72,8 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
-    }
+    },
+    standalone: false
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     protected readonly isBrowser = inject(Platform).isBrowser;

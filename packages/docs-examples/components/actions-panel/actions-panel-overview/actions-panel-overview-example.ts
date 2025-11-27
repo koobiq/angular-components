@@ -36,7 +36,6 @@ type ExampleTableItem = {
 };
 
 @Component({
-    standalone: true,
     imports: [
         KbqTableModule,
         KbqCheckboxModule,
@@ -121,7 +120,6 @@ export class ExampleTable {
 }
 
 @Component({
-    standalone: true,
     imports: [
         KbqOverflowItemsModule,
         KbqButtonModule,
@@ -238,7 +236,6 @@ export class ExampleActionsPanel {
  * @title Actions panel overview
  */
 @Component({
-    standalone: true,
     imports: [ExampleTable],
     providers: [KbqActionsPanel],
     selector: 'actions-panel-overview-example',

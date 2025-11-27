@@ -20,7 +20,6 @@ interface ExampleFileData {
 }
 
 @Component({
-    standalone: true,
     imports: [
         DocsStackblitzButtonComponent,
         KbqLinkModule,

@@ -18,7 +18,6 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-select',
     templateUrl: 'pipe-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-select.scss'],

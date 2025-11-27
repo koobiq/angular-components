@@ -13,7 +13,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-disabled-example',
     imports: [
         KbqDropdownModule,

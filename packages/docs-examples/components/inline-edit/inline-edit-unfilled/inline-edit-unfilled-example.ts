@@ -10,7 +10,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit unfilled
  */
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,

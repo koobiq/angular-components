@@ -315,7 +315,6 @@ describe('KbqTooltip', () => {
 });
 
 @Component({
-    standalone: true,
     selector: 'tooltip-simple',
     imports: [KbqToolTipModule],
     template: `
@@ -335,7 +334,6 @@ export class TooltipSimple {
         <a #titleString [kbqTooltip]="'title-string'" [kbqTrigger]="'hover'" [kbqPlacement]="'top'">Show</a>
         <a #titleTemplate [kbqTooltip]="template">Show</a>
     `,
-    standalone: true,
     imports: [KbqToolTipModule]
 })
 class KbqTooltipTestNewComponent {
@@ -371,7 +369,6 @@ class KbqTooltipTestNewComponent {
             Show
         </span>
     `,
-    standalone: true,
     imports: [KbqToolTipModule]
 })
 class KbqTooltipTestWrapperComponent {
@@ -396,7 +393,6 @@ class KbqTooltipTestWrapperComponent {
             Disabled
         </span>
     `,
-    standalone: true,
     imports: [KbqToolTipModule]
 })
 class KbqTooltipDisabledComponent {
@@ -414,7 +410,6 @@ class KbqTooltipDisabledComponent {
             Button
         </button>
     `,
-    standalone: true,
     imports: [KbqToolTipModule]
 })
 class KbqTooltipWithTemplateRefContent {

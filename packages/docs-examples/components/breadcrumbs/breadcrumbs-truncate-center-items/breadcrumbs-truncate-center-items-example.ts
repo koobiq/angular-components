@@ -10,7 +10,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Breadcrumbs Truncate Center Items
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-truncate-center-items-example',
     template: `
         <nav class="kbq-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>

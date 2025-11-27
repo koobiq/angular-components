@@ -9,7 +9,6 @@ import { take } from 'rxjs/operators';
  * @title Toast actions
  */
 @Component({
-    standalone: true,
     imports: [
         KbqLinkModule,
         KbqDropdownModule,

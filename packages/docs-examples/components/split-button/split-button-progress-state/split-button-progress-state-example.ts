@@ -8,7 +8,6 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
  * @title split-button-progress-state
  */
 @Component({
-    standalone: true,
     selector: 'split-button-progress-state-example',
     imports: [
         KbqSplitButtonModule,

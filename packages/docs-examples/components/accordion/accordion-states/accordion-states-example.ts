@@ -7,7 +7,6 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-states-example',
     templateUrl: 'accordion-states-example.html',
     imports: [KbqAccordionModule, KbqButtonToggleModule]

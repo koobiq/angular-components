@@ -105,7 +105,6 @@ export const DEV_DATA_OBJECT = {
 };
 
 @Component({
-    standalone: true,
     imports: [TreeExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -125,7 +124,6 @@ export const DEV_DATA_OBJECT = {
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqFormFieldModule,

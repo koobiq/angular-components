@@ -16,7 +16,6 @@ import {
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
-    standalone: true,
     imports: [KbqSidepanelModule, KbqButtonModule],
     selector: 'dev-sidepanel-component',
     template: `
@@ -62,7 +61,6 @@ export class DevSidepanelComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqSidepanelModule,

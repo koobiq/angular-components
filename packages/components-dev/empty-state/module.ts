@@ -8,7 +8,6 @@ import { EmptyStateExamplesModule } from '../../docs-examples/components/empty-s
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     imports: [EmptyStateExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -42,7 +41,6 @@ import { DevThemeToggle } from '../theme-toggle';
 class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         FormsModule,
         KbqEmptyStateModule,

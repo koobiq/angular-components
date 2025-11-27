@@ -6,7 +6,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select disabled
  */
 @Component({
-    standalone: true,
     selector: 'select-disabled-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `

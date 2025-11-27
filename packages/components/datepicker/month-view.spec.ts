@@ -123,7 +123,6 @@ describe('KbqMonthView', () => {
     template: `
         <kbq-month-view [(activeDate)]="date" [(selected)]="selected" />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule]
 })
 class StandardMonthView {
@@ -135,7 +134,6 @@ class StandardMonthView {
     template: `
         <kbq-month-view [activeDate]="activeDate" [dateFilter]="dateFilter" />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule]
 })
 class MonthViewWithDateFilter {
@@ -150,7 +148,6 @@ class MonthViewWithDateFilter {
     template: `
         <kbq-month-view [activeDate]="activeDate" [dateClass]="dateClass" />
     `,
-    standalone: true,
     imports: [KbqLuxonDateModule]
 })
 class MonthViewWithDateClass {

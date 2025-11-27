@@ -5,7 +5,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs disabled
  */
 @Component({
-    standalone: true,
     selector: 'tabs-disabled-example',
     imports: [KbqTabsModule],
     template: `

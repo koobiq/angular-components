@@ -17,7 +17,6 @@ import { DevThemeToggle } from '../theme-toggle';
 import { DEV_OPTIONS } from './mock';
 
 @Component({
-    standalone: true,
     imports: [SelectExamplesModule],
     selector: 'dev-examples',
     template: `
@@ -76,7 +75,6 @@ import { DEV_OPTIONS } from './mock';
 class DevExamples {}
 
 @Component({
-    standalone: true,
     imports: [
         AsyncPipe,
         FormsModule,
@@ -94,9 +92,8 @@ class DevExamples {}
     ],
     providers: [
         kbqSelectOptionsProvider({
-            // panelWidth: 200
+        // panelWidth: 200
         })
-
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

@@ -14,7 +14,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
  * @title Tag autocomplete editable
  */
 @Component({
-    standalone: true,
     selector: 'tag-autocomplete-editable-example',
     imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

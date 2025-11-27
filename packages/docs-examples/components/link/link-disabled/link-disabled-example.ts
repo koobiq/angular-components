@@ -6,7 +6,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'link-disabled-example',
     imports: [KbqLinkModule],
     template: `

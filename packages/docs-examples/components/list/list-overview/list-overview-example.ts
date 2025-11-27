@@ -7,7 +7,6 @@ import { KbqListModule } from '@koobiq/components/list';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'list-overview-example',
     imports: [KbqListModule, FormsModule],
     template: `

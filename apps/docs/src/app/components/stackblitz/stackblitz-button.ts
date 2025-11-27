@@ -7,7 +7,6 @@ import { ExampleData } from '@koobiq/docs-examples';
 import { DocsStackblitzWriter } from './stackblitz-writer';
 
 @Component({
-    standalone: true,
     imports: [KbqButtonModule, KbqIconModule, KbqLinkModule],
     providers: [DocsStackblitzWriter],
     selector: 'docs-stackblitz-button',

@@ -8,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit without label
  */
 @Component({
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,

@@ -389,7 +389,6 @@ export class KbqNavbarRectangleElement {
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [KbqIcon_1]
 })
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
@@ -579,7 +578,6 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [KbqIcon_1]
 })
 export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {

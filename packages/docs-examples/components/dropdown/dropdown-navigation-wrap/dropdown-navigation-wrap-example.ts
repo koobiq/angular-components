@@ -10,7 +10,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-navigation-wrap-example',
     imports: [
         KbqDropdownModule,
