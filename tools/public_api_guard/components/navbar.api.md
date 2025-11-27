@@ -133,7 +133,10 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     get disabled(): boolean;
     set disabled(value: boolean);
     get hasCroppedText(): boolean;
+    // (undocumented)
+    get isLink(): boolean;
     longTitle: boolean;
+    protected readonly nativeElement: HTMLElement;
     protected readonly navbarFocusableItem: KbqNavbarFocusableItem;
     // (undocumented)
     ngAfterContentInit(): void;

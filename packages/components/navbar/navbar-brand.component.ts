@@ -1,7 +1,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, ChangeDetectorRef, Component, ContentChild, inject, Input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
+import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } from './navbar-item.component';
 
@@ -16,10 +16,13 @@ import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } fro
     ],
     host: {
         class: 'kbq-navbar-brand',
-        '[class.kbq-navbar-brand_long-title]': 'longTitle'
+        '[class.kbq-navbar-brand_long-title]': 'longTitle',
+        '[class.kbq-navbar-brand_link]': 'isLink'
     }
 })
 export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentInit {
+    /** @docs-private */
+    protected readonly nativeElement = kbqInjectNativeElement();
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
@@ -35,6 +38,10 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
 
     /** text that will be displayed in the tooltip. By default, the text is taken from kbq-navbar-title. */
     @Input() collapsedText: string;
+
+    get isLink(): boolean {
+        return this.nativeElement.tagName === 'A';
+    }
 
     /** @docs-private */
     get croppedText(): string {
@@ -96,6 +103,8 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
 
         this.arrow = false;
         this.offset = 0;
+
+        this.navbarFocusableItem.disabled = !this.isLink;
     }
 
     ngAfterContentInit(): void {

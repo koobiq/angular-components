@@ -471,6 +471,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
         if (this.rectangleElement.vertical) {
             this.placement = PopUpPlacements.Right;
+            this.placementPriority = PopUpPlacements.Right;
         }
 
         this.changeDetectorRef.markForCheck();

@@ -30,12 +30,12 @@ button {
 }
 
 @mixin kbq-navbar-theme() {
-    .kbq-navbar,
-    .kbq-vertical-navbar .kbq-vertical-navbar__container {
+    .kbq-navbar {
         background-color: var(--kbq-navbar-background);
     }
 
     .kbq-vertical-navbar .kbq-vertical-navbar__container {
+        background-color: var(--kbq-navbar-vertical-background);
         border-right: 1px solid var(--kbq-navbar-border);
     }
 
@@ -57,8 +57,8 @@ button {
             }
         }
 
-        &:active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand),
-        &.kbq-active:not(.kbq-disabled, .kbq-vertical.kbq-navbar-brand) {
+        &:active:not(.kbq-disabled),
+        &.kbq-active:not(.kbq-disabled) {
             @include kbq-navbar-item(states-selected);
         }
 
@@ -71,18 +71,6 @@ button {
 
             pointer-events: none;
             cursor: default;
-        }
-    }
-
-    .kbq-navbar-brand.kbq-vertical:hover {
-        .kbq-navbar-logo {
-            transform: scale(1.06);
-        }
-    }
-
-    .kbq-navbar-brand.kbq-horizontal:hover {
-        .kbq-navbar-logo {
-            z-index: 1;
         }
     }
 
