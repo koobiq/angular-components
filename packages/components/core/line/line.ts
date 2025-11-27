@@ -1,4 +1,4 @@
-import { Directive, ElementRef, NgModule, QueryList } from '@angular/core';
+import { Directive, ElementRef, QueryList } from '@angular/core';
 
 /**
  * Shared directive to count lines inside a text area, such as a list item.
@@ -7,8 +7,7 @@ import { Directive, ElementRef, NgModule, QueryList } from '@angular/core';
  */
 @Directive({
     selector: '[kbq-line], [mcLine]',
-    host: { class: 'kbq-line' },
-    standalone: false
+    host: { class: 'kbq-line' }
 })
 export class KbqLine {}
 
@@ -55,9 +54,3 @@ export class KbqLineSetter {
         }
     }
 }
-
-@NgModule({
-    imports: [KbqLine],
-    exports: [KbqLine]
-})
-export class KbqLineModule {}

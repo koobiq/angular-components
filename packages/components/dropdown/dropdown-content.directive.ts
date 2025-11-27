@@ -16,8 +16,7 @@ import { Subject } from 'rxjs';
  * Dropdown content that will be rendered lazily once the dropdown is opened.
  */
 @Directive({
-    selector: 'ng-template[kbqDropdownContent]',
-    standalone: false
+    selector: 'ng-template[kbqDropdownContent]'
 })
 export class KbqDropdownContent implements OnDestroy {
     protected readonly document = inject<Document>(DOCUMENT);

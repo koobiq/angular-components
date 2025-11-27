@@ -1,9 +1,11 @@
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -86,6 +88,7 @@ import {
     kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { BehaviorSubject, Observable, Subject, Subscription, defer, merge } from 'rxjs';
@@ -166,6 +169,15 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
+    ],
+    imports: [
+        CdkOverlayOrigin,
+        KbqTag,
+        NgTemplateOutlet,
+        CdkMonitorFocus,
+        CdkConnectedOverlay,
+        NgClass,
+        KbqIcon
     ],
     standalone: true
 })

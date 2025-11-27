@@ -145,8 +145,8 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
 
 @Injectable({ providedIn: 'root' })
 @Pipe({
-    name: 'kbqNumber', pure: false,
-    standalone: false
+    name: 'kbqNumber',
+    pure: false
 })
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor(
@@ -219,8 +219,8 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 
 @Injectable({ providedIn: 'root' })
 @Pipe({
-    name: 'kbqTableNumber', pure: false,
-    standalone: false
+    name: 'kbqTableNumber',
+    pure: false
 })
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor(
@@ -285,8 +285,8 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
 
 @Injectable({ providedIn: 'root' })
 @Pipe({
-    name: 'kbqRoundNumber', pure: false,
-    standalone: false
+    name: 'kbqRoundNumber',
+    pure: false
 })
 export class KbqRoundDecimalPipe implements PipeTransform {
     roundingOptions: RoundDecimalOptions;

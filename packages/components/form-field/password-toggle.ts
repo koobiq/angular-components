@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { NgClass } from '@angular/common';
+
 import {
     AfterContentInit,
     AfterViewInit,
@@ -37,7 +37,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 
 /** Component which changes password visibility. */
 @Component({
-    imports: [NgClass, KbqIconModule, KbqToolTipModule],
+    imports: [KbqIconModule, KbqToolTipModule],
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
     template: `

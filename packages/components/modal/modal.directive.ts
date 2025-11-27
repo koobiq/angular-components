@@ -1,8 +1,17 @@
 import { Component, Directive } from '@angular/core';
+import { KbqButton } from '@koobiq/components/button';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqModalComponent } from './modal.component';
 
 @Component({
     selector: `[kbq-modal-title], kbq-modal-title, [kbqModalTitle]`,
+    imports: [
+        KbqIcon,
+        KbqButton,
+        KbqTitleDirective
+    ],
+    standalone: true,
     template: `
         <div class="kbq-modal-title" kbq-title>
             <ng-content />
@@ -23,8 +32,7 @@ import { KbqModalComponent } from './modal.component';
     host: {
         class: 'kbq-modal-header',
         '[class.kbq-modal-header_closable]': 'modal.kbqClosable'
-    },
-    standalone: true
+    }
 })
 export class KbqModalTitle {
     constructor(protected modal: KbqModalComponent) {}

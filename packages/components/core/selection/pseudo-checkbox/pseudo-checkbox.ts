@@ -29,8 +29,7 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
     },
     preserveWhitespaces: false,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPseudoCheckbox extends KbqColorDirective {
     @Input() big: boolean = false;

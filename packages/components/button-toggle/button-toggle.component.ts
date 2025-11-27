@@ -25,6 +25,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqButton } from '@koobiq/components/button';
 import { getNodesWithoutComments } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqTitleDirective } from '@koobiq/components/title';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
@@ -315,6 +316,10 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         class: 'kbq-button-toggle',
         '[class]': '"kbq-button-toggle" + iconType'
     },
+    imports: [
+        KbqTitleDirective,
+        KbqButton
+    ],
     standalone: true
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {

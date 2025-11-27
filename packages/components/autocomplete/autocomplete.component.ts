@@ -1,4 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -73,6 +74,9 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
             provide: KBQ_OPTION_PARENT_COMPONENT,
             useExisting: KbqAutocomplete
         }
+    ],
+    imports: [
+        NgClass
     ],
     standalone: true
 })

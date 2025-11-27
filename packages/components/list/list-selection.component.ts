@@ -51,9 +51,9 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     KBQ_OPTION_ACTION_PARENT,
-    KBQ_TITLE_TEXT_REF,
+    KBQ_TITLE_TEXT_REF, KbqActionContainer,
     KbqOptgroup,
-    KbqOptionActionComponent,
+    KbqOptionActionComponent, KbqPseudoCheckbox,
     KbqTitleTextRef,
     MultipleMode
 } from '@koobiq/components/core';
@@ -679,6 +679,10 @@ export class KbqListOptionCaption {}
     providers: [
         { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqListOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption }
+    ],
+    imports: [
+        KbqPseudoCheckbox,
+        KbqActionContainer
     ],
     standalone: true
 })

@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from '@angular/common';
+
 import { booleanAttribute, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
@@ -36,8 +36,7 @@ import { KbqAppSwitcherApp } from './app-switcher';
     },
     imports: [
         KbqIcon,
-        NgTemplateOutlet
-    ],
+        ],
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherListItem },
         { provide: KbqDropdownItem, useExisting: KbqAppSwitcherListItem }

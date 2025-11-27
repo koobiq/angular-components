@@ -16,8 +16,7 @@ let uniqueOptgroupIdCounter = 0;
     host: {
         class: 'kbq-optgroup',
         '[class.kbq-disabled]': 'disabled'
-    },
-    standalone: false
+    }
 })
 export class KbqOptgroup {
     @Input() label: string;

@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -45,8 +46,7 @@ export const buttonRightIconClassName = 'kbq-button-icon_right';
     host: {
         '[class.kbq-button]': '!isIconButton',
         '[class.kbq-button-icon]': 'isIconButton'
-    },
-    standalone: false
+    }
 })
 export class KbqButtonCssStyler implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
@@ -114,10 +114,13 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
 @Component({
     selector: '[kbq-button]',
+    imports: [
+        CdkObserveContent
+    ],
     templateUrl: './button.component.html',
     styleUrls: ['./button.scss', './button-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[attr.disabled]': 'disabled || null',
         '[class.kbq-disabled]': 'disabled',
@@ -127,9 +130,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
         '(blur)': 'onBlur()'
     },
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
-    ],
-    standalone: false
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);

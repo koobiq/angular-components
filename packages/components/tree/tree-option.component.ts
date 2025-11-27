@@ -21,6 +21,7 @@ import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
 import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
+    KbqActionContainer,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -53,9 +54,15 @@ let uniqueIdCounter: number = 0;
 
 @Component({
     selector: 'kbq-tree-option',
-    exportAs: 'kbqTreeOption',
+    imports: [
+        KbqPseudoCheckbox,
+        KbqActionContainer
+    ],
     templateUrl: './tree-option.html',
     styleUrls: ['./tree-option.scss', './tree-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTreeOption',
     host: {
         class: 'kbq-tree-option',
         '[class.kbq-tree-option_multiple]': 'tree.multiple',
@@ -71,14 +78,11 @@ let uniqueIdCounter: number = 0;
         '(click)': 'selectViaInteraction($event)',
         '(keydown)': 'onKeydown($event)'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: KbqTreeNode, useExisting: KbqTreeOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTreeOption },
         { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqTreeOption }
-    ],
-    standalone: true
+    ]
 })
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     readonly onFocus = new Subject<KbqTreeOptionEvent>();

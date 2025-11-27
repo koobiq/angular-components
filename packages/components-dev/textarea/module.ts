@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { TextAreaExamplesModule } from '../../docs-examples/components/textarea';
 
 @Component({
-    imports: [TextAreaExamplesModule],
     selector: 'dev-examples',
+    imports: [TextAreaExamplesModule],
     template: `
         <text-area-overview-example />
     `,
@@ -16,11 +16,11 @@ import { TextAreaExamplesModule } from '../../docs-examples/components/textarea'
 export class DevExamples {}
 
 @Component({
-    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevExamples, KbqIcon],
     selector: 'dev-app',
+    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevExamples],
     templateUrl: './template.html',
-    encapsulation: ViewEncapsulation.None,
     styleUrls: ['./styles.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {

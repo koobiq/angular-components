@@ -22,8 +22,7 @@ import { debounceTime } from 'rxjs/operators';
         '(mouseenter)': 'handleElementEnter()',
         '(mouseleave)': 'hideTooltip()',
         '(window:resize)': 'resizeStream.next($event)'
-    },
-    standalone: false
+    }
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private contentObserver = inject(ContentObserver);

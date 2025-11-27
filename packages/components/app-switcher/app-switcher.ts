@@ -6,7 +6,7 @@ import {
     OverlayConfig,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+
 import {
     AfterContentInit,
     AfterViewInit,
@@ -136,7 +136,6 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -150,8 +149,7 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,
         KbqAppSwitcherListItem,
-        JsonPipe
-    ],
+        ],
     animations: [kbqAppSwitcherAnimations.state]
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
