@@ -77,7 +77,7 @@
 
 #### Фокус на теге
 
-| <div style="min-width: 200px;">Клавиша</div>                                                         | Действие                  |
+| <div style="min-width: 270px;">Клавиша</div>                                                         | Действие                  |
 | ---------------------------------------------------------------------------------------------------- | ------------------------- |
 | <span class="docs-hot-key-button">Space</span>                                                       | Выбрать/снять выбор тега. |
 | <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Удалить тег.              |
@@ -86,7 +86,7 @@
 
 #### Режим редактирования тега
 
-| <div style="min-width: 200px;">Клавиша</div>   | Действие             |
+| <div style="min-width: 270px;">Клавиша</div>   | Действие             |
 | ---------------------------------------------- | -------------------- |
 | <span class="docs-hot-key-button">Enter</span> | Сохранить изменения. |
 | <span class="docs-hot-key-button">Esc</span>   | Отменить изменения.  |

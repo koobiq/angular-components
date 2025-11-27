@@ -59,7 +59,7 @@ To enable tag reordering, you need to set the `draggable` property for `kbq-tag-
 
 #### Focus on tag
 
-| <div style="min-width: 200px;">Key</div>                                                             | Action                           |
+| <div style="min-width: 270px;">Key</div>                                                             | Action                           |
 | ---------------------------------------------------------------------------------------------------- | -------------------------------- |
 | <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>              | Move focus to previous/next tag. |
 | <span class="docs-hot-key-button">Space</span>                                                       | Select/deselect tag.             |
@@ -70,7 +70,7 @@ To enable tag reordering, you need to set the `draggable` property for `kbq-tag-
 
 #### Tag editing mode
 
-| <div style="min-width: 200px;">Key</div>       | Action          |
+| <div style="min-width: 270px;">Key</div>       | Action          |
 | ---------------------------------------------- | --------------- |
 | <span class="docs-hot-key-button">Enter</span> | Save changes.   |
 | <span class="docs-hot-key-button">Esc</span>   | Cancel changes. |

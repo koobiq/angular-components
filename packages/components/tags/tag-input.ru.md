@@ -61,14 +61,14 @@
 
 #### Фокус в пустой области ввода
 
-| <div style="min-width: 200px;">Клавиша</div>                                                                                                                                                    | Действие                                                 |
+| <div style="min-width: 270px;">Клавиша</div>                                                                                                                                                    | Действие                                                 |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | <span class="docs-hot-key-button">Backspace</span> / <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">Tab</span> | Переместить фокус на последний тег.                      |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>                                                                                                      | Выделить все теги и поставить фокус на последний из них. |
 
 #### Фокус на теге
 
-| <div style="min-width: 200px;">Клавиша</div>                                                         | Действие                                       |
+| <div style="min-width: 270px;">Клавиша</div>                                                         | Действие                                       |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>              | Переместить фокус на предыдущий/следующий тег. |
 | <span class="docs-hot-key-button">Space</span>                                                       | Выбрать/снять выбор тега.                      |
@@ -79,7 +79,7 @@
 
 #### Режим редактирования тега
 
-| <div style="min-width: 200px;">Клавиша</div>   | Действие             |
+| <div style="min-width: 270px;">Клавиша</div>   | Действие             |
 | ---------------------------------------------- | -------------------- |
 | <span class="docs-hot-key-button">Enter</span> | Сохранить изменения. |
 | <span class="docs-hot-key-button">Esc</span>   | Отменить изменения.  |

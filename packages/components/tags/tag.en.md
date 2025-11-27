@@ -83,7 +83,7 @@ Use a [`Badge`](/en/components/badge) if you need a colored label in a table or 
 
 #### Focus on tag
 
-| <div style="min-width: 200px;">Key</div>                                                             | Action               |
+| <div style="min-width: 270px;">Key</div>                                                             | Action               |
 | ---------------------------------------------------------------------------------------------------- | -------------------- |
 | <span class="docs-hot-key-button">Space</span>                                                       | Select/deselect tag. |
 | <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Remove tag.          |
@@ -92,7 +92,7 @@ Use a [`Badge`](/en/components/badge) if you need a colored label in a table or 
 
 #### Tag editing mode
 
-| <div style="min-width: 200px;">Key</div>       | Action          |
+| <div style="min-width: 270px;">Key</div>       | Action          |
 | ---------------------------------------------- | --------------- |
 | <span class="docs-hot-key-button">Enter</span> | Save changes.   |
 | <span class="docs-hot-key-button">Esc</span>   | Cancel changes. |
