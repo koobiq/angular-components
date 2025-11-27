@@ -7,35 +7,42 @@
 
 <div kbq-scrollbar class="docs-sidenav__menu">
     <kbq-tree-selection
-        #tree
         [autoSelect]="false"
         [dataSource]="dataSource"
         [treeControl]="treeControl"
-        [(ngModel)]="selectedItem"
+        [(ngModel)]="selectedNodeId"
     >
-        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" class="docs-sidenav__category">
-            <div class="docs-sidenav__category-text" (click)="toggle($event, node)">
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node; when: hasChild"
+            class="docs-sidenav__category"
+            (click)="handleCategoryClick($event, node)"
+            (keydown.enter)="handleCategoryClick($event, node)"
+        >
+            <div class="docs-sidenav__category-text">
                 <span>{{ node.name[locale()] }}</span>
                 <i
                     kbq-icon-button="kbq-chevron-down-s_16"
                     kbq-tree-node-toggle
                     class="docs-sidenav__category-icon"
                     [class.docs-sidenav__category-icon_collapsed]="!treeControl.isExpanded(node)"
-                    [style.visibility]="node.id === 'icons' ? 'hidden' : 'initial'"
+                    [class.cdk-visually-hidden]="node.id === 'icons'"
                 ></i>
             </div>
         </kbq-tree-option>
 
-        <kbq-tree-option *kbqTreeNodeDef="let node" class="docs-sidenav__item">
-            <div class="layout-row layout-align-start-center">
-                <div class="layout-margin-right-s">
-                    {{ node.name[locale()] }}
-                </div>
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node"
+            class="docs-sidenav__item"
+            (click)="handleItemClick($event, node)"
+            (keydown.enter)="handleItemClick($event, node)"
+        >
+            <a routerLink="{{ locale() }}/{{ node.id }}">
+                {{ node.name[locale()] }}
 
                 @if (node.isNew) {
                     <kbq-badge badgeColor="fade-theme" [compact]="true" [outline]="true">New</kbq-badge>
                 }
-            </div>
+            </a>
         </kbq-tree-option>
     </kbq-tree-selection>
 </div>
