@@ -6,14 +6,12 @@
         "@schematics/angular:component": {
             "style": "scss",
             "changeDetection": "OnPush",
-            "standalone": true,
             "inlineTemplate": true,
             "inlineStyle": true,
             "skipTests": true
         },
         "@schematics/angular:application": {
             "strict": true,
-            "standalone": true,
             "inlineTemplate": true,
             "inlineStyle": true,
             "skipTests": true,
