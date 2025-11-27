@@ -3,8 +3,14 @@
 @use './navbar-theme' as *;
 
 .kbq-vertical-navbar {
-    min-width: 48px;
+    position: relative;
+
+    min-width: var(--kbq-size-5xl);
     height: 100%;
+
+    &:not(:hover, .cdk-keyboard-focused) .kbq-navbar-toggle {
+        display: none;
+    }
 
     & .kbq-navbar-container {
         flex-direction: column;
@@ -13,17 +19,19 @@
 
     & .kbq-navbar-container + .kbq-navbar-container {
         padding-top: var(--kbq-size-xxl);
-        padding-bottom: var(--kbq-size-xxs);
+        padding-bottom: var(--kbq-size-s);
     }
 
     & .kbq-vertical-navbar__container {
+        position: relative;
+
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
 
         &.kbq-collapsed {
-            width: var(--kbq-size-5xl);
+            width: var(--kbq-size-6xl);
         }
 
         &.kbq-expanded {
@@ -31,13 +39,9 @@
         }
     }
 
-    &.kbq-vertical-navbar_open-over {
-        position: relative;
-
-        & .kbq-vertical-navbar__container {
-            position: absolute;
-            z-index: 998;
-        }
+    &.kbq-vertical-navbar_open-over .kbq-vertical-navbar__container {
+        position: absolute;
+        z-index: 998;
     }
 }
 

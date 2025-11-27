@@ -377,6 +377,12 @@ export const enUSLocaleData: {
             collapseButton: string;
         };
     };
+    navbar: {
+        toggle: {
+            expand: string;
+            collapse: string;
+        };
+    };
     searchExpandable: {
         tooltip: string;
         placeholder: string;
@@ -594,6 +600,12 @@ export const esLALocaleData: {
         toggle: {
             pinButton: string;
             collapseButton: string;
+        };
+    };
+    navbar: {
+        toggle: {
+            expand: string;
+            collapse: string;
         };
     };
     searchExpandable: {
@@ -894,6 +906,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 collapseButton: string;
             };
         };
+        navbar: {
+            toggle: {
+                expand: string;
+                collapse: string;
+            };
+        };
         searchExpandable: {
             tooltip: string;
             placeholder: string;
@@ -1094,6 +1112,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 collapseButton: string;
             };
         };
+        navbar: {
+            toggle: {
+                expand: string;
+                collapse: string;
+            };
+        };
         searchExpandable: {
             tooltip: string;
             placeholder: string;
@@ -1288,6 +1312,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toggle: {
                 pinButton: string;
                 collapseButton: string;
+            };
+        };
+        navbar: {
+            toggle: {
+                expand: string;
+                collapse: string;
             };
         };
         searchExpandable: {
@@ -1492,6 +1522,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 collapseButton: string;
             };
         };
+        navbar: {
+            toggle: {
+                expand: string;
+                collapse: string;
+            };
+        };
         searchExpandable: {
             tooltip: string;
             placeholder: string;
@@ -1687,6 +1723,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toggle: {
                 pinButton: string;
                 collapseButton: string;
+            };
+        };
+        navbar: {
+            toggle: {
+                expand: string;
+                collapse: string;
             };
         };
         searchExpandable: {
@@ -3222,6 +3264,12 @@ export const ptBRLocaleData: {
             collapseButton: string;
         };
     };
+    navbar: {
+        toggle: {
+            expand: string;
+            collapse: string;
+        };
+    };
     searchExpandable: {
         tooltip: string;
         placeholder: string;
@@ -3604,6 +3652,12 @@ export const ruRULocaleData: {
             collapseButton: string;
         };
     };
+    navbar: {
+        toggle: {
+            expand: string;
+            collapse: string;
+        };
+    };
     searchExpandable: {
         tooltip: string;
         placeholder: string;
@@ -3895,6 +3949,12 @@ export const tkTMLocaleData: {
         toggle: {
             pinButton: string;
             collapseButton: string;
+        };
+    };
+    navbar: {
+        toggle: {
+            expand: string;
+            collapse: string;
         };
     };
     searchExpandable: {

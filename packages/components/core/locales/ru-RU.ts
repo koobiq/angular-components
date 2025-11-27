@@ -103,6 +103,12 @@ export const ruRULocaleData = {
             collapseButton: 'Свернуть'
         }
     },
+    navbar: {
+        toggle: {
+            expand: 'Развернуть',
+            collapse: 'Свернуть'
+        }
+    },
     searchExpandable: {
         tooltip: 'Поиск',
         placeholder: 'Поиск'

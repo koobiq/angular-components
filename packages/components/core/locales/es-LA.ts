@@ -102,6 +102,12 @@ export const esLALocaleData = {
             collapseButton: 'Colapsar'
         }
     },
+    navbar: {
+        toggle: {
+            expand: 'Expandir',
+            collapse: 'Colapsar'
+        }
+    },
     searchExpandable: {
         tooltip: 'Búsqueda',
         placeholder: 'Búsqueda'

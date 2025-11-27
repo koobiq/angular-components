@@ -102,6 +102,12 @@ export const ptBRLocaleData = {
             collapseButton: 'Recolher'
         }
     },
+    navbar: {
+        toggle: {
+            expand: 'Expandir',
+            collapse: 'Colapso'
+        }
+    },
     searchExpandable: {
         tooltip: 'Pesquisar',
         placeholder: 'Pesquisar'
