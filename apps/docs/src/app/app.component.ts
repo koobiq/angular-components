@@ -5,7 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { map, Observable } from 'rxjs';
 import { DocsNavbarComponent } from './components/navbar/navbar.component';
-import { DocsSidenavComponent } from './components/sidenav/sidenav.component';
+import { DocsSidenav } from './components/sidenav/sidenav';
 import { DocsDocStates, DocsNavbarState } from './services/doc-states';
 
 @Component({
@@ -14,7 +14,7 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
         RouterOutlet,
         KbqDividerModule,
         DocsNavbarComponent,
-        DocsSidenavComponent,
+        DocsSidenav,
         AsyncPipe
     ],
     selector: 'docs-app',
