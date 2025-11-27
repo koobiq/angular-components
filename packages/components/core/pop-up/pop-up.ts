@@ -1,4 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import {
     ChangeDetectorRef,
     DestroyRef,
@@ -11,7 +12,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { PopUpVisibility } from './constants';
+import { PopUpPlacements, PopUpVisibility } from './constants';
 import { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Directive({
@@ -161,5 +162,47 @@ export abstract class KbqPopUp implements OnDestroy {
 
     protected addEventListenerForHide() {
         this.elementRef.nativeElement.addEventListener('mouseleave', () => this.hide(0));
+    }
+
+    protected setStickPosition() {
+        const oppositeSide = {
+            [PopUpPlacements.Top]: PopUpPlacements.Bottom,
+            [PopUpPlacements.Bottom]: PopUpPlacements.Top,
+            [PopUpPlacements.Right]: PopUpPlacements.Left,
+            [PopUpPlacements.Left]: PopUpPlacements.Right
+        }[this.trigger.stickToWindow];
+
+        if (!this.trigger.stickToWindow || !oppositeSide) return;
+
+        this.arrow = false;
+
+        if (this.trigger.container) {
+            const { width, height } = this.elementRef.nativeElement.getBoundingClientRect();
+            const { right, left, top, bottom } = this.trigger.container.getBoundingClientRect();
+
+            if (this.trigger.stickToWindow === PopUpPlacements.Right) {
+                this.renderer.setStyle(
+                    this.trigger.overlayRef?.overlayElement,
+                    'left',
+                    coerceCssPixelValue(right - width)
+                );
+            } else if (this.trigger.stickToWindow === PopUpPlacements.Left) {
+                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(left));
+            } else if (this.trigger.stickToWindow === PopUpPlacements.Top) {
+                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(top));
+            } else if (this.trigger.stickToWindow === PopUpPlacements.Bottom) {
+                this.renderer.setStyle(
+                    this.trigger.overlayRef?.overlayElement,
+                    'top',
+                    coerceCssPixelValue(bottom - height)
+                );
+            }
+
+            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'right', 'unset');
+            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'bottom', 'unset');
+        } else {
+            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, this.trigger.stickToWindow, 0);
+            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, oppositeSide, 'unset');
+        }
     }
 }

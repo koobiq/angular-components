@@ -169,6 +169,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     closingActions(): Observable<void | CdkScrollable | MouseEvent>;
     // (undocumented)
     closingActionsForClick(): Observable<MouseEvent>[];
+    container: HTMLElement;
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(value: string | TemplateRef<any>);
@@ -237,6 +238,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     get size(): PopUpSizes;
     set size(value: PopUpSizes);
+    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
     // (undocumented)
     get trigger(): string;
     set trigger(value: string);
@@ -248,7 +250,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "stickToWindow": { "alias": "kbqPopoverStickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverTrigger, never>;
 }

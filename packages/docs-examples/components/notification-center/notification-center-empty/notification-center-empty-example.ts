@@ -5,7 +5,13 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    KbqFormattersModule,
+    kbqInjectNativeElement,
+    PopUpPlacements,
+    ThemeService
+} from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -40,11 +46,6 @@ enum NavbarIcItems {
     standalone: true,
     selector: 'notification-center-empty-example',
     templateUrl: 'notification-center-empty-example.html',
-    styles: `
-        ::ng-deep .example-notification-center-panel {
-            margin-top: -98px;
-        }
-    `,
     imports: [
         KbqNotificationCenterModule,
         KbqNavbarIcModule,
@@ -63,6 +64,7 @@ enum NavbarIcItems {
 })
 export class NotificationCenterEmptyExample {
     readonly notificationCenterService = inject(KbqNotificationCenterService);
+    container = kbqInjectNativeElement();
 
     protected readonly currentTheme = toSignal(
         inject(ThemeService, { optional: true })?.current.pipe(

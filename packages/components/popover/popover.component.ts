@@ -95,6 +95,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
                     this.prefix,
                     `${this.offset!.toString()}px`
                 );
+
+                this.setStickPosition();
             }
         });
     }
@@ -108,7 +110,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
         this.isContentTopOverflow = scrollTop > 0;
 
-        this.isContentBottomOverflow = scrollTop + offsetHeight < scrollHeight;
+        this.isContentBottomOverflow = Math.round(scrollTop + offsetHeight) < scrollHeight;
 
         super.detectChanges();
     }
@@ -194,6 +196,20 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set popoverPlacementPriority(value) {
         super.updatePlacementPriority(value);
     }
+
+    /**
+     * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
+     * If container is specified, the positioning will be relative to it.
+     * */
+    @Input('kbqPopoverStickToWindow') stickToWindow:
+        | PopUpPlacements.Top
+        | PopUpPlacements.Right
+        | PopUpPlacements.Bottom
+        | PopUpPlacements.Left
+        | string;
+
+    /** Container for additional positioning, used with kbqPopoverStickToWindow */
+    @Input() container: HTMLElement;
 
     @Input()
     get hasBackdrop(): boolean {

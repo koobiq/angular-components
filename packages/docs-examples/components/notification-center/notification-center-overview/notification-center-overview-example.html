@@ -92,8 +92,9 @@
                 #trigger="kbqNotificationCenterTrigger"
                 kbq-navbar-ic-item
                 kbqNotificationCenterTrigger
+                [stickToWindow]="'bottom'"
+                [container]="container"
                 [popoverHeight]="'500px'"
-                [kbqNotificationCenterPanelClass]="'example-notification-center-panel'"
             >
                 <i kbq-icon="kbq-bell_16"></i>
                 <div kbqNavbarIcTitle>Notifications</div>
