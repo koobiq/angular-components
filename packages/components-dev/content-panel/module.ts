@@ -9,6 +9,7 @@ import { ContentPanelExamplesModule } from 'packages/docs-examples/components/co
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
+    selector: 'dev-content-panel-overview',
     imports: [
         KbqButtonModule,
         KbqBadgeModule,
@@ -16,7 +17,6 @@ import { DevThemeToggle } from '../theme-toggle';
         KbqIconModule,
         KbqContentPanelModule
     ],
-    selector: 'dev-content-panel-overview',
     template: `
         <kbq-content-panel-container
             #contentPanelContainer="kbqContentPanelContainer"
@@ -30,7 +30,7 @@ import { DevThemeToggle } from '../theme-toggle';
                     @for (_b of asideButtons; track $index) {
                         <button
                             kbq-button
-                            [class.kbq-active]="$index === 0"
+                            [class.kbq-active]="$first"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
                         >
@@ -139,8 +139,8 @@ export class DevContentPanelOverview {
 }
 
 @Component({
-    imports: [ContentPanelExamplesModule],
     selector: 'dev-examples',
+    imports: [ContentPanelExamplesModule],
     template: `
         <content-panel-overview-example />
         <hr />

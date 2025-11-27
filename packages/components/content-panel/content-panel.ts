@@ -49,7 +49,6 @@ const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
 ]);
 
 @Component({
-    standalone: true,
     selector: 'kbq-content-panel-aside',
     exportAs: 'kbqContentPanelAside',
     template: `
@@ -65,7 +64,6 @@ const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
 export class KbqContentPanelAside {}
 
 @Directive({
-    standalone: true,
     selector: '[kbqContentPanelHeaderTitle]',
     exportAs: 'kbqContentPanelHeaderTitle',
     host: {

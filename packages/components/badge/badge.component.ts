@@ -112,18 +112,18 @@ export class KbqBadgeCssStyler implements AfterContentInit {
 
 @Component({
     selector: 'kbq-badge',
+    standalone: true,
     template: '<ng-content />',
     styleUrls: ['badge.component.scss', 'badge-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-badge',
         '[class.kbq-badge_compact]': 'compact',
         '[class.kbq-badge-filled]': '!outline',
         '[class.kbq-badge-outline]': 'outline',
         '[class]': 'badgeColor'
-    },
-    standalone: true
+    }
 })
 export class KbqBadge {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;

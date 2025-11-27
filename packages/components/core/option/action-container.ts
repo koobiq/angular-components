@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 @Component({
     selector: 'kbq-action-container',
     exportAs: 'kbqActionContainer',
-    standalone: true,
     template: `
         <div class="kbq-action-container__gradient"></div>
         <div class="kbq-action-container__box">

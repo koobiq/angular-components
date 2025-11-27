@@ -78,7 +78,6 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
 };
 
 @Directive({
-    standalone: true,
     selector: '[devCustomText]',
     providers: [
         {
@@ -121,8 +120,8 @@ type MultipleUploadState = {
 };
 
 @Component({
-    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
     selector: 'dev-file-upload-state-and-style',
+    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
     template: `
         <div>
             <table>
@@ -262,8 +261,8 @@ export class DevFileUploadStateAndStyle {
 }
 
 @Component({
-    imports: [FileUploadExamplesModule],
     selector: 'dev-examples',
+    imports: [FileUploadExamplesModule],
     template: `
         <file-upload-cva-overview-example />
         <hr />
@@ -301,16 +300,16 @@ export class DevFileUploadStateAndStyle {
         <hr />
         <file-upload-single-mixed-validation-example />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DevExamples {}
 
 @Component({
-    imports: [KbqFileUploadModule, KbqIconModule, KbqFormFieldModule],
     selector: 'dev-file-upload-compact',
+    imports: [KbqFileUploadModule, KbqIconModule, KbqFormFieldModule],
     template: `
         <kbq-multiple-file-upload
             size="compact"
@@ -325,6 +324,7 @@ export class DevExamples {}
             <kbq-hint>{{ hintMessage }}</kbq-hint>
         </kbq-multiple-file-upload>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -333,8 +333,7 @@ export class DevExamples {}
                 captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize
             }
         }
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class DevMultipleFileUploadCompact {
     @Input() disabled: boolean;
@@ -349,6 +348,7 @@ export class DevMultipleFileUploadCompact {
 }
 
 @Component({
+    selector: 'dev-app',
     imports: [
         DevExamples,
         FileUploadExamplesModule,
@@ -367,7 +367,6 @@ export class DevMultipleFileUploadCompact {
         DevCustomTextDirective,
         DevFileUploadStateAndStyle
     ],
-    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

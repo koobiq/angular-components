@@ -6,7 +6,6 @@ import { KbqAccordionContentDirective } from './accordion-content.directive';
     hostDirectives: [KbqAccordionContentDirective],
     host: {
         class: 'kbq-accordion-content'
-    },
-    standalone: false
+    }
 })
 export class KbqAccordionContent {}

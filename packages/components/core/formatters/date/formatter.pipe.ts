@@ -9,7 +9,6 @@ export class BaseFormatterPipe<D> {
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDate'
 })
 export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -21,7 +20,6 @@ export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDateImpurePipe',
     pure: false
 })
@@ -29,7 +27,6 @@ export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDateTime'
 })
 export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -41,7 +38,6 @@ export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDateTimeImpurePipe',
     pure: false
 })
@@ -49,7 +45,6 @@ export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDate'
 })
 export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -61,7 +56,6 @@ export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> impl
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDateImpurePipe',
     pure: false
 })
@@ -69,7 +63,6 @@ export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> impl
 export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDateTime'
 })
 export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -81,7 +74,6 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDateTimeImpurePipe',
     pure: false
 })
@@ -89,7 +81,6 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDateTimeFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDate'
 })
 export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -101,7 +92,6 @@ export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDateImpurePipe',
     pure: false
 })
@@ -109,7 +99,6 @@ export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDateTime'
 })
 export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -121,7 +110,6 @@ export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDateTimeImpurePipe',
     pure: false
 })
@@ -129,7 +117,6 @@ export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDate'
 })
 export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -141,7 +128,6 @@ export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impl
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDateImpurePipe',
     pure: false
 })
@@ -149,7 +135,6 @@ export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impl
 export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDateTime'
 })
 export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -161,7 +146,6 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDateTimeImpurePipe',
     pure: false
 })
@@ -169,7 +153,6 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDateTimeFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDate'
 })
 export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -182,7 +165,6 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDateImpurePipe',
     pure: false
 })
@@ -190,7 +172,6 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
 export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDate'
 })
 export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -203,7 +184,6 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDateImpurePipe',
     pure: false
 })
@@ -211,7 +191,6 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
 export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDateTime'
 })
 export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -224,7 +203,6 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDateTimeImpurePipe',
     pure: false
 })
@@ -232,7 +210,6 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'rangeMiddleDateTime'
 })
 export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -245,7 +222,6 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeMiddleDateTimeImpurePipe',
     pure: false
 })
@@ -253,7 +229,6 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
 export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {}
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDateTime'
 })
 export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -266,7 +241,6 @@ export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imp
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDateTimeImpurePipe',
     pure: false
 })

@@ -5,7 +5,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFilterBar } from './filter-bar';
 
 @Directive({
-    standalone: true,
     selector: '[kbqFilterBarButton]'
 })
 export class KbqFilterBarButton {

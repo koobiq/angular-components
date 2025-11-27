@@ -6,8 +6,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Dynamic translation overview example
  */
 @Component({
-    imports: [KbqDynamicTranslationModule, KbqLinkModule],
     selector: 'dynamic-translation-overview-example',
+    imports: [KbqDynamicTranslationModule, KbqLinkModule],
     template: `
         <kbq-dynamic-translation text="Incident created. [[link:Open in a new tab]] to continue working.">
             <a

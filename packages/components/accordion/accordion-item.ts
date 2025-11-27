@@ -12,7 +12,6 @@ import { KbqAccordionItemDirective } from './accordion-item.directive';
     ],
     host: {
         class: 'kbq-accordion-item'
-    },
-    standalone: false
+    }
 })
 export class KbqAccordionItem {}

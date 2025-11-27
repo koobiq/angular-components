@@ -4,7 +4,6 @@ import { Directive } from '@angular/core';
 @Directive({
     selector: 'kbq-label',
     exportAs: 'kbqLabel',
-    standalone: true,
     host: {
         class: 'kbq-label'
     }

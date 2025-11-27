@@ -48,7 +48,6 @@ export class DevExamples {}
 export class DevProductsPage {}
 
 @Component({
-    standalone: true,
     selector: 'dev-product-details-page',
     template: '<div>product-details</div>',
     changeDetection: ChangeDetectionStrategy.OnPush

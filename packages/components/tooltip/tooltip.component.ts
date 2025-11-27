@@ -119,7 +119,6 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 };
 
 @Directive({
-    standalone: true,
     selector: '[kbqTooltip]',
     exportAs: 'kbqTooltip',
     host: {

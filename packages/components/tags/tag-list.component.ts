@@ -91,8 +91,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
-    hostDirectives: [CdkDropList],
-    standalone: true
+    hostDirectives: [CdkDropList]
 })
 export class KbqTagList
     implements

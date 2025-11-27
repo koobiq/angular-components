@@ -12,8 +12,7 @@ import { Subscription } from 'rxjs';
         '(mouseleave)': 'onMouseLeave()',
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
-    },
-    standalone: true
+    }
 })
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private resizeObserver = inject(SharedResizeObserver);

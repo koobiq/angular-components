@@ -24,7 +24,6 @@ const CONFIG: DocsDocsearchProps = {
 
 /** Algolia DocSearch component implementation */
 @Directive({
-    standalone: true,
     selector: SELECTOR,
     host: {
         class: 'layout-align-center-center'

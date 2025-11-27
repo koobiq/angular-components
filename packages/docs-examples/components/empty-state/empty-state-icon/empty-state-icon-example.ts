@@ -6,7 +6,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Empty-state icon
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'empty-state-icon-example',
     imports: [
         KbqEmptyStateModule,
@@ -21,6 +20,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 This should detail the actions you can take on this screen, as well as why it’s valuable.
             </div>
         </kbq-empty-state>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateIconExample {}

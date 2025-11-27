@@ -6,7 +6,6 @@ import { KbqFilterBar } from '../filter-bar';
 import { KbqBasePipe } from './base-pipe';
 
 @Directive({
-    standalone: true,
     selector: '[kbqPipeState]'
 })
 export class KbqPipeState<T> implements OnInit {

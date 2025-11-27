@@ -7,7 +7,6 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
  * @title Empty-state text only
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'empty-state-text-only-example',
     imports: [
         KbqEmptyStateModule
@@ -16,7 +15,8 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
         <kbq-empty-state style="min-height: 216px">
             <div kbq-empty-state-text>Нет информации</div>
         </kbq-empty-state>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateTextOnlyExample {
     readonly styles = KbqButtonStyles;

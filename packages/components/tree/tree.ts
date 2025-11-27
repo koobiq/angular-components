@@ -1,18 +1,21 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeBase } from './tree-base';
 
 @Component({
     selector: 'kbq-tree',
-    exportAs: 'kbqTree',
+    imports: [
+        KbqTreeNodeOutlet
+    ],
     template: `
         <ng-container kbqTreeNodeOutlet />
     `,
     styleUrls: ['./tree.scss', 'tree-tokens.scss'],
-    host: {
-        class: 'kbq-tree'
-    },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true
+    exportAs: 'kbqTree',
+    host: {
+        class: 'kbq-tree'
+    }
 })
 export class KbqTree extends KbqTreeBase<any> {}

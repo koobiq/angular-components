@@ -34,8 +34,7 @@ export enum KbqAlertColors {
     selector: '[kbq-alert-title]',
     host: {
         class: 'kbq-alert__title'
-    },
-    standalone: true
+    }
 })
 export class KbqAlertTitle {}
 
@@ -43,8 +42,7 @@ export class KbqAlertTitle {}
     selector: '[kbq-alert-close-button]',
     host: {
         class: 'kbq-alert-close-button'
-    },
-    standalone: true
+    }
 })
 export class KbqAlertCloseButton {}
 
@@ -52,8 +50,7 @@ export class KbqAlertCloseButton {}
     selector: '[kbq-alert-control]',
     host: {
         class: 'kbq-alert-control'
-    },
-    standalone: true
+    }
 })
 export class KbqAlertControl {}
 
@@ -61,8 +58,8 @@ export class KbqAlertControl {}
     selector: 'kbq-alert',
     templateUrl: './alert.component.html',
     styleUrls: ['alert.component.scss', 'alert-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-alert',
         '[class]': 'alertColor',
@@ -71,8 +68,7 @@ export class KbqAlertControl {}
         '[class.kbq-alert_default]': '!isColored',
         '[class.kbq-alert_colored]': 'isColored',
         '[class.kbq-alert_dismissible]': 'closeButton'
-    },
-    standalone: true
+    }
 })
 export class KbqAlert implements AfterContentInit {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;

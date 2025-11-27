@@ -38,7 +38,6 @@ export class KbqSelectFooter {}
 @Directive({
     selector: '[kbqSelectSearch]',
     exportAs: 'kbqSelectSearch',
-    standalone: true,
     host: {
         '(keydown)': 'handleKeydown($event)'
     }

@@ -5,7 +5,6 @@ let nextUniqueId = 0;
 
 /** Hint text to be shown below the form field control. */
 @Component({
-    standalone: true,
     selector: 'kbq-hint',
     exportAs: 'kbqHint',
     templateUrl: './hint.html',

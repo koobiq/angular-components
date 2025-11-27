@@ -12,7 +12,6 @@ import {
 import { KbqIcon } from './icon.component';
 
 @Component({
-    standalone: true,
     selector: `[kbq-icon-button]`,
     template: '<ng-content />',
     styleUrls: ['icon-button.scss', 'icon-button-tokens.scss'],

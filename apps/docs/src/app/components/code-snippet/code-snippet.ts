@@ -4,7 +4,6 @@ import { KbqToastService } from '@koobiq/components/toast';
 import { DocsLocaleState } from 'src/app/services/locale';
 
 @Directive({
-    standalone: true,
     selector: '[docsCodeSnippet]',
     host: {
         class: 'docs-code-snippet',

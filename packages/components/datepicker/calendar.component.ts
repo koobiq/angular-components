@@ -16,6 +16,7 @@ import {
 import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
+import { KbqCalendarHeader } from './calendar-header.component';
 import { createMissingDateImplError } from './datepicker-errors';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqMonthView } from './month-view.component';
@@ -26,15 +27,18 @@ import { KbqMonthView } from './month-view.component';
  */
 @Component({
     selector: 'kbq-calendar',
-    exportAs: 'kbqCalendar',
     templateUrl: 'calendar.html',
     styleUrls: ['calendar.scss'],
-    host: {
-        class: 'kbq-calendar'
-    },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true
+    exportAs: 'kbqCalendar',
+    imports: [
+        KbqCalendarHeader,
+        KbqMonthView
+    ],
+    host: {
+        class: 'kbq-calendar'
+    }
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** A date representing the period (month or year) to start the calendar in. */

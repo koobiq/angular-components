@@ -5,7 +5,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
-    standalone: true,
     imports: [
         KbqIconModule,
         KbqLinkModule

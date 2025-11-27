@@ -16,8 +16,7 @@ export const MIN_VALIDATOR: Provider = {
     providers: [MIN_VALIDATOR],
     host: {
         '[attr.min]': 'min ? min : null'
-    },
-    standalone: true
+    }
 })
 export class MinValidator implements Validator, OnChanges {
     @Input() min: number;

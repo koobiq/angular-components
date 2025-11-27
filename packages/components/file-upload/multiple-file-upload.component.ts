@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -21,11 +21,15 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
-import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
+import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
-import { KbqListSelection } from '@koobiq/components/list';
-import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
+import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
+import { KbqFileDropDirective } from './file-drop';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -58,12 +62,22 @@ const fileSizeCellPadding = 16;
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        KbqFileDropDirective,
+        KbqLinkModule,
+        KbqListModule,
+        NgTemplateOutlet,
+        KbqProgressSpinner,
+        KbqEllipsisCenterDirective,
+        KbqDataSizePipe,
+        KbqIconModule,
+        AsyncPipe
+    ],
     host: {
         class: 'kbq-multiple-file-upload'
-    },
-    standalone: true
+    }
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase

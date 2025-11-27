@@ -42,25 +42,25 @@ import {
 } from './dropdown.types';
 
 @Directive({
-    standalone: true,
-    selector: '[kbqDropdownStaticContent]'
+    selector: '[kbqDropdownStaticContent]',
+    standalone: true
 })
 export class KbqDropdownStaticContent {}
 
 @Component({
     selector: 'kbq-dropdown',
-    exportAs: 'kbqDropdown',
+    imports: [
+        NgClass
+    ],
     templateUrl: 'dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqDropdown',
     animations: [
         kbqDropdownAnimations.transformDropdown,
         kbqDropdownAnimations.fadeInItems
-    ],
-    imports: [
-        NgClass
     ],
     providers: [
         { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }]

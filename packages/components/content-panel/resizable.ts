@@ -44,7 +44,6 @@ export type KbqResizerSizeChangeEvent = {
  * ```
  */
 @Directive({
-    standalone: true,
     selector: '[kbqResizable]',
     exportAs: 'kbqResizable',
     host: {
@@ -64,7 +63,6 @@ export class KbqResizable {
  * Directive which defines element resizing direction.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqResizer]',
     exportAs: 'kbqResizer',
     host: {

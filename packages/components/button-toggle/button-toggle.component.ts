@@ -22,7 +22,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqButton } from '@koobiq/components/button';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { getNodesWithoutComments } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -59,8 +59,7 @@ export class KbqButtonToggleChange {
         class: 'kbq-button-toggle-group',
         '[class.kbq-button-toggle_vertical]': 'vertical'
     },
-    exportAs: 'kbqButtonToggleGroup',
-    standalone: true
+    exportAs: 'kbqButtonToggleGroup'
 })
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
     /** Whether the toggle group is vertical. */
@@ -292,7 +291,10 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 /** Single button inside of a toggle group. */
 @Component({
     selector: 'kbq-button-toggle',
-    exportAs: 'kbqButtonToggle',
+    imports: [
+        KbqTitleDirective,
+        KbqButtonModule
+    ],
     template: `
         <button
             kbq-button
@@ -312,15 +314,11 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     styleUrls: ['button-toggle.scss', 'button-toggle-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqButtonToggle',
     host: {
         class: 'kbq-button-toggle',
         '[class]': '"kbq-button-toggle" + iconType'
-    },
-    imports: [
-        KbqTitleDirective,
-        KbqButton
-    ],
-    standalone: true
+    }
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;

@@ -11,7 +11,6 @@ import {
 
 /** Directive for marking an element as legend of `KbqFieldset` */
 @Directive({
-    standalone: true,
     selector: '[kbqLegend]',
     host: {
         class: 'kbq-legend'

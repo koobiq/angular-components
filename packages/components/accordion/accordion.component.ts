@@ -21,6 +21,8 @@ export enum KbqAccordionVariant {
     selector: 'kbq-accordion, [kbq-accordion]',
     template: '<ng-content />',
     styleUrls: ['accordion.component.scss', 'accordion-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     hostDirectives: [
         {
             directive: KbqAccordionRootDirective,
@@ -28,12 +30,9 @@ export enum KbqAccordionVariant {
             outputs: ['onValueChange']
         }
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion'
-    },
-    standalone: false
+    }
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit {
     protected readonly focusMonitor = inject(FocusMonitor);

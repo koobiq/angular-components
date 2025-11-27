@@ -7,7 +7,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Empty-state error
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'empty-state-error-example',
     imports: [
         KbqEmptyStateModule,
@@ -31,7 +30,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Обновить</button>
             </div>
         </kbq-empty-state>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateErrorExample {
     emptyStateText = 'Проблема с сетью или подключением к БД. Попробуйте еще раз или обратитесь к администратору.';

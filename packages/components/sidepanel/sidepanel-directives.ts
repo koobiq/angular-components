@@ -9,6 +9,9 @@ import {
     Optional,
     SimpleChanges
 } from '@angular/core';
+import { KbqButton } from '@koobiq/components/button';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
 
@@ -62,6 +65,12 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
  */
 @Component({
     selector: 'kbq-sidepanel-header',
+    imports: [
+        KbqButton,
+        KbqSidepanelClose,
+        KbqIcon,
+        KbqTitleDirective
+    ],
     template: `
         <div class="kbq-sidepanel-title" kbq-title>
             <ng-content />
@@ -76,8 +85,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     host: {
         class: 'kbq-sidepanel-header',
         '[class.kbq-sidepanel-header_truncate-text]': 'truncateText'
-    },
-    standalone: true
+    }
 })
 export class KbqSidepanelHeader {
     /** Add button for close sidepanel. Default false */

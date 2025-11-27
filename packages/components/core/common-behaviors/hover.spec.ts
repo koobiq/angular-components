@@ -17,14 +17,13 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
 
 @Component({
     selector: 'test-by-attr-directive',
-    template: '<div kbqHover>test</div>',
     imports: [KbqHover],
+    template: '<div kbqHover>test</div>',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestByAttrDirective {}
 
 @Component({
-    standalone: true,
     selector: 'test-by-host-directive',
     hostDirectives: [KbqHover],
     template: '<div>test</div>',

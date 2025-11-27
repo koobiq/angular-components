@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { ExperimentalFormFieldExamplesModule } from 'packages/docs-examples/components/experimental-form-field';
 
 @Component({
-    imports: [ExperimentalFormFieldExamplesModule],
     selector: 'dev-examples',
+    imports: [ExperimentalFormFieldExamplesModule],
     template: `
         <experimental-form-field-password-overview-example />
         <hr />
@@ -29,10 +29,10 @@ import { ExperimentalFormFieldExamplesModule } from 'packages/docs-examples/comp
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

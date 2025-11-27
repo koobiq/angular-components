@@ -7,7 +7,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Empty-state default
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'empty-state-default-example',
     imports: [
         KbqEmptyStateModule,
@@ -25,7 +24,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </button>
             </div>
         </kbq-empty-state>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateDefaultExample {
     buttonText = 'Создать группу';

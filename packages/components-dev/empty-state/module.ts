@@ -4,12 +4,12 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { EmptyStateExamplesModule } from '../../docs-examples/components/empty-state';
+import { EmptyStateExamplesModule, EmptyStateSizeExample } from '../../docs-examples/components/empty-state';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [EmptyStateExamplesModule],
     selector: 'dev-examples',
+    imports: [EmptyStateExamplesModule],
     template: `
         <empty-state-actions-example />
         <hr />
@@ -33,23 +33,24 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <empty-state-title-example />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqEmptyStateModule,
         KbqButtonModule,
         KbqIconModule,
         DevExamples,
-        DevThemeToggle
+        DevThemeToggle,
+        EmptyStateSizeExample
     ],
-    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

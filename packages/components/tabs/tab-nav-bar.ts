@@ -131,7 +131,6 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
  * Link inside of a KbqTabNavBar.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTabLink], [kbq-tab-link]',
     exportAs: 'kbqTabLink',
     host: {
@@ -297,7 +296,6 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
  * Tab panel component associated with KbqTabNav.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTabNavPanel]',
     exportAs: 'kbqTabNavPanel',
     host: {

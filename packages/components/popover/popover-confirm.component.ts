@@ -1,3 +1,5 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -11,6 +13,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KbqButton } from '@koobiq/components/button';
 import { Subject } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
 import { KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
@@ -26,6 +29,11 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqPopoverAnimations.popoverState],
+    imports: [
+        NgClass,
+        CdkTrapFocus,
+        KbqButton
+    ],
     standalone: true
 })
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {

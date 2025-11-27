@@ -9,8 +9,8 @@ import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
 import { combineLatest } from 'rxjs';
 
 @Component({
-    imports: [ButtonExamplesModule],
     selector: 'dev-examples',
+    imports: [ButtonExamplesModule],
     template: `
         <button-overview-example />
         <hr />
@@ -36,8 +36,8 @@ type DevButtonStyle = Partial<{
 type DevButton = DevButtonState & DevButtonStyle;
 
 @Component({
-    imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule],
     selector: 'dev-button-state-and-style',
+    imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule],
     template: `
         <div class="dev-options">
             <kbq-checkbox [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>
@@ -129,8 +129,8 @@ export class DevButtonStateAndStyle {
 }
 
 @Component({
-    imports: [KbqButtonModule, KbqIconModule, DevExamples, DevButtonStateAndStyle],
     selector: 'dev-app',
+    imports: [KbqButtonModule, KbqIconModule, DevExamples, DevButtonStateAndStyle],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,

@@ -40,8 +40,8 @@ export interface KbqDynamicTranslationHelperSlot {
  * Directive for defining a dynamic translation slot.
  */
 @Directive({
-    standalone: true,
-    selector: '[kbqDynamicTranslationSlot]'
+    selector: '[kbqDynamicTranslationSlot]',
+    standalone: true
 })
 export class KbqDynamicTranslationSlot {
     /**
@@ -59,8 +59,8 @@ export class KbqDynamicTranslationSlot {
  * Component for dynamic translation.
  */
 @Component({
-    imports: [NgTemplateOutlet],
     selector: 'kbq-dynamic-translation',
+    imports: [NgTemplateOutlet],
     template: `
         @for (slot of parsedSlots(); track $index) {
             @switch (slot.type) {
@@ -138,8 +138,8 @@ export class KbqDynamicTranslation {
  * @docs-private
  */
 @Component({
-    imports: [KbqDynamicTranslation, KbqDynamicTranslationSlot],
     selector: 'kbq-dynamic-translation-with-dynamic-component-creation',
+    imports: [KbqDynamicTranslation, KbqDynamicTranslationSlot],
     template: `
         <kbq-dynamic-translation [text]="text()">
             @for (slot of slots(); track $index) {

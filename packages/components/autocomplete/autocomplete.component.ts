@@ -61,24 +61,24 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 
 @Component({
     selector: 'kbq-autocomplete',
-    exportAs: 'kbqAutocomplete',
+    imports: [
+        NgClass
+    ],
+    standalone: true,
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqAutocomplete',
     host: {
         class: 'kbq-autocomplete'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_OPTION_PARENT_COMPONENT,
             useExisting: KbqAutocomplete
         }
-    ],
-    imports: [
-        NgClass
-    ],
-    standalone: true
+    ]
 })
 export class KbqAutocomplete implements AfterContentInit {
     private readonly destroyRef = inject(DestroyRef);
