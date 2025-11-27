@@ -13,12 +13,7 @@ describe(KbqTabNavBar.name, () => {
     beforeEach(() => {
         dirChange = new Subject();
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule],
-            declarations: [
-                SimpleTabNavBarTestApp,
-                TabLinkWithNgIf,
-                TabLinkWithTabIndexBinding
-            ],
+            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithNgIf, TabLinkWithTabIndexBinding],
             providers: [
                 {
                     provide: Directionality,
@@ -126,7 +121,9 @@ describe(KbqTabNavBar.name, () => {
                 </a>
             }
         </nav>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class SimpleTabNavBarTestApp {
     @ViewChild(KbqTabNavBar, { static: false }) tabNavBar: KbqTabNavBar;
@@ -146,7 +143,9 @@ class SimpleTabNavBarTestApp {
                 <a kbqTabLink>Link</a>
             }
         </nav>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class TabLinkWithNgIf {
     isDestroyed = false;
@@ -157,7 +156,9 @@ class TabLinkWithNgIf {
         <nav kbqTabNavBar>
             <a kbqTabLink [tabIndex]="tabIndex">TabIndex Link</a>
         </nav>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class TabLinkWithTabIndexBinding {
     tabIndex = 0;

@@ -54,7 +54,8 @@ export const defaultOffsetYWithArrow = 8;
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqPopoverAnimations.popoverState]
+    animations: [kbqPopoverAnimations.popoverState],
+    standalone: true
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-popover';
@@ -157,7 +158,8 @@ export function getKbqPopoverInvalidPositionError(position: string) {
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    standalone: true
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);

@@ -32,10 +32,7 @@ describe('FileDropDirective', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                SimpleDNDComponent,
-                KbqFileDropDirective
-            ]
+            imports: [SimpleDNDComponent, KbqFileDropDirective]
         }).compileComponents();
 
         fixture = TestBed.createComponent(SimpleDNDComponent);
@@ -127,7 +124,8 @@ describe('FileDropDirective', () => {
 });
 
 @Component({
-    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
+    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>',
+    standalone: true
 })
 class SimpleDNDComponent {
     files: FileList | KbqFile[];

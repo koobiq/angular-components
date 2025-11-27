@@ -6,8 +6,7 @@ import { KbqDdComponent, KbqDlComponent, KbqDlModule, KbqDtComponent } from './i
 describe('KbqDl', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqDlModule],
-            declarations: [TestApp]
+            imports: [KbqDlModule, TestApp]
         }).compileComponents();
     });
 
@@ -46,6 +45,8 @@ describe('KbqDl', () => {
                 видите этот текст.
             </kbq-dd>
         </kbq-dl>
-    `
+    `,
+    standalone: true,
+    imports: [KbqDlModule]
 })
 class TestApp {}

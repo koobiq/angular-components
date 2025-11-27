@@ -6,7 +6,7 @@ import { KbqCalendarBody, KbqCalendarCell } from './calendar-body.component';
 describe('KbqCalendarBody', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 KbqCalendarBody,
                 // Test components.
                 StandardCalendarBody
@@ -108,7 +108,8 @@ describe('KbqCalendarBody', () => {
             [activeCell]="10"
             (selectedValueChange)="onSelect($event)"
         ></table>
-    `
+    `,
+    standalone: true
 })
 class StandardCalendarBody {
     rows = [

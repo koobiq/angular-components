@@ -112,17 +112,16 @@ export class KbqListCopyEvent<T> {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-list-selection',
-
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         '(keydown)': 'onKeyDown($event)',
         '(focus)': 'focus()',
         '(blur)': 'blur()',
         '(window:resize)': 'updateScrollSize()'
     },
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
-    preserveWhitespaces: false
+    preserveWhitespaces: false,
+    standalone: true
 })
 export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     protected readonly focusMonitor = inject(FocusMonitor);
@@ -646,7 +645,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     selector: '[kbq-list-option-caption]',
     host: {
         class: 'kbq-list-option-caption'
-    }
+    },
+    standalone: true
 })
 export class KbqListOptionCaption {}
 
@@ -661,17 +661,13 @@ export class KbqListOptionCaption {}
     templateUrl: './list-option.html',
     host: {
         class: 'kbq-list-option',
-
         '[class.kbq-selected]': 'selected',
         '[class.kbq-list-option_multiple]': 'listSelection.multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
-
         '[class.kbq-action-button-focused]': 'actionButton?.active',
-
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         '(focusin)': 'focus()',
         '(blur)': 'blur()',
         '(click)': 'handleClick($event)',
@@ -683,7 +679,8 @@ export class KbqListOptionCaption {}
     providers: [
         { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqListOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption }
-    ]
+    ],
+    standalone: true
 })
 export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     hasFocus: boolean = false;

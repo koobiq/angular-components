@@ -32,7 +32,9 @@ import { KbqSelect } from './select.component';
         KbqSelectSearchEmptyResult,
         NgClass,
         NgTemplateOutlet,
-        A11yModule
+        A11yModule,
+        KbqSelect,
+        KbqOptionTooltip
     ],
     exports: [
         KbqSelect,
@@ -44,10 +46,6 @@ import { KbqSelect } from './select.component';
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
         KbqFormFieldModule
-    ],
-    declarations: [
-        KbqSelect,
-        KbqOptionTooltip
     ],
     providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
 })

@@ -17,12 +17,7 @@ describe('KbqTabBody', () => {
     beforeEach(() => {
         dir = 'ltr';
         TestBed.configureTestingModule({
-            imports: [PortalModule, NoopAnimationsModule],
-            declarations: [
-                KbqTabBody,
-                KbqTabBodyPortal,
-                SimpleTabBodyApp
-            ],
+            imports: [PortalModule, NoopAnimationsModule, KbqTabBody, KbqTabBodyPortal, SimpleTabBodyApp],
             providers: [
                 { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }]
         }).compileComponents();
@@ -181,7 +176,9 @@ describe('KbqTabBody', () => {
     template: `
         <ng-template>Tab Body Content</ng-template>
         <kbq-tab-body [content]="content" [position]="position" [origin]="origin" />
-    `
+    `,
+    standalone: true,
+    imports: [PortalModule]
 })
 class SimpleTabBodyApp implements AfterContentInit {
     content: TemplatePortal;

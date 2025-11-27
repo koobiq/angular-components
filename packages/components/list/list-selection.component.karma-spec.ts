@@ -14,8 +14,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [KbqListModule, FormsModule],
-            declarations: [SelectionListMultipleCheckbox]
+            imports: [KbqListModule, FormsModule, SelectionListMultipleCheckbox]
         });
 
         TestBed.compileComponents();
@@ -70,7 +69,9 @@ describe('should update model after keyboard interaction with multiple mode = ch
             <kbq-list-option [value]="'value4'">value4</kbq-list-option>
             <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule]
 })
 class SelectionListMultipleCheckbox {
     model = [];

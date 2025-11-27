@@ -22,9 +22,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         A11yModule,
         PlatformModule,
         KbqIconModule,
-        KbqToolTipModule
-    ],
-    exports: [
+        KbqToolTipModule,
         KbqNavbar,
         KbqNavbarContainer,
         KbqNavbarTitle,
@@ -38,7 +36,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         KbqNavbarRectangleElement,
         KbqNavbarBento
     ],
-    declarations: [
+    exports: [
         KbqNavbar,
         KbqNavbarContainer,
         KbqNavbarTitle,

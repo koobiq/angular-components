@@ -146,10 +146,8 @@ export class KbqTreeSelectChange {
         '[class.kbq-select_multiline]': 'multiline',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
-
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         '(click)': 'handleClick()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
@@ -165,7 +163,8 @@ export class KbqTreeSelectChange {
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
         { provide: KbqTree, useExisting: KbqTreeSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
-    ]
+    ],
+    standalone: true
 })
 export class KbqTreeSelect
     extends KbqAbstractSelect

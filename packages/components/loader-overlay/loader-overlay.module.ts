@@ -13,9 +13,7 @@ import {
     imports: [
         A11yModule,
         PlatformModule,
-        KbqProgressSpinnerModule
-    ],
-    declarations: [
+        KbqProgressSpinnerModule,
         KbqLoaderOverlay,
         KbqLoaderOverlayIndicator,
         KbqLoaderOverlayText,

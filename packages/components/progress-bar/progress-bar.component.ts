@@ -12,7 +12,8 @@ const MAX_PERCENT = 100;
     selector: '[kbq-progress-bar-text]',
     host: {
         class: 'kbq-progress-bar-text'
-    }
+    },
+    standalone: true
 })
 export class KbqProgressBarText {}
 
@@ -20,7 +21,8 @@ export class KbqProgressBarText {}
     selector: '[kbq-progress-bar-caption]',
     host: {
         class: 'kbq-progress-bar-caption'
-    }
+    },
+    standalone: true
 })
 export class KbqProgressBarCaption {}
 
@@ -35,7 +37,8 @@ export class KbqProgressBarCaption {}
         class: 'kbq-progress-bar',
         '[class.kbq-progress-bar_determinate]': 'mode === "determinate"',
         '[class.kbq-progress-bar_indeterminate]': 'mode === "indeterminate"'
-    }
+    },
+    standalone: true
 })
 export class KbqProgressBar extends KbqColorDirective {
     @Input() id: string = `kbq-progress-bar-${idIterator++}`;

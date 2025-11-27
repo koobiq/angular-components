@@ -11,8 +11,7 @@ describe('MсAlert', () => {
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-            imports: [KbqBadgeModule],
-            declarations: [TestApp]
+            imports: [KbqBadgeModule, TestApp]
         });
 
         TestBed.compileComponents();
@@ -34,6 +33,8 @@ describe('MсAlert', () => {
     selector: 'test-app',
     template: `
         <kbq-badge />
-    `
+    `,
+    standalone: true,
+    imports: [KbqBadgeModule]
 })
 class TestApp {}

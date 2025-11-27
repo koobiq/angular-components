@@ -29,8 +29,7 @@ describe('KbqFilterBar', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [BrowserAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule],
-            declarations: [BaseFunctions]
+            imports: [BrowserAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule, BaseFunctions]
         }).compileComponents();
     });
 
@@ -518,7 +517,9 @@ describe('KbqFilterBar', () => {
 
             <kbq-filter-search (onSearch)="onSearchFilter()" />
         </kbq-filter-bar>
-    `
+    `,
+    standalone: true,
+    imports: [KbqFilterBarModule, KbqLuxonDateModule]
 })
 class BaseFunctions {
     readonly adapter = inject(DateAdapter<DateTime>);

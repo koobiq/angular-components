@@ -24,7 +24,8 @@ import { KbqDatepicker } from './datepicker.component';
 
 /** Can be used to override the icon of a `kbqDatepickerToggle`. */
 @Directive({
-    selector: '[kbqDatepickerToggleIcon]'
+    selector: '[kbqDatepickerToggleIcon]',
+    standalone: true
 })
 export class KbqDatepickerToggleIcon {}
 
@@ -125,7 +126,8 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     },
     exportAs: 'kbqDatepickerToggle',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     /** Whether the toggle button is disabled. */

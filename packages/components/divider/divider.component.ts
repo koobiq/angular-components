@@ -13,7 +13,8 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
     template: '',
     styleUrls: ['divider.scss', 'divider-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqDivider {
     // Whether the divider is vertically aligned.

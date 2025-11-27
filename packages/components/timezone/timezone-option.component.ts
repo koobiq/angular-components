@@ -26,7 +26,8 @@ import { offsetFormatter } from './timezone.utils';
             provide: KbqOption,
             useExisting: forwardRef(() => KbqTimezoneOption)
         }
-    ]
+    ],
+    standalone: true
 })
 export class KbqTimezoneOption extends KbqOption {
     @ViewChild('tooltipContentWrapper', { static: false }) tooltipContentWrapper: ElementRef<HTMLElement>;

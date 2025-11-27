@@ -263,15 +263,13 @@ interface DateTimeObject {
         '[attr.min]': 'min ? toISO8601(min) : null',
         '[attr.max]': 'max ? toISO8601(max) : null',
         '[attr.autocomplete]': '"off"',
-
         '(paste)': 'onPaste($event)',
         '(change)': 'onChange()',
-
         '(focus)': 'focusChanged(true)',
         '(blur)': 'onBlur()',
-
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    standalone: true
 })
 export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit

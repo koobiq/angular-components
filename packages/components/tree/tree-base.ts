@@ -270,7 +270,8 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
 @Directive({
     selector: 'kbq-tree-node',
-    exportAs: 'kbqTreeNode'
+    exportAs: 'kbqTreeNode',
+    standalone: true
 })
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     /**

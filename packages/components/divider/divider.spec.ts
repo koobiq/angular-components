@@ -8,10 +8,7 @@ describe('KbqDivider', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqDividerModule],
-            declarations: [
-                KbqDividerTestComponent
-            ]
+            imports: [KbqDividerModule, KbqDividerTestComponent]
         }).compileComponents();
         fixture = TestBed.createComponent(KbqDividerTestComponent);
     });
@@ -52,7 +49,9 @@ describe('KbqDivider', () => {
 @Component({
     template: `
         <kbq-divider [vertical]="vertical" [inset]="inset" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqDividerModule]
 })
 class KbqDividerTestComponent {
     vertical: boolean;

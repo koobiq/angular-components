@@ -12,8 +12,7 @@ describe('KbqTabHeader', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [PortalModule, ScrollingModule],
-            declarations: [KbqTabHeader, KbqTabLabelWrapper, SimpleTabHeaderApp]
+            imports: [PortalModule, ScrollingModule, KbqTabHeader, KbqTabLabelWrapper, SimpleTabHeaderApp]
         });
 
         TestBed.compileComponents();
@@ -76,7 +75,9 @@ interface ITab {
             }
         `
 
-    ]
+    ],
+    standalone: true,
+    imports: [PortalModule, ScrollingModule]
 })
 class SimpleTabHeaderApp {
     selectedIndex: number = 0;

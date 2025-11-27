@@ -13,9 +13,7 @@ import {
 @NgModule({
     imports: [
         A11yModule,
-        PlatformModule
-    ],
-    declarations: [
+        PlatformModule,
         KbqEmptyState,
         KbqEmptyStateIcon,
         KbqEmptyStateText,

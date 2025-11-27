@@ -12,7 +12,8 @@ export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
     host: {
         '(mouseenter)': 'onMouseEnter()',
         '(mouseleave)': 'onMouseLeave()'
-    }
+    },
+    standalone: true
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private resizeObserver = inject(SharedResizeObserver);

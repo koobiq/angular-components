@@ -11,7 +11,8 @@ import { KbqButton } from '@koobiq/components/button';
         '[class.kbq-table_bordered]': 'border'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqTable {
     @Input() border: boolean = false;
@@ -21,7 +22,8 @@ export class KbqTable {
     selector: 'kbq-table td',
     host: {
         '[class.kbq-table-cell_has-button]': '!!button'
-    }
+    },
+    standalone: true
 })
 export class KbqTableCellContent {
     @ContentChild(KbqButton) button: KbqButton;

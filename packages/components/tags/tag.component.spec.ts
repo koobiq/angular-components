@@ -164,8 +164,7 @@ describe(KbqTag.name, () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTagsModule],
-            declarations: [BasicTag, SingleTag],
+            imports: [KbqTagsModule, BasicTag, SingleTag],
             providers: [
                 {
                     provide: Directionality,
@@ -955,7 +954,9 @@ describe(KbqTag.name, () => {
                 </div>
             }
         </kbq-tag-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTagsModule]
 })
 class SingleTag {
     disabled: boolean = false;
@@ -977,6 +978,8 @@ class SingleTag {
 @Component({
     template: `
         <kbq-basic-tag>{{ name }}</kbq-basic-tag>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTagsModule]
 })
 class BasicTag {}

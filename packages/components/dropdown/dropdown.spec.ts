@@ -64,8 +64,7 @@ describe('KbqDropdown', () => {
         declarations: any[] = []
     ): ComponentFixture<T> {
         TestBed.configureTestingModule({
-            imports: [KbqDropdownModule, NoopAnimationsModule],
-            declarations: [component, ...declarations],
+            imports: [KbqDropdownModule, NoopAnimationsModule, component, ...declarations],
             providers
         }).compileComponents();
 
@@ -1614,8 +1613,7 @@ describe('KbqDropdown', () => {
 describe('KbqDropdown default overrides', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqDropdownModule, NoopAnimationsModule],
-            declarations: [SimpleDropdown],
+            imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown],
             providers: [
                 {
                     provide: KBQ_DROPDOWN_DEFAULT_OPTIONS,
@@ -1659,7 +1657,9 @@ describe('KbqDropdown default overrides', () => {
                 </button>
             }
         </kbq-dropdown>
-    `
+    `,
+    standalone: true,
+    imports: [KbqDropdownModule]
 })
 class SimpleDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;

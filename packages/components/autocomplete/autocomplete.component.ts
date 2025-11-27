@@ -73,7 +73,8 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
             provide: KBQ_OPTION_PARENT_COMPONENT,
             useExisting: KbqAutocomplete
         }
-    ]
+    ],
+    standalone: true
 })
 export class KbqAutocomplete implements AfterContentInit {
     private readonly destroyRef = inject(DestroyRef);

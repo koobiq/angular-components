@@ -77,7 +77,8 @@ describe('KbqModal', () => {
         </kbq-dropdown>
     `,
     // Testing for service with parent service
-    providers: [KbqModalControlService]
+    providers: [KbqModalControlService],
+    standalone: true
 })
 class ModalByServiceFromDropdownComponent {
     nonServiceModalVisible = false;
@@ -109,9 +110,9 @@ const TEST_DIRECTIVES = [
         KbqModalModule,
         KbqButtonModule,
         KbqDropdownModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        ...TEST_DIRECTIVES
     ],
-    exports: TEST_DIRECTIVES,
-    declarations: TEST_DIRECTIVES
+    exports: TEST_DIRECTIVES
 })
 class ModalTestModule {}

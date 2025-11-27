@@ -12,12 +12,8 @@ describe('KbqTitleDirective', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [BrowserAnimationsModule],
-            declarations: [
-                KbqTitleDirective,
-                BaseKbqTitleComponent,
-                WithParamsKbqTitleComponent
-            ],
+            imports: [BrowserAnimationsModule, BaseKbqTitleComponent, WithParamsKbqTitleComponent],
+            declarations: [KbqTitleDirective],
             providers: [
                 KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER
             ]
@@ -137,7 +133,8 @@ describe('KbqTitleDirective', () => {
         >
             <span #kbqTitleText>Protocol: udp/nbns</span>
         </div>
-    `
+    `,
+    standalone: true
 })
 class BaseKbqTitleComponent {
     defaultValue = 'Just a text';
@@ -182,7 +179,8 @@ class BaseKbqTitleComponent {
                 </div>
             </div>
         </div>
-    `
+    `,
+    standalone: true
 })
 class WithParamsKbqTitleComponent {
     defaultValue = 'Just a text';

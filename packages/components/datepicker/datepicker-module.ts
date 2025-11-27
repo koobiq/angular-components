@@ -34,7 +34,16 @@ import { KbqMonthView } from './month-view.component';
         KbqIconModule,
         KbqDatepickerToggleIconComponent,
         NgClass,
-        TitleCasePipe
+        TitleCasePipe,
+        KbqCalendar,
+        KbqCalendarBody,
+        KbqDatepicker,
+        KbqDatepickerContent,
+        KbqDatepickerInput,
+        KbqDatepickerToggle,
+        KbqDatepickerToggleIcon,
+        KbqMonthView,
+        KbqCalendarHeader
     ],
     exports: [
         KbqCalendar,
@@ -48,17 +57,6 @@ import { KbqMonthView } from './month-view.component';
         KbqMonthView,
         KbqCalendarHeader,
         KbqFormFieldModule
-    ],
-    declarations: [
-        KbqCalendar,
-        KbqCalendarBody,
-        KbqDatepicker,
-        KbqDatepickerContent,
-        KbqDatepickerInput,
-        KbqDatepickerToggle,
-        KbqDatepickerToggleIcon,
-        KbqMonthView,
-        KbqCalendarHeader
     ],
     providers: [
         KbqDatepickerIntl,

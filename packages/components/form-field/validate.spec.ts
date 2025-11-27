@@ -11,7 +11,9 @@ import { KbqInputModule } from '@koobiq/components/input';
         <kbq-form-field>
             <input kbqInput type="text" [formControl]="testControl" />
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInputModule]
 })
 class TestApp {
     testControl = new FormControl('');
@@ -27,9 +29,9 @@ describe('KbqValidate', () => {
             imports: [
                 ReactiveFormsModule,
                 KbqFormFieldModule,
-                KbqInputModule
-            ],
-            declarations: [TestApp]
+                KbqInputModule,
+                TestApp
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);

@@ -10,8 +10,7 @@ describe('MсAlert', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqAlertModule],
-            declarations: [TestApp]
+            imports: [KbqAlertModule, TestApp]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
@@ -30,6 +29,8 @@ describe('MсAlert', () => {
     selector: 'test-app',
     template: `
         <kbq-alert />
-    `
+    `,
+    standalone: true,
+    imports: [KbqAlertModule]
 })
 class TestApp {}

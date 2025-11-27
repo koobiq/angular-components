@@ -16,7 +16,8 @@ export const MIN_VALIDATOR: Provider = {
     providers: [MIN_VALIDATOR],
     host: {
         '[attr.min]': 'min ? min : null'
-    }
+    },
+    standalone: true
 })
 export class MinValidator implements Validator, OnChanges {
     @Input() min: number;
@@ -61,7 +62,8 @@ export const MAX_VALIDATOR: Provider = {
     providers: [MAX_VALIDATOR],
     host: {
         '[attr.max]': 'max ? max : null'
-    }
+    },
+    standalone: true
 })
 export class MaxValidator implements Validator, OnChanges {
     @Input() max: number | string;

@@ -11,8 +11,7 @@ describe('KbqSearchExpandable', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [KbqSearchExpandableModule],
-            declarations: [TestApp]
+            imports: [KbqSearchExpandableModule, TestApp]
         }).compileComponents();
     });
 
@@ -57,7 +56,9 @@ describe('KbqSearchExpandable', () => {
     selector: 'test-app',
     template: `
         <kbq-search-expandable [isOpened]="openedState" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqSearchExpandableModule]
 })
 class TestApp {
     openedState: boolean = false;

@@ -46,7 +46,8 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
         }`,
         '(@state.start)': 'onAnimation($event)',
         '(@state.done)': 'onAnimation($event)'
-    }
+    },
+    standalone: true
 })
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
     /** ID for the container DOM element. */

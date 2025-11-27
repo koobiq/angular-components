@@ -37,7 +37,8 @@ import { KBQ_TAB_LABEL, KbqTabLabel } from './tab-label.directive';
         ...[KBQ_SELECT_SCROLL_STRATEGY, KBQ_DROPDOWN_SCROLL_STRATEGY].map((token) =>
             KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER(token, (overlay) => () => overlay.scrollStrategies.close())
         )
-    ]
+    ],
+    standalone: true
 })
 export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** @docs-private */

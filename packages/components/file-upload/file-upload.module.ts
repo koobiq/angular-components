@@ -29,9 +29,7 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
         KbqLinkModule,
         AsyncPipe,
         NgClass,
-        NgTemplateOutlet
-    ],
-    declarations: [
+        NgTemplateOutlet,
         KbqFileDropDirective,
         KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent

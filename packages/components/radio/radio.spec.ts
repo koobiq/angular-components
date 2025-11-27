@@ -8,11 +8,7 @@ import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 describe('MсRadio', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
-            declarations: [
-                DisableableRadioButton,
-                RadiosInsideRadioGroup
-            ]
+            imports: [KbqRadioModule, FormsModule, ReactiveFormsModule, DisableableRadioButton, RadiosInsideRadioGroup]
         }).compileComponents();
     });
 
@@ -328,7 +324,9 @@ describe('MсRadio', () => {
             <kbq-radio-button [value]="'water'" [color]="color">Squirtle</kbq-radio-button>
             <kbq-radio-button [value]="'leaf'" [color]="color">Bulbasaur</kbq-radio-button>
         </kbq-radio-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqRadioModule, FormsModule, ReactiveFormsModule]
 })
 class RadiosInsideRadioGroup {
     labelPos: 'before' | 'after';
@@ -342,7 +340,9 @@ class RadiosInsideRadioGroup {
 @Component({
     template: `
         <kbq-radio-button>One</kbq-radio-button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqRadioModule, FormsModule, ReactiveFormsModule]
 })
 class DisableableRadioButton {
     @ViewChild(KbqRadioButton, { static: false }) kbqRadioButton;

@@ -58,7 +58,8 @@ export class KbqButtonToggleChange {
         class: 'kbq-button-toggle-group',
         '[class.kbq-button-toggle_vertical]': 'vertical'
     },
-    exportAs: 'kbqButtonToggleGroup'
+    exportAs: 'kbqButtonToggleGroup',
+    standalone: true
 })
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
     /** Whether the toggle group is vertical. */
@@ -313,7 +314,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     host: {
         class: 'kbq-button-toggle',
         '[class]': '"kbq-button-toggle" + iconType'
-    }
+    },
+    standalone: true
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;

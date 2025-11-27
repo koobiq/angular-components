@@ -378,7 +378,8 @@ class ComponentForSidepanel {}
         </kbq-dropdown>
     `,
     // Testing for service with parent service
-    providers: [KbqSidepanelService]
+    providers: [KbqSidepanelService],
+    standalone: true
 })
 class SidepanelFromDropdownComponent {
     @ViewChild('trigger') trigger: KbqDropdownTrigger;
@@ -391,7 +392,8 @@ class SidepanelFromDropdownComponent {
 }
 
 @Component({
-    template: '<div>Simple Sidepanel</div>'
+    template: '<div>Simple Sidepanel</div>',
+    standalone: true
 })
 class SimpleSidepanelExample {
     constructor(
@@ -405,7 +407,8 @@ class SimpleSidepanelExample {
         <ng-template let-data let-sidepanelRef="sidepanelRef">
             {{ localValue }} {{ data?.value }}{{ setSidepanelRef(sidepanelRef) }}
         </ng-template>
-    `
+    `,
+    standalone: true
 })
 class ComponentWithTemplateForSidepanel {
     localValue: string;
@@ -424,7 +427,8 @@ class ComponentWithTemplateForSidepanel {
     selector: 'root-component',
     template: `
         <div></div>
-    `
+    `,
+    standalone: true
 })
 class RootComponent {}
 
@@ -442,9 +446,9 @@ const TEST_COMPONENTS = [
         KbqSidepanelModule,
         NoopAnimationsModule,
         KbqDropdownModule,
-        KbqButtonModule
+        KbqButtonModule,
+        ...TEST_COMPONENTS
     ],
-    exports: TEST_COMPONENTS,
-    declarations: TEST_COMPONENTS
+    exports: TEST_COMPONENTS
 })
 class SidepanelTestModule {}

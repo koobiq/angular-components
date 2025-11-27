@@ -49,9 +49,9 @@ const COMPONENTS = [
         KbqIconModule,
         KbqToolTipModule,
         CdkObserveContent,
-        ...STANDALONE_COMPONENTS
+        ...STANDALONE_COMPONENTS,
+        ...COMPONENTS
     ],
-    declarations: COMPONENTS,
     exports: [
         ...COMPONENTS,
         ...STANDALONE_COMPONENTS

@@ -21,9 +21,7 @@ describe('KbqTabHeader', () => {
         TestBed.configureTestingModule({
             imports: [
                 PortalModule,
-                ScrollingModule
-            ],
-            declarations: [
+                ScrollingModule,
                 KbqTabHeader,
                 KbqTabLabelWrapper,
                 SimpleTabHeaderApp
@@ -321,7 +319,9 @@ interface ITab {
             }
         `
 
-    ]
+    ],
+    standalone: true,
+    imports: [PortalModule, ScrollingModule]
 })
 class SimpleTabHeaderApp {
     selectedIndex: number = 0;

@@ -62,7 +62,8 @@ const fileSizeCellPadding = 16;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-multiple-file-upload'
-    }
+    },
+    standalone: true
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase

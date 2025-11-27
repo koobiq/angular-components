@@ -67,7 +67,8 @@ export enum Direction {
         '[class.kbq-gutter_vertical]': 'isVertical',
         '[class.kbq-gutter_dragged]': 'dragged',
         '(mousedown)': 'dragged = true'
-    }
+    },
+    standalone: true
 })
 export class KbqGutterDirective implements OnInit {
     @Input()
@@ -145,7 +146,8 @@ export class KbqGutterDirective implements OnInit {
         class: 'kbq-gutter-ghost',
         '[class.kbq-gutter-ghost_vertical]': 'isVertical',
         '[class.kbq-gutter-ghost_visible]': 'visible'
-    }
+    },
+    standalone: true
 })
 export class KbqGutterGhostDirective {
     @Input() visible: boolean;
@@ -227,7 +229,9 @@ export class KbqGutterGhostDirective {
     styleUrls: ['splitter.scss'],
     templateUrl: './splitter.component.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [KbqGutterDirective, KbqGutterGhostDirective]
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
     @Output() readonly gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();
@@ -551,7 +555,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     host: {
         class: 'kbq-splitter-area',
         '[class.kbq-splitter-area_resizing]': 'isResizing()'
-    }
+    },
+    standalone: true
 })
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     @Output() readonly sizeChange: EventEmitter<number> = new EventEmitter<number>();

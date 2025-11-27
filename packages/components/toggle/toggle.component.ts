@@ -72,7 +72,8 @@ export class KbqToggleChange {
             useExisting: forwardRef(() => KbqToggleComponent),
             multi: true
         }
-    ]
+    ],
+    standalone: true
 })
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     @Input() big: boolean = false;

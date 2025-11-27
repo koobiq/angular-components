@@ -12,7 +12,12 @@ import { KbqList, KbqListItem } from './list.component';
         KbqLineModule,
         KbqOptionModule,
         KbqActionContainer,
-        KbqIconModule
+        KbqIconModule,
+        KbqList,
+        KbqListSelection,
+        KbqListItem,
+        KbqListOption,
+        KbqListOptionCaption
     ],
     exports: [
         KbqList,
@@ -21,13 +26,6 @@ import { KbqList, KbqListItem } from './list.component';
         KbqListOption,
         KbqListOptionCaption,
         KbqOptionModule
-    ],
-    declarations: [
-        KbqList,
-        KbqListSelection,
-        KbqListItem,
-        KbqListOption,
-        KbqListOptionCaption
     ]
 })
 export class KbqListModule {}

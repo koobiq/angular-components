@@ -20,9 +20,9 @@ describe('KbqEmptyState', () => {
                 BrowserModule,
                 KbqEmptyStateModule,
                 KbqIconModule,
-                KbqButtonModule
-            ],
-            declarations: [EmptyStateWithParams]
+                KbqButtonModule,
+                EmptyStateWithParams
+            ]
         }).compileComponents();
     });
 
@@ -59,7 +59,9 @@ describe('KbqEmptyState', () => {
                 <button kbq-button [kbqStyle]="styles.Transparent" [color]="colors.Theme">Action 3</button>
             </div>
         </kbq-empty-state>
-    `
+    `,
+    standalone: true,
+    imports: [BrowserModule, KbqEmptyStateModule, KbqIconModule, KbqButtonModule]
 })
 class EmptyStateWithParams {
     protected readonly styles = KbqButtonStyles;

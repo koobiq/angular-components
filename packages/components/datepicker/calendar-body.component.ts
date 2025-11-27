@@ -40,7 +40,8 @@ export class KbqCalendarCell {
         class: 'kbq-calendar__body'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqCalendarBody implements OnChanges {
     /** The cells to display in the table. */

@@ -53,7 +53,8 @@ let nextUniqueId = 0;
             provide: KbqFormFieldControl,
             useExisting: KbqInput
         }
-    ]
+    ],
+    standalone: true
 })
 export class KbqInput
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
@@ -320,6 +321,7 @@ export class KbqInput
 @Directive({
     selector: 'input[kbqInputMonospace]',
     exportAs: 'KbqInputMonospace',
-    host: { class: 'kbq-input_monospace' }
+    host: { class: 'kbq-input_monospace' },
+    standalone: true
 })
 export class KbqInputMono {}

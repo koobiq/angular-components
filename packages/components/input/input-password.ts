@@ -31,7 +31,6 @@ let nextUniqueId = 0;
         '[attr.placeholder]': 'placeholder',
         '[attr.disabled]': 'disabled || null',
         '[required]': 'required',
-
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
         '(input)': 'onInput()'
@@ -41,7 +40,8 @@ let nextUniqueId = 0;
             provide: KbqFormFieldControl,
             useExisting: KbqInputPassword
         }
-    ]
+    ],
+    standalone: true
 })
 export class KbqInputPassword
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState

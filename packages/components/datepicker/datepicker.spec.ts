@@ -40,13 +40,14 @@ describe('KbqDatepicker', () => {
                 KbqInputModule,
                 NoopAnimationsModule,
                 ReactiveFormsModule,
-                ...imports
+                ...imports,
+                component,
+                ...entryComponents
             ],
             providers: [
                 { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
                 ...providers
-            ],
-            declarations: [component, ...entryComponents]
+            ]
         });
 
         TestBed.overrideModule(BrowserDynamicTestingModule, {}).compileComponents();

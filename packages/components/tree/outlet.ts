@@ -1,6 +1,9 @@
 import { ChangeDetectorRef, Directive, ViewContainerRef } from '@angular/core';
 
-@Directive({ selector: '[kbqTreeNodeOutlet]' })
+@Directive({
+    selector: '[kbqTreeNodeOutlet]',
+    standalone: true
+})
 export class KbqTreeNodeOutlet {
     constructor(
         public viewContainer: ViewContainerRef,

@@ -4,8 +4,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqButtonToggle, KbqButtonToggleGroup } from './button-toggle.component';
 
 @NgModule({
-    imports: [KbqButtonModule, KbqTitleModule],
-    exports: [KbqButtonToggleGroup, KbqButtonToggle],
-    declarations: [KbqButtonToggleGroup, KbqButtonToggle]
+    imports: [KbqButtonModule, KbqTitleModule, KbqButtonToggleGroup, KbqButtonToggle],
+    exports: [KbqButtonToggleGroup, KbqButtonToggle]
 })
 export class KbqButtonToggleModule {}

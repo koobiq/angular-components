@@ -17,9 +17,7 @@ describe('KbqCalendar', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqLuxonDateModule,
-                KbqDatepickerModule
-            ],
-            declarations: [
+                KbqDatepickerModule,
                 StandardCalendar,
                 CalendarWithMinMax,
                 CalendarWithDateFilter,
@@ -349,7 +347,9 @@ describe('KbqCalendar', () => {
             (yearSelected)="selectedYear = $event"
             (monthSelected)="selectedMonth = $event"
         />
-    `
+    `,
+    standalone: true,
+    imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class StandardCalendar {
     selected: DateTime;
@@ -363,7 +363,9 @@ class StandardCalendar {
 @Component({
     template: `
         <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class CalendarWithMinMax {
     startAt: DateTime;
@@ -376,7 +378,9 @@ class CalendarWithMinMax {
 @Component({
     template: `
         <kbq-calendar [startAt]="startDate" [dateFilter]="dateFilter" [(selected)]="selected" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class CalendarWithDateFilter {
     selected: DateTime;
@@ -397,7 +401,9 @@ class CalendarWithDateFilter {
             [minDate]="selected"
             (selectedChange)="select($event)"
         />
-    `
+    `,
+    standalone: true,
+    imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class CalendarWithSelectableMinDate {
     startAt = new Date(2018, 6, 0);

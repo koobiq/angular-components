@@ -27,9 +27,9 @@ describe('KbqTagInput', () => {
                 PlatformModule,
                 KbqTagsModule,
                 KbqFormFieldModule,
-                NoopAnimationsModule
+                NoopAnimationsModule,
+                TestTagInput
             ],
-            declarations: [TestTagInput],
             providers: [
                 {
                     provide: Directionality,
@@ -254,7 +254,9 @@ describe('KbqTagInput', () => {
                 (kbqTagInputTokenEnd)="add($event)"
             />
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule]
 })
 class TestTagInput {
     @ViewChild(KbqTagList, { static: false }) tagListInstance: KbqTagList;

@@ -4,8 +4,7 @@ import { KbqCheckbox } from './checkbox';
 import { KbqCheckboxRequiredValidator } from './checkbox-required-validator';
 
 @NgModule({
-    imports: [CommonModule],
-    exports: [KbqCheckbox, KbqCheckboxRequiredValidator],
-    declarations: [KbqCheckbox, KbqCheckboxRequiredValidator]
+    imports: [CommonModule, KbqCheckbox, KbqCheckboxRequiredValidator],
+    exports: [KbqCheckbox, KbqCheckboxRequiredValidator]
 })
 export class KbqCheckboxModule {}

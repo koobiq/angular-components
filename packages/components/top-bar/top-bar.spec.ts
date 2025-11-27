@@ -10,8 +10,7 @@ describe(KbqTopBar.name, () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [KbqTopBarModule],
-            declarations: [TestApp]
+            imports: [KbqTopBarModule, TestApp]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
@@ -41,7 +40,9 @@ describe(KbqTopBar.name, () => {
 
 @Component({
     selector: 'test-app',
-    template: '<kbq-top-bar [withShadow]="withShadow" />'
+    template: '<kbq-top-bar [withShadow]="withShadow" />',
+    standalone: true,
+    imports: [KbqTopBarModule]
 })
 class TestApp {
     @ViewChild(KbqTopBar) topBar: KbqTopBar;

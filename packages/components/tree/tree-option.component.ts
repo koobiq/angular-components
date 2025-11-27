@@ -63,14 +63,11 @@ let uniqueIdCounter: number = 0;
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-action-button-focused]': 'actionButton?.active',
-
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
         '[attr.disabled]': 'disabled || null',
-
         '(focusin)': 'focus()',
         '(blur)': 'blur()',
-
         '(click)': 'selectViaInteraction($event)',
         '(keydown)': 'onKeydown($event)'
     },
@@ -80,7 +77,8 @@ let uniqueIdCounter: number = 0;
         { provide: KbqTreeNode, useExisting: KbqTreeOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTreeOption },
         { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqTreeOption }
-    ]
+    ],
+    standalone: true
 })
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     readonly onFocus = new Subject<KbqTreeOptionEvent>();

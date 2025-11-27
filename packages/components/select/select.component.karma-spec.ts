@@ -476,7 +476,17 @@ class SelectWithLongOptionText {
                 <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ]
 })
 class CdkVirtualScrollViewportSelect<T = string> {
     itemSize = 32;
@@ -986,9 +996,9 @@ describe(KbqSelect.name, () => {
                     ReactiveFormsModule,
                     FormsModule,
                     NoopAnimationsModule,
-                    ScrollingModule
-                ],
-                declarations: [CdkVirtualScrollViewportSelect]
+                    ScrollingModule,
+                    CdkVirtualScrollViewportSelect
+                ]
             }).compileComponents();
 
             inject([OverlayContainer], (oc: OverlayContainer) => {

@@ -22,8 +22,8 @@ describe('KbqAccordion', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqAccordionModule],
-            declarations: [
+            imports: [
+                KbqAccordionModule,
                 TestApp,
                 AccordionVariants,
                 AccordionDefaultValue,
@@ -272,7 +272,9 @@ describe('KbqAccordion', () => {
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class TestApp {}
 
@@ -287,7 +289,9 @@ class TestApp {}
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class AccordionVariants {
     selectedVariant: KbqAccordionVariant = KbqAccordionVariant.hug;
@@ -304,7 +308,9 @@ class AccordionVariants {
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class AccordionDefaultValue {
     defaultValue: string;
@@ -327,7 +333,9 @@ class AccordionDefaultValue {
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class AccordionValue {
     value: string;
@@ -350,7 +358,9 @@ class AccordionValue {
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class AccordionDisabled {
     disabled: boolean;
@@ -373,7 +383,9 @@ class AccordionDisabled {
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class AccordionDisabledItem {
     disabledItem: boolean;
@@ -396,7 +408,9 @@ class AccordionDisabledItem {
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class AccordionType {
     type: KbqAccordionType;
@@ -419,6 +433,8 @@ class AccordionType {
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>
-    `
+    `,
+    standalone: true,
+    imports: [KbqAccordionModule]
 })
 class AccordionCollapsible {}

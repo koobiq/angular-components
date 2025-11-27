@@ -23,7 +23,8 @@ import { KbqModalComponent } from './modal.component';
     host: {
         class: 'kbq-modal-header',
         '[class.kbq-modal-header_closable]': 'modal.kbqClosable'
-    }
+    },
+    standalone: true
 })
 export class KbqModalTitle {
     constructor(protected modal: KbqModalComponent) {}
@@ -33,7 +34,8 @@ export class KbqModalTitle {
     selector: `[kbq-modal-body], kbq-modal-body, [kbqModalBody]`,
     host: {
         class: 'kbq-modal-body'
-    }
+    },
+    standalone: true
 })
 export class KbqModalBody {}
 
@@ -41,11 +43,13 @@ export class KbqModalBody {}
     selector: `[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]`,
     host: {
         class: 'kbq-modal-footer'
-    }
+    },
+    standalone: true
 })
 export class KbqModalFooter {}
 
 @Directive({
-    selector: `[kbq-modal-main-action]`
+    selector: `[kbq-modal-main-action]`,
+    standalone: true
 })
 export class KbqModalMainAction {}

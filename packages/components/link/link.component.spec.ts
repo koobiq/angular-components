@@ -6,8 +6,9 @@ import { KbqLinkModule } from './index';
 describe('KbqLink', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqLinkModule, KbqIconModule],
-            declarations: [
+            imports: [
+                KbqLinkModule,
+                KbqIconModule,
                 KbqLinkBaseTestApp,
                 KbqLinkIconTestApp,
                 KbqLinkPrintTestApp,
@@ -85,7 +86,9 @@ describe('KbqLink', () => {
     selector: 'kbq-link-base-test-app',
     template: `
         <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
-    `
+    `,
+    standalone: true,
+    imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkBaseTestApp {}
 
@@ -93,7 +96,9 @@ class KbqLinkBaseTestApp {}
     selector: 'kbq-link-print-test-app',
     template: `
         <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a>
-    `
+    `,
+    standalone: true,
+    imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkPrintTestApp {
     print: string = '';
@@ -106,7 +111,9 @@ class KbqLinkPrintTestApp {
             <span class="kbq-link__text">Отчет сканирования</span>
             <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
         </a>
-    `
+    `,
+    standalone: true,
+    imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkIconTestApp {}
 
@@ -114,7 +121,9 @@ class KbqLinkIconTestApp {}
     selector: 'kbq-link-pseudo-test-app',
     template: `
         <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a>
-    `
+    `,
+    standalone: true,
+    imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkPseudoTestApp {}
 
@@ -122,6 +131,8 @@ class KbqLinkPseudoTestApp {}
     selector: 'kbq-link-no-underline-test-app',
     template: `
         <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a>
-    `
+    `,
+    standalone: true,
+    imports: [KbqLinkModule, KbqIconModule]
 })
 class KbqLinkNoUnderlineTestApp {}

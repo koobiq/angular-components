@@ -54,7 +54,8 @@ type AnimationState = 'enter' | 'leave' | null;
     host: {
         class: 'kbq-modal',
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    standalone: true
 })
 export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>

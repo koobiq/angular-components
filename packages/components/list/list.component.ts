@@ -16,7 +16,8 @@ import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
     template: '<ng-content />',
     styleUrls: ['./list.scss', 'list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true
 })
 export class KbqList {}
 
@@ -30,7 +31,8 @@ export class KbqList {}
     templateUrl: './list-item.html',
     encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqListItem implements AfterContentInit {
     @ContentChildren(KbqLine) lines: QueryList<KbqLine>;

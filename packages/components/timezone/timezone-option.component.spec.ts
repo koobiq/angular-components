@@ -7,7 +7,9 @@ import { KbqTimezoneModule } from './timezone.module';
 @Component({
     template: `
         <kbq-timezone-option [timezone]="zone" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqTimezoneModule]
 })
 class TimezoneOptionComponent {
     zone = {
@@ -23,8 +25,7 @@ class TimezoneOptionComponent {
 describe('KbqTimezoneOption component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTimezoneModule],
-            declarations: [TimezoneOptionComponent]
+            imports: [KbqTimezoneModule, TimezoneOptionComponent]
         }).compileComponents();
     });
 

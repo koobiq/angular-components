@@ -32,9 +32,9 @@ describe('KbqAutocomplete', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 NoopAnimationsModule,
-                KbqLocaleServiceModule
+                KbqLocaleServiceModule,
+                component
             ],
-            declarations: [component],
             providers: [
                 { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useFactory: () => ({ autoActiveFirstOption: false }) },

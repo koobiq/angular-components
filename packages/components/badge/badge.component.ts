@@ -36,7 +36,8 @@ export enum KbqBadgeColors {
     selector: '[kbq-badge-caption]',
     host: {
         class: 'kbq-badge-caption'
-    }
+    },
+    standalone: true
 })
 export class KbqBadgeCaption {}
 
@@ -47,7 +48,8 @@ export const badgeLeftIconClassName = 'kbq-badge-icon_left';
 export const badgeRightIconClassName = 'kbq-badge-icon_right';
 
 @Directive({
-    selector: 'kbq-badge'
+    selector: 'kbq-badge',
+    standalone: true
 })
 export class KbqBadgeCssStyler implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
@@ -120,7 +122,8 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         '[class.kbq-badge-filled]': '!outline',
         '[class.kbq-badge-outline]': 'outline',
         '[class]': 'badgeColor'
-    }
+    },
+    standalone: true
 })
 export class KbqBadge {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;

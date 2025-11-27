@@ -33,7 +33,8 @@ import { KbqMonthView } from './month-view.component';
         class: 'kbq-calendar'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** A date representing the period (month or year) to start the calendar in. */

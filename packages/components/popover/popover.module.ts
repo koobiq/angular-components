@@ -19,12 +19,6 @@ import {
 } from './popover.component';
 
 @NgModule({
-    declarations: [
-        KbqPopoverComponent,
-        KbqPopoverTrigger,
-        KbqPopoverConfirmComponent,
-        KbqPopoverConfirmTrigger
-    ],
     exports: [
         KbqPopoverComponent,
         KbqPopoverTrigger,
@@ -38,7 +32,11 @@ import {
         KbqIconModule,
         CdkObserveContent,
         NgClass,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        KbqPopoverComponent,
+        KbqPopoverTrigger,
+        KbqPopoverConfirmComponent,
+        KbqPopoverConfirmTrigger
     ],
     providers: [
         KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,

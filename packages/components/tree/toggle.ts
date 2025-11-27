@@ -74,13 +74,12 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     host: {
         class: 'kbq-tree-node-toggle',
         '[class.kbq-expanded]': 'iconState',
-
         '[attr.disabled]': 'disabled || null',
-
         '(click)': 'toggle($event)'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
 
@@ -91,6 +90,7 @@ export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirectiv
         '[attr.disabled]': 'disabled || null',
         '(click)': 'toggle($event)',
         class: 'kbq-tree-node-toggle'
-    }
+    },
+    standalone: true
 })
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {}

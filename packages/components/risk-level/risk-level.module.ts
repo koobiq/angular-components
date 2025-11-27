@@ -6,9 +6,9 @@ import { KbqRiskLevel } from './risk-level.component';
 @NgModule({
     imports: [
         A11yModule,
-        PlatformModule
+        PlatformModule,
+        KbqRiskLevel
     ],
-    declarations: [KbqRiskLevel],
     exports: [KbqRiskLevel]
 })
 export class KbqRiskLevelModule {}

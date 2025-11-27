@@ -24,8 +24,7 @@ describe('KbqDropdown', () => {
         declarations: any[] = []
     ): ComponentFixture<T> {
         TestBed.configureTestingModule({
-            imports: [KbqDropdownModule, NoopAnimationsModule],
-            declarations: [component, ...declarations],
+            imports: [KbqDropdownModule, NoopAnimationsModule, component, ...declarations],
             providers
         }).compileComponents();
 

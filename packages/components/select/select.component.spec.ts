@@ -1235,7 +1235,17 @@ class MultiSelectWithCustomizedTagContent {
                 <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ]
 })
 class CdkVirtualScrollViewportSelect<T = string> {
     itemSize = 32;
@@ -1279,7 +1289,17 @@ class CdkVirtualScrollViewportSelect<T = string> {
                 <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ]
 })
 class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewportSelect<{
     id: number;
@@ -4843,9 +4863,7 @@ describe(KbqSelect.name, () => {
                     ReactiveFormsModule,
                     FormsModule,
                     NoopAnimationsModule,
-                    ScrollingModule
-                ],
-                declarations: [
+                    ScrollingModule,
                     CdkVirtualScrollViewportSelect,
                     CdkVirtualScrollViewportSelectOptionAsObject
                 ]

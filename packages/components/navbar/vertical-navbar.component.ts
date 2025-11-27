@@ -41,14 +41,13 @@ import { KbqFocusableComponent } from './navbar.component';
         class: 'kbq-vertical-navbar',
         '[class.kbq-vertical-navbar_open-over]': 'openOver',
         '[attr.tabindex]': 'tabIndex',
-
         '(focus)': 'focus()',
         '(blur)': 'blur()',
-
         '(keydown)': 'onKeyDown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     rectangleElements = contentChildren(

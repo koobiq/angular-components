@@ -4,9 +4,7 @@ import { KbqProgressBar, KbqProgressBarCaption, KbqProgressBarText } from './pro
 
 @NgModule({
     imports: [
-        PlatformModule
-    ],
-    declarations: [
+        PlatformModule,
         KbqProgressBar,
         KbqProgressBarText,
         KbqProgressBarCaption

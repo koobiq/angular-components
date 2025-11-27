@@ -18,9 +18,7 @@ describe('KbqTooltip', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqToolTipModule,
-                NoopAnimationsModule
-            ],
-            declarations: [
+                NoopAnimationsModule,
                 KbqTooltipTestWrapperComponent
             ]
         }).compileComponents();
@@ -99,7 +97,9 @@ describe('KbqTooltip', () => {
         >
             Show
         </span>
-    `
+    `,
+    standalone: true,
+    imports: [KbqToolTipModule]
 })
 class KbqTooltipTestWrapperComponent {
     @ViewChild('normalTrigger', { static: false }) normalTrigger: ElementRef;

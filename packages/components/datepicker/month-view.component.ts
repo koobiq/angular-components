@@ -25,7 +25,8 @@ const DAYS_PER_WEEK = 7;
     exportAs: 'kbqMonthView',
     templateUrl: 'month-view.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqMonthView<D> implements AfterContentInit {
     /**

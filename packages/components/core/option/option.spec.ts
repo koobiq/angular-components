@@ -6,7 +6,9 @@ import { KbqOption, KbqOptionModule } from './index';
 @Component({
     template: `
         <kbq-option [disabled]="disabled" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqOptionModule]
 })
 class OptionWithDisable {
     disabled: boolean;
@@ -15,8 +17,7 @@ class OptionWithDisable {
 describe('KbqOption component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule],
-            declarations: [OptionWithDisable]
+            imports: [KbqOptionModule, OptionWithDisable]
         }).compileComponents();
     });
 

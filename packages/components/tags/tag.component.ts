@@ -93,7 +93,8 @@ export type KbqTagDragData = KbqTagEvent;
  */
 @Directive({
     selector: 'kbq-tag-avatar, [kbqTagAvatar]',
-    host: { class: 'kbq-tag-avatar' }
+    host: { class: 'kbq-tag-avatar' },
+    standalone: true
 })
 export class KbqTagAvatar {}
 
@@ -103,7 +104,8 @@ export class KbqTagAvatar {}
  */
 @Directive({
     selector: 'kbq-tag-trailing-icon, [kbqTagTrailingIcon]',
-    host: { class: 'kbq-tag-trailing-icon' }
+    host: { class: 'kbq-tag-trailing-icon' },
+    standalone: true
 })
 export class KbqTagTrailingIcon {}
 
@@ -196,10 +198,8 @@ export class KbqTagEditInput {
     styleUrls: ['./tag.scss'],
     host: {
         class: 'kbq-tag',
-
         '[attr.tabindex]': 'tabindex',
         '[attr.disabled]': 'disabled || null',
-
         '[class.kbq-selected]': 'selected',
         '[class.kbq-tag-with-avatar]': 'avatar',
         '[class.kbq-tag-with-icon]': 'contentChildren',
@@ -210,14 +210,14 @@ export class KbqTagEditInput {
         '[class.kbq-tag_removable]': 'removable',
         '[class.kbq-tag_selectable]': 'selectable',
         '[class.kbq-tag_draggable]': 'draggable',
-
         '(dblclick)': 'handleDblClick($event)',
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
+    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
+    standalone: true
 })
 export class KbqTag
     extends KbqColorDirective
@@ -697,7 +697,8 @@ export class KbqTag
         '[attr.tabindex]': '-1',
         '(click)': 'handleClick($event)',
         '(focus)': 'focus($event)'
-    }
+    },
+    standalone: true
 })
 export class KbqTagRemove {
     constructor(@Inject(forwardRef(() => KbqTag)) protected parentTag: KbqTag) {}

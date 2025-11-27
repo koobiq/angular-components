@@ -13,7 +13,10 @@ import { KbqAutocomplete } from './autocomplete.component';
     imports: [
         KbqOptionModule,
         OverlayModule,
-        NgClass
+        NgClass,
+        KbqAutocomplete,
+        KbqAutocompleteTrigger,
+        KbqAutocompleteOrigin
     ],
     exports: [
         KbqAutocomplete,
@@ -21,7 +24,6 @@ import { KbqAutocomplete } from './autocomplete.component';
         KbqAutocompleteTrigger,
         KbqAutocompleteOrigin
     ],
-    declarations: [KbqAutocomplete, KbqAutocompleteTrigger, KbqAutocompleteOrigin],
     providers: [KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })
 export class KbqAutocompleteModule {}

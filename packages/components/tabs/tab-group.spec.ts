@@ -14,9 +14,7 @@ describe('KbqTabGroup', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqTabsModule,
-                NoopAnimationsModule
-            ],
-            declarations: [
+                NoopAnimationsModule,
                 SimpleTabsTestApp,
                 SimpleDynamicTabsTestApp,
                 BindedTabsTestApp,
@@ -587,8 +585,7 @@ describe('KbqTabGroup', () => {
 describe('nested KbqTabGroup with enabled animations', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule],
-            declarations: [NestedTabs]
+            imports: [KbqTabsModule, NoopAnimationsModule, NestedTabs]
         }).compileComponents();
     });
 
@@ -627,7 +624,9 @@ describe('nested KbqTabGroup with enabled animations', () => {
                 Tab three content
             </kbq-tab>
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class SimpleTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -662,7 +661,9 @@ class SimpleTabsTestApp {
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class SimpleDynamicTabsTestApp {
     tabs = [
@@ -692,7 +693,9 @@ class SimpleDynamicTabsTestApp {
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class BindedTabsTestApp {
     tabs = [
@@ -727,7 +730,9 @@ class BindedTabsTestApp {
                 Tab three content
             </kbq-tab>
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class DisabledTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -744,7 +749,9 @@ class DisabledTabsTestApp {
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class AsyncTabsTestApp implements OnInit {
     tabs: Observable<any>;
@@ -769,7 +776,9 @@ class AsyncTabsTestApp implements OnInit {
             <kbq-tab [label]="otherLabel">{{ otherContent }}</kbq-tab>
             <kbq-tab label="Legumes"><p #legumes>Peanuts</p></kbq-tab>
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class TabGroupWithSimpleApi {
     otherLabel = 'Fruit';
@@ -790,7 +799,9 @@ class TabGroupWithSimpleApi {
                 </kbq-tab-group>
             </kbq-tab>
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class NestedTabs {}
 
@@ -805,7 +816,9 @@ class NestedTabs {}
                 </ng-template>
             </kbq-tab>
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class TemplateTabs {}
 
@@ -819,7 +832,9 @@ class TemplateTabs {}
         @if (pizza.isActive) {
             <div>pizza is active</div>
         }
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class TabGroupWithIsActiveBinding {}
 
@@ -841,7 +856,9 @@ class TabGroupWithIsActiveBinding {}
                 Tab last content
             </kbq-tab>
         </kbq-tab-group>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class TestSelectionByIndexOrTabIdApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;

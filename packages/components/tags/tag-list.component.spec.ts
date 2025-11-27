@@ -1019,9 +1019,9 @@ describe(KbqTagList.name, () => {
                 KbqTagsModule,
                 KbqFormFieldModule,
                 KbqInputModule,
-                NoopAnimationsModule
+                NoopAnimationsModule,
+                component
             ],
-            declarations: [component],
             providers: [
                 { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 ...providers

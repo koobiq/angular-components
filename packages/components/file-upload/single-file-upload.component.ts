@@ -47,7 +47,8 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-single-file-upload'
-    }
+    },
+    standalone: true
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase

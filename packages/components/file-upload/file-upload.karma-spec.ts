@@ -84,8 +84,11 @@ describe('KbqMultipleFileUploadComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
+                KbqFileUploadModule,
+                FormsModule,
+                ReactiveFormsModule,
                 BasicMultipleFileUpload,
                 ControlValueAccessorMultipleFileUpload
             ]
@@ -173,8 +176,11 @@ describe('KbqSingleFileUploadComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
+                KbqFileUploadModule,
+                FormsModule,
+                ReactiveFormsModule,
                 BasicSingleFileUpload,
                 ControlValueAccessorSingleFileUpload
             ]
@@ -302,7 +308,9 @@ describe('KbqSingleFileUploadComponent', () => {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -330,7 +338,9 @@ class BasicSingleFileUpload {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
@@ -358,7 +368,9 @@ class BasicMultipleFileUpload {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
@@ -387,7 +399,9 @@ class ControlValueAccessorMultipleFileUpload {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;

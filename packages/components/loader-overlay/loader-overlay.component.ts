@@ -11,6 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqProgressSpinner } from '../progress-spinner/progress-spinner.component';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 
@@ -18,7 +19,8 @@ const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
     selector: '[kbq-loader-overlay-indicator]',
     host: {
         class: 'kbq-loader-overlay-indicator'
-    }
+    },
+    standalone: true
 })
 export class KbqLoaderOverlayIndicator {}
 
@@ -26,7 +28,8 @@ export class KbqLoaderOverlayIndicator {}
     selector: '[kbq-loader-overlay-text]',
     host: {
         class: 'kbq-loader-overlay-text'
-    }
+    },
+    standalone: true
 })
 export class KbqLoaderOverlayText {}
 
@@ -34,7 +37,8 @@ export class KbqLoaderOverlayText {}
     selector: '[kbq-loader-overlay-caption]',
     host: {
         class: 'kbq-loader-overlay-caption'
-    }
+    },
+    standalone: true
 })
 export class KbqLoaderOverlayCaption {}
 
@@ -50,7 +54,9 @@ export class KbqLoaderOverlayCaption {}
         '[class.kbq-loader-overlay_filled]': '!transparent'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [KbqProgressSpinner]
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @Input() text: string;

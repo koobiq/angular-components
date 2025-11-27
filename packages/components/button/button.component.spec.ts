@@ -11,8 +11,7 @@ import { buttonLeftIconClassName, buttonRightIconClassName, KbqButtonCssStyler, 
 describe('KbqButton', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqButtonModule, KbqDropdownModule, NoopAnimationsModule],
-            declarations: [TestApp, ButtonDropdownTrigger]
+            imports: [KbqButtonModule, KbqDropdownModule, NoopAnimationsModule, TestApp, ButtonDropdownTrigger]
         }).compileComponents();
     });
 
@@ -146,8 +145,9 @@ describe('KbqButton', () => {
 describe('Button with icon', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqButtonModule, KbqIconModule],
-            declarations: [
+            imports: [
+                KbqButtonModule,
+                KbqIconModule,
                 KbqButtonCommentCaseTestApp,
                 KbqButtonHtmlIconLeftCaseTestApp,
                 KbqButtonHtmlIconRightCaseTestApp,
@@ -300,7 +300,9 @@ describe('Button with icon', () => {
     template: `
         <button kbq-button type="button" [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></button>
         <a href="#" kbq-button [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></a>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqDropdownModule]
 })
 class TestApp {
     clickCount: number = 0;
@@ -320,7 +322,9 @@ class TestApp {
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             <!-- comment-after -->
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonCommentCaseTestApp {}
 
@@ -331,7 +335,9 @@ class KbqButtonCommentCaseTestApp {}
             <span>Some text</span>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonHtmlIconRightCaseTestApp {}
 
@@ -342,7 +348,9 @@ class KbqButtonHtmlIconRightCaseTestApp {}
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             <span>Some text</span>
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonHtmlIconLeftCaseTestApp {
     avoidCollisionMockTarget() {}
@@ -356,7 +364,9 @@ class KbqButtonHtmlIconLeftCaseTestApp {
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             Some text
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconCaseTestApp {}
 
@@ -369,7 +379,9 @@ class KbqButtonTextIconCaseTestApp {}
             }
             Some text
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconLeftNgIfCaseTestApp {
     visible = true;
@@ -386,7 +398,9 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconRightNgIfCaseTestApp {
     visible = true;
@@ -402,7 +416,9 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
             }
             Some text
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTextIconLeftRightNgIfCaseTestApp {
     visible = true;
@@ -422,7 +438,9 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
             <span>Some text</span>
             <span>Some text</span>
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
     visible = true;
@@ -435,7 +453,9 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
             <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
             <i id="icon2" kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonTwoIconsCaseTestApp {}
 
@@ -447,7 +467,9 @@ class KbqButtonTwoIconsCaseTestApp {}
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule]
 })
 class KbqButtonIconNgIfCaseTestApp {
     visible = true;
@@ -464,7 +486,9 @@ class KbqButtonIconNgIfCaseTestApp {
         >
             <button kbq-dropdown-item>Item</button>
         </kbq-dropdown>
-    `
+    `,
+    standalone: true,
+    imports: [KbqButtonModule, KbqDropdownModule]
 })
 class ButtonDropdownTrigger {
     @ViewChild('triggerEl', { static: false, read: ElementRef }) trigger: ElementRef;

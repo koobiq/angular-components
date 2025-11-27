@@ -13,8 +13,7 @@ const percentPairs = [
 describe('KbqProgressBar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqProgressBarModule],
-            declarations: [TestApp]
+            imports: [KbqProgressBarModule, TestApp]
         }).compileComponents();
     });
 
@@ -91,7 +90,9 @@ describe('KbqProgressBar', () => {
     template: `
         <kbq-progress-bar class="first" [id]="id" [value]="value" [mode]="mode" />
         <kbq-progress-bar class="default" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqProgressBarModule]
 })
 class TestApp {
     value: number = 0;

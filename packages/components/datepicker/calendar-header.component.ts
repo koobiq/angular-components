@@ -29,7 +29,8 @@ export type MonthName = {
         class: 'kbq-calendar-header'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
     monthNames: MonthName[];

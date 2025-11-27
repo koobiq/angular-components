@@ -158,8 +158,7 @@ describe('KbqTreeSelection', () => {
 
             beforeEach(() => {
                 TestBed.configureTestingModule({
-                    imports: [KbqTreeModule, FormsModule],
-                    declarations: [TreeSelectionFocusStates]
+                    imports: [KbqTreeModule, FormsModule, TreeSelectionFocusStates]
                 }).compileComponents();
 
                 fixture = TestBed.createComponent(TreeSelectionFocusStates);
@@ -931,7 +930,9 @@ abstract class TreeParams {
                 {{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTreeModule, FormsModule]
 })
 class TreeSelectionFocusStates extends TreeParams {}
 

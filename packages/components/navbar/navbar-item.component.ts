@@ -33,6 +33,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
 import { EMPTY, Subject, merge } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { KbqIcon as KbqIcon_1 } from '../icon/icon.component';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
 
 export interface KbqNavbarFocusableItemEvent {
@@ -45,7 +46,8 @@ export interface KbqNavbarFocusableItemEvent {
         class: 'kbq-navbar-logo',
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
-    }
+    },
+    standalone: true
 })
 export class KbqNavbarLogo {
     readonly hovered = new Subject<boolean>();
@@ -55,7 +57,8 @@ export class KbqNavbarLogo {
     selector: 'kbq-navbar-item[bento], [kbq-navbar-item][bento]',
     host: {
         class: 'kbq-navbar-bento'
-    }
+    },
+    standalone: true
 })
 export class KbqNavbarBento {}
 
@@ -64,10 +67,10 @@ export class KbqNavbarBento {}
     host: {
         class: 'kbq-navbar-title',
         '[class.kbq-navbar-title_small]': 'isTextOverflown',
-
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
-    }
+    },
+    standalone: true
 })
 export class KbqNavbarTitle implements AfterViewInit {
     protected readonly isBrowser = inject(Platform).isBrowser;
@@ -113,7 +116,8 @@ export class KbqNavbarTitle implements AfterViewInit {
     host: {
         class: 'kbq-navbar-brand',
         '[class.kbq-hovered]': 'hovered'
-    }
+    },
+    standalone: true
 })
 export class KbqNavbarBrand implements AfterContentInit {
     @ContentChild(KbqNavbarLogo) logo: KbqNavbarLogo;
@@ -144,7 +148,8 @@ export class KbqNavbarBrand implements AfterContentInit {
     selector: 'kbq-navbar-divider',
     host: {
         class: 'kbq-navbar-divider'
-    }
+    },
+    standalone: true
 })
 export class KbqNavbarDivider {}
 
@@ -153,14 +158,13 @@ export class KbqNavbarDivider {}
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         class: 'kbq-navbar-focusable-item',
         '[class.kbq-navbar-item_has-nested]': '!!nestedElement',
         '[class.kbq-disabled]': 'disabled',
-
         '(focus)': 'onFocusHandler()',
         '(blur)': 'blur()'
-    }
+    },
+    standalone: true
 })
 export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
@@ -305,10 +309,10 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     host: {
         '[class.kbq-vertical]': 'vertical',
         '[class.kbq-horizontal]': 'horizontal',
-
         '[class.kbq-expanded]': 'vertical && !collapsed',
         '[class.kbq-collapsed]': 'vertical && collapsed'
-    }
+    },
+    standalone: true
 })
 export class KbqNavbarRectangleElement {
     protected readonly isBrowser = inject(Platform).isBrowser;
@@ -381,11 +385,12 @@ export class KbqNavbarRectangleElement {
         class: 'kbq-navbar-item',
         '[class.kbq-navbar-item_collapsed]': 'isCollapsed',
         '[class.kbq-navbar-item_with-title]': '!!title',
-
         '(keydown)': 'onKeyDown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [KbqIcon_1]
 })
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
     @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
@@ -568,13 +573,14 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
         '[class.kbq-tooltip_open]': 'isOpen',
         '[class.kbq-collapsed]': '!navbar.expanded',
         '[class.kbq-expanded]': 'navbar.expanded',
-
         '(keydown)': 'onKeydown($event)',
         '(click)': 'toggle()',
         '(touchend)': 'touchendHandler()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [KbqIcon_1]
 })
 export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
     protected readonly document = inject<Document>(DOCUMENT);

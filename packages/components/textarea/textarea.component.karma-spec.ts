@@ -16,9 +16,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             FormsModule,
             KbqTextareaModule,
             KbqFormFieldModule,
-            ...imports
+            ...imports,
+            component
         ],
-        declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
             ...providers

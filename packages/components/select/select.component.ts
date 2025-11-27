@@ -146,18 +146,15 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
-
         '(click)': 'toggle()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
-
         // @TODO: turn event listener only for specific conditions (#DS-4253)
         '(window:resize)': 'calculateHiddenItems()'
     },
@@ -169,7 +166,8 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
-    ]
+    ],
+    standalone: true
 })
 export class KbqSelect
     extends KbqAbstractSelect

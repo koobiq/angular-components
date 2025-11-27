@@ -58,7 +58,8 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
         '[class.kbq-radio-group_normal]': '!big',
         '[class.kbq-radio-group_big]': 'big'
     },
-    providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR]
+    providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
+    standalone: true
 })
 export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     @Input() big: boolean = false;
@@ -293,7 +294,8 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
         '[class.kbq-radio-button_big]': 'radioGroup?.big',
         '[class.kbq-selected]': 'checked',
         '[class.kbq-disabled]': 'disabled'
-    }
+    },
+    standalone: true
 })
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
     /** Whether this radio button is checked. */

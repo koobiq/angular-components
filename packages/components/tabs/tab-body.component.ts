@@ -1,6 +1,7 @@
 import { AnimationEvent } from '@angular/animations';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -57,7 +58,9 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     animations: [kbqTabsAnimations.translateTab],
     host: {
         class: 'kbq-tab-body'
-    }
+    },
+    standalone: true,
+    imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)]
 })
 export class KbqTabBody implements OnInit, OnDestroy {
     /** The shifted index position of the tab body, where zero represents the active center tab. */
@@ -191,7 +194,8 @@ export class KbqTabBody implements OnInit, OnDestroy {
  * @docs-private
  */
 @Directive({
-    selector: '[kbqTabBodyHost]'
+    selector: '[kbqTabBodyHost]',
+    standalone: true
 })
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
     /** Subscription to events for when the tab body begins centering. */

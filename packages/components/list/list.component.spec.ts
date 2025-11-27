@@ -6,8 +6,8 @@ import { KbqListItem, KbqListModule } from './index';
 describe('KbqList', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqListModule],
-            declarations: [
+            imports: [
+                KbqListModule,
                 ListWithOneAnchorItem,
                 ListWithOneItem,
                 ListWithTwoLineItem,
@@ -85,7 +85,9 @@ class BaseTestList {
         <kbq-list>
             <a kbq-list-item>Paprika</a>
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithOneAnchorItem extends BaseTestList {
     // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
@@ -98,7 +100,9 @@ class ListWithOneAnchorItem extends BaseTestList {
         <kbq-list>
             <kbq-list-item>Paprika</kbq-list-item>
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithOneItem extends BaseTestList {}
 
@@ -113,7 +117,9 @@ class ListWithOneItem extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithTwoLineItem extends BaseTestList {}
 
@@ -128,7 +134,9 @@ class ListWithTwoLineItem extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithThreeLineItem extends BaseTestList {
     avoidCollisionMockTarget() {}
@@ -146,7 +154,9 @@ class ListWithThreeLineItem extends BaseTestList {
                 </kbq-list-item>
             }
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithManyLines extends BaseTestList {}
 
@@ -159,7 +169,9 @@ class ListWithManyLines extends BaseTestList {}
             </kbq-list-item>
             <kbq-list-item>Pepper</kbq-list-item>
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithAvatar extends BaseTestList {}
 
@@ -173,7 +185,9 @@ class ListWithAvatar extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithItemWithCssClass extends BaseTestList {}
 
@@ -190,7 +204,9 @@ class ListWithItemWithCssClass extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithDynamicNumberOfLines extends BaseTestList {}
 
@@ -203,6 +219,8 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class ListWithMultipleItems extends BaseTestList {}

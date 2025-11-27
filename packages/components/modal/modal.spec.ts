@@ -574,7 +574,8 @@ export class CustomComponent {
 @Component({
     template: `
         Modal Content
-    `
+    `,
+    standalone: true
 })
 class TestModalContentComponent {}
 
@@ -585,7 +586,8 @@ class TestModalContentComponent {}
         <button kbq-button>focusable button</button>
     `,
     // Testing for service with parent service
-    providers: [KbqModalControlService]
+    providers: [KbqModalControlService],
+    standalone: true
 })
 class ModalByServiceComponent {
     nonServiceModalVisible = false;
@@ -603,9 +605,9 @@ const TEST_DIRECTIVES = [
         KbqModalModule,
         KbqButtonModule,
         KbqDropdownModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        ...TEST_DIRECTIVES
     ],
-    exports: TEST_DIRECTIVES,
-    declarations: TEST_DIRECTIVES
+    exports: TEST_DIRECTIVES
 })
 class ModalTestModule {}

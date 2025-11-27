@@ -106,7 +106,8 @@ export function getKbqAutocompleteMissingPanelError(): Error {
         '(click)': 'handleClick($event)'
     },
     exportAs: 'kbqAutocompleteTrigger',
-    providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR]
+    providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR],
+    standalone: true
 })
 export class KbqAutocompleteTrigger
     implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler

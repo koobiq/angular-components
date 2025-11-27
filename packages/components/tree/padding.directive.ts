@@ -10,7 +10,8 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
 
 @Directive({
     selector: '[kbqTreeNodePadding]',
-    exportAs: 'kbqTreeNodePadding'
+    exportAs: 'kbqTreeNodePadding',
+    standalone: true
 })
 export class KbqTreeNodePadding<T> implements AfterViewInit {
     get level(): number {

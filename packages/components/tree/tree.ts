@@ -12,6 +12,7 @@ import { KbqTreeBase } from './tree-base';
         class: 'kbq-tree'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqTree extends KbqTreeBase<any> {}

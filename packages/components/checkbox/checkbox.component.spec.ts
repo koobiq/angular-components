@@ -10,8 +10,10 @@ describe('KbqCheckbox', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
-            declarations: [
+            imports: [
+                KbqCheckboxModule,
+                FormsModule,
+                ReactiveFormsModule,
                 SingleCheckbox,
                 CheckboxWithFormDirectives,
                 MultipleCheckboxes,
@@ -405,10 +407,7 @@ describe('KbqCheckbox', () => {
             beforeEach(() => {
                 TestBed.resetTestingModule();
                 TestBed.configureTestingModule({
-                    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
-                    declarations: [
-                        SingleCheckbox
-                    ],
+                    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
                     providers: [
                         { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'check' }]
                 });
@@ -443,10 +442,7 @@ describe('KbqCheckbox', () => {
             beforeEach(() => {
                 TestBed.resetTestingModule();
                 TestBed.configureTestingModule({
-                    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule],
-                    declarations: [
-                        SingleCheckbox
-                    ],
+                    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
                     providers: [
                         { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }]
                 });
@@ -834,7 +830,9 @@ describe('KbqCheckbox', () => {
                 Simple checkbox
             </kbq-checkbox>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class SingleCheckbox {
     labelPos: 'before' | 'after' = 'after';
@@ -858,7 +856,9 @@ class SingleCheckbox {
         <form>
             <kbq-checkbox name="cb" [(ngModel)]="isGood">Be good</kbq-checkbox>
         </form>
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithFormDirectives {
     isGood: boolean = false;
@@ -868,7 +868,9 @@ class CheckboxWithFormDirectives {
 @Component({
     template: `
         <kbq-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</kbq-checkbox>
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithNgModel {
     isGood: boolean = false;
@@ -880,7 +882,9 @@ class CheckboxWithNgModel {
     template: `
         <kbq-checkbox>Option 1</kbq-checkbox>
         <kbq-checkbox>Option 2</kbq-checkbox>
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class MultipleCheckboxes {}
 
@@ -888,7 +892,9 @@ class MultipleCheckboxes {}
 @Component({
     template: `
         <kbq-checkbox [tabIndex]="customTabIndex" [disabled]="isDisabled" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithTabIndex {
     customTabIndex: number = 7;
@@ -899,7 +905,9 @@ class CheckboxWithTabIndex {
 @Component({
     template: `
         <kbq-checkbox />
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxUsingViewChild {
     @ViewChild(KbqCheckbox, { static: false }) checkbox;
@@ -913,7 +921,9 @@ class CheckboxUsingViewChild {
 @Component({
     template: `
         <kbq-checkbox aria-label="Super effective" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithAriaLabel {}
 
@@ -921,7 +931,9 @@ class CheckboxWithAriaLabel {}
 @Component({
     template: `
         <kbq-checkbox aria-labelledby="some-id" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithAriaLabelledby {}
 
@@ -929,7 +941,9 @@ class CheckboxWithAriaLabelledby {}
 @Component({
     template: `
         <kbq-checkbox name="test-name" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithNameAttribute {}
 
@@ -937,7 +951,9 @@ class CheckboxWithNameAttribute {}
 @Component({
     template: `
         <kbq-checkbox (change)="lastEvent = $event" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithChangeEvent {
     lastEvent: KbqCheckboxChange;
@@ -947,7 +963,9 @@ class CheckboxWithChangeEvent {
 @Component({
     template: `
         <kbq-checkbox [formControl]="formControl" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithFormControl {
     formControl = new UntypedFormControl();
@@ -957,7 +975,9 @@ class CheckboxWithFormControl {
 @Component({
     template: `
         <kbq-checkbox>{{ label }}</kbq-checkbox>
-    `
+    `,
+    standalone: true,
+    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule]
 })
 class CheckboxWithoutLabel {
     label: string;

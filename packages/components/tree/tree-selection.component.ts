@@ -109,13 +109,10 @@ interface SelectionModelOption {
     styleUrls: ['./tree-selection.scss', 'tree-tokens.scss'],
     host: {
         class: 'kbq-tree-selection',
-
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         '(blur)': 'blur()',
         '(focus)': 'focus($event)',
-
         '(keydown)': 'onKeyDown($event)',
         '(window:resize)': 'updateScrollSize()'
     },
@@ -124,7 +121,8 @@ interface SelectionModelOption {
     providers: [
         KBQ_SELECTION_TREE_VALUE_ACCESSOR,
         { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
-        { provide: KbqTreeBase, useExisting: KbqTreeSelection }]
+        { provide: KbqTreeBase, useExisting: KbqTreeSelection }],
+    standalone: true
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>

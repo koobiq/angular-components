@@ -42,18 +42,17 @@ let nextUniqueId = 0;
     exportAs: 'kbqTagInput, kbqTagInputFor',
     host: {
         class: 'kbq-tag-input',
-
         '[id]': 'id',
         '[attr.disabled]': 'disabled || null',
         '[attr.placeholder]': 'placeholder || null',
-
         '(keydown)': 'onKeydown($event)',
         '(blur)': 'blur($event)',
         '(focus)': 'onFocus()',
         '(input)': 'onInput()',
         '(paste)': 'onPaste($event)'
     },
-    hostDirectives: [KbqFieldSizingContent]
+    hostDirectives: [KbqFieldSizingContent],
+    standalone: true
 })
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Whether the control is focused. */

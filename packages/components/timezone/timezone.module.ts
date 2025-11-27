@@ -26,9 +26,7 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqHighlightModule,
         NgClass,
         KeyValuePipe,
-        A11yModule
-    ],
-    declarations: [
+        A11yModule,
         UtcOffsetPipe,
         CitiesByFilterPipe,
         KbqTimezoneSelect,

@@ -1,3 +1,4 @@
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -9,6 +10,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqIcon } from '../icon/icon.component';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
@@ -39,7 +41,9 @@ export type ScrollDirection = 'after' | 'before';
         '[class.kbq-tab-header_underlined]': 'underlined',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
-    }
+    },
+    standalone: true,
+    imports: [KbqIcon, CdkObserveContent]
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {
     /** Whether the tabs are underlined. */

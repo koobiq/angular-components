@@ -83,7 +83,8 @@ export class KbqCheckboxChange {
     },
     providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     @Input() big: boolean = false;

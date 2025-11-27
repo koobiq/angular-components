@@ -25,7 +25,8 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
     styleUrls: ['./popover.scss', './popover-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqPopoverAnimations.popoverState]
+    animations: [kbqPopoverAnimations.popoverState],
+    standalone: true
 })
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     onConfirm = new Subject<void>();
@@ -41,7 +42,8 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
         '[class.kbq-popover_open]': 'isOpen',
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    standalone: true
 })
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     @Output() readonly confirm: EventEmitter<void> = new EventEmitter<void>();

@@ -7,8 +7,7 @@ import { KbqTabsModule } from './tabs.module';
 describe(KbqTabNavBar.name, () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule],
-            declarations: [SimpleTabNavBarTestApp]
+            imports: [KbqTabsModule, SimpleTabNavBarTestApp]
         });
 
         TestBed.compileComponents();
@@ -45,7 +44,9 @@ describe(KbqTabNavBar.name, () => {
                 </a>
             }
         </nav>
-    `
+    `,
+    standalone: true,
+    imports: [KbqTabsModule]
 })
 class SimpleTabNavBarTestApp {
     @ViewChild(KbqTabNavBar, { static: false }) tabNavBar: KbqTabNavBar;

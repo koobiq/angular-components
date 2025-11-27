@@ -33,9 +33,7 @@ describe('KbqTooltip', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqToolTipModule,
-                NoopAnimationsModule
-            ],
-            declarations: [
+                NoopAnimationsModule,
                 KbqTooltipTestWrapperComponent,
                 KbqTooltipTestNewComponent,
                 KbqTooltipDisabledComponent,
@@ -336,7 +334,9 @@ export class TooltipSimple {
 
         <a #titleString [kbqTooltip]="'title-string'" [kbqTrigger]="'hover'" [kbqPlacement]="'top'">Show</a>
         <a #titleTemplate [kbqTooltip]="template">Show</a>
-    `
+    `,
+    standalone: true,
+    imports: [KbqToolTipModule]
 })
 class KbqTooltipTestNewComponent {
     @ViewChild('titleString', { static: false }) titleString: ElementRef;
@@ -370,7 +370,9 @@ class KbqTooltipTestNewComponent {
         >
             Show
         </span>
-    `
+    `,
+    standalone: true,
+    imports: [KbqToolTipModule]
 })
 class KbqTooltipTestWrapperComponent {
     @ViewChild('normalTrigger', { static: false }) normalTrigger: ElementRef;
@@ -393,7 +395,9 @@ class KbqTooltipTestWrapperComponent {
         <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
             Disabled
         </span>
-    `
+    `,
+    standalone: true,
+    imports: [KbqToolTipModule]
 })
 class KbqTooltipDisabledComponent {
     @ViewChild('disabledAttribute', { static: false }) disabledTrigger: ElementRef;
@@ -409,7 +413,9 @@ class KbqTooltipDisabledComponent {
         <button #trigger kbqTrigger="click" [kbqTooltip]="tooltipContent" [kbqTooltipContext]="tooltipContext">
             Button
         </button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqToolTipModule]
 })
 class KbqTooltipWithTemplateRefContent {
     @ViewChild('trigger', { static: false }) trigger: ElementRef;

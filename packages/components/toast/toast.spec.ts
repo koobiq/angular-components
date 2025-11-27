@@ -26,9 +26,9 @@ describe('ToastService', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqToastModule,
-                NoopAnimationsModule
-            ],
-            declarations: [KbqToastButtonWrapperComponent]
+                NoopAnimationsModule,
+                KbqToastButtonWrapperComponent
+            ]
         }).compileComponents();
     });
 
@@ -158,8 +158,7 @@ describe('Standalone ToastService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
-            declarations: [KbqToastButtonWrapperComponent]
+            imports: [KbqToastModule, NoopAnimationsModule, KbqToastButtonWrapperComponent]
         }).compileComponents();
     });
 
@@ -200,7 +199,9 @@ describe('Standalone ToastService', () => {
     selector: 'kbq-toast-test-button',
     template: `
         <button (click)="show()">Show</button>
-    `
+    `,
+    standalone: true,
+    imports: [KbqToastModule]
 })
 class KbqToastButtonWrapperComponent {
     constructor(public toastService: KbqToastService) {}

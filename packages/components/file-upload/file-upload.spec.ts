@@ -72,9 +72,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
-                ReactiveFormsModule
-            ],
-            declarations: [
+                ReactiveFormsModule,
                 BasicMultipleFileUpload,
                 ControlValueAccessorMultipleFileUpload
             ]
@@ -291,9 +289,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
-                ReactiveFormsModule
-            ],
-            declarations: [
+                ReactiveFormsModule,
                 BasicSingleFileUpload,
                 ControlValueAccessorSingleFileUpload
             ]
@@ -514,7 +510,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 (fileQueueChange)="onChange($event)"
             />
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -544,7 +542,9 @@ class BasicSingleFileUpload {
                 (fileQueueChange)="onChange($event)"
             />
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -572,7 +572,9 @@ class ControlValueAccessorSingleFileUpload {
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
@@ -604,7 +606,9 @@ class BasicMultipleFileUpload {
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
 })
 class ControlValueAccessorMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;

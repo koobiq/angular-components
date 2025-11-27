@@ -21,7 +21,13 @@ const COMPONENTS = [
 @NgModule({
     imports: [
         PlatformModule,
-        ...COMPONENTS
+        ...COMPONENTS,
+        KbqTagList,
+        KbqTag,
+        KbqTagInput,
+        KbqTagTrailingIcon,
+        KbqTagAvatar,
+        KbqTagRemove
     ],
     exports: [
         KbqTagList,
@@ -31,14 +37,6 @@ const COMPONENTS = [
         KbqTagAvatar,
         KbqTagRemove,
         ...COMPONENTS
-    ],
-    declarations: [
-        KbqTagList,
-        KbqTag,
-        KbqTagInput,
-        KbqTagTrailingIcon,
-        KbqTagAvatar,
-        KbqTagRemove
     ],
     providers: [
         {

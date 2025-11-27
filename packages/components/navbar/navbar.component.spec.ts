@@ -9,8 +9,7 @@ const FONT_RENDER_TIMEOUT_MS = 10;
 describe('KbqNavbar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqNavbarModule, KbqIconModule],
-            declarations: [TestApp]
+            imports: [KbqNavbarModule, KbqIconModule, TestApp]
         }).compileComponents();
     });
 
@@ -92,7 +91,9 @@ describe('KbqNavbar', () => {
 
 @Component({
     selector: 'test-app',
-    templateUrl: './navbar.component.html'
+    templateUrl: './navbar.component.html',
+    standalone: true,
+    imports: [KbqNavbarModule, KbqIconModule]
 })
 class TestApp {
     counter: number = 0;

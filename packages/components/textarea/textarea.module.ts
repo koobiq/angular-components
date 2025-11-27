@@ -5,8 +5,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextarea } from './textarea.component';
 
 @NgModule({
-    imports: [A11yModule, FormsModule],
-    exports: [KbqTextarea, KbqFormFieldModule],
-    declarations: [KbqTextarea]
+    imports: [A11yModule, FormsModule, KbqTextarea],
+    exports: [KbqTextarea, KbqFormFieldModule]
 })
 export class KbqTextareaModule {}

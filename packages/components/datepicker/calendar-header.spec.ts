@@ -15,9 +15,9 @@ describe('KbqCalendarHeader', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqLuxonDateModule,
-                KbqDatepickerModule
+                KbqDatepickerModule,
+                StandardCalendar
             ],
-            declarations: [StandardCalendar],
             providers: [
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter }]
@@ -76,7 +76,9 @@ describe('KbqCalendarHeader', () => {
             (yearSelected)="selectedYear = $event"
             (monthSelected)="selectedMonth = $event"
         />
-    `
+    `,
+    standalone: true,
+    imports: [KbqLuxonDateModule, KbqDatepickerModule]
 })
 class StandardCalendar {
     selected: DateTime;

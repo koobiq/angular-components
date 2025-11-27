@@ -97,18 +97,16 @@ const fullFormatSize: number = 8;
         '[attr.required]': 'required',
         '[attr.size]': 'getSize()',
         '[attr.autocomplete]': '"off"',
-
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
-
         '(paste)': 'onPaste($event)',
-
         '(keydown)': 'onKeyDown($event)'
     },
     providers: [
         KBQ_TIMEPICKER_VALIDATORS,
         KBQ_TIMEPICKER_VALUE_ACCESSOR,
-        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }]
+        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }],
+    standalone: true
 })
 export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
     /**

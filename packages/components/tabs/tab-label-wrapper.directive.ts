@@ -10,7 +10,8 @@ import { KbqTab } from './tab.component';
     host: {
         '[class.kbq-disabled]': 'disabled',
         '[attr.disabled]': 'disabled || null'
-    }
+    },
+    standalone: true
 })
 export class KbqTabLabelWrapper implements AfterViewInit {
     @ContentChild('labelContent') labelContent: ElementRef;

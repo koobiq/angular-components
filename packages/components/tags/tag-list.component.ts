@@ -82,10 +82,8 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '[class.kbq-tag-list_editable]': 'editable',
         '[class.kbq-tag-list_removable]': 'removable',
         '[class.kbq-tag-list_draggable]': 'draggable',
-
         '[attr.tabindex]': 'disabled ? null : tabIndex',
         '[id]': 'uid',
-
         '(focus)': 'focus()',
         '(blur)': 'blur()',
         '(keydown)': 'keydown($event)'
@@ -93,7 +91,8 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
-    hostDirectives: [CdkDropList]
+    hostDirectives: [CdkDropList],
+    standalone: true
 })
 export class KbqTagList
     implements

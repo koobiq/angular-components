@@ -22,8 +22,7 @@ describe('KbqListSelection without forms', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [SelectionListWithListOptions],
+                imports: [KbqListModule, SelectionListWithListOptions],
                 providers: [
                     {
                         provide: Clipboard,
@@ -404,8 +403,7 @@ describe('KbqListSelection without forms', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [SelectionListWithSelectedOption]
+                imports: [KbqListModule, SelectionListWithSelectedOption]
             }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithSelectedOption);
@@ -425,11 +423,7 @@ describe('KbqListSelection without forms', () => {
     describe('with tabindex', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [
-                    SelectionListWithTabindexAttr,
-                    SelectionListWithTabindexInDisabledState
-                ]
+                imports: [KbqListModule, SelectionListWithTabindexAttr, SelectionListWithTabindexInDisabledState]
             }).compileComponents();
         });
 
@@ -462,8 +456,7 @@ describe('KbqListSelection without forms', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule, FormsModule],
-                declarations: [SelectionListFocusStates]
+                imports: [KbqListModule, FormsModule, SelectionListFocusStates]
             }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListFocusStates);
@@ -527,8 +520,7 @@ describe('KbqListSelection without forms', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [SelectionListWithListDisabled]
+                imports: [KbqListModule, SelectionListWithListDisabled]
             }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithListDisabled);
@@ -557,8 +549,7 @@ describe('KbqListSelection without forms', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [SelectionListWithCheckboxPositionAfter]
+                imports: [KbqListModule, SelectionListWithCheckboxPositionAfter]
             }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
@@ -579,9 +570,7 @@ xdescribe('KbqListSelection with forms', () => {
             imports: [
                 KbqListModule,
                 FormsModule,
-                ReactiveFormsModule
-            ],
-            declarations: [
+                ReactiveFormsModule,
                 SelectionListWithModel,
                 SelectionListWithFormControl,
                 SelectionListWithPreselectedOption,
@@ -822,8 +811,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqListModule, FormsModule],
-            declarations: [SelectionListMultipleCheckbox]
+            imports: [KbqListModule, FormsModule, SelectionListMultipleCheckbox]
         }).compileComponents();
 
         fixture = TestBed.createComponent(SelectionListMultipleCheckbox);
@@ -911,7 +899,9 @@ class SelectionListWithCustomComparator {
                 <kbq-list-option checkboxPosition="before" [value]="'drafts'">Drafts</kbq-list-option>
             }
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class SelectionListWithListOptions {
     showLastOption: boolean = true;
@@ -928,7 +918,9 @@ class SelectionListWithListOptions {
             <kbq-list-option [value]="'value4'">value4</kbq-list-option>
             <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule]
 })
 class SelectionListMultipleCheckbox {
     model = [];
@@ -942,7 +934,9 @@ class SelectionListMultipleCheckbox {
             <kbq-list-option checkboxPosition="after">Sent Mail</kbq-list-option>
             <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class SelectionListWithCheckboxPositionAfter {}
 
@@ -954,7 +948,9 @@ class SelectionListWithCheckboxPositionAfter {}
             <kbq-list-option checkboxPosition="after">Sent Mail</kbq-list-option>
             <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class SelectionListWithListDisabled {}
 
@@ -963,7 +959,9 @@ class SelectionListWithListDisabled {}
         <kbq-list-selection>
             <kbq-list-option [selected]="true">Item</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class SelectionListWithSelectedOption {}
 
@@ -976,7 +974,9 @@ class SelectionListWithSelectedOption {}
             <kbq-list-option [value]="'option_4'">Option 4</kbq-list-option>
             <kbq-list-option [value]="'option_5'">Option 5</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule]
 })
 class SelectionListFocusStates {
     selectedOptions: string[] = [];
@@ -985,14 +985,18 @@ class SelectionListFocusStates {
 @Component({
     template: `
         <kbq-list-selection [tabIndex]="5" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class SelectionListWithTabindexAttr {}
 
 @Component({
     template: `
         <kbq-list-selection [disabled]="disabled" />
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule]
 })
 class SelectionListWithTabindexInDisabledState {
     tabIndex: number;
@@ -1008,7 +1012,9 @@ class SelectionListWithTabindexInDisabledState {
                 <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
             }
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithModel {
     selectedOptions: string[] = [];
@@ -1022,7 +1028,9 @@ class SelectionListWithModel {
             <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
             <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithFormControl {
     formControl = new UntypedFormControl();
@@ -1034,7 +1042,9 @@ class SelectionListWithFormControl {
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
             <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithPreselectedOption {
     selectedOptions: string[];
@@ -1046,7 +1056,9 @@ class SelectionListWithPreselectedOption {
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
             <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithPreselectedOptionAndModel {
     selectedOptions = ['opt1'];
@@ -1062,7 +1074,9 @@ class SelectionListWithPreselectedOptionAndModel {
                 </kbq-list-option>
             }
         </kbq-list-selection>
-    `
+    `,
+    standalone: true,
+    imports: [KbqListModule, FormsModule, ReactiveFormsModule]
 })
 class SelectionListWithPreselectedFormControlOnPush {
     opts = ['opt1', 'opt2', 'opt3'];

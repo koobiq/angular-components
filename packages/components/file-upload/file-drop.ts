@@ -14,7 +14,8 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
         '(dragover)': 'onDragOver($event)',
         '(dragleave)': 'onDragLeave($event)',
         '(drop)': 'onDrop($event)'
-    }
+    },
+    standalone: true
 })
 export class KbqFileDropDirective {
     /** Flag that controls css-class modifications on drag events. */

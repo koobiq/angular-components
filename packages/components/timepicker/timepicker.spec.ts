@@ -33,7 +33,9 @@ import {
                 [(ngModel)]="timeValue"
             />
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule]
 })
 class TestApp {
     @ViewChild('ngModel') ngModel: NgModel;
@@ -62,9 +64,9 @@ describe('KbqTimepicker', () => {
                 KbqFormFieldModule,
                 KbqTimepickerModule,
                 KbqIconModule,
-                KbqLuxonDateModule
-            ],
-            declarations: [TestApp]
+                KbqLuxonDateModule,
+                TestApp
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
@@ -579,7 +581,16 @@ describe('KbqTimepicker', () => {
             <i kbqPrefix kbq-icon="kbq-clock_16"></i>
             <input kbqTimepicker [format]="timeFormat" [formControl]="formControl" />
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqTimepickerModule,
+        KbqIconModule,
+        KbqLuxonDateModule
+    ]
 })
 class TimePickerWithNullFormControlValue {
     formControl: UntypedFormControl = new UntypedFormControl();
@@ -599,9 +610,9 @@ describe('KbqTimepicker with null formControl value', () => {
                 KbqFormFieldModule,
                 KbqTimepickerModule,
                 KbqIconModule,
-                KbqLuxonDateModule
-            ],
-            declarations: [TimePickerWithNullFormControlValue]
+                KbqLuxonDateModule,
+                TimePickerWithNullFormControlValue
+            ]
         }).compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
@@ -657,7 +668,9 @@ describe('KbqTimepicker with null formControl value', () => {
             <i kbqPrefix kbq-icon="kbq-clock_16"></i>
             <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule]
 })
 class TimePickerWithNullModelValue {
     timeFormat: string;
@@ -676,9 +689,9 @@ describe('KbqTimepicker with null model value', () => {
                 KbqFormFieldModule,
                 KbqTimepickerModule,
                 KbqIconModule,
-                KbqLuxonDateModule
-            ],
-            declarations: [TimePickerWithNullModelValue]
+                KbqLuxonDateModule,
+                TimePickerWithNullModelValue
+            ]
         }).compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
@@ -734,7 +747,9 @@ describe('KbqTimepicker with null model value', () => {
             <i kbqPrefix kbq-icon="kbq-clock_16"></i>
             <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
         </kbq-form-field>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule]
 })
 class TimepickerWithLocaleChange {
     timeFormat: TimeFormats;
@@ -760,9 +775,9 @@ describe('with Locale change', () => {
                 KbqFormFieldModule,
                 KbqTimepickerModule,
                 KbqIconModule,
-                KbqLuxonDateModule
-            ],
-            declarations: [TimepickerWithLocaleChange]
+                KbqLuxonDateModule,
+                TimepickerWithLocaleChange
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TimepickerWithLocaleChange);
