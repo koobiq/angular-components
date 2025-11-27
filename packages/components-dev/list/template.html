@@ -118,6 +118,20 @@
 <br />
 <div>multipleSelectedCheckbox: {{ multipleSelectedCheckbox | json }}</div>
 
+<h2 class="kbq-title">Multiple selection with remove on backspace</h2>
+
+<kbq-list-selection
+    multiple="checkbox"
+    [(ngModel)]="multipleSelectedCheckbox"
+    (selectionChange)="onSelectionChange($event)"
+>
+    @for (item of list(); track item) {
+        <kbq-list-option [value]="item" (keydown.backspace)="onRemove(item)">
+            {{ item }}
+        </kbq-list-option>
+    }
+</kbq-list-selection>
+
 <br />
 <br />
 <br />

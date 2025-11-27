@@ -8,21 +8,19 @@ describe('KbqList', () => {
         TestBed.configureTestingModule({
             imports: [KbqListModule],
             declarations: [
-                ListWithOneAnchorItem,
-                ListWithOneItem,
-                ListWithTwoLineItem,
-                ListWithThreeLineItem,
-                ListWithAvatar,
-                ListWithItemWithCssClass,
-                ListWithDynamicNumberOfLines,
-                ListWithMultipleItems,
-                ListWithManyLines
+                TestListWithOneAnchorItem,
+                TestListWithOneItem,
+                TestListWithTwoLineItem,
+                TestListWithThreeLineItem,
+                TestListWithAvatar,
+                TestListWithItemWithCssClass,
+                TestListWithMultipleItems
             ]
         }).compileComponents();
     });
 
     it('should add and remove focus class on focus/blur', () => {
-        const fixture = TestBed.createComponent(ListWithOneAnchorItem);
+        const fixture = TestBed.createComponent(TestListWithOneAnchorItem);
 
         fixture.detectChanges();
         const listItem = fixture.debugElement.query(By.directive(KbqListItem));
@@ -40,7 +38,7 @@ describe('KbqList', () => {
     });
 
     it('should not apply any additional class to a list without lines', () => {
-        const fixture = TestBed.createComponent(ListWithOneItem);
+        const fixture = TestBed.createComponent(TestListWithOneItem);
         const listItem = fixture.debugElement.query(By.css('kbq-list-item'));
 
         fixture.detectChanges();
@@ -48,7 +46,7 @@ describe('KbqList', () => {
     });
 
     it('should not clear custom classes provided by user', () => {
-        const fixture = TestBed.createComponent(ListWithItemWithCssClass);
+        const fixture = TestBed.createComponent(TestListWithItemWithCssClass);
 
         fixture.detectChanges();
 
@@ -58,7 +56,7 @@ describe('KbqList', () => {
     });
 
     it('should add aria roles properly', () => {
-        const fixture = TestBed.createComponent(ListWithMultipleItems);
+        const fixture = TestBed.createComponent(TestListWithMultipleItems);
 
         fixture.detectChanges();
 
@@ -87,7 +85,7 @@ class BaseTestList {
         </kbq-list>
     `
 })
-class ListWithOneAnchorItem extends BaseTestList {
+class TestListWithOneAnchorItem extends BaseTestList {
     // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
     // it doesn't get populated.
     @ViewChildren(KbqListItem) listItems: QueryList<KbqListItem>;
@@ -100,7 +98,7 @@ class ListWithOneAnchorItem extends BaseTestList {
         </kbq-list>
     `
 })
-class ListWithOneItem extends BaseTestList {}
+class TestListWithOneItem extends BaseTestList {}
 
 @Component({
     template: `
@@ -115,7 +113,7 @@ class ListWithOneItem extends BaseTestList {}
         </kbq-list>
     `
 })
-class ListWithTwoLineItem extends BaseTestList {}
+class TestListWithTwoLineItem extends BaseTestList {}
 
 @Component({
     template: `
@@ -130,25 +128,9 @@ class ListWithTwoLineItem extends BaseTestList {}
         </kbq-list>
     `
 })
-class ListWithThreeLineItem extends BaseTestList {
+class TestListWithThreeLineItem extends BaseTestList {
     avoidCollisionMockTarget() {}
 }
-
-@Component({
-    template: `
-        <kbq-list>
-            @for (item of items; track item) {
-                <kbq-list-item>
-                    <h3 kbq-line>Line 1</h3>
-                    <p kbq-line>Line 2</p>
-                    <p kbq-line>Line 3</p>
-                    <p kbq-line>Line 4</p>
-                </kbq-list-item>
-            }
-        </kbq-list>
-    `
-})
-class ListWithManyLines extends BaseTestList {}
 
 @Component({
     template: `
@@ -161,7 +143,7 @@ class ListWithManyLines extends BaseTestList {}
         </kbq-list>
     `
 })
-class ListWithAvatar extends BaseTestList {}
+class TestListWithAvatar extends BaseTestList {}
 
 @Component({
     template: `
@@ -175,7 +157,7 @@ class ListWithAvatar extends BaseTestList {}
         </kbq-list>
     `
 })
-class ListWithItemWithCssClass extends BaseTestList {}
+class TestListWithItemWithCssClass extends BaseTestList {}
 
 @Component({
     template: `
@@ -183,26 +165,9 @@ class ListWithItemWithCssClass extends BaseTestList {}
             @for (item of items; track item) {
                 <kbq-list-item>
                     <h3 kbq-line>{{ item.name }}</h3>
-                    <p kbq-line>{{ item.description }}</p>
-                    @if (showThirdLine) {
-                        <p kbq-line>Some other text</p>
-                    }
                 </kbq-list-item>
             }
         </kbq-list>
     `
 })
-class ListWithDynamicNumberOfLines extends BaseTestList {}
-
-@Component({
-    template: `
-        <kbq-list>
-            @for (item of items; track item) {
-                <kbq-list-item>
-                    {{ item.name }}
-                </kbq-list-item>
-            }
-        </kbq-list>
-    `
-})
-class ListWithMultipleItems extends BaseTestList {}
+class TestListWithMultipleItems extends BaseTestList {}
