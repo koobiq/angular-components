@@ -16,10 +16,10 @@
         "node": "^18.19.0"
     },
     "packageManager": "yarn@4.1.1",
-    "requiredAngularVersion": "^18.0.0",
+    "requiredAngularVersion": "^19.0.0",
     "dependencies": {
         "@angular/animations": "19.2.16",
-        "@angular/cdk": "18.2.14",
+        "@angular/cdk": "19.2.19",
         "@angular/common": "19.2.16",
         "@angular/compiler": "19.2.16",
         "@angular/core": "19.2.16",
