@@ -195,6 +195,8 @@ const typescriptRules = {
         '@angular-eslint/consistent-component-styles': 0,
         '@angular-eslint/use-component-view-encapsulation': 0,
         '@angular-eslint/use-injectable-provided-in': 0,
+        '@angular-eslint/prefer-standalone-component': 0,
+        '@angular-eslint/prefer-standalone': 0,
         '@angular-eslint/no-forward-ref': 0,
         '@angular-eslint/no-conflicting-lifecycle': 0,
         '@angular-eslint/no-attribute-decorator': 0,
