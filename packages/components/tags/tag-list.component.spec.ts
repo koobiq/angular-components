@@ -138,6 +138,7 @@ export class TestTagList {
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class TestFormFieldTagList {
+    readonly tagList = viewChild.required(KbqTagList);
     readonly tags = model<Array<{ id: string; value: string; selected: boolean }>>(
         Array.from({ length: 4 }, (_, i) => ({
             id: `tag${i}`,
@@ -1412,14 +1413,71 @@ describe(KbqTagList.name, () => {
 
     it('should focus tag input on focus', () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
-        const { debugElement } = fixture;
+        const { debugElement, componentInstance } = fixture;
         const input = getTagInputElement(debugElement);
 
         expect(input.classList).not.toContain('cdk-focused');
 
-        getTagListElement(debugElement).focus();
+        componentInstance.tagList().focus();
 
         expect(input.classList).toContain('cdk-focused');
+    });
+
+    it('should focus last tag on LEFT_ARROW keydown when input is empty', () => {
+        const { debugElement } = createStandaloneComponent(TestFormFieldTagList);
+        const tag = getLastTagElement(debugElement);
+
+        expect(tag.classList).not.toContain('cdk-focused');
+
+        getTagInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: LEFT_ARROW }));
+
+        expect(tag.classList).toContain('cdk-focused');
+    });
+
+    it('should NOT focus last tag on LEFT_ARROW keydown when input is NOT empty', () => {
+        const { debugElement } = createStandaloneComponent(TestFormFieldTagList);
+        const input = getTagInputElement(debugElement);
+        const tag = getLastTagElement(debugElement);
+
+        expect(tag.classList).not.toContain('cdk-focused');
+
+        input.value = 'not empty';
+
+        getTagInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: LEFT_ARROW }));
+
+        expect(tag.classList).not.toContain('cdk-focused');
+    });
+
+    it('should focus last tag on TAB+SHIFT keydown when input is empty', () => {
+        const { debugElement } = createStandaloneComponent(TestFormFieldTagList);
+        const tag = getLastTagElement(debugElement);
+
+        expect(tag.classList).not.toContain('cdk-focused');
+
+        getTagInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: TAB, shiftKey: true }));
+
+        expect(tag.classList).toContain('cdk-focused');
+    });
+
+    it('should NOT focus last tag on TAB+SHIFT keydown when input is NOT empty', () => {
+        const { debugElement } = createStandaloneComponent(TestFormFieldTagList);
+        const tag = getLastTagElement(debugElement);
+        const input = getTagInputElement(debugElement);
+
+        expect(tag.classList).not.toContain('cdk-focused');
+
+        input.value = 'not empty';
+
+        getTagInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: TAB, shiftKey: true }));
+
+        expect(tag.classList).not.toContain('cdk-focused');
+    });
+
+    it('should NOT have tabindex attribute when tag list contains input', () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement } = fixture;
+
+        expect(getTagListElement(debugElement).hasAttribute('tabindex')).toBe(false);
     });
 });
 
