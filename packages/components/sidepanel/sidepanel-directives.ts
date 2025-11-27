@@ -23,8 +23,7 @@ import { KbqSidepanelService } from './sidepanel.service';
     host: {
         '(click)': 'sidepanelRef.close(sidepanelResult)',
         class: 'kbq-sidepanel-close'
-    },
-    standalone: true
+    }
 })
 export class KbqSidepanelClose implements OnInit, OnChanges {
     @Input('kbq-sidepanel-close') sidepanelResult: any;
@@ -102,8 +101,7 @@ export class KbqSidepanelHeader {
     selector: 'kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody',
     host: {
         class: 'kbq-sidepanel-body kbq-scrollbar'
-    },
-    standalone: true
+    }
 })
 export class KbqSidepanelBody {}
 
@@ -114,8 +112,7 @@ export class KbqSidepanelBody {}
     selector: 'kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter',
     host: {
         class: 'kbq-sidepanel-footer'
-    },
-    standalone: true
+    }
 })
 export class KbqSidepanelFooter {}
 
@@ -126,8 +123,7 @@ export class KbqSidepanelFooter {}
     selector: 'kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions',
     host: {
         class: 'kbq-sidepanel-actions'
-    },
-    standalone: true
+    }
 })
 export class KbqSidepanelActions {}
 

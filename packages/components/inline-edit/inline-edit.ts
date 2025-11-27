@@ -55,7 +55,6 @@ const baseClass = 'kbq-inline-edit';
 
 /** @docs-private */
 @Directive({
-    standalone: true,
     selector: '[kbqFocusRegionItem]',
     exportAs: 'kbqFocusRegionItem',
     host: {
@@ -80,7 +79,6 @@ export class KbqFocusRegionItem {
 
 /** Directive for easy using styles of inline edit placeholder publicly. */
 @Directive({
-    standalone: true,
     selector: '[kbqInlineEditPlaceholder]',
     exportAs: 'kbqInlineEditPlaceholder',
     host: {
@@ -95,7 +93,6 @@ export class KbqInlineEditPlaceholder {}
  * Also, it prevents click/keydown events from being propagated to disable mode toggling of parent component.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqInlineEditMenu]',
     exportAs: 'kbqInlineEditMenu',
     host: {
@@ -119,9 +116,21 @@ export class KbqInlineEditMenu {
  */
 @Component({
     selector: 'kbq-inline-edit',
-    exportAs: 'kbqInlineEdit',
+    imports: [
+        CdkConnectedOverlay,
+        CdkOverlayOrigin,
+        KbqButtonModule,
+        KbqIcon,
+        KbqTooltipTrigger,
+        KbqFocusRegionItem,
+        CdkTrapFocus,
+        CdkMonitorFocus
+    ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqInlineEdit',
     host: {
         class: baseClass,
         '[class]': 'className()',
@@ -133,19 +142,7 @@ export class KbqInlineEditMenu {
         '(keydown.space)': 'onClick($event)'
     },
     hostDirectives: [KbqFocusMonitor],
-    imports: [
-        CdkConnectedOverlay,
-        CdkOverlayOrigin,
-        KbqButtonModule,
-        KbqIcon,
-        KbqTooltipTrigger,
-        KbqFocusRegionItem,
-        CdkTrapFocus,
-        CdkMonitorFocus
-    ],
-    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION]
 })
 export class KbqInlineEdit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

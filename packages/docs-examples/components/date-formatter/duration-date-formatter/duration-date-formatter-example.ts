@@ -15,12 +15,11 @@ import { distinctUntilChanged } from 'rxjs/operators';
  * @title Duration date-formatter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'duration-date-formatter-example',
+    imports: [LuxonDateModule, KbqFormattersModule],
     templateUrl: 'duration-date-formatter-example.html',
     styleUrls: ['duration-date-formatter-example.css'],
-    imports: [LuxonDateModule, KbqFormattersModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DurationDateFormatterExample {
     formats = {

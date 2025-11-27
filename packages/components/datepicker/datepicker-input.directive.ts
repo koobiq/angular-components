@@ -268,8 +268,7 @@ interface DateTimeObject {
         '(focus)': 'focusChanged(true)',
         '(blur)': 'onBlur()',
         '(keydown)': 'onKeyDown($event)'
-    },
-    standalone: true
+    }
 })
 export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit

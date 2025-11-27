@@ -23,7 +23,6 @@ import { KbqFocusableComponent } from './navbar.component';
 
 @Component({
     selector: 'kbq-vertical-navbar',
-    exportAs: 'KbqVerticalNavbar',
     template: `
         <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
             <ng-content select="[kbq-navbar-container], kbq-navbar-container" />
@@ -37,6 +36,9 @@ import { KbqFocusableComponent } from './navbar.component';
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'KbqVerticalNavbar',
     host: {
         class: 'kbq-vertical-navbar',
         '[class.kbq-vertical-navbar_open-over]': 'openOver',
@@ -44,13 +46,10 @@ import { KbqFocusableComponent } from './navbar.component';
         '(focus)': 'focus()',
         '(blur)': 'blur()',
         '(keydown)': 'onKeyDown($event)'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    standalone: true
+    }
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
-    rectangleElements = contentChildren(
+    readonly rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarRectangleElement),
         { descendants: true }
     );

@@ -40,8 +40,7 @@ export interface KbqDynamicTranslationHelperSlot {
  * Directive for defining a dynamic translation slot.
  */
 @Directive({
-    selector: '[kbqDynamicTranslationSlot]',
-    standalone: true
+    selector: '[kbqDynamicTranslationSlot]'
 })
 export class KbqDynamicTranslationSlot {
     /**

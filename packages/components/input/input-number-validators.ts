@@ -61,8 +61,7 @@ export const MAX_VALIDATOR: Provider = {
     providers: [MAX_VALIDATOR],
     host: {
         '[attr.max]': 'max ? max : null'
-    },
-    standalone: true
+    }
 })
 export class MaxValidator implements Validator, OnChanges {
     @Input() max: number | string;

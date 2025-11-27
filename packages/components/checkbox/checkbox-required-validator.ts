@@ -16,7 +16,6 @@ export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
     selector: `kbq-checkbox[required][formControlName],
              kbq-checkbox[required][formControl], kbq-checkbox[required][ngModel]`,
     providers: [KBQ_CHECKBOX_REQUIRED_VALIDATOR],
-    host: { '[attr.required]': 'required ? "" : null' },
-    standalone: true
+    host: { '[attr.required]': 'required ? "" : null' }
 })
 export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {}

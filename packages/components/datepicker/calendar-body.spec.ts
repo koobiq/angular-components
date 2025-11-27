@@ -108,8 +108,7 @@ describe('KbqCalendarBody', () => {
             [activeCell]="10"
             (selectedValueChange)="onSelect($event)"
         ></table>
-    `,
-    standalone: true
+    `
 })
 class StandardCalendarBody {
     rows = [

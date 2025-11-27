@@ -1428,8 +1428,7 @@ describe(KbqTagList.name, () => {
                 <kbq-tag (select)="chipSelect(i)" (deselect)="chipDeselect(i)">{{ name }} {{ i + 1 }}</kbq-tag>
             }
         </kbq-tag-list>
-    `,
-    standalone: false
+    `
 })
 class StandardTagList {
     name: string = 'Test';
@@ -1453,8 +1452,7 @@ class StandardTagList {
                 <input name="test" [kbqTagInputFor]="tagList" />
             </kbq-tag-list>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class FormFieldTagList {
     tags = ['Chip 0', 'Chip 1', 'Chip 2'];
@@ -1486,8 +1484,7 @@ class FormFieldTagList {
                 }
             </kbq-tag-list>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicTagList {
     foods: any[] = [
@@ -1529,8 +1526,7 @@ class BasicTagList {
                 (kbqTagInputTokenEnd)="add($event)"
             />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class InputTagList {
     foods: any[] = [
@@ -1588,8 +1584,7 @@ class InputTagList {
                 </kbq-tag>
             }
         </kbq-tag-list>
-    `,
-    standalone: false
+    `
 })
 class SelectedTagList {
     foods: any[] = [
@@ -1615,8 +1610,7 @@ class SelectedTagList {
                 <!--                <kbq-error>Should have value</kbq-error>-->
             </kbq-form-field>
         </form>
-    `,
-    standalone: false
+    `
 })
 class TagListWithFormErrorMessages {
     foods: any[] = [
@@ -1651,8 +1645,7 @@ class TagListWithFormErrorMessages {
                 animate('500ms', style({ opacity: 1 }))
             ])
         ])
-    ],
-    standalone: false
+    ]
 })
 class StandardTagListWithAnimations {
     numbers = [0, 1, 2, 3, 4];

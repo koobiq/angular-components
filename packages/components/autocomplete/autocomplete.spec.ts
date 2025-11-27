@@ -2135,8 +2135,7 @@ describe('KbqAutocomplete', () => {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class SimpleAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();
@@ -2198,8 +2197,7 @@ class SimpleAutocomplete implements OnDestroy {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class NgIfAutocomplete {
     optionCtrl = new UntypedFormControl();
@@ -2233,8 +2231,7 @@ class NgIfAutocomplete {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithoutForms {
     filteredStates: any[];
@@ -2268,8 +2265,7 @@ class AutocompleteWithoutForms {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithNgModel {
     filteredStates: any[];
@@ -2298,8 +2294,7 @@ class AutocompleteWithNgModel {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithNumbers {
     selectedNumber: number;
@@ -2307,7 +2302,6 @@ class AutocompleteWithNumbers {
 }
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <input type="text" kbqInput [kbqAutocomplete]="auto" />
@@ -2321,7 +2315,7 @@ class AutocompleteWithNumbers {
             }
         </kbq-autocomplete>
     `,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class AutocompleteWithOnPushDelay implements OnInit {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2345,8 +2339,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithNativeInput {
     optionCtrl = new UntypedFormControl();
@@ -2369,8 +2362,7 @@ class AutocompleteWithNativeInput {
 @Component({
     template: `
         <input placeholder="Choose" [kbqAutocomplete]="auto" [formControl]="control" />
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithoutPanel {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2386,8 +2378,7 @@ class AutocompleteWithoutPanel {
         <kbq-autocomplete #auto="kbqAutocomplete">
             <kbq-option [value]="'California'">California</kbq-option>
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithFormsAndNonfloatingLabel {
     formControl = new UntypedFormControl('California');
@@ -2410,8 +2401,7 @@ class AutocompleteWithFormsAndNonfloatingLabel {
                 </kbq-optgroup>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithGroups {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2445,8 +2435,7 @@ class AutocompleteWithGroups {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithSelectEvent {
     selectedState: string;
@@ -2461,8 +2450,7 @@ class AutocompleteWithSelectEvent {
     template: `
         <input [formControl]="formControl" [kbqAutocomplete]="auto" />
         <kbq-autocomplete #auto="kbqAutocomplete" />
-    `,
-    standalone: false
+    `
 })
 class PlainAutocompleteInputWithFormControl {
     formControl = new UntypedFormControl();
@@ -2481,8 +2469,7 @@ class PlainAutocompleteInputWithFormControl {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithNumberInputAndNgModel {
     selectedValue: number;
@@ -2513,8 +2500,7 @@ class AutocompleteWithNumberInputAndNgModel {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithDifferentOrigin {
     @ViewChild(KbqAutocompleteTrigger, { static: false }) trigger: KbqAutocompleteTrigger;
@@ -2529,16 +2515,14 @@ class AutocompleteWithDifferentOrigin {
     template: `
         <input autocomplete="changed" [kbqAutocomplete]="auto" [(ngModel)]="value" />
         <kbq-autocomplete #auto="kbqAutocomplete" />
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithNativeAutocompleteAttribute {
     value: string;
 }
 
 @Component({
-    template: '<input kbqAutocompleteDisabled [kbqAutocomplete]="null">',
-    standalone: false
+    template: '<input kbqAutocompleteDisabled [kbqAutocomplete]="null">'
 })
 class InputWithoutAutocompleteAndDisabled {}
 
@@ -2555,8 +2539,7 @@ class InputWithoutAutocompleteAndDisabled {}
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithDisabledItems {
     @ViewChild(KbqAutocompleteTrigger, { static: true }) trigger: KbqAutocompleteTrigger;
@@ -2590,8 +2573,7 @@ class AutocompleteWithDisabledItems {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class AutocompleteWithOpenOnFocus {
     @ViewChild(KbqAutocompleteTrigger, { static: true }) trigger: KbqAutocompleteTrigger;

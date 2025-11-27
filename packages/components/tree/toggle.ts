@@ -78,8 +78,7 @@ export class KbqTreeNodeToggleBaseDirective<T> {
         '(click)': 'toggle($event)'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
 
@@ -90,7 +89,6 @@ export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirectiv
         '[attr.disabled]': 'disabled || null',
         '(click)': 'toggle($event)',
         class: 'kbq-tree-node-toggle'
-    },
-    standalone: true
+    }
 })
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {}

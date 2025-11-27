@@ -45,8 +45,7 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
         '[attr.print]': 'printUrl'
-    },
-    standalone: true
+    }
 })
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly renderer = inject(Renderer2);

@@ -1636,6 +1636,7 @@ describe('KbqDropdown default overrides', () => {
 });
 
 @Component({
+    imports: [KbqDropdownModule],
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown
@@ -1657,8 +1658,7 @@ describe('KbqDropdown default overrides', () => {
                 </button>
             }
         </kbq-dropdown>
-    `,
-    imports: [KbqDropdownModule]
+    `
 })
 class SimpleDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1676,8 +1676,7 @@ class SimpleDropdown {
         <kbq-dropdown #dropdown="kbqDropdown" [xPosition]="xPosition" [yPosition]="yPosition">
             <button kbq-dropdown-item>Positioned Content</button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class PositionedDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1697,8 +1696,7 @@ interface TestableDropdown {
         <kbq-dropdown #dropdown="kbqDropdown" [overlapTriggerY]="overlapTriggerY">
             <button kbq-dropdown-item>Not overlapped Content</button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class OverlapDropdown implements TestableDropdown {
     @Input() overlapTriggerY: boolean;
@@ -1714,8 +1712,7 @@ class OverlapDropdown implements TestableDropdown {
             <ng-content />
         </ng-template>
     `,
-    exportAs: 'appCustomDropdown',
-    standalone: false
+    exportAs: 'appCustomDropdown'
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
     direction: Direction;
@@ -1746,8 +1743,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
         <custom-dropdown #dropdown="appCustomDropdown">
             <button kbq-dropdown-item>Custom Content</button>
         </custom-dropdown>
-    `,
-    standalone: false
+    `
 })
 class CustomDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1807,8 +1803,7 @@ class CustomDropdown {
             <button kbq-dropdown-item>Eleven</button>
             <button kbq-dropdown-item>Twelve</button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class NestedDropdown {
     @ViewChild('root', { static: false }) rootDropdown: KbqDropdown;
@@ -1845,8 +1840,7 @@ class NestedDropdown {
             <button kbq-dropdown-item>Four</button>
             <button kbq-dropdown-item>Five</button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class NestedDropdownRepeater {
     @ViewChild('rootTriggerEl', { static: false }) rootTriggerEl: ElementRef<HTMLElement>;
@@ -1866,8 +1860,7 @@ class NestedDropdownRepeater {
                 <button class="level-two-item" kbq-dropdown-item>Two</button>
             </kbq-dropdown>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class NestedDropdownDeclaredInsideParentDropdown {
     @ViewChild('rootTriggerEl', { static: false }) rootTriggerEl: ElementRef;
@@ -1882,8 +1875,7 @@ class NestedDropdownDeclaredInsideParentDropdown {
                 <button kbq-dropdown-item>Another item</button>
             </ng-template>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class SimpleLazyDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1912,8 +1904,7 @@ class SimpleLazyDropdown {
                 <button kbq-dropdown-item>{{ label }}</button>
             </ng-template>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class LazyDropdownWithContext {
     @ViewChild('triggerOne', { static: false }) triggerOne: KbqDropdownTrigger;
@@ -1930,8 +1921,7 @@ class LazyDropdownWithContext {
         <kbq-dropdown #two="kbqDropdown">
             <button kbq-dropdown-item>Two</button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class DynamicPanelDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1946,8 +1936,7 @@ class DynamicPanelDropdown {
             <button #item kbq-dropdown-item>Item</button>
         </kbq-dropdown>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class OnPushContainer {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
@@ -1978,8 +1967,7 @@ class OnPushContainer {
                 </div>
             </button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class DropdownWithTooltip implements TestableDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;

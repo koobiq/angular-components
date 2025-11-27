@@ -36,30 +36,26 @@ import { KbqTab } from './tab.component';
 @Directive({
     selector:
         'kbq-tab-group[kbq-align-tabs-center], [kbq-tab-nav-bar][kbq-align-tabs-center], [kbqTabNavBar][kbq-align-tabs-center]',
-    host: { class: 'kbq-tab-group_align-labels-center' },
-    standalone: true
+    host: { class: 'kbq-tab-group_align-labels-center' }
 })
 export class KbqAlignTabsCenterCssStyler {}
 
 @Directive({
     selector:
         'kbq-tab-group[kbq-align-tabs-end], [kbq-tab-nav-bar][kbq-align-tabs-end], [kbqTabNavBar][kbq-align-tabs-end]',
-    host: { class: 'kbq-tab-group_align-labels-end' },
-    standalone: true
+    host: { class: 'kbq-tab-group_align-labels-end' }
 })
 export class KbqAlignTabsEndCssStyler {}
 
 @Directive({
     selector: 'kbq-tab-group[kbq-stretch-tabs], [kbq-tab-nav-bar][kbq-stretch-tabs], [kbqTabNavBar][kbq-stretch-tabs]',
-    host: { class: 'kbq-tab-group_stretch-labels' },
-    standalone: true
+    host: { class: 'kbq-tab-group_stretch-labels' }
 })
 export class KbqStretchTabsCssStyler {}
 
 @Directive({
     selector: 'kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical], [kbqTabNavBar][vertical]',
-    host: { class: 'kbq-tab-group_vertical' },
-    standalone: true
+    host: { class: 'kbq-tab-group_vertical' }
 })
 export class KbqVerticalTabsCssStyler {}
 
@@ -93,11 +89,12 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
  */
 @Component({
     selector: 'kbq-tab-group',
-    exportAs: 'kbqTabGroup',
+    imports: [KbqTabHeader, CdkMonitorFocus, KbqTabLabelWrapper, KbqTooltipTrigger, CdkPortalOutlet, KbqTabBody],
     templateUrl: './tab-group.html',
     styleUrls: ['./tab-group.scss', './tabs-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTabGroup',
     host: {
         class: 'kbq-tab-group',
         '[class.kbq-tab-group_filled]': '!transparent',
@@ -108,8 +105,7 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
         '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"',
         '(window:resize)': 'resizeStream.next($event)'
     },
-    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }],
-    imports: [KbqTabHeader, CdkMonitorFocus, KbqTabLabelWrapper, KbqTooltipTrigger, CdkPortalOutlet, KbqTabBody]
+    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }]
 })
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     readonly resizeStream = new Subject<Event>();

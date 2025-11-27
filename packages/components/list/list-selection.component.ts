@@ -51,9 +51,11 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     KBQ_OPTION_ACTION_PARENT,
-    KBQ_TITLE_TEXT_REF, KbqActionContainer,
+    KBQ_TITLE_TEXT_REF,
+    KbqActionContainer,
     KbqOptgroup,
-    KbqOptionActionComponent, KbqPseudoCheckbox,
+    KbqOptionActionComponent,
+    KbqPseudoCheckbox,
     KbqTitleTextRef,
     MultipleMode
 } from '@koobiq/components/core';
@@ -103,13 +105,13 @@ export class KbqListCopyEvent<T> {
 
 @Component({
     selector: 'kbq-list-selection',
-    exportAs: 'kbqListSelection',
     template: `
         <ng-content />
     `,
     styleUrls: ['./list.scss', 'list-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqListSelection',
     host: {
         class: 'kbq-list-selection',
         '[attr.tabindex]': 'tabIndex',
@@ -120,8 +122,7 @@ export class KbqListCopyEvent<T> {
         '(window:resize)': 'updateScrollSize()'
     },
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
-    preserveWhitespaces: false,
-    standalone: true
+    preserveWhitespaces: false
 })
 export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     protected readonly focusMonitor = inject(FocusMonitor);
@@ -645,8 +646,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     selector: '[kbq-list-option-caption]',
     host: {
         class: 'kbq-list-option-caption'
-    },
-    standalone: true
+    }
 })
 export class KbqListOptionCaption {}
 
@@ -656,9 +656,15 @@ export class KbqListOptionCaption {}
  * if the current item is selected.
  */
 @Component({
-    exportAs: 'kbqListOption',
     selector: 'kbq-list-option',
+    imports: [
+        KbqPseudoCheckbox,
+        KbqActionContainer
+    ],
     templateUrl: './list-option.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqListOption',
     host: {
         class: 'kbq-list-option',
         '[class.kbq-selected]': 'selected',
@@ -673,18 +679,11 @@ export class KbqListOptionCaption {}
         '(click)': 'handleClick($event)',
         '(keydown)': 'onKeydown($event)'
     },
-    encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqListOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption }
-    ],
-    imports: [
-        KbqPseudoCheckbox,
-        KbqActionContainer
-    ],
-    standalone: true
+    ]
 })
 export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     hasFocus: boolean = false;

@@ -51,8 +51,7 @@ let nextUniqueId = 0;
         '(input)': 'onInput()',
         '(paste)': 'onPaste($event)'
     },
-    hostDirectives: [KbqFieldSizingContent],
-    standalone: true
+    hostDirectives: [KbqFieldSizingContent]
 })
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Whether the control is focused. */

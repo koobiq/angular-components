@@ -60,10 +60,6 @@ const fileSizeCellPadding = 16;
 
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
-    templateUrl: './multiple-file-upload.component.html',
-    styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         KbqFileDropDirective,
         KbqLinkModule,
@@ -75,6 +71,10 @@ const fileSizeCellPadding = 16;
         KbqIconModule,
         AsyncPipe
     ],
+    templateUrl: './multiple-file-upload.component.html',
+    styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-multiple-file-upload'
     }

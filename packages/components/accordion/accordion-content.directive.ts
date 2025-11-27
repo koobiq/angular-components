@@ -3,7 +3,6 @@ import { KbqAccordionItemDirective } from './accordion-item.directive';
 
 @Directive({
     selector: '[kbqAccordionContent]',
-    standalone: true,
     exportAs: 'kbqAccordionContent',
     host: {
         '[attr.role]': '"region"',

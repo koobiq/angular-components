@@ -124,8 +124,7 @@ describe('FileDropDirective', () => {
 });
 
 @Component({
-    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>',
-    standalone: true
+    template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
 })
 class SimpleDNDComponent {
     files: FileList | KbqFile[];

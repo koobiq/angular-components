@@ -34,14 +34,14 @@ export class KbqCalendarCell {
  */
 @Component({
     selector: '[kbq-calendar-body]',
+    imports: [
+        NgClass
+    ],
     templateUrl: 'calendar-body.html',
     styleUrls: ['calendar-body.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqCalendarBody',
-    imports: [
-        NgClass
-    ],
     host: {
         class: 'kbq-calendar__body'
     }

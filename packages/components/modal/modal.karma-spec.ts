@@ -77,8 +77,7 @@ describe('KbqModal', () => {
         </kbq-dropdown>
     `,
     // Testing for service with parent service
-    providers: [KbqModalControlService],
-    standalone: true
+    providers: [KbqModalControlService]
 })
 class ModalByServiceFromDropdownComponent {
     nonServiceModalVisible = false;

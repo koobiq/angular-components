@@ -18,8 +18,7 @@ import { KbqPopUpTrigger } from './pop-up-trigger';
     host: {
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
-    },
-    standalone: false
+    }
 })
 export abstract class KbqPopUp implements OnDestroy {
     protected readonly renderer: Renderer2 = inject(Renderer2);

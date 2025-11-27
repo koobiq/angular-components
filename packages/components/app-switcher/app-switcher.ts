@@ -127,14 +127,6 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
 /** @docs-private */
 @Component({
     selector: 'kbq-app-switcher',
-    templateUrl: './app-switcher.html',
-    preserveWhitespaces: false,
-    styleUrls: ['./app-switcher.scss'],
-    host: {
-        class: 'kbq-app-switcher'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -148,8 +140,16 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
         KbqOptionModule,
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,
-        KbqAppSwitcherListItem,
-        ],
+        KbqAppSwitcherListItem
+    ],
+    templateUrl: './app-switcher.html',
+    styleUrls: ['./app-switcher.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
+    host: {
+        class: 'kbq-app-switcher'
+    },
     animations: [kbqAppSwitcherAnimations.state]
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
@@ -274,7 +274,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
 }
 
 @Directive({
-    standalone: true,
     selector: '[kbqAppSwitcher]',
     exportAs: 'kbqAppSwitcher',
     host: {

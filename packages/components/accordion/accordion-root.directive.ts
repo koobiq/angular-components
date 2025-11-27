@@ -28,7 +28,6 @@ let nextId = 0;
 
 @Directive({
     selector: '[kbqAccordionRoot]',
-    standalone: true,
     providers: [
         { provide: KbqAccordionRootToken, useExisting: KbqAccordionRootDirective },
         { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }

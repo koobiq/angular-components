@@ -25,8 +25,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             <input kbqInput [(ngModel)]="value" />
             <kbq-cleaner />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqFormFieldWithCleaner {
     value: string;

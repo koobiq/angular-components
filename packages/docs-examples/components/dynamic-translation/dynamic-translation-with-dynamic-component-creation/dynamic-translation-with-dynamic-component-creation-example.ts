@@ -15,7 +15,6 @@ import { KbqDynamicTranslationHelper, KbqDynamicTranslationHelperSlot } from '@k
  * @title Dynamic-translation with dynamic component creation
  */
 @Component({
-    standalone: true,
     selector: 'dynamic-translation-with-dynamic-component-creation-example',
     template: `
         <div #container></div>

@@ -64,7 +64,6 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     imports: [
         NgClass
     ],
-    standalone: true,
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
     encapsulation: ViewEncapsulation.None,

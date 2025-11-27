@@ -71,7 +71,6 @@ export class KbqCheckboxChange {
     imports: [
         CdkObserveContent
     ],
-    standalone: true,
     templateUrl: 'checkbox.html',
     styleUrls: ['checkbox.scss', 'checkbox-tokens.scss'],
     encapsulation: ViewEncapsulation.None,

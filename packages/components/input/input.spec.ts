@@ -31,8 +31,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <input kbqInput minlength="4" [required]="true" [(ngModel)]="value" />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqInputInvalid {
     value: string = '';
@@ -43,8 +42,7 @@ class KbqInputInvalid {
         <kbq-form-field>
             <input kbqInput kbqInputMonospace [(ngModel)]="value" />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqInputWithKbqInputMonospace {
     value: string = 'test';
@@ -55,8 +53,7 @@ class KbqInputWithKbqInputMonospace {
         <kbq-form-field>
             <input kbqInput [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value" />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqInputForBehaviors {
     value: string = 'test';
@@ -70,8 +67,7 @@ class KbqInputForBehaviors {
             <input kbqInput />
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqFormFieldWithHint {}
 
@@ -81,8 +77,7 @@ class KbqFormFieldWithHint {}
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
             <input kbqInput />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqFormFieldWithPrefix {}
 
@@ -92,8 +87,7 @@ class KbqFormFieldWithPrefix {}
             <input kbqInput />
             <i kbqSuffix kbq-icon="kbq-magnifying-glass_16"></i>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqFormFieldWithSuffix {}
 
@@ -102,8 +96,7 @@ class KbqFormFieldWithSuffix {}
         <kbq-form-field kbqFormFieldWithoutBorders>
             <input kbqInput />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqFormFieldWithoutBorders {}
 
@@ -112,8 +105,7 @@ class KbqFormFieldWithoutBorders {}
         <kbq-form-field>
             <input kbqInput required [(ngModel)]="value" />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class KbqFormFieldWithStandaloneNgModel {
     value: string = '';
@@ -128,8 +120,7 @@ class KbqFormFieldWithStandaloneNgModel {
 
             <button type="submit"></button>
         </form>
-    `,
-    standalone: false
+    `
 })
 class KbqFormFieldWithNgModelInForm {
     @ViewChild('form', { static: false }) form: NgForm;
@@ -150,8 +141,7 @@ class KbqFormFieldWithNgModelInForm {
                 Отправить
             </button>
         </form>
-    `,
-    standalone: false
+    `
 })
 class KbqFormWithRequiredValidation {
     reactiveForm = new FormGroup({

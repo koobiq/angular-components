@@ -11,7 +11,6 @@ import { KbqModalComponent } from './modal.component';
         KbqButton,
         KbqTitleDirective
     ],
-    standalone: true,
     template: `
         <div class="kbq-modal-title" kbq-title>
             <ng-content />
@@ -42,8 +41,7 @@ export class KbqModalTitle {
     selector: `[kbq-modal-body], kbq-modal-body, [kbqModalBody]`,
     host: {
         class: 'kbq-modal-body'
-    },
-    standalone: true
+    }
 })
 export class KbqModalBody {}
 
@@ -51,13 +49,11 @@ export class KbqModalBody {}
     selector: `[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]`,
     host: {
         class: 'kbq-modal-footer'
-    },
-    standalone: true
+    }
 })
 export class KbqModalFooter {}
 
 @Directive({
-    selector: `[kbq-modal-main-action]`,
-    standalone: true
+    selector: `[kbq-modal-main-action]`
 })
 export class KbqModalMainAction {}

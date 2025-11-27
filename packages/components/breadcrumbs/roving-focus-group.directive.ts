@@ -13,7 +13,6 @@ import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from '
 
 @Directive({
     selector: '[rdxRovingFocusGroup]',
-    standalone: true,
     host: {
         '[attr.data-orientation]': 'dataOrientation',
         '[attr.tabindex]': 'tabIndex',

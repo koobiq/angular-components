@@ -38,8 +38,7 @@ interface KbqSidebarParams {
     exportAs: 'kbqSidebarOpened',
     host: {
         class: 'kbq-sidebar-opened'
-    },
-    standalone: true
+    }
 })
 export class KbqSidebarOpened {
     @Input() minWidth: string;
@@ -52,8 +51,7 @@ export class KbqSidebarOpened {
     exportAs: 'kbqSidebarClosed',
     host: {
         class: 'kbq-sidebar-closed'
-    },
-    standalone: true
+    }
 })
 export class KbqSidebarClosed {
     @Input() width: string;
@@ -75,8 +73,7 @@ export class KbqSidebarClosed {
     },
     animations: [kbqSidebarAnimations.sidebarState],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqSidebar implements OnDestroy, AfterContentInit {
     /**

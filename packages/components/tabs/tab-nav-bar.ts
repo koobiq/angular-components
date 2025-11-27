@@ -32,12 +32,11 @@ let nextUniqueId = 0;
  * Navigation component matching the styles of the tab group header.
  */
 @Component({
+    selector: '[kbqTabNavBar], [kbq-tab-nav-bar]',
     imports: [
         KbqIconModule,
         CdkObserveContent
     ],
-    selector: '[kbqTabNavBar], [kbq-tab-nav-bar]',
-    exportAs: 'kbqTabNavBar',
     templateUrl: './tab-nav-bar.html',
     styleUrls: [
         './tab-nav-bar.scss',
@@ -45,6 +44,9 @@ let nextUniqueId = 0;
         // KbqTabLink is a directive and can't have self styles, so we need to include its styles here.
         './tab-link.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTabNavBar',
     host: {
         class: 'kbq-tab-nav-bar',
         '[class.kbq-tab-nav-bar_filled]': '!transparent',
@@ -54,9 +56,7 @@ let nextUniqueId = 0;
         '[class.kbq-tab-header_underlined]': 'underlined',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[attr.role]': 'role'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
     @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;

@@ -20,15 +20,14 @@ import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
 
 @Component({
-    standalone: true,
     selector: 'kbq-toast-container',
     template: '<ng-container #container />',
     styleUrls: ['./toast-container.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-toast-container'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqToastContainerComponent extends CdkScrollable {
     @ViewChild('container', { static: true, read: ViewContainerRef }) viewContainer: ViewContainerRef;

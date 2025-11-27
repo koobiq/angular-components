@@ -288,8 +288,7 @@ describe('KbqAutocomplete', () => {
                 </kbq-option>
             }
         </kbq-autocomplete>
-    `,
-    standalone: false
+    `
 })
 class SimpleAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();

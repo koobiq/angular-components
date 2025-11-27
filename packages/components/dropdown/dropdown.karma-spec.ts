@@ -229,8 +229,7 @@ describe('KbqDropdown', () => {
             <button kbq-dropdown-item>Eleven</button>
             <button kbq-dropdown-item>Twelve</button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class NestedDropdown {
     @ViewChild('root', { static: false }) rootDropdown: KbqDropdown;
@@ -275,8 +274,7 @@ class NestedDropdown {
                 </div>
             </button>
         </kbq-dropdown>
-    `,
-    standalone: false
+    `
 })
 class DropdownWithTooltip {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;

@@ -86,8 +86,7 @@ const getOffset = (
     host: {
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
-    },
-    standalone: false
+    }
 })
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     /** Stream that emits when the popupTrigger is hovered. */

@@ -27,15 +27,15 @@ import { KbqMonthView } from './month-view.component';
  */
 @Component({
     selector: 'kbq-calendar',
+    imports: [
+        KbqCalendarHeader,
+        KbqMonthView
+    ],
     templateUrl: 'calendar.html',
     styleUrls: ['calendar.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqCalendar',
-    imports: [
-        KbqCalendarHeader,
-        KbqMonthView
-    ],
     host: {
         class: 'kbq-calendar'
     }

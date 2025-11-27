@@ -11,12 +11,11 @@ import {
 import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 
 @Component({
-    standalone: true,
     selector: '[kbq-icon]',
     template: '<ng-content />',
     styleUrls: ['icon.scss', 'icon-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'iconName',

@@ -3,16 +3,15 @@ import { KbqButton } from '@koobiq/components/button';
 
 @Component({
     selector: 'table[kbq-table]',
-    exportAs: 'kbqTable',
-    styleUrls: ['table.scss', 'table-tokens.scss'],
     template: '<ng-content />',
+    styleUrls: ['table.scss', 'table-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTable',
     host: {
         class: 'kbq-table',
         '[class.kbq-table_bordered]': 'border'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true
+    }
 })
 export class KbqTable {
     @Input() border: boolean = false;
@@ -22,8 +21,7 @@ export class KbqTable {
     selector: 'kbq-table td',
     host: {
         '[class.kbq-table-cell_has-button]': '!!button'
-    },
-    standalone: true
+    }
 })
 export class KbqTableCellContent {
     @ContentChild(KbqButton) button: KbqButton;

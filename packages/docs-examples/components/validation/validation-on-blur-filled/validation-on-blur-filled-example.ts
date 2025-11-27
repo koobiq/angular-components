@@ -44,7 +44,6 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Directive({
-    standalone: true,
     selector: '[exampleResetTouchedOnFirstInput]',
     exportAs: 'exampleResetTouchedOnFirstInput'
 })
@@ -105,8 +104,7 @@ class ExampleResetTouchedOnFirstInput {
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
-    ],
+        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnBlurFilledExample {

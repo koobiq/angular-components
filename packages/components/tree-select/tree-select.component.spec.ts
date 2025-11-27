@@ -243,8 +243,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
             </kbq-tree-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `,
-    standalone: false
+    `
 })
 class BasicTreeSelect {
     control = new UntypedFormControl();
@@ -300,8 +299,7 @@ class BasicTreeSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicEvents {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -360,8 +358,7 @@ class BasicEvents {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class ManySelects {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -402,8 +399,7 @@ class ManySelects {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithSearch implements OnInit {
     control = new UntypedFormControl();
@@ -447,8 +443,7 @@ class SelectWithSearch implements OnInit {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithChangeEvent {
     @ViewChild(KbqTreeSelect) treeSelect: KbqTreeSelect;
@@ -490,8 +485,7 @@ class SelectWithChangeEvent {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectInitWithoutOptions {
     control = new UntypedFormControl('rootNode_1');
@@ -531,8 +525,7 @@ class SelectInitWithoutOptions {
             useExisting: CustomSelectAccessor,
             multi: true
         }
-    ],
-    standalone: false
+    ]
 })
 class CustomSelectAccessor implements ControlValueAccessor {
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
@@ -553,8 +546,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
             useExisting: CustomSelectAccessor,
             multi: true
         }
-    ],
-    standalone: false
+    ]
 })
 class CompWithCustomSelect {
     ctrl = new UntypedFormControl('initial value');
@@ -568,8 +560,7 @@ class CompWithCustomSelect {
             <kbq-tree-select [(ngModel)]="value" />
         </kbq-form-field>
         <throws-error-on-init />
-    `,
-    standalone: false
+    `
 })
 class SelectWithErrorSibling {
     value: string;
@@ -577,8 +568,7 @@ class SelectWithErrorSibling {
 
 @Component({
     selector: 'throws-error-on-init',
-    template: '',
-    standalone: false
+    template: ''
 })
 class ThrowsErrorOnInit implements OnInit {
     ngOnInit() {
@@ -588,7 +578,6 @@ class ThrowsErrorOnInit implements OnInit {
 
 @Component({
     selector: 'basic-select-on-push',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control">
@@ -605,7 +594,7 @@ class ThrowsErrorOnInit implements OnInit {
             </kbq-tree-select>
         </kbq-form-field>
     `,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicSelectOnPush {
     control = new UntypedFormControl();
@@ -630,7 +619,6 @@ class BasicSelectOnPush {
 
 @Component({
     selector: 'basic-select-on-push-preselected',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control">
@@ -647,7 +635,7 @@ class BasicSelectOnPush {
             </kbq-tree-select>
         </kbq-form-field>
     `,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicSelectOnPushPreselected {
     control = new UntypedFormControl('rootNode_1');
@@ -687,8 +675,7 @@ class BasicSelectOnPushPreselected {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class MultiSelect {
     control = new UntypedFormControl();
@@ -720,8 +707,7 @@ class MultiSelect {
         <kbq-form-field>
             <kbq-tree-select />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class EmptySelect {}
 
@@ -731,8 +717,7 @@ class EmptySelect {}
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect" />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectEarlyAccessSibling {}
 
@@ -753,8 +738,7 @@ class SelectEarlyAccessSibling {}
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithTheming {
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
@@ -795,8 +779,7 @@ class BasicSelectWithTheming {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class ResetValuesSelect {
     control = new UntypedFormControl();
@@ -837,8 +820,7 @@ class ResetValuesSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class FalsyValueSelect {
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
@@ -870,8 +852,7 @@ class FalsyValueSelect {
                 <kbq-tree-select [(ngModel)]="value" />
             </kbq-form-field>
         </form>
-    `,
-    standalone: false
+    `
 })
 class InvalidSelectInForm {
     value: any;
@@ -896,8 +877,7 @@ class InvalidSelectInForm {
                 <!--<kbq-error>This field is required</kbq-error>-->
             </kbq-form-field>
         </form>
-    `,
-    standalone: false
+    `
 })
 class SelectInsideFormGroup {
     @ViewChild(FormGroupDirective, { static: false }) formGroupDirective: FormGroupDirective;
@@ -947,8 +927,7 @@ class SelectInsideFormGroup {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithoutForms {
     selectedFood: string | null;
@@ -989,8 +968,7 @@ class BasicSelectWithoutForms {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithoutFormsPreselected {
     selectedFood = 'Pictures';
@@ -1033,8 +1011,7 @@ class BasicSelectWithoutFormsPreselected {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithoutFormsMultiple {
     selectedFoods: string[];
@@ -1079,8 +1056,7 @@ class BasicSelectWithoutFormsMultiple {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithCustomTrigger {
     control = new UntypedFormControl();
@@ -1123,8 +1099,7 @@ class SelectWithCustomTrigger {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithCustomMatcher {
     @ViewChild('select') select: KbqTreeSelect;
@@ -1168,8 +1143,7 @@ class SelectWithCustomMatcher {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class NgModelCompareWithFlatTreeControl {
     selectedModel: { name: string; type: string };
@@ -1219,8 +1193,7 @@ class NgModelCompareWithFlatTreeControl {
                 </kbq-tree-option>
             </kbq-tree-selection>
         </kbq-tree-select>
-    `,
-    standalone: false
+    `
 })
 class CustomErrorBehaviorSelect {
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
@@ -1263,8 +1236,7 @@ class CustomErrorBehaviorSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SingleSelectWithPreselectedArrayValues {
     selectedFood: string | null;
@@ -1301,8 +1273,7 @@ class SingleSelectWithPreselectedArrayValues {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithFormFieldLabel {
     placeholder: string;
@@ -1335,8 +1306,7 @@ class SelectWithFormFieldLabel {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class ChildSelection {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -1445,8 +1415,7 @@ class ChildSelection {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class LocalizedTreeSelect extends BasicTreeSelect {}
 

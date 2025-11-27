@@ -62,6 +62,10 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
  */
 @Component({
     selector: 'kbq-datepicker__content',
+    imports: [
+        KbqCalendar,
+        NgClass
+    ],
     templateUrl: 'datepicker-content.html',
     styleUrls: ['datepicker-content.scss', 'datepicker-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
@@ -72,10 +76,6 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         '[@transformPanel]': 'animationState',
         '(@transformPanel.done)': 'animationDone.next()'
     },
-    imports: [
-        KbqCalendar,
-        NgClass
-    ],
     animations: [
         kbqDatepickerAnimations.transformPanel,
         kbqDatepickerAnimations.fadeInCalendar

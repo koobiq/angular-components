@@ -6,8 +6,7 @@ import { Directive, ElementRef } from '@angular/core';
  */
 @Directive({
     selector: '[kbqAutocompleteOrigin]',
-    exportAs: 'kbqAutocompleteOrigin',
-    standalone: true
+    exportAs: 'kbqAutocompleteOrigin'
 })
 export class KbqAutocompleteOrigin {
     constructor(public elementRef: ElementRef<HTMLElement>) {}

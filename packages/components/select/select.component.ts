@@ -141,11 +141,20 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
 
 @Component({
     selector: 'kbq-select',
-    exportAs: 'kbqSelect',
+    imports: [
+        CdkOverlayOrigin,
+        KbqTag,
+        NgTemplateOutlet,
+        CdkMonitorFocus,
+        CdkConnectedOverlay,
+        NgClass,
+        KbqIcon
+    ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqSelect',
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
@@ -169,17 +178,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
-    ],
-    imports: [
-        CdkOverlayOrigin,
-        KbqTag,
-        NgTemplateOutlet,
-        CdkMonitorFocus,
-        CdkConnectedOverlay,
-        NgClass,
-        KbqIcon
-    ],
-    standalone: true
+    ]
 })
 export class KbqSelect
     extends KbqAbstractSelect

@@ -55,7 +55,6 @@ export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBr
 
 @Directive({
     selector: 'ng-template[kbqBreadcrumbsSeparator]',
-    standalone: true,
     host: {
         class: 'kbq-breadcrumbs-separator'
     }
@@ -70,7 +69,6 @@ export class KbqBreadcrumbsSeparator {
  * - Optionally injects `KbqButton` to customize its style for breadcrumb usage.
  */
 @Directive({
-    standalone: true,
     selector: '[kbq-button][kbqBreadcrumb]',
     host: { class: 'kbq-breadcrumb-item' },
     hostDirectives: [
@@ -96,7 +94,6 @@ export class KbqBreadcrumbButton implements OnInit {
  *
  */
 @Directive({
-    standalone: true,
     selector: '[kbqBreadcrumbView]'
 })
 export class KbqBreadcrumbView {
@@ -107,7 +104,6 @@ export class KbqBreadcrumbView {
  * Component represents an individual breadcrumb item with optional support for router navigation and styling.
  */
 @Component({
-    standalone: true,
     selector: 'kbq-breadcrumb-item',
     template: `
         <ng-content />
@@ -146,10 +142,6 @@ export class KbqBreadcrumbItem {
 
 @Component({
     selector: 'kbq-breadcrumbs,[kbq-breadcrumbs]',
-    templateUrl: './breadcrumbs.html',
-    styleUrls: ['./breadcrumbs.scss', './breadcrumbs-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     imports: [
         NgTemplateOutlet,
         RouterLink,
@@ -160,6 +152,10 @@ export class KbqBreadcrumbItem {
         KbqTitleModule,
         KbqOverflowItemsModule
     ],
+    templateUrl: './breadcrumbs.html',
+    styleUrls: ['./breadcrumbs.scss', './breadcrumbs-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-breadcrumbs',
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',

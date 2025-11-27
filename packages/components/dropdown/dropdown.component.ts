@@ -42,8 +42,7 @@ import {
 } from './dropdown.types';
 
 @Directive({
-    selector: '[kbqDropdownStaticContent]',
-    standalone: true
+    selector: '[kbqDropdownStaticContent]'
 })
 export class KbqDropdownStaticContent {}
 

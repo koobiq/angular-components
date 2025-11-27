@@ -24,7 +24,6 @@ import { KbqToastService } from './toast.service';
 import { KbqToastData, KbqToastStyle } from './toast.type';
 
 @Directive({
-    standalone: true,
     selector: '[kbq-toast-close-button]',
     host: {
         class: 'kbq-toast__close-button'
@@ -35,6 +34,7 @@ export class KbqToastCloseButton {}
 let id = 0;
 
 @Component({
+    selector: 'kbq-toast',
     imports: [
         NgTemplateOutlet,
         KbqIconModule,
@@ -42,9 +42,10 @@ let id = 0;
         KbqTitleModule,
         KbqToastCloseButton
     ],
-    selector: 'kbq-toast',
     templateUrl: './toast.component.html',
     styleUrls: ['./toast.component.scss', './toast-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-toast',
         '[class]': 'toastStyle',
@@ -57,9 +58,7 @@ let id = 0;
         '(keydown.esc)': 'close()'
     },
     animations: [kbqToastAnimations.toastState],
-    hostDirectives: [KbqReadStateDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    hostDirectives: [KbqReadStateDirective]
 })
 export class KbqToastComponent implements OnDestroy {
     protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });

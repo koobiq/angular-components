@@ -19,8 +19,7 @@ const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
     selector: '[kbq-loader-overlay-indicator]',
     host: {
         class: 'kbq-loader-overlay-indicator'
-    },
-    standalone: true
+    }
 })
 export class KbqLoaderOverlayIndicator {}
 
@@ -28,8 +27,7 @@ export class KbqLoaderOverlayIndicator {}
     selector: '[kbq-loader-overlay-text]',
     host: {
         class: 'kbq-loader-overlay-text'
-    },
-    standalone: true
+    }
 })
 export class KbqLoaderOverlayText {}
 
@@ -37,25 +35,24 @@ export class KbqLoaderOverlayText {}
     selector: '[kbq-loader-overlay-caption]',
     host: {
         class: 'kbq-loader-overlay-caption'
-    },
-    standalone: true
+    }
 })
 export class KbqLoaderOverlayCaption {}
 
 @Component({
     selector: 'kbq-loader-overlay',
+    imports: [KbqProgressSpinner],
     templateUrl: './loader-overlay.component.html',
     styleUrls: ['./loader-overlay.scss', 'loader-overlay-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-loader-overlay',
         '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
         '[class.kbq-loader-overlay_transparent]': 'transparent',
         '[class.kbq-loader-overlay_filled]': '!transparent'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    imports: [KbqProgressSpinner]
+    }
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @Input() text: string;

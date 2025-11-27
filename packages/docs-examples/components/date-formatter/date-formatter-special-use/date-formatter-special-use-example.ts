@@ -7,10 +7,9 @@ import { DateTime } from 'luxon';
  * @title date-formatter-special-use
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'date-formatter-special-use-example',
     template: '{{ date }}',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: DateAdapter,

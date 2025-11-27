@@ -259,8 +259,7 @@ const OPTIONS = [
             </kbq-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `,
-    standalone: false
+    `
 })
 class BasicSelect {
     foods: any[] = [
@@ -312,8 +311,7 @@ class BasicSelect {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicEvents {
     foods: any[] = [
@@ -349,8 +347,7 @@ class BasicEvents {
                 <kbq-option [value]="'four'">four</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class ManySelects {}
 
@@ -378,8 +375,7 @@ class ManySelects {}
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithChangeEvent {
     foods: string[] = [
@@ -424,8 +420,7 @@ class SelectWithChangeEvent {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithSearch implements OnInit {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -467,8 +462,7 @@ class SelectWithSearch implements OnInit {
             useExisting: CustomSelectAccessor,
             multi: true
         }
-    ],
-    standalone: false
+    ]
 })
 class CustomSelectAccessor implements ControlValueAccessor {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -489,8 +483,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
             useExisting: CustomSelectAccessor,
             multi: true
         }
-    ],
-    standalone: false
+    ]
 })
 class CompWithCustomSelect {
     ctrl = new UntypedFormControl('initial value');
@@ -504,8 +497,7 @@ class CompWithCustomSelect {
             <kbq-select [(ngModel)]="value" />
         </kbq-form-field>
         <throws-error-on-init />
-    `,
-    standalone: false
+    `
 })
 class SelectWithErrorSibling {
     value: string;
@@ -513,8 +505,7 @@ class SelectWithErrorSibling {
 
 @Component({
     selector: 'throws-error-on-init',
-    template: '',
-    standalone: false
+    template: ''
 })
 class ThrowsErrorOnInit implements OnInit {
     ngOnInit() {
@@ -524,7 +515,6 @@ class ThrowsErrorOnInit implements OnInit {
 
 @Component({
     selector: 'basic-select-on-push',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [formControl]="control">
@@ -536,7 +526,7 @@ class ThrowsErrorOnInit implements OnInit {
             </kbq-select>
         </kbq-form-field>
     `,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicSelectOnPush {
     foods: any[] = [
@@ -549,7 +539,6 @@ class BasicSelectOnPush {
 
 @Component({
     selector: 'basic-select-on-push-preselected',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [formControl]="control">
@@ -561,7 +550,7 @@ class BasicSelectOnPush {
             </kbq-select>
         </kbq-form-field>
     `,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicSelectOnPushPreselected {
     foods: any[] = [
@@ -596,8 +585,7 @@ class BasicSelectOnPushPreselected {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class MultiSelect {
     foods: any[] = [
@@ -647,8 +635,7 @@ class MultiSelect {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class MultiSelectNarrow {
     foods: any[] = [
@@ -674,8 +661,7 @@ class MultiSelectNarrow {
         <kbq-form-field>
             <kbq-select [tabIndex]="5" />
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithPlainTabindex {}
 
@@ -688,8 +674,7 @@ class SelectWithPlainTabindex {}
         @if (select.selected) {
             <div></div>
         }
-    `,
-    standalone: false
+    `
 })
 class SelectEarlyAccessSibling {}
 
@@ -702,8 +687,7 @@ class SelectEarlyAccessSibling {}
                 <kbq-option [value]="'pizza' - 1">Pizza</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithTheming {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -735,8 +719,7 @@ class BasicSelectWithTheming {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class ResetValuesSelect {
     foods: any[] = [
@@ -775,8 +758,7 @@ class ResetValuesSelect {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class FalsyValueSelect {
     foods: any[] = [
@@ -804,8 +786,7 @@ class FalsyValueSelect {
                 <kbq-option [value]="'mime' - 11">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithGroups {
     control = new UntypedFormControl();
@@ -862,8 +843,7 @@ class SelectWithGroups {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithGroupsAndNgContainer {
     control = new UntypedFormControl();
@@ -882,8 +862,7 @@ class SelectWithGroupsAndNgContainer {
                 <kbq-select [(ngModel)]="value" />
             </kbq-form-field>
         </form>
-    `,
-    standalone: false
+    `
 })
 class InvalidSelectInForm {
     value: any;
@@ -899,8 +878,7 @@ class InvalidSelectInForm {
                 </kbq-select>
             </kbq-form-field>
         </form>
-    `,
-    standalone: false
+    `
 })
 class SelectInsideFormGroup {
     @ViewChild(FormGroupDirective, { static: false }) formGroupDirective: FormGroupDirective;
@@ -927,8 +905,7 @@ class SelectInsideFormGroup {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithoutForms {
     selectedFood: string | null;
@@ -954,8 +931,7 @@ class BasicSelectWithoutForms {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithoutFormsPreselected {
     selectedFood = 'pizza-1';
@@ -978,8 +954,7 @@ class BasicSelectWithoutFormsPreselected {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectWithoutFormsMultiple {
     selectedFoods: string[];
@@ -1007,8 +982,7 @@ class BasicSelectWithoutFormsMultiple {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithCustomTrigger {
     foods: any[] = [
@@ -1042,8 +1016,7 @@ class SelectWithCustomTrigger {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class NgModelCompareWithSelect {
     foods: { value: string; viewValue: string }[] = [
@@ -1091,8 +1064,7 @@ class NgModelCompareWithSelect {
                 </kbq-option>
             }
         </kbq-select>
-    `,
-    standalone: false
+    `
 })
 class CustomErrorBehaviorSelect {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
@@ -1115,8 +1087,7 @@ class CustomErrorBehaviorSelect {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SingleSelectWithPreselectedArrayValues {
     foods: any[] = [
@@ -1143,8 +1114,7 @@ class SingleSelectWithPreselectedArrayValues {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithoutOptionCentering {
     foods: any[] = [
@@ -1172,8 +1142,7 @@ class SelectWithoutOptionCentering {
                 <kbq-option [value]="'thing'">A thing</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithFormFieldLabel {
     placeholder: string;
@@ -1206,8 +1175,7 @@ class SelectWithFormFieldLabel {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithLongOptionText {
     changingLabel: string =
@@ -1244,8 +1212,7 @@ class SelectWithLongOptionText {
                 </ng-template>
             </kbq-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class MultiSelectWithCustomizedTagContent {
     @ViewChild('select') kbqSelect: KbqSelect;
@@ -1256,6 +1223,15 @@ class MultiSelectWithCustomizedTagContent {
 
 @Component({
     selector: 'cdk-virtual-scroll-viewport-select',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select [multiple]="true" [style]="style" [(value)]="values">
@@ -1268,16 +1244,7 @@ class MultiSelectWithCustomizedTagContent {
                 <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
-    `,
-    imports: [
-        KbqFormFieldModule,
-        KbqSelectModule,
-        KbqInputModule,
-        KbqTagsModule,
-        ReactiveFormsModule,
-        FormsModule,
-        ScrollingModule
-    ]
+    `
 })
 class CdkVirtualScrollViewportSelect<T = string> {
     itemSize = 32;
@@ -1296,6 +1263,15 @@ class CdkVirtualScrollViewportSelect<T = string> {
 
 @Component({
     selector: 'cdk-virtual-scroll-viewport-select-option-as-object',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select [multiple]="true" [style]="style" [(value)]="values">
@@ -1321,16 +1297,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
                 <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
-    `,
-    imports: [
-        KbqFormFieldModule,
-        KbqSelectModule,
-        KbqInputModule,
-        KbqTagsModule,
-        ReactiveFormsModule,
-        FormsModule,
-        ScrollingModule
-    ]
+    `
 })
 class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewportSelect<{
     id: number;

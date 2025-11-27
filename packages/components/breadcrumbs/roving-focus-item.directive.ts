@@ -14,7 +14,6 @@ import { focusFirst, generateId, getFocusIntent, wrapArray } from './utils';
 
 @Directive({
     selector: '[rdxRovingFocusItem]',
-    standalone: true,
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.data-orientation]': 'parent.orientation',

@@ -40,8 +40,7 @@ let nextUniqueId = 0;
             provide: KbqFormFieldControl,
             useExisting: KbqInputPassword
         }
-    ],
-    standalone: true
+    ]
 })
 export class KbqInputPassword
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState

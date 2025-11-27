@@ -50,14 +50,6 @@ type AnimationState = 'enter' | 'leave' | null;
 
 @Component({
     selector: 'kbq-modal',
-    templateUrl: './modal.component.html',
-    styleUrls: ['./modal.scss', 'modal-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'kbq-modal',
-        '(keydown)': 'onKeyDown($event)'
-    },
     imports: [
         CdkTrapFocus,
         NgStyle,
@@ -67,7 +59,14 @@ type AnimationState = 'enter' | 'leave' | null;
         CssUnitPipe,
         NgTemplateOutlet
     ],
-    standalone: true
+    templateUrl: './modal.component.html',
+    styleUrls: ['./modal.scss', 'modal-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'kbq-modal',
+        '(keydown)': 'onKeyDown($event)'
+    }
 })
 export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>

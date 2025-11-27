@@ -51,8 +51,7 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(paste)': 'stateChanges.next()'
     },
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }],
-    standalone: true
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }]
 })
 export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState

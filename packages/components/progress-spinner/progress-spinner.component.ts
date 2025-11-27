@@ -16,8 +16,7 @@ const MAX_PERCENT = 100;
     selector: '[kbq-progress-spinner-text]',
     host: {
         class: 'kbq-progress-spinner-text'
-    },
-    standalone: true
+    }
 })
 export class KbqProgressSpinnerText {}
 
@@ -25,8 +24,7 @@ export class KbqProgressSpinnerText {}
     selector: '[kbq-progress-spinner-caption]',
     host: {
         class: 'kbq-progress-spinner-caption'
-    },
-    standalone: true
+    }
 })
 export class KbqProgressSpinnerCaption {}
 
@@ -34,17 +32,17 @@ const MAX_DASH_ARRAY = 295;
 
 @Component({
     selector: 'kbq-progress-spinner',
+    imports: [NgStyle],
     templateUrl: './progress-spinner.component.html',
     styleUrls: ['./progress-spinner.scss', './progress-spinner-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-progress-spinner',
         '[class.kbq-progress-spinner_big]': `size === 'big'`,
         '[class.kbq-progress-spinner_indeterminate]': `mode === 'indeterminate'`,
         '[attr.id]': 'id'
-    },
-    imports: [NgStyle]
+    }
 })
 export class KbqProgressSpinner extends KbqColorDirective {
     @Input() id: string = `kbq-progress-spinner-${id++}`;

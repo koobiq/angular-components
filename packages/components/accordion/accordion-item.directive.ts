@@ -23,7 +23,6 @@ let nextId = 0;
 
 @Directive({
     selector: '[kbqAccordionItem]',
-    standalone: true,
     exportAs: 'kbqAccordionItem',
     host: {
         '[attr.data-state]': 'dataState',

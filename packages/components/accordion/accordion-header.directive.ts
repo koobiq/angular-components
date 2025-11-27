@@ -3,7 +3,6 @@ import { KbqAccordionItemDirective } from './accordion-item.directive';
 
 @Directive({
     selector: '[kbqAccordionHeader]',
-    standalone: true,
     host: {
         '[attr.data-state]': 'item.dataState',
         '[attr.data-disabled]': 'item.disabled',

@@ -572,8 +572,7 @@ export class CustomComponent {
 @Component({
     template: `
         Modal Content
-    `,
-    standalone: true
+    `
 })
 class TestModalContentComponent {}
 
@@ -584,8 +583,7 @@ class TestModalContentComponent {}
         <button kbq-button>focusable button</button>
     `,
     // Testing for service with parent service
-    providers: [KbqModalControlService],
-    standalone: true
+    providers: [KbqModalControlService]
 })
 class ModalByServiceComponent {
     nonServiceModalVisible = false;

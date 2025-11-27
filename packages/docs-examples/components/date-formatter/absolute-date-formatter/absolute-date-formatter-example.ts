@@ -15,12 +15,11 @@ import { distinctUntilChanged } from 'rxjs/operators';
  * @title Absolute date-formatter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'absolute-date-formatter-example',
+    imports: [LuxonDateModule, KbqFormattersModule],
     templateUrl: 'absolute-date-formatter-example.html',
     styleUrls: ['absolute-date-formatter-example.css'],
-    imports: [LuxonDateModule, KbqFormattersModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AbsoluteDateFormatterExample {
     formats = {

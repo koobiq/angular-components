@@ -179,8 +179,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
             </kbq-tree-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `,
-    standalone: false
+    `
 })
 class BasicTreeSelect {
     control = new UntypedFormControl();
@@ -264,8 +263,7 @@ class TreeSelectWithPanelWidth {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicEvents {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -309,8 +307,7 @@ class BasicEvents {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class NgModelSelect {
     isDisabled: boolean;
@@ -356,8 +353,7 @@ class NgModelSelect {
                 </kbq-form-field>
             </div>
         }
-    `,
-    standalone: false
+    `
 })
 class NgIfSelect {
     isShowing = false;
@@ -401,8 +397,7 @@ class NgIfSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithChangeEvent {
     changeListener = jasmine.createSpy('KbqTreeSelect change listener');
@@ -442,8 +437,7 @@ class SelectWithChangeEvent {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class MultiSelect {
     control = new UntypedFormControl();
@@ -486,8 +480,7 @@ class MultiSelect {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectInitiallyHidden {
     isVisible = false;
@@ -527,8 +520,7 @@ class BasicSelectInitiallyHidden {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class BasicSelectNoPlaceholder {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
@@ -560,8 +552,7 @@ class BasicSelectNoPlaceholder {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `,
-    standalone: false
+    `
 })
 class SelectWithFormFieldLabel {
     placeholder: string;

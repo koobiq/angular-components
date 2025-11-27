@@ -99,8 +99,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)',
         '(input)': 'onInput($event)'
-    },
-    standalone: true
+    }
 })
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
     /** Emits when the value changes (either due to user input or programmatic change). */

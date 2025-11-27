@@ -25,8 +25,7 @@ export class KbqTreeNodeOutletContext<T> {
  */
 @Directive({
     selector: '[kbqTreeNodeDef]',
-    inputs: ['when: kbqTreeNodeDefWhen'],
-    standalone: true
+    inputs: ['when: kbqTreeNodeDefWhen']
 })
 export class KbqTreeNodeDef<T> {
     @Input('kbqTreeNode') data: T;

@@ -15,8 +15,7 @@ import { KbqIconItem } from '@koobiq/components/icon';
     selector: '[kbq-empty-state-icon]',
     host: {
         class: 'kbq-empty-state-icon'
-    },
-    standalone: true
+    }
 })
 export class KbqEmptyStateIcon {
     constructor(@Optional() private icon: KbqIconItem) {}
@@ -34,8 +33,7 @@ export class KbqEmptyStateIcon {
     selector: '[kbq-empty-state-text]',
     host: {
         class: 'kbq-empty-state-text'
-    },
-    standalone: true
+    }
 })
 export class KbqEmptyStateText {}
 
@@ -43,8 +41,7 @@ export class KbqEmptyStateText {}
     selector: '[kbq-empty-state-title]',
     host: {
         class: 'kbq-empty-state-title'
-    },
-    standalone: true
+    }
 })
 export class KbqEmptyStateTitle {}
 
@@ -52,8 +49,7 @@ export class KbqEmptyStateTitle {}
     selector: '[kbq-empty-state-actions]',
     host: {
         class: 'kbq-empty-state-actions'
-    },
-    standalone: true
+    }
 })
 export class KbqEmptyStateActions {}
 

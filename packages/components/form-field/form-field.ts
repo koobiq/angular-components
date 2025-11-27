@@ -515,7 +515,6 @@ export class KbqFormFieldWithoutBorders {}
  * @docs-private
  */
 @Directive({
-    standalone: true,
     selector: '[kbqInput], [kbqTextarea]',
     exportAs: 'KbqTrim',
     host: { class: 'kbq-trim' }

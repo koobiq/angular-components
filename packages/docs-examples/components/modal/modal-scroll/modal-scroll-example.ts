@@ -3,7 +3,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
-    standalone: true,
     selector: 'custom-modal',
     template: `
         @for (item of items; track item) {

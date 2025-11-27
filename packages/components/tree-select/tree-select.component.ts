@@ -163,8 +163,7 @@ export class KbqTreeSelectChange {
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
         { provide: KbqTree, useExisting: KbqTreeSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
-    ],
-    standalone: true
+    ]
 })
 export class KbqTreeSelect
     extends KbqAbstractSelect

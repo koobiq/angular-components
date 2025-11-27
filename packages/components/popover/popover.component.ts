@@ -50,15 +50,6 @@ export const defaultOffsetYWithArrow = 8;
 
 @Component({
     selector: 'kbq-popover-component',
-    templateUrl: './popover.component.html',
-    preserveWhitespaces: false,
-    styleUrls: ['./popover.scss', './popover-tokens.scss'],
-    host: {
-        '(keydown.esc)': 'onEscape()'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqPopoverAnimations.popoverState],
     imports: [
         NgTemplateOutlet,
         CdkObserveContent,
@@ -67,7 +58,15 @@ export const defaultOffsetYWithArrow = 8;
         CdkTrapFocus,
         NgClass
     ],
-    standalone: true
+    templateUrl: './popover.component.html',
+    styleUrls: ['./popover.scss', './popover-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
+    host: {
+        '(keydown.esc)': 'onEscape()'
+    },
+    animations: [kbqPopoverAnimations.popoverState]
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-popover';
@@ -170,8 +169,7 @@ export function getKbqPopoverInvalidPositionError(position: string) {
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    },
-    standalone: true
+    }
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);

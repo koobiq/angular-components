@@ -32,11 +32,11 @@ export class KbqToggleChange {
 
 @Component({
     selector: 'kbq-toggle',
-    exportAs: 'kbqToggle',
     templateUrl: './toggle.component.html',
     styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqToggle',
     host: {
         class: 'kbq-toggle',
         '[class.kbq-toggle_big]': 'big',
@@ -72,8 +72,7 @@ export class KbqToggleChange {
             useExisting: forwardRef(() => KbqToggleComponent),
             multi: true
         }
-    ],
-    standalone: true
+    ]
 })
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     @Input() big: boolean = false;

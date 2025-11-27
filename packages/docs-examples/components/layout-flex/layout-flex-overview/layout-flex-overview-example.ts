@@ -6,10 +6,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  * @title Layout-flex
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'layout-flex-overview-example',
-    styleUrls: ['layout-flex-overview-example.css'],
     imports: [
         KbqRadioModule,
         FormsModule
@@ -24,7 +21,9 @@ import { KbqRadioModule } from '@koobiq/components/radio';
             <div class="flex example-block">second</div>
             <div class="flex example-block">third</div>
         </div>
-    `
+    `,
+    styleUrls: ['layout-flex-overview-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutFlexOverviewExample {
     layoutDirection: string = 'layout-column';

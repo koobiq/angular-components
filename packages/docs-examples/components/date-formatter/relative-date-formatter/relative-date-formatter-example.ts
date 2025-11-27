@@ -15,12 +15,11 @@ import { distinctUntilChanged } from 'rxjs/operators';
  * @title Relative date-formatter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'relative-date-formatter-example',
+    imports: [LuxonDateModule, KbqFormattersModule],
     templateUrl: 'relative-date-formatter-example.html',
     styleUrls: ['relative-date-formatter-example.css'],
-    imports: [LuxonDateModule, KbqFormattersModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelativeDateFormatterExample {
     formats = {

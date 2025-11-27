@@ -1242,8 +1242,7 @@ describe('KbqDatepicker', () => {
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [disabled]="disabled" [opened]="opened" />
-    `,
-    standalone: false
+    `
 })
 class StandardDatepicker {
     opened = false;
@@ -1258,16 +1257,14 @@ class StandardDatepicker {
         <input [kbqDatepicker]="d" />
         <input [kbqDatepicker]="d" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class MultiInputDatepicker {}
 
 @Component({
     template: `
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class NoInputDatepicker {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1277,8 +1274,7 @@ class NoInputDatepicker {
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [startAt]="startDate" />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithStartAt {
     date = DateTime.local(2020, 1, 1);
@@ -1290,8 +1286,7 @@ class DatepickerWithStartAt {
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithNgModel {
     selected: DateTime | null = null;
@@ -1306,8 +1301,7 @@ class DatepickerWithNgModel {
         <input [formControl]="formControl" [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithFormControl {
     formControl = new UntypedFormControl();
@@ -1321,8 +1315,7 @@ class DatepickerWithFormControl {
         <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithToggle {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1336,8 +1329,7 @@ class DatepickerWithToggle {
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
         </kbq-datepicker-toggle>
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithCustomIcon {}
 
@@ -1346,8 +1338,7 @@ class DatepickerWithCustomIcon {}
         <input [kbqDatepicker]="d" [min]="minDate" [max]="maxDate" [(ngModel)]="date" />
         <kbq-datepicker-toggle [for]="d" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithMinAndMaxValidation {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1361,8 +1352,7 @@ class DatepickerWithMinAndMaxValidation {
         <input [kbqDatepicker]="d" [kbqDatepickerFilter]="filter" [(ngModel)]="date" />
         <kbq-datepicker-toggle [for]="d" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithFilterAndValidation {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1380,8 +1370,7 @@ class DatepickerWithFilterAndValidation {
             (dateInput)="onDateInput()"
         />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithChangeAndInputEvents {
     value = null;
@@ -1398,8 +1387,7 @@ class DatepickerWithChangeAndInputEvents {
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="date" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithi18n {
     date: DateTime | null = DateTime.local(2010, 1, 1);
@@ -1411,8 +1399,7 @@ class DatepickerWithi18n {
     template: `
         <input [kbqDatepicker]="d" [min]="min" [max]="max" [(ngModel)]="value" />
         <kbq-datepicker #d [startAt]="startAt" />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithISOStrings {
     value = new Date(2017, 5, 1).toISOString();
@@ -1427,8 +1414,7 @@ class DatepickerWithISOStrings {
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d (opened)="openedSpy()" (closed)="closedSpy()" />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithEvents {
     selected: DateTime | null = null;
@@ -1441,8 +1427,7 @@ class DatepickerWithEvents {
     template: `
         <input [kbqDatepicker]="d" (focus)="d.open()" />
         <kbq-datepicker #d="kbqDatepicker" />
-    `,
-    standalone: false
+    `
 })
 class DatepickerOpeningOnFocus {
     @ViewChild(KbqDatepicker, { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1452,8 +1437,7 @@ class DatepickerOpeningOnFocus {
     template: `
         <input [kbqDatepicker]="assignedDatepicker" [value]="date" />
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DelayedDatepicker {
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
@@ -1469,7 +1453,6 @@ class DelayedDatepicker {
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
         </kbq-datepicker-toggle>
         <kbq-datepicker #d />
-    `,
-    standalone: false
+    `
 })
 class DatepickerWithTabindexOnToggle {}

@@ -81,7 +81,7 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
     };
 }
 
-@Directive({ standalone: true })
+@Directive()
 export class KbqColorDirective {
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

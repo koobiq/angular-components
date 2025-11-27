@@ -4,7 +4,6 @@ import { KbqAccordionRootDirective } from './accordion-root.directive';
 
 @Directive({
     selector: '[kbqAccordionTrigger]',
-    standalone: true,
     host: {
         '[attr.role]': '"button"',
         '[attr.aria-expanded]': 'item.expanded',

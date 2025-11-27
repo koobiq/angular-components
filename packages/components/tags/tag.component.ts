@@ -93,8 +93,7 @@ export type KbqTagDragData = KbqTagEvent;
  */
 @Directive({
     selector: 'kbq-tag-avatar, [kbqTagAvatar]',
-    host: { class: 'kbq-tag-avatar' },
-    standalone: true
+    host: { class: 'kbq-tag-avatar' }
 })
 export class KbqTagAvatar {}
 
@@ -104,8 +103,7 @@ export class KbqTagAvatar {}
  */
 @Directive({
     selector: 'kbq-tag-trailing-icon, [kbqTagTrailingIcon]',
-    host: { class: 'kbq-tag-trailing-icon' },
-    standalone: true
+    host: { class: 'kbq-tag-trailing-icon' }
 })
 export class KbqTagTrailingIcon {}
 
@@ -113,7 +111,6 @@ export class KbqTagTrailingIcon {}
  * Directive to add submit behavior for the editable tag.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTagEditSubmit]',
     exportAs: 'kbqTagEditSubmit',
     host: {
@@ -132,7 +129,6 @@ export class KbqTagEditSubmit {
  * Directive to add input behavior for the editable tag.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTagEditInput]',
     exportAs: 'kbqTagEditInput',
     host: {
@@ -174,8 +170,6 @@ export class KbqTagEditInput {
 
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
-    exportAs: 'kbqTag',
-    hostDirectives: [CdkDrag],
     template: `
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
@@ -196,6 +190,10 @@ export class KbqTagEditInput {
         </div>
     `,
     styleUrls: ['./tag.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTag',
+    hostDirectives: [CdkDrag],
     host: {
         class: 'kbq-tag',
         '[attr.tabindex]': 'tabindex',
@@ -214,10 +212,7 @@ export class KbqTagEditInput {
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
-    standalone: true
+    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
 })
 export class KbqTag
     extends KbqColorDirective
@@ -697,8 +692,7 @@ export class KbqTag
         '[attr.tabindex]': '-1',
         '(click)': 'handleClick($event)',
         '(focus)': 'focus($event)'
-    },
-    standalone: true
+    }
 })
 export class KbqTagRemove {
     constructor(@Inject(forwardRef(() => KbqTag)) protected parentTag: KbqTag) {}

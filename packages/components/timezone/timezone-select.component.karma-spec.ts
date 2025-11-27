@@ -105,8 +105,7 @@ const groupedZones: KbqTimezoneGroup[] = [
             </kbq-timezone-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
-    `,
-    standalone: false
+    `
 })
 class BasicTimezoneSelect {
     zones: KbqTimezoneGroup[] = groupedZones;

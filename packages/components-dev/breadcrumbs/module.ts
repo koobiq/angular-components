@@ -3,8 +3,8 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadcrumbs';
 
 @Component({
-    imports: [BreadcrumbsExamplesModule],
     selector: 'dev-examples',
+    imports: [BreadcrumbsExamplesModule],
     template: `
         <breadcrumbs-with-wrap-example />
         <hr />
@@ -55,7 +55,6 @@ export class DevProductsPage {}
 export class DevProductDetailsPage {}
 
 @Component({
-    standalone: true,
     selector: 'dev-about-page',
     template: '<div>about</div>',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -63,8 +62,8 @@ export class DevProductDetailsPage {}
 export class DevAboutPage {}
 
 @Component({
-    imports: [RouterOutlet, RouterLink, DevExamples],
     selector: 'dev-app',
+    imports: [RouterOutlet, RouterLink, DevExamples],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

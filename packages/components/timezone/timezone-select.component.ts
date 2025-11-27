@@ -12,8 +12,7 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqSelect, KbqSelectPanelWidth } from '@koobiq/components/select';
 
 @Directive({
-    selector: 'kbq-timezone-select-trigger',
-    standalone: true
+    selector: 'kbq-timezone-select-trigger'
 })
 export class KbqTimezoneSelectTrigger {}
 
@@ -29,8 +28,7 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect }
-    ],
-    standalone: true
+    ]
 })
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     @ContentChild(KbqTimezoneSelectTrigger, { static: false }) customTrigger: KbqTimezoneSelectTrigger;

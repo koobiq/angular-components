@@ -60,7 +60,6 @@ export const getKbqFormFieldMissingControlError = (): Error => {
 
 /** Container for form controls that applies styling and behavior. */
 @Component({
-    standalone: true,
     selector: 'kbq-form-field',
     exportAs: 'kbqFormField',
     templateUrl: './form-field.html',

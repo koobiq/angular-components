@@ -51,6 +51,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
  */
 @Component({
     selector: 'kbq-tab-body',
+    imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)],
     templateUrl: './tab-body.html',
     styleUrl: './tab-body.scss',
     encapsulation: ViewEncapsulation.None,
@@ -58,8 +59,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     animations: [kbqTabsAnimations.translateTab],
     host: {
         class: 'kbq-tab-body'
-    },
-    imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)]
+    }
 })
 export class KbqTabBody implements OnInit, OnDestroy {
     /** The shifted index position of the tab body, where zero represents the active center tab. */
@@ -193,8 +193,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
  * @docs-private
  */
 @Directive({
-    selector: '[kbqTabBodyHost]',
-    standalone: true
+    selector: '[kbqTabBodyHost]'
 })
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
     /** Subscription to events for when the tab body begins centering. */

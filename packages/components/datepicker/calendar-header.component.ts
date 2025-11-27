@@ -26,11 +26,6 @@ export type MonthName = {
 /** Default header for KbqCalendar */
 @Component({
     selector: 'kbq-calendar-header',
-    templateUrl: 'calendar-header.html',
-    styleUrls: ['calendar-header.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCalendarHeader',
     imports: [
         TitleCasePipe,
         KbqButtonModule,
@@ -38,6 +33,11 @@ export type MonthName = {
         KbqSelectModule,
         KbqOptionModule
     ],
+    templateUrl: 'calendar-header.html',
+    styleUrls: ['calendar-header.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqCalendarHeader',
     host: {
         class: 'kbq-calendar-header'
     }
