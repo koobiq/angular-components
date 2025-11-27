@@ -1,40 +1,41 @@
-const {
-    mapColors,
-    mapPalette,
-    mapTypography,
-    mapGlobals,
-    mapBorderRadius,
-    mapShadows,
-    outputTypographyTable,
-    outputTable,
-    outputPage
-} = require('./templates');
+const { simpleMapColors, simpleMapTypography, getTokensOverviewData } = require('./templates');
 const { updateObject, sortSections } = require('./utils');
-const { DEFAULT_MARKDOWN_HEADER_LEVEL, LINE_SEP, NO_HEADER } = require('./config');
+const { NO_HEADER, CUSTOM_HEADER } = require('./config');
 
 module.exports = (StyleDictionary) => {
-    StyleDictionary.registerTransform({
-        type: 'name',
-        name: `name/themeable-token`,
-        transformer: (token) => token.name.replace(/(light|dark)-/, '')
-    });
-    StyleDictionary.registerTransformGroup({
-        name: 'kbq/css-extended',
-        transforms: [
-            'attribute/cti',
-            'kbq-attribute/palette',
-            'kbq-attribute/font',
-            'kbq-attribute/light',
-            'kbq-attribute/dark',
-            'name/cti/kebab',
-            'color/css',
-            'kbq/prefix',
-            'name/themeable-token'
-        ]
+    StyleDictionary.registerFormat({
+        name: 'docs/typography-ts',
+        formatter: function ({ dictionary }) {
+            const filtered = [];
+
+            for (const token of dictionary.allTokens) {
+                const isTypographyTypeMissing =
+                    filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
+
+                if (isTypographyTypeMissing && token.attributes.item === 'font-size') {
+                    filtered.push(token);
+                }
+            }
+
+            // Sort by font-size
+            filtered.sort((a, b) => {
+                const aFontSize = parseInt(a.value);
+                const bFontSize = parseInt(b.value);
+
+                if (aFontSize < bFontSize) return 1;
+                if (aFontSize > bFontSize) return -1;
+
+                return 0;
+            });
+
+            const mappedTokens = filtered.map(simpleMapTypography);
+
+            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)} as const;\n`;
+        }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/colors',
+        name: 'docs/colors-ts',
         formatter: function ({ dictionary }) {
             // filter duplicates (light/dark)
             dictionary.allTokens = dictionary.allTokens.filter((token, pos, allTokens) => {
@@ -62,84 +63,53 @@ module.exports = (StyleDictionary) => {
                 return updateObject(res, section, currentToken);
             }, {});
 
-            const mappedTokens = Object.entries(groupedTokens).map(mapColors);
+            const mappedTokens = Object.entries(groupedTokens).map(simpleMapColors);
 
             // sort token tables, so those of them without the header
             // will be under the higher header
             mappedTokens.sort(sortSections);
             mappedTokens.forEach(({ sections }) => sections?.sort(sortSections));
 
-            return outputPage(DEFAULT_MARKDOWN_HEADER_LEVEL, mappedTokens).join(LINE_SEP);
+            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(mappedTokens)};\n`;
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/palette',
+        name: 'docs/palette-ts',
         formatter: function ({ dictionary }) {
             dictionary.allTokens = dictionary.allTokens.filter(
                 (token, pos, allTokens) => allTokens.indexOf(token) === pos
             );
 
-            const mappedTokens = dictionary.allTokens.map(mapPalette);
-
-            return outputTable(mappedTokens);
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/typography',
+        name: 'docs/globals-ts',
         formatter: function ({ dictionary }) {
-            const filtered = [];
-
-            for (const token of dictionary.allTokens) {
-                const isTypographyTypeMissing =
-                    filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
-
-                if (isTypographyTypeMissing && token.attributes.item === 'font-size') {
-                    filtered.push(token);
-                }
-            }
-
-            // Sort by font-size
-            filtered.sort((a, b) => {
-                const aFontSize = parseInt(a.value);
-                const bFontSize = parseInt(b.value);
-
-                if (aFontSize < bFontSize) return 1;
-                if (aFontSize > bFontSize) return -1;
-
-                return 0;
-            });
-            const mappedTokens = filtered.map(mapTypography);
-
-            return outputTypographyTable(mappedTokens);
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/globals',
+        name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(mapGlobals);
-
-            return outputTable(mappedTokens);
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/border-radius',
+        name: 'docs/border-radius-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(mapBorderRadius);
-
-            return outputTable(mappedTokens);
+            return getTokensOverviewData(dictionary);
         }
     });
 
     StyleDictionary.registerFormat({
-        name: 'docs/shadows',
+        name: 'docs/shadows-ts',
         formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(mapShadows);
-
-            return outputTable(mappedTokens);
+            return getTokensOverviewData(dictionary);
         }
     });
 };

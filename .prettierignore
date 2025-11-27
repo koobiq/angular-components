@@ -8,6 +8,9 @@
 /apps/docs/src/styles/koobiq/default-theme/
 /apps/docs/src/assets/versions.json
 
+# ignore docs tokens values
+apps/docs/src/app/components/design-tokens-viewers/data/*.ts
+
 # ignore public-api-guard
 /tools/public_api_guard/**/*.md
 
