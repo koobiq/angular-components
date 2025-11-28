@@ -10,7 +10,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqIcon } from '../icon/icon.component';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
@@ -30,7 +30,7 @@ export type ScrollDirection = 'after' | 'before';
  */
 @Component({
     selector: 'kbq-tab-header',
-    imports: [KbqIcon, CdkObserveContent],
+    imports: [KbqIconModule, CdkObserveContent],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
     encapsulation: ViewEncapsulation.None,

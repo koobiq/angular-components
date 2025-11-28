@@ -97,6 +97,9 @@ describe('KbqCalendarBody', () => {
 });
 
 @Component({
+    imports: [
+        KbqCalendarBody
+    ],
     template: `
         <table
             kbq-calendar-body

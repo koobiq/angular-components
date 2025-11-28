@@ -29,11 +29,10 @@ import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconModule } from '@koobiq/components/icon';
 import { KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
 import { EMPTY, Subject, merge } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KbqIcon as KbqIcon_1 } from '../icon/icon.component';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
 
 export interface KbqNavbarFocusableItemEvent {
@@ -372,7 +371,7 @@ export class KbqNavbarRectangleElement {
 
 @Component({
     selector: 'kbq-navbar-item, [kbq-navbar-item]',
-    imports: [KbqIcon_1],
+    imports: [KbqIconModule],
     templateUrl: './navbar-item.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -542,7 +541,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
 @Component({
     selector: 'kbq-navbar-toggle',
-    imports: [KbqIcon_1],
+    imports: [KbqIconModule],
     template: `
         @if (!customIcon) {
             <i

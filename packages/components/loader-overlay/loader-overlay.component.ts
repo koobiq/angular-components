@@ -11,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqProgressSpinner } from '../progress-spinner/progress-spinner.component';
+import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 

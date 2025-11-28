@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -736,7 +737,7 @@ class DisabledTabsTestApp {
 }
 
 @Component({
-    imports: [KbqTabsModule],
+    imports: [KbqTabsModule, AsyncPipe],
     template: `
         <kbq-tab-group class="tab-group">
             @for (tab of tabs | async; track tab) {

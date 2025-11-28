@@ -10,10 +10,9 @@ import {
     KbqScrollbarOptions
 } from './scrollbar.types';
 
-const configureTestingModule = (declarations?: any[]) => {
+const configureTestingModule = () => {
     TestBed.configureTestingModule({
         imports: [KbqScrollbarModule],
-        declarations,
         providers: [
             {
                 provide: KBQ_SCROLLBAR_CONFIG,
@@ -69,7 +68,7 @@ describe(KbqScrollbarModule.name, () => {
         let fixture: ComponentFixture<ScrollEventListener>;
 
         beforeEach(() => {
-            configureTestingModule([ScrollEventListener]);
+            configureTestingModule();
 
             fixture = TestBed.createComponent(ScrollEventListener);
             component = fixture.componentInstance;
@@ -95,12 +94,15 @@ describe(KbqScrollbarModule.name, () => {
             component.options = KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG;
             fixture.detectChanges();
 
-            expect(component.update).toHaveBeenCalledTimes(2);
+            expect(component.update).toHaveBeenCalledTimes(1);
         });
     });
 });
 
 @Component({
+    imports: [
+        KbqScrollbarModule
+    ],
     template: `
         <div
             style="height: 300px; max-width: 200px; overflow: auto"

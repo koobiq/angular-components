@@ -176,6 +176,9 @@ describe('KbqDropdown', () => {
 });
 
 @Component({
+    imports: [
+        KbqDropdownModule
+    ],
     template: `
         <button #rootTrigger="kbqDropdownTrigger" #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
 
@@ -252,6 +255,10 @@ class NestedDropdown {
 }
 
 @Component({
+    imports: [
+        KbqDropdownModule,
+        KbqTitleDirective
+    ],
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">

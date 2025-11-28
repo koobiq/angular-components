@@ -5,6 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
+import { KbqTabsModule } from './tabs.module';
 
 describe('KbqTabBody', () => {
     let dir: Direction = 'ltr';
@@ -173,7 +174,7 @@ describe('KbqTabBody', () => {
 });
 
 @Component({
-    imports: [PortalModule],
+    imports: [PortalModule, KbqTabsModule],
     template: `
         <ng-template>Tab Body Content</ng-template>
         <kbq-tab-body [content]="content" [position]="position" [origin]="origin" />

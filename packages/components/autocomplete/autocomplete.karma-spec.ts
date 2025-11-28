@@ -264,6 +264,12 @@ describe('KbqAutocomplete', () => {
 });
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqAutocompleteModule,
+        ReactiveFormsModule,
+        KbqInputModule
+    ],
     template: `
         <kbq-form-field [style.width.px]="width">
             <input

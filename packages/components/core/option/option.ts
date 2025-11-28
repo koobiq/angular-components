@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
-import { KbqPseudoCheckbox } from '../selection';
+import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';
 
@@ -128,7 +128,7 @@ export class KbqVirtualOption extends KbqOptionBase {
 @Component({
     selector: 'kbq-option',
     imports: [
-        KbqPseudoCheckbox
+        KbqPseudoCheckboxModule
     ],
     templateUrl: 'option.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */

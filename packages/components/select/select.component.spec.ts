@@ -49,6 +49,7 @@ import {
 import {
     ErrorStateMatcher,
     KbqOption,
+    KbqOptionModule,
     KbqOptionSelectionChange,
     KbqVirtualOption,
     ThemePalette,
@@ -856,6 +857,11 @@ class SelectWithGroupsAndNgContainer {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        FormsModule
+    ],
     template: `
         <form>
             <kbq-form-field>
@@ -869,6 +875,12 @@ class InvalidSelectInForm {
 }
 
 @Component({
+    imports: [
+        ReactiveFormsModule,
+        KbqSelectModule,
+        KbqOptionModule,
+        KbqFormFieldModule
+    ],
     template: `
         <form [formGroup]="formGroup" (ngSubmit)="submitReactive()">
             <kbq-form-field>
@@ -895,6 +907,11 @@ class SelectInsideFormGroup {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [(value)]="selectedFood">
@@ -921,6 +938,11 @@ class BasicSelectWithoutForms {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" [(value)]="selectedFood">
@@ -944,6 +966,11 @@ class BasicSelectWithoutFormsPreselected {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" multiple [(value)]="selectedFoods">
@@ -969,6 +996,12 @@ class BasicSelectWithoutFormsMultiple {
 
 @Component({
     selector: 'select-with-custom-trigger',
+    imports: [
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select #select="kbqSelect" placeholder="Food" [formControl]="control">
