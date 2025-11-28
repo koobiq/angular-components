@@ -1,5 +1,27 @@
-🚧 **Documentation in progress** 🚧
+`KbqTextarea` — component for multi-line text input.
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(textarea-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### Auto-resize
+
+When the `canGrow` attribute is enabled, the text field will automatically adjust its height based on the content.
+
+<!-- example(textarea-can-grow) -->
+
+### Maximum number of rows
+
+The `maxRows` attribute limits the maximum number of rows in the text field; when the limit is reached, scrolling appears.
+
+<!-- example(textarea-max-rows) -->
+
+### Disabled state
+
+The field is not available for editing and interaction. Configured using the `disabled` attribute.
+
+<!-- example(textarea-disabled) -->
+
+### Error state
+
+Display of the field in an error state for visual indication of invalid data.
+
+<!-- example(textarea-error-state) -->
