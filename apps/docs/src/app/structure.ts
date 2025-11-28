@@ -54,6 +54,7 @@ export enum DocsStructureItemId {
     ProgressBar = 'progress-bar',
     ProgressSpinner = 'progress-spinner',
     Radio = 'radio',
+    Resizer = 'resizer',
     Scrollbar = 'scrollbar',
     Select = 'select',
     SearchExpandable = 'search-expandable',
@@ -735,6 +736,17 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'radio',
                     hasApi: true,
                     apiId: 'radio',
+                    hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.Resizer,
+                    name: {
+                        ru: 'Resizer',
+                        en: 'Resizer'
+                    },
+                    svgPreview: 'resizer',
+                    hasApi: true,
+                    apiId: 'resizer',
                     hasExamples: false
                 },
                 {

@@ -3458,6 +3458,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "radio-style-example.ts",
     "importPath": "components/radio"
   },
+  "resizer-overview": {
+    "packagePath": "components/resizer/resizer-overview",
+    "title": "Resizer overview example",
+    "componentName": "ResizerOverviewExample",
+    "files": [
+      "resizer-overview-example.ts"
+    ],
+    "selector": "resizer-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "resizer-overview-example.ts",
+    "importPath": "components/resizer"
+  },
   "scrollbar-scroll-to-top": {
     "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
     "title": "Scrollbar scroll to top",
@@ -4515,6 +4527,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "time-range-as-form-field-example",
     "additionalComponents": [],
     "primaryFile": "time-range-as-form-field-example.ts",
+    "importPath": "components/time-range"
+  },
+  "time-range-custom-option": {
+    "packagePath": "components/time-range/time-range-custom-option",
+    "title": "Time range custom option",
+    "componentName": "TimeRangeCustomOptionExample",
+    "files": [
+      "time-range-custom-option-example.ts"
+    ],
+    "selector": "time-range-custom-option-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-custom-option-example.ts",
+    "importPath": "components/time-range"
+  },
+  "time-range-custom-range-types": {
+    "packagePath": "components/time-range/time-range-custom-range-types",
+    "title": "Time range custom range types",
+    "componentName": "TimeRangeCustomRangeTypesExample",
+    "files": [
+      "time-range-custom-range-types-example.ts"
+    ],
+    "selector": "time-range-custom-range-types-example",
+    "additionalComponents": [],
+    "primaryFile": "time-range-custom-range-types-example.ts",
     "importPath": "components/time-range"
   },
   "time-range-custom-trigger": {
@@ -6085,6 +6121,8 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-style':
 return import('@koobiq/docs-examples/components/radio');
+  case 'resizer-overview':
+return import('@koobiq/docs-examples/components/resizer');
   case 'scrollbar-scroll-to-top':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-with-custom-config':
@@ -6258,6 +6296,10 @@ return import('@koobiq/docs-examples/components/tag');
   case 'text-area-overview':
 return import('@koobiq/docs-examples/components/textarea');
   case 'time-range-as-form-field':
+return import('@koobiq/docs-examples/components/time-range');
+  case 'time-range-custom-option':
+return import('@koobiq/docs-examples/components/time-range');
+  case 'time-range-custom-range-types':
 return import('@koobiq/docs-examples/components/time-range');
   case 'time-range-custom-trigger':
 return import('@koobiq/docs-examples/components/time-range');
