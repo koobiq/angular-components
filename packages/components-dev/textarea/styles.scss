@@ -1,3 +1,9 @@
 .dev-container .kbq-form-field {
     width: 200px;
 }
+
+dev-app {
+    display: block;
+    max-width: 608px;
+    padding: var(--kbq-size-m);
+}
