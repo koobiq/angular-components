@@ -21,7 +21,7 @@ export class KbqResizable {
 // @public
 export class KbqResizer {
     constructor();
-    protected readonly cursor: Signal<"ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
+    protected readonly cursor: Signal<"default" | "ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
     readonly direction: InputSignal<KbqResizerDirection>;
     readonly sizeChange: OutputEmitterRef<KbqResizerSizeChangeEvent>;
     // (undocumented)
