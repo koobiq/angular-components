@@ -25,6 +25,7 @@ describe('KbqDl', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqDlModule],
     template: `
         <kbq-dl [minWidth]="600">
             <kbq-dt>Тип инцидента</kbq-dt>
@@ -45,7 +46,6 @@ describe('KbqDl', () => {
                 видите этот текст.
             </kbq-dd>
         </kbq-dl>
-    `,
-    imports: [KbqDlModule]
+    `
 })
 class TestApp {}

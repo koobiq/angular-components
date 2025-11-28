@@ -24,7 +24,6 @@ const customDefaultTypes = customTypes.map(({ type }) => type);
  * @title Time range custom range types
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'time-range-custom-range-types-example',
     imports: [
         ReactiveFormsModule,
@@ -33,11 +32,6 @@ const customDefaultTypes = customTypes.map(({ type }) => type);
         KbqIconModule,
         KbqFormFieldModule,
         TitleCasePipe
-    ],
-    providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
-        { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, useValue: customTypes },
-        { provide: KBQ_DEFAULT_TIME_RANGE_TYPES, useValue: customDefaultTypes }
     ],
     template: `
         <ng-template #customOption let-context>
@@ -59,6 +53,12 @@ const customDefaultTypes = customTypes.map(({ type }) => type);
 
         <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [nonNullable]="false" />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
+        { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, useValue: customTypes },
+        { provide: KBQ_DEFAULT_TIME_RANGE_TYPES, useValue: customDefaultTypes }
+    ],
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

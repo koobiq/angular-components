@@ -84,19 +84,19 @@ describe('KbqLink', () => {
 
 @Component({
     selector: 'kbq-link-base-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
-    `,
-    imports: [KbqLinkModule, KbqIconModule]
+    `
 })
 class KbqLinkBaseTestApp {}
 
 @Component({
     selector: 'kbq-link-print-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a>
-    `,
-    imports: [KbqLinkModule, KbqIconModule]
+    `
 })
 class KbqLinkPrintTestApp {
     print: string = '';
@@ -104,30 +104,30 @@ class KbqLinkPrintTestApp {
 
 @Component({
     selector: 'kbq-link-icon-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link>
             <span class="kbq-link__text">Отчет сканирования</span>
             <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
         </a>
-    `,
-    imports: [KbqLinkModule, KbqIconModule]
+    `
 })
 class KbqLinkIconTestApp {}
 
 @Component({
     selector: 'kbq-link-pseudo-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a>
-    `,
-    imports: [KbqLinkModule, KbqIconModule]
+    `
 })
 class KbqLinkPseudoTestApp {}
 
 @Component({
     selector: 'kbq-link-no-underline-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a>
-    `,
-    imports: [KbqLinkModule, KbqIconModule]
+    `
 })
 class KbqLinkNoUnderlineTestApp {}

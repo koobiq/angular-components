@@ -26,9 +26,9 @@ const TAG = 'Editable tag with validation';
             >
                 {{ tagValue() }}
                 <input
+                    kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ trimmedTagModel().length }})"
                     kbqTagEditInput
                     kbqTrigger="none"
-                    kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ trimmedTagModel().length }})"
                     [kbqTooltipColor]="color.Error"
                     [(ngModel)]="tagModel"
                 />

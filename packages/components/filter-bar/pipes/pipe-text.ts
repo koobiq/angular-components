@@ -18,16 +18,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-text',
-    templateUrl: 'pipe-text.html',
-    styleUrls: ['base-pipe.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    providers: [
-        {
-            provide: KbqBasePipe,
-            useExisting: this
-        }
-    ],
     imports: [
         KbqButtonModule,
         KbqFormFieldModule,
@@ -43,6 +33,16 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeState,
         KbqPipeTitleDirective,
         KbqPipeMinWidth
+    ],
+    templateUrl: 'pipe-text.html',
+    styleUrls: ['base-pipe.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: KbqBasePipe,
+            useExisting: this
+        }
     ]
 })
 export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {

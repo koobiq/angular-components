@@ -297,6 +297,7 @@ describe('KbqSingleFileUploadComponent', () => {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-single-file-upload
@@ -308,8 +309,7 @@ describe('KbqSingleFileUploadComponent', () => {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -327,6 +327,7 @@ class BasicSingleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload
@@ -337,8 +338,7 @@ class BasicSingleFileUpload {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
@@ -355,6 +355,7 @@ class BasicMultipleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload
@@ -366,8 +367,7 @@ class BasicMultipleFileUpload {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class ControlValueAccessorMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
@@ -385,6 +385,7 @@ class ControlValueAccessorMultipleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-file-upload
@@ -396,8 +397,7 @@ class ControlValueAccessorMultipleFileUpload {
             />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class ControlValueAccessorSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;

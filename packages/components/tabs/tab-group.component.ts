@@ -25,9 +25,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { KbqTooltipTrigger } from '../tooltip/tooltip.component';
 import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';

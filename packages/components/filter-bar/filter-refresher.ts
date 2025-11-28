@@ -4,6 +4,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
     selector: 'kbq-filter-refresher, [kbq-filter-refresher]',
+    imports: [
+        KbqButtonModule,
+        KbqIconModule
+    ],
     template: `
         <button kbq-button [color]="'contrast'" [kbqStyle]="'transparent'">
             <i kbq-icon="kbq-arrow-rotate-right_16"></i>
@@ -13,12 +17,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </button>
     `,
     styleUrls: ['filter-refresher.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [
-        KbqButtonModule,
-        KbqIconModule
-    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-filter-refresher'
     }

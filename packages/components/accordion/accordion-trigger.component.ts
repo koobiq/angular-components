@@ -5,6 +5,9 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 
 @Component({
     selector: 'kbq-accordion-trigger, [kbq-accordion-trigger]',
+    imports: [
+        KbqIcon
+    ],
     template: `
         @if (isHugSpaceBetween) {
             <i class="kbq-accordion-trigger__icon" kbq-icon="kbq-chevron-down-s_16"></i>
@@ -15,11 +18,8 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
         <ng-content />
     `,
     styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
-    hostDirectives: [KbqAccordionTriggerDirective],
     encapsulation: ViewEncapsulation.None,
-    imports: [
-        KbqIcon
-    ],
+    hostDirectives: [KbqAccordionTriggerDirective],
     host: {
         class: 'kbq-accordion-trigger',
         '[class.kbq-accordion-trigger_fill]': 'isFill',

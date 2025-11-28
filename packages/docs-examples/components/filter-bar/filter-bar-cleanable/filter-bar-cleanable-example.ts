@@ -11,14 +11,14 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
         KbqFilterBarModule,
         LuxonDateModule
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates">
             @for (pipe of pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarCleanableExample {
     pipes: KbqPipe[] = [

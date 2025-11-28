@@ -50,8 +50,8 @@ const options = [
 ];
 
 @Component({
-    imports: [TitleExamplesModule],
     selector: 'dev-examples',
+    imports: [TitleExamplesModule],
     template: `
         <title-overview-example />
         <br />
@@ -62,6 +62,7 @@ const options = [
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         KbqTitleModule,
         KbqButtonModule,
@@ -77,7 +78,6 @@ export class DevExamples {}
         AsyncPipe,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

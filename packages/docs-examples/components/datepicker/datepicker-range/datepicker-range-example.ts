@@ -10,7 +10,6 @@ import { DateTime } from 'luxon';
  * @title Datepicker range
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'datepicker-range-example',
     imports: [
         LuxonDateModule,
@@ -40,7 +39,8 @@ import { DateTime } from 'luxon';
                 </div>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerRangeExample {
     readonly minDate = this.adapter.createDate(2023, 11, 14);

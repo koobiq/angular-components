@@ -211,9 +211,9 @@
             <kbq-sidepanel-body class="layout-padding">
                 <div class="kbq-subheading">Sidepanel Template Body</div>
 
-                @for (item of array; track i; let i = $index) {
+                @for (item of array; track $index) {
                     <div>
-                        {{ i + 1 }}
+                        {{ $index + 1 }}
                     </div>
                 }
             </kbq-sidepanel-body>

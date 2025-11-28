@@ -6,12 +6,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Button toggle disabled partial
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'button-toggle-disabled-partial-overview-example',
-    templateUrl: 'button-toggle-disabled-partial-overview-example.html',
     imports: [
         KbqButtonToggleModule,
         KbqIconModule
-    ]
+    ],
+    templateUrl: 'button-toggle-disabled-partial-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleDisabledPartialOverviewExample {}

@@ -499,6 +499,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-single-file-upload
@@ -510,8 +511,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 (fileQueueChange)="onChange($event)"
             />
         </div>
-    `,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    `
 })
 class BasicSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -531,6 +531,7 @@ class BasicSingleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-file-upload
@@ -541,8 +542,7 @@ class BasicSingleFileUpload {
                 (fileQueueChange)="onChange($event)"
             />
         </div>
-    `,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    `
 })
 class ControlValueAccessorSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
@@ -560,6 +560,7 @@ class ControlValueAccessorSingleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload
@@ -570,8 +571,7 @@ class ControlValueAccessorSingleFileUpload {
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
-    `,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    `
 })
 class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
@@ -593,6 +593,7 @@ class BasicMultipleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload
@@ -603,8 +604,7 @@ class BasicMultipleFileUpload {
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
-    `,
-    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule]
+    `
 })
 class ControlValueAccessorMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;

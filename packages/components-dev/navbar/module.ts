@@ -17,6 +17,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { map, timer } from 'rxjs';
 
 @Component({
+    selector: 'dev-app',
     imports: [
         KbqNavbarModule,
         KbqIconModule,
@@ -33,7 +34,6 @@ import { map, timer } from 'rxjs';
         KbqDividerModule,
         AsyncPipe
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

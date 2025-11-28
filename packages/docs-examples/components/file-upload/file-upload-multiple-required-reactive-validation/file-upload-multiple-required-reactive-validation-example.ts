@@ -11,6 +11,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     selector: 'file-upload-multiple-required-reactive-validation-example',
+    imports: [
+        ReactiveFormsModule,
+        KbqFileUploadModule,
+        KbqFormFieldModule,
+        KbqButtonModule,
+        KbqIconModule
+    ],
     template: `
         <form [formGroup]="formMultiple" (ngSubmit)="onSubmit()">
             <kbq-file-upload
@@ -31,13 +38,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFileUploadModule,
-        KbqFormFieldModule,
-        KbqButtonModule,
-        KbqIconModule
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleRequiredReactiveValidationExample {

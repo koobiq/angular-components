@@ -7,7 +7,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Textarea
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'text-area-overview-example',
     imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule],
     template: `
@@ -29,7 +28,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         <kbq-form-field kbqFormFieldWithoutBorders>
             <textarea kbqTextarea placeholder="Placeholder" [canGrow]="false" [(ngModel)]="value"></textarea>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TextAreaOverviewExample {
     disabled: boolean = true;

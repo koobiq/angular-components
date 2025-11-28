@@ -3,8 +3,8 @@ import { InlineEditExamplesModule } from '../../docs-examples/components/inline-
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [InlineEditExamplesModule],
     selector: 'dev-examples',
+    imports: [InlineEditExamplesModule],
     template: `
         <inline-edit-overview-example />
         <inline-edit-unfilled-example />

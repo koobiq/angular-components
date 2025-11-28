@@ -40,8 +40,8 @@ describe(KbqTopBar.name, () => {
 
 @Component({
     selector: 'test-app',
-    template: '<kbq-top-bar [withShadow]="withShadow" />',
-    imports: [KbqTopBarModule]
+    imports: [KbqTopBarModule],
+    template: '<kbq-top-bar [withShadow]="withShadow" />'
 })
 class TestApp {
     @ViewChild(KbqTopBar) topBar: KbqTopBar;

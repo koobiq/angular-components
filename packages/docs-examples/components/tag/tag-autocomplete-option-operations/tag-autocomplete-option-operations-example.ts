@@ -16,7 +16,6 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
  * @title Tag autocomplete option operations
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tag-autocomplete-option-operations-example',
     imports: [
         FormsModule,
@@ -28,7 +27,6 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         AsyncPipe,
         KbqInputModule
     ],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -80,7 +78,9 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
             gap: var(--kbq-size-m);
             margin: var(--kbq-size-5xl);
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     allTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];

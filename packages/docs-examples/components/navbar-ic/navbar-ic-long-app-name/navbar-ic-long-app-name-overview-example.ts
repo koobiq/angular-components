@@ -31,9 +31,7 @@ enum NavbarIcItems {
  * @title Navbar-ic
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'navbar-ic-long-app-name-example',
-    templateUrl: 'navbar-ic-long-app-name-example.html',
     imports: [
         KbqNavbarIcModule,
         KbqBadgeModule,
@@ -42,7 +40,9 @@ enum NavbarIcItems {
         KbqTopBarModule,
         KbqButtonModule,
         KbqDropdownModule
-    ]
+    ],
+    templateUrl: 'navbar-ic-long-app-name-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarIcLongAppNameExample {
     protected readonly currentTheme = toSignal(

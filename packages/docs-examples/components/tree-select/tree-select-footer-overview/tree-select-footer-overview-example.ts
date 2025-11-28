@@ -102,7 +102,6 @@ export const DATA_OBJECT = {
  * @title Tree-select footer
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tree-select-footer-overview-example',
     imports: [KbqFormFieldModule, KbqTreeSelectModule, FormsModule, KbqTreeModule, KbqIconModule, KbqLinkModule],
     template: `
@@ -138,7 +137,8 @@ export const DATA_OBJECT = {
                 </kbq-select-footer>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectFooterOverviewExample {
     selected = '';

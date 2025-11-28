@@ -6,7 +6,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
  * @title search-expandable
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'search-expandable-overview-example',
     imports: [
         KbqSearchExpandableModule,
@@ -14,7 +13,8 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     ],
     template: `
         <kbq-search-expandable [(ngModel)]="search" />
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchExpandableOverviewExample {
     search: string;

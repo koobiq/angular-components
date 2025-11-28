@@ -116,7 +116,7 @@ describe('KbqToggle', () => {
         });
 
         it('should generate a unique id for the toggle input if no id is set', () => {
-            testComponent.toggleId = null;
+            testComponent.toggleId = '';
             fixture.detectChanges();
 
             expect(toggleInstance.inputId).toMatch(/kbq-toggle-\d+/);
@@ -599,7 +599,7 @@ class SingleToggle {
     isDisabled: boolean = false;
     parentElementClicked: boolean = false;
     parentElementKeyedUp: boolean = false;
-    toggleId: string | null = 'simple-check';
+    toggleId: string = 'simple-check';
     toggleColor: string = 'primary';
     indeterminate = false;
 

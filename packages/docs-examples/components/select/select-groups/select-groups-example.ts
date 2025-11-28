@@ -8,7 +8,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     selector: 'select-groups-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select [value]="selected">
@@ -32,7 +31,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectGroupsExample {
     readonly groups = Array.from({ length: 3 }).map((_, i) => `Group #${i}`);

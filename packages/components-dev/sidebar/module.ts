@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { SidebarExamplesModule } from 'packages/docs-examples/components/sidebar';
 
 @Component({
-    imports: [SidebarExamplesModule],
     selector: 'dev-examples',
+    imports: [SidebarExamplesModule],
     template: `
         <sidebar-overview-example />
         <hr />
@@ -15,10 +15,10 @@ import { SidebarExamplesModule } from 'packages/docs-examples/components/sidebar
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

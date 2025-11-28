@@ -5,16 +5,16 @@ import { KbqFilter } from './filter-bar.types';
 
 @Component({
     selector: 'kbq-filter-reset',
+    imports: [KbqButtonModule],
     template: `
         <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()">
             <ng-content>{{ localeData }}</ng-content>
         </button>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-filter-reset'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [KbqButtonModule]
+    }
 })
 export class KbqFilterReset {
     /** KbqFilterBar instance */

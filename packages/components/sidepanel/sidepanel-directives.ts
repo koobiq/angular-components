@@ -21,8 +21,8 @@ import { KbqSidepanelService } from './sidepanel.service';
 @Directive({
     selector: 'button[kbq-sidepanel-close], button[kbqSidepanelClose]',
     host: {
-        '(click)': 'sidepanelRef.close(sidepanelResult)',
-        class: 'kbq-sidepanel-close'
+        class: 'kbq-sidepanel-close',
+        '(click)': 'sidepanelRef.close(sidepanelResult)'
     }
 })
 export class KbqSidepanelClose implements OnInit, OnChanges {

@@ -12,7 +12,6 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
  * @title Time range custom trigger
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'time-range-custom-trigger-example',
     imports: [
         ReactiveFormsModule,
@@ -24,9 +23,6 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
         KbqSuffix,
         KbqTimeRangeTitleAsControl,
         TitleCasePipe
-    ],
-    providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
     ],
     template: `
         <ng-template #titleTemplate let-context>
@@ -48,6 +44,9 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
 
         <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [formControl]="control" />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-xl'
     }

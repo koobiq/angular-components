@@ -4,10 +4,10 @@ import { By } from '@angular/platform-browser';
 import { KbqOption, KbqOptionModule } from './index';
 
 @Component({
+    imports: [KbqOptionModule],
     template: `
         <kbq-option [disabled]="disabled" />
-    `,
-    imports: [KbqOptionModule]
+    `
 })
 class OptionWithDisable {
     disabled: boolean;

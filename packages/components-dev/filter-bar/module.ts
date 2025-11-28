@@ -46,8 +46,8 @@ const DEV_DATA_OBJECT = {
 };
 
 @Component({
-    imports: [FilterBarExamplesModule],
     selector: 'dev-examples',
+    imports: [FilterBarExamplesModule],
     template: `
         <filter-bar-overview-example />
         <br />
@@ -99,9 +99,6 @@ export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqIconModule,
         KbqFilterBarModule,
@@ -112,6 +109,9 @@ export class DevExamples {}
         DevLocaleSelector,
         JsonPipe
     ],
+    templateUrl: './template.html',
+    styleUrls: ['./styles.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp implements AfterViewInit {

@@ -7,11 +7,11 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
  */
 @Component({
     selector: 'checkbox-overview-example',
-    templateUrl: 'checkbox-overview-example.html',
     imports: [
         KbqCheckboxModule,
         KbqFormFieldModule
     ],
+    templateUrl: 'checkbox-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxOverviewExample {}

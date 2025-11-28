@@ -120,10 +120,10 @@ describe('KbqMonthView', () => {
 });
 
 @Component({
+    imports: [KbqLuxonDateModule],
     template: `
         <kbq-month-view [(activeDate)]="date" [(selected)]="selected" />
-    `,
-    imports: [KbqLuxonDateModule]
+    `
 })
 class StandardMonthView {
     date = DateTime.local(2017, 1, 5);
@@ -131,10 +131,10 @@ class StandardMonthView {
 }
 
 @Component({
+    imports: [KbqLuxonDateModule],
     template: `
         <kbq-month-view [activeDate]="activeDate" [dateFilter]="dateFilter" />
-    `,
-    imports: [KbqLuxonDateModule]
+    `
 })
 class MonthViewWithDateFilter {
     activeDate = DateTime.local(2017, 1, 1);
@@ -145,10 +145,10 @@ class MonthViewWithDateFilter {
 }
 
 @Component({
+    imports: [KbqLuxonDateModule],
     template: `
         <kbq-month-view [activeDate]="activeDate" [dateClass]="dateClass" />
-    `,
-    imports: [KbqLuxonDateModule]
+    `
 })
 class MonthViewWithDateClass {
     activeDate = DateTime.local(2017, 1, 1);

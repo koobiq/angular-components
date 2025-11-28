@@ -8,6 +8,7 @@ import { DevTagEditable, DevTagStateAndStyle } from './components/tag';
 import { DevToggleStateAndStyle, DevToggleWithTextAndCaption } from './components/toggle';
 
 @Component({
+    selector: 'dev-app',
     imports: [
         DevThemeToggle,
         DevButtonStateAndStyle,
@@ -19,7 +20,6 @@ import { DevToggleStateAndStyle, DevToggleWithTextAndCaption } from './component
         DevToggleStateAndStyle,
         DevToggleWithTextAndCaption
     ],
-    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrl: 'styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -10,7 +10,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Dropdown lazy load data
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'dropdown-lazyload-data-example',
     imports: [
         KbqDropdownModule,
@@ -20,7 +19,8 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormFieldModule,
         KbqInputModule
     ],
-    templateUrl: 'dropdown-lazyload-data-example.html'
+    templateUrl: 'dropdown-lazyload-data-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownLazyloadDataExample {
     someValue = 'Lazy Value';

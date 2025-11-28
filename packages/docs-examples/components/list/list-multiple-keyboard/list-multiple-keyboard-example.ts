@@ -6,7 +6,6 @@ import { KbqListModule } from '@koobiq/components/list';
  * @title List multiple keyboard
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'list-multiple-keyboard-example',
     imports: [KbqListModule, FormsModule],
     template: `
@@ -24,7 +23,8 @@ import { KbqListModule } from '@koobiq/components/list';
         </kbq-list-selection>
         <br />
         <div>Selected: {{ selected }}</div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListMultipleKeyboardExample {
     selected = [];

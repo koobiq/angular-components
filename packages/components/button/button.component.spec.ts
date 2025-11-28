@@ -297,11 +297,11 @@ describe('Button with icon', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqButtonModule, KbqDropdownModule],
     template: `
         <button kbq-button type="button" [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></button>
         <a href="#" kbq-button [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></a>
-    `,
-    imports: [KbqButtonModule, KbqDropdownModule]
+    `
 })
 class TestApp {
     clickCount: number = 0;
@@ -315,38 +315,38 @@ class TestApp {
 
 @Component({
     selector: 'kbq-button-comment-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             <!-- comment-before -->
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             <!-- comment-after -->
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonCommentCaseTestApp {}
 
 @Component({
     selector: 'kbq-button-two-icons-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             <span>Some text</span>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonHtmlIconRightCaseTestApp {}
 
 @Component({
     selector: 'kbq-button-two-icons-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             <span>Some text</span>
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonHtmlIconLeftCaseTestApp {
     avoidCollisionMockTarget() {}
@@ -354,19 +354,20 @@ class KbqButtonHtmlIconLeftCaseTestApp {
 
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             Some text
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             Some text
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonTextIconCaseTestApp {}
 
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             @if (visible) {
@@ -374,8 +375,7 @@ class KbqButtonTextIconCaseTestApp {}
             }
             Some text
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonTextIconLeftNgIfCaseTestApp {
     visible = true;
@@ -385,6 +385,7 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
 
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             Some text
@@ -392,8 +393,7 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonTextIconRightNgIfCaseTestApp {
     visible = true;
@@ -401,6 +401,7 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
 
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             Some text
@@ -409,8 +410,7 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
             }
             Some text
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonTextIconLeftRightNgIfCaseTestApp {
     visible = true;
@@ -418,6 +418,7 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
 
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             <span>Some text</span>
@@ -430,8 +431,7 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
             <span>Some text</span>
             <span>Some text</span>
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
     visible = true;
@@ -439,32 +439,33 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 
 @Component({
     selector: 'kbq-button-comment-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
             <i id="icon2" kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonTwoIconsCaseTestApp {}
 
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             @if (visible) {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
         </button>
-    `,
-    imports: [KbqButtonModule, KbqIconModule]
+    `
 })
 class KbqButtonIconNgIfCaseTestApp {
     visible = true;
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqDropdownModule],
     template: `
         <button #triggerEl kbq-button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown
@@ -475,8 +476,7 @@ class KbqButtonIconNgIfCaseTestApp {
         >
             <button kbq-dropdown-item>Item</button>
         </kbq-dropdown>
-    `,
-    imports: [KbqButtonModule, KbqDropdownModule]
+    `
 })
 class ButtonDropdownTrigger {
     @ViewChild('triggerEl', { static: false, read: ElementRef }) trigger: ElementRef;

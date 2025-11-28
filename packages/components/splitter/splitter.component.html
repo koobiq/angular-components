@@ -1,14 +1,14 @@
 <ng-content />
 
-@for (area of areas; track area; let index = $index; let last = $last) {
-    @if (last === false) {
+@for (area of areas; track area) {
+    @if (!$last) {
         <kbq-gutter
             [attr.disabled]="disabled || null"
             [direction]="direction"
-            [order]="index * 2 + 1"
+            [order]="$index * 2 + 1"
             [size]="gutterSize"
             [style.display]="hideGutters ? 'none' : 'flex'"
-            (mousedown)="onMouseDown($event, index, index + 1)"
+            (mousedown)="onMouseDown($event, $index, $index + 1)"
         />
     }
 }

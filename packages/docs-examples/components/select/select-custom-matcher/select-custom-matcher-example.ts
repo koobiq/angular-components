@@ -8,7 +8,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     selector: 'select-custom-matcher-example',
     imports: [KbqSelectModule, KbqButtonModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-select
             #select="kbqSelect"
@@ -37,7 +36,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .my-custom-select {
             outline: none;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectCustomMatcherExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);

@@ -36,12 +36,12 @@ type ExampleTableItem = {
 };
 
 @Component({
+    selector: 'example-table',
     imports: [
         KbqTableModule,
         KbqCheckboxModule,
         FormsModule
     ],
-    selector: 'example-table',
     template: `
         <table kbq-table>
             <thead>
@@ -120,6 +120,7 @@ export class ExampleTable {
 }
 
 @Component({
+    selector: 'example-actions-panel',
     imports: [
         KbqOverflowItemsModule,
         KbqButtonModule,
@@ -127,7 +128,6 @@ export class ExampleTable {
         KbqDropdownModule,
         KbqDividerModule
     ],
-    selector: 'example-actions-panel',
     template: `
         <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
             <div order="99" [kbqOverflowItem]="action.Counter">
@@ -236,9 +236,8 @@ export class ExampleActionsPanel {
  * @title Actions panel overview
  */
 @Component({
-    imports: [ExampleTable],
-    providers: [KbqActionsPanel],
     selector: 'actions-panel-overview-example',
+    imports: [ExampleTable],
     template: `
         <example-table (selectedItems)="toggleActionsPanel($event)" />
     `,
@@ -248,7 +247,8 @@ export class ExampleActionsPanel {
             overflow: hidden;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqActionsPanel]
 })
 export class ActionsPanelOverviewExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });

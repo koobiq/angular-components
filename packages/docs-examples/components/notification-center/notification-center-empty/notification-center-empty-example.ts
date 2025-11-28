@@ -36,14 +36,7 @@ enum NavbarIcItems {
  * @title notification-center-empty
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'notification-center-empty-example',
-    templateUrl: 'notification-center-empty-example.html',
-    styles: `
-        ::ng-deep .example-notification-center-panel {
-            margin-top: -98px;
-        }
-    `,
     imports: [
         KbqNotificationCenterModule,
         KbqNavbarIcModule,
@@ -57,9 +50,15 @@ enum NavbarIcItems {
         LuxonDateModule,
         KbqFormattersModule
     ],
+    templateUrl: 'notification-center-empty-example.html',
+    styles: `
+        ::ng-deep .example-notification-center-panel {
+            margin-top: -98px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }
-    ]
+        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
 })
 export class NotificationCenterEmptyExample {
     readonly notificationCenterService = inject(KbqNotificationCenterService);

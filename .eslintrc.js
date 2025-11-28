@@ -203,6 +203,10 @@ const typescriptRules = {
         '@angular-eslint/no-pipe-impure': 0,
         '@angular-eslint/sort-ngmodule-metadata-arrays': 0,
 
+        '@angular-eslint/prefer-signals': 0,
+        '@angular-eslint/prefer-output-emitter-ref': 0,
+        '@angular-eslint/prefer-inject': 0,
+
         // plugin:rxjs
         'rxjs/no-implicit-any-catch': 0,
         'rxjs/no-sharereplay': 0,

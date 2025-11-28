@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -32,6 +33,9 @@ export class KbqToggleChange {
 
 @Component({
     selector: 'kbq-toggle',
+    imports: [
+        CdkObserveContent
+    ],
     templateUrl: './toggle.component.html',
     styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
     encapsulation: ViewEncapsulation.None,

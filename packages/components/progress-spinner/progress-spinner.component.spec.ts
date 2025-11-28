@@ -119,11 +119,11 @@ describe('KbqProgressSpinner', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqProgressSpinnerModule],
     template: `
         <kbq-progress-spinner class="first" [id]="id" [color]="color" [value]="value" [mode]="mode" />
         <kbq-progress-spinner class="default" />
-    `,
-    imports: [KbqProgressSpinnerModule]
+    `
 })
 class TestApp {
     color: ThemePalette;

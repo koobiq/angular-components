@@ -174,17 +174,17 @@ describe(KbqBreadcrumbs.name, () => {
 });
 
 @Component({
+    imports: [
+        KbqBreadcrumbs,
+        KbqBreadcrumbItem
+    ],
     template: `
         <kbq-breadcrumbs [max]="max" [size]="size">
             @for (item of items; track item) {
                 <kbq-breadcrumb-item [text]="item.text" [disabled]="item.disabled" />
             }
         </kbq-breadcrumbs>
-    `,
-    imports: [
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem
-    ]
+    `
 })
 class SimpleBreadcrumbs {
     @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
@@ -199,6 +199,12 @@ class SimpleBreadcrumbs {
 }
 
 @Component({
+    imports: [
+        KbqBreadcrumbs,
+        KbqBreadcrumbItem,
+        KbqBreadcrumbsSeparator,
+        KbqBreadcrumbView
+    ],
     template: `
         <kbq-breadcrumbs [max]="max" [size]="size">
             <ng-template kbqBreadcrumbsSeparator>
@@ -211,13 +217,7 @@ class SimpleBreadcrumbs {
                 </kbq-breadcrumb-item>
             }
         </kbq-breadcrumbs>
-    `,
-    imports: [
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem,
-        KbqBreadcrumbsSeparator,
-        KbqBreadcrumbView
-    ]
+    `
 })
 class BreadcrumbsCustomization {
     @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;

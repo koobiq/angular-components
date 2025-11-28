@@ -8,12 +8,12 @@ import { KbqToastService } from '@koobiq/components/toast';
  * @title Toast progress bar
  */
 @Component({
+    selector: 'toast-progress-bar-overview-example',
     imports: [
         KbqProgressBarModule,
         KbqLinkModule,
         KbqButtonModule
     ],
-    selector: 'toast-progress-bar-overview-example',
     template: `
         <ng-template #toastStickyContentTemplate let-toast>
             <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />

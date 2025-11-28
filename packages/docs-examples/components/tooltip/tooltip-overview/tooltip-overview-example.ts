@@ -7,7 +7,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tooltip-overview-example',
     imports: [
         KbqButtonModule,
@@ -18,7 +17,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <button kbq-button kbqTooltip="Тултип" [kbqPlacement]="placement">Кнопка с тултипом</button>
             <button kbq-button kbqWarningTooltip="Тултип" [kbqPlacement]="placement">Кнопка с предупреждением</button>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipOverviewExample {
     placement: PopUpPlacements = PopUpPlacements.Top;

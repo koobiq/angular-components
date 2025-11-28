@@ -6,9 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Icon-item size
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'icon-item-size-example',
-    styleUrls: ['icon-item-size-example.css'],
     imports: [
         KbqIconModule
     ],
@@ -24,7 +22,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <div class="example-icon-item-container__name kbq-text-normal">Normal</div>
             </div>
         </div>
-    `
+    `,
+    styleUrls: ['icon-item-size-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconItemSizeExample {
     colors = KbqComponentColors;

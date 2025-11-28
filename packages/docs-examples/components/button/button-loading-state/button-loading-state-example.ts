@@ -6,7 +6,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
  * @title Button loading state
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'button-loading-state-example',
     imports: [
         KbqButtonModule
@@ -14,7 +13,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
     template: `
         <button class="kbq-progress" kbq-button [color]="colors.Contrast">Кнопка</button>
         &nbsp;
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonLoadingStateExample {
     colors = KbqComponentColors;

@@ -30,11 +30,8 @@ type DevButtonStyle = Partial<{
 type DevButton = DevButtonState & DevButtonStyle;
 
 @Component({
-    imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule, KbqSplitButtonModule],
     selector: 'dev-split-button-state-and-style',
-    host: {
-        'data-testid': 'e2eSplitButtonStateAndStyle'
-    },
+    imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule, KbqSplitButtonModule],
     template: `
         <div class="dev-options">
             <kbq-checkbox data-testid="e2eShowPrefixIcon" [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>
@@ -97,7 +94,10 @@ type DevButton = DevButtonState & DevButtonStyle;
             padding: var(--kbq-size-xxs);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSplitButtonStateAndStyle'
+    }
 })
 export class DevSplitButtonStateAndStyle {
     readonly showPrefixIcon = model(false);

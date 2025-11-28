@@ -27,8 +27,8 @@ import { TreeSelectExamplesModule } from '../../docs-examples/components/tree-se
 import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
-    imports: [TreeSelectExamplesModule],
     selector: 'dev-examples',
+    imports: [TreeSelectExamplesModule],
     template: `
         <tree-select-custom-matcher-with-input-example />
         <hr />
@@ -58,8 +58,9 @@ class DevExamples {}
     ],
     providers: [
         kbqTreeSelectOptionsProvider({
-        // panelWidth: 700
+            // panelWidth: 700
         })
+
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

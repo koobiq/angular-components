@@ -9,18 +9,25 @@ import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'dev-breadcrumbs-hydration',
+    imports: [
+        RouterLink,
+        KbqBreadcrumbsModule,
+        KbqButtonModule,
+        AsyncPipe,
+        KbqTopBarModule
+    ],
     template: `
         <kbq-top-bar>
             @if (breadcrumbItems$ | async; as breadcrumbs) {
                 <nav kbq-breadcrumbs wrapMode="none">
-                    @for (breadcrumb of breadcrumbs; track breadcrumb.label; let last = $last) {
+                    @for (breadcrumb of breadcrumbs; track breadcrumb.label) {
                         <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
                             <a *kbqBreadcrumbView tabindex="-1" [routerLink]="breadcrumb.url">
                                 <button
                                     kbq-button
                                     kbqBreadcrumb
-                                    [disabled]="last"
-                                    [attr.aria-current]="last ? 'page' : null"
+                                    [disabled]="$last"
+                                    [attr.aria-current]="$last ? 'page' : null"
                                 >
                                     <span>{{ breadcrumb.label }}</span>
                                 </button>
@@ -31,13 +38,6 @@ import { map } from 'rxjs/operators';
             }
         </kbq-top-bar>
     `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule,
-        KbqButtonModule,
-        AsyncPipe,
-        KbqTopBarModule
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevBreadcrumbsHydration {

@@ -5,7 +5,6 @@ import { KbqTableModule } from '@koobiq/components/table';
  * @title Table with borders
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'table-with-borders-example',
     imports: [
         KbqTableModule
@@ -47,6 +46,7 @@ import { KbqTableModule } from '@koobiq/components/table';
                 </tr>
             </tbody>
         </table>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableWithBordersExample {}

@@ -5,13 +5,13 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 @Component({
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqInputModule,
         KbqFormFieldModule,
         KbqFormsModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

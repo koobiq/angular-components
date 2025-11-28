@@ -12,10 +12,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'popover-content-example',
-    templateUrl: 'popover-content-example.html',
-    styleUrls: ['popover-content-example.css'],
     imports: [
         KbqDropdownModule,
         KbqButtonModule,
@@ -24,7 +21,10 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqIconModule,
         KbqPopoverModule,
         NgStyle
-    ]
+    ],
+    templateUrl: 'popover-content-example.html',
+    styleUrls: ['popover-content-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverContentExample {
     members: Record<string, string>[] = [

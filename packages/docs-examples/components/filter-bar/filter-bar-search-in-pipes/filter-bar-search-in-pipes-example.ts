@@ -30,7 +30,6 @@ const DATA_OBJECT = {
  * @title filter-bar-search-in-pipes
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'filter-bar-search-in-pipes-example',
     imports: [
         KbqFilterBarModule
@@ -47,7 +46,8 @@ const DATA_OBJECT = {
                 <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSearchInPipesExample {
     activeFilter: KbqFilter = this.getDefaultFilter();

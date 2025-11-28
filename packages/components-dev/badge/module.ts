@@ -4,8 +4,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [KbqBadgeModule, KbqIconModule, DevThemeToggle],
     selector: 'dev-app',
+    imports: [KbqBadgeModule, KbqIconModule, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

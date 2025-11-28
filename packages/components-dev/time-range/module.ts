@@ -5,18 +5,21 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [TimeRangeExamplesModule],
     selector: 'dev-examples',
+    imports: [TimeRangeExamplesModule],
     template: `
         <time-range-overview-example />
+        <br />
         <time-range-custom-trigger-example />
+        <br />
         <time-range-empty-type-list-example />
+        <br />
         <time-range-min-max-example />
-
+        <br />
         <time-range-as-form-field-example />
-
+        <br />
         <time-range-custom-range-types-example />
-
+        <br />
         <time-range-custom-option-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,15 +27,15 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         DevLocaleSelector,
         DevThemeToggle,
         DevExamples,
         KbqLocaleServiceModule
     ],
-    selector: 'dev-app',
-    styleUrls: ['styles.scss'],
     templateUrl: 'template.html',
+    styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

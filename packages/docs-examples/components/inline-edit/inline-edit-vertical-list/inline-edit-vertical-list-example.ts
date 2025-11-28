@@ -10,6 +10,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit vertical list
  */
 @Component({
+    selector: 'inline-edit-vertical-list-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
@@ -17,7 +18,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqInputModule,
         NgTemplateOutlet
     ],
-    selector: 'inline-edit-vertical-list-example',
     template: `
         <form [formGroup]="form">
             <kbq-inline-edit>
@@ -73,10 +73,10 @@ import { KbqInputModule } from '@koobiq/components/input';
             white-space: nowrap;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditVerticalListExample {
     protected readonly placeholder = 'Placeholder';

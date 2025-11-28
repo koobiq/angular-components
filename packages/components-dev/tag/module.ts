@@ -29,8 +29,8 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [TagExamplesModule],
     selector: 'dev-examples',
+    imports: [TagExamplesModule],
     template: `
         <tag-list-draggable-example />
         <hr />
@@ -80,6 +80,7 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqFormFieldModule,
@@ -92,17 +93,16 @@ export class DevExamples {}
         AsyncPipe,
         DevThemeToggle
     ],
+    templateUrl: 'template.html',
+    styleUrls: ['styles.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } satisfies KbqTagsDefaultOptions
         }
-    ],
-    selector: 'dev-app',
-    templateUrl: 'template.html',
-    styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class DevApp implements AfterViewInit {
     colors = KbqComponentColors;

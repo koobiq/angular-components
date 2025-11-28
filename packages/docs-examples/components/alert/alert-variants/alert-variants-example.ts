@@ -9,17 +9,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Alert variants
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'alert-variants-example',
-    styleUrls: ['alert-variants-example.css'],
-    animations: [
-        trigger('hideShowAnimator', [
-            state('true', style({ opacity: 1, display: '' })),
-            state('false', style({ opacity: 0, display: 'none' })),
-            transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))
-        ])
-    ],
     imports: [
         KbqAlertModule,
         KbqIconModule
@@ -41,7 +31,17 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </kbq-alert>
             </div>
         </div>
-    `
+    `,
+    styleUrls: ['alert-variants-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('hideShowAnimator', [
+            state('true', style({ opacity: 1, display: '' })),
+            state('false', style({ opacity: 0, display: 'none' })),
+            transition('false => true', animate('.5s')),
+            transition('true => false', animate('.2s'))])
+
+    ]
 })
 export class AlertVariantsExample {
     colors = KbqComponentColors;

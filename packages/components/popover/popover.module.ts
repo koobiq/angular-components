@@ -19,12 +19,6 @@ import {
 } from './popover.component';
 
 @NgModule({
-    exports: [
-        KbqPopoverComponent,
-        KbqPopoverTrigger,
-        KbqPopoverConfirmComponent,
-        KbqPopoverConfirmTrigger
-    ],
     imports: [
         OverlayModule,
         KbqButtonModule,
@@ -33,6 +27,12 @@ import {
         CdkObserveContent,
         NgClass,
         NgTemplateOutlet,
+        KbqPopoverComponent,
+        KbqPopoverTrigger,
+        KbqPopoverConfirmComponent,
+        KbqPopoverConfirmTrigger
+    ],
+    exports: [
         KbqPopoverComponent,
         KbqPopoverTrigger,
         KbqPopoverConfirmComponent,

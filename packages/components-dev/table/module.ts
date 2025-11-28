@@ -4,8 +4,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
-    imports: [KbqTableModule, KbqButtonModule],
     selector: 'dev-app',
+    imports: [KbqTableModule, KbqButtonModule],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

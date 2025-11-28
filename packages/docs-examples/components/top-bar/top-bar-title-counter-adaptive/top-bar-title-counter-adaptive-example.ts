@@ -183,8 +183,8 @@ export class ExampleTopBar {
  * @title Top Bar Title And Counter Adaptive
  */
 @Component({
-    imports: [ExampleTopBar],
     selector: 'top-bar-title-counter-adaptive-example',
+    imports: [ExampleTopBar],
     template: `
         <div class="example-text layout-margin-bottom-l">
             {{ text().fullDisplay }}

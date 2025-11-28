@@ -8,8 +8,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Overflow items with vertical orientation
  */
 @Component({
-    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-with-vertical-orientation-example',
+    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     template: `
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="reverseOverflowOrder">
             Reverse overflow order

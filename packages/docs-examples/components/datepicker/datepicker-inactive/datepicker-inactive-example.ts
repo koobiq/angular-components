@@ -11,7 +11,6 @@ import { DateTime } from 'luxon';
  * @title Datepicker inactive
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'datepicker-inactive-example',
     imports: [
         FormsModule,
@@ -43,7 +42,8 @@ import { DateTime } from 'luxon';
                 </kbq-form-field>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerInactiveExample {
     selectedDate: DateTime;

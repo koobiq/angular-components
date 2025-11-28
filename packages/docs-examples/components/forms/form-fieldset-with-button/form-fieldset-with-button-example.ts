@@ -9,6 +9,12 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     selector: 'form-fieldset-with-button-example',
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-fieldset>
             <legend kbqLegend>
@@ -29,21 +35,15 @@ import { KbqInputModule } from '@koobiq/components/input';
             </kbq-hint>
         </kbq-fieldset>
     `,
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqIconModule
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'layout-row'
-    },
     styles: `
         :host {
             margin: var(--kbq-size-m) auto;
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row'
+    }
 })
 export class FormFieldsetWithButtonExample {}

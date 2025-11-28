@@ -3,8 +3,8 @@ import { ThemePalette } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 
 @Component({
-    imports: [KbqDlModule],
     selector: 'dev-app',
+    imports: [KbqDlModule],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

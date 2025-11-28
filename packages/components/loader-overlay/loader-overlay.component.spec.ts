@@ -88,14 +88,14 @@ describe('KbqLoaderOverlay', () => {
 
 @Component({
     selector: 'overlay-with-params',
+    imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule],
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
 
             <kbq-loader-overlay [text]="'Создание отчета'" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" />
         </div>
-    `,
-    imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule]
+    `
 })
 class OverlayWithParams {
     @ViewChild(KbqLoaderOverlay) overlay: KbqLoaderOverlay;
@@ -103,19 +103,20 @@ class OverlayWithParams {
 
 @Component({
     selector: 'overlay-no-params',
+    imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule],
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
 
             <kbq-loader-overlay />
         </div>
-    `,
-    imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule]
+    `
 })
 class OverlayNoParams {}
 
 @Component({
     selector: 'overlay-with-external-params',
+    imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule],
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
@@ -131,8 +132,7 @@ class OverlayNoParams {}
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
             </kbq-loader-overlay>
         </div>
-    `,
-    imports: [BrowserModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule]
+    `
 })
 class OverlayWithExternalParams {
     themePalette = ThemePalette;

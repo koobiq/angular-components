@@ -8,8 +8,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Overflow items overview
  */
 @Component({
-    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-overview-example',
+    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     template: `
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="reverseOverflowOrder">
             Reverse overflow order

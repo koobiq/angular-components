@@ -9,7 +9,6 @@ import { DateTime } from 'luxon';
  * @title filter-bar-complete-functions
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'filter-bar-complete-functions-example',
     imports: [
         KbqFilterBarModule,
@@ -46,7 +45,8 @@ import { DateTime } from 'luxon';
             <i kbq-icon="kbq-square_16" [color]="option.type"></i>
             {{ option.name }}
         </ng-template>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarCompleteFunctionsExample implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);

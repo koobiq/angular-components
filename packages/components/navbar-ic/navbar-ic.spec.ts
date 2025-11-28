@@ -62,8 +62,8 @@ describe('KbqNavbarIc', () => {
 
 @Component({
     selector: 'test-app',
-    templateUrl: './navbar-ic.spec.html',
-    imports: [KbqNavbarIcModule, KbqIconModule]
+    imports: [KbqNavbarIcModule, KbqIconModule],
+    templateUrl: './navbar-ic.spec.html'
 })
 class TestApp {
     counter: number = 0;

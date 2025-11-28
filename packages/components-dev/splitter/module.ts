@@ -4,8 +4,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
 
 @Component({
-    imports: [KbqButtonModule, KbqSplitterModule, KbqIconModule],
     selector: 'dev-app',
+    imports: [KbqButtonModule, KbqSplitterModule, KbqIconModule],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

@@ -15,8 +15,8 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [DatepickerExamplesModule],
     selector: 'dev-examples',
+    imports: [DatepickerExamplesModule],
     template: `
         <datepicker-and-timepicker-example />
         <hr />
@@ -30,14 +30,15 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <datepicker-required-example />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -53,7 +54,6 @@ class DevExamples {}
         DevThemeToggle,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

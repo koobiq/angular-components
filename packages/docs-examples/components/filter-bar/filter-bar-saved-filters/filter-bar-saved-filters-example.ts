@@ -20,7 +20,6 @@ interface ExampleFilter extends KbqFilter {
  * @title filter-bar-saved-filters
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'filter-bar-saved-filters-example',
     imports: [
         KbqFilterBarModule,
@@ -57,7 +56,8 @@ interface ExampleFilter extends KbqFilter {
         <ng-template #errorToastActions let-toast>
             <a kbq-link [pseudo]="true" (click)="toast.close()">Повторить</a>
         </ng-template>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSavedFiltersExample {
     readonly toastService = inject(KbqToastService);

@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqAutocompleteModule,
@@ -20,7 +21,6 @@ import { map, startWith } from 'rxjs/operators';
         ReactiveFormsModule,
         AsyncPipe
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

@@ -11,6 +11,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'form-fieldset-overview-example',
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-fieldset>
             <legend kbqLegend>Field group title</legend>
@@ -36,24 +43,17 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <kbq-hint>Hint for the second field</kbq-hint>
         </kbq-fieldset>
     `,
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqSelectModule,
-        ReactiveFormsModule
-    ],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'layout-row'
-    },
     styles: `
         :host {
             margin: var(--kbq-size-m) auto;
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    host: {
+        class: 'layout-row'
+    }
 })
 export class FormFieldsetOverviewExample {
     options = [

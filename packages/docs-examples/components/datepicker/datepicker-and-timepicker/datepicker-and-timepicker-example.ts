@@ -12,7 +12,6 @@ import { DateTime } from 'luxon';
  * @title Datepicker and timepicker
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'datepicker-and-timepicker-example',
     imports: [
         FormsModule,
@@ -43,7 +42,8 @@ import { DateTime } from 'luxon';
                 </div>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerAndTimepickerExample {
     selectedDateTime: DateTime;

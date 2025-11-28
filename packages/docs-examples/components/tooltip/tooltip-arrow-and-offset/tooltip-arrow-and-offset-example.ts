@@ -10,7 +10,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip arrow and offset example
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tooltip-arrow-and-offset-example',
     imports: [
         KbqButtonModule,
@@ -50,7 +49,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 </kbq-dd>
             </kbq-dl>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipArrowAndOffsetExample implements AfterViewInit {
     arrow: boolean = true;

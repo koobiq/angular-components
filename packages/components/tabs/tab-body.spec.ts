@@ -173,11 +173,11 @@ describe('KbqTabBody', () => {
 });
 
 @Component({
+    imports: [PortalModule],
     template: `
         <ng-template>Tab Body Content</ng-template>
         <kbq-tab-body [content]="content" [position]="position" [origin]="origin" />
-    `,
-    imports: [PortalModule]
+    `
 })
 class SimpleTabBodyApp implements AfterContentInit {
     content: TemplatePortal;

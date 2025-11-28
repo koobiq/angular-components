@@ -12,7 +12,6 @@ import { map, startWith } from 'rxjs/operators';
  * @title Autocomplete
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'autocomplete-overview-example',
     imports: [
         KbqFormFieldModule,
@@ -41,7 +40,8 @@ import { map, startWith } from 'rxjs/operators';
                 </kbq-form-field>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutocompleteOverviewExample implements OnInit {
     options = [

@@ -7,7 +7,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  */
 @Component({
     selector: 'tabs-empty-label-example',
-    styleUrls: ['tabs-empty-label-example.css'],
     imports: [KbqTabsModule],
     template: `
         <div class="example-tabs-empty-label">
@@ -59,6 +58,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             </kbq-tab-group>
         </div>
     `,
+    styleUrls: ['tabs-empty-label-example.css'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

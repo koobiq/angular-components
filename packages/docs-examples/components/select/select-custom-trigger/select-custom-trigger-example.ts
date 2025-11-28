@@ -7,7 +7,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     selector: 'select-custom-trigger-example',
     imports: [KbqSelectModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-select #select="kbqSelect" [(value)]="selected">
             <ng-container kbq-select-trigger>custom trigger {{ select.triggerValue }}</ng-container>
@@ -23,7 +22,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
             justify-content: center;
             padding: var(--kbq-size-l);
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectCustomTriggerExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);

@@ -101,7 +101,6 @@ export const DATA_OBJECT = {
  * @title tree-select-custom-matcher
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tree-select-custom-matcher-example',
     imports: [FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule, KbqButtonModule],
     template: `
@@ -139,7 +138,8 @@ export const DATA_OBJECT = {
             justify-content: center;
             padding: var(--kbq-size-l);
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCustomMatcherExample {
     selected = 'docs';

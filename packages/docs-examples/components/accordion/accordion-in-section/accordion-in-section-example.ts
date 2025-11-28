@@ -5,10 +5,10 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
  * @title Accordion in section
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'accordion-in-section-example',
+    imports: [KbqAccordionModule],
     templateUrl: 'accordion-in-section-example.html',
     styleUrls: ['accordion-in-section-example.css'],
-    imports: [KbqAccordionModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInSectionExample {}

@@ -87,11 +87,11 @@ describe('KbqProgressBar', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqProgressBarModule],
     template: `
         <kbq-progress-bar class="first" [id]="id" [value]="value" [mode]="mode" />
         <kbq-progress-bar class="default" />
-    `,
-    imports: [KbqProgressBarModule]
+    `
 })
 class TestApp {
     value: number = 0;

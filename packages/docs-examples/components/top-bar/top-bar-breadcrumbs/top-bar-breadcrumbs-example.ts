@@ -17,7 +17,6 @@ import { map } from 'rxjs/operators';
  */
 @Component({
     selector: 'top-bar-breadcrumbs-example',
-    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     imports: [
         RouterLink,
         KbqTopBarModule,
@@ -28,7 +27,6 @@ import { map } from 'rxjs/operators';
         KbqDropdownModule,
         KbqOverflowItemsModule
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
@@ -101,7 +99,9 @@ import { map } from 'rxjs/operators';
                 min-width: 238px;
             }
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })]
 })
 export class TopBarBreadcrumbsExample {
     readonly isDesktop = toSignal(

@@ -113,16 +113,16 @@ describe(KbqTabNavBar.name, () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqTabsModule],
     template: `
         <nav kbqTabNavBar>
-            @for (tab of tabs; track tab; let index = $index) {
-                <a kbqTabLink [active]="activeIndex === index" [disabled]="disabled" (click)="activeIndex = index">
+            @for (tab of tabs; track tab) {
+                <a kbqTabLink [active]="activeIndex === $index" [disabled]="disabled" (click)="activeIndex = $index">
                     Tab link {{ label }}
                 </a>
             }
         </nav>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class SimpleTabNavBarTestApp {
     @ViewChild(KbqTabNavBar, { static: false }) tabNavBar: KbqTabNavBar;
@@ -136,26 +136,26 @@ class SimpleTabNavBarTestApp {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <nav kbqTabNavBar>
             @if (!isDestroyed) {
                 <a kbqTabLink>Link</a>
             }
         </nav>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class TabLinkWithNgIf {
     isDestroyed = false;
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <nav kbqTabNavBar>
             <a kbqTabLink [tabIndex]="tabIndex">TabIndex Link</a>
         </nav>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class TabLinkWithTabIndexBinding {
     tabIndex = 0;

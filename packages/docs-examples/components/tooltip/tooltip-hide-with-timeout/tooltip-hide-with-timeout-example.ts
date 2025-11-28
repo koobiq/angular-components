@@ -6,7 +6,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title tooltip-hide-with-timeout
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tooltip-hide-with-timeout-example',
     imports: [
         KbqButtonModule,
@@ -16,6 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <div class="layout-column" style="gap: 16px; align-items: flex-start">
             <button kbq-button kbqTooltip="Тултип" [hideWithTimeout]="true">Кнопка с тултипом</button>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipHideWithTimeoutExample {}

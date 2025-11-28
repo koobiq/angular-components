@@ -13,7 +13,6 @@ import { timezones } from '../mock';
  * @title Timezone
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'timezone-overview-example',
     imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOptionModule],
     template: `
@@ -28,7 +27,8 @@ import { timezones } from '../mock';
                 }
             </kbq-timezone-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimezoneOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;

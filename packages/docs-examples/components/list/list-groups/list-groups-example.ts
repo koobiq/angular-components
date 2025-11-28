@@ -5,7 +5,6 @@ import { KbqListModule } from '@koobiq/components/list';
  * @title List groups
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'list-groups-example',
     imports: [KbqListModule],
     template: `
@@ -21,7 +20,8 @@ import { KbqListModule } from '@koobiq/components/list';
             }
             <kbq-list-option [value]="'rbac-11'">Role-Based Access Control (RBAC)</kbq-list-option>
         </kbq-list-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListGroupsExample {
     securityCategories = [

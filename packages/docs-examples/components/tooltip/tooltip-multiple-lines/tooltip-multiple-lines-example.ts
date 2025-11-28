@@ -7,7 +7,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip multiple lines
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tooltip-multiple-lines-example',
     imports: [
         KbqButtonModule,
@@ -17,7 +16,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <button kbq-button kbqTooltip="Подсказка может занимать две и более строк" [kbqPlacement]="placement">
             Кнопка с тултипом
         </button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipMultipleLinesExample {
     placement: PopUpPlacements = PopUpPlacements.Top;

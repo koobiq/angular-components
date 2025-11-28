@@ -19,6 +19,7 @@ import { DateTime } from 'luxon';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqTimepickerModule,
@@ -32,9 +33,8 @@ import { DevLocaleSelector } from '../locale-selector';
         DevLocaleSelector,
         KbqIcon
     ],
-    selector: 'dev-app',
-    styleUrls: ['styles.scss'],
     templateUrl: 'template.html',
+    styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

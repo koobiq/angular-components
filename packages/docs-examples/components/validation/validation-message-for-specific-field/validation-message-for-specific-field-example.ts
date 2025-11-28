@@ -66,8 +66,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
-    ],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationMessageForSpecificFieldExample {

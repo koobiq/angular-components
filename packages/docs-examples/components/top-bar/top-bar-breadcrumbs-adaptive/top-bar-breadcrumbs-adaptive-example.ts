@@ -191,8 +191,8 @@ export class ExampleTopBarBreadcrumbs {
  * @title Top Bar Breadcrumbs Adaptive
  */
 @Component({
-    imports: [ExampleTopBarBreadcrumbs],
     selector: 'top-bar-breadcrumbs-adaptive-example',
+    imports: [ExampleTopBarBreadcrumbs],
     template: `
         <div class="layout-margin-bottom-l">
             {{ text().breadcrumbShortening }}

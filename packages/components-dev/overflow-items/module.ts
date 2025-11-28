@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/overflow-items';
 
 @Component({
-    imports: [OverflowItemsExamplesModule],
     selector: 'dev-examples',
+    imports: [OverflowItemsExamplesModule],
     template: `
         <overflow-items-with-vertical-orientation-example />
         <hr />
@@ -21,10 +21,10 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

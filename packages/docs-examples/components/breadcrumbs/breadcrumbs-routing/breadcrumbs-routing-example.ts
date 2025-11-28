@@ -7,17 +7,17 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
  */
 @Component({
     selector: 'breadcrumbs-routing-example',
-    template: `
-        <nav kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
-                <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label" />
-            }
-        </nav>
-    `,
     imports: [
         RouterLink,
         KbqBreadcrumbsModule
     ],
+    template: `
+        <nav kbq-breadcrumbs>
+            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+                <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label" />
+            }
+        </nav>
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsRoutingExample {

@@ -7,11 +7,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  * @title toast-multiline
  */
 @Component({
+    selector: 'toast-multiline-example',
     imports: [
         KbqLinkModule,
         KbqButtonModule
     ],
-    selector: 'toast-multiline-example',
     template: `
         <ng-template #toastAction let-toast>
             <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Обновить</a>

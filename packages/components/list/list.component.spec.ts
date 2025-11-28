@@ -81,12 +81,12 @@ class BaseTestList {
 }
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             <a kbq-list-item>Paprika</a>
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithOneAnchorItem extends BaseTestList {
     // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
@@ -95,16 +95,17 @@ class ListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             <kbq-list-item>Paprika</kbq-list-item>
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithOneItem extends BaseTestList {}
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -115,12 +116,12 @@ class ListWithOneItem extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithTwoLineItem extends BaseTestList {}
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -131,14 +132,14 @@ class ListWithTwoLineItem extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithThreeLineItem extends BaseTestList {
     avoidCollisionMockTarget() {}
 }
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -150,12 +151,12 @@ class ListWithThreeLineItem extends BaseTestList {
                 </kbq-list-item>
             }
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithManyLines extends BaseTestList {}
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             <kbq-list-item>
@@ -164,12 +165,12 @@ class ListWithManyLines extends BaseTestList {}
             </kbq-list-item>
             <kbq-list-item>Pepper</kbq-list-item>
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithAvatar extends BaseTestList {}
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -179,12 +180,12 @@ class ListWithAvatar extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithItemWithCssClass extends BaseTestList {}
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -197,12 +198,12 @@ class ListWithItemWithCssClass extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithDynamicNumberOfLines extends BaseTestList {}
 
 @Component({
+    imports: [KbqListModule],
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -211,7 +212,6 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
                 </kbq-list-item>
             }
         </kbq-list>
-    `,
-    imports: [KbqListModule]
+    `
 })
 class ListWithMultipleItems extends BaseTestList {}

@@ -22,7 +22,6 @@ import { map, startWith } from 'rxjs/operators';
         ReactiveFormsModule,
         KbqHighlightModule
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder">
@@ -52,7 +51,8 @@ import { map, startWith } from 'rxjs/operators';
         .kbq-form-field-type-select {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectSearchExample {
     readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);

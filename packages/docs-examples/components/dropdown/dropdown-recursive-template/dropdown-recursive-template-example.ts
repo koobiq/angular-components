@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -47,7 +46,6 @@ export class ExampleDropdownPortal implements OnInit {
 @Component({
     selector: 'dropdown-recursive-template-example',
     imports: [
-        NgTemplateOutlet,
         KbqDropdownModule,
         KbqButtonModule,
         KbqIconModule,

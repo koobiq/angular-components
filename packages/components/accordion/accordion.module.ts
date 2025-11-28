@@ -7,15 +7,15 @@ import { KbqAccordionTrigger } from './accordion-trigger.component';
 import { KbqAccordion } from './accordion.component';
 
 @NgModule({
-    exports: [
+    imports: [
+        KbqIcon,
         KbqAccordion,
         KbqAccordionContent,
         KbqAccordionHeader,
         KbqAccordionItem,
         KbqAccordionTrigger
     ],
-    imports: [
-        KbqIcon,
+    exports: [
         KbqAccordion,
         KbqAccordionContent,
         KbqAccordionHeader,

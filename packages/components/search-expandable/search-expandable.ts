@@ -41,14 +41,6 @@ export const defaultEmitValueTimeout = 200;
 
 @Component({
     selector: 'kbq-search-expandable',
-    templateUrl: './search-expandable.html',
-    styleUrls: ['./search-expandable.scss'],
-    host: {
-        class: 'kbq-search-expandable',
-        '[class.kbq-search-expandable_opened]': 'isOpened'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqButtonModule,
         KbqIconModule,
@@ -58,6 +50,14 @@ export const defaultEmitValueTimeout = 200;
         KbqToolTipModule,
         KbqFormFieldModule
     ],
+    templateUrl: './search-expandable.html',
+    styleUrls: ['./search-expandable.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'kbq-search-expandable',
+        '[class.kbq-search-expandable_opened]': 'isOpened'
+    },
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

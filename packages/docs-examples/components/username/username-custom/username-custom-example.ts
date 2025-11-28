@@ -86,8 +86,7 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
         }
     `,
     providers: [
-        { provide: KBQ_PROFILE_MAPPING, useValue: mapping }
-    ],
+        { provide: KBQ_PROFILE_MAPPING, useValue: mapping }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernameCustomExample {

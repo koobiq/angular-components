@@ -9,21 +9,21 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Alert size
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'alert-size-example',
+    imports: [
+        KbqAlertModule,
+        KbqLinkModule
+    ],
     templateUrl: 'alert-size-example.html',
     styleUrls: ['alert-size-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),
             state('false', style({ opacity: 0, display: 'none' })),
             transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))
-        ])
-    ],
-    imports: [
-        KbqAlertModule,
-        KbqLinkModule
+            transition('true => false', animate('.2s'))])
+
     ]
 })
 export class AlertSizeExample {

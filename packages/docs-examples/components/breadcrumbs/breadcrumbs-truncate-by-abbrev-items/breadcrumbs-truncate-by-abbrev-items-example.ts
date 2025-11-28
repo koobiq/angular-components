@@ -10,9 +10,15 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  */
 @Component({
     selector: 'breadcrumbs-truncate-by-abbrev-items-example',
+    imports: [
+        RouterLink,
+        KbqBreadcrumbsModule,
+        KbqButtonModule,
+        KbqToolTipModule
+    ],
     template: `
         <nav kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item
                     [routerLink]="breadcrumb.url"
                     [queryParams]="{ queryParams: breadcrumb }"
@@ -23,8 +29,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         <button
                             kbq-button
                             kbqBreadcrumb
-                            [attr.aria-current]="last ? 'page' : null"
-                            [disabled]="last"
+                            [attr.aria-current]="$last ? 'page' : null"
+                            [disabled]="$last"
                             [kbqPlacementPriority]="PopUpPlacements.Bottom"
                             [kbqTooltipArrow]="false"
                             [kbqTooltip]="breadcrumb.longText"
@@ -37,12 +43,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             }
         </nav>
     `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule,
-        KbqButtonModule,
-        KbqToolTipModule
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateByAbbrevItemsExample {

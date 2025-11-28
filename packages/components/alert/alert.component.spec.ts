@@ -27,9 +27,9 @@ describe('MсAlert', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqAlertModule],
     template: `
         <kbq-alert />
-    `,
-    imports: [KbqAlertModule]
+    `
 })
 class TestApp {}

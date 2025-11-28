@@ -5,7 +5,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link print
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'link-print-example',
     imports: [KbqLinkModule],
     template: `
@@ -18,6 +17,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 CVE-2019-1020010
             </a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkPrintExample {}

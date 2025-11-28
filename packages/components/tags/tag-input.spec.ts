@@ -242,6 +242,7 @@ describe('KbqTagInput', () => {
 });
 
 @Component({
+    imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList />
@@ -254,8 +255,7 @@ describe('KbqTagInput', () => {
                 (kbqTagInputTokenEnd)="add($event)"
             />
         </kbq-form-field>
-    `,
-    imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule]
+    `
 })
 class TestTagInput {
     @ViewChild(KbqTagList, { static: false }) tagListInstance: KbqTagList;

@@ -48,7 +48,6 @@ type ExampleAction = {
         KbqOverflowItemsModule,
         KbqFormattersModule
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar [withShadow]="hasOverflow()">
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
@@ -173,7 +172,8 @@ type ExampleAction = {
             white-space: nowrap;
             min-width: 100px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarOverflowExample implements AfterViewInit {
     readonly isDesktop = toSignal(

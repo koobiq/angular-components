@@ -5,7 +5,6 @@ import { KbqDlModule } from '@koobiq/components/dl';
  * @title Description list
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'dl-overview-example',
     imports: [
         KbqDlModule
@@ -49,6 +48,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
             <kbq-dt>File</kbq-dt>
             <kbq-dd>125 КБ</kbq-dd>
         </kbq-dl>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DlOverviewExample {}

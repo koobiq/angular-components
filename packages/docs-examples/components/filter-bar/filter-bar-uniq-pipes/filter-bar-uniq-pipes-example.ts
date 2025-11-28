@@ -14,7 +14,6 @@ import {
  * @title filter bar
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'filter-bar-uniq-pipes-example',
     imports: [
         KbqFilterBarModule,
@@ -41,7 +40,8 @@ import {
 
             <kbq-filter-search />
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarUniqPipesExample {
     filters: KbqFilter[] = [

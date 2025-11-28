@@ -14,7 +14,6 @@ import {
  * @title filter bar
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'filter-bar-overview-example',
     imports: [
         KbqFilterBarModule,
@@ -45,7 +44,8 @@ import {
 
             <kbq-filter-search />
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarOverviewExample {
     filters: KbqFilter[] = [

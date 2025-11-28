@@ -47,15 +47,7 @@ enum NavbarIcItems {
  * @title notification-center-popover
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'notification-center-popover-example',
-    templateUrl: 'notification-center-popover-example.html',
-    styles: `
-        :host {
-            display: block;
-            min-height: 480px;
-        }
-    `,
     imports: [
         KbqNotificationCenterModule,
         KbqBadgeModule,
@@ -70,7 +62,15 @@ enum NavbarIcItems {
         KbqLinkModule,
         LuxonDateModule,
         KbqFormattersModule
-    ]
+    ],
+    templateUrl: 'notification-center-popover-example.html',
+    styles: `
+        :host {
+            display: block;
+            min-height: 480px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterPopoverExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);

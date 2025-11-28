@@ -9,8 +9,8 @@ import { NotificationCenterExamplesModule } from '../../docs-examples/components
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [NotificationCenterExamplesModule],
     selector: 'dev-examples',
+    imports: [NotificationCenterExamplesModule],
     template: `
         <notification-center-overview-example />
         <br />
@@ -28,6 +28,7 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         DevExamples,
         DevThemeToggle,
@@ -37,7 +38,6 @@ export class DevExamples {}
         KbqLuxonDateModule,
         KbqFormattersModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

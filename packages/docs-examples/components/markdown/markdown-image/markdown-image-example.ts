@@ -5,8 +5,8 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
  * @title Markdown image
  */
 @Component({
-    imports: [KbqMarkdownModule],
     selector: 'markdown-image-example',
+    imports: [KbqMarkdownModule],
     templateUrl: './markdown-image-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

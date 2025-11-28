@@ -6,9 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Icon-item color
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'icon-item-color-example',
-    styleUrls: ['icon-item-color-example.css'],
     imports: [
         KbqIconModule
     ],
@@ -39,7 +37,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <div class="example-icon-item-container__name kbq-text-normal">Error</div>
             </div>
         </div>
-    `
+    `,
+    styleUrls: ['icon-item-color-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconItemColorExample {
     colors = KbqComponentColors;

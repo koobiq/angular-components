@@ -50,6 +50,13 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
 
 @Component({
     selector: 'kbq-time-range',
+    imports: [
+        ReactiveFormsModule,
+        KbqPopoverModule,
+        KbqButtonModule,
+        KbqTimeRangeEditor,
+        KbqTimeRangeTitle
+    ],
     template: `
         @let localeConfig = localeConfiguration();
         <kbq-time-range-title
@@ -97,19 +104,12 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
         </ng-template>
     `,
     styleUrls: ['./time-range.scss'],
-    imports: [
-        ReactiveFormsModule,
-        KbqPopoverModule,
-        KbqButtonModule,
-        KbqTimeRangeEditor,
-        KbqTimeRangeTitle
-    ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-time-range'
     },
-    providers: [KbqTimeRangeService],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    providers: [KbqTimeRangeService]
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);

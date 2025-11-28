@@ -6,7 +6,6 @@ import { KbqTableModule } from '@koobiq/components/table';
  * @title Table
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'table-overview-example',
     imports: [
         KbqTableModule
@@ -53,7 +52,8 @@ import { KbqTableModule } from '@koobiq/components/table';
                 </tr>
             </tbody>
         </table>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableOverviewExample {
     protected readonly colors = KbqComponentColors;

@@ -54,10 +54,10 @@ describe('KbqSearchExpandable', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqSearchExpandableModule],
     template: `
         <kbq-search-expandable [isOpened]="openedState" />
-    `,
-    imports: [KbqSearchExpandableModule]
+    `
 })
 class TestApp {
     openedState: boolean = false;

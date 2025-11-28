@@ -21,7 +21,6 @@ import { timezones } from '../mock';
  * @title Timezone search
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'timezone-search-overview-example',
     imports: [
         KbqFormFieldModule,
@@ -59,7 +58,8 @@ import { timezones } from '../mock';
                 }
             </kbq-timezone-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimezoneSearchOverviewExample implements OnInit {
     filteredOptions$: Observable<KbqTimezoneGroup[]>;

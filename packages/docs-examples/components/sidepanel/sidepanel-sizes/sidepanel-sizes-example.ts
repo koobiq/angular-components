@@ -11,13 +11,13 @@ import {
  * @title Sidepanel sizes
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sidepanel-sizes-example',
-    templateUrl: 'sidepanel-sizes-example.html',
     imports: [
         KbqButtonModule,
         KbqSidepanelModule
-    ]
+    ],
+    templateUrl: 'sidepanel-sizes-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelSizesExample {
     size = KbqSidepanelPosition.Right;

@@ -10,7 +10,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title List action button
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'list-action-button-example',
     imports: [KbqListModule, FormsModule, KbqDropdownModule, KbqToolTipModule, KbqBadgeModule],
     template: `
@@ -46,7 +45,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <button kbq-dropdown-item>item 2</button>
             <button kbq-dropdown-item>item 3</button>
         </kbq-dropdown>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListActionButtonExample {
     selected = [];

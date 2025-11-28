@@ -6,25 +6,25 @@
     (indexFocused)="focusChanged($event)"
     (selectFocusedIndex)="onSelectFocusedIndex($event)"
 >
-    @for (tab of tabs; track tab; let i = $index) {
+    @for (tab of tabs; track tab) {
         <div
             cdkMonitorElementFocus
             kbqTabLabelWrapper
             class="kbq-tab-label"
-            [attr.tabindex]="getTabIndex(tab, i)"
-            [class.kbq-selected]="selectedIndex === i"
+            [attr.tabindex]="getTabIndex(tab, $index)"
+            [class.kbq-selected]="selectedIndex === $index"
             [class.kbq-tab-label_empty]="tab.empty"
             [class.kbq-tab-label_horizontal]="!vertical"
             [class.kbq-tab-label_underlined]="underlined"
             [class.kbq-tab-label_vertical]="vertical"
             [disabled]="tab.disabled"
-            [id]="getTabLabelId(i)"
+            [id]="getTabLabelId($index)"
             [kbqPlacement]="tab.tooltipPlacement"
             [kbqTooltip]="tab.tooltipTitle"
             [kbqTooltipDisabled]="!tab.empty && !tab.isOverflown"
             [kbqTrigger]="'hover, focus'"
             [tab]="tab"
-            (click)="handleClick(tab, tabHeader, i)"
+            (click)="handleClick(tab, tabHeader, $index)"
         >
             <div #labelContent class="kbq-tab-label__content" [class.kbq-tab-label__template]="tab.templateLabel">
                 <!-- If there is a label template, use it. -->
@@ -41,12 +41,12 @@
 </kbq-tab-header>
 
 <div #tabBodyWrapper class="kbq-tab-body__wrapper">
-    @for (tab of tabs; track tab; let i = $index) {
+    @for (tab of tabs; track tab) {
         <kbq-tab-body
             [animationDuration]="animationDuration"
-            [class.kbq-tab-body__active]="selectedIndex === i"
+            [class.kbq-tab-body__active]="selectedIndex === $index"
             [content]="tab.content!"
-            [id]="getTabContentId(i)"
+            [id]="getTabContentId($index)"
             [origin]="tab.origin!"
             [position]="tab.position!"
             (onCentered)="removeTabBodyWrapperHeight()"

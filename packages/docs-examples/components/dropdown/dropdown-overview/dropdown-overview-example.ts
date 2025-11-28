@@ -10,7 +10,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  * @title Dropdown
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'dropdown-overview-example',
     imports: [
         KbqDropdownModule,
@@ -20,6 +19,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqTitleModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-overview-example.html'
+    templateUrl: 'dropdown-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownOverviewExample {}

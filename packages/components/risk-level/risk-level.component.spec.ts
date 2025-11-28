@@ -27,9 +27,9 @@ describe('kbq-risk-level', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqRiskLevelModule],
     template: `
         <kbq-risk-level />
-    `,
-    imports: [KbqRiskLevelModule]
+    `
 })
 class TestApp {}

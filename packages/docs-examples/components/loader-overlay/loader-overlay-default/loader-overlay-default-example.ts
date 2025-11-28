@@ -6,7 +6,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  * @title Loader-overlay default
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'loader-overlay-default-example',
     imports: [KbqLoaderOverlayModule],
     template: `
@@ -19,7 +18,8 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             text text text text text text text text text text text text text text text
             <kbq-loader-overlay [text]="'Загрузка'" />
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlayDefaultExample {
     themePalette = ThemePalette;

@@ -9,8 +9,8 @@ import { ToggleExamplesModule } from 'packages/docs-examples/components/toggle';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [ToggleExamplesModule],
     selector: 'dev-examples',
+    imports: [ToggleExamplesModule],
     template: `
         <toggle-overview-example />
         <toggle-disabled-example />

@@ -1642,8 +1642,8 @@ class TagListWithFormErrorMessages {
         trigger('dummyAnimation', [
             transition(':leave', [
                 style({ opacity: 0 }),
-                animate('500ms', style({ opacity: 1 }))
-            ])
+                animate('500ms', style({ opacity: 1 }))])
+
         ])
     ]
 })

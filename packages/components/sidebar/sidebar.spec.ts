@@ -110,6 +110,7 @@ describe(KbqSidebarModule.name, () => {
 });
 
 @Component({
+    imports: [KbqSidebarModule],
     template: `
         @if (showContainer) {
             <div>
@@ -124,8 +125,7 @@ describe(KbqSidebarModule.name, () => {
                 </kbq-sidebar>
             </div>
         }
-    `,
-    imports: [KbqSidebarModule]
+    `
 })
 class TestSidebar {
     showContainer: boolean = true;

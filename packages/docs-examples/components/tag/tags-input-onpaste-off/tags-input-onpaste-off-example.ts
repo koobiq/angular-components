@@ -15,15 +15,15 @@ import {
  * @title Tags input onpaste off
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tags-input-onpaste-off-example',
-    templateUrl: 'tags-input-onpaste-off-example.html',
     imports: [
         KbqTagsModule,
         ReactiveFormsModule,
         KbqIconModule,
         KbqFormFieldModule
     ],
+    templateUrl: 'tags-input-onpaste-off-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     // turn off tag add on paste with InjectionToken
     providers: [
         {

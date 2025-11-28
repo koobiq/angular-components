@@ -46,12 +46,12 @@
                     </div>
                 </div>
                 <kbq-list-selection [autoSelect]="false" [disabled]="disabled">
-                    @for (file of files; track file; let index = $index) {
+                    @for (file of files; track file) {
                         <kbq-list-option
                             class="kbq-file-multiple__uploaded-item"
                             [value]="file.file.name"
-                            (keydown.backspace)="deleteFile(index)"
-                            (keydown.delete)="deleteFile(index)"
+                            (keydown.backspace)="deleteFile($index)"
+                            (keydown.delete)="deleteFile($index)"
                         >
                             <div class="kbq-file-upload__row" [class.kbq-error]="file.hasError">
                                 <div
@@ -87,7 +87,7 @@
                                 </div>
                                 <div
                                     class="kbq-file-upload__action kbq-file-upload__grid-cell"
-                                    (click)="deleteFile(index, $event)"
+                                    (click)="deleteFile($index, $event)"
                                 >
                                     <i kbq-icon-button="kbq-xmark-circle_16" tabindex="-1" [disabled]="disabled"></i>
                                 </div>

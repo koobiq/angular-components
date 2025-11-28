@@ -5,10 +5,10 @@ import { KbqTimezoneOption } from './timezone-option.component';
 import { KbqTimezoneModule } from './timezone.module';
 
 @Component({
+    imports: [KbqTimezoneModule],
     template: `
         <kbq-timezone-option [timezone]="zone" />
-    `,
-    imports: [KbqTimezoneModule]
+    `
 })
 class TimezoneOptionComponent {
     zone = {

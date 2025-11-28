@@ -28,8 +28,8 @@ type ExampleRowData = {
  * @title AG Grid with row dragging
  */
 @Component({
-    imports: [AgGridModule, KbqAgGridThemeModule],
     selector: 'ag-grid-row-dragging-example',
+    imports: [AgGridModule, KbqAgGridThemeModule],
     template: `
         <ag-grid-angular
             kbqAgGridTheme

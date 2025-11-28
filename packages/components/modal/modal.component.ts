@@ -29,9 +29,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ENTER, ESCAPE } from '@koobiq/cdk/keycodes';
-import { KbqButton } from '@koobiq/components/button';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CssUnitPipe } from './css-unit.pipe';
@@ -54,8 +54,8 @@ type AnimationState = 'enter' | 'leave' | null;
         CdkTrapFocus,
         NgStyle,
         NgClass,
-        KbqButton,
-        KbqIcon,
+        KbqButtonModule,
+        KbqIconModule,
         CssUnitPipe,
         NgTemplateOutlet
     ],

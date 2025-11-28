@@ -7,11 +7,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  * @title Toast report
  */
 @Component({
+    selector: 'toast-report-overview-example',
     imports: [
         KbqLinkModule,
         KbqButtonModule
     ],
-    selector: 'toast-report-overview-example',
     template: `
         <ng-template #toastContentTemplate>
             Отчет&nbsp;

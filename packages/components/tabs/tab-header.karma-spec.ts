@@ -47,6 +47,7 @@ interface ITab {
 }
 
 @Component({
+    imports: [PortalModule, ScrollingModule],
     template: `
         <div [dir]="dir">
             <kbq-tab-header
@@ -54,7 +55,7 @@ interface ITab {
                 (indexFocused)="focusedIndex = $event"
                 (selectFocusedIndex)="selectedIndex = $event"
             >
-                @for (tab of tabs; track tab; let i = $index) {
+                @for (tab of tabs; track tab) {
                     <div
                         class="label-content"
                         kbqTabLabelWrapper
@@ -74,8 +75,8 @@ interface ITab {
                 width: 130px;
             }
         `
-    ],
-    imports: [PortalModule, ScrollingModule]
+
+    ]
 })
 class SimpleTabHeaderApp {
     selectedIndex: number = 0;

@@ -27,8 +27,8 @@ type ExampleRowData = {
 };
 
 @Component({
-    imports: [KbqLinkModule],
     selector: 'example-link-cell-renderer',
+    imports: [KbqLinkModule],
     template: `
         <a kbq-link href="https://koobiq.io/en/components/ag-grid" target="_blank">{{ cellValue }}</a>
     `,
@@ -56,8 +56,8 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
  * @title AG Grid overview
  */
 @Component({
-    imports: [AgGridModule, KbqAgGridThemeModule],
     selector: 'ag-grid-overview-example',
+    imports: [AgGridModule, KbqAgGridThemeModule],
     template: `
         <ag-grid-angular
             kbqAgGridTheme

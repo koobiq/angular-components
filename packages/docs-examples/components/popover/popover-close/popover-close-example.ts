@@ -11,11 +11,11 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover close
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'popover-close-example',
+    imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqIconModule, KbqDropdownModule],
     templateUrl: 'popover-close-example.html',
     styleUrls: ['popover-close-example.css'],
-    imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqIconModule, KbqDropdownModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverCloseExample {
     members: Record<string, string>[] = [

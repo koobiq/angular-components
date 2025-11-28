@@ -127,6 +127,14 @@ export class KbqVirtualOption extends KbqOptionBase {
  */
 @Component({
     selector: 'kbq-option',
+    imports: [
+        KbqPseudoCheckbox
+    ],
+    templateUrl: 'option.html',
+    /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
+    styleUrls: ['option.scss', 'option-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqOption',
     host: {
         '[attr.tabindex]': 'getTabIndex()',
@@ -140,14 +148,6 @@ export class KbqVirtualOption extends KbqOptionBase {
         '(click)': 'selectViaInteraction()',
         '(keydown)': 'handleKeydown($event)'
     },
-    /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
-    styleUrls: ['option.scss', 'option-tokens.scss'],
-    templateUrl: 'option.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        KbqPseudoCheckbox
-    ],
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,

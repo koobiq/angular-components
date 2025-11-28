@@ -9,7 +9,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Dropdown navigation wrap
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'dropdown-navigation-wrap-example',
     imports: [
         KbqDropdownModule,
@@ -18,6 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqDividerModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-navigation-wrap-example.html'
+    templateUrl: 'dropdown-navigation-wrap-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownNavigationWrapExample {}

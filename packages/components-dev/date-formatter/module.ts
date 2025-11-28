@@ -13,13 +13,13 @@ import { delay, distinctUntilChanged } from 'rxjs';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
+    selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
         KbqFormattersModule,
         KbqButtonModule,
         DevLocaleSelector
     ],
-    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,

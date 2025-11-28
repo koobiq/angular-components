@@ -5,8 +5,8 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [CodeBlockExamplesModule],
     selector: 'dev-examples',
+    imports: [CodeBlockExamplesModule],
     template: `
         <code-block-with-soft-wrap-example />
         <hr />
@@ -49,6 +49,7 @@ export class DevExamples {}
             viewLessText: '*dev* Show less',
             openExternalSystemTooltip: '*dev* Open in the external system'
         })
+
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

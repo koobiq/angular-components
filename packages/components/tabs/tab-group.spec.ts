@@ -600,6 +600,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
 });
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group
             class="tab-group"
@@ -624,8 +625,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
                 Tab three content
             </kbq-tab>
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class SimpleTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -646,6 +646,7 @@ class SimpleTabsTestApp {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group
             class="tab-group"
@@ -660,8 +661,7 @@ class SimpleTabsTestApp {
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class SimpleDynamicTabsTestApp {
     tabs = [
@@ -683,6 +683,7 @@ class SimpleDynamicTabsTestApp {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
             @for (tab of tabs; track tab) {
@@ -691,8 +692,7 @@ class SimpleDynamicTabsTestApp {
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class BindedTabsTestApp {
     tabs = [
@@ -712,6 +712,7 @@ class BindedTabsTestApp {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="tab-group">
             <kbq-tab>
@@ -727,8 +728,7 @@ class BindedTabsTestApp {
                 Tab three content
             </kbq-tab>
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class DisabledTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -736,6 +736,7 @@ class DisabledTabsTestApp {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="tab-group">
             @for (tab of tabs | async; track tab) {
@@ -745,8 +746,7 @@ class DisabledTabsTestApp {
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class AsyncTabsTestApp implements OnInit {
     tabs: Observable<any>;
@@ -764,6 +764,7 @@ class AsyncTabsTestApp implements OnInit {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab label="Junk food">Pizza, fries</kbq-tab>
@@ -771,8 +772,7 @@ class AsyncTabsTestApp implements OnInit {
             <kbq-tab [label]="otherLabel">{{ otherContent }}</kbq-tab>
             <kbq-tab label="Legumes"><p #legumes>Peanuts</p></kbq-tab>
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class TabGroupWithSimpleApi {
     otherLabel = 'Fruit';
@@ -782,6 +782,7 @@ class TabGroupWithSimpleApi {
 
 @Component({
     selector: 'nested-tabs',
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab label="One">Tab one content</kbq-tab>
@@ -793,13 +794,13 @@ class TabGroupWithSimpleApi {
                 </kbq-tab-group>
             </kbq-tab>
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class NestedTabs {}
 
 @Component({
     selector: 'template-tabs',
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab label="One">Eager</kbq-tab>
@@ -809,12 +810,12 @@ class NestedTabs {}
                 </ng-template>
             </kbq-tab>
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class TemplateTabs {}
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab #pizza label="Junk food">Pizza, fries</kbq-tab>
@@ -824,12 +825,12 @@ class TemplateTabs {}
         @if (pizza.isActive) {
             <div>pizza is active</div>
         }
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class TabGroupWithIsActiveBinding {}
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="tab-group" [(activeTab)]="selectBy">
             <kbq-tab tabId="first">
@@ -847,8 +848,7 @@ class TabGroupWithIsActiveBinding {}
                 Tab last content
             </kbq-tab>
         </kbq-tab-group>
-    `,
-    imports: [KbqTabsModule]
+    `
 })
 class TestSelectionByIndexOrTabIdApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;

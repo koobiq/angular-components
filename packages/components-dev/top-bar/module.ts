@@ -5,8 +5,8 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [TopBarExamplesModule],
     selector: 'dev-examples',
+    imports: [TopBarExamplesModule],
     template: `
         <top-bar-actions-example />
         <!-- <top-bar-breadcrumbs-example /> -->
@@ -22,15 +22,15 @@ export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html',
     imports: [
         DevLocaleSelector,
         KbqLocaleServiceModule,
         DevThemeToggle,
         DevExamples
     ],
+    templateUrl: './template.html',
+    styleUrls: ['./styles.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {}

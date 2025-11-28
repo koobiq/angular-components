@@ -7,7 +7,6 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
  * @title Loader-overlay fixed-top
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'loader-overlay-fixed-top-example',
     imports: [KbqLoaderOverlayModule, KbqProgressSpinnerModule],
     template: `
@@ -25,7 +24,8 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
             </kbq-loader-overlay>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlayFixedTopExample {
     themePalette = ThemePalette;

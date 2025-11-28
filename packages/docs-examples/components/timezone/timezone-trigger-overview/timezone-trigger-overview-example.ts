@@ -14,7 +14,6 @@ import { timezones } from '../mock';
  * @title Timezone trigger
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'timezone-trigger-overview-example',
     imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOptionModule, KbqIconModule],
     template: `
@@ -36,7 +35,8 @@ import { timezones } from '../mock';
                 }
             </kbq-timezone-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimezoneTriggerOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;

@@ -7,8 +7,8 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
  * @title Sidebar with splitter
  */
 @Component({
-    imports: [KbqSidebarModule, KbqButtonModule, KbqSplitterModule],
     selector: 'sidebar-with-splitter-example',
+    imports: [KbqSidebarModule, KbqButtonModule, KbqSplitterModule],
     template: `
         <kbq-splitter [direction]="direction.Horizontal" [disabled]="!opened">
             <kbq-sidebar

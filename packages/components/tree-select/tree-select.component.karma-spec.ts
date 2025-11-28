@@ -16,7 +16,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/f
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLocaleServiceModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import {
@@ -24,7 +24,9 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption
+    KbqTreeNodePadding,
+    KbqTreeOption,
+    KbqTreeSelection
 } from '@koobiq/components/tree';
 import { Observable, Subject, of as observableOf } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectPanelWidth } from './tree-select.component';
@@ -158,6 +160,14 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
 
 @Component({
     selector: 'basic-select',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        KbqTreeOption,
+        ReactiveFormsModule,
+        KbqTreeSelection,
+        KbqTreeNodePadding
+    ],
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
@@ -240,6 +250,13 @@ class TreeSelectWithPanelWidth {
 
 @Component({
     selector: 'basic-events',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        KbqTreeSelection,
+        KbqTreeNodePadding,
+        KbqTreeOption
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select
@@ -292,6 +309,14 @@ class BasicEvents {
 
 @Component({
     selector: 'ng-model-select',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        FormsModule,
+        KbqTreeSelection,
+        KbqTreeNodePadding,
+        KbqTreeOption
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" ngModel [disabled]="isDisabled">
@@ -335,6 +360,14 @@ class NgModelSelect {
 
 @Component({
     selector: 'ng-if-select',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        KbqTreeOption,
+        KbqTreeSelection,
+        ReactiveFormsModule,
+        KbqTreeNodePadding
+    ],
     template: `
         @if (isShowing) {
             <div>
@@ -382,6 +415,13 @@ class NgIfSelect {
 
 @Component({
     selector: 'select-with-change-event',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        KbqTreeOption,
+        KbqTreeSelection,
+        KbqTreeNodePadding
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select (selectionChange)="changeListener($event)">
@@ -422,6 +462,14 @@ class SelectWithChangeEvent {
 
 @Component({
     selector: 'multi-select',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        ReactiveFormsModule,
+        KbqTreeSelection,
+        KbqTreeNodePadding,
+        KbqTreeOption
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [multiple]="true" [formControl]="control">
@@ -465,6 +513,13 @@ class MultiSelect {
 
 @Component({
     selector: 'basic-select-initially-hidden',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        KbqTreeSelection,
+        KbqTreeNodePadding,
+        KbqTreeOption
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [style.display]="isVisible ? 'block' : 'none'">
@@ -505,6 +560,13 @@ class BasicSelectInitiallyHidden {
 
 @Component({
     selector: 'basic-select-no-placeholder',
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        KbqTreeOption,
+        KbqTreeSelection,
+        KbqTreeNodePadding
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select>
@@ -542,6 +604,12 @@ class BasicSelectNoPlaceholder {
 }
 
 @Component({
+    imports: [
+        KbqFormField,
+        KbqTreeSelect,
+        KbqTreeSelection,
+        KbqTreeOption
+    ],
     template: `
         <kbq-form-field>
             <!--<kbq-label>Select a thing</kbq-label>-->

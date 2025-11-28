@@ -10,6 +10,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     selector: 'breadcrumbs-dropdown-example',
+    imports: [
+        RouterLink,
+        KbqBreadcrumbsModule,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqDropdownModule
+    ],
     template: `
         <nav kbq-breadcrumbs>
             <kbq-breadcrumb-item
@@ -53,13 +60,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <a kbq-dropdown-item routerLink="./ABAC">ABAC</a>
         </kbq-dropdown>
     `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqDropdownModule
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsDropdownExample {}

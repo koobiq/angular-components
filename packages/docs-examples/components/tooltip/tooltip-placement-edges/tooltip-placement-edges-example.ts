@@ -6,9 +6,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip placement edges
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tooltip-placement-edges-example',
-    styleUrls: ['tooltip-placement-edges-example.css'],
     imports: [KbqToolTipModule],
     template: `
         <div class="example-tooltip__visual-box">
@@ -20,7 +18,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 ></div>
             }
         </div>
-    `
+    `,
+    styleUrls: ['tooltip-placement-edges-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipPlacementEdgesExample {
     placements = [

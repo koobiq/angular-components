@@ -5,7 +5,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link multi-line
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'link-multi-line-example',
     imports: [
         KbqLinkModule
@@ -15,6 +14,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
             Просим вас обратитесь
             <a kbq-link>в Центр технической поддержки</a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkMultiLineExample {}

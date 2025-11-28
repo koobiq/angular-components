@@ -8,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Input number
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'input-number-overview-example',
     imports: [
         KbqFormFieldModule,
@@ -69,7 +68,8 @@ import { KbqInputModule } from '@koobiq/components/input';
                 </div>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputNumberOverviewExample {
     value = '';

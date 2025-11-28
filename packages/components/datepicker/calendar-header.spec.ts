@@ -69,6 +69,7 @@ describe('KbqCalendarHeader', () => {
 });
 
 @Component({
+    imports: [KbqLuxonDateModule, KbqDatepickerModule],
     template: `
         <kbq-calendar
             [startAt]="startDate"
@@ -76,8 +77,7 @@ describe('KbqCalendarHeader', () => {
             (yearSelected)="selectedYear = $event"
             (monthSelected)="selectedMonth = $event"
         />
-    `,
-    imports: [KbqLuxonDateModule, KbqDatepickerModule]
+    `
 })
 class StandardCalendar {
     selected: DateTime;

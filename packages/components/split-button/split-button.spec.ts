@@ -30,6 +30,7 @@ describe('KbqSearchExpandable', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqSplitButtonModule, KbqButtonModule],
     template: `
         <kbq-split-button>
             <button kbq-button [disabled]="true">
@@ -39,7 +40,6 @@ describe('KbqSearchExpandable', () => {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
-    `,
-    imports: [KbqSplitButtonModule, KbqButtonModule]
+    `
 })
 class TestApp {}

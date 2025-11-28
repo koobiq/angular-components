@@ -5,8 +5,8 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
 import { SearchExpandableExamplesModule } from '../../docs-examples/components/search-expandable';
 
 @Component({
-    imports: [SearchExpandableExamplesModule],
     selector: 'dev-examples',
+    imports: [SearchExpandableExamplesModule],
     template: `
         <search-expandable-overview-example />
         <br />
@@ -17,13 +17,13 @@ import { SearchExpandableExamplesModule } from '../../docs-examples/components/s
 export class DevExamples {}
 
 @Component({
+    selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
         KbqSearchExpandableModule,
         DevExamples,
         FormsModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

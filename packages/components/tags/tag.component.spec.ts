@@ -932,6 +932,7 @@ describe(KbqTag.name, () => {
 });
 
 @Component({
+    imports: [KbqTagsModule],
     template: `
         <kbq-tag-list>
             @if (shouldShow) {
@@ -952,8 +953,7 @@ describe(KbqTag.name, () => {
                 </div>
             }
         </kbq-tag-list>
-    `,
-    imports: [KbqTagsModule]
+    `
 })
 class SingleTag {
     disabled: boolean = false;
@@ -973,9 +973,9 @@ class SingleTag {
 }
 
 @Component({
+    imports: [KbqTagsModule],
     template: `
         <kbq-basic-tag>{{ name }}</kbq-basic-tag>
-    `,
-    imports: [KbqTagsModule]
+    `
 })
 class BasicTag {}

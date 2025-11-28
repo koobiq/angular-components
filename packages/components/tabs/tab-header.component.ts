@@ -30,19 +30,19 @@ export type ScrollDirection = 'after' | 'before';
  */
 @Component({
     selector: 'kbq-tab-header',
+    imports: [KbqIcon, CdkObserveContent],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
-    outputs: ['selectFocusedIndex', 'indexFocused'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
+    outputs: ['selectFocusedIndex', 'indexFocused'],
     host: {
         class: 'kbq-tab-header',
         '[class.kbq-tab-header_vertical]': 'vertical',
         '[class.kbq-tab-header_underlined]': 'underlined',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
-    },
-    imports: [KbqIcon, CdkObserveContent]
+    }
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {
     /** Whether the tabs are underlined. */

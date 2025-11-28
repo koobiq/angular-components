@@ -8,6 +8,10 @@ import { PopUpPlacements } from '@koobiq/components/core';
  */
 @Component({
     selector: 'breadcrumbs-truncate-tail-items-example',
+    imports: [
+        RouterLink,
+        KbqBreadcrumbsModule
+    ],
     template: `
         <nav class="kbq-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb) {
@@ -39,10 +43,6 @@ import { PopUpPlacements } from '@koobiq/components/core';
             }
         }
     `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule
-    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -17,9 +17,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  * @title Actions panel with dropdown and popover
  */
 @Component({
-    imports: [KbqButtonModule, KbqIconModule, KbqDropdownModule, KbqPopoverModule],
-    providers: [KbqActionsPanel],
     selector: 'actions-panel-with-dropdown-and-popover-example',
+    imports: [KbqButtonModule, KbqIconModule, KbqDropdownModule, KbqPopoverModule],
     template: `
         <button kbq-button (click)="open()">open</button>
 
@@ -71,7 +70,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
             gap: var(--kbq-size-s);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqActionsPanel]
 })
 export class ActionsPanelWithDropdownAndPopoverExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });

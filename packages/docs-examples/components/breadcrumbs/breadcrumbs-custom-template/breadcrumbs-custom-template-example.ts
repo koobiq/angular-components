@@ -9,6 +9,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     selector: 'breadcrumbs-custom-template-example',
+    imports: [
+        RouterLink,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqBreadcrumbsModule
+    ],
     template: `
         <nav kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
@@ -30,12 +36,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             }
         </nav>
     `,
-    imports: [
-        RouterLink,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqBreadcrumbsModule
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsCustomTemplateExample {

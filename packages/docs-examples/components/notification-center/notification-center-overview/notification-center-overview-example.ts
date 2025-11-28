@@ -46,14 +46,7 @@ enum NavbarIcItems {
  * @title notification-center
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'notification-center-overview-example',
-    templateUrl: 'notification-center-overview-example.html',
-    styles: `
-        ::ng-deep .example-notification-center-panel {
-            margin-top: -98px;
-        }
-    `,
     imports: [
         KbqNotificationCenterModule,
         KbqNavbarIcModule,
@@ -67,7 +60,14 @@ enum NavbarIcItems {
         KbqLinkModule,
         LuxonDateModule,
         KbqFormattersModule
-    ]
+    ],
+    templateUrl: 'notification-center-overview-example.html',
+    styles: `
+        ::ng-deep .example-notification-center-panel {
+            margin-top: -98px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterOverviewExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);

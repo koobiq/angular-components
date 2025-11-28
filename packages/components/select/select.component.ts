@@ -88,7 +88,7 @@ import {
     kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { BehaviorSubject, Observable, Subject, Subscription, defer, merge } from 'rxjs';
@@ -148,7 +148,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         CdkMonitorFocus,
         CdkConnectedOverlay,
         NgClass,
-        KbqIcon
+        KbqIconModule
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],

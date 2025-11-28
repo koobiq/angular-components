@@ -6,11 +6,11 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
  * @title Accordion content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'accordion-content-example',
+    imports: [KbqAccordionModule, KbqCheckboxModule],
     templateUrl: 'accordion-content-example.html',
     styleUrls: ['accordion-content-example.css'],
-    imports: [KbqAccordionModule, KbqCheckboxModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionContentExample {
     image: boolean = false;

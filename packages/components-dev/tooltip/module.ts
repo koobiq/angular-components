@@ -14,6 +14,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
+    selector: 'dev-app',
     imports: [
         A11yModule,
         FormsModule,
@@ -29,10 +30,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToggleModule,
         NgClass
     ],
-    selector: 'dev-app',
+    templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {

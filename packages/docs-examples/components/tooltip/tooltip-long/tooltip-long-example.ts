@@ -6,13 +6,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip long
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tooltip-long-example',
-    styles: `
-        .long-tooltip {
-            max-width: none !important;
-        }
-    `,
     imports: [
         KbqButtonModule,
         KbqToolTipModule
@@ -25,6 +19,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         >
             Кнопка с длинным тултипом
         </button>
-    `
+    `,
+    styles: `
+        .long-tooltip {
+            max-width: none !important;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipLongExample {}

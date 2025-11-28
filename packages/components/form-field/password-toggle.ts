@@ -37,13 +37,15 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 
 /** Component which changes password visibility. */
 @Component({
-    imports: [KbqIconModule, KbqToolTipModule],
     selector: `kbq-password-toggle`,
-    exportAs: 'kbqPasswordToggle',
+    imports: [KbqIconModule, KbqToolTipModule],
     template: `
         <ng-content />
     `,
     styleUrls: ['password-toggle.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqPasswordToggle',
     host: {
         class: 'kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade',
         '[class.kbq-error]': 'hasError',
@@ -57,9 +59,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         '(click)': 'toggle($event)',
         '(keydown.ENTER)': 'toggle($event)',
         '(keydown.SPACE)': 'toggle($event)'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
     protected readonly nativeElement = kbqInjectNativeElement();

@@ -7,11 +7,11 @@ import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components
  * @title Toast user data
  */
 @Component({
+    selector: 'toast-user-data-example',
     imports: [
         KbqLinkModule,
         KbqButtonModule
     ],
-    selector: 'toast-user-data-example',
     templateUrl: 'toast-user-data-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -328,13 +328,13 @@ export class TooltipSimple {
 
 @Component({
     selector: 'kbq-tooltip-test-new',
+    imports: [KbqToolTipModule],
     template: `
         <ng-template #template>title-template</ng-template>
 
         <a #titleString [kbqTooltip]="'title-string'" [kbqTrigger]="'hover'" [kbqPlacement]="'top'">Show</a>
         <a #titleTemplate [kbqTooltip]="template">Show</a>
-    `,
-    imports: [KbqToolTipModule]
+    `
 })
 class KbqTooltipTestNewComponent {
     @ViewChild('titleString', { static: false }) titleString: ElementRef;
@@ -353,6 +353,7 @@ class KbqTooltipTestNewComponent {
 
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
+    imports: [KbqToolTipModule],
     template: `
         <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 
@@ -368,8 +369,7 @@ class KbqTooltipTestNewComponent {
         >
             Show
         </span>
-    `,
-    imports: [KbqToolTipModule]
+    `
 })
 class KbqTooltipTestWrapperComponent {
     @ViewChild('normalTrigger', { static: false }) normalTrigger: ElementRef;
@@ -388,12 +388,12 @@ class KbqTooltipTestWrapperComponent {
 
 @Component({
     selector: 'kbq-tooltip-disabled-wrapper',
+    imports: [KbqToolTipModule],
     template: `
         <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
             Disabled
         </span>
-    `,
-    imports: [KbqToolTipModule]
+    `
 })
 class KbqTooltipDisabledComponent {
     @ViewChild('disabledAttribute', { static: false }) disabledTrigger: ElementRef;
@@ -402,6 +402,7 @@ class KbqTooltipDisabledComponent {
 
 @Component({
     selector: 'kbq-tooltip-wih-template-ref-content',
+    imports: [KbqToolTipModule],
     template: `
         <ng-template #tooltipContent let-ctx>
             <div>{{ ctx.content }}</div>
@@ -409,8 +410,7 @@ class KbqTooltipDisabledComponent {
         <button #trigger kbqTrigger="click" [kbqTooltip]="tooltipContent" [kbqTooltipContext]="tooltipContext">
             Button
         </button>
-    `,
-    imports: [KbqToolTipModule]
+    `
 })
 class KbqTooltipWithTemplateRefContent {
     @ViewChild('trigger', { static: false }) trigger: ElementRef;

@@ -5,8 +5,8 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
  * @title Markdown line break
  */
 @Component({
-    imports: [KbqMarkdownModule],
     selector: 'markdown-line-break-example',
+    imports: [KbqMarkdownModule],
     templateUrl: './markdown-line-break-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

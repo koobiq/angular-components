@@ -82,6 +82,7 @@ describe('KbqTooltip', () => {
 
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
+    imports: [KbqToolTipModule],
     template: `
         <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 
@@ -97,8 +98,7 @@ describe('KbqTooltip', () => {
         >
             Show
         </span>
-    `,
-    imports: [KbqToolTipModule]
+    `
 })
 class KbqTooltipTestWrapperComponent {
     @ViewChild('normalTrigger', { static: false }) normalTrigger: ElementRef;

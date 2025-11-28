@@ -10,6 +10,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit on clean
  */
 @Component({
+    selector: 'inline-edit-on-clean-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
@@ -17,7 +18,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqDlModule,
         KbqInputModule
     ],
-    selector: 'inline-edit-on-clean-example',
     template: `
         <kbq-dl class="flex">
             <kbq-dt>Label</kbq-dt>
@@ -49,10 +49,10 @@ import { KbqInputModule } from '@koobiq/components/input';
             white-space: nowrap;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditOnCleanExample {
     protected readonly placeholder = 'Placeholder';

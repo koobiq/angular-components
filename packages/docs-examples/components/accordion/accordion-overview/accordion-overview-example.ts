@@ -5,9 +5,9 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
  * @title Accordion
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'accordion-overview-example',
+    imports: [KbqAccordionModule],
     templateUrl: 'accordion-overview-example.html',
-    imports: [KbqAccordionModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionOverviewExample {}

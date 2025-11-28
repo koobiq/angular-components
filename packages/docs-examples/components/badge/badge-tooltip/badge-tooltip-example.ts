@@ -7,9 +7,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Badge tooltip
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'badge-tooltip-example',
-    styleUrls: ['badge-tooltip-example.css'],
     imports: [
         KbqBadgeModule,
         KbqToolTipModule
@@ -25,7 +23,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 DoS
             </kbq-badge>
         </div>
-    `
+    `,
+    styleUrls: ['badge-tooltip-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeTooltipExample {
     colors = KbqBadgeColors;

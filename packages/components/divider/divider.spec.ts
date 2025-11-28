@@ -47,10 +47,10 @@ describe('KbqDivider', () => {
 });
 
 @Component({
+    imports: [KbqDividerModule],
     template: `
         <kbq-divider [vertical]="vertical" [inset]="inset" />
-    `,
-    imports: [KbqDividerModule]
+    `
 })
 class KbqDividerTestComponent {
     vertical: boolean;

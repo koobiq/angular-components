@@ -20,6 +20,8 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
     selector: 'kbq-pseudo-checkbox',
     templateUrl: 'pseudo-checkbox.partial.html',
     styleUrls: ['pseudo-checkbox.scss', 'pseudo-checkbox-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-pseudo-checkbox',
         '[class.kbq-checkbox_big]': 'big',
@@ -27,9 +29,7 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
         '[class.kbq-checked]': 'state === true || state === "checked"',
         '[class.kbq-disabled]': 'disabled'
     },
-    preserveWhitespaces: false,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    preserveWhitespaces: false
 })
 export class KbqPseudoCheckbox extends KbqColorDirective {
     @Input() big: boolean = false;

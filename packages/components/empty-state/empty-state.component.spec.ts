@@ -48,6 +48,7 @@ describe('KbqEmptyState', () => {
 
 @Component({
     selector: 'empty-state-with-params',
+    imports: [BrowserModule, KbqEmptyStateModule, KbqIconModule, KbqButtonModule],
     template: `
         <kbq-empty-state>
             <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [fade]="true" [big]="true" [color]="'contrast'"></i>
@@ -59,8 +60,7 @@ describe('KbqEmptyState', () => {
                 <button kbq-button [kbqStyle]="styles.Transparent" [color]="colors.Theme">Action 3</button>
             </div>
         </kbq-empty-state>
-    `,
-    imports: [BrowserModule, KbqEmptyStateModule, KbqIconModule, KbqButtonModule]
+    `
 })
 class EmptyStateWithParams {
     protected readonly styles = KbqButtonStyles;

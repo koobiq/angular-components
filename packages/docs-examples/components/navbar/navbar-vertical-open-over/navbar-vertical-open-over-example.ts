@@ -10,21 +10,21 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Navbar vertical open over
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'navbar-vertical-open-over-example',
-    templateUrl: 'navbar-vertical-open-over-example.html',
-    styles: `
-        :host::ng-deep.kbq-vertical-navbar__container {
-            border-top-left-radius: 12px;
-        }
-    `,
     imports: [
         KbqDropdownModule,
         KbqNavbarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule
-    ]
+    ],
+    templateUrl: 'navbar-vertical-open-over-example.html',
+    styles: `
+        :host::ng-deep.kbq-vertical-navbar__container {
+            border-top-left-radius: 12px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalOpenOverExample {
     popUpPlacements = PopUpPlacements;

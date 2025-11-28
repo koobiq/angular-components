@@ -189,7 +189,6 @@ abstract class TreeParams {
  * @title Tree access rights
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tree-access-rights-example',
     imports: [
         KbqTreeModule,
@@ -214,7 +213,8 @@ abstract class TreeParams {
                 <span>{{ treeControl.getViewValue(node) }}</span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeAccessRightsExample extends TreeParams implements AfterViewInit, OnDestroy {
     treeControl: FlatTreeControl<FileFlatNode>;

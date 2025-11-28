@@ -8,6 +8,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 const classWithMargin = 'kbq-form-row_margin';
 
 @Component({
+    imports: [KbqFormsModule, KbqInputModule, KbqFormFieldModule],
     template: `
         <form class="kbq-form-horizontal" novalidate>
             <div class="kbq-form__row">
@@ -37,12 +38,12 @@ const classWithMargin = 'kbq-form-row_margin';
                 </kbq-form-field>
             </div>
         </form>
-    `,
-    imports: [KbqFormsModule, KbqInputModule, KbqFormFieldModule]
+    `
 })
 class HorizontalForm {}
 
 @Component({
+    imports: [KbqFormsModule, KbqInputModule, KbqFormFieldModule],
     template: `
         <form class="kbq-form-vertical" novalidate>
             <div class="kbq-form__row">
@@ -72,8 +73,7 @@ class HorizontalForm {}
                 </kbq-form-field>
             </div>
         </form>
-    `,
-    imports: [KbqFormsModule, KbqInputModule, KbqFormFieldModule]
+    `
 })
 class VerticalForm {}
 

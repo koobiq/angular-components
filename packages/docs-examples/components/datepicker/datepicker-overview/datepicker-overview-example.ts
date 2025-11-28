@@ -10,7 +10,6 @@ import { DateTime } from 'luxon';
  * @title Datepicker
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'datepicker-overview-example',
     imports: [
         FormsModule,
@@ -27,7 +26,8 @@ import { DateTime } from 'luxon';
                 <kbq-datepicker #datepicker />
             </kbq-form-field>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerOverviewExample {
     date: DateTime | null = null;

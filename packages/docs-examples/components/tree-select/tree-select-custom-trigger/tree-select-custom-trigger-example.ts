@@ -101,7 +101,6 @@ export const DATA_OBJECT = {
  * @title tree-select-custom-trigger
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'tree-select-custom-trigger-example',
     imports: [FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule, KbqButtonModule],
     template: `
@@ -130,7 +129,8 @@ export const DATA_OBJECT = {
             justify-content: center;
             padding: var(--kbq-size-l);
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCustomTriggerExample {
     selected = 'docs';

@@ -4,8 +4,8 @@ import { AppSwitcherExamplesModule } from '../../docs-examples/components/app-sw
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    imports: [AppSwitcherExamplesModule, KbqAppSwitcherModule],
     selector: 'dev-examples',
+    imports: [AppSwitcherExamplesModule, KbqAppSwitcherModule],
     template: `
         <app-switcher-overview-example />
         <br />
@@ -17,11 +17,11 @@ class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    templateUrl: './template.html',
     imports: [
         DevExamples,
         DevThemeToggle
     ],
+    templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

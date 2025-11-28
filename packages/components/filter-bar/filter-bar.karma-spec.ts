@@ -496,6 +496,7 @@ describe('KbqFilterBar', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqFilterBarModule, KbqLuxonDateModule],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             <kbq-filters
@@ -517,8 +518,7 @@ describe('KbqFilterBar', () => {
 
             <kbq-filter-search (onSearch)="onSearchFilter()" />
         </kbq-filter-bar>
-    `,
-    imports: [KbqFilterBarModule, KbqLuxonDateModule]
+    `
 })
 class BaseFunctions {
     readonly adapter = inject(DateAdapter<DateTime>);

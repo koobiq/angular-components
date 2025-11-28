@@ -3,9 +3,9 @@
         <kbq-form-field noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
             <input
+                placeholder="{{ localeData.searchPlaceholder }}"
                 autocomplete="off"
                 kbqInput
-                placeholder="{{ localeData.searchPlaceholder }}"
                 [formControl]="searchControl"
                 (keydown.escape)="escapeHandler()"
             />
@@ -35,8 +35,8 @@
                     @for (app of trigger.currentApps; track app) {
                         @if (!app.aliases) {
                             <a
-                                kbq-app-switcher-list-item
                                 href="{{ app.link }}"
+                                kbq-app-switcher-list-item
                                 [class.kbq-selected]="app.id === trigger.selectedApp?.id"
                                 [app]="app"
                                 [toggle]="!!app.aliases"
@@ -52,9 +52,9 @@
                             @if (!appSwitcherApp.collapsed) {
                                 @for (alias of app.aliases; track alias) {
                                     <a
+                                        href="{{ alias.link }}"
                                         class="kbq-app-switcher-site_nested"
                                         kbq-app-switcher-list-item
-                                        href="{{ alias.link }}"
                                         [class.kbq-selected]="alias.id === trigger.selectedApp?.id"
                                         [app]="alias"
                                     ></a>
@@ -131,7 +131,7 @@
                         }
 
                         @for (app of site.apps; track app) {
-                            <a kbq-app-switcher-list-item href="{{ app.link }}" [app]="app"></a>
+                            <a href="{{ app.link }}" kbq-app-switcher-list-item [app]="app"></a>
                         }
                     } @empty {
                         <div class="kbq-app-switcher__empty-search-result">{{ localeData.searchEmptyResult }}</div>
