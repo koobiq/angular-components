@@ -4,8 +4,8 @@ import { FilesizeFormatterExamplesModule } from '../../docs-examples/components/
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    imports: [FilesizeFormatterExamplesModule],
     selector: 'dev-examples',
+    imports: [FilesizeFormatterExamplesModule],
     template: `
         <filesize-formatter-overview-example />
         <filesize-formatter-table-number-example />
@@ -15,8 +15,8 @@ import { DevLocaleSelector } from '../locale-selector';
 export class DevExamples {}
 
 @Component({
-    imports: [DevExamples, DevLocaleSelector, KbqLocaleServiceModule],
     selector: 'dev-app',
+    imports: [DevExamples, DevLocaleSelector, KbqLocaleServiceModule],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,
