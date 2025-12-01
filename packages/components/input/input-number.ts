@@ -517,17 +517,20 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const localeId = !this.localeService || this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
 
         const formatter = new Intl.NumberFormat(localeId, formatOptions);
-        let formattedFractionPart: string = '';
-
-        for (const numChar of fractionPart || '') {
-            formattedFractionPart += formatter.format(+numChar);
-        }
 
         const formattedIntPart = formatNumberWithLocale(intPart, formatter, this.config);
 
-        return formattedFractionPart === ''
-            ? formattedIntPart
-            : `${formattedIntPart}${this.fractionSeparator}${formattedFractionPart}`;
+        if (fractionPart === undefined) {
+            return formattedIntPart;
+        }
+
+        let formattedFractionPart: string = '';
+
+        for (const numChar of fractionPart) {
+            formattedFractionPart += formatter.format(+numChar);
+        }
+
+        return `${formattedIntPart}${this.fractionSeparator}${formattedFractionPart}`;
     }
 
     private updateLocaleParams = () => {

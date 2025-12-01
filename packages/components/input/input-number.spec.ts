@@ -936,6 +936,32 @@ describe('KbqNumberInput', () => {
             expect(fixture.componentInstance.value).toBeNull();
         }));
 
+        it('should allow enter fraction separator char after integer part', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputMaxMinStep);
+            const localeService = fixture.debugElement.injector.get(KbqLocaleService);
+
+            localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            flush();
+
+            const fractionSeparator = localeService.current.input.number.fractionSeparator;
+
+            const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+            const inputElement = inputElementDebug.nativeElement;
+
+            inputElement.value = '123';
+            dispatchFakeEvent(inputElement, 'input');
+            fixture.detectChanges();
+            flush();
+
+            inputElement.value = `${inputElement.value}${fractionSeparator}`;
+            dispatchFakeEvent(inputElement, 'input');
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toContain(localeService?.current.input.number.fractionSeparator);
+        }));
+
         describe('negative values', () => {
             let fixture: ComponentFixture<KbqNumberInputMaxMinStepInput>;
             let inputElementDebug;
