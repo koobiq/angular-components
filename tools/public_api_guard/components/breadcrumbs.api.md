@@ -50,6 +50,7 @@ export class KbqBreadcrumbItem {
 
 // @public (undocumented)
 export class KbqBreadcrumbs implements AfterContentInit {
+    constructor();
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     disabled: boolean;

@@ -25,13 +25,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqDefaultSizes, kbqInjectNativeElement, PopUpPlacements } from '@koobiq/components/core';
-import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItem, KbqOverflowItemsModule, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
-import { fromEvent } from 'rxjs';
 import { KbqBreadcrumbsConfiguration, KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
@@ -81,27 +80,12 @@ export class KbqBreadcrumbsSeparator {
     ]
 })
 export class KbqBreadcrumbButton implements OnInit {
-    private readonly element = kbqInjectNativeElement();
-    private readonly destroyRef = inject(DestroyRef);
     private readonly button = inject(KbqButton, { optional: true, self: true });
-    private readonly dropdownTrigger = inject(KbqDropdownTrigger, { optional: true, host: true });
 
     ngOnInit() {
         if (this.button) {
             this.button.color = KbqComponentColors.Contrast;
             this.button.kbqStyle = KbqButtonStyles.Transparent;
-        }
-
-        if (this.dropdownTrigger) {
-            fromEvent<KeyboardEvent>(this.element, 'keydown')
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((event) => {
-                    if (event.key !== 'ArrowDown') return;
-
-                    event.preventDefault();
-                    this.dropdownTrigger!.openedBy = 'keyboard';
-                    this.dropdownTrigger!.open();
-                });
         }
     }
 }
@@ -185,7 +169,6 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin',
         '[attr.aria-label]': "'breadcrumb'"
     },
-    // @TODO add support for Home,End keys interaction (#DS-3334)
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
 export class KbqBreadcrumbs implements AfterContentInit {
@@ -274,6 +257,10 @@ export class KbqBreadcrumbs implements AfterContentInit {
         }
 
         return visibleItemsWidth;
+    }
+
+    constructor() {
+        inject(RdxRovingFocusGroupDirective, { self: true }).orientation = 'horizontal';
     }
 
     ngAfterContentInit() {

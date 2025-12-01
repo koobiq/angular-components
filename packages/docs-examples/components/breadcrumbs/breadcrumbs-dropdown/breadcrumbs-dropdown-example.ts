@@ -36,12 +36,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 
             <kbq-breadcrumb-item>
                 <div *kbqBreadcrumbView>
-                    <button
-                        kbq-button
-                        kbqBreadcrumb
-                        [kbqDropdownTriggerFor]="siblingsListDropdown"
-                        [openByArrowDown]="false"
-                    >
+                    <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
                         Access Control
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>

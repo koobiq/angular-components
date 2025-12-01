@@ -3,6 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
+import { DOWN_ARROW } from '@koobiq/cdk/keycodes';
 import { dispatchEvent } from '@koobiq/cdk/testing';
 import { KbqButtonDropdownTrigger, KbqButtonModule } from '@koobiq/components/button';
 import { KbqDefaultSizes } from '@koobiq/components/core';
@@ -174,7 +175,7 @@ describe(KbqBreadcrumbs.name, () => {
             const lastBreadcrumbItem = breadcrumbItems[breadcrumbItems.length - 1];
             const dropdownTrigger = lastBreadcrumbItem.injector.get(KbqDropdownTrigger, null);
 
-            dispatchEvent(lastBreadcrumbItem.nativeElement, new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            dispatchEvent(lastBreadcrumbItem.nativeElement, new KeyboardEvent('keydown', { keyCode: DOWN_ARROW }));
             fixture.detectChanges();
             tick();
 
@@ -282,12 +283,7 @@ class BreadcrumbsCustomization {
 
             <kbq-breadcrumb-item>
                 <div *kbqBreadcrumbView>
-                    <button
-                        kbq-button
-                        kbqBreadcrumb
-                        [kbqDropdownTriggerFor]="siblingsListDropdown"
-                        [openByArrowDown]="false"
-                    >
+                    <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
                         {{ items[items.length - 1].text }}
                     </button>
                 </div>
