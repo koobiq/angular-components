@@ -78,3 +78,21 @@ Do not use tag editing when complex validation is expected. Editing is configure
 ### Recommendations
 
 Use a [`Badge`](/en/components/badge) if you need a colored label in a table or key-value list. Tags should be used exclusively as tokens within input controls.
+
+### Keyboard navigation
+
+#### Focus on tag
+
+| <div style="min-width: 270px;">Key</div>                                                             | Action               |
+| ---------------------------------------------------------------------------------------------------- | -------------------- |
+| <span class="docs-hot-key-button">Space</span>                                                       | Select/deselect tag. |
+| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Remove tag.          |
+| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>         | Start editing.       |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>           | Select all tags.     |
+
+#### Tag editing mode
+
+| <div style="min-width: 270px;">Key</div>       | Action          |
+| ---------------------------------------------- | --------------- |
+| <span class="docs-hot-key-button">Enter</span> | Save changes.   |
+| <span class="docs-hot-key-button">Esc</span>   | Cancel changes. |

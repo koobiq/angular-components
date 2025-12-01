@@ -3,7 +3,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { BACKSPACE, END, HOME } from '@angular/cdk/keycodes';
+import { BACKSPACE, END, HOME, LEFT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -83,7 +83,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '[class.kbq-tag-list_removable]': 'removable',
         '[class.kbq-tag-list_draggable]': 'draggable',
 
-        '[attr.tabindex]': 'disabled ? null : tabIndex',
+        '[attr.tabindex]': 'tabIndex',
         '[id]': 'uid',
 
         '(focus)': 'focus()',
@@ -330,9 +330,14 @@ export class KbqTagList
 
     private _removable = true;
 
+    /**
+     * Tab index of the tag list. This property is ignored when the tag list contains a tag input or is disabled.
+     *
+     * @docs-private
+     */
     @Input()
-    get tabIndex(): number {
-        return this._tabIndex;
+    get tabIndex(): number | null {
+        return this.disabled || this.tagInput ? null : this._tabIndex;
     }
 
     set tabIndex(value: number) {
@@ -636,13 +641,23 @@ export class KbqTagList
         const shouldSelectAll = this.selectable && isSelectAll(event);
 
         if (this.isInputEmpty(target)) {
-            if (event.keyCode === BACKSPACE) {
+            if (
+                event.keyCode === BACKSPACE ||
+                event.keyCode === LEFT_ARROW ||
+                (event.keyCode === TAB && event.shiftKey)
+            ) {
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
-            } else if (shouldSelectAll) {
+
+                return;
+            }
+
+            if (shouldSelectAll) {
                 this.selectAll();
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
+
+                return;
             }
         } else if (this.isTagElement(target)) {
             if (event.keyCode === HOME) {
@@ -743,14 +758,14 @@ export class KbqTagList
         return index >= 0 && index < this.tags.length;
     }
 
+    private isInputElement(element: HTMLElement): element is HTMLInputElement {
+        return element.nodeName.toLowerCase() === 'input';
+    }
+
     private isInputEmpty(element: HTMLElement): boolean {
-        if (element && element.nodeName.toLowerCase() === 'input') {
-            const input = element as HTMLInputElement;
+        if (!this.isInputElement(element)) return false;
 
-            return !input.value;
-        }
-
-        return false;
+        return !element.value;
     }
 
     private isTagElement(element: HTMLElement): boolean {

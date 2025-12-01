@@ -54,3 +54,23 @@ Canceling changes:
 To enable tag reordering, you need to set the `draggable` property for `kbq-tag-list`.
 
 <!-- example(tag-list-draggable) -->
+
+### Keyboard navigation
+
+#### Focus on tag
+
+| <div style="min-width: 270px;">Key</div>                                                             | Action                           |
+| ---------------------------------------------------------------------------------------------------- | -------------------------------- |
+| <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>              | Move focus to previous/next tag. |
+| <span class="docs-hot-key-button">Space</span>                                                       | Select/deselect tag.             |
+| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Remove tag.                      |
+| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>         | Start editing.                   |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>           | Select all tags.                 |
+| <span class="docs-hot-key-button">Home</span> / <span class="docs-hot-key-button">End</span>         | Move focus to first/last tag.    |
+
+#### Tag editing mode
+
+| <div style="min-width: 270px;">Key</div>       | Action          |
+| ---------------------------------------------- | --------------- |
+| <span class="docs-hot-key-button">Enter</span> | Save changes.   |
+| <span class="docs-hot-key-button">Esc</span>   | Cancel changes. |
