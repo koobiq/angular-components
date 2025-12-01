@@ -4,12 +4,11 @@
 
 ```ts
 
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { OutputEmitterRef } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -119,36 +118,6 @@ export class KbqContentPanelModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof i1.KbqContentPanelContainer, typeof i1.KbqContentPanel, typeof i1.KbqContentPanelAside, typeof i1.KbqContentPanelHeader, typeof i1.KbqContentPanelHeaderTitle, typeof i1.KbqContentPanelHeaderActions, typeof i1.KbqContentPanelBody, typeof i1.KbqContentPanelFooter], [typeof i1.KbqContentPanelContainer, typeof i1.KbqContentPanel, typeof i1.KbqContentPanelAside, typeof i1.KbqContentPanelHeader, typeof i1.KbqContentPanelHeaderTitle, typeof i1.KbqContentPanelHeaderActions, typeof i1.KbqContentPanelBody, typeof i1.KbqContentPanelFooter]>;
 }
-
-// @public
-export class KbqResizable {
-    readonly elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizable, "[kbqResizable]", ["kbqResizable"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizable, never>;
-}
-
-// @public
-export class KbqResizer {
-    constructor();
-    protected readonly cursor: Signal<"ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
-    readonly direction: InputSignal<KbqResizerDirection>;
-    readonly sizeChange: OutputEmitterRef<KbqResizerSizeChangeEvent>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizer, "[kbqResizer]", ["kbqResizer"], { "direction": { "alias": "kbqResizer"; "required": true; "isSignal": true; }; }, { "sizeChange": "sizeChange"; }, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizer, never>;
-}
-
-// @public
-export type KbqResizerDirection = [x: -1 | 0 | 1, y: -1 | 0 | 1];
-
-// @public (undocumented)
-export type KbqResizerSizeChangeEvent = {
-    width: number;
-    height: number;
-};
 
 // (No @packageDocumentation comment for this package)
 

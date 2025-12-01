@@ -22,9 +22,9 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqAnimationCurves, KbqAnimationDurations, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
-import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable';
 
 const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
     state('false', style({ 'margin-right': 0 })),

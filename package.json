@@ -249,6 +249,7 @@
         "dev:progress-bar": "ng serve dev-progress-bar --port 3003",
         "dev:progress-spinner": "ng serve dev-progress-spinner --port 3003",
         "dev:radio": "ng serve dev-radio --port 3003",
+        "dev:resizer": "ng serve dev-resizer --port 3003",
         "dev:risk-level": "ng serve dev-risk-level --port 3003",
         "dev:scrollbar": "ng serve dev-scrollbar --port 3003",
         "dev:search-expandable": "ng serve dev-search-expandable --port 3003",
