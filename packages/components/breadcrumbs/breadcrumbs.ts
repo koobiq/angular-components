@@ -169,7 +169,6 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin',
         '[attr.aria-label]': "'breadcrumb'"
     },
-    // @TODO add support for Home,End keys interaction (#DS-3334)
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
 export class KbqBreadcrumbs implements AfterContentInit {
@@ -258,6 +257,10 @@ export class KbqBreadcrumbs implements AfterContentInit {
         }
 
         return visibleItemsWidth;
+    }
+
+    constructor() {
+        inject(RdxRovingFocusGroupDirective, { self: true }).orientation = 'horizontal';
     }
 
     ngAfterContentInit() {
