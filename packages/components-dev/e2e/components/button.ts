@@ -26,7 +26,7 @@ type DevButton = DevButtonState & DevButtonStyle;
 @Component({
     standalone: true,
     imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule],
-    selector: 'dev-button-state-and-style',
+    selector: 'e2e-button-state-and-style',
     host: {
         'data-testid': 'e2eButtonStateAndStyle'
     },
@@ -92,7 +92,7 @@ type DevButton = DevButtonState & DevButtonStyle;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevButtonStateAndStyle {
+export class E2eButtonStateAndStyle {
     readonly showPrefixIcon = model(false);
     readonly showTitle = model(true);
     readonly showSuffixIcon = model(false);

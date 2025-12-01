@@ -31,7 +31,7 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -53,7 +53,7 @@ class DevExamples {}
         KbqCheckboxModule,
         KbqRadioModule,
         KbqLinkModule,
-        DevExamples,
+        DevDocsExamples,
         NgClass
     ],
     encapsulation: ViewEncapsulation.None,

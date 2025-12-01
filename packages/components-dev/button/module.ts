@@ -18,7 +18,7 @@ import { combineLatest } from 'rxjs';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 type DevButtonState = Partial<{
     title: string;
@@ -132,7 +132,7 @@ export class DevButtonStateAndStyle {
 
 @Component({
     standalone: true,
-    imports: [KbqButtonModule, KbqIconModule, DevExamples, DevButtonStateAndStyle],
+    imports: [KbqButtonModule, KbqIconModule, DevDocsExamples, DevButtonStateAndStyle],
     selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],

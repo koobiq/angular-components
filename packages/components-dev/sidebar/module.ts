@@ -13,12 +13,12 @@ import { SidebarExamplesModule } from 'packages/docs-examples/components/sidebar
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
     imports: [
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

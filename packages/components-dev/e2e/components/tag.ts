@@ -7,7 +7,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 @Component({
     standalone: true,
     imports: [KbqTagsModule, KbqIconModule],
-    selector: 'dev-tag-state-and-style',
+    selector: 'e2e-tag-state-and-style',
     host: {
         'data-testid': 'e2eTagStateAndStyle'
     },
@@ -50,7 +50,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevTagStateAndStyle {
+export class E2eTagStateAndStyle {
     readonly states = ['normal', 'hovered', 'focused', 'disabled'] as const;
     readonly colors = [
         KbqComponentColors.Theme,
@@ -64,7 +64,7 @@ export class DevTagStateAndStyle {
 @Component({
     standalone: true,
     imports: [KbqTagsModule, KbqIconModule, FormsModule],
-    selector: 'dev-tag-editable',
+    selector: 'e2e-tag-editable',
     host: {
         'data-testid': 'e2eTagEditable'
     },
@@ -102,7 +102,7 @@ export class DevTagStateAndStyle {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevTagEditable {
+export class E2eTagEditable {
     readonly tag = model('Editable tag');
     readonly color = KbqComponentColors;
 }

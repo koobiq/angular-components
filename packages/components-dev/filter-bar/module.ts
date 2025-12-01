@@ -96,7 +96,7 @@ const DEV_DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -110,7 +110,7 @@ export class DevExamples {}
         KbqDividerModule,
         KbqButtonModule,
         KbqLuxonDateModule,
-        DevExamples,
+        DevDocsExamples,
         DevLocaleSelector,
         JsonPipe
     ],

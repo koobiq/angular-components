@@ -20,11 +20,11 @@ const MAX_PERCENT: number = 100;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
-    imports: [KbqProgressBarModule, FormsModule, DevExamples, DevThemeToggle],
+    imports: [KbqProgressBarModule, FormsModule, DevDocsExamples, DevThemeToggle],
     selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

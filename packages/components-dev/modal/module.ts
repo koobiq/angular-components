@@ -29,7 +29,7 @@ import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -136,7 +136,7 @@ export class DevModalFullCustomComponent {
         KbqButtonModule,
         KbqDropdownModule,
         KbqToolTipModule,
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

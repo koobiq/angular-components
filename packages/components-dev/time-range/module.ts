@@ -22,14 +22,14 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
     imports: [
         DevLocaleSelector,
         DevThemeToggle,
-        DevExamples,
+        DevDocsExamples,
         KbqLocaleServiceModule
     ],
     selector: 'dev-app',

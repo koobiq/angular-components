@@ -39,11 +39,11 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
-    imports: [DevExamples, DevThemeToggle],
+    imports: [DevDocsExamples, DevThemeToggle],
     selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',

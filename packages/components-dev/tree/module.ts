@@ -122,7 +122,7 @@ export const DEV_DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -140,7 +140,7 @@ export class DevExamples {}
         KbqTitleModule,
         KbqButtonToggleModule,
         JsonPipe,
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

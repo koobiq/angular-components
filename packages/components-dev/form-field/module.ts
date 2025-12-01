@@ -56,7 +56,7 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 const OPTIONS = [
     'Value Value Value Value Value Value Value Value Value Value',
@@ -157,7 +157,7 @@ const DATA_OBJECT = {
         ReactiveFormsModule,
         KbqButtonModule,
         KbqModalModule,
-        DevExamples,
+        DevDocsExamples,
         DevThemeToggle
     ],
     selector: 'dev-app',

@@ -78,7 +78,7 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -90,7 +90,7 @@ export class DevExamples {}
         KbqTagsModule,
         KbqIconModule,
         KbqTitleModule,
-        DevExamples,
+        DevDocsExamples,
         AsyncPipe,
         DevThemeToggle
     ],

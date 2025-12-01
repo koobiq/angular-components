@@ -7,7 +7,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 @Component({
     standalone: true,
     imports: [KbqToggleModule, FormsModule],
-    selector: 'dev-toggle-state-and-style',
+    selector: 'e2e-toggle-state-and-style',
     host: {
         'data-testid': 'e2eToggleStateAndStyle'
     },
@@ -56,7 +56,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevToggleStateAndStyle {
+export class E2eToggleStateAndStyle {
     readonly states = ['normal', 'hovered', 'focused', 'disabled', 'loading'] as const;
     readonly colors = [KbqComponentColors.Theme, KbqComponentColors.Error];
     readonly types = ['default', 'checked'] as const;
@@ -68,7 +68,7 @@ export class DevToggleStateAndStyle {
 @Component({
     standalone: true,
     imports: [KbqToggleModule, KbqFormFieldModule, FormsModule],
-    selector: 'dev-toggle-with-text-and-caption',
+    selector: 'e2e-toggle-with-text-and-caption',
     host: {
         'data-testid': 'e2eToggleWithTextAndCaption'
     },
@@ -112,7 +112,7 @@ export class DevToggleStateAndStyle {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevToggleWithTextAndCaption {
+export class E2eToggleWithTextAndCaption {
     readonly states = ['normal', 'disabled'] as const;
     readonly positions = ['left', 'right'] as const;
 

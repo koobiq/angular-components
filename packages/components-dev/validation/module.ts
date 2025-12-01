@@ -56,7 +56,7 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -77,7 +77,7 @@ export class DevExamples {}
         KbqDatepickerModule,
         KbqTimepickerModule,
         KbqLuxonDateModule,
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

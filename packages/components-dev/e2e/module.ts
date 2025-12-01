@@ -1,28 +1,28 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DevThemeToggle } from '../theme-toggle';
-import { DevActionsPanelWithOverlayContainer } from './components/actions-panel';
-import { DevButtonStateAndStyle } from './components/button';
-import { DevFileUploadStateAndStyle } from './components/file-upload';
-import { DevSplitButtonStateAndStyle } from './components/split-button';
-import { DevTagEditable, DevTagStateAndStyle } from './components/tag';
-import { DevToggleStateAndStyle, DevToggleWithTextAndCaption } from './components/toggle';
+import { E2eActionsPanelWithOverlayContainer } from './components/actions-panel';
+import { E2eButtonStateAndStyle } from './components/button';
+import { E2eFileUploadStateAndStyle } from './components/file-upload';
+import { E2eSplitButtonStateAndStyle } from './components/split-button';
+import { E2eTagEditable, E2eTagStateAndStyle } from './components/tag';
+import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from './components/toggle';
 
 @Component({
     standalone: true,
     imports: [
         DevThemeToggle,
-        DevButtonStateAndStyle,
-        DevSplitButtonStateAndStyle,
-        DevFileUploadStateAndStyle,
-        DevActionsPanelWithOverlayContainer,
-        DevTagStateAndStyle,
-        DevTagEditable,
-        DevToggleStateAndStyle,
-        DevToggleWithTextAndCaption
+        E2eButtonStateAndStyle,
+        E2eSplitButtonStateAndStyle,
+        E2eFileUploadStateAndStyle,
+        E2eActionsPanelWithOverlayContainer,
+        E2eTagStateAndStyle,
+        E2eTagEditable,
+        E2eToggleStateAndStyle,
+        E2eToggleWithTextAndCaption
     ],
-    selector: 'dev-app',
+    selector: 'e2e-app',
     templateUrl: 'template.html',
     styleUrl: 'styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevApp {}
+export class E2eApp {}

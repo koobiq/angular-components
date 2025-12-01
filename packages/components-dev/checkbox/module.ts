@@ -22,7 +22,7 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -31,7 +31,7 @@ export class DevExamples {}
         KbqFormFieldModule,
         KbqCheckboxModule,
         KbqPseudoCheckboxModule,
-        DevExamples,
+        DevDocsExamples,
         KbqTableModule,
         DevThemeToggle
     ],

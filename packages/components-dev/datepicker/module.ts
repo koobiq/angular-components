@@ -36,7 +36,7 @@ import { DevThemeToggle } from '../theme-toggle';
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -53,7 +53,7 @@ class DevExamples {}
         KbqRadioModule,
         DevLocaleSelector,
         DevThemeToggle,
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
