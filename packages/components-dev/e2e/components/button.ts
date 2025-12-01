@@ -7,7 +7,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { combineLatest } from 'rxjs';
 
-type DevButtonState = Partial<{
+type ButtonState = Partial<{
     title: string;
     disabled: boolean;
     hover: boolean;
@@ -16,12 +16,12 @@ type DevButtonState = Partial<{
     progress: boolean;
 }>;
 
-type DevButtonStyle = Partial<{
+type ButtonStyle = Partial<{
     style: KbqButtonStyles;
     color: KbqComponentColors;
 }>;
 
-type DevButton = DevButtonState & DevButtonStyle;
+type Button = ButtonState & ButtonStyle;
 
 @Component({
     standalone: true,
@@ -97,7 +97,7 @@ export class E2eButtonStateAndStyle {
     readonly showTitle = model(true);
     readonly showSuffixIcon = model(false);
 
-    private readonly states: DevButtonState[] = [
+    private readonly states: ButtonState[] = [
         { title: 'disabled', disabled: true },
         { title: 'normal' },
         { title: 'hover', hover: true },
@@ -105,7 +105,7 @@ export class E2eButtonStateAndStyle {
         { title: 'focus', focused: true },
         { title: 'progress', progress: true }];
 
-    private readonly styles: DevButtonStyle[] = [
+    private readonly styles: ButtonStyle[] = [
         {},
         { color: KbqComponentColors.Contrast },
         { color: KbqComponentColors.ThemeFade, style: KbqButtonStyles.Outline },
@@ -113,7 +113,7 @@ export class E2eButtonStateAndStyle {
         { color: KbqComponentColors.Theme, style: KbqButtonStyles.Transparent },
         { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }];
 
-    readonly rows: DevButton[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
+    readonly rows: Button[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
 
     constructor() {
         combineLatest([toObservable(this.showPrefixIcon), toObservable(this.showSuffixIcon)])
