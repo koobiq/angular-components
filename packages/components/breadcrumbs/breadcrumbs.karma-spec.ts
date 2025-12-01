@@ -1,10 +1,15 @@
 import { Component, DebugElement, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter, RouterLink } from '@angular/router';
+import { dispatchEvent } from '@koobiq/cdk/testing';
+import { KbqButtonDropdownTrigger, KbqButtonModule } from '@koobiq/components/button';
 import { KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem } from '@koobiq/components/overflow-items';
 import {
+    KbqBreadcrumbButton,
     KbqBreadcrumbItem,
     KbqBreadcrumbs,
     kbqBreadcrumbsConfigurationProvider,
@@ -12,8 +17,8 @@ import {
     KbqBreadcrumbView
 } from './breadcrumbs';
 
-const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+const createComponent = <T>(component: Type<T>, providers: any[] = [], imports: any[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component, ...imports], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -27,6 +32,10 @@ function getBreadcrumbsDebugElement(debugElement: DebugElement): DebugElement {
 
 function findAllBreadcrumbItems(debugElement: DebugElement): DebugElement[] {
     return debugElement.queryAll(By.css('.kbq-breadcrumb-item__container:not(.kbq-overflow-items-result)'));
+}
+
+function findAllBreadcrumbButtons(debugElement: DebugElement): DebugElement[] {
+    return debugElement.queryAll(By.directive(KbqBreadcrumbButton));
 }
 
 function getBreadcrumbsElementRef(debugElement: DebugElement): DebugElement {
@@ -146,6 +155,33 @@ describe(KbqBreadcrumbs.name, () => {
             expect(componentInstance.items.length).toBeLessThan(componentInstance.max);
             expect(breadcrumbsElementRef.nativeElement.style.maxWidth).toBeFalsy();
         });
+
+        it('should open dropdown on ArrowDown if item is Dropdown trigger', fakeAsync(() => {
+            const fixture = createComponent(
+                TestDropdownBreadcrumbs,
+                [
+                    provideRouter([]),
+                    customBreadcrumbsProvider
+                ],
+                [
+                    NoopAnimationsModule
+                ]
+            );
+            const { debugElement } = fixture;
+
+            fixture.detectChanges();
+            const breadcrumbItems = findAllBreadcrumbButtons(debugElement);
+            const lastBreadcrumbItem = breadcrumbItems[breadcrumbItems.length - 1];
+            const dropdownTrigger = lastBreadcrumbItem.injector.get(KbqDropdownTrigger, null);
+
+            dispatchEvent(lastBreadcrumbItem.nativeElement, new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            fixture.detectChanges();
+            tick();
+
+            expect(dropdownTrigger).toBeTruthy();
+            expect(dropdownTrigger?.opened).toBeTruthy();
+            expect(dropdownTrigger?.openedBy).toBe('keyboard');
+        }));
     });
 
     describe('customization', () => {
@@ -232,5 +268,54 @@ class BreadcrumbsCustomization {
         { text: 'Library', disabled: false },
         { text: 'Data', disabled: false },
         { text: 'Person', disabled: false }
+    ];
+}
+
+@Component({
+    template: `
+        <nav kbq-breadcrumbs>
+            @for (item of items; track item) {
+                @if ($index < items.length - 1) {
+                    <kbq-breadcrumb-item [routerLink]="'./' + item.text" [text]="item.text" />
+                }
+            }
+
+            <kbq-breadcrumb-item>
+                <div *kbqBreadcrumbView>
+                    <button
+                        kbq-button
+                        kbqBreadcrumb
+                        [kbqDropdownTriggerFor]="siblingsListDropdown"
+                        [openByArrowDown]="false"
+                    >
+                        {{ items[items.length - 1].text }}
+                    </button>
+                </div>
+            </kbq-breadcrumb-item>
+        </nav>
+
+        <kbq-dropdown #siblingsListDropdown="kbqDropdown">
+            <a kbq-dropdown-item routerLink="./RBAC">RBAC</a>
+            <a kbq-dropdown-item routerLink="./ABAC">ABAC</a>
+        </kbq-dropdown>
+    `,
+    standalone: true,
+    imports: [
+        KbqBreadcrumbs,
+        KbqBreadcrumbItem,
+        KbqBreadcrumbButton,
+        KbqBreadcrumbView,
+        KbqButtonDropdownTrigger,
+        KbqButtonModule,
+        KbqDropdownModule,
+        RouterLink
+    ]
+})
+class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
+    items = [
+        { text: 'Home', disabled: false },
+        { text: 'Library', disabled: false },
+        { text: 'Data', disabled: true },
+        { text: 'Access Control', disabled: true }
     ];
 }
