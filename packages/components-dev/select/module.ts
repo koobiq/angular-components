@@ -73,7 +73,7 @@ import { DEV_OPTIONS } from './mock';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -89,7 +89,7 @@ class DevExamples {}
         KbqIconModule,
         ReactiveFormsModule,
         KbqTagsModule,
-        DevExamples,
+        DevDocsExamples,
         DevThemeToggle
     ],
     providers: [

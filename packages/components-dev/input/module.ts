@@ -42,7 +42,7 @@ import { InputExamplesModule } from '../../docs-examples/components/input';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -55,7 +55,7 @@ export class DevExamples {}
         KbqInputModule,
         KbqToolTipModule,
         KbqIconModule,
-        DevExamples,
+        DevDocsExamples,
         KbqNormalizeWhitespace
     ],
     selector: 'dev-app',

@@ -319,6 +319,7 @@
             "projectType": "application",
             "root": "packages/components-dev/accordion",
             "sourceRoot": "packages/components-dev/accordion",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -349,6 +350,7 @@
             "projectType": "application",
             "root": "packages/components-dev/actions-panel",
             "sourceRoot": "packages/components-dev/actions-panel",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -379,6 +381,7 @@
             "projectType": "application",
             "root": "packages/components-dev/ag-grid",
             "sourceRoot": "packages/components-dev/ag-grid",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -409,6 +412,7 @@
             "projectType": "application",
             "root": "packages/components-dev/alert",
             "sourceRoot": "packages/components-dev/alert",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -439,6 +443,7 @@
             "projectType": "application",
             "root": "packages/components-dev/all",
             "sourceRoot": "packages/components-dev/all",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -469,6 +474,7 @@
             "projectType": "application",
             "root": "packages/components-dev/app-switcher",
             "sourceRoot": "packages/components-dev/app-switcher",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -499,6 +505,7 @@
             "projectType": "application",
             "root": "packages/components-dev/autocomplete",
             "sourceRoot": "packages/components-dev/autocomplete",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -529,6 +536,7 @@
             "projectType": "application",
             "root": "packages/components-dev/badge",
             "sourceRoot": "packages/components-dev/badge",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -559,6 +567,7 @@
             "projectType": "application",
             "root": "packages/components-dev/breadcrumbs",
             "sourceRoot": "packages/components-dev/breadcrumbs",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -589,6 +598,7 @@
             "projectType": "application",
             "root": "packages/components-dev/button",
             "sourceRoot": "packages/components-dev/button",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -619,6 +629,7 @@
             "projectType": "application",
             "root": "packages/components-dev/button-toggle",
             "sourceRoot": "packages/components-dev/button-toggle",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -649,6 +660,7 @@
             "projectType": "application",
             "root": "packages/components-dev/checkbox",
             "sourceRoot": "packages/components-dev/checkbox",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -679,6 +691,7 @@
             "projectType": "application",
             "root": "packages/components-dev/clamped-text",
             "sourceRoot": "packages/components-dev/clamped-text",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -709,6 +722,7 @@
             "projectType": "application",
             "root": "packages/components-dev/code-block",
             "sourceRoot": "packages/components-dev/code-block",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -739,6 +753,7 @@
             "projectType": "application",
             "root": "packages/components-dev/content-panel",
             "sourceRoot": "packages/components-dev/content-panel",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -769,6 +784,7 @@
             "projectType": "application",
             "root": "packages/components-dev/date-formatter",
             "sourceRoot": "packages/components-dev/date-formatter",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -799,6 +815,7 @@
             "projectType": "application",
             "root": "packages/components-dev/date-pipes",
             "sourceRoot": "packages/components-dev/date-pipes",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -829,6 +846,7 @@
             "projectType": "application",
             "root": "packages/components-dev/datepicker",
             "sourceRoot": "packages/components-dev/datepicker",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -859,6 +877,7 @@
             "projectType": "application",
             "root": "packages/components-dev/divider",
             "sourceRoot": "packages/components-dev/divider",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -889,6 +908,7 @@
             "projectType": "application",
             "root": "packages/components-dev/dl",
             "sourceRoot": "packages/components-dev/dl",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -919,6 +939,7 @@
             "projectType": "application",
             "root": "packages/components-dev/dynamic-translation",
             "sourceRoot": "packages/components-dev/dynamic-translation",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -949,6 +970,7 @@
             "projectType": "application",
             "root": "packages/components-dev/dropdown",
             "sourceRoot": "packages/components-dev/dropdown",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -979,6 +1001,7 @@
             "projectType": "application",
             "root": "packages/components-dev/e2e",
             "sourceRoot": "packages/components-dev/e2e",
+            "prefix": "e2e",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1009,6 +1032,7 @@
             "projectType": "application",
             "root": "packages/components-dev/empty-state",
             "sourceRoot": "packages/components-dev/empty-state",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1046,6 +1070,7 @@
             "projectType": "application",
             "root": "packages/components-dev/form-field",
             "sourceRoot": "packages/components-dev/form-field",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1076,6 +1101,7 @@
             "projectType": "application",
             "root": "packages/components-dev/experimental-form-field",
             "sourceRoot": "packages/components-dev/experimental-form-field",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1104,6 +1130,7 @@
             "projectType": "application",
             "root": "packages/components-dev/forms",
             "sourceRoot": "packages/components-dev/forms",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1134,6 +1161,7 @@
             "projectType": "application",
             "root": "packages/components-dev/flex-layout",
             "sourceRoot": "packages/components-dev/flex-layout",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1164,6 +1192,7 @@
             "projectType": "application",
             "root": "packages/components-dev/file-upload",
             "sourceRoot": "packages/components-dev/file-upload",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1194,6 +1223,7 @@
             "projectType": "application",
             "root": "packages/components-dev/filesize-formatter",
             "sourceRoot": "packages/components-dev/filesize-formatter",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1224,6 +1254,7 @@
             "projectType": "application",
             "root": "packages/components-dev/filter-bar",
             "sourceRoot": "packages/components-dev/filter-bar",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1254,6 +1285,7 @@
             "projectType": "application",
             "root": "packages/components-dev/icon",
             "sourceRoot": "packages/components-dev/icon",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1284,6 +1316,7 @@
             "projectType": "application",
             "root": "packages/components-dev/icon-item",
             "sourceRoot": "packages/components-dev/icon-item",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1314,6 +1347,7 @@
             "projectType": "application",
             "root": "packages/components-dev/hint",
             "sourceRoot": "packages/components-dev/hint",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1344,6 +1378,7 @@
             "projectType": "application",
             "root": "packages/components-dev/inline-edit",
             "sourceRoot": "packages/components-dev/inline-edit",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1374,6 +1409,7 @@
             "projectType": "application",
             "root": "packages/components-dev/input",
             "sourceRoot": "packages/components-dev/input",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1404,6 +1440,7 @@
             "projectType": "application",
             "root": "packages/components-dev/link",
             "sourceRoot": "packages/components-dev/link",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1434,6 +1471,7 @@
             "projectType": "application",
             "root": "packages/components-dev/list",
             "sourceRoot": "packages/components-dev/list",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1464,6 +1502,7 @@
             "projectType": "application",
             "root": "packages/components-dev/loader-overlay",
             "sourceRoot": "packages/components-dev/loader-overlay",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1494,6 +1533,7 @@
             "projectType": "application",
             "root": "packages/components-dev/locale",
             "sourceRoot": "packages/components-dev/locale",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1524,6 +1564,7 @@
             "projectType": "application",
             "root": "packages/components-dev/markdown",
             "sourceRoot": "packages/markdown-dev/markdown",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1554,6 +1595,7 @@
             "projectType": "application",
             "root": "packages/components-dev/modal",
             "sourceRoot": "packages/components-dev/modal",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1584,6 +1626,7 @@
             "projectType": "application",
             "root": "packages/components-dev/navbar",
             "sourceRoot": "packages/components-dev/navbar",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1614,6 +1657,7 @@
             "projectType": "application",
             "root": "packages/components-dev/navbar-ic",
             "sourceRoot": "packages/components-dev/navbar-ic",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1644,6 +1688,7 @@
             "projectType": "application",
             "root": "packages/components-dev/number-formatter",
             "sourceRoot": "packages/components-dev/number-formatter",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1674,6 +1719,7 @@
             "projectType": "application",
             "root": "packages/components-dev/notification-center",
             "sourceRoot": "packages/components-dev/notification-center",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1704,6 +1750,7 @@
             "projectType": "application",
             "root": "packages/components-dev/overflow-items",
             "sourceRoot": "packages/components-dev/overflow-items",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1734,6 +1781,7 @@
             "projectType": "application",
             "root": "packages/components-dev/panel",
             "sourceRoot": "packages/components-dev/panel",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1764,6 +1812,7 @@
             "projectType": "application",
             "root": "packages/components-dev/popover",
             "sourceRoot": "packages/components-dev/popover",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1794,6 +1843,7 @@
             "projectType": "application",
             "root": "packages/components-dev/progress-bar",
             "sourceRoot": "packages/components-dev/progress-bar",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1824,6 +1874,7 @@
             "projectType": "application",
             "root": "packages/components-dev/progress-spinner",
             "sourceRoot": "packages/components-dev/progress-spinner",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1854,6 +1905,7 @@
             "projectType": "application",
             "root": "packages/components-dev/radio",
             "sourceRoot": "packages/components-dev/radio",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1914,6 +1966,7 @@
             "projectType": "application",
             "root": "packages/components-dev/risk-level",
             "sourceRoot": "packages/components-dev/risk-level",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1944,6 +1997,7 @@
             "projectType": "application",
             "root": "packages/components-dev/scrollbar",
             "sourceRoot": "packages/components-dev/scrollbar",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -1974,6 +2028,7 @@
             "projectType": "application",
             "root": "packages/components-dev/search-expandable",
             "sourceRoot": "packages/components-dev/search-expandable",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2004,6 +2059,7 @@
             "projectType": "application",
             "root": "packages/components-dev/select",
             "sourceRoot": "packages/components-dev/select",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2034,6 +2090,7 @@
             "projectType": "application",
             "root": "packages/components-dev/sidebar",
             "sourceRoot": "packages/components-dev/sidebar",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2064,6 +2121,7 @@
             "projectType": "application",
             "root": "packages/components-dev/sidepanel",
             "sourceRoot": "packages/components-dev/sidepanel",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2094,6 +2152,7 @@
             "projectType": "application",
             "root": "packages/components-dev/splitter",
             "sourceRoot": "packages/components-dev/splitter",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2124,6 +2183,7 @@
             "projectType": "application",
             "root": "packages/components-dev/split-button",
             "sourceRoot": "packages/components-dev/split-button",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2154,6 +2214,7 @@
             "projectType": "application",
             "root": "packages/components-dev/ssr",
             "sourceRoot": "packages/components-dev/ssr",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2189,6 +2250,7 @@
             "projectType": "application",
             "root": "packages/components-dev/table",
             "sourceRoot": "packages/components-dev/table",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2219,6 +2281,7 @@
             "projectType": "application",
             "root": "packages/components-dev/tabs",
             "sourceRoot": "packages/components-dev/tabs",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2249,6 +2312,7 @@
             "projectType": "application",
             "root": "packages/components-dev/tag",
             "sourceRoot": "packages/components-dev/tag",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2279,6 +2343,7 @@
             "projectType": "application",
             "root": "packages/components-dev/textarea",
             "sourceRoot": "packages/components-dev/textarea",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2309,6 +2374,7 @@
             "projectType": "application",
             "root": "packages/components-dev/timepicker",
             "sourceRoot": "packages/components-dev/timepicker",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2339,6 +2405,7 @@
             "projectType": "application",
             "root": "packages/components-dev/time-range",
             "sourceRoot": "packages/components-dev/time-range",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2369,6 +2436,7 @@
             "projectType": "application",
             "root": "packages/components-dev/timezone",
             "sourceRoot": "packages/components-dev/timezone",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2399,6 +2467,7 @@
             "projectType": "application",
             "root": "packages/components-dev/toast",
             "sourceRoot": "packages/components-dev/toast",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2427,6 +2496,7 @@
             "projectType": "application",
             "root": "packages/components-dev/toggle",
             "sourceRoot": "packages/components-dev/toggle",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2457,6 +2527,7 @@
             "projectType": "application",
             "root": "packages/components-dev/top-bar",
             "sourceRoot": "packages/components-dev/top-bar",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2487,6 +2558,7 @@
             "projectType": "application",
             "root": "packages/components-dev/tooltip",
             "sourceRoot": "packages/components-dev/tooltip",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2517,6 +2589,7 @@
             "projectType": "application",
             "root": "packages/components-dev/tree",
             "sourceRoot": "packages/components-dev/tree",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2547,6 +2620,7 @@
             "projectType": "application",
             "root": "packages/components-dev/tree-select",
             "sourceRoot": "packages/components-dev/tree-select",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2577,6 +2651,7 @@
             "projectType": "application",
             "root": "packages/components-dev/typography",
             "sourceRoot": "packages/components-dev/typography",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2607,6 +2682,7 @@
             "projectType": "application",
             "root": "packages/components-dev/title",
             "sourceRoot": "packages/components-dev/title",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2637,6 +2713,7 @@
             "projectType": "application",
             "root": "packages/components-dev/username",
             "sourceRoot": "packages/components-dev/username",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2667,6 +2744,7 @@
             "projectType": "application",
             "root": "packages/components-dev/validation",
             "sourceRoot": "packages/components-dev/validation",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
@@ -2697,6 +2775,7 @@
             "projectType": "application",
             "root": "packages/components-dev/z-index",
             "sourceRoot": "packages/components-dev/z-index",
+            "prefix": "dev",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",

@@ -9,7 +9,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
     standalone: true,
     imports: [KbqButtonModule, KbqIconModule, KbqOverflowItemsModule, KbqDropdownModule],
     providers: [KbqActionsPanel],
-    selector: 'dev-actions-panel-with-overlay-container',
+    selector: 'e2e-actions-panel-with-overlay-container',
     host: {
         'data-testid': 'e2eActionsPanelWithOverlayContainer'
     },
@@ -74,7 +74,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevActionsPanelWithOverlayContainer {
+export class E2eActionsPanelWithOverlayContainer {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly overlayContainer = viewChild.required('overlayContainer', { read: ElementRef });

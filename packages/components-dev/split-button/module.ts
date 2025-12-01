@@ -4,7 +4,7 @@ import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { SplitButtonExamplesModule } from '../../docs-examples/components/split-button';
-import { DevSplitButtonStateAndStyle } from '../e2e/components/split-button';
+import { E2eSplitButtonStateAndStyle } from '../e2e/components/split-button';
 
 @Component({
     standalone: true,
@@ -27,17 +27,17 @@ import { DevSplitButtonStateAndStyle } from '../e2e/components/split-button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
     imports: [
         KbqLocaleServiceModule,
         KbqSplitButtonModule,
-        DevExamples,
+        DevDocsExamples,
         KbqButtonModule,
         KbqIconModule,
-        DevSplitButtonStateAndStyle
+        E2eSplitButtonStateAndStyle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

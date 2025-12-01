@@ -248,6 +248,7 @@ const templateRules = {
  */
 const componentsDevRules = {
     files: ['packages/components-dev/**/*.ts'],
+    excludedFiles: ['packages/components-dev/e2e'],
     rules: {
         // plugin:eslint
         'no-restricted-globals': [
@@ -383,6 +384,46 @@ const specRules = {
 };
 
 /**
+ * Override rules for e2e
+ *
+ * @type {import('eslint').Linter.ConfigOverride}
+ */
+const e2eRules = {
+    files: ['*.playwright-spec.ts', 'packages/components-dev/e2e/**/*.ts'],
+    rules: {
+        // plugin:eslint
+        // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
+        'no-restricted-globals': 0,
+
+        // plugin:@angular-eslint
+        '@angular-eslint/directive-selector': [
+            1,
+            {
+                type: 'attribute',
+                prefix: 'e2e',
+                style: 'camelCase'
+            }
+        ],
+        '@angular-eslint/component-selector': [
+            1,
+            {
+                type: 'element',
+                prefix: 'e2e',
+                style: 'kebab-case'
+            }
+        ],
+        '@angular-eslint/prefer-standalone': 1,
+        '@angular-eslint/use-component-selector': 1,
+        '@angular-eslint/prefer-on-push-component-change-detection': 1,
+
+        // plugin:@typescript-eslint
+        '@typescript-eslint/naming-convention': [
+            1,
+            ...makeNamingConventionOptions('e2e')]
+    }
+};
+
+/**
  * Override rules for /tools
  *
  * @type {import('eslint').Linter.ConfigOverride}
@@ -461,6 +502,7 @@ const config = {
         toolsRules,
         schematicsRules,
         cliRules,
+        e2eRules,
         // should be last
         prettierRules
     ]

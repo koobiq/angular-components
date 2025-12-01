@@ -16,13 +16,13 @@ import { TimezoneExamplesModule } from 'packages/docs-examples/components/timezo
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
     imports: [
         KbqTimezoneModule,
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

@@ -273,11 +273,11 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
-    imports: [DevExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
+    imports: [DevDocsExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
     hostDirectives: [
         // Required for components with overlays that use scrolling strategies
         CdkScrollable

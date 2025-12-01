@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { combineLatest } from 'rxjs';
 
-type DevButtonState = Partial<{
+type ButtonState = Partial<{
     title: string;
     disabled: boolean;
     disabledSecond: boolean;
@@ -22,17 +22,17 @@ type DevButtonState = Partial<{
     progressSecond: boolean;
 }>;
 
-type DevButtonStyle = Partial<{
+type ButtonStyle = Partial<{
     style: KbqButtonStyles;
     color: KbqComponentColors;
 }>;
 
-type DevButton = DevButtonState & DevButtonStyle;
+type Button = ButtonState & ButtonStyle;
 
 @Component({
     standalone: true,
     imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule, KbqSplitButtonModule],
-    selector: 'dev-split-button-state-and-style',
+    selector: 'e2e-split-button-state-and-style',
     host: {
         'data-testid': 'e2eSplitButtonStateAndStyle'
     },
@@ -100,11 +100,11 @@ type DevButton = DevButtonState & DevButtonStyle;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevSplitButtonStateAndStyle {
+export class E2eSplitButtonStateAndStyle {
     readonly showPrefixIcon = model(false);
     readonly showTitle = model(true);
 
-    private readonly states: DevButtonState[] = [
+    private readonly states: ButtonState[] = [
         { title: 'disabled', disabled: true },
         { title: 'disabledSecond', disabledSecond: true },
         { title: 'completelyDisabled', disabledSecond: true, disabled: true },
@@ -119,7 +119,7 @@ export class DevSplitButtonStateAndStyle {
         { title: 'progressSecond', progressSecond: true },
         { title: 'progressAll', progress: true, progressSecond: true }];
 
-    private readonly styles: DevButtonStyle[] = [
+    private readonly styles: ButtonStyle[] = [
         {},
         { color: KbqComponentColors.Contrast },
         { color: KbqComponentColors.ThemeFade, style: KbqButtonStyles.Outline },
@@ -127,7 +127,7 @@ export class DevSplitButtonStateAndStyle {
         { color: KbqComponentColors.Theme, style: KbqButtonStyles.Transparent },
         { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }];
 
-    readonly rows: DevButton[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
+    readonly rows: Button[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
 
     constructor() {
         combineLatest([toObservable(this.showPrefixIcon)])

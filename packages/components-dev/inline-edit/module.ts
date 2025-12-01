@@ -24,13 +24,13 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     standalone: true,
     imports: [
-        DevExamples,
+        DevDocsExamples,
         DevThemeToggle
     ],
     providers: [],

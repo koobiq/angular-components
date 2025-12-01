@@ -14,11 +14,11 @@ import { TextAreaExamplesModule } from '../../docs-examples/components/textarea'
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
-    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevExamples, KbqIcon],
+    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevDocsExamples, KbqIcon],
     selector: 'dev-app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,

@@ -19,12 +19,12 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
     imports: [
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

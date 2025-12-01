@@ -13,12 +13,12 @@ import { UsernameExamplesModule } from '../../docs-examples/components/username'
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     standalone: true,
-    imports: [DevExamples],
+    imports: [DevDocsExamples],
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

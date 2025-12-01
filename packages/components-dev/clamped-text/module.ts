@@ -12,12 +12,12 @@ import { DevLocaleSelector } from '../locale-selector';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
     imports: [
-        DevExamples,
+        DevDocsExamples,
         DevLocaleSelector,
         KbqLocaleServiceModule
     ],

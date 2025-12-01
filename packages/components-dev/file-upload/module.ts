@@ -308,7 +308,7 @@ export class DevFileUploadStateAndStyle {
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -354,7 +354,7 @@ export class DevMultipleFileUploadCompact {
 @Component({
     standalone: true,
     imports: [
-        DevExamples,
+        DevDocsExamples,
         FileUploadExamplesModule,
         DevLocaleSelector,
         FormsModule,

@@ -62,7 +62,7 @@ import { ToastExamplesModule } from '../../docs-examples/components/toast';
         KbqToastModule
     ]
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -100,7 +100,7 @@ export class DevToastComponent extends KbqToastComponent {
         KbqSidepanelModule,
         KbqScrollbarModule,
         DevToastComponent,
-        DevExamples
+        DevDocsExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

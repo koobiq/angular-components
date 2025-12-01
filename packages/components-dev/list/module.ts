@@ -25,7 +25,7 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -36,7 +36,7 @@ export class DevExamples {}
         KbqDropdownModule,
         KbqIconModule,
         KbqTitleModule,
-        DevExamples,
+        DevDocsExamples,
         JsonPipe,
         AsyncPipe,
         DevThemeToggle

@@ -14,14 +14,14 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
     selector: 'dev-app',
     templateUrl: './template.html',
     imports: [
-        DevExamples,
+        DevDocsExamples,
         DevThemeToggle
     ],
     encapsulation: ViewEncapsulation.None,

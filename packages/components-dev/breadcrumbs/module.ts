@@ -31,7 +31,7 @@ import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadc
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     standalone: true,
@@ -67,7 +67,7 @@ export class DevAboutPage {}
 
 @Component({
     standalone: true,
-    imports: [RouterOutlet, RouterLink, DevExamples],
+    imports: [RouterOutlet, RouterLink, DevDocsExamples],
     selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
