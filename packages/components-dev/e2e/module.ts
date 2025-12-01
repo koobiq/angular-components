@@ -20,7 +20,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from './component
         E2eToggleStateAndStyle,
         E2eToggleWithTextAndCaption
     ],
-    selector: 'e2e-app',
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrl: 'styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
