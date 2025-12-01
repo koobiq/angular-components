@@ -57,7 +57,7 @@ import {
     TagEditableExample,
     TagInputOverviewExample
 } from 'packages/docs-examples/components/tag';
-import { TextAreaOverviewExample } from 'packages/docs-examples/components/textarea';
+import { TextareaOverviewExample } from 'packages/docs-examples/components/textarea';
 import { TimeRangeOverviewExample } from 'packages/docs-examples/components/time-range';
 import { TimepickerValidationSymbolsExample } from 'packages/docs-examples/components/timepicker';
 import { TimezoneOverviewExample } from 'packages/docs-examples/components/timezone';
@@ -128,7 +128,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         TagAutocompleteOverviewExample,
         TagInputOverviewExample,
         TagEditableExample,
-        TextAreaOverviewExample,
+        TextareaOverviewExample,
         TimeRangeOverviewExample,
         TimezoneOverviewExample,
         TitleOverviewExample,
@@ -247,7 +247,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <tag-editable-example />
         <hr />
-        <text-area-overview-example />
+        <textarea-overview-example />
         <hr />
         <time-range-overview-example />
         <hr />

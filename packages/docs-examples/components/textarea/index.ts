@@ -1,14 +1,28 @@
 import { NgModule } from '@angular/core';
-import { TextAreaOverviewExample } from './text-area-overview/text-area-overview-example';
+import { TextareaCanGrowExample } from './textarea-can-grow/textarea-can-grow-example';
+import { TextareaDisabledExample } from './textarea-disabled/textarea-disabled-example';
+import { TextareaErrorStateExample } from './textarea-error-state/textarea-error-state-example';
+import { TextareaMaxRowsExample } from './textarea-max-rows/textarea-max-rows-example';
+import { TextareaOverviewExample } from './textarea-overview/textarea-overview-example';
 
-export { TextAreaOverviewExample };
+export {
+    TextareaCanGrowExample,
+    TextareaDisabledExample,
+    TextareaErrorStateExample,
+    TextareaMaxRowsExample,
+    TextareaOverviewExample
+};
 
 const EXAMPLES = [
-    TextAreaOverviewExample
+    TextareaOverviewExample,
+    TextareaDisabledExample,
+    TextareaErrorStateExample,
+    TextareaCanGrowExample,
+    TextareaMaxRowsExample
 ];
 
 @NgModule({
     imports: EXAMPLES,
     exports: EXAMPLES
 })
-export class TextAreaExamplesModule {}
+export class TextareaExamplesModule {}
