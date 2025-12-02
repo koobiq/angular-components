@@ -1,3 +1,11 @@
+# 18.38.0 (2025-12-02)
+
+### Koobiq
+
+ * bug fix  design-tokens urls for sitemap ([#DS-4301](https://github.com/koobiq/angular-components/issues/issue/DS-4301)) ([#1159](https://github.com/koobiq/angular-components/issues/1159)) ([3396b42](https://github.com/koobiq/angular-components/commit/3396b423ca49334e8550f553073e3d4745f21997))
+ * feature  **navbar:** new design ([#DS-4332](https://github.com/koobiq/angular-components/issues/issue/DS-4332)) ([#1136](https://github.com/koobiq/angular-components/issues/1136)) ([2169a18](https://github.com/koobiq/angular-components/commit/2169a18bb61b29610eee1af210c410c18e9e76ad))
+ * feature  **popover, notification-center:** added 'stickToWindow' ([#DS-3621](https://github.com/koobiq/angular-components/issues/issue/DS-3621)) ([#1109](https://github.com/koobiq/angular-components/issues/1109)) ([1ba2f57](https://github.com/koobiq/angular-components/commit/1ba2f573e3a33b8c1ce5f7f3ed70a862c68c5c01))
+
 # 18.37.0 (2025-12-02)
 
 ### Koobiq
