@@ -9,15 +9,15 @@ import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@koobiq/components/icon';
-import * as i11 from '@koobiq/components/tags';
-import * as i12 from '@koobiq/components/tooltip';
-import * as i13 from '@angular/common';
-import * as i14 from '@angular/cdk/a11y';
-import * as i6 from '@angular/cdk/overlay';
-import * as i7 from '@koobiq/components/form-field';
-import * as i8 from '@koobiq/components/core';
-import * as i9 from '@koobiq/components/select';
+import * as i1 from '@angular/cdk/overlay';
+import * as i2 from '@koobiq/components/form-field';
+import * as i3 from '@koobiq/components/core';
+import * as i4 from '@koobiq/components/select';
+import * as i5 from '@koobiq/components/icon';
+import * as i6 from '@koobiq/components/tags';
+import * as i7 from '@koobiq/components/tooltip';
+import * as i8 from '@angular/common';
+import * as i9 from '@angular/cdk/a11y';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqSelectPanelWidth } from '@koobiq/components/select';
@@ -47,14 +47,14 @@ export class KbqTimezoneModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimezoneModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, [typeof i1.UtcOffsetPipe, typeof i2.CitiesByFilterPipe, typeof i3.KbqTimezoneSelect, typeof i4.KbqTimezoneOption, typeof i5.KbqTimezoneOptionTooltip, typeof i3.KbqTimezoneSelectTrigger], [typeof i6.OverlayModule, typeof i7.KbqFormFieldModule, typeof i8.KbqOptionModule, typeof i9.KbqSelectModule, typeof i10.KbqIconModule, typeof i11.KbqTagsModule, typeof i12.KbqToolTipModule, typeof i8.KbqHighlightModule, typeof i13.NgClass, typeof i13.KeyValuePipe, typeof i14.A11yModule], [typeof i3.KbqTimezoneSelect, typeof i4.KbqTimezoneOption, typeof i5.KbqTimezoneOptionTooltip, typeof i3.KbqTimezoneSelectTrigger, typeof i7.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof i1.OverlayModule, typeof i2.KbqFormFieldModule, typeof i3.KbqOptionModule, typeof i4.KbqSelectModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqToolTipModule, typeof i3.KbqHighlightModule, typeof i8.NgClass, typeof i8.KeyValuePipe, typeof i9.A11yModule, typeof i10.UtcOffsetPipe, typeof i11.CitiesByFilterPipe, typeof i12.KbqTimezoneSelect, typeof i13.KbqTimezoneOption, typeof i14.KbqTimezoneOptionTooltip, typeof i12.KbqTimezoneSelectTrigger], [typeof i12.KbqTimezoneSelect, typeof i13.KbqTimezoneOption, typeof i14.KbqTimezoneOptionTooltip, typeof i12.KbqTimezoneSelectTrigger, typeof i2.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
@@ -71,7 +71,7 @@ export class KbqTimezoneOption extends KbqOption {
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOption, never>;
 }
@@ -88,7 +88,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     // (undocumented)
     onMouseLeave(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOptionTooltip, never>;
 }
@@ -110,7 +110,7 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     // (undocumented)
     panelWidth: KbqSelectPanelWidth;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneSelect, never>;
 }
@@ -118,7 +118,7 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
 // @public (undocumented)
 export class KbqTimezoneSelectTrigger {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneSelectTrigger, "kbq-timezone-select-trigger", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneSelectTrigger, "kbq-timezone-select-trigger", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneSelectTrigger, never>;
 }

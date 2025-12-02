@@ -10,7 +10,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@koobiq/components/icon';
+import * as i1 from '@koobiq/components/icon';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -48,7 +48,7 @@ export class KbqGutterDirective implements OnInit {
     get size(): number;
     set size(size: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterDirective, "kbq-gutter", never, { "direction": { "alias": "direction"; "required": false; }; "order": { "alias": "order"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterDirective, "kbq-gutter", never, { "direction": { "alias": "direction"; "required": false; }; "order": { "alias": "order"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqGutterDirective, never>;
 }
@@ -73,7 +73,7 @@ export class KbqGutterGhostDirective {
     get y(): number;
     set y(y: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterGhostDirective, "kbq-gutter-ghost", never, { "visible": { "alias": "visible"; "required": false; }; "x": { "alias": "x"; "required": false; }; "y": { "alias": "y"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqGutterGhostDirective, "kbq-gutter-ghost", never, { "visible": { "alias": "visible"; "required": false; }; "x": { "alias": "x"; "required": false; }; "y": { "alias": "y"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqGutterGhostDirective, never>;
 }
@@ -102,7 +102,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     // (undocumented)
     readonly sizeChange: EventEmitter<number>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterAreaDirective, never>;
 }
@@ -160,7 +160,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     get useGhost(): boolean;
     set useGhost(useGhost: boolean);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitterComponent, "kbq-splitter", ["kbqSplitter"], { "hideGutters": { "alias": "hideGutters"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "useGhost": { "alias": "useGhost"; "required": false; }; "gutterSize": { "alias": "gutterSize"; "required": false; }; }, { "gutterPositionChange": "gutterPositionChange"; }, ["areaRefs"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitterComponent, "kbq-splitter", ["kbqSplitter"], { "hideGutters": { "alias": "hideGutters"; "required": false; }; "direction": { "alias": "direction"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "useGhost": { "alias": "useGhost"; "required": false; }; "gutterSize": { "alias": "gutterSize"; "required": false; }; }, { "gutterPositionChange": "gutterPositionChange"; }, ["areaRefs"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterComponent, never>;
 }
@@ -171,10 +171,10 @@ export class KbqSplitterModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitterModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, [typeof i1.KbqGutterDirective, typeof i1.KbqGutterGhostDirective, typeof i1.KbqSplitterAreaDirective, typeof i1.KbqSplitterComponent], [typeof i2.KbqIconModule], [typeof i1.KbqGutterDirective, typeof i1.KbqSplitterAreaDirective, typeof i1.KbqSplitterComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof i2.KbqGutterDirective, typeof i2.KbqGutterGhostDirective, typeof i2.KbqSplitterAreaDirective, typeof i2.KbqSplitterComponent], [typeof i2.KbqGutterDirective, typeof i2.KbqSplitterAreaDirective, typeof i2.KbqSplitterComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

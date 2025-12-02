@@ -8,10 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
  * @title Button overview
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-overview-example',
-    styleUrls: ['button-overview-example.css'],
     imports: [
         KbqButtonModule,
         KbqCheckboxModule,
@@ -30,7 +27,9 @@ import { KbqComponentColors } from '@koobiq/components/core';
         <br />
         <kbq-checkbox [(ngModel)]="isDisabled">disabled</kbq-checkbox>
         <kbq-checkbox [(ngModel)]="hasProgress">progress</kbq-checkbox>
-    `
+    `,
+    styleUrls: ['button-overview-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonOverviewExample {
     colors = KbqComponentColors;

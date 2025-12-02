@@ -72,7 +72,6 @@ export class ElementVisibilityManager {
  * Directive for displaying the result of hidden items by the `KbqOverflowItems` directive.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqOverflowItemsResult]',
     exportAs: 'kbqOverflowItemsResult',
     host: { class: 'kbq-overflow-items-result' }
@@ -83,7 +82,6 @@ export class KbqOverflowItemsResult extends ElementVisibilityManager {}
  * Directive for the item that can be hidden by the `KbqOverflowItems` directive.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqOverflowItem]',
     exportAs: 'kbqOverflowItem',
     host: {
@@ -121,7 +119,6 @@ export class KbqOverflowItem extends ElementVisibilityManager {
  * Directive for managing the visibility of items that overflow the container.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqOverflowItems]',
     exportAs: 'kbqOverflowItems',
     host: { class: 'kbq-overflow-items' }

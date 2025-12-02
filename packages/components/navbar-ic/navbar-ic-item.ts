@@ -46,7 +46,6 @@ export interface KbqNavbarFocusableItemEvent {
 }
 
 @Directive({
-    standalone: true,
     selector: '[kbqNavbarIcLogo]',
     host: {
         class: 'kbq-navbar-ic-logo'
@@ -55,7 +54,6 @@ export interface KbqNavbarFocusableItemEvent {
 export class KbqNavbarIcLogo {}
 
 @Directive({
-    standalone: true,
     selector: '[kbqNavbarIcTitle]',
     host: {
         class: 'kbq-navbar-ic-title',
@@ -103,7 +101,6 @@ export class KbqNavbarIcTitle implements AfterViewInit {
 }
 
 @Directive({
-    standalone: true,
     selector: '[kbqNavbarIcDivider]',
     host: {
         class: 'kbq-navbar-ic-divider'
@@ -112,7 +109,6 @@ export class KbqNavbarIcTitle implements AfterViewInit {
 export class KbqNavbarIcDivider {}
 
 @Directive({
-    standalone: true,
     selector:
         'kbq-navbar-ic-item, [kbq-navbar-ic-item], kbq-navbar-ic-header, [kbq-navbar-ic-header], kbq-navbar-ic-toggle',
     host: {
@@ -248,21 +244,19 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 }
 
 @Component({
-    standalone: true,
     selector: 'kbq-navbar-ic-item, [kbq-navbar-ic-item]',
-    exportAs: 'kbqNavbarIcItem',
+    imports: [KbqIcon],
     templateUrl: './navbar-ic-item.html',
     styleUrl: './navbar-ic-item.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqNavbarIcItem',
     host: {
         class: 'kbq-navbar-ic-item',
         '[class.kbq-navbar-ic-item_with-title]': '!!title',
-
         '(keydown)': 'onKeyDown($event)'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     hostDirectives: [KbqRectangleItem],
-    imports: [KbqIcon],
     animations: [toggleNavbarIcItemAnimation()]
 })
 export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentInit {
@@ -396,8 +390,8 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
 }
 
 @Component({
-    standalone: true,
     selector: 'kbq-navbar-ic-toggle',
+    imports: [KbqIcon],
     template: `
         <div class="kbq-navbar-ic-item__inner">
             @if (navbar.pinned) {
@@ -412,17 +406,15 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         </div>
     `,
     styleUrls: ['./navbar-ic.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-navbar-ic-item kbq-navbar-ic-toggle',
         '[class.kbq-collapsed]': '!navbar.expanded',
         '[class.kbq-expanded]': 'navbar.expanded',
-
         '(keydown)': 'onKeydown($event)',
         '(click)': 'toggle()'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    imports: [KbqIcon],
     hostDirectives: [KbqRectangleItem]
 })
 export class KbqNavbarIcToggle {

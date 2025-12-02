@@ -1,11 +1,11 @@
 import { Directive } from '@angular/core';
-import { RdxAccordionItemDirective } from '@radix-ng/primitives/accordion';
+import { KbqAccordionItemDirective } from './accordion-item.directive';
 
 @Directive({
     selector: 'kbq-accordion-item, [kbq-accordion-item]',
     hostDirectives: [
         {
-            directive: RdxAccordionItemDirective,
+            directive: KbqAccordionItemDirective,
             inputs: ['expanded', 'disabled', 'value'],
             outputs: ['closed', 'opened', 'expandedChange']
         }

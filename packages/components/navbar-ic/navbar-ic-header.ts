@@ -17,9 +17,7 @@ import { KbqNavbarIcLogo, KbqNavbarIcTitle } from './navbar-ic-item';
 import { toggleNavbarIcItemAnimation } from './navbar-ic.animation';
 
 @Component({
-    standalone: true,
     selector: 'kbq-navbar-ic-header, [kbq-navbar-ic-header]',
-    exportAs: 'kbqNavbarIcHeader',
     template: `
         <div class="kbq-navbar-ic-header__inner">
             <ng-content select="[kbqNavbarIcLogo]" />
@@ -31,12 +29,13 @@ import { toggleNavbarIcItemAnimation } from './navbar-ic.animation';
         </div>
     `,
     styleUrl: './navbar-ic-header.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqNavbarIcHeader',
     host: {
         class: 'kbq-navbar-ic-header',
         '[class.kbq-navbar-ic-header_interactive]': 'isLink'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     animations: [toggleNavbarIcItemAnimation()]
 })
 export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContentInit {

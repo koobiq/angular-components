@@ -23,7 +23,6 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } f
 
 @Component({
     selector: 'kbq-clamped-text',
-    standalone: true,
     exportAs: 'kbqClampedText',
     imports: [
         KbqIcon,

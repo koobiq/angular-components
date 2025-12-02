@@ -98,8 +98,6 @@ export const DATA_OBJECT = {
  * @title Tree multiple keyboard
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-multiple-keyboard-example',
     imports: [
         KbqTreeModule,
@@ -122,7 +120,8 @@ export const DATA_OBJECT = {
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeMultipleKeyboardExample {
     treeControl: FlatTreeControl<FileFlatNode>;

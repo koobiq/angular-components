@@ -19,5 +19,4 @@ npm install @koobiq/date-adapter
 npm install @koobiq/date-formatter
 npm install luxon
 npm install @messageformat/core
-npm install @radix-ng/primitives@^0.23.0
 ```

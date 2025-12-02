@@ -5,8 +5,8 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/platform';
-import * as i3 from '@angular/common';
+import * as i1 from '@angular/cdk/platform';
+import * as i2 from '@angular/common';
 import { KbqColorDirective } from '@koobiq/components/core';
 
 // @public (undocumented)
@@ -28,7 +28,7 @@ export class KbqProgressSpinner extends KbqColorDirective {
     // (undocumented)
     value: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinner, never>;
 }
@@ -36,7 +36,7 @@ export class KbqProgressSpinner extends KbqColorDirective {
 // @public (undocumented)
 export class KbqProgressSpinnerCaption {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressSpinnerCaption, "[kbq-progress-spinner-caption]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressSpinnerCaption, "[kbq-progress-spinner-caption]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinnerCaption, never>;
 }
@@ -47,16 +47,16 @@ export class KbqProgressSpinnerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinnerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressSpinnerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, [typeof i1.KbqProgressSpinner, typeof i1.KbqProgressSpinnerText, typeof i1.KbqProgressSpinnerCaption], [typeof i2.PlatformModule, typeof i3.NgStyle], [typeof i1.KbqProgressSpinner, typeof i1.KbqProgressSpinnerText, typeof i1.KbqProgressSpinnerCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof i2.NgStyle, typeof i3.KbqProgressSpinner, typeof i3.KbqProgressSpinnerText, typeof i3.KbqProgressSpinnerCaption], [typeof i3.KbqProgressSpinner, typeof i3.KbqProgressSpinnerText, typeof i3.KbqProgressSpinnerCaption]>;
 }
 
 // @public (undocumented)
 export class KbqProgressSpinnerText {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressSpinnerText, "[kbq-progress-spinner-text]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressSpinnerText, "[kbq-progress-spinner-text]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinnerText, never>;
 }

@@ -27,8 +27,8 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-    exports: COMPONENTS,
     imports: COMPONENTS,
+    exports: COMPONENTS,
     providers: [kbqFilterBarPipesProvider()]
 })
 export class KbqFilterBarModule {}

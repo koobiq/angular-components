@@ -6,8 +6,23 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
  * @title Breadcrumbs Truncate Head Items
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-truncate-head-items-example',
+    imports: [
+        RouterLink,
+        KbqBreadcrumbsModule
+    ],
+    template: `
+        <nav class="kbq-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
+            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+                <kbq-breadcrumb-item
+                    [routerLink]="breadcrumb.url"
+                    [queryParams]="{ queryParams: 'queryParam' }"
+                    [fragment]="'fragment'"
+                    [text]="breadcrumb.label"
+                />
+            }
+        </nav>
+    `,
     styles: `
         .kbq-breadcrumbs_truncate-by-length {
             .kbq-breadcrumb-item {
@@ -26,22 +41,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
             }
         }
     `,
-    template: `
-        <nav class="kbq-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
-                <kbq-breadcrumb-item
-                    [routerLink]="breadcrumb.url"
-                    [queryParams]="{ queryParams: 'queryParam' }"
-                    [fragment]="'fragment'"
-                    [text]="breadcrumb.label"
-                />
-            }
-        </nav>
-    `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule
-    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

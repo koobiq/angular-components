@@ -12,9 +12,8 @@ type DocsVersion = {
 };
 
 @Directive({
-    standalone: true,
-    exportAs: 'docsVersionPicker',
-    selector: '[docsVersionPicker]'
+    selector: '[docsVersionPicker]',
+    exportAs: 'docsVersionPicker'
 })
 export class DocsVersionPickerDirective {
     selected: DocsVersion;

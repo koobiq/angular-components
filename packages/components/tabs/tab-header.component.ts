@@ -1,3 +1,4 @@
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -9,6 +10,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
@@ -28,11 +30,12 @@ export type ScrollDirection = 'after' | 'before';
  */
 @Component({
     selector: 'kbq-tab-header',
+    imports: [KbqIconModule, CdkObserveContent],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
-    outputs: ['selectFocusedIndex', 'indexFocused'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
+    outputs: ['selectFocusedIndex', 'indexFocused'],
     host: {
         class: 'kbq-tab-header',
         '[class.kbq-tab-header_vertical]': 'vertical',

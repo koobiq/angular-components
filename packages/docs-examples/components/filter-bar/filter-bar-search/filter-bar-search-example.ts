@@ -6,8 +6,6 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
  * @title filter-bar-search
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-search-example',
     imports: [
         KbqFilterBarModule,
@@ -27,7 +25,8 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-filter-search />
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSearchExample {
     activeFilter: KbqFilter = {

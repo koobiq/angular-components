@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
 @Component({
-    standalone: true,
     selector: 'example-breadcrumbs',
+    imports: [KbqBreadcrumbsModule],
     template: `
         <nav wrapMode="auto" kbq-breadcrumbs [max]="null">
-            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item [text]="breadcrumb.label" />
             }
         </nav>
@@ -27,7 +27,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
             box-sizing: border-box;
         }
     `,
-    imports: [KbqBreadcrumbsModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleBreadcrumbs {
@@ -43,8 +42,8 @@ export class ExampleBreadcrumbs {
  * @title Breadcrumbs Auto Wrap Adaptive
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-with-auto-wrap-adaptive-example',
+    imports: [ExampleBreadcrumbs],
     template: `
         <example-breadcrumbs class="layout-margin-bottom-3xl" />
         <example-breadcrumbs class="layout-margin-bottom-l" [style.width.px]="480" />
@@ -68,7 +67,6 @@ export class ExampleBreadcrumbs {
             color: var(--kbq-foreground-contrast-secondary);
         }
     `,
-    imports: [ExampleBreadcrumbs],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsWithAutoWrapAdaptiveExample {}

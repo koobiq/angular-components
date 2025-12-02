@@ -8,11 +8,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Textarea error state
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'textarea-error-state-example',
     imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>
@@ -21,6 +18,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <kbq-error>Minimum 10 characters</kbq-error>
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     host: {
         class: 'layout-margin-xl layout-row'
     }

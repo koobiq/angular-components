@@ -7,6 +7,7 @@ import {
     Input,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 
 /** @docs-private */
@@ -64,23 +65,24 @@ export class KbqTreeNodeToggleBaseDirective<T> {
 
 @Component({
     selector: 'kbq-tree-node-toggle',
-    exportAs: 'kbqTreeNodeToggle',
+    imports: [
+        KbqIcon
+    ],
     template: `
         <ng-content>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </ng-content>
     `,
     styleUrls: ['./toggle.scss', './tree-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTreeNodeToggle',
     host: {
         class: 'kbq-tree-node-toggle',
         '[class.kbq-expanded]': 'iconState',
-
         '[attr.disabled]': 'disabled || null',
-
         '(click)': 'toggle($event)'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
 

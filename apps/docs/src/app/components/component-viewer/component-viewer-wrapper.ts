@@ -5,8 +5,12 @@ import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsOverviewComponentBase } from './component-viewer.component';
 
 @Component({
-    standalone: true,
     selector: 'docs-component-viewer-wrapper',
+    imports: [
+        DocsAnchorsComponent,
+        KbqDividerModule,
+        KbqLinkModule
+    ],
     template: `
         <div class="docs-component-viewer__article">
             <ng-content select="[docs-article]" />
@@ -42,12 +46,7 @@ import { DocsOverviewComponentBase } from './component-viewer.component';
     `,
     host: {
         class: 'docs-component-overview'
-    },
-    imports: [
-        DocsAnchorsComponent,
-        KbqDividerModule,
-        KbqLinkModule
-    ]
+    }
 })
 export class DocsComponentViewerWrapperComponent extends DocsOverviewComponentBase {
     constructor() {

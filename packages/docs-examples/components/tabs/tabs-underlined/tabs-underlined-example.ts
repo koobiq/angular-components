@@ -6,7 +6,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs underlined
  */
 @Component({
-    standalone: true,
     selector: 'tabs-underlined-example',
     imports: [
         KbqTabsModule,

@@ -5,12 +5,17 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
  * @title Basic Splitter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'splitter-vertical-example',
     imports: [
         KbqSplitterModule
     ],
+    template: `
+        <kbq-splitter [direction]="direction.Vertical">
+            <div class="kbq-splitter-area_fixed-height" kbq-splitter-area>first (with min-height)</div>
+            <div class="flex" kbq-splitter-area>second</div>
+            <div kbq-splitter-area>third</div>
+        </kbq-splitter>
+    `,
     styles: `
         kbq-splitter {
             display: flex;
@@ -27,13 +32,7 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
             background: #c5c0c0;
         }
     `,
-    template: `
-        <kbq-splitter [direction]="direction.Vertical">
-            <div class="kbq-splitter-area_fixed-height" kbq-splitter-area>first (with min-height)</div>
-            <div class="flex" kbq-splitter-area>second</div>
-            <div kbq-splitter-area>third</div>
-        </kbq-splitter>
-    `
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterVerticalExample {
     direction = Direction;

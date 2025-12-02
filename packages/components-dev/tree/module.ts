@@ -105,9 +105,8 @@ export const DEV_DATA_OBJECT = {
 };
 
 @Component({
-    standalone: true,
-    imports: [TreeExamplesModule],
     selector: 'dev-examples',
+    imports: [TreeExamplesModule],
     template: `
         <tree-action-button-example />
         <br />
@@ -125,7 +124,7 @@ export const DEV_DATA_OBJECT = {
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqFormFieldModule,
@@ -142,7 +141,6 @@ export class DevExamples {}
         JsonPipe,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

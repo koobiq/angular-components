@@ -7,22 +7,21 @@ import { KbqTagsModule } from '@koobiq/components/tags';
  * @title Tag with icon
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tag-with-icon-example',
     imports: [
         KbqTagsModule,
         KbqIconModule
     ],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     template: `
         <kbq-tag [color]="colors.ContrastFade">
             <i kbq-icon="kbq-diamond-o_16"></i>
             Tag
         </kbq-tag>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class TagWithIconExample {
     colors = KbqComponentColors;

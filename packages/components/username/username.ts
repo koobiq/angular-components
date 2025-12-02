@@ -31,7 +31,6 @@ export type KbqUserInfo = {
 @Directive({
     selector: '[kbqUsernamePrimary]',
     exportAs: 'kbqUsernamePrimary',
-    standalone: true,
     host: {
         class: `${baseClass}__primary`
     }
@@ -42,7 +41,6 @@ export class KbqUsernamePrimary {}
 @Directive({
     selector: '[kbqUsernameSecondary]',
     exportAs: 'kbqUsernameSecondary',
-    standalone: true,
     host: {
         class: `${baseClass}__secondary`
     }
@@ -53,7 +51,6 @@ export class KbqUsernameSecondary {}
 @Directive({
     selector: '[kbqUsernameSecondaryHint]',
     exportAs: 'kbqUsernameSecondaryHint',
-    standalone: true,
     host: {
         class: `${baseClass}__secondary-hint`
     }
@@ -63,7 +60,6 @@ export class KbqUsernameSecondaryHint {}
 /** Custom content for `KbqUsername`, overrides default view. */
 @Directive({
     selector: 'kbq-username-custom-view, [kbq-username-custom-view]',
-    standalone: true,
     exportAs: 'kbqUsernameCustomView',
     host: {
         class: `${baseClass}__custom-view`
@@ -79,7 +75,6 @@ export class KbqUsernameCustomView {}
  */
 @Component({
     selector: 'kbq-username',
-    standalone: true,
     exportAs: 'kbqUsername',
     imports: [
         KbqTitleModule,

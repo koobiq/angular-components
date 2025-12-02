@@ -7,8 +7,6 @@ import { KbqIcon } from '@koobiq/components/icon';
  * @title app-switcher
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'app-switcher-overview-example',
     imports: [
         KbqAppSwitcherModule,
@@ -22,7 +20,8 @@ import { KbqIcon } from '@koobiq/components/icon';
         <button kbq-button kbqAppSwitcher [apps]="apps" [(selectedApp)]="selectedApp">
             <i kbq-icon="kbq-bento-menu_16"></i>
         </button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppSwitcherOverviewExample {
     SVGIcon: string = `

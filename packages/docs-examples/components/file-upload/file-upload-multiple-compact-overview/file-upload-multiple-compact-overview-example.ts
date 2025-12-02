@@ -6,8 +6,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File-upload multiple compact
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-compact-overview-example',
     imports: [
         KbqFileUploadModule,
@@ -19,6 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>
         </kbq-multiple-file-upload>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleCompactOverviewExample {}

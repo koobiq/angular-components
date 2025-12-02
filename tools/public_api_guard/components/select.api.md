@@ -22,14 +22,14 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
+import * as i1 from '@angular/cdk/overlay';
 import * as i10 from '@koobiq/components/form-field';
-import * as i3 from '@angular/cdk/overlay';
-import * as i4 from '@koobiq/components/core';
-import * as i5 from '@koobiq/components/icon';
-import * as i6 from '@koobiq/components/tags';
-import * as i7 from '@koobiq/components/tooltip';
-import * as i8 from '@angular/common';
-import * as i9 from '@angular/cdk/a11y';
+import * as i2 from '@koobiq/components/core';
+import * as i3 from '@koobiq/components/icon';
+import * as i4 from '@koobiq/components/tags';
+import * as i5 from '@koobiq/components/tooltip';
+import * as i6 from '@angular/common';
+import * as i7 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
@@ -87,7 +87,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     // (undocumented)
     get textElement(): HTMLElement;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOptionTooltip, "kbq-option", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOptionTooltip, "kbq-option", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionTooltip, never>;
 }
@@ -286,7 +286,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
@@ -306,11 +306,11 @@ export class KbqSelectModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSelectModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.OverlayModule, typeof i4.KbqOptionModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqToolTipModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i8.NgClass, typeof i8.NgTemplateOutlet, typeof i9.A11yModule], [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i4.KbqOptionModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i10.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof i8.KbqSelect, typeof i9.KbqOptionTooltip], [typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i10.KbqFormFieldModule]>;
 }
 
 // @public

@@ -7,8 +7,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Input password
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'input-password-overview-example',
     imports: [
         KbqFormFieldModule,
@@ -39,7 +37,8 @@ import { KbqInputModule } from '@koobiq/components/input';
                 Не менее 5 заглавных букв
             </kbq-password-hint>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputPasswordOverviewExample {
     passwordRules = PasswordRules;

@@ -26,8 +26,8 @@ import { KbqFilters } from './filters';
 import { getId } from './pipes/base-pipe';
 
 @Component({
-    standalone: true,
     selector: 'kbq-filter-bar, [kbq-filter-bar]',
+    imports: [KbqDividerModule],
     template: `
         <div class="kbq-filter-bar__left">
             <ng-content select="kbq-filters" />
@@ -46,9 +46,8 @@ import { getId } from './pipes/base-pipe';
         </div>
     `,
     styleUrls: ['filter-bar.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [KbqDividerModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-filter-bar'
     }

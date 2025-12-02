@@ -1,8 +1,16 @@
 import { Component, Directive } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqModalComponent } from './modal.component';
 
 @Component({
     selector: `[kbq-modal-title], kbq-modal-title, [kbqModalTitle]`,
+    imports: [
+        KbqIconModule,
+        KbqButtonModule,
+        KbqTitleDirective
+    ],
     template: `
         <div class="kbq-modal-title" kbq-title>
             <ng-content />

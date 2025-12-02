@@ -7,9 +7,8 @@ import { RadioExamplesModule } from 'packages/docs-examples/components/radio';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [RadioExamplesModule],
     selector: 'dev-examples',
+    imports: [RadioExamplesModule],
     template: `
         <radio-size-example />
         <hr />
@@ -26,7 +25,7 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqFormFieldModule,
@@ -34,7 +33,6 @@ export class DevExamples {}
         DevExamples,
         DevThemeToggle
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

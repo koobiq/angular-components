@@ -195,13 +195,18 @@ const typescriptRules = {
         '@angular-eslint/consistent-component-styles': 0,
         '@angular-eslint/use-component-view-encapsulation': 0,
         '@angular-eslint/use-injectable-provided-in': 0,
-        '@angular-eslint/no-forward-ref': 0,
         '@angular-eslint/prefer-standalone-component': 0,
         '@angular-eslint/prefer-standalone': 0,
+        '@angular-eslint/no-forward-ref': 0,
         '@angular-eslint/no-conflicting-lifecycle': 0,
         '@angular-eslint/no-attribute-decorator': 0,
         '@angular-eslint/no-pipe-impure': 0,
         '@angular-eslint/sort-ngmodule-metadata-arrays': 0,
+        '@angular-eslint/template/cyclomatic-complexity': 0,
+
+        '@angular-eslint/prefer-signals': 0,
+        '@angular-eslint/prefer-output-emitter-ref': 0,
+        '@angular-eslint/prefer-inject': 0,
 
         // plugin:rxjs
         'rxjs/no-implicit-any-catch': 0,
@@ -237,7 +242,9 @@ const templateRules = {
         '@angular-eslint/template/no-inline-styles': 0,
         '@angular-eslint/template/button-has-type': 0,
         '@angular-eslint/template/no-interpolation-in-attributes': 0,
-        '@angular-eslint/template/no-any': 0
+        '@angular-eslint/template/no-any': 0,
+        '@angular-eslint/template/prefer-static-string-properties': 0,
+        '@angular-eslint/template/cyclomatic-complexity': 0
     }
 };
 
@@ -273,7 +280,6 @@ const componentsDevRules = {
                 style: 'kebab-case'
             }
         ],
-        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1,
         '@angular-eslint/prefer-on-push-component-change-detection': 1,
 
@@ -300,7 +306,6 @@ const componentsExamplesRules = {
         'no-console': 0,
 
         // plugin:@angular-eslint
-        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1,
         '@angular-eslint/prefer-on-push-component-change-detection': 1
     }
@@ -354,7 +359,6 @@ const appDocsRules = {
                 style: 'kebab-case'
             }
         ],
-        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1,
 
         // plugin:@typescript-eslint

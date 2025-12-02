@@ -4,9 +4,8 @@ import { DateAdapter, DateFormatter, KbqFormattersModule, KbqLocaleService } fro
 import { DateTime } from 'luxon';
 
 @Component({
-    standalone: true,
-    imports: [KbqLuxonDateModule, KbqFormattersModule],
     selector: 'dev-app',
+    imports: [KbqLuxonDateModule, KbqFormattersModule],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,

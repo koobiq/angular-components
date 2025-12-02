@@ -72,9 +72,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
-                ReactiveFormsModule
-            ],
-            declarations: [
+                ReactiveFormsModule,
                 BasicMultipleFileUpload,
                 ControlValueAccessorMultipleFileUpload
             ]
@@ -291,9 +289,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
-                ReactiveFormsModule
-            ],
-            declarations: [
+                ReactiveFormsModule,
                 BasicSingleFileUpload,
                 ControlValueAccessorSingleFileUpload
             ]
@@ -503,6 +499,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-single-file-upload
@@ -534,6 +531,7 @@ class BasicSingleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-file-upload
@@ -562,6 +560,7 @@ class ControlValueAccessorSingleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload
@@ -594,6 +593,7 @@ class BasicMultipleFileUpload {
 
 @Component({
     selector: '',
+    imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
             <kbq-multiple-file-upload

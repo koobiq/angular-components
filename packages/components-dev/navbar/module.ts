@@ -33,7 +33,7 @@ import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqNavbarModule,
         KbqIconModule,
@@ -51,7 +51,6 @@ export class DevExamples {}
         AsyncPipe,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

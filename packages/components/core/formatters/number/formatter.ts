@@ -144,7 +144,10 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
 }
 
 @Injectable({ providedIn: 'root' })
-@Pipe({ name: 'kbqNumber', pure: false })
+@Pipe({
+    name: 'kbqNumber',
+    pure: false
+})
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
@@ -215,7 +218,10 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 }
 
 @Injectable({ providedIn: 'root' })
-@Pipe({ name: 'kbqTableNumber', pure: false })
+@Pipe({
+    name: 'kbqTableNumber',
+    pure: false
+})
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
@@ -278,7 +284,10 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
 }
 
 @Injectable({ providedIn: 'root' })
-@Pipe({ name: 'kbqRoundNumber', pure: false })
+@Pipe({
+    name: 'kbqRoundNumber',
+    pure: false
+})
 export class KbqRoundDecimalPipe implements PipeTransform {
     roundingOptions: RoundDecimalOptions;
 

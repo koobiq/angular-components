@@ -6,8 +6,6 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
  * @title Progress spinner indeterminate
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'progress-spinner-indeterminate-example',
     imports: [
         KbqProgressSpinnerModule
@@ -20,7 +18,8 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
         <div class="layout-row">
             <kbq-progress-spinner class="layout-margin-right-s" [mode]="'indeterminate'" [size]="'big'" />
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgressSpinnerIndeterminateExample {
     themePalette = ThemePalette;

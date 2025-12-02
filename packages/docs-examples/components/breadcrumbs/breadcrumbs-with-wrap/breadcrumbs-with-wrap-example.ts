@@ -5,8 +5,8 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
  * @title Breadcrumbs Wrap
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-with-wrap-example',
+    imports: [KbqBreadcrumbsModule],
     template: `
         <div [style.max-width.px]="320">
             <nav wrapMode="wrap" kbq-breadcrumbs [firstItemNegativeMargin]="false">
@@ -16,7 +16,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
             </nav>
         </div>
     `,
-    imports: [KbqBreadcrumbsModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsWithWrapExample {

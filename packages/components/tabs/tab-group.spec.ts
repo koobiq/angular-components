@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -14,9 +15,7 @@ describe('KbqTabGroup', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqTabsModule,
-                NoopAnimationsModule
-            ],
-            declarations: [
+                NoopAnimationsModule,
                 SimpleTabsTestApp,
                 SimpleDynamicTabsTestApp,
                 BindedTabsTestApp,
@@ -587,8 +586,7 @@ describe('KbqTabGroup', () => {
 describe('nested KbqTabGroup with enabled animations', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule],
-            declarations: [NestedTabs]
+            imports: [KbqTabsModule, NoopAnimationsModule, NestedTabs]
         }).compileComponents();
     });
 
@@ -603,6 +601,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
 });
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group
             class="tab-group"
@@ -648,6 +647,7 @@ class SimpleTabsTestApp {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group
             class="tab-group"
@@ -684,6 +684,7 @@ class SimpleDynamicTabsTestApp {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
             @for (tab of tabs; track tab) {
@@ -712,6 +713,7 @@ class BindedTabsTestApp {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="tab-group">
             <kbq-tab>
@@ -735,6 +737,7 @@ class DisabledTabsTestApp {
 }
 
 @Component({
+    imports: [KbqTabsModule, AsyncPipe],
     template: `
         <kbq-tab-group class="tab-group">
             @for (tab of tabs | async; track tab) {
@@ -762,6 +765,7 @@ class AsyncTabsTestApp implements OnInit {
 }
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab label="Junk food">Pizza, fries</kbq-tab>
@@ -779,6 +783,7 @@ class TabGroupWithSimpleApi {
 
 @Component({
     selector: 'nested-tabs',
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab label="One">Tab one content</kbq-tab>
@@ -796,6 +801,7 @@ class NestedTabs {}
 
 @Component({
     selector: 'template-tabs',
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab label="One">Eager</kbq-tab>
@@ -810,6 +816,7 @@ class NestedTabs {}
 class TemplateTabs {}
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
             <kbq-tab #pizza label="Junk food">Pizza, fries</kbq-tab>
@@ -824,6 +831,7 @@ class TemplateTabs {}
 class TabGroupWithIsActiveBinding {}
 
 @Component({
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="tab-group" [(activeTab)]="selectBy">
             <kbq-tab tabId="first">

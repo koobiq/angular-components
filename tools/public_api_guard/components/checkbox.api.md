@@ -12,7 +12,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/common';
+import * as i1 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
@@ -79,7 +79,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckbox, [null, null, { optional: true; }]>;
 }
@@ -99,17 +99,17 @@ export class KbqCheckboxModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckboxModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCheckboxModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator], [typeof i3.CommonModule], [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof i2.KbqCheckbox, typeof i3.KbqCheckboxRequiredValidator], [typeof i2.KbqCheckbox, typeof i3.KbqCheckboxRequiredValidator]>;
 }
 
 // @public
 export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCheckboxRequiredValidator, "kbq-checkbox[required][formControlName],             kbq-checkbox[required][formControl], kbq-checkbox[required][ngModel]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCheckboxRequiredValidator, "kbq-checkbox[required][formControlName],             kbq-checkbox[required][formControl], kbq-checkbox[required][ngModel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckboxRequiredValidator, never>;
 }

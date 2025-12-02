@@ -11,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Inline edit overview
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-overview-example',
     imports: [
         FormsModule,
         KbqInlineEditModule,
@@ -21,17 +21,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqBadgeModule,
         KbqIconModule
     ],
-    selector: 'inline-edit-overview-example',
     template: `
         <kbq-inline-edit showActions (saved)="update()">
             <kbq-label>Label</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
-                @if (displayValue().length > 0) {
-                    @for (badge of displayValue(); track badge) {
-                        <kbq-badge>{{ badge }}</kbq-badge>
-                    }
-                } @else {
+                @for (badge of displayValue(); track badge) {
+                    <kbq-badge>{{ badge }}</kbq-badge>
+                } @empty {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 }
             </div>
@@ -45,10 +42,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </kbq-form-field>
         </kbq-inline-edit>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditOverviewExample {
     protected readonly placeholder = 'Placeholder';

@@ -9,7 +9,7 @@ import { DocsSidenav } from './components/sidenav/sidenav';
 import { DocsDocStates, DocsNavbarState } from './services/doc-states';
 
 @Component({
-    standalone: true,
+    selector: 'docs-app',
     imports: [
         RouterOutlet,
         KbqDividerModule,
@@ -17,13 +17,12 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
         DocsSidenav,
         AsyncPipe
     ],
-    selector: 'docs-app',
     templateUrl: 'app.component.html',
     styleUrl: 'app.component.scss',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-app'
     },
-    encapsulation: ViewEncapsulation.None,
     animations: [
         trigger('openCloseSidenav', [
             state('open', style({ right: '0' })),

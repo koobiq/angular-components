@@ -20,21 +20,19 @@ import { KbqModalService } from './modal.service';
         KbqTitleModule,
         NgTemplateOutlet,
         NgStyle,
-        NgClass
+        NgClass,
+        KbqModalComponent,
+        KbqModalTitle,
+        KbqModalBody,
+        KbqModalFooter,
+        CssUnitPipe,
+        KbqModalMainAction
     ],
     exports: [
         KbqModalComponent,
         KbqModalTitle,
         KbqModalBody,
         KbqModalFooter,
-        KbqModalMainAction
-    ],
-    declarations: [
-        KbqModalComponent,
-        KbqModalTitle,
-        KbqModalBody,
-        KbqModalFooter,
-        CssUnitPipe,
         KbqModalMainAction
     ],
     providers: [

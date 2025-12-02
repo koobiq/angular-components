@@ -12,8 +12,7 @@ describe('KbqSearchExpandable', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [KbqSplitButtonModule, KbqButtonModule],
-            declarations: [TestApp]
+            imports: [KbqSplitButtonModule, KbqButtonModule, TestApp]
         }).compileComponents();
     });
 
@@ -31,6 +30,7 @@ describe('KbqSearchExpandable', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqSplitButtonModule, KbqButtonModule],
     template: `
         <kbq-split-button>
             <button kbq-button [disabled]="true">

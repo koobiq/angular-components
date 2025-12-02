@@ -5,7 +5,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle Label Left
  */
 @Component({
-    standalone: true,
     selector: 'toggle-label-left-example',
     imports: [KbqToggleModule],
     template: `

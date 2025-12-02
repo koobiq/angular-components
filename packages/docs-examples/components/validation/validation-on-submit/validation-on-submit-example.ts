@@ -28,7 +28,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     selector: 'validation-on-submit-example',
-    standalone: true,
     imports: [
         KbqAlertModule,
         KbqIconModule,

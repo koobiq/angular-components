@@ -13,21 +13,20 @@ import { DocsNavbarProperty } from '../navbar/navbar-property';
 import { DocsVersionPickerDirective } from '../version-picker/version-picker.directive';
 
 @Component({
-    standalone: true,
+    selector: 'docs-footer',
     imports: [
         KbqIconModule,
         KbqLinkModule,
         KbqDropdownModule,
         DocsVersionPickerDirective
     ],
-    selector: 'docs-footer',
     templateUrl: './footer.component.html',
     styleUrl: './footer.component.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-footer'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsFooterComponent extends DocsLocaleState {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE);

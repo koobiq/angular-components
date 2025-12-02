@@ -32,13 +32,11 @@ let nextUniqueId = 0;
  * Navigation component matching the styles of the tab group header.
  */
 @Component({
-    standalone: true,
+    selector: '[kbqTabNavBar], [kbq-tab-nav-bar]',
     imports: [
         KbqIconModule,
         CdkObserveContent
     ],
-    selector: '[kbqTabNavBar], [kbq-tab-nav-bar]',
-    exportAs: 'kbqTabNavBar',
     templateUrl: './tab-nav-bar.html',
     styleUrls: [
         './tab-nav-bar.scss',
@@ -46,6 +44,9 @@ let nextUniqueId = 0;
         // KbqTabLink is a directive and can't have self styles, so we need to include its styles here.
         './tab-link.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTabNavBar',
     host: {
         class: 'kbq-tab-nav-bar',
         '[class.kbq-tab-nav-bar_filled]': '!transparent',
@@ -53,13 +54,9 @@ let nextUniqueId = 0;
         '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
         '[class.kbq-tab-nav-bar_on-surface]': 'onSurface',
         '[class.kbq-tab-header_underlined]': 'underlined',
-
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
-
         '[attr.role]': 'role'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
     @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
@@ -134,7 +131,6 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
  * Link inside of a KbqTabNavBar.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTabLink], [kbq-tab-link]',
     exportAs: 'kbqTabLink',
     host: {
@@ -300,7 +296,6 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
  * Tab panel component associated with KbqTabNav.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTabNavPanel]',
     exportAs: 'kbqTabNavPanel',
     host: {

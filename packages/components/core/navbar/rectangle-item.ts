@@ -5,7 +5,6 @@ import { KBQ_WINDOW } from '../tokens';
 import { kbqInjectNativeElement } from '../utils';
 
 @Directive({
-    standalone: true,
     host: {
         '[class.kbq-expanded]': '!collapsed',
         '[class.kbq-collapsed]': 'collapsed'

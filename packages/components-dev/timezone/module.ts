@@ -3,9 +3,8 @@ import { KbqTimezoneModule } from '@koobiq/components/timezone';
 import { TimezoneExamplesModule } from 'packages/docs-examples/components/timezone';
 
 @Component({
-    standalone: true,
-    imports: [TimezoneExamplesModule],
     selector: 'dev-examples',
+    imports: [TimezoneExamplesModule],
     template: `
         <timezone-overview-example />
         <hr />
@@ -19,12 +18,11 @@ import { TimezoneExamplesModule } from 'packages/docs-examples/components/timezo
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqTimezoneModule,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

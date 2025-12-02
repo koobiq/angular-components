@@ -27,19 +27,18 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
 
 /** Component which allows to convert `Markdown` into `HTML` */
 @Component({
-    standalone: true,
     selector: 'kbq-markdown',
-    styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
     template: `
         <pre #contentWrapper class="kbq-markdown__input" ngPreserveWhitespaces><ng-content /></pre>
         <div class="kbq-markdown__output" [innerHtml]="resultHtml"></div>
     `,
+    styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-markdown'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqMarkdown {
     @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef;

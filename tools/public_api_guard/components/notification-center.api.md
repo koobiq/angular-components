@@ -8,7 +8,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
-import { CdkScrollable } from '@angular/cdk/scrolling';
+import { C } from '@angular/cdk/scrolling-module.d-ud2XrbF8';
 import { ChangeDetectorRef } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
@@ -143,7 +143,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     constructor();
     arrow: boolean;
     backdropClass: string;
-    closingActions(): Observable<void | CdkScrollable | MouseEvent>;
+    closingActions(): Observable<void | C | MouseEvent>;
     container: HTMLElement;
     content: string | TemplateRef<any>;
     customClass: string;

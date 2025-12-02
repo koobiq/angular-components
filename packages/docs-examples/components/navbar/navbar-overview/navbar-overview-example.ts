@@ -12,10 +12,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Navbar
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'navbar-overview-example',
-    templateUrl: 'navbar-overview-example.html',
     imports: [
         KbqDropdownModule,
         KbqDividerModule,
@@ -24,7 +21,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqBadgeModule,
         KbqIconModule,
         KbqToolTipModule
-    ]
+    ],
+    templateUrl: 'navbar-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarOverviewExample {
     popUpPlacements = PopUpPlacements;

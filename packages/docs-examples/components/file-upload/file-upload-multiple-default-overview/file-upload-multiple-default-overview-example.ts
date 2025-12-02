@@ -6,9 +6,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File-upload multiple default
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-default-overview-example',
+    imports: [
+        KbqFileUploadModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-multiple-file-upload>
             <ng-template #kbqFileIcon>
@@ -16,9 +18,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </ng-template>
         </kbq-multiple-file-upload>
     `,
-    imports: [
-        KbqFileUploadModule,
-        KbqIconModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleDefaultOverviewExample {}

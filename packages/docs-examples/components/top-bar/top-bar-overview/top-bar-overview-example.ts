@@ -23,7 +23,6 @@ type ExampleAction = {
  * @title TopBar
  */
 @Component({
-    standalone: true,
     selector: 'top-bar-overview-example',
     imports: [
         KbqTopBarModule,

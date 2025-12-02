@@ -9,13 +9,12 @@ import { take } from 'rxjs/operators';
  * @title Toast actions
  */
 @Component({
-    standalone: true,
+    selector: 'toast-actions-overview-example',
     imports: [
         KbqLinkModule,
         KbqDropdownModule,
         KbqButtonModule
     ],
-    selector: 'toast-actions-overview-example',
     templateUrl: 'toast-actions-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

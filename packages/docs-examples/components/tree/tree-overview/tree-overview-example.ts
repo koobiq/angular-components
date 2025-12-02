@@ -98,8 +98,6 @@ export const DATA_OBJECT = {
  * @title Tree
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-overview-example',
     imports: [
         KbqTreeModule,
@@ -117,7 +115,8 @@ export const DATA_OBJECT = {
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeOverviewExample {
     treeControl: FlatTreeControl<FileFlatNode>;

@@ -5,7 +5,6 @@ import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@
  * @title Scrollbar with custom KBQ_SCROLLBAR_CONFIG
  */
 @Component({
-    standalone: true,
     selector: 'scrollbar-with-custom-config-example',
     imports: [KbqScrollbarModule],
     providers: [

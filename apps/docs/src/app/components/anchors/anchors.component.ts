@@ -31,19 +31,18 @@ interface KbqDocsAnchor {
 const NEXT_ROUTE_KEY = 'KBQ_nextRoute';
 
 @Component({
-    standalone: true,
+    selector: 'docs-anchors',
     imports: [
         RouterLink,
         NgClass,
         KbqTitleModule
     ],
-    selector: 'docs-anchors',
     templateUrl: './anchors.component.html',
     styleUrls: ['./anchors.component.scss'],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-anchors'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsAnchorsComponent implements OnDestroy, OnInit {
     @Input() anchors: KbqDocsAnchor[] = [];

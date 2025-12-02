@@ -6,16 +6,7 @@ import { KbqListItem, KbqListModule } from './index';
 describe('KbqList', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqListModule],
-            declarations: [
-                TestListWithOneAnchorItem,
-                TestListWithOneItem,
-                TestListWithTwoLineItem,
-                TestListWithThreeLineItem,
-                TestListWithAvatar,
-                TestListWithItemWithCssClass,
-                TestListWithMultipleItems
-            ]
+            imports: [KbqListModule]
         }).compileComponents();
     });
 
@@ -79,6 +70,9 @@ class BaseTestList {
 }
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list>
             <a kbq-list-item>Paprika</a>
@@ -92,6 +86,9 @@ class TestListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list>
             <kbq-list-item>Paprika</kbq-list-item>
@@ -101,51 +98,9 @@ class TestListWithOneAnchorItem extends BaseTestList {
 class TestListWithOneItem extends BaseTestList {}
 
 @Component({
-    template: `
-        <kbq-list>
-            @for (item of items; track item) {
-                <kbq-list-item>
-                    <img src="" alt="" />
-                    <h3 kbq-line>{{ item.name }}</h3>
-                    <p kbq-line>{{ item.description }}</p>
-                </kbq-list-item>
-            }
-        </kbq-list>
-    `
-})
-class TestListWithTwoLineItem extends BaseTestList {}
-
-@Component({
-    template: `
-        <kbq-list>
-            @for (item of items; track item) {
-                <kbq-list-item>
-                    <h3 kbq-line>{{ item.name }}</h3>
-                    <p kbq-line>{{ item.description }}</p>
-                    <p kbq-line>Some other text</p>
-                </kbq-list-item>
-            }
-        </kbq-list>
-    `
-})
-class TestListWithThreeLineItem extends BaseTestList {
-    avoidCollisionMockTarget() {}
-}
-
-@Component({
-    template: `
-        <kbq-list>
-            <kbq-list-item>
-                <img alt="" src="" kbq-list-avatar />
-                Paprika
-            </kbq-list-item>
-            <kbq-list-item>Pepper</kbq-list-item>
-        </kbq-list>
-    `
-})
-class TestListWithAvatar extends BaseTestList {}
-
-@Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list>
             @for (item of items; track item) {
@@ -160,6 +115,9 @@ class TestListWithAvatar extends BaseTestList {}
 class TestListWithItemWithCssClass extends BaseTestList {}
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list>
             @for (item of items; track item) {

@@ -8,9 +8,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Overflow items with always visible item
  */
 @Component({
-    standalone: true,
-    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     selector: 'overflow-items-with-always-visible-item-example',
+    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqToggleModule, FormsModule],
     template: `
         <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
             @for (item of items; track item.id) {

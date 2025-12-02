@@ -1,9 +1,9 @@
 import { Directive } from '@angular/core';
-import { RdxAccordionContentDirective } from '@radix-ng/primitives/accordion';
+import { KbqAccordionContentDirective } from './accordion-content.directive';
 
 @Directive({
     selector: 'kbq-accordion-content, [kbq-accordion-content]',
-    hostDirectives: [RdxAccordionContentDirective],
+    hostDirectives: [KbqAccordionContentDirective],
     host: {
         class: 'kbq-accordion-content'
     }

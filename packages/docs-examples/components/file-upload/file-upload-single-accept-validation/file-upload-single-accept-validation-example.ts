@@ -9,9 +9,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File upload single accept validation
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-single-accept-validation-example',
+    imports: [
+        ReactiveFormsModule,
+        KbqFileUploadModule,
+        KbqFormFieldModule,
+        KbqIconModule
+    ],
     template: `
         <form [formGroup]="formGroup">
             <kbq-file-upload class="layout-margin-bottom-s" formControlName="fileControl" [accept]="accept">
@@ -30,12 +34,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </kbq-file-upload>
         </form>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFileUploadModule,
-        KbqFormFieldModule,
-        KbqIconModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleAcceptValidationExample {
     protected accept: KbqFileTypeSpecifier = ['.txt'];

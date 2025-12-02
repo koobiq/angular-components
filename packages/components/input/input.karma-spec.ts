@@ -12,8 +12,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     TestBed.resetTestingModule();
 
     TestBed.configureTestingModule({
-        imports: [FormsModule, KbqInputModule, KbqFormFieldModule, ...imports],
-        declarations: [component],
+        imports: [FormsModule, KbqInputModule, KbqFormFieldModule, ...imports, component],
         providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }, ...providers]
     }).compileComponents();
 
@@ -21,6 +20,10 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 }
 
 @Component({
+    imports: [
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInput [(ngModel)]="value" />

@@ -7,9 +7,8 @@ import { KbqAppSwitcherApp } from './app-switcher';
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: '[kbq-app-switcher-dropdown-app]',
-    exportAs: 'kbqAppSwitcherDropdownApp',
+    imports: [KbqIcon],
     template: `
         <i class="kbq kbq-icon" [className]=""></i>
         <span class="kbq-app-switcher-dropdown-app__icon" [innerHtml]="getIcon(app.icon)"></span>
@@ -32,13 +31,13 @@ import { KbqAppSwitcherApp } from './app-switcher';
         </div>
     `,
     styleUrls: ['app-switcher-dropdown-app.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqAppSwitcherDropdownApp',
     host: {
         class: 'kbq-app-switcher-dropdown-app',
         '[class.kbq-dropdown-item]': 'false'
     },
-    imports: [KbqIcon],
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownApp },
         { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownApp }

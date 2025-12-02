@@ -10,8 +10,7 @@ describe('kbq-risk-level', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqRiskLevelModule],
-            declarations: [TestApp]
+            imports: [KbqRiskLevelModule, TestApp]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
@@ -28,6 +27,7 @@ describe('kbq-risk-level', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqRiskLevelModule],
     template: `
         <kbq-risk-level />
     `

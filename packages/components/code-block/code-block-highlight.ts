@@ -34,7 +34,6 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
 
 /** Directive which applies syntax highlighting to the code block content. */
 @Directive({
-    standalone: true,
     selector: 'code[kbqCodeBlockHighlight]',
     host: {
         class: 'hljs'

@@ -7,10 +7,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select virtual scroll
  */
 @Component({
-    standalone: true,
     selector: 'select-virtual-scroll-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select [(value)]="selected" (openedChange)="openedChange($event)">
@@ -32,7 +30,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectVirtualScrollExample {
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));

@@ -5,7 +5,6 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
  * @title Scrollbar with options
  */
 @Component({
-    standalone: true,
     selector: 'scrollbar-with-options-example',
     imports: [KbqScrollbarModule],
     template: `

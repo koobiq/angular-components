@@ -7,15 +7,14 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Button toggle disabled all
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-toggle-disabled-all-overview-example',
-    templateUrl: 'button-toggle-disabled-all-overview-example.html',
     imports: [
         KbqButtonToggleModule,
         FormsModule,
         KbqIconModule
-    ]
+    ],
+    templateUrl: 'button-toggle-disabled-all-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleDisabledAllOverviewExample {
     model = 1;

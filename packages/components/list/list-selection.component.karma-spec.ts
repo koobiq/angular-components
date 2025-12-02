@@ -14,8 +14,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [KbqListModule, FormsModule],
-            declarations: [SelectionListMultipleCheckbox]
+            imports: [KbqListModule, FormsModule, SelectionListMultipleCheckbox]
         });
 
         TestBed.compileComponents();
@@ -62,6 +61,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
 });
 
 @Component({
+    imports: [KbqListModule, FormsModule],
     template: `
         <kbq-list-selection multiple="checkbox" [autoSelect]="false" [noUnselectLast]="false" [(ngModel)]="model">
             <kbq-list-option [value]="'value1'">value1</kbq-list-option>

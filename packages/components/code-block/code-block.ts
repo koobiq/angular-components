@@ -67,7 +67,7 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
  * Component which highlights blocks of code.
  */
 @Component({
-    standalone: true,
+    selector: 'kbq-code-block',
     imports: [
         KbqTabsModule,
         KbqButtonModule,
@@ -77,10 +77,11 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
         KbqToolTipModule,
         KbqIconModule
     ],
-    selector: 'kbq-code-block',
-    exportAs: 'kbqCodeBlock',
     templateUrl: './code-block.html',
     styleUrls: ['./code-block.scss', './code-block-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqCodeBlock',
     host: {
         class: 'kbq-code-block',
         '[class.kbq-code-block_filled]': 'filled',
@@ -90,9 +91,7 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
         '[class.kbq-code-block_no-border]': 'noBorder || filled',
         '[class.kbq-code-block_soft-wrap]': 'softWrap',
         '[class.kbq-code-block_view-all]': 'viewAll'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqCodeBlock implements AfterViewInit {
     @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;

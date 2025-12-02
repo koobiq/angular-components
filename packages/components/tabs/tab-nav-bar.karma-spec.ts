@@ -7,8 +7,7 @@ import { KbqTabsModule } from './tabs.module';
 describe(KbqTabNavBar.name, () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule],
-            declarations: [SimpleTabNavBarTestApp]
+            imports: [KbqTabsModule, SimpleTabNavBarTestApp]
         });
 
         TestBed.compileComponents();
@@ -37,10 +36,11 @@ describe(KbqTabNavBar.name, () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqTabsModule],
     template: `
         <nav kbqTabNavBar>
-            @for (tab of tabs; track tab; let index = $index) {
-                <a kbqTabLink [active]="activeIndex === index" [disabled]="disabled" (click)="activeIndex = index">
+            @for (tab of tabs; track tab) {
+                <a kbqTabLink [active]="activeIndex === $index" [disabled]="disabled" (click)="activeIndex = $index">
                     Tab link {{ label }}
                 </a>
             }

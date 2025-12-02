@@ -17,14 +17,14 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/cdk/a11y';
-import * as i11 from '@angular/cdk/portal';
-import * as i12 from '@koobiq/components/select';
-import * as i13 from '@koobiq/components/icon';
-import * as i14 from '@angular/common';
+import * as i1 from '@koobiq/components/button';
 import * as i15 from '@koobiq/components/form-field';
-import * as i8 from '@koobiq/components/button';
-import * as i9 from '@angular/cdk/overlay';
+import * as i2 from '@angular/cdk/overlay';
+import * as i3 from '@angular/cdk/a11y';
+import * as i4 from '@angular/cdk/portal';
+import * as i5 from '@koobiq/components/select';
+import * as i6 from '@koobiq/components/icon';
+import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqDateFormats } from '@koobiq/components/core';
@@ -106,7 +106,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     readonly userSelection: EventEmitter<void>;
     readonly yearSelected: EventEmitter<D>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendar<any>, "kbq-calendar", ["kbqCalendar"], { "startAt": { "alias": "startAt"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "userSelection": "userSelection"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendar<any>, "kbq-calendar", ["kbqCalendar"], { "startAt": { "alias": "startAt"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "userSelection": "userSelection"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCalendar<any>, [null, { optional: true; }, null]>;
 }
@@ -131,7 +131,7 @@ export class KbqCalendarBody implements OnChanges {
     readonly selectedValueChange: EventEmitter<number>;
     todayValue: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendarBody, "[kbq-calendar-body]", ["kbqCalendarBody"], { "rows": { "alias": "rows"; "required": false; }; "todayValue": { "alias": "todayValue"; "required": false; }; "selectedValue": { "alias": "selectedValue"; "required": false; }; "labelMinRequiredCells": { "alias": "labelMinRequiredCells"; "required": false; }; "numCols": { "alias": "numCols"; "required": false; }; "activeCell": { "alias": "activeCell"; "required": false; }; "cellAspectRatio": { "alias": "cellAspectRatio"; "required": false; }; }, { "selectedValueChange": "selectedValueChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendarBody, "[kbq-calendar-body]", ["kbqCalendarBody"], { "rows": { "alias": "rows"; "required": false; }; "todayValue": { "alias": "todayValue"; "required": false; }; "selectedValue": { "alias": "selectedValue"; "required": false; }; "labelMinRequiredCells": { "alias": "labelMinRequiredCells"; "required": false; }; "numCols": { "alias": "numCols"; "required": false; }; "activeCell": { "alias": "activeCell"; "required": false; }; "cellAspectRatio": { "alias": "cellAspectRatio"; "required": false; }; }, { "selectedValueChange": "selectedValueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCalendarBody, never>;
 }
@@ -194,7 +194,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     readonly yearSelected: EventEmitter<D>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendarHeader<any>, "kbq-calendar-header", ["kbqCalendarHeader"], { "activeDate": { "alias": "activeDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; }, { "activeDateChange": "activeDateChange"; "monthSelected": "monthSelected"; "yearSelected": "yearSelected"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendarHeader<any>, "kbq-calendar-header", ["kbqCalendarHeader"], { "activeDate": { "alias": "activeDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; }, { "activeDateChange": "activeDateChange"; "monthSelected": "monthSelected"; "yearSelected": "yearSelected"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCalendarHeader<any>, never>;
 }
@@ -247,7 +247,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     get value(): D | null;
     readonly yearSelected: EventEmitter<D>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepicker<any>, "kbq-datepicker", ["kbqDatepicker"], { "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "startAt": { "alias": "startAt"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "opened": { "alias": "opened"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "openedStream": "opened"; "closedStream": "closed"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepicker<any>, "kbq-datepicker", ["kbqDatepicker"], { "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "startAt": { "alias": "startAt"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "opened": { "alias": "opened"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "openedStream": "opened"; "closedStream": "closed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepicker<any>, [null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -272,7 +272,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     // (undocumented)
     startExitAnimation(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerContent<any>, "kbq-datepicker__content", ["kbqDatepickerContent"], {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerContent<any>, "kbq-datepicker__content", ["kbqDatepickerContent"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerContent<any>, never>;
 }
@@ -383,7 +383,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     writeValue(value: D): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -423,16 +423,16 @@ export class KbqDatepickerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDatepickerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i5.KbqDatepickerToggleIconComponent, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i5.KbqDatepickerToggleIconComponent, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof i7.KbqDatepickerToggleIconComponent, typeof i8.NgClass, typeof i8.TitleCasePipe, typeof i9.KbqCalendar, typeof i10.KbqCalendarBody, typeof i11.KbqDatepicker, typeof i11.KbqDatepickerContent, typeof i12.KbqDatepickerInput, typeof i7.KbqDatepickerToggle, typeof i7.KbqDatepickerToggleIcon, typeof i13.KbqMonthView, typeof i14.KbqCalendarHeader], [typeof i9.KbqCalendar, typeof i10.KbqCalendarBody, typeof i11.KbqDatepicker, typeof i11.KbqDatepickerContent, typeof i12.KbqDatepickerInput, typeof i7.KbqDatepickerToggle, typeof i7.KbqDatepickerToggleIcon, typeof i7.KbqDatepickerToggleIconComponent, typeof i13.KbqMonthView, typeof i14.KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
 }
 
 // @public @deprecated (undocumented)
@@ -455,7 +455,7 @@ export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     open(event: Event): void;
     tabIndex: number | null;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggle<any>, "kbq-datepicker-toggle", ["kbqDatepickerToggle"], { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["customIcon"], ["[kbqDatepickerToggleIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggle<any>, "kbq-datepicker-toggle", ["kbqDatepickerToggle"], { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["customIcon"], ["[kbqDatepickerToggleIcon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggle<any>, never>;
 }
@@ -463,7 +463,7 @@ export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
 // @public
 export class KbqDatepickerToggleIcon {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerToggleIcon, "[kbqDatepickerToggleIcon]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerToggleIcon, "[kbqDatepickerToggleIcon]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIcon, never>;
 }
@@ -516,7 +516,7 @@ export class KbqMonthView<D> implements AfterContentInit {
     }[];
     weeks: KbqCalendarCell[][];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMonthView<any>, "kbq-month-view", ["kbqMonthView"], { "activeDate": { "alias": "activeDate"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; }, { "selectedChange": "selectedChange"; "userSelection": "userSelection"; "activeDateChange": "activeDateChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMonthView<any>, "kbq-month-view", ["kbqMonthView"], { "activeDate": { "alias": "activeDate"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; }, { "selectedChange": "selectedChange"; "userSelection": "userSelection"; "activeDateChange": "activeDateChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMonthView<any>, [null, { optional: true; }]>;
 }

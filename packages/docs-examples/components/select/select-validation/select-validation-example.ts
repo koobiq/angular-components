@@ -8,11 +8,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select validation
  */
 @Component({
-    standalone: true,
     selector: 'select-validation-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Valid</div>
@@ -46,7 +43,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-vertical {
             width: 50%;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 export class SelectValidationExample {
     readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);

@@ -6,9 +6,7 @@ import { KbqTable, KbqTableCellContent } from './table.component';
 @NgModule({
     imports: [
         A11yModule,
-        PlatformModule
-    ],
-    declarations: [
+        PlatformModule,
         KbqTable,
         KbqTableCellContent
     ],

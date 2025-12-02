@@ -18,9 +18,7 @@ describe('KbqTooltip', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqToolTipModule,
-                NoopAnimationsModule
-            ],
-            declarations: [
+                NoopAnimationsModule,
                 KbqTooltipTestWrapperComponent
             ]
         }).compileComponents();
@@ -84,6 +82,7 @@ describe('KbqTooltip', () => {
 
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
+    imports: [KbqToolTipModule],
     template: `
         <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 

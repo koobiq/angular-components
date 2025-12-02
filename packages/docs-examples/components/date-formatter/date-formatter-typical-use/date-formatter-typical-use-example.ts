@@ -13,11 +13,10 @@ import { DateTime } from 'luxon';
  * @title date-formatter-typical-use
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'date-formatter-typical-use-example',
+    imports: [KbqLuxonDateModule, KbqFormattersModule],
     template: '{{ date }}',
-    imports: [KbqLuxonDateModule, KbqFormattersModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateFormatterTypicalUseExample {
     date: string;

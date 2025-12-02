@@ -25,7 +25,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
 
 /** @title Tag input with form control validators. */
 @Component({
-    standalone: true,
+    selector: 'tag-input-with-form-control-validators-example',
     imports: [
         KbqFormFieldModule,
         KbqInputModule,
@@ -33,8 +33,6 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
         KbqIconModule,
         ReactiveFormsModule
     ],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    selector: 'tag-input-with-form-control-validators-example',
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" [formControl]="formControl">
@@ -65,7 +63,8 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
             </kbq-error>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 export class TagInputWithFormControlValidatorsExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });

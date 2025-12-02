@@ -3,7 +3,6 @@ import { KBQ_FILTER_BAR_PIPES, KbqPipe } from './filter-bar.types';
 import { KBQ_PIPE_DATA } from './pipes/base-pipe';
 
 @Directive({
-    standalone: true,
     selector: '[kbqPipe]'
 })
 export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {

@@ -15,7 +15,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  */
 @Component({
     selector: 'validation-no-message-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,

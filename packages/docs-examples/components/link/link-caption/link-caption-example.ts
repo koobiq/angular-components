@@ -5,8 +5,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link caption
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'link-caption-example',
     imports: [
         KbqLinkModule
@@ -17,6 +15,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 Отчет сканирования
             </a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkCaptionExample {}

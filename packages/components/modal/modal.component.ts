@@ -1,7 +1,7 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkTrapFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -29,9 +29,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ENTER, ESCAPE } from '@koobiq/cdk/keycodes';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { CssUnitPipe } from './css-unit.pipe';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { modalUtilObject as ModalUtil } from './modal-util';
@@ -47,6 +50,15 @@ type AnimationState = 'enter' | 'leave' | null;
 
 @Component({
     selector: 'kbq-modal',
+    imports: [
+        CdkTrapFocus,
+        NgStyle,
+        NgClass,
+        KbqButtonModule,
+        KbqIconModule,
+        CssUnitPipe,
+        NgTemplateOutlet
+    ],
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.scss', 'modal-tokens.scss'],
     encapsulation: ViewEncapsulation.None,

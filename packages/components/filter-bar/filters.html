@@ -32,10 +32,10 @@
 
 @if (filterBar.isChanged && !filterBar.isSaved) {
     <button
+        kbqTooltip="{{ localeData.saveNewFilterTooltip }}"
         kbq-button
         kbqFilterBarButton
         class="kbq-button_action"
-        kbqTooltip="{{ localeData.saveNewFilterTooltip }}"
         [color]="colors.Empty"
         [disabled]="isSaving"
         (click)="openSaveAsNewFilterPopover()"
@@ -69,9 +69,9 @@
 
             <input
                 #search
+                placeholder="{{ localeData.searchPlaceholder }}"
                 autocomplete="off"
                 kbqInput
-                placeholder="{{ localeData.searchPlaceholder }}"
                 [formControl]="searchControl"
                 (click)="stopEventPropagation($event)"
                 (keydown)="searchKeydownHandler($event)"

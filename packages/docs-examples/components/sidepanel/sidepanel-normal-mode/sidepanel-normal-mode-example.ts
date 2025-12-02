@@ -9,11 +9,10 @@ import { take } from 'rxjs/operators';
  * @title Sidepanel normal mode
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'sidepanel-normal-mode-example',
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
     templateUrl: 'sidepanel-normal-mode-example.html',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelNormalModeExample {
     position = KbqSidepanelPosition.Right;

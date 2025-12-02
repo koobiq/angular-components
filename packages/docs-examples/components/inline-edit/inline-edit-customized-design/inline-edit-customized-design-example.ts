@@ -14,7 +14,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Inline edit customized design
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-customized-design-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
@@ -27,7 +27,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqLinkModule,
         KbqBadgeModule
     ],
-    selector: 'inline-edit-customized-design-example',
     template: `
         <kbq-inline-edit>
             <kbq-label>Link</kbq-label>
@@ -107,13 +106,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             gap: var(--kbq-size-xs);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditCustomizedDesignExample {
     protected readonly placeholder = 'Placeholder';

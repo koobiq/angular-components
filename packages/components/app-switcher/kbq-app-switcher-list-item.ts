@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
@@ -8,9 +7,10 @@ import { KbqAppSwitcherApp } from './app-switcher';
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: '[kbq-app-switcher-list-item]',
-    exportAs: 'kbqAppSwitcherApp',
+    imports: [
+        KbqIcon
+    ],
     template: `
         <span class="kbq-app-switcher-list-item__icon" [innerHtml]="getIcon(app.icon)"></span>
 
@@ -28,17 +28,14 @@ import { KbqAppSwitcherApp } from './app-switcher';
         }
     `,
     styleUrls: ['kbq-app-switcher-list-item.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqAppSwitcherApp',
     host: {
         class: 'kbq-app-switcher-list-item',
         '[class.kbq-dropdown-item]': 'false',
         '(click)': 'clickHandler($event)'
     },
-    imports: [
-        KbqIcon,
-        NgTemplateOutlet
-    ],
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherListItem },
         { provide: KbqDropdownItem, useExisting: KbqAppSwitcherListItem }

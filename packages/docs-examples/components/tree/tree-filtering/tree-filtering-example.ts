@@ -101,8 +101,6 @@ export const DATA_OBJECT = {
  * @title Tree filtering
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-filtering-example',
     imports: [KbqFormFieldModule, KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
     template: `
@@ -125,7 +123,8 @@ export const DATA_OBJECT = {
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeFilteringExample {
     treeControl: FlatTreeControl<FileFlatNode>;

@@ -176,7 +176,6 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
 }
 
 @Directive({
-    standalone: true,
     selector: 'kbq-navbar-ic-container',
     host: {
         class: 'kbq-navbar-ic-container'
@@ -185,9 +184,7 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
 export class KbqNavbarIcContainer {}
 
 @Component({
-    standalone: true,
     selector: 'kbq-navbar-ic',
-    exportAs: 'KbqNavbarIc',
     template: `
         <div class="kbq-navbar-ic__top-layer" [@toggle]="expanded" (@toggle.done)="animationDone.next()">
             <ng-content select="[kbq-navbar-ic-container], kbq-navbar-ic-container" />
@@ -199,6 +196,9 @@ export class KbqNavbarIcContainer {}
         './navbar-ic-divider.scss',
         './navbar-ic-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'KbqNavbarIc',
     host: {
         class: 'kbq-navbar-ic',
         '[class.kbq-collapsed]': '!expanded',
@@ -214,9 +214,7 @@ export class KbqNavbarIcContainer {}
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
     },
-    animations: [toggleNavbarIcAnimation()],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    animations: [toggleNavbarIcAnimation()]
 })
 export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     /** @docs-private */
@@ -229,37 +227,37 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     configuration;
 
     /** @docs-private */
-    rectangleElements = contentChildren(
+    readonly rectangleElements = contentChildren(
         forwardRef(() => KbqRectangleItem),
         { descendants: true }
     );
 
     /** @docs-private */
-    items = contentChildren(
+    readonly items = contentChildren(
         forwardRef(() => KbqNavbarIcItem),
         { descendants: true }
     );
 
     /** @docs-private */
-    toggleElement = contentChildren(
+    readonly toggleElement = contentChildren(
         forwardRef(() => KbqNavbarIcToggle),
         { descendants: true }
     );
 
     /** @docs-private */
-    dropdownTrigger = contentChildren(
+    readonly dropdownTrigger = contentChildren(
         forwardRef(() => KbqDropdownTrigger),
         { descendants: true }
     );
 
     /** @docs-private */
-    popoverTrigger = contentChildren(
+    readonly popoverTrigger = contentChildren(
         forwardRef(() => KbqPopoverTrigger),
         { descendants: true }
     );
 
     /** @docs-private */
-    notificationCenterTrigger = contentChildren(
+    readonly notificationCenterTrigger = contentChildren(
         forwardRef(() => KbqNotificationCenterTrigger),
         { descendants: true }
     );

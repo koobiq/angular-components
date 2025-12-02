@@ -57,6 +57,8 @@ export class KbqEmptyStateActions {}
     selector: 'kbq-empty-state',
     templateUrl: './empty-state.component.html',
     styleUrls: ['./empty-state.scss', 'empty-state-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-empty-state',
         '[class]': 'emptyStateSizeClass',
@@ -65,9 +67,7 @@ export class KbqEmptyStateActions {}
         '[class.kbq-empty-state_normal-color]': '!errorColor',
         '[class.kbq-empty-state_error-color]': 'errorColor',
         '[class.kbq-empty-state_has-icon]': '!!icon'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqEmptyState implements AfterContentInit {
     @Input() errorColor: boolean = false;

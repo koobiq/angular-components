@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { KbqTitleModule } from '@koobiq/components/title';
 
@@ -9,12 +9,11 @@ import { KbqTitleModule } from '@koobiq/components/title';
  * @title split-button-text-overflow
  */
 @Component({
-    standalone: true,
     selector: 'split-button-text-overflow-example',
     imports: [
         KbqSplitButtonModule,
         KbqButtonModule,
-        KbqIcon,
+        KbqIconModule,
         KbqDropdownModule,
         KbqTitleModule
     ],

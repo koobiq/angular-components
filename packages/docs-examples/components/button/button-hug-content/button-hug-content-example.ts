@@ -6,10 +6,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
  * @title Button hug content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-hug-content-example',
-    styleUrls: ['button-hug-content-example.css'],
     imports: [
         KbqButtonModule
     ],
@@ -21,7 +18,9 @@ import { KbqComponentColors } from '@koobiq/components/core';
             Очень длинный текст кнопки
         </button>
         &nbsp;
-    `
+    `,
+    styleUrls: ['button-hug-content-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonHugContentExample {
     colors = KbqComponentColors;

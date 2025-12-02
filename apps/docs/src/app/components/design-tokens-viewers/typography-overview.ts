@@ -9,7 +9,6 @@ import { KbqTableModule } from '@koobiq/components/table';
 import { docsData } from './data/typography';
 
 @Component({
-    standalone: true,
     selector: 'docs-typography-table',
     imports: [
         DocsComponentViewerWrapperComponent,
@@ -31,7 +30,7 @@ import { docsData } from './data/typography';
                     @for (token of tokensInfo(); track token) {
                         <tr>
                             <td>
-                                <div [class]="'kbq-' + token">{{ token | titlecase }}</div>
+                                <div [class]="getClassName(token)">{{ token | titlecase }}</div>
                             </td>
                             <td>
                                 <span
@@ -82,7 +81,7 @@ export class DocsTypographyTable extends DocsLocaleState {
         }
     };
 
-    constructor() {
-        super();
+    getClassName(text: string): string {
+        return `kbq-${text}`;
     }
 }

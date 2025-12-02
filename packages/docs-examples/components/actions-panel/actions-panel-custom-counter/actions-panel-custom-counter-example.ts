@@ -26,7 +26,7 @@ type ExampleAction = {
  * @title Actions panel custom counter
  */
 @Component({
-    standalone: true,
+    selector: 'actions-panel-custom-counter-example',
     imports: [
         KbqOverflowItemsModule,
         KbqButtonModule,
@@ -35,8 +35,6 @@ type ExampleAction = {
         KbqDividerModule,
         KbqBadgeModule
     ],
-    providers: [KbqActionsPanel],
-    selector: 'actions-panel-custom-counter-example',
     template: `
         <button kbq-button (click)="open()">open</button>
 
@@ -150,7 +148,8 @@ type ExampleAction = {
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqActionsPanel]
 })
 export class ActionsPanelCustomCounterExample {
     protected readonly actions: ExampleAction[] = [

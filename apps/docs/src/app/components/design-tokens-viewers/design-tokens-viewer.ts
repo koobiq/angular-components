@@ -9,7 +9,7 @@ import { DocsComponentViewerComponent } from '../component-viewer/component-view
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
-    standalone: true,
+    selector: 'docs-component-viewer',
     imports: [
         KbqTabsModule,
         RouterOutlet,
@@ -20,8 +20,6 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule
     ],
-    providers: [KbqSidepanelService],
-    selector: 'docs-component-viewer',
     template: `
         <div class="docs-component-header">
             <div class="docs-component-name" docsRegisterHeader>
@@ -43,12 +41,13 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         </div>
     `,
     styleUrls: ['../component-viewer/component-viewer.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqSidepanelService],
     host: {
         class: 'docs-component-viewer kbq-scrollbar',
         '[attr.data-docsearch-category]': 'structureItem.id'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
     constructor() {

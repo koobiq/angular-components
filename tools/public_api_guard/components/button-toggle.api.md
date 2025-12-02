@@ -12,8 +12,8 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@koobiq/components/button';
-import * as i3 from '@koobiq/components/title';
+import * as i1 from '@koobiq/components/button';
+import * as i2 from '@koobiq/components/title';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
@@ -56,7 +56,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     type: ToggleType;
     value: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggle, [{ optional: true; }, null, null, null]>;
 }
@@ -103,7 +103,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set vertical(value: boolean);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }
@@ -114,10 +114,10 @@ export class KbqButtonToggleModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonToggleModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, [typeof i1.KbqButtonToggleGroup, typeof i1.KbqButtonToggle], [typeof i2.KbqButtonModule, typeof i3.KbqTitleModule], [typeof i1.KbqButtonToggleGroup, typeof i1.KbqButtonToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle], [typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle]>;
 }
 
 // @public

@@ -45,7 +45,6 @@ import { KbqFormFieldControl } from './form-field-control';
  * @docs-private
  */
 @Directive({
-    standalone: true,
     selector: `
         input[kbqInput],
         input[kbqNumberInput],

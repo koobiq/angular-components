@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
 import { DOWN_ARROW } from '@koobiq/cdk/keycodes';
 import { dispatchEvent } from '@koobiq/cdk/testing';
-import { KbqButtonDropdownTrigger, KbqButtonModule } from '@koobiq/components/button';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem } from '@koobiq/components/overflow-items';
@@ -13,10 +13,9 @@ import {
     KbqBreadcrumbButton,
     KbqBreadcrumbItem,
     KbqBreadcrumbs,
-    kbqBreadcrumbsConfigurationProvider,
-    KbqBreadcrumbsSeparator,
-    KbqBreadcrumbView
+    kbqBreadcrumbsConfigurationProvider
 } from './breadcrumbs';
+import { KbqBreadcrumbsModule } from './breadcrumbs.module';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = [], imports: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, ...imports], providers }).compileComponents();
@@ -211,18 +210,16 @@ describe(KbqBreadcrumbs.name, () => {
 });
 
 @Component({
+    imports: [
+        KbqBreadcrumbsModule
+    ],
     template: `
         <kbq-breadcrumbs [max]="max" [size]="size">
             @for (item of items; track item) {
                 <kbq-breadcrumb-item [text]="item.text" [disabled]="item.disabled" />
             }
         </kbq-breadcrumbs>
-    `,
-    standalone: true,
-    imports: [
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem
-    ]
+    `
 })
 class SimpleBreadcrumbs {
     @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
@@ -237,6 +234,9 @@ class SimpleBreadcrumbs {
 }
 
 @Component({
+    imports: [
+        KbqBreadcrumbsModule
+    ],
     template: `
         <kbq-breadcrumbs [max]="max" [size]="size">
             <ng-template kbqBreadcrumbsSeparator>
@@ -249,14 +249,7 @@ class SimpleBreadcrumbs {
                 </kbq-breadcrumb-item>
             }
         </kbq-breadcrumbs>
-    `,
-    standalone: true,
-    imports: [
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem,
-        KbqBreadcrumbsSeparator,
-        KbqBreadcrumbView
-    ]
+    `
 })
 class BreadcrumbsCustomization {
     @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
@@ -273,11 +266,17 @@ class BreadcrumbsCustomization {
 }
 
 @Component({
+    imports: [
+        KbqBreadcrumbsModule,
+        KbqButtonModule,
+        KbqDropdownModule,
+        RouterLink
+    ],
     template: `
         <nav kbq-breadcrumbs>
             @for (item of items; track item) {
-                @if ($index < items.length - 1) {
-                    <kbq-breadcrumb-item [routerLink]="'./' + item.text" [text]="item.text" />
+                @if ($last) {
+                    <kbq-breadcrumb-item [routerLink]="getText(item.text)" [text]="item.text" />
                 }
             }
 
@@ -294,18 +293,7 @@ class BreadcrumbsCustomization {
             <a kbq-dropdown-item routerLink="./RBAC">RBAC</a>
             <a kbq-dropdown-item routerLink="./ABAC">ABAC</a>
         </kbq-dropdown>
-    `,
-    standalone: true,
-    imports: [
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem,
-        KbqBreadcrumbButton,
-        KbqBreadcrumbView,
-        KbqButtonDropdownTrigger,
-        KbqButtonModule,
-        KbqDropdownModule,
-        RouterLink
-    ]
+    `
 })
 class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
     items = [
@@ -314,4 +302,8 @@ class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
         { text: 'Data', disabled: true },
         { text: 'Access Control', disabled: true }
     ];
+
+    getText(text: string): string {
+        return `./${text}`;
+    }
 }

@@ -82,10 +82,8 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '[class.kbq-tag-list_editable]': 'editable',
         '[class.kbq-tag-list_removable]': 'removable',
         '[class.kbq-tag-list_draggable]': 'draggable',
-
         '[attr.tabindex]': 'tabIndex',
         '[id]': 'uid',
-
         '(focus)': 'focus()',
         '(blur)': 'blur()',
         '(keydown)': 'keydown($event)'

@@ -14,7 +14,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Remov
  * @title Tag autocomplete removable
  */
 @Component({
-    standalone: true,
     selector: 'tag-autocomplete-removable-example',
     imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

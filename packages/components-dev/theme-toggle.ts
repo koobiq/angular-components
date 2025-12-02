@@ -5,7 +5,6 @@ import { KbqThemeSelector, ThemeService } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
-    standalone: true,
     selector: 'dev-theme-toggle',
     exportAs: 'devThemeToggle',
     imports: [KbqToggleModule, FormsModule],

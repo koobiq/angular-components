@@ -9,11 +9,9 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  * @title Popover height
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-height-example',
-    templateUrl: 'popover-height-example.html',
     imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqFormsModule],
+    templateUrl: 'popover-height-example.html',
     styles: `
         ::ng-deep .kbq-popover.popover-height-custom-example .kbq-popover__container {
             max-height: 240px;
@@ -22,7 +20,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
         ::ng-deep .kbq-popover.popover-height-custom-example .kbq-popover__header {
             flex-shrink: 0;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverHeightExample {
     activePopover: KbqPopoverTrigger;

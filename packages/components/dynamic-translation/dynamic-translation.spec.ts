@@ -23,9 +23,8 @@ const getDynamicTranslationDebugElement = (debugElement: DebugElement): DebugEle
 };
 
 @Component({
-    standalone: true,
-    imports: [KbqDynamicTranslationModule, KbqLinkModule],
     selector: 'test-dynamic-translation',
+    imports: [KbqDynamicTranslationModule, KbqLinkModule],
     template: `
         <kbq-dynamic-translation [text]="text()">
             <a *kbqDynamicTranslationSlot="'testSlot1'; let context" kbq-link href="#">{{ context }}</a>

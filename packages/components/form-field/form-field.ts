@@ -77,7 +77,6 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 
 /** Container for form controls that applies styling and behavior. */
 @Component({
-    standalone: true,
     selector: 'kbq-form-field',
     exportAs: 'kbqFormField',
     templateUrl: 'form-field.html',
@@ -506,7 +505,6 @@ export class KbqFormField
  * @deprecated Will be removed in next major release, use `noBorders` input instead.
  */
 @Directive({
-    standalone: true,
     selector: 'kbq-form-field[kbqFormFieldWithoutBorders]',
     exportAs: 'kbqFormFieldWithoutBorders',
     host: { class: 'kbq-form-field_without-borders' }
@@ -517,7 +515,6 @@ export class KbqFormFieldWithoutBorders {}
  * @docs-private
  */
 @Directive({
-    standalone: true,
     selector: '[kbqInput], [kbqTextarea]',
     exportAs: 'KbqTrim',
     host: { class: 'kbq-trim' }

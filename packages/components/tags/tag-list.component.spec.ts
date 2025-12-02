@@ -74,7 +74,6 @@ const getTagInputElement = (debugElement: DebugElement): HTMLInputElement => {
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);
 
 @Component({
-    standalone: true,
     selector: 'test-tag-list',
     imports: [KbqTagsModule],
     template: `
@@ -119,7 +118,6 @@ export class TestTagList {
 }
 
 @Component({
-    standalone: true,
     selector: 'test-form-field-tag-list',
     imports: [KbqTagsModule, KbqFormFieldModule, CdkMonitorFocus],
     template: `
@@ -1020,9 +1018,9 @@ describe(KbqTagList.name, () => {
                 KbqTagsModule,
                 KbqFormFieldModule,
                 KbqInputModule,
-                NoopAnimationsModule
+                NoopAnimationsModule,
+                component
             ],
-            declarations: [component],
             providers: [
                 { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 ...providers
@@ -1482,6 +1480,9 @@ describe(KbqTagList.name, () => {
 });
 
 @Component({
+    imports: [
+        KbqTagsModule
+    ],
     template: `
         <kbq-tag-list [tabIndex]="tabIndex" [selectable]="selectable">
             @for (i of tags; track i) {
@@ -1501,6 +1502,10 @@ class StandardTagList {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
@@ -1528,6 +1533,11 @@ class FormFieldTagList {
 
 @Component({
     selector: 'basic-tag-list',
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tag-list
@@ -1569,6 +1579,11 @@ class BasicTagList {
 
 @Component({
     selector: 'input-tag-list',
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList1 placeholder="Food" [formControl]="control" [required]="isRequired">
@@ -1636,6 +1651,9 @@ class InputTagList {
 }
 
 @Component({
+    imports: [
+        KbqTagsModule
+    ],
     template: `
         <kbq-tag-list>
             @for (food of foods; track food) {
@@ -1656,6 +1674,11 @@ class SelectedTagList {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule,
+        ReactiveFormsModule
+    ],
     template: `
         <form #form="ngForm" novalidate>
             <kbq-form-field>
@@ -1687,6 +1710,9 @@ class TagListWithFormErrorMessages {
 }
 
 @Component({
+    imports: [
+        KbqTagsModule
+    ],
     template: `
         <kbq-tag-list>
             @for (i of numbers; track i) {

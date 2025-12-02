@@ -5,8 +5,8 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@angular/cdk/platform';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/platform';
 import { KbqButton } from '@koobiq/components/button';
 
 // @public (undocumented)
@@ -14,7 +14,7 @@ export class KbqTable {
     // (undocumented)
     border: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTable, never>;
 }
@@ -24,7 +24,7 @@ export class KbqTableCellContent {
     // (undocumented)
     button: KbqButton;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTableCellContent, "kbq-table td", never, {}, {}, ["button"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTableCellContent, "kbq-table td", never, {}, {}, ["button"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableCellContent, never>;
 }
@@ -35,10 +35,10 @@ export class KbqTableModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTableModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, [typeof i1.KbqTable, typeof i1.KbqTableCellContent], [typeof i2.A11yModule, typeof i3.PlatformModule], [typeof i1.KbqTable, typeof i1.KbqTableCellContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqTable, typeof i3.KbqTableCellContent], [typeof i3.KbqTable, typeof i3.KbqTableCellContent]>;
 }
 
 // (No @packageDocumentation comment for this package)

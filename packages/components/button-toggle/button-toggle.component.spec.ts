@@ -8,8 +8,11 @@ import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButton
 describe('KbqButtonToggle with forms', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
-            declarations: [
+            imports: [
+                KbqButtonModule,
+                KbqButtonToggleModule,
+                FormsModule,
+                ReactiveFormsModule,
                 ButtonToggleGroupWithNgModel,
                 ButtonToggleGroupWithFormControl
             ]
@@ -156,9 +159,7 @@ describe('KbqButtonToggle without forms', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqButtonModule,
-                KbqButtonToggleModule
-            ],
-            declarations: [
+                KbqButtonToggleModule,
                 ButtonTogglesInsideButtonToggleGroup,
                 ButtonTogglesInsideButtonToggleGroupMultiple,
                 FalsyButtonTogglesInsideButtonToggleGroupMultiple,
@@ -615,6 +616,7 @@ describe('KbqButtonToggle without forms', () => {
 });
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" [(value)]="groupValue">
             @if (renderFirstToggle) {
@@ -633,6 +635,7 @@ class ButtonTogglesInsideButtonToggleGroup {
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-button-toggle-group [name]="groupName" [(ngModel)]="modelValue" (change)="lastEvent = $event">
             @for (option of options; track option) {
@@ -655,6 +658,7 @@ class ButtonToggleGroupWithNgModel {
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <kbq-button-toggle-group multiple [disabled]="isGroupDisabled" [vertical]="isVertical">
             <kbq-button-toggle [value]="'eggs'">Eggs</kbq-button-toggle>
@@ -669,6 +673,7 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <kbq-button-toggle-group multiple [value]="value">
             <kbq-button-toggle [value]="0">Eggs</kbq-button-toggle>
@@ -684,6 +689,7 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <kbq-button-toggle>Yes</kbq-button-toggle>
     `
@@ -691,6 +697,7 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 class StandaloneButtonToggle {}
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <kbq-button-toggle-group [value]="'red'" (change)="lastEvent = $event">
             <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
@@ -703,6 +710,7 @@ class ButtonToggleGroupWithInitialValue {
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-button-toggle-group [formControl]="control">
             <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
@@ -716,6 +724,7 @@ class ButtonToggleGroupWithFormControl {
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <kbq-button-toggle-group [(value)]="value">
             @for (toggle of possibleValues; track toggle) {

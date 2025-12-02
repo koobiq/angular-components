@@ -47,10 +47,8 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         class: 'kbq-option-action',
         '[class.kbq-expanded]': 'false',
         '[class.kbq-disabled]': 'disabled',
-
         '[attr.disabled]': 'disabled || null',
         '[attr.tabIndex]': '-1',
-
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
     },

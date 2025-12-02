@@ -10,8 +10,7 @@ import { KbqFormatKeyToProfileMapping, KbqFormatKeyToProfileMappingExtended, Kbq
 @Injectable({ providedIn: 'root' })
 @Pipe({
     name: 'kbqUsername',
-    pure: true,
-    standalone: true
+    pure: true
 })
 export class KbqUsernamePipe<T = unknown> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true });
@@ -55,8 +54,7 @@ export class KbqUsernamePipe<T = unknown> implements PipeTransform {
 @Injectable({ providedIn: 'root' })
 @Pipe({
     name: 'kbqUsernameCustom',
-    pure: true,
-    standalone: true
+    pure: true
 })
 export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true });

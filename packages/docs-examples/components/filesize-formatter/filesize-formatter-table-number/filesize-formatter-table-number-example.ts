@@ -7,15 +7,11 @@ import { KbqTableModule } from '@koobiq/components/table';
  * @title Filesize formatter Table Number
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filesize-formatter-table-number-example',
     imports: [
         KbqDataSizePipe,
         KbqTableModule
     ],
-    providers: [
-        { provide: KbqDecimalPipe, useClass: KbqTableNumberPipe }],
     template: `
         <table kbq-table>
             <thead>
@@ -41,7 +37,10 @@ import { KbqTableModule } from '@koobiq/components/table';
                 </tr>
             </tbody>
         </table>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: KbqDecimalPipe, useClass: KbqTableNumberPipe }]
 })
 export class FilesizeFormatterTableNumberExample {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });

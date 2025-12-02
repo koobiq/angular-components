@@ -13,9 +13,9 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i4 from '@koobiq/components/core';
-import * as i5 from '@angular/cdk/overlay';
-import * as i6 from '@angular/common';
+import * as i1 from '@koobiq/components/core';
+import * as i2 from '@angular/cdk/overlay';
+import * as i3 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqOptgroup } from '@koobiq/components/core';
@@ -103,7 +103,7 @@ export class KbqAutocomplete implements AfterContentInit {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
 }
@@ -119,12 +119,12 @@ export class KbqAutocompleteModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, [typeof i1.KbqAutocomplete, typeof i2.KbqAutocompleteTrigger, typeof i3.KbqAutocompleteOrigin], [typeof i4.KbqOptionModule, typeof i5.OverlayModule, typeof i6.NgClass], [typeof i1.KbqAutocomplete, typeof i4.KbqOptionModule, typeof i2.KbqAutocompleteTrigger, typeof i3.KbqAutocompleteOrigin]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof i4.KbqAutocomplete, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin], [typeof i4.KbqAutocomplete, typeof i1.KbqOptionModule, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin]>;
 }
 
 // @public
@@ -133,7 +133,7 @@ export class KbqAutocompleteOrigin {
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteOrigin, "[kbqAutocompleteOrigin]", ["kbqAutocompleteOrigin"], {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteOrigin, "[kbqAutocompleteOrigin]", ["kbqAutocompleteOrigin"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteOrigin, never>;
 }
@@ -193,7 +193,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, null]>;
 }

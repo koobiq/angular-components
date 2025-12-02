@@ -12,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Inline edit custom handler
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-custom-handler-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
@@ -22,7 +22,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqIconModule,
         KbqFileUploadModule
     ],
-    selector: 'inline-edit-custom-handler-example',
     template: `
         <kbq-inline-edit
             showActions
@@ -47,10 +46,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </div>
         </kbq-inline-edit>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditCustomHandlerExample {
     protected readonly control = new FormControl<KbqFileItem | null>(null);

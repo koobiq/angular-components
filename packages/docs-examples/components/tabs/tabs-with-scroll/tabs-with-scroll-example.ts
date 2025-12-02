@@ -5,7 +5,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs with scroll
  */
 @Component({
-    standalone: true,
     selector: 'tabs-with-scroll-example',
     imports: [KbqTabsModule],
     template: `

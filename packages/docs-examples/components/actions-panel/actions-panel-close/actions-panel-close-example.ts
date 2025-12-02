@@ -16,10 +16,8 @@ import { KbqToastService } from '@koobiq/components/toast';
  * @title Actions panel close
  */
 @Component({
-    standalone: true,
-    imports: [KbqButtonModule, KbqIconModule],
-    providers: [KbqActionsPanel],
     selector: 'actions-panel-close-example',
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button (click)="open()">open</button>
 
@@ -39,7 +37,8 @@ import { KbqToastService } from '@koobiq/components/toast';
             overflow: hidden;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqActionsPanel]
 })
 export class ActionsPanelCloseExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });

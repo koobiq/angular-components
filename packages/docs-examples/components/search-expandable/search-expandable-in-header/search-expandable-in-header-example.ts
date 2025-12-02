@@ -6,8 +6,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
  * @title search-expandable-in-header
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'search-expandable-in-header-example',
     imports: [
         KbqSearchExpandableModule,
@@ -60,7 +58,8 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
         .example-search-expandable-in-header-example__body {
             height: 152px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchExpandableInHeaderExample {
     search: string;

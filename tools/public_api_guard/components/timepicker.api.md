@@ -10,9 +10,9 @@ import { DateAdapter } from '@koobiq/components/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@angular/cdk/platform';
-import * as i4 from '@angular/forms';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/platform';
+import * as i3 from '@angular/forms';
 import * as i5 from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
@@ -129,7 +129,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     writeValue(value: D | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -140,10 +140,10 @@ export class KbqTimepickerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepickerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimepickerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, [typeof i1.KbqTimepicker], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.FormsModule], [typeof i1.KbqTimepicker, typeof i5.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof i4.KbqTimepicker], [typeof i4.KbqTimepicker, typeof i5.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)

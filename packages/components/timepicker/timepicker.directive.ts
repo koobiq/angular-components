@@ -97,12 +97,9 @@ const fullFormatSize: number = 8;
         '[attr.required]': 'required',
         '[attr.size]': 'getSize()',
         '[attr.autocomplete]': '"off"',
-
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
-
         '(paste)': 'onPaste($event)',
-
         '(keydown)': 'onKeyDown($event)'
     },
     providers: [

@@ -14,8 +14,7 @@ const percentPairs = [
 describe('KbqProgressSpinner', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqProgressSpinnerModule],
-            declarations: [TestApp]
+            imports: [KbqProgressSpinnerModule, TestApp]
         }).compileComponents();
     });
 
@@ -120,6 +119,7 @@ describe('KbqProgressSpinner', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqProgressSpinnerModule],
     template: `
         <kbq-progress-spinner class="first" [id]="id" [color]="color" [value]="value" [mode]="mode" />
         <kbq-progress-spinner class="default" />

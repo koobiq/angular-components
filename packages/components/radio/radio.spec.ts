@@ -8,11 +8,7 @@ import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 describe('MсRadio', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
-            declarations: [
-                DisableableRadioButton,
-                RadiosInsideRadioGroup
-            ]
+            imports: [KbqRadioModule, FormsModule, ReactiveFormsModule, DisableableRadioButton, RadiosInsideRadioGroup]
         }).compileComponents();
     });
 
@@ -314,6 +310,7 @@ describe('MсRadio', () => {
 });
 
 @Component({
+    imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-radio-group
             name="test-name"
@@ -340,6 +337,7 @@ class RadiosInsideRadioGroup {
 }
 
 @Component({
+    imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-radio-button>One</kbq-radio-button>
     `

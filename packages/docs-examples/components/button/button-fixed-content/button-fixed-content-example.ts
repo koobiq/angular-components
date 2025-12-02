@@ -6,10 +6,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
  * @title Button fixed content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-fixed-content-example',
-    styleUrls: ['button-fixed-content-example.css'],
     imports: [
         KbqButtonModule
     ],
@@ -23,7 +20,9 @@ import { KbqComponentColors } from '@koobiq/components/core';
             </button>
             &nbsp;
         </div>
-    `
+    `,
+    styleUrls: ['button-fixed-content-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFixedContentExample {
     colors = KbqComponentColors;

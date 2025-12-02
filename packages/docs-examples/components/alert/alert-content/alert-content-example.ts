@@ -10,11 +10,16 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Alert content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'alert-content-example',
+    imports: [
+        KbqAlertModule,
+        KbqButtonModule,
+        KbqLinkModule,
+        KbqIconModule
+    ],
     templateUrl: 'alert-content-example.html',
     styleUrls: ['alert-content-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),
@@ -22,12 +27,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
             transition('false => true', animate('.5s')),
             transition('true => false', animate('.2s'))])
 
-    ],
-    imports: [
-        KbqAlertModule,
-        KbqButtonModule,
-        KbqLinkModule,
-        KbqIconModule
     ]
 })
 export class AlertContentExample {

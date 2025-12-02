@@ -1,6 +1,7 @@
 import { AnimationEvent } from '@angular/animations';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -50,6 +51,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
  */
 @Component({
     selector: 'kbq-tab-body',
+    imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)],
     templateUrl: './tab-body.html',
     styleUrl: './tab-body.scss',
     encapsulation: ViewEncapsulation.None,

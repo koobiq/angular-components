@@ -8,14 +8,13 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Inline edit editable header
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-editable-header-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
         KbqTextareaModule
     ],
-    selector: 'inline-edit-editable-header-example',
     template: `
         <kbq-inline-edit #inlineEdit [canSaveOnEnter]="canSaveOnEnterFn" (saved)="onSave()">
             <div kbqInlineEditViewMode>
@@ -43,9 +42,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         </kbq-inline-edit>
         <div>{{ content }}</div>
     `,
-    host: {
-        class: 'layout-flex layout-column layout-gap-s'
-    },
     styles: `
         :host .kbq-inline-edit {
             width: calc(100% + 12px);
@@ -72,7 +68,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             --kbq-textarea-size-padding-horizontal: 5px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-flex layout-column layout-gap-s'
+    }
 })
 export class InlineEditEditableHeaderExample {
     protected readonly maxRows = 5;

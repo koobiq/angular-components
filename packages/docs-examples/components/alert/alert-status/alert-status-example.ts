@@ -9,11 +9,14 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Alert status
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'alert-status-example',
+    imports: [
+        KbqAlertModule,
+        KbqIconModule
+    ],
     templateUrl: 'alert-status-example.html',
     styleUrls: ['alert-status-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),
@@ -21,10 +24,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             transition('false => true', animate('.5s')),
             transition('true => false', animate('.2s'))])
 
-    ],
-    imports: [
-        KbqAlertModule,
-        KbqIconModule
     ]
 })
 export class AlertStatusExample {

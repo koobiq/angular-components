@@ -6,16 +6,15 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle Error
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'toggle-error-example',
     imports: [KbqToggleModule],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     template: `
         <kbq-toggle [checked]="value()" [color]="color" (change)="value.set($event.checked)">Vibration</kbq-toggle>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ToggleErrorExample {
     protected readonly value = signal(false);

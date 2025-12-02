@@ -5,7 +5,6 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  * @title Radio size
  */
 @Component({
-    standalone: true,
     selector: 'radio-size-example',
     imports: [
         KbqRadioModule

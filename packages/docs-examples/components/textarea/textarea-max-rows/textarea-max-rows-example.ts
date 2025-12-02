@@ -8,8 +8,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Textarea with maxRows attribute
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'textarea-max-rows-example',
     imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule, KbqInputModule],
     template: `
@@ -18,6 +16,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <textarea kbqTextarea placeholder="Placeholder" [maxRows]="5" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-xl layout-row'
     }

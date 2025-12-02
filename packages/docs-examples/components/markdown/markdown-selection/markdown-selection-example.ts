@@ -5,9 +5,8 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
  * @title Markdown selection
  */
 @Component({
-    standalone: true,
-    imports: [KbqMarkdownModule],
     selector: 'markdown-selection-example',
+    imports: [KbqMarkdownModule],
     templateUrl: 'markdown-selection-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

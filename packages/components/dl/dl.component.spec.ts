@@ -6,8 +6,7 @@ import { KbqDdComponent, KbqDlComponent, KbqDlModule, KbqDtComponent } from './i
 describe('KbqDl', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqDlModule],
-            declarations: [TestApp]
+            imports: [KbqDlModule, TestApp]
         }).compileComponents();
     });
 
@@ -26,6 +25,7 @@ describe('KbqDl', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqDlModule],
     template: `
         <kbq-dl [minWidth]="600">
             <kbq-dt>Тип инцидента</kbq-dt>

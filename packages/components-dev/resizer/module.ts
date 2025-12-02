@@ -3,9 +3,8 @@ import { ResizerOverviewExample } from 'packages/docs-examples/components/resize
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [ResizerOverviewExample],
     selector: 'dev-examples',
+    imports: [ResizerOverviewExample],
     template: `
         <resizer-overview-example />
     `,
@@ -14,9 +13,8 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
-    imports: [DevExamples, DevThemeToggle],
     selector: 'dev-app',
+    imports: [DevExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

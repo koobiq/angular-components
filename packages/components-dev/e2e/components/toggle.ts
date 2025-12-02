@@ -5,12 +5,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
-    standalone: true,
-    imports: [KbqToggleModule, FormsModule],
     selector: 'dev-toggle-state-and-style',
-    host: {
-        'data-testid': 'e2eToggleStateAndStyle'
-    },
+    imports: [KbqToggleModule, FormsModule],
     template: `
         <input type="checkbox" data-testid="e2eIndeterminateToggle" [(ngModel)]="indeterminate" />
         <input type="checkbox" data-testid="e2eBigToggle" [(ngModel)]="big" />
@@ -54,7 +50,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             gap: var(--kbq-size-xxs);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eToggleStateAndStyle'
+    }
 })
 export class DevToggleStateAndStyle {
     readonly states = ['normal', 'hovered', 'focused', 'disabled', 'loading'] as const;
@@ -66,12 +65,8 @@ export class DevToggleStateAndStyle {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqToggleModule, KbqFormFieldModule, FormsModule],
     selector: 'dev-toggle-with-text-and-caption',
-    host: {
-        'data-testid': 'e2eToggleWithTextAndCaption'
-    },
+    imports: [KbqToggleModule, KbqFormFieldModule, FormsModule],
     template: `
         <input type="checkbox" data-testid="e2eBigToggle" [(ngModel)]="big" />
 
@@ -110,7 +105,10 @@ export class DevToggleStateAndStyle {
             gap: var(--kbq-size-m);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eToggleWithTextAndCaption'
+    }
 })
 export class DevToggleWithTextAndCaption {
     readonly states = ['normal', 'disabled'] as const;

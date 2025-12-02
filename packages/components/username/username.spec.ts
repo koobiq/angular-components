@@ -138,7 +138,6 @@ describe(KbqUsername.name, () => {
 
 @Component({
     selector: 'test-component',
-    standalone: true,
     imports: [
         KbqUsername
     ],
@@ -168,7 +167,6 @@ export class TestComponent {
 
 @Component({
     selector: 'test-component',
-    standalone: true,
     imports: [
         KbqUsername,
         KbqUsernameCustomView

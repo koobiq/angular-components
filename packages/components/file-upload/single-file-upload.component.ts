@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -20,11 +20,15 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
-import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
+import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
-import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { KbqFileDropDirective } from './file-drop';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -41,10 +45,19 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
 
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
+    imports: [
+        KbqFileDropDirective,
+        KbqLinkModule,
+        KbqIconModule,
+        KbqProgressSpinner,
+        AsyncPipe,
+        KbqEllipsisCenterDirective,
+        KbqDataSizePipe
+    ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-single-file-upload'
     }

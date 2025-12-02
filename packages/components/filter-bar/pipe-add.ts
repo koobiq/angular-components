@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOption, KbqOptionModule, KbqSelectMatcher } from '@koobiq/components/core';
+import { KbqOption, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
@@ -21,17 +21,25 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-add',
+    imports: [
+        KbqDropdownModule,
+        KbqToolTipModule,
+        KbqButtonModule,
+        KbqIcon,
+        KbqOptionModule,
+        KbqSelectModule,
+        NgClass
+    ],
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
             <button
+                kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
                 kbq-button
                 kbq-select-matcher
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
                 [ngClass]="{ 'kbq-active': select.panelOpen }"
-                kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
             >
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
@@ -50,21 +58,11 @@ import { getId } from './pipes/base-pipe';
         </kbq-select>
     `,
     styleUrl: 'pipe-add.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-pipe-add'
-    },
-    imports: [
-        KbqDropdownModule,
-        KbqToolTipModule,
-        KbqButtonModule,
-        KbqIcon,
-        KbqOptionModule,
-        KbqSelectMatcher,
-        KbqSelectModule,
-        NgClass
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqPipeAdd {
     /** KbqFilterBar instance */

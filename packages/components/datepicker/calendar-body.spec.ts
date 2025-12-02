@@ -6,7 +6,7 @@ import { KbqCalendarBody, KbqCalendarCell } from './calendar-body.component';
 describe('KbqCalendarBody', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 KbqCalendarBody,
                 // Test components.
                 StandardCalendarBody
@@ -97,6 +97,9 @@ describe('KbqCalendarBody', () => {
 });
 
 @Component({
+    imports: [
+        KbqCalendarBody
+    ],
     template: `
         <table
             kbq-calendar-body

@@ -6,10 +6,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Selected prioritized selected
  */
 @Component({
-    standalone: true,
     selector: 'select-prioritized-selected-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" multiple [(value)]="selected" (openedChange)="openedChange($event)">
@@ -31,7 +29,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectPrioritizedSelectedExample {
     options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);

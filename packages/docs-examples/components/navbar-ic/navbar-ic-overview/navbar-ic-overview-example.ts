@@ -34,10 +34,7 @@ enum NavbarIcItems {
  * @title Navbar-ic
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'navbar-ic-overview-example',
-    templateUrl: 'navbar-ic-overview-example.html',
     imports: [
         KbqNavbarIcModule,
         KbqBadgeModule,
@@ -47,7 +44,9 @@ enum NavbarIcItems {
         KbqButtonModule,
         KbqDropdownModule,
         KbqNavbarModule
-    ]
+    ],
+    templateUrl: 'navbar-ic-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarIcOverviewExample {
     protected readonly currentTheme = toSignal(

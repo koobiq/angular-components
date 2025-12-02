@@ -532,7 +532,6 @@ class TestComponentLevelService {
 }
 
 @Component({
-    standalone: true,
     selector: 'custom-modal-component',
     imports: [KbqModalModule],
     template: `
@@ -547,7 +546,6 @@ export class CustomModalComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'custom-component',
     providers: [
         TestComponentLevelService
@@ -580,6 +578,10 @@ class TestModalContentComponent {}
 
 @Component({
     selector: 'kbq-modal-by-service',
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
         <kbq-modal kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__" [(kbqVisible)]="nonServiceModalVisible" />
         <button kbq-button>focusable button</button>
@@ -603,9 +605,9 @@ const TEST_DIRECTIVES = [
         KbqModalModule,
         KbqButtonModule,
         KbqDropdownModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        ...TEST_DIRECTIVES
     ],
-    exports: TEST_DIRECTIVES,
-    declarations: TEST_DIRECTIVES
+    exports: TEST_DIRECTIVES
 })
 class ModalTestModule {}

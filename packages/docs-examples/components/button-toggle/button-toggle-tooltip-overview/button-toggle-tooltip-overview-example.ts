@@ -7,10 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Button toggle tooltip
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-toggle-tooltip-overview-example',
-    styleUrls: ['button-toggle-tooltip-overview-example.css'],
     imports: [
         KbqButtonToggleModule,
         FormsModule,
@@ -19,8 +16,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="kbq-button-toggle-group_stretched layout-margin-bottom-l">
             <kbq-button-toggle-group class="kbq-button-toggle-group_stretched" [(ngModel)]="model">
-                @for (toggle of group; track toggle; let i = $index) {
-                    <kbq-button-toggle [value]="i">
+                @for (toggle of group; track toggle) {
+                    <kbq-button-toggle [value]="$index">
                         {{ toggle }}
                     </kbq-button-toggle>
                 }
@@ -29,15 +26,17 @@ import { KbqIconModule } from '@koobiq/components/icon';
 
         <div>
             <kbq-button-toggle-group class="kbq-button-toggle-group_stretched" [(ngModel)]="model">
-                @for (toggle of group; track toggle; let i = $index) {
-                    <kbq-button-toggle [value]="i">
+                @for (toggle of group; track toggle) {
+                    <kbq-button-toggle [value]="$index">
                         <i kbq-icon="kbq-briefcase_16"></i>
                         <span>{{ toggle }}</span>
                     </kbq-button-toggle>
                 }
             </kbq-button-toggle-group>
         </div>
-    `
+    `,
+    styleUrls: ['button-toggle-tooltip-overview-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleTooltipOverviewExample {
     group = [

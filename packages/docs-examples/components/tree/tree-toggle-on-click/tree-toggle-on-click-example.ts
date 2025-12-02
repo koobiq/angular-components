@@ -93,8 +93,6 @@ export const DATA_OBJECT = [
  * @title tree-select-and-mark
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-toggle-on-click-example',
     imports: [
         KbqTreeModule,
@@ -124,7 +122,8 @@ export const DATA_OBJECT = [
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeToggleOnClickExample {
     treeControl: FlatTreeControl<FileFlatNode>;

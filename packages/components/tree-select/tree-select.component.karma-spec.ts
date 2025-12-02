@@ -12,13 +12,10 @@ import {
     ViewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqLocaleServiceModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
@@ -158,6 +155,11 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
 
 @Component({
     selector: 'basic-select',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule,
+        ReactiveFormsModule
+    ],
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
@@ -211,8 +213,7 @@ class BasicTreeSelect {
 
 @Component({
     selector: 'tree-select-with-panel-width',
-    standalone: true,
-    imports: [KbqTreeSelectModule, KbqTreeModule, KbqFormFieldModule],
+    imports: [KbqTreeSelectModule, KbqTreeModule],
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-tree-select [panelWidth]="panelWidth">
@@ -241,6 +242,10 @@ class TreeSelectWithPanelWidth {
 
 @Component({
     selector: 'basic-events',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select
@@ -293,6 +298,10 @@ class BasicEvents {
 
 @Component({
     selector: 'ng-model-select',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" ngModel [disabled]="isDisabled">
@@ -336,6 +345,11 @@ class NgModelSelect {
 
 @Component({
     selector: 'ng-if-select',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule,
+        ReactiveFormsModule
+    ],
     template: `
         @if (isShowing) {
             <div>
@@ -383,6 +397,10 @@ class NgIfSelect {
 
 @Component({
     selector: 'select-with-change-event',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select (selectionChange)="changeListener($event)">
@@ -423,6 +441,11 @@ class SelectWithChangeEvent {
 
 @Component({
     selector: 'multi-select',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [multiple]="true" [formControl]="control">
@@ -466,6 +489,10 @@ class MultiSelect {
 
 @Component({
     selector: 'basic-select-initially-hidden',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [style.display]="isVisible ? 'block' : 'none'">
@@ -506,6 +533,10 @@ class BasicSelectInitiallyHidden {
 
 @Component({
     selector: 'basic-select-no-placeholder',
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select>
@@ -543,6 +574,10 @@ class BasicSelectNoPlaceholder {
 }
 
 @Component({
+    imports: [
+        KbqTreeSelectModule,
+        KbqTreeModule
+    ],
     template: `
         <kbq-form-field>
             <!--<kbq-label>Select a thing</kbq-label>-->
@@ -564,7 +599,7 @@ class SelectWithFormFieldLabel {
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 }
 
-describe(KbqTreeSelect.name, () => {
+describe('KbqTreeSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
     let dir: { value: 'ltr' | 'rtl' };
@@ -579,18 +614,10 @@ describe(KbqTreeSelect.name, () => {
     function configureKbqTreeSelectTestingModule(declarations: any[]) {
         TestBed.configureTestingModule({
             imports: [
-                KbqFormFieldModule,
-                KbqTreeModule,
-                KbqTreeSelectModule,
-                KbqSelectModule,
-                KbqInputModule,
-                ReactiveFormsModule,
-                FormsModule,
                 NoopAnimationsModule,
-                KbqPseudoCheckboxModule,
-                KbqLocaleServiceModule
+                KbqLocaleServiceModule,
+                ...declarations
             ],
-            declarations,
             providers: [
                 { provide: Directionality, useFactory: () => (dir = { value: 'ltr' }) },
                 {

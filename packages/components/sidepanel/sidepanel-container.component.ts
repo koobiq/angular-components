@@ -1,4 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
     ChangeDetectionStrategy,
@@ -28,10 +29,14 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
 
 @Component({
     selector: 'kbq-sidepanel-container',
+    imports: [
+        CdkPortalOutlet,
+        CdkTrapFocus
+    ],
     templateUrl: './sidepanel-container.component.html',
     styleUrls: ['./sidepanel.scss', './sidepanel-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqSidepanelAnimations.sidepanelState],
     host: {
         class: 'kbq-sidepanel-container',

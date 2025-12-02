@@ -8,19 +8,18 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
  * @title Time range overview
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-overview-example',
     imports: [
         ReactiveFormsModule,
         KbqTimeRange,
         LuxonDateModule
     ],
-    providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     template: `
         <kbq-time-range [formControl]="control" [availableTimeRangeTypes]="availableTimeRangeTypes" />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

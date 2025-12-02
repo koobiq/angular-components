@@ -41,7 +41,6 @@ interface DocsTokensInfoRaw {
 }
 
 @Component({
-    standalone: true,
     selector: 'docs-tokens-table',
     imports: [
         DocsCodeSnippetDirective,
@@ -64,10 +63,7 @@ interface DocsTokensInfoRaw {
                     @for (token of outputSection.tokens; track token) {
                         <tr>
                             <td align="left">
-                                <div
-                                    [class]="'docs-design-token-example__' + mapTabToType[tab()]"
-                                    [style]="getStyle(token.token)"
-                                ></div>
+                                <div [class]="getClassName(mapTabToType[tab()])" [style]="getStyle(token.token)"></div>
                             </td>
                             <td align="left">
                                 <div class="docs-design-token-example__var">
@@ -145,10 +141,13 @@ export class DocsTokensTable extends DocsLocaleState {
     getStyle(token: string) {
         return { [this.mapTabToCssProp[this.tab()]]: `var(${token})` };
     }
+
+    getClassName(text: string): string {
+        return `docs-design-token-example__${text}`;
+    }
 }
 
 @Component({
-    standalone: true,
     selector: 'docs-tokens-overview',
     imports: [
         DocsComponentViewerWrapperComponent,
@@ -166,7 +165,7 @@ export class DocsTokensTable extends DocsLocaleState {
 
         <ng-template #sectionTemplate let-section let-level="level">
             @if (section.type && section.type !== 'No-header') {
-                <div [class]="'docs-header-link kbq-markdown__h' + level" [id]="section.type">
+                <div [class]="getClassName(level)" [id]="section.type">
                     {{ section.type }}
                 </div>
             }
@@ -238,6 +237,10 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
 
     ngAfterViewInit() {
         setTimeout(() => this.wrapper().scrollToSelectedContentSection());
+    }
+
+    getClassName(text: string): string {
+        return `'docs-header-link kbq-markdown__h${text}`;
     }
 
     protected calculateViewData(): DocsTokensInfo[] {

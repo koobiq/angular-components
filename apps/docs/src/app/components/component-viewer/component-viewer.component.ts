@@ -35,28 +35,26 @@ import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
-    standalone: true,
+    selector: 'docs-component-viewer',
     imports: [
         KbqTabsModule,
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
         DocsRegisterHeaderDirective,
-
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule
     ],
-    providers: [KbqSidepanelService],
-    hostDirectives: [CdkScrollable],
-    selector: 'docs-component-viewer',
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqSidepanelService],
+    hostDirectives: [CdkScrollable],
     host: {
         class: 'docs-component-viewer kbq-scrollbar',
         '[attr.data-docsearch-category]': 'structureCategoryId'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;
@@ -154,20 +152,19 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
 }
 
 @Component({
-    standalone: true,
+    selector: 'docs-cdk-overview',
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
         KbqDividerModule,
         KbqLinkModule
     ],
-    selector: 'docs-cdk-overview',
     templateUrl: './component-overview.template.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-component-overview'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsCdkOverviewComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
@@ -180,20 +177,19 @@ export class DocsCdkOverviewComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
+    selector: 'docs-component-overview',
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
         KbqDividerModule,
         KbqLinkModule
     ],
-    selector: 'docs-component-overview',
     templateUrl: './component-overview.template.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-component-overview'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsComponentOverviewComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
@@ -206,20 +202,19 @@ export class DocsComponentOverviewComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
+    selector: 'docs-component-api',
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
         KbqDividerModule,
         KbqLinkModule
     ],
-    selector: 'docs-component-api',
     templateUrl: './component-overview.template.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-component-overview'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsComponentApiComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
@@ -232,20 +227,19 @@ export class DocsComponentApiComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
+    selector: 'docs-cdk-api',
     imports: [
         DocsAnchorsComponent,
         DocsLiveExampleComponent,
         KbqDividerModule,
         KbqLinkModule
     ],
-    selector: 'docs-cdk-api',
     templateUrl: './component-overview.template.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-component-overview'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsCdkApiComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
@@ -258,12 +252,11 @@ export class DocsCdkApiComponent extends DocsOverviewComponentBase {
 }
 
 @Component({
-    standalone: true,
+    selector: 'docs-component-examples',
     imports: [
         DocsExampleViewerComponent,
         DocsAnchorsComponent
     ],
-    selector: 'docs-component-examples',
     template: `
         <div class="docs-component-viewer__article">
             <docs-example-viewer
@@ -277,11 +270,11 @@ export class DocsCdkApiComponent extends DocsOverviewComponentBase {
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
         </div>
     `,
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-component-overview'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsComponentExamplesComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {

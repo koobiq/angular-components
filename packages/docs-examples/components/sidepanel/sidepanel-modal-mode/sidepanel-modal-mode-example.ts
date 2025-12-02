@@ -8,11 +8,10 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
  * @title Sidepanel modal mode
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'sidepanel-modal-mode-example',
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
     templateUrl: 'sidepanel-modal-mode-example.html',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelModalModeExample {
     position = KbqSidepanelPosition.Right;

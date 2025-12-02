@@ -4,9 +4,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
-    standalone: true,
-    imports: [KbqFormFieldModule, KbqIconModule],
     selector: 'dev-app',
+    imports: [KbqFormFieldModule, KbqIconModule],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

@@ -13,7 +13,7 @@ import { docsGetCategories, DocsStructureCategory } from '../../structure';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
-    standalone: true,
+    selector: 'docs-welcome',
     imports: [
         KbqIconModule,
         KbqLinkModule,
@@ -21,13 +21,12 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         AsyncPipe,
         DocsRegisterHeaderDirective
     ],
-    selector: 'docs-welcome',
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.scss'],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-welcome kbq-scrollbar'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     protected structureCategories: DocsStructureCategory[];

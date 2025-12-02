@@ -180,8 +180,8 @@
         }
 
         <input
-            kbqInput
             placeholder="{{ placeholder }}"
+            kbqInput
             [kbqTagInputFor]="inputTagList"
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
             [ngModel]="''"
@@ -202,8 +202,8 @@
         }
 
         <input
-            kbqInput
             placeholder="{{ placeholder }}"
+            kbqInput
             [kbqTagInputFor]="inputTagList1"
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
             [ngModel]="'value'"
@@ -297,7 +297,7 @@
     <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
     <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
 
-    <input kbqInput placeholder="{{ placeholder }}" [ngModel]="''" />
+    <input placeholder="{{ placeholder }}" kbqInput [ngModel]="''" />
 </kbq-form-field>
 
 <hr />

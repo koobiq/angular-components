@@ -6,8 +6,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip relative to pointer
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-relative-to-pointer-example',
     imports: [
         KbqButtonModule,
@@ -17,6 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <button kbq-button kbqTooltip="relativeToPointer" [kbqRelativeToPointer]="true">
             Button with a tooltip positioned relative to the cursor
         </button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipRelativeToPointerExample {}

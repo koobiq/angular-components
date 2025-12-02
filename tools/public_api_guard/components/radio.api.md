@@ -12,7 +12,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
+import * as i1 from '@angular/cdk/a11y';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -37,7 +37,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     // (undocumented)
     isFocused: boolean;
     get labelPosition(): 'before' | 'after';
-    set labelPosition(value: 'before' | 'after');
+    set labelPosition(value: "before" | "after");
     markForCheck(): void;
     name: string;
     // (undocumented)
@@ -67,7 +67,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, [{ optional: true; }, null, null, null]>;
 }
@@ -94,7 +94,7 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     set disabled(value: boolean);
     emitChangeEvent(): void;
     get labelPosition(): 'before' | 'after';
-    set labelPosition(v: 'before' | 'after');
+    set labelPosition(v: "before" | "after");
     // (undocumented)
     markRadiosForCheck(): void;
     get name(): string;
@@ -118,7 +118,7 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     set value(newValue: any);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "big": { "alias": "big"; "required": false; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; }, { "change": "change"; }, ["radios"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "big": { "alias": "big"; "required": false; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; }, { "change": "change"; }, ["radios"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioGroup, never>;
 }
@@ -129,10 +129,10 @@ export class KbqRadioModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqRadioModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, [typeof i1.KbqRadioGroup, typeof i1.KbqRadioButton], [typeof i2.A11yModule], [typeof i1.KbqRadioGroup, typeof i1.KbqRadioButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, never, [typeof i1.A11yModule, typeof i2.KbqRadioGroup, typeof i2.KbqRadioButton], [typeof i2.KbqRadioGroup, typeof i2.KbqRadioButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

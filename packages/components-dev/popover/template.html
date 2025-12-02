@@ -294,7 +294,7 @@
         </div>
     </div>
 
-    <div cdkScrollable style="overflow: scroll" class="{{ layoutClass }} dev-result" [style.order]="getOrder('result')">
+    <div class="{{ layoutClass }} dev-result" cdkScrollable style="overflow: scroll" [style.order]="getOrder('result')">
         <div style="min-width: 1500px; display: flex; justify-content: center">
             @switch (showElement()) {
                 @case (ELEMENTS.BUTTON) {

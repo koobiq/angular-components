@@ -80,7 +80,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
  * @docs-private
  */
 @Component({
-    standalone: true,
+    selector: 'kbq-actions-panel-container',
     imports: [
         CdkPortalOutlet,
         KbqDividerModule,
@@ -88,7 +88,6 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         KbqIconModule,
         KbqToolTipModule
     ],
-    selector: 'kbq-actions-panel-container',
     template: `
         <div class="kbq-actions-panel-container__content">
             <ng-template cdkPortalOutlet />
@@ -111,6 +110,10 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         './actions-panel-tokens.scss',
         './actions-panel-container.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    // Uses the `Default` change detection strategy as parent `CdkDialogContainer`:
+    // https://github.com/angular/components/blob/18.2.14/src/cdk/dialog/dialog-container.ts#L60
+    changeDetection: ChangeDetectionStrategy.Default,
     animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION],
     host: {
         class: 'kbq-actions-panel-container',
@@ -119,11 +122,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         '(@state.start)': 'onAnimationStart($event)',
         '(@state.done)': 'onAnimationDone($event)',
         '(keydown.escape)': 'handleEscape($event)'
-    },
-    // Uses the `Default` change detection strategy as parent `CdkDialogContainer`:
-    // https://github.com/angular/components/blob/18.2.14/src/cdk/dialog/dialog-container.ts#L60
-    changeDetection: ChangeDetectionStrategy.Default,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
     /**

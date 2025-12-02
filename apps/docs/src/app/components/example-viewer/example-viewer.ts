@@ -40,9 +40,8 @@ export class DocsDocFetcher {
 }
 
 @Component({
-    standalone: true,
-    imports: [],
     selector: 'docs-example-viewer',
+    imports: [],
     template: `
         Loading document...
     `,

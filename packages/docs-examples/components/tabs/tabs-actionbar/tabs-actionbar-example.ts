@@ -7,13 +7,12 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs actionbar
  */
 @Component({
-    standalone: true,
+    selector: 'tabs-actionbar-example',
     imports: [
         KbqTabsModule,
         KbqButtonModule,
         KbqIconModule
     ],
-    selector: 'tabs-actionbar-example',
     template: `
         <div class="example-tabs-actionbar">
             <div class="example-tabs-actionbar_nav">

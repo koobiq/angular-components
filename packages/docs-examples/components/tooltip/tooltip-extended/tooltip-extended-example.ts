@@ -6,14 +6,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip extended
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-extended-example',
-    styles: `
-        .custom-tooltip {
-            max-width: 485px !important;
-        }
-    `,
     imports: [
         KbqButtonModule,
         KbqToolTipModule
@@ -39,6 +32,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <ng-template #tooltipHeader>
             <span>Заголовок</span>
         </ng-template>
-    `
+    `,
+    styles: `
+        .custom-tooltip {
+            max-width: 485px !important;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipExtendedExample {}

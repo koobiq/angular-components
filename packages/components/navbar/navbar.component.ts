@@ -177,23 +177,19 @@ export class KbqNavbarContainer {}
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-navbar',
-
         '[attr.tabindex]': 'tabIndex',
-
         '(focus)': 'focus()',
         '(blur)': 'blur()',
-
         '(keydown)': 'onKeyDown($event)',
-
         '(window:resize)': 'resizeStream.next($event)'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-    rectangleElements = contentChildren(
+    readonly rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarRectangleElement),
         { descendants: true }
     );

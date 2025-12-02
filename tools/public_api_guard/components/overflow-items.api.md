@@ -18,7 +18,7 @@ export class ElementVisibilityManager {
     hide(): void;
     show(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<ElementVisibilityManager, never, never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<ElementVisibilityManager, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ElementVisibilityManager, never>;
 }

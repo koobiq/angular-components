@@ -1,8 +1,10 @@
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
 import { Platform, _getEventTarget } from '@angular/cdk/platform';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -74,7 +76,8 @@ import {
     kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqTag } from '@koobiq/components/tags';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { Observable, Subject, Subscription, audit, defer, merge } from 'rxjs';
@@ -135,21 +138,29 @@ export class KbqTreeSelectChange {
 
 @Component({
     selector: 'kbq-tree-select',
-    exportAs: 'kbqTreeSelect',
+    imports: [
+        CdkOverlayOrigin,
+        KbqIconModule,
+        KbqTagRemove,
+        CdkConnectedOverlay,
+        CdkMonitorFocus,
+        NgClass,
+        KbqTag,
+        NgTemplateOutlet
+    ],
     templateUrl: 'tree-select.html',
     styleUrls: ['./tree-select.scss', './tree-select-tokens.scss', '../select/select-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTreeSelect',
     host: {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
-
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         '(click)': 'handleClick()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',

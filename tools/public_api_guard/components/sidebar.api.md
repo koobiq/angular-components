@@ -8,7 +8,7 @@ import { AfterContentInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
+import * as i1 from '@angular/common';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 
@@ -39,7 +39,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "opened": { "alias": "opened"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "opened": { "alias": "opened"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebar, never>;
 }
@@ -49,7 +49,7 @@ export class KbqSidebarClosed {
     // (undocumented)
     width: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarClosed, "[kbq-sidebar-closed]", ["kbqSidebarClosed"], { "width": { "alias": "width"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarClosed, "[kbq-sidebar-closed]", ["kbqSidebarClosed"], { "width": { "alias": "width"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarClosed, never>;
 }
@@ -60,10 +60,10 @@ export class KbqSidebarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidebarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, [typeof i1.KbqSidebarClosed, typeof i1.KbqSidebarOpened, typeof i1.KbqSidebar], [typeof i2.CommonModule], [typeof i1.KbqSidebarClosed, typeof i1.KbqSidebarOpened, typeof i1.KbqSidebar]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof i1.CommonModule, typeof i2.KbqSidebarClosed, typeof i2.KbqSidebarOpened, typeof i2.KbqSidebar], [typeof i2.KbqSidebarClosed, typeof i2.KbqSidebarOpened, typeof i2.KbqSidebar]>;
 }
 
 // @public (undocumented)
@@ -75,7 +75,7 @@ export class KbqSidebarOpened {
     // (undocumented)
     width: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarOpened, "[kbq-sidebar-opened]", ["kbqSidebarOpened"], { "minWidth": { "alias": "minWidth"; "required": false; }; "width": { "alias": "width"; "required": false; }; "maxWidth": { "alias": "maxWidth"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarOpened, "[kbq-sidebar-opened]", ["kbqSidebarOpened"], { "minWidth": { "alias": "minWidth"; "required": false; }; "width": { "alias": "width"; "required": false; }; "maxWidth": { "alias": "maxWidth"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarOpened, never>;
 }

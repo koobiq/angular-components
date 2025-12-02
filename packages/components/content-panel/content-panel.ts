@@ -49,23 +49,21 @@ const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
 ]);
 
 @Component({
-    standalone: true,
     selector: 'kbq-content-panel-aside',
-    exportAs: 'kbqContentPanelAside',
     template: `
         <ng-content />
     `,
     styleUrl: './content-panel-aside.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqContentPanelAside',
     host: {
         class: 'kbq-content-panel-aside'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqContentPanelAside {}
 
 @Directive({
-    standalone: true,
     selector: '[kbqContentPanelHeaderTitle]',
     exportAs: 'kbqContentPanelHeaderTitle',
     host: {
@@ -75,7 +73,6 @@ export class KbqContentPanelAside {}
 export class KbqContentPanelHeaderTitle {}
 
 @Directive({
-    standalone: true,
     selector: '[kbqContentPanelHeaderActions]',
     exportAs: 'kbqContentPanelHeaderActions',
     host: {
@@ -85,12 +82,8 @@ export class KbqContentPanelHeaderTitle {}
 export class KbqContentPanelHeaderActions {}
 
 @Component({
-    standalone: true,
-    imports: [KbqButtonModule, KbqIconModule],
     selector: 'kbq-content-panel-header',
-    host: {
-        class: 'kbq-content-panel-header'
-    },
+    imports: [KbqButtonModule, KbqIconModule],
     template: `
         <div class="kbq-content-panel-header__wrapper">
             <ng-content select="[kbqContentPanelHeaderTitle]" />
@@ -113,8 +106,11 @@ export class KbqContentPanelHeaderActions {}
         <ng-content />
     `,
     styleUrl: './content-panel-header.scss',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    host: {
+        class: 'kbq-content-panel-header'
+    }
 })
 export class KbqContentPanelHeader {
     /**
@@ -132,21 +128,20 @@ export class KbqContentPanelHeader {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqScrollbarModule],
     selector: 'kbq-content-panel-body',
-    exportAs: 'kbqContentPanelBody',
-    host: {
-        class: 'kbq-content-panel-body'
-    },
+    imports: [KbqScrollbarModule],
     template: `
         <kbq-scrollbar class="kbq-content-panel-body__content">
             <ng-content />
         </kbq-scrollbar>
     `,
     styleUrl: './content-panel-body.scss',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    exportAs: 'kbqContentPanelBody',
+    host: {
+        class: 'kbq-content-panel-body'
+    }
 })
 export class KbqContentPanelBody {
     /**
@@ -156,22 +151,20 @@ export class KbqContentPanelBody {
 }
 
 @Component({
-    standalone: true,
     selector: 'kbq-content-panel-footer',
-    host: {
-        class: 'kbq-content-panel-footer'
-    },
     template: `
         <ng-content />
     `,
     styleUrl: './content-panel-footer.scss',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    host: {
+        class: 'kbq-content-panel-footer'
+    }
 })
 export class KbqContentPanelFooter {}
 
 @Component({
-    standalone: true,
     selector: 'kbq-content-panel',
     host: {
         class: 'kbq-content-panel'
@@ -239,24 +232,17 @@ export class KbqContentPanel {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqResizable, KbqResizer, KbqScrollbarModule],
     selector: 'kbq-content-panel-container',
-    exportAs: 'kbqContentPanelContainer',
-    host: {
-        class: 'kbq-content-panel-container',
-        '[class.kbq-content-panel-container__opened]': 'openedState()',
-        '(keydown.escape)': 'handleEscapeKeydown($event)'
-    },
+    imports: [KbqResizable, KbqResizer, KbqScrollbarModule],
     template: `
         <kbq-scrollbar class="kbq-content-panel-container__content" [@contentAnimation]="contentAnimationState()">
             <ng-content />
         </kbq-scrollbar>
         @if (openedState()) {
             <div
+                @panelAnimation
                 class="kbq-content-panel-container__panel"
                 kbqResizable
-                @panelAnimation
                 [style.min-width.px]="minWidth()"
                 [style.width.px]="widthState()"
                 [style.max-width.px]="maxWidth()"
@@ -274,12 +260,18 @@ export class KbqContentPanel {
         }
     `,
     styleUrl: './content-panel-container.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqContentPanelContainer',
+    host: {
+        class: 'kbq-content-panel-container',
+        '[class.kbq-content-panel-container__opened]': 'openedState()',
+        '(keydown.escape)': 'handleEscapeKeydown($event)'
+    },
     animations: [
         KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION,
         KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION
-    ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class KbqContentPanelContainer {
     /**

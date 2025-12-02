@@ -1,7 +1,6 @@
-import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
+import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
-import { ProjectDefinition, WorkspaceDefinition } from '@schematics/angular/utility';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
@@ -10,7 +9,7 @@ import { Schema } from './schema';
 const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'empty-state-size-attr';
 
-const getProjectContentPaths = (project: ProjectDefinition) => {
+const getProjectContentPaths = (project: workspaces.ProjectDefinition) => {
     return {
         templatePath: `/${project.root}/src/app/app.component.html`,
         tsPath: `/${project.root}/src/app/app.component.ts`,
@@ -21,14 +20,14 @@ const getProjectContentPaths = (project: ProjectDefinition) => {
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
-    let projects: ProjectDefinitionCollection;
-    let workspace: WorkspaceDefinition;
+    let projects: workspaces.ProjectDefinitionCollection;
 
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
         appTree = await createTestApp(runner, { style: 'scss' });
-        workspace = await getWorkspace(appTree);
-        projects = workspace.projects as unknown as ProjectDefinitionCollection;
+        const workspace = await getWorkspace(appTree);
+
+        projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
     });
 
     it('should run migration for specified project', async () => {

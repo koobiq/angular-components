@@ -3,9 +3,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
-    standalone: true,
-    imports: [KbqIconModule],
     selector: 'dev-app',
+    imports: [KbqIconModule],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

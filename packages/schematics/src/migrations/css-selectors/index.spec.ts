@@ -1,7 +1,6 @@
-import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
+import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { ProjectDefinition } from '@schematics/angular/utility';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
@@ -35,7 +34,7 @@ const cssClassesWithDeprecatedColors = colorsVarsReplacement
     .map(({ replace }) => `.test { color: var(--${replace}) }`)
     .join('\n');
 
-const getProjectContent = (tree: UnitTestTree | Tree, project: ProjectDefinition) => {
+const getProjectContent = (tree: UnitTestTree | Tree, project: workspaces.ProjectDefinition) => {
     return [
         tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
         tree.read(`/${project.root}/src/app/app.component.ts`)?.toString() || '',
@@ -46,7 +45,7 @@ const getProjectContent = (tree: UnitTestTree | Tree, project: ProjectDefinition
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
-    let projects: ProjectDefinitionCollection;
+    let projects: workspaces.ProjectDefinitionCollection;
 
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
@@ -54,7 +53,7 @@ describe(SCHEMATIC_NAME, () => {
 
         const workspace = await getWorkspace(appTree);
 
-        projects = workspace.projects as unknown as ProjectDefinitionCollection;
+        projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
         projects.forEach((project) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;
             const tsPath = `/${project.root}/src/app/app.component.ts`;

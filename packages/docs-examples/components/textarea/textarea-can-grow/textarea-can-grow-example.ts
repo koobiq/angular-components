@@ -8,8 +8,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Textarea with canGrow attribute
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'textarea-can-grow-example',
     imports: [KbqFormFieldModule, KbqTextareaModule, KbqToggleModule, FormsModule],
     template: `
@@ -20,6 +18,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             <textarea kbqTextarea placeholder="Placeholder" [canGrow]="canGrow()" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-xl layout-column'
     }

@@ -7,7 +7,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tab list with selection by tab id
  */
 @Component({
-    standalone: true,
     selector: 'tabs-active-tab-id-example',
     imports: [
         KbqTabsModule,

@@ -14,8 +14,8 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@koobiq/components/tooltip';
-import * as i7 from '@angular/cdk/platform';
-import * as i8 from '@koobiq/components/icon';
+import * as i2_2 from '@angular/cdk/platform';
+import * as i3 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
@@ -78,7 +78,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     get tabIndex(): any;
     set tabIndex(value: any);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusableComponent, never, never, { "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["focusableItems"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusableComponent, never, never, { "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["focusableItems"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusableComponent, never>;
 }
@@ -103,13 +103,13 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    rectangleElements: Signal<readonly any[]>;
+    readonly rectangleElements: Signal<readonly any[]>;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
     // (undocumented)
     updateExpandedStateForItems: () => void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbar, "kbq-navbar", never, {}, {}, ["rectangleElements", "navbarItems"], ["[kbq-navbar-container], kbq-navbar-container"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbar, "kbq-navbar", never, {}, {}, ["rectangleElements", "navbarItems"], ["[kbq-navbar-container], kbq-navbar-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbar, never>;
 }
@@ -117,7 +117,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 // @public (undocumented)
 export class KbqNavbarBento {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarBento, "kbq-navbar-item[bento], [kbq-navbar-item][bento]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarBento, "kbq-navbar-item[bento], [kbq-navbar-item][bento]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarBento, never>;
 }
@@ -144,7 +144,7 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     title: KbqNavbarTitle;
     get titleText(): string | null;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; }; "collapsedText": { "alias": "collapsedText"; "required": false; }; }, {}, ["title"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; }; "collapsedText": { "alias": "collapsedText"; "required": false; }; }, {}, ["title"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarBrand, never>;
 }
@@ -152,7 +152,7 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
 // @public (undocumented)
 export class KbqNavbarContainer {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarContainer, "kbq-navbar-container", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarContainer, "kbq-navbar-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarContainer, never>;
 }
@@ -163,7 +163,7 @@ export type KbqNavbarContainerPositionType = 'left' | 'right';
 // @public (undocumented)
 export class KbqNavbarDivider {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarDivider, "kbq-navbar-divider", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarDivider, "kbq-navbar-divider", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarDivider, never>;
 }
@@ -211,7 +211,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     // (undocumented)
     get tooltip(): KbqTooltipTrigger;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarFocusableItem, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle", never, { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["title", "button", "formField"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarFocusableItem, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle", never, { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["title", "button", "formField"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarFocusableItem, never>;
 }
@@ -269,7 +269,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     updateTooltip(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "collapsable": { "alias": "collapsable"; "required": false; }; }, {}, ["title", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "collapsable": { "alias": "collapsable"; "required": false; }; }, {}, ["title", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, [null, null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -279,7 +279,7 @@ export class KbqNavbarLogo {
     // (undocumented)
     readonly hovered: Subject<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarLogo, "kbq-navbar-logo, [kbq-navbar-logo]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarLogo, "kbq-navbar-logo, [kbq-navbar-logo]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarLogo, never>;
 }
@@ -290,14 +290,14 @@ export class KbqNavbarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2_2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, [typeof i1_2.KbqNavbar, typeof i1_2.KbqNavbarContainer, typeof i2_2.KbqNavbarTitle, typeof i2_2.KbqNavbarItem, typeof i3.KbqNavbarBrand, typeof i2_2.KbqNavbarLogo, typeof i4.KbqNavbarToggle, typeof i5.KbqVerticalNavbar, typeof i2_2.KbqNavbarDivider, typeof i2_2.KbqNavbarFocusableItem, typeof i2_2.KbqNavbarRectangleElement, typeof i2_2.KbqNavbarBento], [typeof i1.A11yModule, typeof i7.PlatformModule, typeof i8.KbqIconModule, typeof i2.KbqToolTipModule], [typeof i1_2.KbqNavbar, typeof i1_2.KbqNavbarContainer, typeof i2_2.KbqNavbarTitle, typeof i2_2.KbqNavbarItem, typeof i3.KbqNavbarBrand, typeof i2_2.KbqNavbarLogo, typeof i4.KbqNavbarToggle, typeof i5.KbqVerticalNavbar, typeof i2_2.KbqNavbarDivider, typeof i2_2.KbqNavbarFocusableItem, typeof i2_2.KbqNavbarRectangleElement, typeof i2_2.KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1.A11yModule, typeof i2_2.PlatformModule, typeof i3.KbqIconModule, typeof i2.KbqToolTipModule, typeof i5.KbqNavbar, typeof i5.KbqNavbarContainer, typeof i6.KbqNavbarTitle, typeof i6.KbqNavbarItem, typeof i7.KbqNavbarBrand, typeof i6.KbqNavbarLogo, typeof i8.KbqNavbarToggle, typeof i9.KbqVerticalNavbar, typeof i6.KbqNavbarDivider, typeof i6.KbqNavbarFocusableItem, typeof i6.KbqNavbarRectangleElement, typeof i6.KbqNavbarBento], [typeof i5.KbqNavbar, typeof i5.KbqNavbarContainer, typeof i6.KbqNavbarTitle, typeof i6.KbqNavbarItem, typeof i7.KbqNavbarBrand, typeof i6.KbqNavbarLogo, typeof i8.KbqNavbarToggle, typeof i9.KbqVerticalNavbar, typeof i6.KbqNavbarDivider, typeof i6.KbqNavbarFocusableItem, typeof i6.KbqNavbarRectangleElement, typeof i6.KbqNavbarBento]>;
 }
 
 // @public (undocumented)
@@ -322,7 +322,7 @@ export class KbqNavbarRectangleElement {
     get vertical(): boolean;
     set vertical(value: boolean);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarRectangleElement, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-divider, kbq-navbar-brand, [kbq-navbar-brand]", never, {}, {}, ["button"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarRectangleElement, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-divider, kbq-navbar-brand, [kbq-navbar-brand]", never, {}, {}, ["button"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarRectangleElement, never>;
 }
@@ -350,7 +350,7 @@ export class KbqNavbarTitle implements AfterViewInit {
     // (undocumented)
     get text(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarTitle, "kbq-navbar-title, [kbq-navbar-title]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarTitle, "kbq-navbar-title, [kbq-navbar-title]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarTitle, never>;
 }
@@ -364,7 +364,7 @@ export class KbqNavbarToggle implements OnDestroy {
     ngOnDestroy(): void;
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarToggle, "kbq-navbar-toggle, [kbq-navbar-toggle]", never, {}, {}, never, ["[kbq-icon]"], false, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqTooltipTrigger; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarToggle, "kbq-navbar-toggle, [kbq-navbar-toggle]", never, {}, {}, never, ["[kbq-icon]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqTooltipTrigger; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarToggle, never>;
 }
@@ -399,7 +399,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "bento", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], false, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "bento", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }

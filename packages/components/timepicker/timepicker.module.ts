@@ -9,9 +9,9 @@ import { KbqTimepicker } from './timepicker.directive';
     imports: [
         A11yModule,
         PlatformModule,
-        FormsModule
+        FormsModule,
+        KbqTimepicker
     ],
-    declarations: [KbqTimepicker],
     exports: [KbqTimepicker, KbqFormFieldModule]
 })
 export class KbqTimepickerModule {}

@@ -11,9 +11,13 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
  * @title File-upload multiple default validation reactive forms
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-default-validation-reactive-forms-overview-example',
+    imports: [
+        ReactiveFormsModule,
+        KbqFileUploadModule,
+        KbqFormFieldModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-file-upload
             multiple
@@ -41,12 +45,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
             }
         </kbq-file-upload>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFileUploadModule,
-        KbqFormFieldModule,
-        KbqIconModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample {
     maxFileSizeErrorMessage = 'The file size has exceeded the limit';

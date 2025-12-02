@@ -6,12 +6,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select with panelWidth default
  */
 @Component({
-    standalone: true,
+    selector: 'select-with-panel-width-default-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule
     ],
-    selector: 'select-with-panel-width-default-example',
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" [(value)]="valueFirst">
@@ -40,10 +39,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             max-width: 32%;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-l layout-align-center-center layout-row layout-gap-l'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class SelectWithPanelWidthDefaultExample {
     readonly options = [

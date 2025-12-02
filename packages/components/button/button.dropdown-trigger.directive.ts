@@ -9,7 +9,6 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
  * The directive relies on a separate `KbqDropdownTrigger` directive to get dropdown's state.
  */
 @Directive({
-    standalone: true,
     selector: `[kbq-button][kbqDropdownTriggerFor]`,
     host: {
         '[class.kbq-active]': 'dropdownTrigger.opened'

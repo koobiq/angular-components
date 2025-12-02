@@ -7,8 +7,15 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-readonly',
+    imports: [
+        KbqButtonModule,
+        KbqTitleModule,
+        KbqPipeState,
+        KbqPipeTitleDirective,
+        KbqPipeMinWidth,
+        KbqPipeButton
+    ],
     template: `
         <button kbq-button [disabled]="data.disabled" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip">
             <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
@@ -27,21 +34,13 @@ import { KbqPipeTitleDirective } from './pipe-title';
         </ng-template>
     `,
     styleUrls: ['base-pipe.scss', 'pipe-readonly.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ],
-    imports: [
-        KbqButtonModule,
-        KbqTitleModule,
-        KbqPipeState,
-        KbqPipeTitleDirective,
-        KbqPipeMinWidth,
-        KbqPipeButton
     ]
 })
 export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {

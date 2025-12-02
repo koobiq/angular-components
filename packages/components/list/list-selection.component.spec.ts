@@ -51,18 +51,19 @@ describe('KbqListSelection without forms', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqListModule],
-                declarations: [SelectionListWithListOptions],
                 providers: [
                     {
                         provide: Clipboard,
-                        useFactory: () => ({
-                            copy: (value) => {
-                                const originalClipboard = new Clipboard(document);
+                        useFactory: () => {
+                            const originalClipboard = new Clipboard(document);
 
-                                originalClipboard.copy(value);
-                                clipboardContent = value;
-                            }
-                        })
+                            return {
+                                copy: (value) => {
+                                    originalClipboard.copy(value);
+                                    clipboardContent = value;
+                                }
+                            };
+                        }
                     }
                 ]
             }).compileComponents();
@@ -432,8 +433,7 @@ describe('KbqListSelection without forms', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [SelectionListWithSelectedOption]
+                imports: [KbqListModule]
             }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithSelectedOption);
@@ -453,11 +453,7 @@ describe('KbqListSelection without forms', () => {
     describe('with tabindex', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [
-                    SelectionListWithTabindexAttr,
-                    SelectionListWithTabindexInDisabledState
-                ]
+                imports: [KbqListModule]
             }).compileComponents();
         });
 
@@ -489,10 +485,7 @@ describe('KbqListSelection without forms', () => {
         let options: DebugElement[];
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [KbqListModule, FormsModule],
-                declarations: [SelectionListFocusStates]
-            }).compileComponents();
+            TestBed.configureTestingModule({ imports: [KbqListModule, FormsModule] }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListFocusStates);
             list = fixture.debugElement.query(By.directive(KbqListSelection));
@@ -554,10 +547,7 @@ describe('KbqListSelection without forms', () => {
         let selectionList: DebugElement;
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [SelectionListWithListDisabled]
-            }).compileComponents();
+            TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithListDisabled);
             listOption = fixture.debugElement.queryAll(By.directive(KbqListOption));
@@ -584,10 +574,7 @@ describe('KbqListSelection without forms', () => {
         let fixture: ComponentFixture<SelectionListWithCheckboxPositionAfter>;
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [SelectionListWithCheckboxPositionAfter]
-            }).compileComponents();
+            TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
             fixture.detectChanges();
@@ -608,13 +595,6 @@ xdescribe('KbqListSelection with forms', () => {
                 KbqListModule,
                 FormsModule,
                 ReactiveFormsModule
-            ],
-            declarations: [
-                SelectionListWithModel,
-                SelectionListWithFormControl,
-                SelectionListWithPreselectedOption,
-                SelectionListWithPreselectedOptionAndModel,
-                SelectionListWithPreselectedFormControlOnPush
             ]
         }).compileComponents();
     });
@@ -849,10 +829,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
     let ngModel: NgModel;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [KbqListModule, FormsModule],
-            declarations: [SelectionListMultipleCheckbox]
-        }).compileComponents();
+        TestBed.configureTestingModule({ imports: [KbqListModule, FormsModule] }).compileComponents();
 
         fixture = TestBed.createComponent(SelectionListMultipleCheckbox);
         fixture.detectChanges();
@@ -950,6 +927,10 @@ describe('KbqListSelection keyboard interaction', () => {
 });
 
 @Component({
+    imports: [
+        KbqListModule,
+        FormsModule
+    ],
     template: `
         <kbq-list-selection [compareWith]="compareWith" [(ngModel)]="selectedOptions">
             @for (option of options; track option) {
@@ -977,6 +958,9 @@ class SelectionListWithCustomComparator {
 }
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list-selection
             id="selection-list-1"
@@ -1003,6 +987,10 @@ class SelectionListWithListOptions {
 }
 
 @Component({
+    imports: [
+        KbqListModule,
+        FormsModule
+    ],
     template: `
         <kbq-list-selection multiple="checkbox" [autoSelect]="false" [noUnselectLast]="false" [(ngModel)]="model">
             <kbq-list-option [value]="'value1'">value1</kbq-list-option>
@@ -1018,6 +1006,9 @@ class SelectionListMultipleCheckbox {
 }
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list-selection id="selection-list-2">
             <kbq-list-option checkboxPosition="after">Inbox (disabled selection-option)</kbq-list-option>
@@ -1030,6 +1021,9 @@ class SelectionListMultipleCheckbox {
 class SelectionListWithCheckboxPositionAfter {}
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list-selection id="selection-list-3" [disabled]="true">
             <kbq-list-option checkboxPosition="after">Inbox (disabled selection-option)</kbq-list-option>
@@ -1042,6 +1036,9 @@ class SelectionListWithCheckboxPositionAfter {}
 class SelectionListWithListDisabled {}
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list-selection>
             <kbq-list-option [selected]="true">Item</kbq-list-option>
@@ -1051,6 +1048,10 @@ class SelectionListWithListDisabled {}
 class SelectionListWithSelectedOption {}
 
 @Component({
+    imports: [
+        KbqListModule,
+        FormsModule
+    ],
     template: `
         <kbq-list-selection [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'option_1'">Option 1</kbq-list-option>
@@ -1066,6 +1067,9 @@ class SelectionListFocusStates {
 }
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list-selection [tabIndex]="5" />
     `
@@ -1073,6 +1077,9 @@ class SelectionListFocusStates {
 class SelectionListWithTabindexAttr {}
 
 @Component({
+    imports: [
+        KbqListModule
+    ],
     template: `
         <kbq-list-selection [disabled]="disabled" />
     `
@@ -1083,6 +1090,10 @@ class SelectionListWithTabindexInDisabledState {
 }
 
 @Component({
+    imports: [
+        KbqListModule,
+        FormsModule
+    ],
     template: `
         <kbq-list-selection [autoSelect]="false" [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -1099,6 +1110,10 @@ class SelectionListWithModel {
 }
 
 @Component({
+    imports: [
+        KbqListModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-list-selection [formControl]="formControl">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -1112,6 +1127,10 @@ class SelectionListWithFormControl {
 }
 
 @Component({
+    imports: [
+        KbqListModule,
+        FormsModule
+    ],
     template: `
         <kbq-list-selection [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -1124,6 +1143,10 @@ class SelectionListWithPreselectedOption {
 }
 
 @Component({
+    imports: [
+        KbqListModule,
+        FormsModule
+    ],
     template: `
         <kbq-list-selection [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
@@ -1136,7 +1159,10 @@ class SelectionListWithPreselectedOptionAndModel {
 }
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        KbqListModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-list-selection [formControl]="formControl">
             @for (opt of opts; track opt) {
@@ -1145,7 +1171,8 @@ class SelectionListWithPreselectedOptionAndModel {
                 </kbq-list-option>
             }
         </kbq-list-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class SelectionListWithPreselectedFormControlOnPush {
     opts = ['opt1', 'opt2', 'opt3'];
@@ -1153,9 +1180,8 @@ class SelectionListWithPreselectedFormControlOnPush {
 }
 
 @Component({
-    standalone: true,
     imports: [KbqListModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
     template: `
         <kbq-list-selection>
             @for (opt of opts; track opt) {
@@ -1164,7 +1190,8 @@ class SelectionListWithPreselectedFormControlOnPush {
                 </kbq-list-option>
             }
         </kbq-list-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestListSelectionWithDynamicList {
     listSelection = viewChild.required(KbqListSelection);

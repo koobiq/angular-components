@@ -13,9 +13,9 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/cdk/a11y';
-import * as i6 from '@angular/forms';
-import * as i7 from '@koobiq/components/icon';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/forms';
+import * as i3 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -121,7 +121,7 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     get value(): string;
     set value(value: string);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInput, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
 }
@@ -132,19 +132,19 @@ export class KbqInputModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqInputModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, [typeof i1.KbqInput, typeof i2.KbqNumberInput, typeof i3.KbqInputPassword, typeof i1.KbqInputMono, typeof i4.MinValidator, typeof i4.MaxValidator], [typeof i5.A11yModule, typeof i6.FormsModule, typeof i7.KbqIconModule], [typeof i1.KbqInput, typeof i2.KbqNumberInput, typeof i3.KbqInputPassword, typeof i1.KbqInputMono, typeof i4.MinValidator, typeof i4.MaxValidator, typeof i8.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof i4.KbqInput, typeof i5.KbqNumberInput, typeof i6.KbqInputPassword, typeof i4.KbqInputMono, typeof i7.MinValidator, typeof i7.MaxValidator], [typeof i4.KbqInput, typeof i5.KbqNumberInput, typeof i6.KbqInputPassword, typeof i4.KbqInputMono, typeof i7.MinValidator, typeof i7.MaxValidator, typeof i8.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
 export class KbqInputMono {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputMono, "input[kbqInputMonospace]", ["KbqInputMonospace"], {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputMono, "input[kbqInputMonospace]", ["KbqInputMonospace"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputMono, never>;
 }
@@ -207,7 +207,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     get value(): string;
     set value(value: string);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputPassword, [null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
 }
@@ -294,7 +294,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     writeValue(value: number | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, [null, null, { attribute: "step"; }, { attribute: "big-step"; }, { attribute: "min"; }, { attribute: "max"; }, { optional: true; }]>;
 }
@@ -313,7 +313,7 @@ export class MaxValidator implements Validator, OnChanges {
     // (undocumented)
     validate(c: AbstractControl): ValidationErrors | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MaxValidator, "[max][formControlName],[max][formControl],[max][ngModel]", never, { "max": { "alias": "max"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MaxValidator, "[max][formControlName],[max][formControl],[max][ngModel]", never, { "max": { "alias": "max"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MaxValidator, never>;
 }
@@ -332,7 +332,7 @@ export class MinValidator implements Validator, OnChanges {
     // (undocumented)
     validate(c: AbstractControl): ValidationErrors | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MinValidator, "[min][formControlName],[min][formControl],[min][ngModel]", never, { "min": { "alias": "min"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MinValidator, "[min][formControlName],[min][formControl],[min][ngModel]", never, { "min": { "alias": "min"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MinValidator, never>;
 }

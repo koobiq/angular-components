@@ -11,7 +11,6 @@ import {
 
 /** Directive for marking an element as legend of `KbqFieldset` */
 @Directive({
-    standalone: true,
     selector: '[kbqLegend]',
     host: {
         class: 'kbq-legend'
@@ -21,7 +20,6 @@ export class KbqLegend {}
 
 /** Directive for marking elements as items inside `KbqFieldset` */
 @Directive({
-    standalone: true,
     selector: '[kbqFieldsetItem]',
     host: {
         class: 'kbq-fieldset-item'
@@ -34,14 +32,7 @@ export class KbqFieldsetItem {}
  * Container component emulating the native `fieldset` element.
  */
 @Component({
-    standalone: true,
     selector: 'kbq-fieldset',
-    host: {
-        class: 'kbq-fieldset',
-        role: 'group',
-        '[attr.aria-label]': 'ariaLabel()'
-    },
-    styleUrls: ['./fieldset.scss', './fieldset-tokens.scss'],
     template: `
         <ng-content select="[kbqLegend]" />
 
@@ -55,8 +46,14 @@ export class KbqFieldsetItem {}
             <ng-content select="kbq-hint, kbq-password-hint, kbq-reactive-password-hint" />
         </div>
     `,
+    styleUrls: ['./fieldset.scss', './fieldset-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'kbq-fieldset',
+        role: 'group',
+        '[attr.aria-label]': 'ariaLabel()'
+    }
 })
 export class KbqFieldset {
     private readonly legend: Signal<ElementRef<HTMLElement> | undefined> = contentChild(KbqLegend, {

@@ -7,10 +7,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Selected preselected values
  */
 @Component({
-    standalone: true,
     selector: 'select-preselected-values-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" multiple [formControl]="control">
@@ -32,7 +30,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectPreselectedValuesExample {
     options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);

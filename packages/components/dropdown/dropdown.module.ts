@@ -12,7 +12,11 @@ import { KbqDropdown, KbqDropdownStaticContent } from './dropdown.component';
         OverlayModule,
         KbqIconModule,
         NgClass,
-        KbqDropdownStaticContent
+        KbqDropdownStaticContent,
+        KbqDropdown,
+        KbqDropdownItem,
+        KbqDropdownTrigger,
+        KbqDropdownContent
     ],
     exports: [
         KbqDropdown,
@@ -20,12 +24,6 @@ import { KbqDropdown, KbqDropdownStaticContent } from './dropdown.component';
         KbqDropdownTrigger,
         KbqDropdownContent,
         KbqDropdownStaticContent
-    ],
-    declarations: [
-        KbqDropdown,
-        KbqDropdownItem,
-        KbqDropdownTrigger,
-        KbqDropdownContent
     ],
     providers: [KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })

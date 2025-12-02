@@ -7,16 +7,15 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Button toggle alignment
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-toggle-alignment-overview-example',
-    templateUrl: 'button-toggle-alignment-overview-example.html',
-    styleUrls: ['button-toggle-alignment-overview-example.css'],
     imports: [
         KbqButtonToggleModule,
         FormsModule,
         KbqIconModule
-    ]
+    ],
+    templateUrl: 'button-toggle-alignment-overview-example.html',
+    styleUrls: ['button-toggle-alignment-overview-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleAlignmentOverviewExample {
     group = [

@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { KbqOption, KbqOptionModule } from './index';
 
 @Component({
+    imports: [KbqOptionModule],
     template: `
         <kbq-option [disabled]="disabled" />
     `
@@ -15,8 +16,7 @@ class OptionWithDisable {
 describe('KbqOption component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule],
-            declarations: [OptionWithDisable]
+            imports: [KbqOptionModule, OptionWithDisable]
         }).compileComponents();
     });
 

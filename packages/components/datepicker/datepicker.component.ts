@@ -3,7 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgClass } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -62,21 +62,24 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
  */
 @Component({
     selector: 'kbq-datepicker__content',
-    exportAs: 'kbqDatepickerContent',
+    imports: [
+        KbqCalendar,
+        NgClass
+    ],
     templateUrl: 'datepicker-content.html',
     styleUrls: ['datepicker-content.scss', 'datepicker-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqDatepickerContent',
     host: {
         class: 'kbq-datepicker__content',
-
         '[@transformPanel]': 'animationState',
         '(@transformPanel.done)': 'animationDone.next()'
     },
     animations: [
         kbqDatepickerAnimations.transformPanel,
         kbqDatepickerAnimations.fadeInCalendar
-    ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     /** Emits when an animation has finished. */
@@ -121,9 +124,9 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 @Component({
     selector: 'kbq-datepicker',
     template: '',
-    exportAs: 'kbqDatepicker',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqDatepicker',
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }]
 })
 export class KbqDatepicker<D> implements OnDestroy {

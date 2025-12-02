@@ -8,8 +8,6 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  * @title popover-scroll
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-scroll-example',
     imports: [
         KbqButtonModule,
@@ -17,11 +15,6 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
         KbqFormFieldModule,
         KbqInputModule
     ],
-    styles: `
-        ::ng-deep .kbq-popover.kbq-popover_medium.popover-scroll-example {
-            width: 400px;
-        }
-    `,
     template: `
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
@@ -62,7 +55,13 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
                 Закрывается при прокрутке
             </button>
         </div>
-    `
+    `,
+    styles: `
+        ::ng-deep .kbq-popover.kbq-popover_medium.popover-scroll-example {
+            width: 400px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverScrollExample {
     activePopover: KbqPopoverTrigger;

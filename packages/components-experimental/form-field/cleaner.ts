@@ -8,22 +8,21 @@ import { KbqFormField } from './form-field';
  * Resets form control by click.
  */
 @Component({
-    standalone: true,
-    imports: [KbqIconModule],
     selector: 'kbq-cleaner',
-    exportAs: 'kbqCleaner',
+    imports: [KbqIconModule],
     template: `
         <i color="contrast-fade" kbq-icon-button="kbq-xmark-circle_16" [autoColor]="true"></i>
     `,
     styleUrl: './cleaner.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqCleaner',
     host: {
         class: 'kbq-cleaner___EXPERIMENTAL',
         '(click)': 'clean($event)',
         '[style.visibility]': 'visible ? "visible" : "hidden"',
         '[attr.aria-hidden]': '!visible'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqCleaner {
     // @TODO fix types (#DS-2915)

@@ -67,6 +67,11 @@ describe('KbqModal', () => {
 
 @Component({
     selector: 'kbq-modal-by-service-from-dropdown',
+    imports: [
+        KbqModalModule,
+        KbqDropdownModule,
+        KbqButtonModule
+    ],
     template: `
         <kbq-modal kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__" [(kbqVisible)]="nonServiceModalVisible" />
         <button class="template-button" kbq-button [kbqDropdownTriggerFor]="dropdown">Open modal from dropdown</button>
@@ -109,9 +114,9 @@ const TEST_DIRECTIVES = [
         KbqModalModule,
         KbqButtonModule,
         KbqDropdownModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        ...TEST_DIRECTIVES
     ],
-    exports: TEST_DIRECTIVES,
-    declarations: TEST_DIRECTIVES
+    exports: TEST_DIRECTIVES
 })
 class ModalTestModule {}

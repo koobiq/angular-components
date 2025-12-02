@@ -6,7 +6,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link application
  */
 @Component({
-    standalone: true,
     selector: 'link-application-example',
     imports: [
         KbqLinkModule,

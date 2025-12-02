@@ -6,8 +6,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link external
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'link-external-example',
     imports: [KbqLinkModule, KbqIconModule],
     template: `
@@ -17,6 +15,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 <i kbq-icon="kbq-north-east_16"></i>
             </a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkExternalExample {}

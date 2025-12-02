@@ -1,9 +1,13 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
-import { RdxAccordionTriggerDirective } from '@radix-ng/primitives/accordion';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 
 @Component({
     selector: 'kbq-accordion-trigger, [kbq-accordion-trigger]',
+    imports: [
+        KbqIcon
+    ],
     template: `
         @if (isHugSpaceBetween) {
             <i class="kbq-accordion-trigger__icon" kbq-icon="kbq-chevron-down-s_16"></i>
@@ -14,8 +18,8 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
         <ng-content />
     `,
     styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
-    hostDirectives: [RdxAccordionTriggerDirective],
     encapsulation: ViewEncapsulation.None,
+    hostDirectives: [KbqAccordionTriggerDirective],
     host: {
         class: 'kbq-accordion-trigger',
         '[class.kbq-accordion-trigger_fill]': 'isFill',

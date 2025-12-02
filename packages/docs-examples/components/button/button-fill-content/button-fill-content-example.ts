@@ -6,10 +6,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
  * @title Button fill content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-fill-content-example',
-    styleUrls: ['button-fill-content-example.css'],
     imports: [
         KbqButtonModule
     ],
@@ -17,7 +14,9 @@ import { KbqComponentColors } from '@koobiq/components/core';
         <button class="example-fill-content__button" kbq-button [color]="colors.Contrast">
             Очень длинный текст кнопки, который не умеет обрезаться по ширине
         </button>
-    `
+    `,
+    styleUrls: ['button-fill-content-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFillContentExample {
     colors = KbqComponentColors;

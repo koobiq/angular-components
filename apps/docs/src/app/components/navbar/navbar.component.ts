@@ -16,7 +16,7 @@ import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
 import { DocsNavbarProperty } from './navbar-property';
 
 @Component({
-    standalone: true,
+    selector: 'docs-navbar',
     imports: [
         RouterLink,
         KbqButtonModule,
@@ -28,13 +28,12 @@ import { DocsNavbarProperty } from './navbar-property';
         DocsDocsearchDirective,
         AsyncPipe
     ],
-    selector: 'docs-navbar',
     templateUrl: 'navbar.template.html',
     styleUrls: ['navbar.scss'],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-navbar'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     private readonly window = inject(KBQ_WINDOW);

@@ -6,11 +6,10 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
  * @title Accordion states
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-states-example',
+    imports: [KbqAccordionModule, KbqButtonToggleModule],
     templateUrl: 'accordion-states-example.html',
-    imports: [KbqAccordionModule, KbqButtonToggleModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionStatesExample {
     accordionVariant = KbqAccordionVariant;

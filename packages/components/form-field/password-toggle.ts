@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { NgClass } from '@angular/common';
+
 import {
     AfterContentInit,
     AfterViewInit,
@@ -37,32 +37,29 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 
 /** Component which changes password visibility. */
 @Component({
-    standalone: true,
-    imports: [NgClass, KbqIconModule, KbqToolTipModule],
     selector: `kbq-password-toggle`,
-    exportAs: 'kbqPasswordToggle',
+    imports: [KbqIconModule, KbqToolTipModule],
     template: `
         <ng-content />
     `,
     styleUrls: ['password-toggle.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqPasswordToggle',
     host: {
         class: 'kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade',
         '[class.kbq-error]': 'hasError',
         '[class.kbq-eye_16]': 'hidden',
         '[class.kbq-eye-slash_16]': '!hidden',
-
         // legacy style for backward compatibility
         '[style.visibility]': 'visibility',
         '[class.cdk-visually-hidden]': 'visibility === "hidden"',
         '[attr.aria-hidden]': 'visibility === "hidden"',
         '[attr.tabindex]': 'tabindex',
-
         '(click)': 'toggle($event)',
         '(keydown.ENTER)': 'toggle($event)',
         '(keydown.SPACE)': 'toggle($event)'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
     protected readonly nativeElement = kbqInjectNativeElement();

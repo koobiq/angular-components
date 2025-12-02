@@ -5,12 +5,11 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
-    standalone: true,
+    selector: 'docs-copy-button',
     imports: [
         KbqIconModule,
         KbqLinkModule
     ],
-    selector: 'docs-copy-button',
     template: `
         @if (isLabelSuccessVisible) {
             <span disabled kbq-link pseudo>
@@ -24,11 +23,11 @@ import { DocsLocaleState } from 'src/app/services/locale';
         }
     `,
     styleUrls: ['./copy-button.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-copy-button'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsCopyButtonComponent extends DocsLocaleState {
     @Input() contentToCopy: string;

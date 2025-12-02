@@ -11,7 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit horizontal list
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-horizontal-list-example',
     imports: [
         NgTemplateOutlet,
         ReactiveFormsModule,
@@ -20,7 +20,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormFieldModule,
         KbqInputModule
     ],
-    selector: 'inline-edit-horizontal-list-example',
     template: `
         <form [formGroup]="form">
             <kbq-dl [vertical]="false">
@@ -90,10 +89,10 @@ import { KbqInputModule } from '@koobiq/components/input';
             white-space: nowrap;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditHorizontalListExample {
     protected readonly placeholder = 'Placeholder';

@@ -17,9 +17,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             KbqFormFieldModule,
             KbqInputModule,
             KbqToolTipModule,
-            ...imports
+            ...imports,
+            component
         ],
-        declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
             ...providers
@@ -30,6 +30,11 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
@@ -63,6 +68,11 @@ class KbqPasswordInputDefault {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInputPassword [(ngModel)]="value" />
@@ -82,6 +92,11 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
@@ -112,6 +127,11 @@ class KbqPasswordInputCustomPasswordRule {
 }
 
 @Component({
+    imports: [
+        ReactiveFormsModule,
+        KbqInputModule,
+        KbqFormFieldModule
+    ],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>

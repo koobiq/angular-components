@@ -156,8 +156,6 @@ abstract class TreeParams {
  * @title Tree descendants subcategories
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-descendants-subcategories-example',
     imports: [
         KbqTreeModule,
@@ -183,7 +181,8 @@ abstract class TreeParams {
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;

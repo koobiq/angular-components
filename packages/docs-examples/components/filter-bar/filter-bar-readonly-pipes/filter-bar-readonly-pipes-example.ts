@@ -8,7 +8,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title filter-bar-readonly-pipes
  */
 @Component({
-    standalone: true,
     selector: 'filter-bar-readonly-pipes-example',
     imports: [
         KbqFilterBarModule,

@@ -7,7 +7,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  */
 @Component({
     selector: 'clamped-text-overview-example',
-    standalone: true,
     imports: [KbqClampedText, KbqToggleModule],
     template: `
         <div class="layout-margin-bottom-l">

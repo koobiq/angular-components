@@ -9,7 +9,6 @@ import { kbqInjectNativeElement } from '../utils';
  * @docs-private
  */
 @Directive({
-    standalone: true,
     selector: '[kbqHover]',
     exportAs: 'kbqHover',
     host: {

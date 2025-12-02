@@ -9,16 +9,14 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  * @title Popover placement edges
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-placement-edges-example',
-    templateUrl: 'popover-placement-edges-example.html',
     imports: [
         KbqPopoverModule,
         KbqButtonModule,
         KbqFormFieldModule,
         KbqInputModule
     ],
+    templateUrl: 'popover-placement-edges-example.html',
     styles: `
         .popover-placement-edges-example {
             display: flex;
@@ -43,7 +41,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
         .popover-placement-edges-example__column.middle button + button {
             margin-top: 136px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverPlacementEdgesExample {
     placements = PopUpPlacements;

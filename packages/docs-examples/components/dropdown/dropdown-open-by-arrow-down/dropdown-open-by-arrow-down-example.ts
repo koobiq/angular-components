@@ -14,8 +14,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  * @title Dropdown open by arrow down
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-open-by-arrow-down-example',
     imports: [
         KbqDropdownModule,
@@ -29,7 +27,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqInputModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-open-by-arrow-down-example.html'
+    templateUrl: 'dropdown-open-by-arrow-down-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownOpenByArrowDownExample {
     openByArrowDown = true;

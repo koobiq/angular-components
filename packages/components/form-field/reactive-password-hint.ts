@@ -21,10 +21,8 @@ import { KbqHint } from './hint';
 
 /** Password hint to be shown below the password form field control. */
 @Component({
-    standalone: true,
-    imports: [NgClass, KbqIconModule],
     selector: 'kbq-reactive-password-hint',
-    exportAs: 'kbqReactivePasswordHint',
+    imports: [NgClass, KbqIconModule],
     template: `
         <i kbq-icon="" [ngClass]="icon()" [color]="color"></i>
 
@@ -36,11 +34,12 @@ import { KbqHint } from './hint';
         './hint.scss',
         './hint-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqReactivePasswordHint',
     host: {
         class: 'kbq-reactive-password-hint'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqReactivePasswordHint extends KbqHint {
     // @TODO fix types (#DS-2915)

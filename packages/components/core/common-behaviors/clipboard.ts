@@ -1,7 +1,6 @@
 import { Directive, ElementRef, inject } from '@angular/core';
 
 @Directive({
-    standalone: true,
     selector: '[kbqNormalizeWhitespace]',
     host: {
         '(copy)': 'onCopy($event)'

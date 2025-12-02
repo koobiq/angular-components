@@ -31,7 +31,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     refresh(): void;
     readonly resizeStream: Subject<Event>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEllipsisCenterDirective, "[kbqEllipsisCenter]", never, { "kbqEllipsisCenter": { "alias": "kbqEllipsisCenter"; "required": false; }; "minVisibleLength": { "alias": "minVisibleLength"; "required": false; }; "charWidth": { "alias": "charWidth"; "required": false; }; "debounceInterval": { "alias": "debounceInterval"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEllipsisCenterDirective, "[kbqEllipsisCenter]", never, { "kbqEllipsisCenter": { "alias": "kbqEllipsisCenter"; "required": false; }; "minVisibleLength": { "alias": "minVisibleLength"; "required": false; }; "charWidth": { "alias": "charWidth"; "required": false; }; "debounceInterval": { "alias": "debounceInterval"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEllipsisCenterDirective, never>;
 }
@@ -43,7 +43,7 @@ export class KbqEllipsisCenterModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqEllipsisCenterModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEllipsisCenterModule, [typeof KbqEllipsisCenterDirective], never, [typeof KbqEllipsisCenterDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEllipsisCenterModule, never, [typeof KbqEllipsisCenterDirective], [typeof KbqEllipsisCenterDirective]>;
 }
 
 // (No @packageDocumentation comment for this package)

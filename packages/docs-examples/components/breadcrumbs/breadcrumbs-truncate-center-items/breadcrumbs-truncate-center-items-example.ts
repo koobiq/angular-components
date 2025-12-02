@@ -10,8 +10,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Breadcrumbs Truncate Center Items
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-truncate-center-items-example',
+    imports: [
+        RouterLink,
+        KbqBreadcrumbsModule,
+        KbqEllipsisCenterModule,
+        KbqToolTipModule,
+        KbqButtonModule
+    ],
     template: `
         <nav class="kbq-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
             <kbq-breadcrumb-item routerLink="./groups" text="Groups" />
@@ -67,13 +73,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             }
         }
     `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule,
-        KbqEllipsisCenterModule,
-        KbqToolTipModule,
-        KbqButtonModule
-    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

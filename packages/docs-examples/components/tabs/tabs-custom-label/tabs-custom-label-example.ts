@@ -6,9 +6,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  * @title Tabs custom label
  */
 @Component({
-    standalone: true,
     selector: 'tabs-custom-label-example',
-    styleUrls: ['tabs-custom-label-example.css'],
     imports: [
         KbqTabsModule,
         KbqIconModule
@@ -47,6 +45,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             </kbq-tab-group>
         </div>
     `,
+    styleUrls: ['tabs-custom-label-example.css'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

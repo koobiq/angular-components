@@ -25,8 +25,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DOWN_ARROW, END, HOME, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
-import { KbqOption } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqLocaleServiceModule, KbqOption } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqSelect, kbqSelectOptionsProvider, KbqSelectPanelWidth } from './select.component';
@@ -233,6 +232,11 @@ const OPTIONS = [
 
 @Component({
     selector: 'basic-select',
+    imports: [
+        KbqSelectModule,
+        ReactiveFormsModule,
+        KbqTagsModule
+    ],
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
@@ -282,6 +286,10 @@ class BasicSelect {
 
 @Component({
     selector: 'ng-model-select',
+    imports: [
+        KbqSelectModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Food" ngModel [disabled]="isDisabled">
@@ -308,6 +316,10 @@ class NgModelSelect {
 
 @Component({
     selector: 'ng-if-select',
+    imports: [
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         @if (isShowing) {
             <div>
@@ -338,6 +350,9 @@ class NgIfSelect {
 
 @Component({
     selector: 'basic-select-initially-hidden',
+    imports: [
+        KbqSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select [style.display]="isVisible ? 'block' : 'none'">
@@ -353,6 +368,9 @@ class BasicSelectInitiallyHidden {
 
 @Component({
     selector: 'basic-select-no-placeholder',
+    imports: [
+        KbqSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select>
@@ -365,6 +383,10 @@ class BasicSelectNoPlaceholder {}
 
 @Component({
     selector: 'select-with-groups',
+    imports: [
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Pokemon" [formControl]="control">
@@ -425,6 +447,10 @@ class SelectWithGroups {
 
 @Component({
     selector: 'select-with-long-label-option',
+    imports: [
+        KbqSelectModule,
+        KbqTagsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select>
@@ -464,6 +490,14 @@ class SelectWithLongOptionText {
 
 @Component({
     selector: 'cdk-virtual-scroll-viewport-select',
+    imports: [
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-select [multiple]="true" [style]="style" [(value)]="values">
@@ -494,8 +528,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqSelectModule, KbqFormFieldModule],
+    imports: [KbqSelectModule],
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [panelWidth]="panelWidth">
@@ -516,8 +549,7 @@ export class SelectWithPanelWidth {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqSelectModule, KbqFormFieldModule],
+    imports: [KbqSelectModule],
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select>
@@ -530,7 +562,7 @@ export class SelectWithPanelWidth {
 })
 export class BaseSelect {}
 
-describe(KbqSelect.name, () => {
+describe('KbqSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
@@ -543,16 +575,11 @@ describe(KbqSelect.name, () => {
     function configureKbqSelectTestingModule(declarations: any[]) {
         TestBed.configureTestingModule({
             imports: [
-                KbqFormFieldModule,
-                KbqSelectModule,
-                KbqInputModule,
-                KbqTagsModule,
-                ReactiveFormsModule,
-                FormsModule,
                 NoopAnimationsModule,
-                ScrollingModule
-            ],
-            declarations
+                KbqLocaleServiceModule,
+                ScrollingModule,
+                ...declarations
+            ]
         }).compileComponents();
 
         inject([OverlayContainer], (oc: OverlayContainer) => {
@@ -979,16 +1006,15 @@ describe(KbqSelect.name, () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    KbqFormFieldModule,
                     KbqSelectModule,
                     KbqInputModule,
                     KbqTagsModule,
                     ReactiveFormsModule,
                     FormsModule,
                     NoopAnimationsModule,
-                    ScrollingModule
-                ],
-                declarations: [CdkVirtualScrollViewportSelect]
+                    ScrollingModule,
+                    CdkVirtualScrollViewportSelect
+                ]
             }).compileComponents();
 
             inject([OverlayContainer], (oc: OverlayContainer) => {

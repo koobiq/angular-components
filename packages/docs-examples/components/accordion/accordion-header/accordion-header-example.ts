@@ -8,11 +8,10 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
  * @title Accordion header
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-header-example',
+    imports: [KbqAccordionModule, KbqBadgeModule, KbqCheckboxModule, KbqIcon, KbqIconButton],
     templateUrl: 'accordion-header-example.html',
-    imports: [KbqAccordionModule, KbqBadgeModule, KbqCheckboxModule, KbqIcon, KbqIconButton]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionHeaderExample {
     icon: boolean = false;

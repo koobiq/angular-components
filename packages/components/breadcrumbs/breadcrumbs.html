@@ -4,10 +4,10 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
 -->
 <ng-content />
 @if (items.length < minVisibleItems || wrapMode !== 'auto') {
-    @for (item of items; track item; let last = $last) {
+    @for (item of items; track item) {
         <div class="kbq-breadcrumb-item__container">
-            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
-            @if (!last) {
+            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: $last }" />
+            @if (!$last) {
                 <ng-container [ngTemplateOutlet]="separatorTemplate" />
             }
         </div>
@@ -49,8 +49,8 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
                 </kbq-dropdown>
             </div>
         }
-        @for (item of itemsExcludingEdges; track item; let index = $index) {
-            <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="index + 1">
+        @for (item of itemsExcludingEdges; track item) {
+            <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="$index + 1">
                 <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: false }" />
                 <ng-container [ngTemplateOutlet]="separatorTemplate" />
             </div>

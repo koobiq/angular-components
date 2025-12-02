@@ -3,7 +3,6 @@ import { UsernameExamplesModule } from '../../docs-examples/components/username'
 
 @Component({
     selector: 'dev-examples',
-    standalone: true,
     imports: [UsernameExamplesModule],
     template: `
         <username-overview-example />
@@ -17,7 +16,6 @@ class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    standalone: true,
     imports: [DevExamples],
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,

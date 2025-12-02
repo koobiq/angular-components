@@ -26,8 +26,11 @@ import {
 import { ToastExamplesModule } from '../../docs-examples/components/toast';
 
 @Component({
-    standalone: true,
     selector: 'dev-examples',
+    imports: [
+        ToastExamplesModule,
+        KbqToastModule
+    ],
     template: `
         <toast-overview-example />
         <br />
@@ -55,24 +58,19 @@ import { ToastExamplesModule } from '../../docs-examples/components/toast';
         <br />
         <toast-types-overview-example />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [
-        ToastExamplesModule,
-        KbqToastModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     selector: 'dev-toast-component',
     template: '<div>DevToastComponent</div>',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'dev-toast-component'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DevToastComponent extends KbqToastComponent {
     constructor(
@@ -88,7 +86,7 @@ export class DevToastComponent extends KbqToastComponent {
 }
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqButtonModule,
         KbqIconModule,
@@ -102,7 +100,6 @@ export class DevToastComponent extends KbqToastComponent {
         DevToastComponent,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

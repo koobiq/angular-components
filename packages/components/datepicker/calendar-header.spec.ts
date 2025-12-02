@@ -15,9 +15,9 @@ describe('KbqCalendarHeader', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqLuxonDateModule,
-                KbqDatepickerModule
+                KbqDatepickerModule,
+                StandardCalendar
             ],
-            declarations: [StandardCalendar],
             providers: [
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter }]
@@ -69,6 +69,7 @@ describe('KbqCalendarHeader', () => {
 });
 
 @Component({
+    imports: [KbqLuxonDateModule, KbqDatepickerModule],
     template: `
         <kbq-calendar
             [startAt]="startDate"

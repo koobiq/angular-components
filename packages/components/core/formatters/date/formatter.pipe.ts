@@ -9,7 +9,6 @@ export class BaseFormatterPipe<D> {
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDate'
 })
 export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -21,15 +20,17 @@ export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDateImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {}
+export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
+    transform(value: string | D, currYear?: boolean): string {
+        return super.transform(value, currYear);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDateTime'
 })
 export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -41,15 +42,17 @@ export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteLongDateTimeImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeFormatterPipe<D> {}
+export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeFormatterPipe<D> {
+    transform(value: string | D, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDate'
 })
 export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -61,15 +64,17 @@ export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> impl
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDateImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFormatterPipe<D> {}
+export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFormatterPipe<D> {
+    transform(value: string | D, currYear?: boolean): string {
+        return super.transform(value, currYear);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDateTime'
 })
 export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -81,15 +86,17 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 }
 
 @Pipe({
-    standalone: true,
     name: 'absoluteShortDateTimeImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDateTimeFormatterPipe<D> {}
+export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDateTimeFormatterPipe<D> {
+    transform(value: string | D, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDate'
 })
 export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -101,15 +108,17 @@ export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDateImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPipe<D> {}
+export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPipe<D> {
+    transform(value: string | D): string {
+        return super.transform(value);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDateTime'
 })
 export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -121,15 +130,17 @@ export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeLongDateTimeImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeFormatterPipe<D> {}
+export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeFormatterPipe<D> {
+    transform(value: string | D, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDate'
 })
 export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -141,15 +152,17 @@ export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impl
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDateImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFormatterPipe<D> {}
+export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFormatterPipe<D> {
+    transform(value: string | D): string {
+        return super.transform(value);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDateTime'
 })
 export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -161,15 +174,17 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 }
 
 @Pipe({
-    standalone: true,
     name: 'relativeShortDateTimeImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDateTimeFormatterPipe<D> {}
+export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDateTimeFormatterPipe<D> {
+    transform(value: string | D, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDate'
 })
 export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -182,15 +197,17 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDateImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {}
+export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
+    transform([value1, value2]: D[] | string[]): string {
+        return super.transform([value1, value2] as D[] | string[]);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDate'
 })
 export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -203,15 +220,17 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDateImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {}
+export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {
+    transform([value1, value2]: D[] | string[]): string {
+        return super.transform([value1, value2] as D[] | string[]);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDateTime'
 })
 export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -224,15 +243,17 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeLongDateTimeImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {}
+export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {
+    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
+        return super.transform([value1, value2] as D[] | string[], options);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'rangeMiddleDateTime'
 })
 export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -245,15 +266,17 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeMiddleDateTimeImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {}
+export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {
+    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
+        return super.transform([value1, value2] as D[] | string[], options);
+    }
+}
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDateTime'
 })
 export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
@@ -266,9 +289,12 @@ export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imp
 }
 
 @Pipe({
-    standalone: true,
     name: 'rangeShortDateTimeImpurePipe',
     pure: false
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
-export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {}
+export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {
+    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
+        return super.transform([value1, value2] as D[] | string[], options);
+    }
+}

@@ -162,8 +162,6 @@ abstract class TreeParams {
  * @title Tree checked filtering
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-checked-filtering-example',
     imports: [
         KbqFormFieldModule,
@@ -212,7 +210,8 @@ abstract class TreeParams {
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeCheckedFilteringExample extends TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;

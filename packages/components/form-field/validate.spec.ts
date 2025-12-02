@@ -7,6 +7,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 @Component({
     selector: 'test-app',
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <input kbqInput type="text" [formControl]="testControl" />
@@ -27,9 +28,9 @@ describe('KbqValidate', () => {
             imports: [
                 ReactiveFormsModule,
                 KbqFormFieldModule,
-                KbqInputModule
-            ],
-            declarations: [TestApp]
+                KbqInputModule,
+                TestApp
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);

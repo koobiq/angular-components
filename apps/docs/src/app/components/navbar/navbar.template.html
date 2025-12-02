@@ -64,8 +64,8 @@
                 <span class="kbq-caps-compact-strong">{{ isRuLocale() ? 'ТЕМА' : 'THEME' }}</span>
             </div>
 
-            @for (theme of themeSwitch.data; track theme; let index = $index) {
-                <button kbq-dropdown-item [class.kbq-selected]="theme.selected" (click)="setTheme(index)">
+            @for (theme of themeSwitch.data; track theme) {
+                <button kbq-dropdown-item [class.kbq-selected]="theme.selected" (click)="setTheme($index)">
                     {{ theme.title[locale()] }}
                 </button>
             }

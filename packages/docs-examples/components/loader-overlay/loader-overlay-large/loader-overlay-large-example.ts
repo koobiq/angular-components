@@ -7,8 +7,6 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
  * @title Loader-overlay large
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'loader-overlay-large-example',
     imports: [KbqLoaderOverlayModule, KbqProgressSpinnerModule],
     template: `
@@ -23,7 +21,8 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
                 <kbq-progress-spinner size="big" kbq-loader-overlay-indicator [mode]="'indeterminate'" />
             </kbq-loader-overlay>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlayLargeExample {
     themePalette = ThemePalette;

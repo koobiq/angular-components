@@ -42,14 +42,8 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
  * The component-wrapper for `overlayscrollbars` library.
  */
 @Component({
-    standalone: true,
-    imports: [KbqScrollbarDirective],
     selector: 'kbq-scrollbar, [kbq-scrollbar]',
-    exportAs: 'kbqScrollbar',
-    host: {
-        'data-overlayscrollbars-initialize': '',
-        class: 'kbq-scrollbar-component'
-    },
+    imports: [KbqScrollbarDirective],
     template: `
         <div
             #content
@@ -63,8 +57,13 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
         </div>
     `,
     styleUrls: ['./scrollbar.component.scss', 'scrollbar-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    exportAs: 'kbqScrollbar',
+    host: {
+        'data-overlayscrollbars-initialize': '',
+        class: 'kbq-scrollbar-component'
+    }
 })
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Element that is being overflowed */

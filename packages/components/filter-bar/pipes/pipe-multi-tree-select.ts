@@ -7,7 +7,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
@@ -27,18 +27,7 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-multi-tree-select',
-    templateUrl: 'pipe-multi-tree-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    providers: [
-        {
-            provide: KbqBasePipe,
-            useExisting: this
-        }
-    ],
     imports: [
         KbqButtonModule,
         KbqDividerModule,
@@ -49,7 +38,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeTitleDirective,
         KbqPipeMinWidth,
         KbqFormFieldModule,
-        KbqIcon,
+        KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,
         KbqHighlightModule,
@@ -59,6 +48,16 @@ import { KbqPipeTitleDirective } from './pipe-title';
         FormsModule,
         KbqBadgeModule,
         KbqPseudoCheckboxModule
+    ],
+    templateUrl: 'pipe-multi-tree-select.html',
+    styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: KbqBasePipe,
+            useExisting: this
+        }
     ]
 })
 export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit, AfterViewInit {

@@ -25,7 +25,6 @@ npm install @koobiq/date-adapter^3.1.3
 npm install @koobiq/date-formatter^3.1.3
 npm install luxon
 npm install @messageformat/core
-npm install @radix-ng/primitives@0.14.0
 ```
 
 #### Новая темизация

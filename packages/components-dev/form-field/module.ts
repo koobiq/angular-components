@@ -26,9 +26,8 @@ import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
-    standalone: true,
-    imports: [FormFieldExamplesModule, FormsExamplesModule],
     selector: 'dev-examples',
+    imports: [FormFieldExamplesModule, FormsExamplesModule],
     template: `
         <form-field-with-hint-example />
         <hr />
@@ -140,7 +139,7 @@ const DATA_OBJECT = {
 };
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqSelectModule,
@@ -160,7 +159,6 @@ const DATA_OBJECT = {
         DevExamples,
         DevThemeToggle
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

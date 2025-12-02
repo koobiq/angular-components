@@ -14,9 +14,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/cdk/a11y';
-import * as i4 from '@koobiq/components/core';
-import * as i5 from '@koobiq/components/icon';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@koobiq/components/core';
+import * as i3 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqLine } from '@koobiq/components/core';
@@ -39,7 +39,7 @@ export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: any;
 // @public (undocumented)
 export class KbqList {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqList, "kbq-list", never, {}, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqList, "kbq-list", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqList, never>;
 }
@@ -69,7 +69,7 @@ export class KbqListItem implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["lines"], ["[kbq-list-icon], [mcListIcon]", "[kbq-line], [mcLine]", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["lines"], ["[kbq-list-icon], [mcListIcon]", "[kbq-line], [mcLine]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListItem, never>;
 }
@@ -80,11 +80,11 @@ export class KbqListModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqListModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption], [typeof i3.A11yModule, typeof i4.KbqPseudoCheckboxModule, typeof i4.KbqLineModule, typeof i4.KbqOptionModule, typeof i4.KbqActionContainer, typeof i5.KbqIconModule], [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption, typeof i4.KbqOptionModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1.A11yModule, typeof i2.KbqPseudoCheckboxModule, typeof i2.KbqLine, typeof i2.KbqOptionModule, typeof i2.KbqActionContainer, typeof i3.KbqIconModule, typeof i4.KbqList, typeof i5.KbqListSelection, typeof i4.KbqListItem, typeof i5.KbqListOption, typeof i5.KbqListOptionCaption], [typeof i4.KbqList, typeof i5.KbqListSelection, typeof i4.KbqListItem, typeof i5.KbqListOption, typeof i5.KbqListOptionCaption, typeof i2.KbqOptionModule]>;
 }
 
 // @public
@@ -152,7 +152,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     get value(): any;
     set value(newValue: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "tooltipTrigger", "dropdownTrigger"], ["[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "tooltipTrigger", "dropdownTrigger"], ["[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption, [null, null, null, null, { optional: true; }]>;
 }
@@ -160,7 +160,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 // @public (undocumented)
 export class KbqListOptionCaption {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqListOptionCaption, "[kbq-list-option-caption]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqListOptionCaption, "[kbq-list-option-caption]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOptionCaption, never>;
 }
@@ -273,7 +273,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // (undocumented)
     writeValue(values: string[]): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection, [null, null, { attribute: "multiple"; }, { optional: true; }]>;
 }

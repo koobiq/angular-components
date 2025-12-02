@@ -10,14 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Navbar vertical
  */
 @Component({
-    standalone: true,
     selector: 'navbar-vertical-example',
-    templateUrl: 'navbar-vertical-example.html',
-    styles: `
-        :host ::ng-deep .kbq-vertical-navbar__container {
-            border-top-left-radius: 12px;
-        }
-    `,
     imports: [
         KbqDropdownModule,
         KbqNavbarModule,
@@ -25,6 +18,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule,
         KbqIconModule
     ],
+    templateUrl: 'navbar-vertical-example.html',
+    styles: `
+        :host ::ng-deep .kbq-vertical-navbar__container {
+            border-top-left-radius: 12px;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalExample {

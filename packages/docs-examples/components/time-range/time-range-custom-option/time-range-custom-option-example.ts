@@ -59,8 +59,6 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
  * @title Time range custom option
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-custom-option-example',
     imports: [
         TitleCasePipe,
@@ -69,15 +67,6 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
         LuxonDateModule,
         KbqIconModule,
         KbqFormFieldModule
-    ],
-    providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
-        { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, deps: [DateAdapter], useFactory: customTypesFactory },
-        {
-            provide: KBQ_DEFAULT_TIME_RANGE_TYPES,
-            deps: [KBQ_CUSTOM_TIME_RANGE_TYPES],
-            useFactory: (customTypes: KbqCustomTimeRangeType[]) => customTypes.map(({ type }) => type)
-        }
     ],
     template: `
         <ng-template #customOption let-context>
@@ -104,6 +93,16 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
             [optionTemplate]="customOption"
         />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
+        { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, deps: [DateAdapter], useFactory: customTypesFactory },
+        {
+            provide: KBQ_DEFAULT_TIME_RANGE_TYPES,
+            deps: [KBQ_CUSTOM_TIME_RANGE_TYPES],
+            useFactory: (customTypes: KbqCustomTimeRangeType[]) => customTypes.map(({ type }) => type)
+        }
+    ],
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

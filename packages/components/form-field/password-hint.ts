@@ -40,9 +40,8 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
 };
 
 @Component({
-    standalone: true,
-    imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
+    imports: [NgClass, KbqIconModule],
     template: `
         <i class="kbq-password-hint__icon" kbq-icon="" [ngClass]="icon" [color]="iconColor"></i>
 
@@ -51,6 +50,8 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
         </span>
     `,
     styleUrls: ['hint.scss', 'hint-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[attr.id]': 'id',
         class: 'kbq-hint kbq-password-hint',
@@ -58,9 +59,7 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
         '[class.kbq-error]': 'hasError',
         '[class.kbq-hint_fill-text-off]': 'fillTextOff',
         '[class.kbq-hint_compact]': 'compact'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     @Input() id: string = `kbq-hint-${nextPasswordHintUniqueId++}`;

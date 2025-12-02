@@ -13,6 +13,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchMouseEvent } from '@koobiq/cdk/testing';
+import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
@@ -82,6 +83,11 @@ const groupedZones: KbqTimezoneGroup[] = [
 
 @Component({
     selector: 'basic-timezone-select',
+    imports: [
+        KbqTimezoneModule,
+        KbqOptionModule,
+        ReactiveFormsModule
+    ],
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
@@ -133,9 +139,9 @@ describe('KbqTimezoneSelect', () => {
                 KbqInputModule,
                 ReactiveFormsModule,
                 FormsModule,
-                NoopAnimationsModule
-            ],
-            declarations
+                NoopAnimationsModule,
+                ...declarations
+            ]
         }).compileComponents();
 
         inject([OverlayContainer], (oc: OverlayContainer) => {

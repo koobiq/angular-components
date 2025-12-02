@@ -22,12 +22,7 @@ import { KbqSidepanelService } from './sidepanel.service';
         KbqButtonModule,
         KbqIconModule,
         KbqTitleModule,
-        A11yModule
-    ],
-    providers: [
-        KbqSidepanelService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }],
-    declarations: [
+        A11yModule,
         KbqSidepanelContainerComponent,
         KbqSidepanelClose,
         KbqSidepanelHeader,
@@ -42,6 +37,9 @@ import { KbqSidepanelService } from './sidepanel.service';
         KbqSidepanelBody,
         KbqSidepanelFooter,
         KbqSidepanelActions
-    ]
+    ],
+    providers: [
+        KbqSidepanelService,
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]
 })
 export class KbqSidepanelModule {}

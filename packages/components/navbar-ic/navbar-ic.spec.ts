@@ -10,8 +10,7 @@ const FONT_RENDER_TIMEOUT_MS = 10;
 describe('KbqNavbarIc', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqNavbarIcModule, KbqIconModule, NoopAnimationsModule],
-            declarations: [TestApp]
+            imports: [KbqNavbarIcModule, KbqIconModule, NoopAnimationsModule, TestApp]
         }).compileComponents();
     });
 
@@ -63,6 +62,7 @@ describe('KbqNavbarIc', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqNavbarIcModule, KbqIconModule],
     templateUrl: './navbar-ic.spec.html'
 })
 class TestApp {

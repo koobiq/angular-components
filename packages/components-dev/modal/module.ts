@@ -8,9 +8,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
 
 @Component({
-    standalone: true,
-    imports: [ModalExamplesModule],
     selector: 'dev-examples',
+    imports: [ModalExamplesModule],
     template: `
         <modal-overview-example />
         <hr />
@@ -32,9 +31,8 @@ import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
-    imports: [],
     selector: 'dev-modal-custom-long-component',
+    imports: [],
     template: `
         @for (item of longText; track item) {
             <p>{{ item }}</p>
@@ -53,9 +51,8 @@ export class DevModalLongCustomComponent {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqButtonModule],
     selector: 'dev-modal-custom-component',
+    imports: [KbqButtonModule],
     template: `
         <div>
             <h2>{{ title }}</h2>
@@ -88,9 +85,8 @@ export class DevModalCustomComponent {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqModalModule, KbqButtonModule],
     selector: 'dev-modal-full-custom-component',
+    imports: [KbqModalModule, KbqButtonModule],
     template: `
         <kbq-modal-title>
             Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal
@@ -129,7 +125,7 @@ export class DevModalFullCustomComponent {
 }
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqModalModule,
         KbqIconModule,
@@ -138,7 +134,6 @@ export class DevModalFullCustomComponent {
         KbqToolTipModule,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

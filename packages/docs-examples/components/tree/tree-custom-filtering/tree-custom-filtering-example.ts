@@ -154,8 +154,6 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
  * @title Tree custom filtering
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-custom-filtering-example',
     imports: [KbqFormFieldModule, KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
     template: `
@@ -178,7 +176,8 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeCustomFilteringExample {
     treeControl: FlatTreeControl<FileFlatNode>;

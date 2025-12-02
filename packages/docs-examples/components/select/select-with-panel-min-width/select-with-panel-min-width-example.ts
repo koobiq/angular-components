@@ -6,12 +6,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select with panelWidth min-width
  */
 @Component({
-    standalone: true,
+    selector: 'select-with-panel-min-width-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule
     ],
-    selector: 'select-with-panel-min-width-example',
     template: `
         <kbq-form-field>
             <kbq-select [(value)]="value">
@@ -27,10 +26,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             max-width: 104px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-l layout-align-center-center layout-row'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class SelectWithPanelMinWidthExample {
     readonly options = [

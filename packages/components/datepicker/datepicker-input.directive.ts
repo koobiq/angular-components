@@ -263,13 +263,10 @@ interface DateTimeObject {
         '[attr.min]': 'min ? toISO8601(min) : null',
         '[attr.max]': 'max ? toISO8601(max) : null',
         '[attr.autocomplete]': '"off"',
-
         '(paste)': 'onPaste($event)',
         '(change)': 'onChange()',
-
         '(focus)': 'focusChanged(true)',
         '(blur)': 'onBlur()',
-
         '(keydown)': 'onKeyDown($event)'
     }
 })

@@ -9,9 +9,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File upload multiple accept validation
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-accept-validation-example',
+    imports: [
+        ReactiveFormsModule,
+        KbqFileUploadModule,
+        KbqFormFieldModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-file-upload multiple (fileRemoved)="onFileRemoved($event)" (filesAdded)="onFilesAdded($event)">
             <ng-template #kbqFileIcon let-file>
@@ -34,12 +38,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             }
         </kbq-file-upload>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFileUploadModule,
-        KbqFormFieldModule,
-        KbqIconModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleAcceptValidationExample {
     protected accept: KbqFileTypeSpecifier = ['.txt'];

@@ -9,16 +9,14 @@ import {
 
 @NgModule({
     imports: [
-        KbqIconModule
-    ],
-    exports: [
+        KbqIconModule,
         KbqGutterDirective,
+        KbqGutterGhostDirective,
         KbqSplitterAreaDirective,
         KbqSplitterComponent
     ],
-    declarations: [
+    exports: [
         KbqGutterDirective,
-        KbqGutterGhostDirective,
         KbqSplitterAreaDirective,
         KbqSplitterComponent
     ]

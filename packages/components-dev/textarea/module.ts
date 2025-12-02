@@ -12,7 +12,7 @@ import {
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
+    selector: 'dev-examples',
     imports: [
         TextareaOverviewExample,
         TextareaDisabledExample,
@@ -20,7 +20,6 @@ import { DevThemeToggle } from '../theme-toggle';
         TextareaCanGrowExample,
         TextareaMaxRowsExample
     ],
-    selector: 'dev-examples',
     template: `
         <textarea-overview-example />
         <hr />
@@ -37,12 +36,11 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
-    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevExamples, DevThemeToggle],
     selector: 'dev-app',
+    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevExamples, DevThemeToggle],
     templateUrl: './template.html',
-    encapsulation: ViewEncapsulation.None,
     styleUrls: ['./styles.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {

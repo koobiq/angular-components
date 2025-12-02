@@ -11,7 +11,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
+import * as i1 from '@angular/cdk/a11y';
 import { KbqCheckboxClickAction } from '@koobiq/components/checkbox';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
@@ -96,7 +96,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
 }
@@ -107,10 +107,10 @@ export class KbqToggleModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqToggleModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToggleModule, [typeof i1.KbqToggleComponent], [typeof i2.A11yModule], [typeof i1.KbqToggleComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1.A11yModule, typeof i2.KbqToggleComponent], [typeof i2.KbqToggleComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

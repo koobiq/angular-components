@@ -9,7 +9,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover arrowless
  */
 @Component({
-    standalone: true,
     selector: 'popover-arrowless-example',
     imports: [
         KbqButtonModule,
@@ -17,10 +16,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqInputModule,
         KbqPopoverModule
     ],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <ng-template #customContent>
             <div [style.width.px]="400">
@@ -49,7 +44,11 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         >
             Open popover
         </button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class PopoverArrowlessExample {
     colors = KbqComponentColors;

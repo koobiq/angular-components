@@ -10,9 +10,8 @@ const STEP: number = 4;
 const MAX_PERCENT: number = 100;
 
 @Component({
-    standalone: true,
-    imports: [ProgressBarExamplesModule],
     selector: 'dev-examples',
+    imports: [ProgressBarExamplesModule],
     template: `
         <progress-bar-overview-example />
         <hr />
@@ -23,9 +22,8 @@ const MAX_PERCENT: number = 100;
 export class DevExamples {}
 
 @Component({
-    standalone: true,
-    imports: [KbqProgressBarModule, FormsModule, DevExamples, DevThemeToggle],
     selector: 'dev-app',
+    imports: [KbqProgressBarModule, FormsModule, DevExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

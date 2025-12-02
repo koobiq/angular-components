@@ -30,7 +30,6 @@ const DATA_OBJECT = {
  * @title filter-bar-master-checkbox
  */
 @Component({
-    standalone: true,
     selector: 'filter-bar-master-checkbox-example',
     imports: [
         KbqFilterBarModule

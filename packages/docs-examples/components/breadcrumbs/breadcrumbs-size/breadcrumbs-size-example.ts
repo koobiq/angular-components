@@ -9,8 +9,13 @@ import { KbqDlModule } from '@koobiq/components/dl';
  * @title Breadcrumbs sizes
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-size-example',
+    imports: [
+        RouterLink,
+        KbqBreadcrumbsModule,
+        KbqDlModule,
+        TitleCasePipe
+    ],
     template: `
         <kbq-dl [vertical]="true">
             @for (size of sizes; track size) {
@@ -37,12 +42,6 @@ import { KbqDlModule } from '@koobiq/components/dl';
             box-sizing: border-box;
         }
     `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule,
-        KbqDlModule,
-        TitleCasePipe
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsSizeExample {

@@ -28,9 +28,8 @@ const getContentPanelContainerPanelElement = (debugElement: DebugElement): HTMLE
 const ESCAPE_KEY_EVENT = new KeyboardEvent('keydown', { key: 'Escape' });
 
 @Component({
-    standalone: true,
-    imports: [KbqContentPanelModule],
     selector: 'test-content-panel',
+    imports: [KbqContentPanelModule],
     template: `
         <kbq-content-panel-container
             [width]="width()"
@@ -62,7 +61,6 @@ const ESCAPE_KEY_EVENT = new KeyboardEvent('keydown', { key: 'Escape' });
             </kbq-content-panel>
         </kbq-content-panel-container>
     `
-    // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestContentPanel {
     readonly container = viewChild.required(KbqContentPanelContainer);

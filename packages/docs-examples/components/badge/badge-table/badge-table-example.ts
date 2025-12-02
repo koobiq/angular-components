@@ -7,15 +7,14 @@ import { KbqTableModule } from '@koobiq/components/table';
  * @title Badge table
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'badge-table-example',
-    templateUrl: 'badge-table-example.html',
     imports: [
         KbqBadgeModule,
         KbqLinkModule,
         KbqTableModule
-    ]
+    ],
+    templateUrl: 'badge-table-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeTableExample {
     colors = KbqBadgeColors;

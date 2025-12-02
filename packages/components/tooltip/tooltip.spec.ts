@@ -33,9 +33,7 @@ describe('KbqTooltip', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqToolTipModule,
-                NoopAnimationsModule
-            ],
-            declarations: [
+                NoopAnimationsModule,
                 KbqTooltipTestWrapperComponent,
                 KbqTooltipTestNewComponent,
                 KbqTooltipDisabledComponent,
@@ -317,7 +315,6 @@ describe('KbqTooltip', () => {
 });
 
 @Component({
-    standalone: true,
     selector: 'tooltip-simple',
     imports: [KbqToolTipModule],
     template: `
@@ -331,6 +328,7 @@ export class TooltipSimple {
 
 @Component({
     selector: 'kbq-tooltip-test-new',
+    imports: [KbqToolTipModule],
     template: `
         <ng-template #template>title-template</ng-template>
 
@@ -355,6 +353,7 @@ class KbqTooltipTestNewComponent {
 
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
+    imports: [KbqToolTipModule],
     template: `
         <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 
@@ -389,6 +388,7 @@ class KbqTooltipTestWrapperComponent {
 
 @Component({
     selector: 'kbq-tooltip-disabled-wrapper',
+    imports: [KbqToolTipModule],
     template: `
         <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
             Disabled
@@ -402,6 +402,7 @@ class KbqTooltipDisabledComponent {
 
 @Component({
     selector: 'kbq-tooltip-wih-template-ref-content',
+    imports: [KbqToolTipModule],
     template: `
         <ng-template #tooltipContent let-ctx>
             <div>{{ ctx.content }}</div>

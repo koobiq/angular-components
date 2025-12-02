@@ -11,8 +11,6 @@ import { map } from 'rxjs/operators';
  * @title Empty-state content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-content-example',
     imports: [
         KbqEmptyStateModule,
@@ -24,11 +22,11 @@ import { map } from 'rxjs/operators';
             <kbq-empty-state class="flex" size="big" style="min-height: 216px">
                 <div kbq-empty-state-icon>
                     <img
+                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
                         alt="Empty state"
                         height="192"
                         width="192"
                         [srcset]="srcSet()"
-                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
                     />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>
@@ -44,11 +42,11 @@ import { map } from 'rxjs/operators';
             <kbq-empty-state class="flex" style="min-height: 216px">
                 <div kbq-empty-state-icon>
                     <img
+                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
                         alt="Empty state"
                         width="80"
                         height="80"
                         [srcset]="srcSet()"
-                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
                     />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>
@@ -61,7 +59,8 @@ import { map } from 'rxjs/operators';
                 </div>
             </kbq-empty-state>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateContentExample {
     readonly colors = KbqComponentColors;

@@ -26,9 +26,14 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
  */
 @Component({
     selector: 'kbq-dropdown-item, [kbq-dropdown-item]',
-    exportAs: 'kbqDropdownItem',
+    imports: [
+        KbqIcon
+    ],
     templateUrl: 'dropdown-item.html',
     styleUrls: ['dropdown-item.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqDropdownItem',
     host: {
         class: 'kbq-dropdown-item',
         '[class.kbq-dropdown-item_with-icon]': 'icon',
@@ -38,8 +43,6 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'getTabIndex()'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }]
 })

@@ -1,3 +1,4 @@
+import { KeyValuePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,20 +8,28 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqOption } from '@koobiq/components/core';
+import { KbqHighlightPipe, KbqOption } from '@koobiq/components/core';
+import { CitiesByFilterPipe } from './cities-by-filter.pipe';
 import { KbqTimezoneZone } from './timezone.models';
 import { offsetFormatter } from './timezone.utils';
+import { UtcOffsetPipe } from './utc-offset.pipe';
 
 @Component({
     selector: 'kbq-timezone-option',
-    exportAs: 'kbqTimezoneOption',
-    host: {
-        class: 'kbq-timezone-option'
-    },
+    imports: [
+        UtcOffsetPipe,
+        KeyValuePipe,
+        KbqHighlightPipe,
+        CitiesByFilterPipe
+    ],
     templateUrl: 'timezone-option.component.html',
     styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss', 'timezone-option-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTimezoneOption',
+    host: {
+        class: 'kbq-timezone-option'
+    },
     providers: [
         {
             provide: KbqOption,

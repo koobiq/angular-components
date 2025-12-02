@@ -3,15 +3,15 @@ import { KbqButton } from '@koobiq/components/button';
 
 @Component({
     selector: 'table[kbq-table]',
-    exportAs: 'kbqTable',
-    styleUrls: ['table.scss', 'table-tokens.scss'],
     template: '<ng-content />',
+    styleUrls: ['table.scss', 'table-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTable',
     host: {
         class: 'kbq-table',
         '[class.kbq-table_bordered]': 'border'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqTable {
     @Input() border: boolean = false;

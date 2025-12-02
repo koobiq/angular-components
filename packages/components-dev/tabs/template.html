@@ -1,7 +1,7 @@
 <h3>Nav-bar tabs</h3>
 <nav kbqTabNavBar [tabNavPanel]="kbqTabNavPanel1">
-    @for (link of links; track link; let index = $index) {
-        @let disabled = index === 1;
+    @for (link of links; track link) {
+        @let disabled = $index === 1;
         <a kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
             {{ link }}
         </a>
@@ -13,8 +13,8 @@
 
 <h3>Nav-bar tabs underlined</h3>
 <nav kbqTabNavBar underlined [tabNavPanel]="kbqTabNavPanel1">
-    @for (link of links; track link; let index = $index) {
-        @let disabled = index === 1;
+    @for (link of links; track link) {
+        @let disabled = $index === 1;
         <a kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
             {{ link }}
         </a>
@@ -27,8 +27,8 @@
 <h3>Nav-bar tabs vertical</h3>
 <div class="layout-row">
     <nav kbqTabNavBar vertical [style.height.px]="160" [style.width.px]="120" [tabNavPanel]="kbqTabNavPanel2">
-        @for (link of links; track link; let index = $index) {
-            @let disabled = index === 1;
+        @for (link of links; track link) {
+            @let disabled = $index === 1;
             <a kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
                 {{ link }}
             </a>
@@ -41,8 +41,8 @@
 
 <h3>Nav-bar tabs transparent</h3>
 <nav kbqTabNavBar transparent [tabNavPanel]="kbqTabNavPanel3">
-    @for (link of links; track link; let index = $index) {
-        @let disabled = index === 1;
+    @for (link of links; track link) {
+        @let disabled = $index === 1;
         <div kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
             {{ link }}
         </div>
@@ -54,8 +54,8 @@
 
 <h3>Nav-bar tabs onSurface</h3>
 <nav kbqTabNavBar onSurface [tabNavPanel]="kbqTabNavPanel4">
-    @for (link of links; track link; let index = $index) {
-        @let disabled = index === 1;
+    @for (link of links; track link) {
+        @let disabled = $index === 1;
         <div kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
             {{ link }}
         </div>
@@ -67,11 +67,11 @@
 
 <h4>Tabs underlined with custom label</h4>
 <kbq-tab-group underlined class="dev-custom-underlined-tabs">
-    @for (tab of tabs; track tab; let index = $index) {
+    @for (tab of tabs; track tab) {
         <kbq-tab>
             <ng-template kbq-tab-label>
-                <div>Заголовок {{ index }}</div>
-                <div class="dev-custom-underlined-tabs__subtitle">Подзаголовок {{ index }}</div>
+                <div>Заголовок {{ $index }}</div>
+                <div class="dev-custom-underlined-tabs__subtitle">Подзаголовок {{ $index }}</div>
             </ng-template>
 
             {{ tab }} content
@@ -139,8 +139,8 @@
 
 <h4>Tabs with scrolled content</h4>
 <kbq-tab-group>
-    @for (tab of tabs; track tab; let index = $index) {
-        @let disabled = index === 2;
+    @for (tab of tabs; track tab) {
+        @let disabled = $index === 2;
         <kbq-tab [disabled]="disabled" [label]="tab">
             <div style="height: 200px">
                 {{ tab }} content

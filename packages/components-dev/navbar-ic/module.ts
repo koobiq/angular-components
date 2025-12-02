@@ -15,9 +15,8 @@ import { NavbarIcExamplesModule } from '../../docs-examples/components/navbar-ic
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [NavbarIcExamplesModule],
     selector: 'dev-examples',
+    imports: [NavbarIcExamplesModule],
     template: `
         <div style="padding: 20px">
             <navbar-ic-overview-example />
@@ -37,7 +36,7 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqNavbarIcModule,
         KbqIconModule,
@@ -52,7 +51,6 @@ export class DevExamples {}
         DevExamples,
         DevThemeToggle
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

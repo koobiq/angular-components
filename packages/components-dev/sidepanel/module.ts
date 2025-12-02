@@ -16,9 +16,8 @@ import {
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
-    standalone: true,
-    imports: [KbqSidepanelModule, KbqButtonModule],
     selector: 'dev-sidepanel-component',
+    imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
         <kbq-sidepanel-header [closeable]="true">
             Sidepanel Component Content Sidepanel Component Content Sidepanel Component Content
@@ -27,8 +26,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <kbq-sidepanel-body class="layout-padding">
             <div class="kbq-subheading">Sidepanel Component Body</div>
 
-            @for (item of array; track item; let i = $index) {
-                <div>{{ i + 1 }}</div>
+            @for (item of array; track item) {
+                <div>{{ $index + 1 }}</div>
             }
         </kbq-sidepanel-body>
 
@@ -44,10 +43,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column flex'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DevSidepanelComponent {
     themePalette = ThemePalette;
@@ -62,7 +61,7 @@ export class DevSidepanelComponent {
 }
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqSidepanelModule,
@@ -73,7 +72,6 @@ export class DevSidepanelComponent {
         KbqToggleModule,
         KbqDropdownModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

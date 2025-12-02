@@ -4,12 +4,11 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
-    standalone: true,
+    selector: 'docs-page-not-found',
     imports: [
         KbqLinkModule,
         RouterLink
     ],
-    selector: 'docs-page-not-found',
     template: `
         <div class="kbq-display-compact">{{ isRuLocale() ? 'Страница не найдена' : 'Page not found' }}</div>
 
@@ -18,10 +17,10 @@ import { DocsLocaleState } from 'src/app/services/locale';
         </a>
     `,
     styleUrls: ['page-not-found.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-page-not-found'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsPageNotFoundComponent extends DocsLocaleState {}

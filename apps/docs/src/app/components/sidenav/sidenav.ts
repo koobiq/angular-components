@@ -76,7 +76,7 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
 }
 
 @Component({
-    standalone: true,
+    selector: 'docs-sidenav',
     imports: [
         FormsModule,
         KbqIconModule,
@@ -87,14 +87,13 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
         RouterLink,
         KbqBadgeModule
     ],
-    selector: 'docs-sidenav',
     templateUrl: './sidenav.html',
     styleUrl: './sidenav.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-sidenav'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
     private readonly scrollbar = viewChild.required(KbqScrollbar);

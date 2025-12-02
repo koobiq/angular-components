@@ -5,8 +5,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link visited
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'link-visited-example',
     imports: [KbqLinkModule],
     template: `
@@ -22,7 +20,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 Отчет от 19.05.2020
             </a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkVisitedExample {
     visited = false;

@@ -6,10 +6,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select cleaner
  */
 @Component({
-    standalone: true,
     selector: 'select-cleaner-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" [value]="selected">
@@ -30,7 +28,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectCleanerExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);

@@ -17,9 +17,8 @@ const getMarkdownDebugElement = (debugElement: DebugElement): DebugElement => {
 };
 
 @Component({
-    standalone: true,
-    imports: [KbqMarkdownModule],
     selector: 'generate-html-from-markdown-string',
+    imports: [KbqMarkdownModule],
     template: `
         <kbq-markdown [markdownText]="markdownText" />
     `,
@@ -84,9 +83,8 @@ npm install jquery
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqMarkdownModule],
     selector: 'generate-html-from-markdown-inline-template',
+    imports: [KbqMarkdownModule],
     // prettier-ignore
     template: `
 <kbq-markdown ngPreserveWhitespaces>

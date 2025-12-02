@@ -11,7 +11,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
  * @title Tag input removable
  */
 @Component({
-    standalone: true,
     selector: 'tag-input-removable-example',
     imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

@@ -4,10 +4,10 @@ import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Valid
 import { By } from '@angular/platform-browser';
 import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { ThemePalette } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { ThemePalette } from '../core';
-import { KbqInput, KbqInputModule } from './index';
+import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -15,11 +15,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     TestBed.configureTestingModule({
         imports: [
             FormsModule,
-            KbqInputModule,
-            KbqFormFieldModule,
-            ...imports
+            ...imports,
+            component
         ],
-        declarations: [component],
         providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }, ...providers]
     }).compileComponents();
 
@@ -27,6 +25,11 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInput minlength="4" [required]="true" [(ngModel)]="value" />
@@ -38,6 +41,11 @@ class KbqInputInvalid {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        FormsModule,
+        KbqInputModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInput kbqInputMonospace [(ngModel)]="value" />
@@ -49,6 +57,11 @@ class KbqInputWithKbqInputMonospace {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInput [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value" />
@@ -62,6 +75,10 @@ class KbqInputForBehaviors {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -72,6 +89,11 @@ class KbqInputForBehaviors {
 class KbqFormFieldWithHint {}
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
@@ -82,6 +104,11 @@ class KbqFormFieldWithHint {}
 class KbqFormFieldWithPrefix {}
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -92,6 +119,10 @@ class KbqFormFieldWithPrefix {}
 class KbqFormFieldWithSuffix {}
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule
+    ],
     template: `
         <kbq-form-field kbqFormFieldWithoutBorders>
             <input kbqInput />
@@ -101,6 +132,11 @@ class KbqFormFieldWithSuffix {}
 class KbqFormFieldWithoutBorders {}
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <input kbqInput required [(ngModel)]="value" />
@@ -112,6 +148,11 @@ class KbqFormFieldWithStandaloneNgModel {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule
+    ],
     template: `
         <form #form="ngForm">
             <kbq-form-field>
@@ -129,6 +170,12 @@ class KbqFormFieldWithNgModelInForm {
 }
 
 @Component({
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule
+    ],
     template: `
         <form [formGroup]="reactiveForm" (ngSubmit)="submitReactive()">
             <kbq-form-field class="kbq-form__control">

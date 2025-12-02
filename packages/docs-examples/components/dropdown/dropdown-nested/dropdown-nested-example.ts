@@ -8,8 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Dropdown nested
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-nested-example',
     imports: [
         KbqDropdownModule,
@@ -17,6 +15,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule,
         KbqDividerModule
     ],
-    templateUrl: 'dropdown-nested-example.html'
+    templateUrl: 'dropdown-nested-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownNestedExample {}

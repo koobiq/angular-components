@@ -9,22 +9,21 @@ import { DateTime } from 'luxon';
  * @title Time range min max
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-min-max-example',
     imports: [
         ReactiveFormsModule,
         KbqTimeRange,
         LuxonDateModule
     ],
-    providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     template: `
         <div>
             <div style="color: var(--kbq-foreground-contrast-secondary)">From 2017 to 2025</div>
             <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" [nonNullable]="false" />
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     host: {
         class: 'layout-flex layout-column layout-align-center-center layout-gap-xs'
     }

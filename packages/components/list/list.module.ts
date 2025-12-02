@@ -1,6 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { NgModule } from '@angular/core';
-import { KbqActionContainer, KbqLineModule, KbqOptionModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
+import { KbqActionContainer, KbqLine, KbqOptionModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListOption, KbqListOptionCaption, KbqListSelection } from './list-selection.component';
 import { KbqList, KbqListItem } from './list.component';
@@ -9,10 +9,15 @@ import { KbqList, KbqListItem } from './list.component';
     imports: [
         A11yModule,
         KbqPseudoCheckboxModule,
-        KbqLineModule,
+        KbqLine,
         KbqOptionModule,
         KbqActionContainer,
-        KbqIconModule
+        KbqIconModule,
+        KbqList,
+        KbqListSelection,
+        KbqListItem,
+        KbqListOption,
+        KbqListOptionCaption
     ],
     exports: [
         KbqList,
@@ -21,13 +26,6 @@ import { KbqList, KbqListItem } from './list.component';
         KbqListOption,
         KbqListOptionCaption,
         KbqOptionModule
-    ],
-    declarations: [
-        KbqList,
-        KbqListSelection,
-        KbqListItem,
-        KbqListOption,
-        KbqListOptionCaption
     ]
 })
 export class KbqListModule {}

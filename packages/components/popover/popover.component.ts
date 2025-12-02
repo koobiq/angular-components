@@ -1,5 +1,6 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     CdkScrollable,
     FlexibleConnectedPositionStrategy,
@@ -7,6 +8,7 @@ import {
     OverlayConfig,
     ScrollStrategy
 } from '@angular/cdk/overlay';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -28,6 +30,7 @@ import {
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KbqButton } from '@koobiq/components/button';
 import {
     KbqComponentColors,
     KbqPopUp,
@@ -38,6 +41,7 @@ import {
     PopUpTriggers,
     applyPopupMargins
 } from '@koobiq/components/core';
+import { KbqIcon } from '@koobiq/components/icon';
 import { NEVER, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
@@ -46,14 +50,22 @@ export const defaultOffsetYWithArrow = 8;
 
 @Component({
     selector: 'kbq-popover-component',
+    imports: [
+        NgTemplateOutlet,
+        CdkObserveContent,
+        KbqButton,
+        KbqIcon,
+        CdkTrapFocus,
+        NgClass
+    ],
     templateUrl: './popover.component.html',
-    preserveWhitespaces: false,
     styleUrls: ['./popover.scss', './popover-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     host: {
         '(keydown.esc)': 'onEscape()'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqPopoverAnimations.popoverState]
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {

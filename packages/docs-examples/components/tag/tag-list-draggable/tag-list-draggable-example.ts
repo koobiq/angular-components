@@ -12,7 +12,6 @@ const getTags = () => Array.from({ length: 6 }, (_, id) => ({ id, value: `Dragga
  * @title Tag list draggable
  */
 @Component({
-    standalone: true,
     selector: 'tag-list-draggable-example',
     imports: [KbqTagsModule, KbqToggleModule, FormsModule, KbqIconModule],
     template: `

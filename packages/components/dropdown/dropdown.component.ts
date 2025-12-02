@@ -3,6 +3,7 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DOWN_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
+import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -41,19 +42,21 @@ import {
 } from './dropdown.types';
 
 @Directive({
-    standalone: true,
     selector: '[kbqDropdownStaticContent]'
 })
 export class KbqDropdownStaticContent {}
 
 @Component({
     selector: 'kbq-dropdown',
-    exportAs: 'kbqDropdown',
+    imports: [
+        NgClass
+    ],
     templateUrl: 'dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqDropdown',
     animations: [
         kbqDropdownAnimations.transformDropdown,
         kbqDropdownAnimations.fadeInItems

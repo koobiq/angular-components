@@ -5,9 +5,8 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
  * @title Markdown divider
  */
 @Component({
-    standalone: true,
-    imports: [KbqMarkdownModule],
     selector: 'markdown-divider-example',
+    imports: [KbqMarkdownModule],
     templateUrl: './markdown-divider-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
