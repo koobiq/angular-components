@@ -3432,15 +3432,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-markdown@npm:^2.0.12":
-  version: 2.0.12
-  resolution: "@cspell/dict-markdown@npm:2.0.12"
+"@cspell/dict-markdown@npm:^2.0.13":
+  version: 2.0.13
+  resolution: "@cspell/dict-markdown@npm:2.0.13"
   peerDependencies:
     "@cspell/dict-css": ^4.0.18
-    "@cspell/dict-html": ^4.0.12
+    "@cspell/dict-html": ^4.0.13
     "@cspell/dict-html-symbol-entities": ^4.0.4
     "@cspell/dict-typescript": ^3.2.3
-  checksum: 10c0/f6d53e71525dff0832950345118abcb2c2ca01aaff51922c5c18f7c3bc0d84a2168bb9bb3e400fe6b91312a5892d0b608db6ea590e2a785474ad355e60d9b535
+  checksum: 10c0/9f8de4d2548e23997fb77cc1fc03330d4a3ff58bc6f23855773bfb93053ca7f17e3d8374c06947b08ed60334842041c939be4324d046040d500bb0a5ad198ce1
   languageName: node
   linkType: hard
 
@@ -15694,7 +15694,7 @@ __metadata:
     "@angular/ssr": "npm:18.2.21"
     "@commitlint/cli": "npm:^19.8.1"
     "@commitlint/config-conventional": "npm:^19.8.1"
-    "@cspell/dict-markdown": "npm:^2.0.12"
+    "@cspell/dict-markdown": "npm:^2.0.13"
     "@cspell/dict-ru_ru": "npm:^2.3.2"
     "@docsearch/css": "npm:^3.9.0"
     "@docsearch/js": "npm:^3.9.0"
