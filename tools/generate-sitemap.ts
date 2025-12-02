@@ -18,7 +18,7 @@ try {
 
     const paths = docsGetItems()
         .map(({ categoryId, id, hasApi }) => {
-            // We should manually handle /design-tokens page, because it have different tabs structure.
+            // We should manually handle /design-tokens page, because it has a different tab structure.
             if (id === DocsStructureItemId.DesignTokens) {
                 return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
             }
