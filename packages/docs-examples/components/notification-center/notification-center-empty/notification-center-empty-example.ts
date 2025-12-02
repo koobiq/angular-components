@@ -62,7 +62,7 @@ enum NavbarIcItems {
         { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
 })
 export class NotificationCenterEmptyExample {
-    readonly notificationCenterService = inject(KbqNotificationCenterService);
+    readonly notificationService = inject(KbqNotificationCenterService);
 
     protected readonly currentTheme = toSignal(
         inject(ThemeService, { optional: true })?.current.pipe(
