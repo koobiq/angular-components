@@ -31,10 +31,40 @@
 		<loc>https://koobiq.io/ru/main/typography/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/main/design-tokens/overview</loc>
+		<loc>https://koobiq.io/en/main/design-tokens/colors</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/main/design-tokens/overview</loc>
+		<loc>https://koobiq.io/ru/main/design-tokens/colors</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/main/design-tokens/typography</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/typography</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/main/design-tokens/shadows</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/shadows</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/main/design-tokens/border-radius</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/border-radius</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/main/design-tokens/sizes</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/sizes</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/main/design-tokens/palette</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/palette</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/main/schematics/overview</loc>
