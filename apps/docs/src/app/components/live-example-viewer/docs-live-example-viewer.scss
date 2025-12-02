@@ -1,4 +1,4 @@
-.docs-live-example__example {
+.docs-live-example__example:not(.docs-live-example__example_notification-center-popover) {
     padding: var(--kbq-size-xl);
 
     overflow: auto;

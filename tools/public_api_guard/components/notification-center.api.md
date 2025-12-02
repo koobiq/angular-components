@@ -8,7 +8,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
-import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ChangeDetectorRef } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
@@ -21,7 +21,6 @@ import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { KbqToastData } from '@koobiq/components/toast';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { Observable } from 'rxjs';
-import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -140,11 +139,12 @@ export class KbqNotificationCenterService {
 }
 
 // @public (undocumented)
-export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> implements AfterContentInit, OnInit {
+export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificationCenterComponent> implements AfterContentInit {
     constructor();
     arrow: boolean;
     backdropClass: string;
     closingActions(): Observable<void | CdkScrollable | MouseEvent>;
+    container: HTMLElement;
     content: string | TemplateRef<any>;
     customClass: string;
     get disabled(): boolean;
@@ -161,8 +161,6 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     static ngAcceptInputType_popoverMode: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnInit(): void;
     offset: number | null;
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
@@ -176,6 +174,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
+    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
     trigger: string;
     get unreadItemsCounter(): Observable<string>;
     updateClassMap(newPlacement?: string): void;
@@ -183,7 +182,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     updatePosition(reapplyPosition?: boolean): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterTrigger, never>;
 }
