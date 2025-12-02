@@ -1,7 +1,13 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { DOCS_SUPPORTED_LOCALES } from '../apps/docs/src/app/constants/locale';
-import { docsGetItems, DocsStructureCategoryId, DocsStructureItemTab } from '../apps/docs/src/app/structure';
+import {
+    docsGetItems,
+    DocsStructureCategoryId,
+    DocsStructureItemId,
+    DocsStructureItemTab,
+    DocsStructureTokensTab
+} from '../apps/docs/src/app/structure';
 
 const timeLabel = 'Runtime';
 
@@ -12,13 +18,16 @@ try {
 
     const paths = docsGetItems()
         .map(({ categoryId, id, hasApi }) => {
-            const _paths: string[] = [
-                `${categoryId}/${id}/${DocsStructureItemTab.Overview}`
-            ];
+            // We should manually handle /design-tokens page, because it has a different tab structure.
+            if (id === DocsStructureItemId.DesignTokens) {
+                return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
+            }
 
-            if (hasApi) _paths.push(`${categoryId}/${id}/${DocsStructureItemTab.Api}`);
+            const tabs = [`${categoryId}/${id}/${DocsStructureItemTab.Overview}`];
 
-            return _paths;
+            if (hasApi) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Api}`);
+
+            return tabs;
         })
         .flat();
 
