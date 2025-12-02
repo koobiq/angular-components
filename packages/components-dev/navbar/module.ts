@@ -15,6 +15,22 @@ import { KbqNavbar, KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { map, timer } from 'rxjs';
+import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
+
+@Component({
+    standalone: true,
+    imports: [NavbarExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <navbar-overview-example />
+        <br />
+        <navbar-vertical-example />
+        <br />
+        <navbar-vertical-open-over-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -32,7 +48,8 @@ import { map, timer } from 'rxjs';
         KbqModalModule,
         KbqBadgeModule,
         KbqDividerModule,
-        AsyncPipe
+        AsyncPipe,
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
