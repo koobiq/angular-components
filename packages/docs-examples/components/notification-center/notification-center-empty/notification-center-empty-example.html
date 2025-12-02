@@ -83,7 +83,7 @@
                 [popoverHeight]="'500px'"
                 [kbqNotificationCenterPanelClass]="'example-notification-center-panel'"
             >
-                <i kbq-icon="kbq-bell_16"></i>
+                <i kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
                 <div kbqNavbarIcTitle>Notifications</div>
                 @if (trigger.unreadItemsCounter | async; as unreadItems) {
                     <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>

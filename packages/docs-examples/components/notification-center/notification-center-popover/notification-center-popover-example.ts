@@ -71,7 +71,9 @@ enum NavbarIcItems {
         KbqLinkModule,
         LuxonDateModule,
         KbqFormattersModule
-    ]
+    ],
+    providers: [
+        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
 })
 export class NotificationCenterPopoverExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);

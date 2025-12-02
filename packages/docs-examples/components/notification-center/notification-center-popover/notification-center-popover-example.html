@@ -37,7 +37,7 @@
             [popoverMode]="true"
             [popoverHeight]="'430px'"
         >
-            <i kbq-icon="kbq-bell_16"></i>
+            <i kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
             @if (trigger.unreadItemsCounter | async; as unreadItems) {
                 <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>
             }
