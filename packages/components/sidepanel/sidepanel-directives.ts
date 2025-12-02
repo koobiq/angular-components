@@ -9,8 +9,8 @@ import {
     Optional,
     SimpleChanges
 } from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
@@ -65,9 +65,9 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 @Component({
     selector: 'kbq-sidepanel-header',
     imports: [
-        KbqButton,
+        KbqButtonModule,
         KbqSidepanelClose,
-        KbqIcon,
+        KbqIconModule,
         KbqTitleDirective
     ],
     template: `

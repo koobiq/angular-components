@@ -63,7 +63,6 @@ enum NavbarIcItems {
         LuxonDateModule,
         KbqFormattersModule
     ],
-    standalone: true,
     templateUrl: 'notification-center-popover-example.html',
     styles: `
         :host {

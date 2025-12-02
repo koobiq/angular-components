@@ -1,12 +1,5 @@
 An accordion is an interactive UI element that allows users to expand and collapse individual blocks of information on demand, organizing them into compact sections.
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Pay Attention</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-</div>
-</div>
-
 <!-- example(accordion-overview) -->
 
 ### States

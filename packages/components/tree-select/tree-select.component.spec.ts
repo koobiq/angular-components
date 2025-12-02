@@ -1563,7 +1563,7 @@ class ChildSelection {
 })
 class LocalizedTreeSelect extends BasicTreeSelect {}
 
-describe('KbqTreeSelect.name', () => {
+describe('KbqTreeSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
     let dir: { value: 'ltr' | 'rtl' };

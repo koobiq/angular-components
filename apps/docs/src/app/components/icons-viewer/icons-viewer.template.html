@@ -19,8 +19,8 @@
                     <div class="docs-icons-viewer__table-row docs-icons-viewer__table-row_{{ size }}">
                         @for (icon of filterBySize(icons, size); track icon) {
                             <div
-                                tabindex="0"
                                 class="docs-icons-viewer__table-cell docs-icons-viewer__table-cell_{{ size }}"
+                                tabindex="0"
                                 (click)="setActiveIcon(icon)"
                                 (keyup.enter)="setActiveIcon(icon)"
                             >

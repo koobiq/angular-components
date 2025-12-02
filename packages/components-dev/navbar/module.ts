@@ -18,9 +18,8 @@ import { map, timer } from 'rxjs';
 import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
 
 @Component({
-    standalone: true,
-    imports: [NavbarExamplesModule],
     selector: 'dev-examples',
+    imports: [NavbarExamplesModule],
     template: `
         <navbar-overview-example />
         <br />

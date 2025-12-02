@@ -1,12 +1,5 @@
 Аккордеон (accordion) — это интерактивный элемент интерфейса, позволяющий пользователю раскрывать по требованию отдельные блоки информации, организованные в компактные секции.
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Обрати внимание</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-</div>
-</div>
-
 <!-- example(accordion-overview) -->
 
 ### Состояния
