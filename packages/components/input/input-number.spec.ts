@@ -1327,6 +1327,33 @@ describe('KbqNumberInput', () => {
             expect(preventDefault).toHaveBeenCalled();
             expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,89`);
         }));
+
+        it('should paste negative value properly', fakeAsync(() => {
+            const pasteValue = '-1234';
+            const mockEvent: any = { preventDefault: () => true };
+            const preventDefault = jest.spyOn(mockEvent, 'preventDefault');
+
+            expect(inputElement.value).toBe('');
+
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.componentInstance.withMask = false;
+            fixture.detectChanges();
+            flush();
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault,
+                clipboardData: {
+                    getData: () => pasteValue
+                }
+            });
+            fixture.detectChanges();
+
+            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.detectChanges();
+            flush();
+
+            expect(preventDefault).not.toHaveBeenCalled();
+            expect(inputElement.value).toBe(pasteValue);
+        }));
     });
 
     describe('with [integer]="true"', () => {

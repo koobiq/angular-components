@@ -114,6 +114,7 @@ export function numberByParts(
 ): { integer: string; fraction: string } {
     const result = { integer: '', fraction: '' };
 
+    const isNegative = value.startsWith('-');
     const numberByParts = value.split(fractionSeparator);
 
     if (numberByParts.length > 1) {
@@ -126,6 +127,8 @@ export function numberByParts(
     } else {
         result.integer = numberByParts.join().replace(groupSeparator[0], '').replace(/\D/g, '');
     }
+
+    if (isNegative) result.integer = `-${result.integer}`;
 
     return result;
 }
