@@ -151,6 +151,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onClear() {
         this.data.value = [];
 
+        this.filterBar?.onClearPipe.emit(this.data);
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
     }
