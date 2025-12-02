@@ -97,12 +97,8 @@
 
 #### Использование Datepicker и Timepicker вместе
 
-Это пример совместного использования [Datepicker](/ru/components/datepicker) и Timepicker для выбора определенной даты и времени. Этот подход удобен в тех случаях, когда требуется задать точное время события или дедлайна.
-
-<div style="margin-top: 15px;">
-    <img src="./assets/images/timepicker/timepicker-with-datepicker.png" alt="Using timepicker with datepicker" width="100%"/>
-</div>
+Это пример совместного использования Datepicker и Timepicker для выбора определенной даты и времени. Такой подход удобен в тех случаях, когда требуется задать точное время события или дедлайна.
 
 Пользователь может выбрать дату через Datepicker, а затем указать конкретное время через Timepicker.
 
-<!-- Example from DS-2491 -->
+Пример реализации доступен в разделе [Datepicker](/ru/components/datepicker/overview#использование-datepicker-и-timepicker-вместе)
