@@ -5,10 +5,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
  * @title Badge list
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'badge-list-example',
-    styleUrls: ['badge-list-example.css'],
     imports: [
         KbqBadgeModule
     ],
@@ -27,7 +24,9 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
                 }
             </div>
         </div>
-    `
+    `,
+    styleUrls: ['badge-list-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeListExample {
     colors = KbqBadgeColors;

@@ -28,10 +28,10 @@ const KBQ_TREE_DIRECTIVES = [
     imports: [
         KbqPseudoCheckboxModule,
         KbqIconModule,
-        KbqActionContainer
+        KbqActionContainer,
+        ...KBQ_TREE_DIRECTIVES
     ],
     exports: KBQ_TREE_DIRECTIVES,
-    declarations: KBQ_TREE_DIRECTIVES,
     providers: [{ provide: AsyncScheduler, useValue: asyncScheduler }]
 })
 export class KbqTreeModule {}

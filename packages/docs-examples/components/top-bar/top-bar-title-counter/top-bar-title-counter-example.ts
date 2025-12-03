@@ -24,7 +24,6 @@ type ExampleAction = {
  * @title TopBar With Title And Counter
  */
 @Component({
-    standalone: true,
     selector: 'top-bar-title-counter-example',
     imports: [
         KbqTopBarModule,

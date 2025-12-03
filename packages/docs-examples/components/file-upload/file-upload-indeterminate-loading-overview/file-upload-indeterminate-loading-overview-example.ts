@@ -8,8 +8,6 @@ import { take } from 'rxjs/operators';
  * @title File-upload indeterminate loading
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-indeterminate-loading-overview-example',
     imports: [
         KbqFileUploadModule,
@@ -30,6 +28,7 @@ import { take } from 'rxjs/operators';
             <p class="kbq-text-big">Immediately load to backend...</p>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column layout-gap-l'
     }

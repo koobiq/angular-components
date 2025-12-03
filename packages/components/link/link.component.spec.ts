@@ -6,8 +6,9 @@ import { KbqLinkModule } from './index';
 describe('KbqLink', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqLinkModule, KbqIconModule],
-            declarations: [
+            imports: [
+                KbqLinkModule,
+                KbqIconModule,
                 KbqLinkBaseTestApp,
                 KbqLinkIconTestApp,
                 KbqLinkPrintTestApp,
@@ -83,6 +84,7 @@ describe('KbqLink', () => {
 
 @Component({
     selector: 'kbq-link-base-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
     `
@@ -91,6 +93,7 @@ class KbqLinkBaseTestApp {}
 
 @Component({
     selector: 'kbq-link-print-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a>
     `
@@ -101,6 +104,7 @@ class KbqLinkPrintTestApp {
 
 @Component({
     selector: 'kbq-link-icon-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link>
             <span class="kbq-link__text">Отчет сканирования</span>
@@ -112,6 +116,7 @@ class KbqLinkIconTestApp {}
 
 @Component({
     selector: 'kbq-link-pseudo-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a>
     `
@@ -120,6 +125,7 @@ class KbqLinkPseudoTestApp {}
 
 @Component({
     selector: 'kbq-link-no-underline-test-app',
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
         <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a>
     `

@@ -30,7 +30,7 @@ import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview
 const SEARCH_DEBOUNCE_TIME = 300;
 
 @Component({
-    standalone: true,
+    selector: 'docs-icons-viewer',
     imports: [
         AsyncPipe,
         KbqFormFieldModule,
@@ -42,18 +42,16 @@ const SEARCH_DEBOUNCE_TIME = 300;
         KbqEmptyStateModule,
         NgClass,
         KbqToolTipModule,
-
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule
     ],
-    selector: 'docs-icons-viewer',
     templateUrl: './icons-viewer.template.html',
     styleUrls: ['./icons-viewer.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-icons-viewer kbq-scrollbar'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly http = inject(HttpClient);

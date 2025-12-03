@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -7,7 +8,10 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { DateAdapter, KbqOptionModule } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 const defaultMinYear = 1900;
 const defaultMaxYear = 2099;
@@ -22,14 +26,21 @@ export type MonthName = {
 /** Default header for KbqCalendar */
 @Component({
     selector: 'kbq-calendar-header',
-    exportAs: 'kbqCalendarHeader',
+    imports: [
+        TitleCasePipe,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqSelectModule,
+        KbqOptionModule
+    ],
     templateUrl: 'calendar-header.html',
     styleUrls: ['calendar-header.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqCalendarHeader',
     host: {
         class: 'kbq-calendar-header'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
     monthNames: MonthName[];

@@ -5,9 +5,8 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
  * @title Markdown quote
  */
 @Component({
-    standalone: true,
-    imports: [KbqMarkdownModule],
     selector: 'markdown-quote-example',
+    imports: [KbqMarkdownModule],
     templateUrl: './markdown-quote-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

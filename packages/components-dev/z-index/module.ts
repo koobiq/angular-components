@@ -27,14 +27,13 @@ import { KbqToastComponent, KbqToastData, KbqToastModule, KbqToastService } from
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
-    standalone: true,
     selector: 'dev-toast-component',
     template: '<div>DevToastComponent</div>',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'dev-toast-component'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DevToastComponent extends KbqToastComponent {
     constructor(
@@ -48,7 +47,7 @@ export class DevToastComponent extends KbqToastComponent {
 }
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         CdkScrollableModule,
         KbqButtonModule,
@@ -68,7 +67,6 @@ export class DevToastComponent extends KbqToastComponent {
         KbqSelectModule,
         NgTemplateOutlet
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

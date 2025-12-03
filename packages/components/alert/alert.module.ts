@@ -6,15 +6,13 @@ import { KbqAlert, KbqAlertCloseButton, KbqAlertControl, KbqAlertTitle } from '.
 @NgModule({
     imports: [
         A11yModule,
-        PlatformModule
-    ],
-    exports: [
+        PlatformModule,
         KbqAlert,
         KbqAlertTitle,
         KbqAlertCloseButton,
         KbqAlertControl
     ],
-    declarations: [
+    exports: [
         KbqAlert,
         KbqAlertTitle,
         KbqAlertCloseButton,

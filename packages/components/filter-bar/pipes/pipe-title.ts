@@ -18,7 +18,6 @@ import { debounceTime } from 'rxjs/operators';
 
 // todo DS-3672
 @Directive({
-    standalone: true,
     selector: '[kbqPipeTitle]',
     exportAs: 'kbqPipeTitle',
     host: {

@@ -165,21 +165,19 @@ describe('KbqTimeRange', () => {
 });
 
 @Component({
-    standalone: true,
+    imports: [KbqTimeRange],
     template: `
         <kbq-time-range />
     `,
-    imports: [KbqTimeRange],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestComponent {}
 
 @Component({
-    standalone: true,
+    imports: [KbqTimeRange, ReactiveFormsModule],
     template: `
         <kbq-time-range [formControl]="control" />
     `,
-    imports: [KbqTimeRange, ReactiveFormsModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestComponentWithInitial {
@@ -187,11 +185,10 @@ export class TestComponentWithInitial {
 }
 
 @Component({
-    standalone: true,
+    imports: [KbqTimeRange, ReactiveFormsModule],
     template: `
         <kbq-time-range [availableTimeRangeTypes]="availableTimeRangeTypes()" [formControl]="control" />
     `,
-    imports: [KbqTimeRange, ReactiveFormsModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestComponentWithInputs {
@@ -217,8 +214,6 @@ export class TestComponentWithInputs {
 }
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'time-range-custom-range-types-example',
     imports: [
         ReactiveFormsModule,
@@ -235,6 +230,7 @@ export class TestComponentWithInputs {
 
         <kbq-time-range [optionTemplate]="customOption" />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

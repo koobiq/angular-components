@@ -6,12 +6,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select with panelWidth auto
  */
 @Component({
-    standalone: true,
+    selector: 'select-with-panel-width-auto-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule
     ],
-    selector: 'select-with-panel-width-auto-example',
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" [panelWidth]="'auto'" [(value)]="value">
@@ -26,10 +25,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             width: 280px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-l layout-align-center-center layout-row'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class SelectWithPanelWidthAutoExample {
     readonly options = [

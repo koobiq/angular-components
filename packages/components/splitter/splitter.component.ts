@@ -219,15 +219,16 @@ export class KbqGutterGhostDirective {
 
 @Component({
     selector: 'kbq-splitter',
+    imports: [KbqGutterDirective, KbqGutterGhostDirective],
+    templateUrl: './splitter.component.html',
+    styleUrls: ['splitter.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqSplitter',
     host: {
         class: 'kbq-splitter'
     },
-    preserveWhitespaces: false,
-    styleUrls: ['splitter.scss'],
-    templateUrl: './splitter.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    preserveWhitespaces: false
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
     @Output() readonly gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();

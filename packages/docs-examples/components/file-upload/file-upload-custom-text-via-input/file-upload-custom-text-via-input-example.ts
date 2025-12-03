@@ -75,9 +75,11 @@ const localeData = {
  * @title File-upload custom text via input example
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-custom-text-via-input-example',
+    imports: [
+        KbqFileUploadModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-file-upload multiple [localeConfig]="multipleLocaleConfig()">
             <ng-template #kbqFileIcon>
@@ -91,10 +93,7 @@ const localeData = {
             </ng-template>
         </kbq-file-upload>
     `,
-    imports: [
-        KbqFileUploadModule,
-        KbqIconModule
-    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column layout-gap-l'
     }

@@ -108,8 +108,6 @@ export const DATA_OBJECT = {
  * @title Tree-select child selection
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-select-child-selection-overview-example',
     imports: [KbqFormFieldModule, ReactiveFormsModule, KbqTreeSelectModule, KbqTreeModule, KbqIconModule],
     template: `
@@ -137,7 +135,8 @@ export const DATA_OBJECT = {
                 <kbq-cleaner #kbqSelectCleaner />
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectChildSelectionOverviewExample {
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;

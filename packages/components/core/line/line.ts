@@ -1,4 +1,4 @@
-import { Directive, ElementRef, NgModule, QueryList } from '@angular/core';
+import { Directive, ElementRef, QueryList } from '@angular/core';
 
 /**
  * Shared directive to count lines inside a text area, such as a list item.
@@ -54,10 +54,3 @@ export class KbqLineSetter {
         }
     }
 }
-
-@NgModule({
-    imports: [],
-    exports: [KbqLine],
-    declarations: [KbqLine]
-})
-export class KbqLineModule {}

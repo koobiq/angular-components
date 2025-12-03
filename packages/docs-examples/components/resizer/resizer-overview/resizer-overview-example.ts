@@ -6,7 +6,6 @@ import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/com
  * @title Resizer overview example
  */
 @Component({
-    standalone: true,
     selector: 'resizer-overview-example',
     imports: [KbqResizer, KbqResizable, KbqIcon],
     template: `

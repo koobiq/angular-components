@@ -12,8 +12,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  * @title Dropdown disabled
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-disabled-example',
     imports: [
         KbqDropdownModule,
@@ -25,7 +23,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqTitleModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-disabled-example.html'
+    templateUrl: 'dropdown-disabled-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownDisabledExample {
     disabled = false;

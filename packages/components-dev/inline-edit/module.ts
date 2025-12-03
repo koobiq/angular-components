@@ -3,9 +3,8 @@ import { InlineEditExamplesModule } from '../../docs-examples/components/inline-
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [InlineEditExamplesModule],
     selector: 'dev-examples',
+    imports: [InlineEditExamplesModule],
     template: `
         <inline-edit-overview-example />
         <inline-edit-unfilled-example />
@@ -28,7 +27,6 @@ export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
-    standalone: true,
     imports: [
         DevExamples,
         DevThemeToggle

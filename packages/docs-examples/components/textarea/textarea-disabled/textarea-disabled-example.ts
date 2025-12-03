@@ -8,8 +8,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Textarea disabled
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'textarea-disabled-example',
     imports: [KbqFormFieldModule, KbqTextareaModule, KbqToggleModule, FormsModule],
     template: `
@@ -20,6 +18,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             <textarea kbqTextarea placeholder="Placeholder" [disabled]="disabled()"></textarea>
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-xl layout-column'
     }

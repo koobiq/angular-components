@@ -58,8 +58,8 @@ export class KbqAlertControl {}
     selector: 'kbq-alert',
     templateUrl: './alert.component.html',
     styleUrls: ['alert.component.scss', 'alert-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-alert',
         '[class]': 'alertColor',

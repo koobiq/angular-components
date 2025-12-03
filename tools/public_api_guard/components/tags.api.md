@@ -21,7 +21,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/drag-drop';
 import * as i1_2 from '@koobiq/components/core';
-import * as i4 from '@angular/cdk/platform';
+import * as i1_3 from '@angular/cdk/platform';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
@@ -120,7 +120,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTag, "kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]", ["kbqTag"], { "editable": { "alias": "editable"; "required": false; }; "preventEditSubmit": { "alias": "preventEditSubmit"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "editChange": "editChange"; "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["editInputElementRef", "avatar", "trailingIcon", "removeIcon", "contentChildren"], ["[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])", "[kbqTagEditInput]", "*", "[kbqTagEditSubmit]", "[kbqTagRemove]"], false, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTag, "kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]", ["kbqTag"], { "editable": { "alias": "editable"; "required": false; }; "preventEditSubmit": { "alias": "preventEditSubmit"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "editChange": "editChange"; "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["editInputElementRef", "avatar", "trailingIcon", "removeIcon", "contentChildren"], ["[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])", "[kbqTagEditInput]", "*", "[kbqTagEditSubmit]", "[kbqTagRemove]"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTag, never>;
 }
@@ -128,7 +128,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
 // @public
 export class KbqTagAvatar {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagAvatar, "kbq-tag-avatar, [kbqTagAvatar]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagAvatar, "kbq-tag-avatar, [kbqTagAvatar]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagAvatar, never>;
 }
@@ -220,7 +220,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     // @deprecated
     updateInputWidth(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, false, [{ directive: typeof i1_2.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1_2.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagInput, [null, null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; self: true; }]>;
 }
@@ -335,7 +335,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], false, [{ directive: typeof i1.CdkDropList; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i1.CdkDropList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagList, [null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
 }
@@ -362,7 +362,7 @@ export class KbqTagRemove {
     // (undocumented)
     protected parentTag: KbqTag;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagRemove, never>;
 }
@@ -403,18 +403,18 @@ export class KbqTagsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagsModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTagsModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_3" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagsModule, [typeof i1_3.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i4.PlatformModule, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput], [typeof i1_3.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagsModule, never, [typeof i1_3.PlatformModule, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput, typeof i3.KbqTagList, typeof i2.KbqTag, typeof i4.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i3.KbqTagList, typeof i2.KbqTag, typeof i4.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput]>;
 }
 
 // @public
 export class KbqTagTrailingIcon {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagTrailingIcon, "kbq-tag-trailing-icon, [kbqTagTrailingIcon]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagTrailingIcon, "kbq-tag-trailing-icon, [kbqTagTrailingIcon]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagTrailingIcon, never>;
 }

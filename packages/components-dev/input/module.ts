@@ -30,9 +30,8 @@ import { startWith } from 'rxjs';
 import { InputExamplesModule } from '../../docs-examples/components/input';
 
 @Component({
-    standalone: true,
-    imports: [InputExamplesModule],
     selector: 'dev-examples',
+    imports: [InputExamplesModule],
     template: `
         <input-number-overview-example />
         <hr />
@@ -45,7 +44,7 @@ import { InputExamplesModule } from '../../docs-examples/components/input';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -58,7 +57,6 @@ export class DevExamples {}
         DevExamples,
         KbqNormalizeWhitespace
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

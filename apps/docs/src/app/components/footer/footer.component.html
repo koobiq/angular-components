@@ -31,12 +31,12 @@
     </div>
 
     <kbq-dropdown #docsLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
-        @for (item of docsLanguageSwitch.data; track item; let index = $index) {
+        @for (item of docsLanguageSwitch.data; track item) {
             <button
                 kbq-dropdown-item
                 [class.kbq-selected]="item.selected"
                 [disabled]="item.disabled"
-                (click)="docsLanguageSwitch.setValue(index)"
+                (click)="docsLanguageSwitch.setValue($index)"
             >
                 {{ item.value }}
             </button>
@@ -44,11 +44,11 @@
     </kbq-dropdown>
 
     <kbq-dropdown #examplesLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
-        @for (item of examplesLanguageSwitch.data; track item; let index = $index) {
+        @for (item of examplesLanguageSwitch.data; track item) {
             <button
                 kbq-dropdown-item
                 [class.kbq-selected]="item.selected"
-                (click)="examplesLanguageSwitch.setValue(index)"
+                (click)="examplesLanguageSwitch.setValue($index)"
             >
                 {{ item.value }}
             </button>

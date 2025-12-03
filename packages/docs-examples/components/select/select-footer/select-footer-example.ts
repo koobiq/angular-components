@@ -9,7 +9,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select footer
  */
 @Component({
-    standalone: true,
+    selector: 'select-footer-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule,
@@ -17,7 +17,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqIconModule,
         KbqLinkModule
     ],
-    selector: 'select-footer-example',
     template: `
         <div class="example-row">
             <div class="kbq-form__label">Button</div>
@@ -70,7 +69,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </kbq-form-field>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .example-row {
             display: flex;
@@ -93,7 +91,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .example-select-footer-with-caption {
             color: var(--kbq-foreground-contrast-secondary);
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectFooterExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);

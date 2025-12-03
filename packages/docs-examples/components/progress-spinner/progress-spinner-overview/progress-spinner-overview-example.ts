@@ -9,14 +9,13 @@ const MAX_PERCENT: number = 100;
  * @title Basic progress spinner
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'progress-spinner-overview-example',
     imports: [KbqProgressSpinnerModule],
     template: `
         <small [style.width.px]="40">{{ percent() }}%</small>
         <kbq-progress-spinner [value]="percent()" />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }

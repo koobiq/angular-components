@@ -16,7 +16,6 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
  */
 @Component({
     selector: 'validation-on-type-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,

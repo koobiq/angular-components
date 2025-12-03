@@ -60,7 +60,6 @@ const FIELD_RESIZE_EVENTS = ['input', 'change', 'focus', 'blur'] as const;
  * @docs-private
  */
 @Directive({
-    standalone: true,
     selector: '[kbqFieldSizingContent]',
     exportAs: 'kbqFieldSizingContent',
     host: {

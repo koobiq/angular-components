@@ -7,7 +7,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Code-block with filled attribute
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-filled-example',
     imports: [
         KbqCodeBlockModule,

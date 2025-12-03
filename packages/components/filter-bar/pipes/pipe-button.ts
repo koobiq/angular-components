@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge } from 'rxjs';
 import { KbqFilterBar } from '../filter-bar';
@@ -17,33 +17,32 @@ import { KbqBasePipe } from './base-pipe';
 import { KbqPipeState } from './pipe-state';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-button',
+    imports: [
+        KbqIconModule,
+        KbqButtonModule,
+        KbqPipeState,
+        KbqTooltipTrigger
+    ],
     template: `
         <button
+            kbqTooltip="{{ pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
             class="kbq-pipe__remove-button"
             kbq-button
             [disabled]="pipe.data.disabled"
             [kbqPipeState]="pipe.data"
             [kbqTooltipDisabled]="pipe.data.disabled"
-            kbqTooltip="{{ pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
             (click)="pipe.data.cleanable ? pipe.onClear() : pipe.onRemove()"
         >
             <i kbq-icon="kbq-xmark-s_16" [color]="pipe.data.disabled ? 'empty' : 'contrast'"></i>
         </button>
     `,
     styleUrl: 'pipe-button.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-pipe-button'
-    },
-    imports: [
-        KbqIcon,
-        KbqButtonModule,
-        KbqPipeState,
-        KbqTooltipTrigger
-    ]
+    }
 })
 export class KbqPipeButton {
     /** KbqPipe instance */

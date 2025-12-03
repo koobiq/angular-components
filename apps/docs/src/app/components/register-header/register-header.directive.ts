@@ -2,7 +2,6 @@ import { Directive, ElementRef, inject } from '@angular/core';
 import { DocsDocStates } from '../../services/doc-states';
 
 @Directive({
-    standalone: true,
     selector: '[docsRegisterHeader]'
 })
 export class DocsRegisterHeaderDirective {

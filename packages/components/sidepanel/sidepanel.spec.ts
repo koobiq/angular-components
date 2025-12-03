@@ -367,6 +367,9 @@ class ComponentForSidepanel {}
 
 @Component({
     selector: 'kbq-sidepanel-from-dropdown',
+    imports: [
+        KbqDropdownModule
+    ],
     template: `
         <button #trigger="kbqDropdownTrigger" class="template-button" kbq-button [kbqDropdownTriggerFor]="dropdown">
             Open sidepanel from dropdown
@@ -442,9 +445,9 @@ const TEST_COMPONENTS = [
         KbqSidepanelModule,
         NoopAnimationsModule,
         KbqDropdownModule,
-        KbqButtonModule
+        KbqButtonModule,
+        ...TEST_COMPONENTS
     ],
-    exports: TEST_COMPONENTS,
-    declarations: TEST_COMPONENTS
+    exports: TEST_COMPONENTS
 })
 class SidepanelTestModule {}

@@ -15,9 +15,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             FormsModule,
             KbqTextareaModule,
             KbqFormFieldModule,
-            ...imports
+            ...imports,
+            component
         ],
-        declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
             ...providers
@@ -28,6 +28,11 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea required [(ngModel)]="value"></textarea>
@@ -39,6 +44,11 @@ class KbqTextareaInvalid {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        FormsModule
+    ],
     template: `
         <form #form="ngForm">
             <kbq-form-field>
@@ -56,6 +66,11 @@ class KbqFormFieldWithNgModelInForm {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <textarea class="kbq-textarea_monospace" kbqTextarea [(ngModel)]="value"></textarea>
@@ -67,6 +82,11 @@ class KbqTextareaWithMonospace {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"></textarea>
@@ -80,6 +100,10 @@ class KbqTextareaForBehaviors {
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule
+    ],
     template: `
         <kbq-form-field kbqFormFieldWithoutBorders>
             <textarea kbqTextarea></textarea>

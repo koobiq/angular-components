@@ -18,18 +18,7 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-select',
-    templateUrl: 'pipe-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-select.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    providers: [
-        {
-            provide: KbqBasePipe,
-            useExisting: this
-        }
-    ],
     imports: [
         KbqButtonModule,
         KbqDividerModule,
@@ -46,6 +35,16 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqInputModule,
         ReactiveFormsModule,
         AsyncPipe
+    ],
+    templateUrl: 'pipe-select.html',
+    styleUrls: ['base-pipe.scss', 'pipe-select.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: KbqBasePipe,
+            useExisting: this
+        }
     ]
 })
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {

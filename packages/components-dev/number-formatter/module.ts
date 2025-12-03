@@ -7,7 +7,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
         KbqButtonModule,
@@ -18,7 +18,6 @@ import { DevLocaleSelector } from '../locale-selector';
         DevLocaleSelector,
         KbqNormalizeWhitespace
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

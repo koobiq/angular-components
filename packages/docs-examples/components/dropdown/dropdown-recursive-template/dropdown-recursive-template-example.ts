@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -19,7 +18,6 @@ type DropdownItem = {
 };
 
 @Directive({
-    standalone: true,
     selector: '[exampleDropdownOutlet]'
 })
 export class ExampleDropdownPortal implements OnInit {
@@ -46,11 +44,8 @@ export class ExampleDropdownPortal implements OnInit {
  * @title Dropdown Recursive Template
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'dropdown-recursive-template-example',
     imports: [
-        NgTemplateOutlet,
         KbqDropdownModule,
         KbqButtonModule,
         KbqIconModule,
@@ -89,7 +84,8 @@ export class ExampleDropdownPortal implements OnInit {
                 }
             </ng-template>
         </kbq-dropdown>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownRecursiveTemplateExample {
     items: DropdownItem[] = [

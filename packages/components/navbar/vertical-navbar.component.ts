@@ -34,7 +34,6 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
 
 @Component({
     selector: 'kbq-vertical-navbar',
-    exportAs: 'KbqVerticalNavbar',
     template: `
         <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
             <ng-content select="[kbq-navbar-container], kbq-navbar-container" />
@@ -48,6 +47,9 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'KbqVerticalNavbar',
     host: {
         class: 'kbq-vertical-navbar',
         '[class.kbq-vertical-navbar_open-over]': 'openOver',
@@ -59,8 +61,6 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
 
         '(keydown)': 'onKeyDown($event)'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     hostDirectives: [CdkMonitorFocus]
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {

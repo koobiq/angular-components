@@ -15,10 +15,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
  * @title Number-formatter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'number-formatter-overview-example',
-    templateUrl: 'number-formatter-overview-example.html',
     imports: [
         FormsModule,
         KbqFormFieldModule,
@@ -26,6 +23,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
         KbqInputModule,
         KbqNormalizeWhitespace
     ],
+    templateUrl: 'number-formatter-overview-example.html',
     styles: `
         :host {
             .light-text-secondary {
@@ -37,7 +35,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
                 border-bottom: 1px solid var(--kbq-line-contrast-less);
             }
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NumberFormatterOverviewExample {
     protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);

@@ -17,9 +17,8 @@ import { DevThemeToggle } from '../theme-toggle';
 import { DEV_OPTIONS } from './mock';
 
 @Component({
-    standalone: true,
-    imports: [SelectExamplesModule],
     selector: 'dev-examples',
+    imports: [SelectExamplesModule],
     template: `
         <select-with-multiline-matcher-example />
         <hr />
@@ -76,7 +75,7 @@ import { DEV_OPTIONS } from './mock';
 class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         AsyncPipe,
         FormsModule,
@@ -92,17 +91,16 @@ class DevExamples {}
         DevExamples,
         DevThemeToggle
     ],
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqSelectOptionsProvider({
             // panelWidth: 200
         })
 
-    ],
-    selector: 'dev-app',
-    templateUrl: './template.html',
-    styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class DevApp implements OnInit {
     singleSelected = '';

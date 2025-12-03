@@ -15,14 +15,12 @@ import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
-    selector: 'kbq-select-trigger, [kbq-select-trigger]',
-    standalone: true
+    selector: 'kbq-select-trigger, [kbq-select-trigger]'
 })
 export class KbqSelectTrigger {}
 
 @Directive({
-    selector: 'kbq-select-matcher, [kbq-select-matcher]',
-    standalone: true
+    selector: 'kbq-select-matcher, [kbq-select-matcher]'
 })
 export class KbqSelectMatcher {
     @Input({ transform: booleanAttribute }) useDefaultHandlers: boolean = true;
@@ -30,15 +28,13 @@ export class KbqSelectMatcher {
 
 @Directive({
     selector: 'kbq-select-footer, [kbq-select-footer]',
-    host: { class: 'kbq-select__footer' },
-    standalone: true
+    host: { class: 'kbq-select__footer' }
 })
 export class KbqSelectFooter {}
 
 @Directive({
     selector: '[kbqSelectSearch]',
     exportAs: 'kbqSelectSearch',
-    standalone: true,
     host: {
         '(keydown)': 'handleKeydown($event)'
     }
@@ -115,8 +111,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
 
 @Directive({
     selector: '[kbq-select-search-empty-result]',
-    exportAs: 'kbqSelectSearchEmptyResult',
-    standalone: true
+    exportAs: 'kbqSelectSearchEmptyResult'
 })
 export class KbqSelectSearchEmptyResult {}
 

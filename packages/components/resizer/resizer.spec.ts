@@ -18,9 +18,9 @@ const getResizerElement = ({ debugElement }: ComponentFixture<unknown>): HTMLEle
 };
 
 @Component({
-    standalone: true,
-    imports: [KbqResizable, KbqResizer],
     selector: 'test-resizer',
+    imports: [KbqResizable, KbqResizer],
+    standalone: true,
     template: `
         <div kbqResizable>
             <div [kbqResizer]="direction()" (sizeChange)="sizeChange($event)"></div>

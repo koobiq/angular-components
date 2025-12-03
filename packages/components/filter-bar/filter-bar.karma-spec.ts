@@ -29,8 +29,7 @@ describe('KbqFilterBar', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [BrowserAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule],
-            declarations: [BaseFunctions]
+            imports: [BrowserAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule, BaseFunctions]
         }).compileComponents();
     });
 
@@ -497,6 +496,7 @@ describe('KbqFilterBar', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqFilterBarModule, KbqLuxonDateModule],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             <kbq-filters

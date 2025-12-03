@@ -8,8 +8,12 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Form fieldset
  */
 @Component({
-    standalone: true,
     selector: 'form-fieldset-invalid-example',
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule
+    ],
     template: `
         <form [formGroup]="form">
             <kbq-fieldset>
@@ -37,24 +41,19 @@ import { KbqInputModule } from '@koobiq/components/input';
             </kbq-fieldset>
         </form>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule
-    ],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'layout-row'
-    },
     styles: `
         :host {
             margin: var(--kbq-size-m) auto;
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
+    host: {
+        class: 'layout-row'
+    }
 })
 export class FormFieldsetInvalidExample {
     form = new FormGroup({

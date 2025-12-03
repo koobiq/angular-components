@@ -5,7 +5,6 @@ import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
  * @title Pseudo checkbox
  */
 @Component({
-    standalone: true,
     selector: 'pseudo-checkbox-example',
     imports: [
         KbqPseudoCheckboxModule

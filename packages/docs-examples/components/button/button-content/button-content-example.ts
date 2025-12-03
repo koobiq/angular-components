@@ -7,10 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Button content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-content-example',
-    styleUrls: ['button-content-example.css'],
     imports: [
         KbqButtonModule,
         KbqIconModule
@@ -44,7 +41,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </button>
             </div>
         </div>
-    `
+    `,
+    styleUrls: ['button-content-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonContentExample {
     colors = KbqComponentColors;

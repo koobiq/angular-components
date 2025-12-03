@@ -6,14 +6,13 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  * @title Radio content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'radio-content-example',
     imports: [
         KbqRadioModule,
         KbqFormFieldModule
     ],
-    templateUrl: 'radio-content-example.html'
+    templateUrl: 'radio-content-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RadioContentExample {
     isDisabled = false;

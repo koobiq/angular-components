@@ -8,14 +8,13 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit without label
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-without-label-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
         KbqFormFieldModule,
         KbqInputModule
     ],
-    selector: 'inline-edit-without-label-example',
     template: `
         <kbq-inline-edit>
             <div class="example-inline-text" kbqInlineEditViewMode>

@@ -9,8 +9,6 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Input
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'input-overview-example',
     imports: [
         KbqFormFieldModule,
@@ -38,7 +36,8 @@ import { KbqInputModule } from '@koobiq/components/input';
 
             <kbq-cleaner />
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputOverviewExample {
     themePalette = ThemePalette;

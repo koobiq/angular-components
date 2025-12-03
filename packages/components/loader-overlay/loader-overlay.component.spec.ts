@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import {
@@ -15,11 +15,8 @@ describe('KbqLoaderOverlay', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                BrowserModule,
                 KbqProgressSpinnerModule,
-                KbqLoaderOverlayModule
-            ],
-            declarations: [
+                KbqLoaderOverlayModule,
                 OverlayWithParams,
                 OverlayNoParams,
                 OverlayWithExternalParams
@@ -90,6 +87,7 @@ describe('KbqLoaderOverlay', () => {
 
 @Component({
     selector: 'overlay-with-params',
+    imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
@@ -104,6 +102,7 @@ class OverlayWithParams {
 
 @Component({
     selector: 'overlay-no-params',
+    imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
@@ -116,6 +115,7 @@ class OverlayNoParams {}
 
 @Component({
     selector: 'overlay-with-external-params',
+    imports: [KbqProgressSpinnerModule, KbqLoaderOverlayModule],
     template: `
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text

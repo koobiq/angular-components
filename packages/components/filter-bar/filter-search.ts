@@ -19,38 +19,7 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 import { KbqFilterBar } from './filter-bar';
 
 @Component({
-    standalone: true,
     selector: 'kbq-filter-search, [kbq-filter-search]',
-    template: `
-        <button
-            kbq-button
-            [class.kbq-filter_hidden]="isSearchActive"
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
-            kbqTooltip="{{ localeData.tooltip }}"
-            (click)="openSearch()"
-        >
-            <i kbq-icon="kbq-magnifying-glass_16"></i>
-        </button>
-
-        <kbq-form-field [class.kbq-filter_hidden]="!isSearchActive">
-            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-
-            <input
-                autocomplete="off"
-                kbqInput
-                [formControl]="searchControl"
-                placeholder="{{ localeData.placeholder }}"
-                (blur)="onBlur()"
-                (keydown.escape)="onEscape()"
-            />
-
-            <kbq-cleaner (click)="onClear()" />
-        </kbq-form-field>
-    `,
-    styleUrl: 'filter-search.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqDividerModule,
         KbqButtonModule,
@@ -60,6 +29,36 @@ import { KbqFilterBar } from './filter-bar';
         KbqInputModule,
         ReactiveFormsModule
     ],
+    template: `
+        <button
+            kbqTooltip="{{ localeData.tooltip }}"
+            kbq-button
+            [class.kbq-filter_hidden]="isSearchActive"
+            [color]="'contrast'"
+            [kbqStyle]="'transparent'"
+            (click)="openSearch()"
+        >
+            <i kbq-icon="kbq-magnifying-glass_16"></i>
+        </button>
+
+        <kbq-form-field [class.kbq-filter_hidden]="!isSearchActive">
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+
+            <input
+                placeholder="{{ localeData.placeholder }}"
+                autocomplete="off"
+                kbqInput
+                [formControl]="searchControl"
+                (blur)="onBlur()"
+                (keydown.escape)="onEscape()"
+            />
+
+            <kbq-cleaner (click)="onClear()" />
+        </kbq-form-field>
+    `,
+    styleUrl: 'filter-search.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-filter-search'
     }

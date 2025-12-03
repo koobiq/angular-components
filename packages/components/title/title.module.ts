@@ -3,8 +3,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTitleDirective } from './title.directive';
 
 @NgModule({
-    imports: [KbqToolTipModule],
-    declarations: [KbqTitleDirective],
+    imports: [KbqToolTipModule, KbqTitleDirective],
     exports: [KbqTitleDirective]
 })
 export class KbqTitleModule {}

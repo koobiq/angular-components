@@ -103,8 +103,6 @@ export const DATA_OBJECT = {
  * @title Tree-select search
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-select-search-overview-example',
     imports: [
         KbqFormFieldModule,
@@ -149,7 +147,8 @@ export const DATA_OBJECT = {
                 <kbq-cleaner #kbqSelectCleaner />
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectSearchOverviewExample implements OnInit {
     selected = '';

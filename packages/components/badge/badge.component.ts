@@ -112,8 +112,8 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     selector: 'kbq-badge',
     template: '<ng-content />',
     styleUrls: ['badge.component.scss', 'badge-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-badge',
         '[class.kbq-badge_compact]': 'compact',

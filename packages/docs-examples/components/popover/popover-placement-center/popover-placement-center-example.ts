@@ -9,11 +9,9 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  * @title Popover placement center
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-placement-center-example',
-    templateUrl: 'popover-placement-center-example.html',
     imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule],
+    templateUrl: 'popover-placement-center-example.html',
     styles: `
         .popover-placement-center-example {
             display: flex;
@@ -34,7 +32,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
         .popover-placement-center-example__column button + button {
             margin-top: 48px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverPlacementCenterExample {
     placements = PopUpPlacements;

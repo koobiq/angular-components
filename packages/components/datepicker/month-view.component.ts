@@ -22,10 +22,13 @@ const DAYS_PER_WEEK = 7;
  */
 @Component({
     selector: 'kbq-month-view',
-    exportAs: 'kbqMonthView',
+    imports: [
+        KbqCalendarBody
+    ],
     templateUrl: 'month-view.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqMonthView'
 })
 export class KbqMonthView<D> implements AfterContentInit {
     /**

@@ -8,15 +8,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover common
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-common-example',
     imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],
-    styles: `
-        ::ng-deep .kbq-popover.kbq-popover_medium.popover-common-example {
-            width: 400px;
-        }
-    `,
     template: `
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
@@ -42,6 +35,12 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         >
             Открыть поповер
         </button>
-    `
+    `,
+    styles: `
+        ::ng-deep .kbq-popover.kbq-popover_medium.popover-common-example {
+            width: 400px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverCommonExample {}

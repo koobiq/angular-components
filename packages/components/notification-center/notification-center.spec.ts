@@ -71,14 +71,13 @@ describe('KbqNotificationCenter', () => {
 });
 
 @Component({
-    standalone: true,
     selector: 'notification-center-simple',
-    template: `
-        <button kbqNotificationCenterTrigger>notification-center Trigger</button>
-    `,
     imports: [
         KbqNotificationCenterModule
-    ]
+    ],
+    template: `
+        <button kbqNotificationCenterTrigger>notification-center Trigger</button>
+    `
 })
 export class KbqNotificationCenterSimple {
     @ViewChild(KbqNotificationCenterTrigger) trigger: KbqNotificationCenterTrigger;

@@ -15,12 +15,11 @@ import { distinctUntilChanged } from 'rxjs/operators';
  * @title Range date-formatter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'range-date-formatter-example',
+    imports: [LuxonDateModule, KbqFormattersModule],
     templateUrl: 'range-date-formatter-example.html',
     styleUrls: ['range-date-formatter-example.css'],
-    imports: [LuxonDateModule, KbqFormattersModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RangeDateFormatterExample {
     formats = {

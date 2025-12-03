@@ -6,7 +6,6 @@ import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/m
  * @title Modal sizes
  */
 @Component({
-    standalone: true,
     selector: 'modal-sizes-example',
     imports: [
         KbqModalModule,

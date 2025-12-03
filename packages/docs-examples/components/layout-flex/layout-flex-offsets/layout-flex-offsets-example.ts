@@ -6,10 +6,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Layout-flex offsets
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'layout-flex-offsets-example',
-    styleUrls: ['layout-flex-offsets-example.css'],
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
         <div class="example-layout-flex-offsets layout-margin-top-4xl">
@@ -46,7 +43,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 </div>
             </div>
         </div>
-    `
+    `,
+    styleUrls: ['layout-flex-offsets-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutFlexOffsetsExample {
     selectedSize: string = 'flex-10';

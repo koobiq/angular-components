@@ -16,9 +16,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
             FormsModule,
             KbqTextareaModule,
             KbqFormFieldModule,
-            ...imports
+            ...imports,
+            component
         ],
-        declarations: [component],
         providers: [
             { provide: ComponentFixtureAutoDetect, useValue: true },
             ...providers
@@ -29,6 +29,10 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 }
 
 @Component({
+    imports: [
+        KbqTextareaModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"></textarea>
@@ -42,6 +46,10 @@ class KbqTextareaForBehaviors {
 }
 
 @Component({
+    imports: [
+        KbqTextareaModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [canGrow]="false" [(ngModel)]="value"></textarea>

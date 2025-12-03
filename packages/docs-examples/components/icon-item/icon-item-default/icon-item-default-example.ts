@@ -6,10 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Icon-item
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'icon-item-default-example',
-    styleUrls: ['icon-item-default-example.css'],
     imports: [
         KbqIconModule
     ],
@@ -17,7 +14,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
         <div class="example-icon-item-container layout-column">
             <i kbq-icon-item="kbq-bell_16" [color]="colors.Theme"></i>
         </div>
-    `
+    `,
+    styleUrls: ['icon-item-default-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconItemDefaultExample {
     colors = KbqComponentColors;

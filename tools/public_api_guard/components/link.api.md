@@ -11,7 +11,7 @@ import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
+import * as i1 from '@angular/cdk/a11y';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -81,7 +81,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     useVisited: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon", "icons"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon", "icons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLink, never>;
 }
@@ -92,10 +92,10 @@ export class KbqLinkModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLinkModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqLinkModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLinkModule, [typeof i1.KbqLink], [typeof i2.A11yModule], [typeof i1.KbqLink]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLinkModule, never, [typeof i1.A11yModule, typeof i2.KbqLink], [typeof i2.KbqLink]>;
 }
 
 // (No @packageDocumentation comment for this package)

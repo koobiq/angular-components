@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
+import { KbqAlertColors, KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqNormalizeWhitespace, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -42,10 +43,11 @@ const STEP: number = 4;
 const MAX_PERCENT: number = 100;
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         FormsModule,
         ReactiveFormsModule,
+        KbqAlertModule,
         KbqIconModule,
         KbqButtonModule,
         KbqButtonToggleModule,
@@ -70,10 +72,8 @@ const MAX_PERCENT: number = 100;
         KbqTimepickerModule,
         KbqToggleModule,
         KbqToolTipModule,
-        KbqTreeModule,
-        KbqNormalizeWhitespace
+        KbqTreeModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
@@ -232,4 +232,6 @@ export class DevApp implements OnDestroy {
     private getChildren = (node: DevFileNode): Observable<DevFileNode[]> => {
         return observableOf(node.children);
     };
+    protected readonly colors = KbqComponentColors;
+    protected readonly alertColors = KbqAlertColors;
 }

@@ -19,8 +19,6 @@ type DocsFormData = {
 
 @Component({
     selector: 'docs-empty-form',
-    standalone: true,
-
     imports: [KbqFormsModule, KbqFormFieldModule, FormsModule, KbqButtonModule, KbqInputModule, ReactiveFormsModule],
     template: `
         <form class="kbq-form-vertical" id="docs-form" novalidate [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
@@ -81,8 +79,6 @@ export class DocsNameFormComponent {
  * @title Validation on open
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-on-open-example',
     imports: [
         ReactiveFormsModule,
@@ -106,6 +102,7 @@ export class DocsNameFormComponent {
             </button>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row layout-gap-l'
     }

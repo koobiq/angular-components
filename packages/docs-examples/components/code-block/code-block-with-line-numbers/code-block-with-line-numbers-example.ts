@@ -7,7 +7,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Code-block with lineNumbers attribute
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-line-numbers-example',
     imports: [
         KbqCodeBlockModule,

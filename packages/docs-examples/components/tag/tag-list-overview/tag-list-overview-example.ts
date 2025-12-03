@@ -10,7 +10,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }
  * @title Tag list overview
  */
 @Component({
-    standalone: true,
     selector: 'tag-list-overview-example',
     imports: [KbqTagsModule, KbqIconModule],
     template: `

@@ -14,7 +14,6 @@ import { getFormattedSizeParts } from './size';
 
 @Pipe({
     name: 'kbqDataSize',
-    standalone: true,
     pure: false
 })
 export class KbqDataSizePipe implements PipeTransform {

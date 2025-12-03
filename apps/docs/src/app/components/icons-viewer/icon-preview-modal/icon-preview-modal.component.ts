@@ -28,7 +28,7 @@ import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
 
 @Component({
-    standalone: true,
+    selector: 'docs-icon-preview-modal-component',
     imports: [
         TitleCasePipe,
         KbqIconModule,
@@ -42,7 +42,6 @@ import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
         KbqBadgeModule,
         DocsCodeSnippetDirective
     ],
-    selector: 'docs-icon-preview-modal-component',
     templateUrl: './icon-preview-modal.template.html',
     styleUrls: ['./icon-preview-modal.scss'],
     encapsulation: ViewEncapsulation.None,

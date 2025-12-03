@@ -7,20 +7,19 @@ import { ExampleData } from '@koobiq/docs-examples';
 import { DocsStackblitzWriter } from './stackblitz-writer';
 
 @Component({
-    standalone: true,
-    imports: [KbqButtonModule, KbqIconModule, KbqLinkModule],
-    providers: [DocsStackblitzWriter],
     selector: 'docs-stackblitz-button',
+    imports: [KbqButtonModule, KbqIconModule, KbqLinkModule],
     template: `
         <span class="kbq-link__text">StackBlitz</span>
         <i kbq-icon="kbq-north-east_16"></i>
     `,
+    encapsulation: ViewEncapsulation.None,
+    providers: [DocsStackblitzWriter],
     host: {
         class: 'docs-stackblitz-button kbq-link_external',
         '(click)': 'openStackBlitz()',
         '(keydown.enter)': 'openStackBlitz()'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsStackblitzButtonComponent extends KbqLink {
     @Input()

@@ -12,12 +12,12 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/cdk/overlay';
-import * as i4 from '@koobiq/components/button';
-import * as i5 from '@angular/cdk/a11y';
-import * as i6 from '@koobiq/components/icon';
-import * as i7 from '@angular/cdk/observers';
-import * as i8 from '@angular/common';
+import * as i1 from '@angular/cdk/overlay';
+import * as i2 from '@koobiq/components/button';
+import * as i3 from '@angular/cdk/a11y';
+import * as i4 from '@koobiq/components/icon';
+import * as i5 from '@angular/cdk/observers';
+import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
@@ -99,7 +99,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPopoverComponent, "kbq-popover-component", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPopoverComponent, "kbq-popover-component", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverComponent, never>;
 }
@@ -113,7 +113,7 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     // (undocumented)
     onConfirm: Subject<void>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPopoverConfirmComponent, "kbq-popover-confirm-component", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPopoverConfirmComponent, "kbq-popover-confirm-component", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverConfirmComponent, never>;
 }
@@ -136,7 +136,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     // (undocumented)
     updateData(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverConfirmTrigger, "[kbqPopoverConfirm]", ["kbqPopoverConfirm"], { "confirmText": { "alias": "kbqPopoverConfirmText"; "required": false; }; "confirmButtonText": { "alias": "kbqPopoverConfirmButtonText"; "required": false; }; }, { "confirm": "confirm"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverConfirmTrigger, "[kbqPopoverConfirm]", ["kbqPopoverConfirm"], { "confirmText": { "alias": "kbqPopoverConfirmText"; "required": false; }; "confirmButtonText": { "alias": "kbqPopoverConfirmButtonText"; "required": false; }; }, { "confirm": "confirm"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverConfirmTrigger, [{ optional: true; }, { optional: true; }]>;
 }
@@ -147,11 +147,11 @@ export class KbqPopoverModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqPopoverModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger], [typeof i3.OverlayModule, typeof i4.KbqButtonModule, typeof i5.A11yModule, typeof i6.KbqIconModule, typeof i7.CdkObserveContent, typeof i8.NgClass, typeof i8.NgTemplateOutlet], [typeof i1.KbqPopoverComponent, typeof i1.KbqPopoverTrigger, typeof i2.KbqPopoverConfirmComponent, typeof i2.KbqPopoverConfirmTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, never, [typeof i1.OverlayModule, typeof i2.KbqButtonModule, typeof i3.A11yModule, typeof i4.KbqIconModule, typeof i5.CdkObserveContent, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.KbqPopoverComponent, typeof i7.KbqPopoverTrigger, typeof i8.KbqPopoverConfirmComponent, typeof i8.KbqPopoverConfirmTrigger], [typeof i7.KbqPopoverComponent, typeof i7.KbqPopoverTrigger, typeof i8.KbqPopoverConfirmComponent, typeof i8.KbqPopoverConfirmTrigger]>;
 }
 
 // @public
@@ -250,7 +250,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "stickToWindow": { "alias": "kbqPopoverStickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "stickToWindow": { "alias": "kbqPopoverStickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverTrigger, never>;
 }

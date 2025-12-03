@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 
 /** Directive that wraps cdk `FocusMonitor` into standalone directive */
 @Directive({
-    standalone: true,
     selector: '[kbqFocusMonitor]',
     exportAs: 'kbqFocusMonitor'
 })

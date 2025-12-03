@@ -10,8 +10,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Empty-state size
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-size-example',
     imports: [
         FormsModule,
@@ -39,10 +37,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </button>
             </div>
         </kbq-empty-state>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateSizeExample {
     buttonText = 'Create group';
     emptyStateText = 'Agents can be grouped together and assigned the same policies.';
-    size = model<KbqDefaultSizes>('compact');
+    readonly size = model<KbqDefaultSizes>('compact');
 }

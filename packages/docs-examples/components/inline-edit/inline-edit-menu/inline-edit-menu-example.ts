@@ -15,7 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Inline edit menu
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-menu-example',
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -29,7 +29,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule,
         NgTemplateOutlet
     ],
-    selector: 'inline-edit-menu-example',
     template: `
         <div role="group" class="layout-flex layout-column flex" aria-label="vertical list">
             <span class="kbq-text-normal-strong">Vertical list</span>
@@ -187,10 +186,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             margin-left: -8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column layout-gap-m'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class InlineEditMenuExample {
     protected readonly maxRows = 20;

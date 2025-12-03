@@ -9,9 +9,7 @@ import {
     OnDestroy,
     ViewEncapsulation
 } from '@angular/core';
-import { RdxAccordionRootDirective, RdxAccordionType } from '@radix-ng/primitives/accordion';
-
-export type KbqAccordionType = RdxAccordionType;
+import { KbqAccordionRootDirective } from './accordion-root.directive';
 
 export enum KbqAccordionVariant {
     fill = 'fill',
@@ -23,15 +21,15 @@ export enum KbqAccordionVariant {
     selector: 'kbq-accordion, [kbq-accordion]',
     template: '<ng-content />',
     styleUrls: ['accordion.component.scss', 'accordion-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     hostDirectives: [
         {
-            directive: RdxAccordionRootDirective,
+            directive: KbqAccordionRootDirective,
             inputs: ['type', 'collapsible', 'disabled', 'defaultValue', 'value'],
             outputs: ['onValueChange']
         }
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion'
     }

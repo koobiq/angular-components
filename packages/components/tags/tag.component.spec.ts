@@ -75,7 +75,6 @@ const getTagRemoveElement = (debugElement: DebugElement): HTMLElement => {
 };
 
 @Component({
-    standalone: true,
     selector: 'test-tag',
     imports: [KbqTagsModule, FormsModule],
     template: `
@@ -115,7 +114,6 @@ export class TestTag {
 }
 
 @Component({
-    standalone: true,
     selector: 'test-tag',
     imports: [KbqTagsModule, FormsModule],
     template: `
@@ -164,8 +162,7 @@ describe(KbqTag.name, () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTagsModule],
-            declarations: [BasicTag, SingleTag],
+            imports: [KbqTagsModule, BasicTag, SingleTag],
             providers: [
                 {
                     provide: Directionality,
@@ -935,6 +932,7 @@ describe(KbqTag.name, () => {
 });
 
 @Component({
+    imports: [KbqTagsModule],
     template: `
         <kbq-tag-list>
             @if (shouldShow) {
@@ -975,6 +973,7 @@ class SingleTag {
 }
 
 @Component({
+    imports: [KbqTagsModule],
     template: `
         <kbq-basic-tag>{{ name }}</kbq-basic-tag>
     `

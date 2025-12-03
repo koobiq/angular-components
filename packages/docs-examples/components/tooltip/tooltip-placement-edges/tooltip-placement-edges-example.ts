@@ -6,10 +6,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip placement edges
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-placement-edges-example',
-    styleUrls: ['tooltip-placement-edges-example.css'],
     imports: [KbqToolTipModule],
     template: `
         <div class="example-tooltip__visual-box">
@@ -17,11 +14,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 <div
                     class="example-tooltip__trigger example-tooltip__trigger_{{ placement }}"
                     [kbqPlacement]="placement"
-                    [kbqTooltip]="'Tooltip\\nkbqPlacement: ' + placement"
+                    [kbqTooltip]="getText(placement)"
                 ></div>
             }
         </div>
-    `
+    `,
+    styleUrls: ['tooltip-placement-edges-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipPlacementEdgesExample {
     placements = [
@@ -34,4 +33,8 @@ export class TooltipPlacementEdgesExample {
         PopUpPlacements.RightBottom,
         PopUpPlacements.RightTop
     ];
+
+    getText(placement: PopUpPlacements): string {
+        return 'Tooltip\nkb qPlacement: ' + placement;
+    }
 }

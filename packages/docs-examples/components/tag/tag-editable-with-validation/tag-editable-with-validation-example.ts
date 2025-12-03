@@ -13,7 +13,6 @@ const TAG = 'Editable tag with validation';
  * @title Tag editable with validation
  */
 @Component({
-    standalone: true,
     selector: 'tag-editable-with-validation-example',
     imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqToolTipModule],
     template: `
@@ -27,9 +26,9 @@ const TAG = 'Editable tag with validation';
             >
                 {{ tagValue() }}
                 <input
+                    kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ trimmedTagModel().length }})"
                     kbqTagEditInput
                     kbqTrigger="none"
-                    kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ trimmedTagModel().length }})"
                     [kbqTooltipColor]="color.Error"
                     [(ngModel)]="tagModel"
                 />

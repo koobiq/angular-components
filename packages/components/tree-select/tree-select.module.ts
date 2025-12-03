@@ -31,7 +31,8 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectSearchEmptyResult,
         NgClass,
         NgTemplateOutlet,
-        A11yModule
+        A11yModule,
+        KbqTreeSelect
     ],
     exports: [
         KbqTreeSelect,
@@ -42,7 +43,6 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectSearchEmptyResult,
         KbqFormFieldModule
     ],
-    declarations: [KbqTreeSelect],
     providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
 })
 export class KbqTreeSelectModule {}

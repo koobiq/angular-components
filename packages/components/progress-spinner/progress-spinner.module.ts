@@ -6,9 +6,7 @@ import { KbqProgressSpinner, KbqProgressSpinnerCaption, KbqProgressSpinnerText }
 @NgModule({
     imports: [
         PlatformModule,
-        NgStyle
-    ],
-    declarations: [
+        NgStyle,
         KbqProgressSpinner,
         KbqProgressSpinnerText,
         KbqProgressSpinnerCaption

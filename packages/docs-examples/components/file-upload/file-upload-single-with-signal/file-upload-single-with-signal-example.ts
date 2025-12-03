@@ -6,7 +6,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File-upload single
  */
 @Component({
-    standalone: true,
     selector: 'file-upload-single-with-signal-example',
     imports: [KbqFileUploadModule, KbqIconModule],
     template: `

@@ -8,21 +8,26 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Breadcrumbs custom-template
  */
 @Component({
-    standalone: true,
     selector: 'breadcrumbs-custom-template-example',
+    imports: [
+        RouterLink,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqBreadcrumbsModule
+    ],
     template: `
         <nav kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
                     <a
                         *kbqBreadcrumbView
                         tabindex="-1"
                         kbq-button
                         kbqBreadcrumb
-                        [focusable]="!last"
+                        [focusable]="!$last"
                         [routerLink]="breadcrumb.url"
-                        [disabled]="last"
-                        [attr.aria-current]="last ? 'page' : null"
+                        [disabled]="$last"
+                        [attr.aria-current]="$last ? 'page' : null"
                     >
                         {{ breadcrumb.label }}
                         <i kbq-icon="kbq-file-code-o_16"></i>
@@ -31,12 +36,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             }
         </nav>
     `,
-    imports: [
-        RouterLink,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqBreadcrumbsModule
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsCustomTemplateExample {

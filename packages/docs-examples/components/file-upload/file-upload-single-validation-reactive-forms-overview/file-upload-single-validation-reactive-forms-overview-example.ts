@@ -11,9 +11,13 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
  * @title File-upload single validation reactive forms
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-single-validation-reactive-forms-overview-example',
+    imports: [
+        ReactiveFormsModule,
+        KbqFileUploadModule,
+        KbqFormFieldModule,
+        KbqIconModule
+    ],
     template: `
         <form [formGroup]="formGroup">
             <kbq-file-upload class="layout-margin-bottom-s" formControlName="fileControl">
@@ -32,12 +36,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
             </kbq-file-upload>
         </form>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFileUploadModule,
-        KbqFormFieldModule,
-        KbqIconModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleValidationReactiveFormsOverviewExample {
     formGroup = new FormGroup({

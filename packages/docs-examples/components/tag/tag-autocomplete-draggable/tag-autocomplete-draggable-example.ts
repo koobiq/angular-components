@@ -21,7 +21,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Dragg
  * @title Tag autocomplete draggable
  */
 @Component({
-    standalone: true,
     selector: 'tag-autocomplete-draggable-example',
     imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

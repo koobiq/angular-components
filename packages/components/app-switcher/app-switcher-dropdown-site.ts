@@ -7,9 +7,11 @@ import { KbqAppSwitcherSite } from './app-switcher';
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: '[kbq-app-switcher-dropdown-site]',
-    exportAs: 'kbqAppSwitcherDropdownSite',
+    imports: [
+        KbqIcon,
+        KbqBadgeModule
+    ],
     template: `
         <span class="kbq-app-switcher-dropdown-site__name">{{ site.name }}</span>
 
@@ -26,16 +28,13 @@ import { KbqAppSwitcherSite } from './app-switcher';
         }
     `,
     styleUrls: ['app-switcher-dropdown-site.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqAppSwitcherDropdownSite',
     host: {
         class: 'kbq-app-switcher-dropdown-site',
         '[class.kbq-dropdown-item]': 'false'
     },
-    imports: [
-        KbqIcon,
-        KbqBadgeModule
-    ],
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownSite },
         { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownSite }

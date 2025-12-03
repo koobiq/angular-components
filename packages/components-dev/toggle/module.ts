@@ -9,9 +9,8 @@ import { ToggleExamplesModule } from 'packages/docs-examples/components/toggle';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [ToggleExamplesModule],
     selector: 'dev-examples',
+    imports: [ToggleExamplesModule],
     template: `
         <toggle-overview-example />
         <toggle-disabled-example />
@@ -27,7 +26,6 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
     selector: 'dev-app',
     imports: [
         FormsModule,

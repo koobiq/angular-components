@@ -12,7 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit disabled
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-disabled-example',
     imports: [
         FormsModule,
         KbqInlineEditModule,
@@ -22,7 +22,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqButtonModule,
         KbqDropdownModule
     ],
-    selector: 'inline-edit-disabled-example',
     template: `
         <kbq-dropdown #dropdown="kbqDropdown">
             <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>

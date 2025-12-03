@@ -45,9 +45,11 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
  * @title File-upload multiple custom text
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-multiple-custom-text-overview-example',
+    imports: [
+        KbqFileUploadModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-multiple-file-upload>
             <ng-template #kbqFileIcon>
@@ -55,10 +57,7 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
             </ng-template>
         </kbq-multiple-file-upload>
     `,
-    imports: [
-        KbqFileUploadModule,
-        KbqIconModule
-    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,

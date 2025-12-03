@@ -29,7 +29,7 @@ import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
 @Component({
-    standalone: true,
+    selector: 'docs-live-example',
     imports: [
         KbqCodeBlockModule,
         DocsCodeSnippetDirective,
@@ -38,7 +38,6 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
         KbqDividerModule,
         KbqLinkModule
     ],
-    selector: 'docs-live-example',
     template: `
         {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
         <ng-template let-htmlContent let-contentToCopy="textContent" let-language="language" cdkPortal>

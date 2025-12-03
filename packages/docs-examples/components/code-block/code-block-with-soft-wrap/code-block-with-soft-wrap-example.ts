@@ -7,7 +7,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Code-block with softWrap attribute
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-soft-wrap-example',
     imports: [
         KbqCodeBlockModule,

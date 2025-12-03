@@ -6,9 +6,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 @Component({
-    standalone: true,
-    imports: [KbqFormFieldModule, KbqSelectModule, FormsModule],
     selector: 'dev-locale-selector',
+    imports: [KbqFormFieldModule, KbqSelectModule, FormsModule],
     template: `
         @if (localeService) {
             <kbq-form-field>
@@ -22,8 +21,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <div>No provider for KBQ_LOCALE_SERVICE</div>
         }
     `,
-    exportAs: 'devLocaleSelector',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'devLocaleSelector'
 })
 export class DevLocaleSelector {
     readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });

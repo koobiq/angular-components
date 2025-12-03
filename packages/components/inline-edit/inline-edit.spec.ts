@@ -352,7 +352,6 @@ describe('KbqInlineEdit', () => {
 });
 
 @Directive({
-    standalone: true,
     selector: 'name'
 })
 export class BaseTestComponent {
@@ -365,7 +364,6 @@ export class BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -404,7 +402,7 @@ export class BaseTestComponent {
 })
 export class TestComponent extends BaseTestComponent {
     value = '';
-    currentMode = signal('view');
+    readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.value);
 
@@ -429,7 +427,6 @@ export class TestComponent extends BaseTestComponent {
     cancel = jest.fn();
 }
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -474,7 +471,7 @@ export class TestComponent extends BaseTestComponent {
 })
 export class TestWithMenu extends BaseTestComponent {
     value = '';
-    currentMode = signal('view');
+    readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.value);
 
@@ -496,7 +493,6 @@ export class TestWithMenu extends BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -535,7 +531,7 @@ export class TestWithMenu extends BaseTestComponent {
 })
 export class TestWithTextareaControl extends BaseTestComponent {
     value = '';
-    currentMode = signal('view');
+    readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.value);
 
@@ -557,7 +553,6 @@ export class TestWithTextareaControl extends BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,
@@ -600,7 +595,7 @@ export class TestWithTextareaControl extends BaseTestComponent {
 })
 export class TestWithValidatedControl extends BaseTestComponent {
     control = new FormControl('', Validators.required);
-    currentMode = signal('view');
+    readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.control.value);
 
@@ -622,7 +617,6 @@ export class TestWithValidatedControl extends BaseTestComponent {
 }
 
 @Component({
-    standalone: true,
     selector: 'name',
     imports: [
         FormsModule,

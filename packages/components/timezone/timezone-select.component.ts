@@ -1,3 +1,6 @@
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -9,20 +12,30 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_OPTION_PARENT_COMPONENT, ruRULocaleData } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectPanelWidth } from '@koobiq/components/select';
 
-@Directive({ selector: 'kbq-timezone-select-trigger' })
+@Directive({
+    selector: 'kbq-timezone-select-trigger'
+})
 export class KbqTimezoneSelectTrigger {}
 
 const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
 
 @Component({
     selector: 'kbq-timezone-select',
-    exportAs: 'kbqTimezoneSelect',
+    imports: [
+        CdkOverlayOrigin,
+        CdkConnectedOverlay,
+        CdkMonitorFocus,
+        KbqIconModule,
+        NgClass
+    ],
     templateUrl: 'timezone-select.component.html',
     styleUrls: ['../select/select.scss', 'timezone-select.component.scss', 'timezone-option-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTimezoneSelect',
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect }

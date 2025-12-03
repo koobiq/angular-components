@@ -7,8 +7,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip style
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-style-example',
     imports: [
         KbqButtonModule,
@@ -61,7 +59,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 {{ buttonText }}
             </button>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipStyleExample {
     buttonText = 'Кнопка с тултипом';

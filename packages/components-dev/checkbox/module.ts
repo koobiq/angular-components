@@ -8,7 +8,6 @@ import { CheckboxExamplesModule } from 'packages/docs-examples/components/checkb
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
     selector: 'dev-checkbox-examples',
     imports: [CheckboxExamplesModule],
     template: `
@@ -25,7 +24,7 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqFormFieldModule,
@@ -35,7 +34,6 @@ export class DevExamples {}
         KbqTableModule,
         DevThemeToggle
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

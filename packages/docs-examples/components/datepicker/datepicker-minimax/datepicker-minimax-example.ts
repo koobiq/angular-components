@@ -12,8 +12,6 @@ import { DateTime } from 'luxon';
  * @title Datepicker minimax
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'datepicker-minimax-example',
     imports: [
         FormsModule,
@@ -46,7 +44,8 @@ import { DateTime } from 'luxon';
                 </div>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerMinimaxExample {
     readonly minDate = this.adapter.createDate(2023, 11, 14);

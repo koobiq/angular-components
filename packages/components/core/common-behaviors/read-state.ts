@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Directive, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Directive({
-    standalone: true,
     host: {
         '(mouseenter)': 'mouseenterHandler()',
         '(mouseleave)': 'mouseleaveHandler()',

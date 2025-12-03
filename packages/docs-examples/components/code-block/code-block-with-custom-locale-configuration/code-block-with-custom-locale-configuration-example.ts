@@ -10,7 +10,6 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
  * @title Code-block with custom locale configuration, without KBQ_LOCALE_SERVICE
  */
 @Component({
-    standalone: true,
     selector: 'code-block-with-custom-locale-configuration-example',
     imports: [KbqCodeBlockModule],
     providers: [

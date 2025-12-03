@@ -6,8 +6,6 @@ import { KbqListModule } from '@koobiq/components/list';
  * @title List
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'list-overview-example',
     imports: [KbqListModule, FormsModule],
     template: `
@@ -25,7 +23,8 @@ import { KbqListModule } from '@koobiq/components/list';
         </kbq-list-selection>
         <br />
         <div>Selected: {{ selected }}</div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListOverviewExample {
     selected = [];

@@ -6,8 +6,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Textarea overview
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'textarea-overview-example',
     imports: [KbqFormFieldModule, KbqTextareaModule],
     template: `
@@ -16,6 +14,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <textarea kbqTextarea placeholder="Placeholder" canGrow="false"></textarea>
         </kbq-form-field>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-xl layout-row'
     }

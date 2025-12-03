@@ -11,14 +11,13 @@ import { switchMap, timer } from 'rxjs';
  * @title Toast hide
  */
 @Component({
-    standalone: true,
+    selector: 'toast-hide-overview-example',
     imports: [
         KbqButtonModule,
         KbqLinkModule,
         KbqProgressBarModule,
         NgTemplateOutlet
     ],
-    selector: 'toast-hide-overview-example',
     templateUrl: 'toast-hide-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

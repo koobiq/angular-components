@@ -10,7 +10,6 @@ interface ICheckbox {
  * @title Checkbox indeterminate
  */
 @Component({
-    standalone: true,
     selector: 'checkbox-indeterminate-example',
     imports: [
         KbqCheckboxModule
@@ -20,9 +19,9 @@ interface ICheckbox {
             <kbq-checkbox [checked]="parentChecked" [indeterminate]="parentIndeterminate" (change)="toggleChecked()">
                 All fruits
             </kbq-checkbox>
-            @for (fruit of fruits; track fruit; let i = $index) {
+            @for (fruit of fruits; track fruit) {
                 <p>
-                    <kbq-checkbox [checked]="fruit.checked" (change)="updateCheckboxes(i)">
+                    <kbq-checkbox [checked]="fruit.checked" (change)="updateCheckboxes($index)">
                         {{ fruit.name }}
                     </kbq-checkbox>
                 </p>

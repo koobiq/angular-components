@@ -397,14 +397,13 @@ describe('KbqPopover', () => {
 });
 
 @Component({
-    standalone: true,
     selector: 'popover-simple',
-    template: `
-        <button kbqPopover [kbqPopoverContent]="'test'">Popover Trigger</button>
-    `,
     imports: [
         KbqPopoverModule
-    ]
+    ],
+    template: `
+        <button kbqPopover [kbqPopoverContent]="'test'">Popover Trigger</button>
+    `
 })
 export class PopoverSimple {
     @ViewChild(KbqPopoverTrigger) popoverTrigger: KbqPopoverTrigger;
@@ -413,9 +412,8 @@ export class PopoverSimple {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqPopoverModule],
     selector: 'kbq-popover-test-component',
+    imports: [KbqPopoverModule],
     template: `
         <button #test1 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST1'">_TEST1asdasd</button>
         <button
@@ -451,9 +449,8 @@ class KbqPopoverTestComponent {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqPopoverModule],
     selector: 'kbq-popover-test-component',
+    imports: [KbqPopoverModule],
     template: `
         <button #test8 kbqPopoverConfirm>_TEST8</button>
         <button #test9 kbqPopoverConfirm kbqPopoverConfirmText="new confirm text">_TEST9</button>
@@ -473,9 +470,8 @@ class KbqPopoverConfirmTestComponent {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqPopoverModule],
     selector: 'kbq-popover-test-with-providers-component',
+    imports: [KbqPopoverModule],
     template: `
         <button #test12 kbqPopoverConfirm>_TEST12</button>
     `,
@@ -489,9 +485,8 @@ class KbqPopoverConfirmWithProvidersTestComponent {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqPopoverModule],
     selector: 'kbq-popover-wih-template-ref',
+    imports: [KbqPopoverModule],
     template: `
         <ng-template #popoverHeaderTemplate let-ctx>{{ ctx.header }}</ng-template>
         <ng-template #popoverContentTemplate let-ctx>{{ ctx.content }}</ng-template>

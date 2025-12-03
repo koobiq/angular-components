@@ -6,8 +6,6 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
  * @title filter-bar-removable
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-removable-example',
     imports: [
         KbqFilterBarModule,
@@ -21,7 +19,8 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarRemovableExample {
     activeFilter: KbqFilter | null = {

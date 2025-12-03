@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
+import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';
 
@@ -126,6 +127,14 @@ export class KbqVirtualOption extends KbqOptionBase {
  */
 @Component({
     selector: 'kbq-option',
+    imports: [
+        KbqPseudoCheckboxModule
+    ],
+    templateUrl: 'option.html',
+    /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
+    styleUrls: ['option.scss', 'option-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqOption',
     host: {
         '[attr.tabindex]': 'getTabIndex()',
@@ -139,11 +148,6 @@ export class KbqVirtualOption extends KbqOptionBase {
         '(click)': 'selectViaInteraction()',
         '(keydown)': 'handleKeydown($event)'
     },
-    /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
-    styleUrls: ['option.scss', 'option-tokens.scss'],
-    templateUrl: 'option.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,

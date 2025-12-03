@@ -7,12 +7,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  * @title Basic Toast
  */
 @Component({
-    standalone: true,
+    selector: 'toast-overview-example',
     imports: [
         KbqLinkModule,
         KbqButtonModule
     ],
-    selector: 'toast-overview-example',
     template: `
         <ng-template #toastAction let-toast>
             <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Обновить</a>

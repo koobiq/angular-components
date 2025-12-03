@@ -60,7 +60,6 @@ const getActionsPanelCloseButton = (): HTMLElement => {
 };
 
 @Component({
-    standalone: true,
     selector: 'actions-panel-component',
     template: `
         <div id="actionsPanel-data">{{ data }}</div>
@@ -75,8 +74,6 @@ export class ActionsPanelComponent {
 }
 
 @Component({
-    standalone: true,
-    providers: [KbqActionsPanel],
     selector: 'actions-panel-controller',
     template: `
         <ng-template #actionsPanel let-data let-actionsPanelRef="actionsPanelRef">
@@ -85,7 +82,8 @@ export class ActionsPanelComponent {
             <button id="actionsPanel-action2" (click)="actionsPanelRef.close()">Action2</button>
         </ng-template>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqActionsPanel]
 })
 export class ActionsPanelController {
     readonly actionsPanel = inject(KbqActionsPanel, { self: true });

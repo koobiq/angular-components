@@ -1,3 +1,5 @@
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { CdkPortalOutlet } from '@angular/cdk/portal';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -23,9 +25,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
+import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 import { KbqTab } from './tab.component';
 
 @Directive({
@@ -84,11 +89,12 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
  */
 @Component({
     selector: 'kbq-tab-group',
-    exportAs: 'kbqTabGroup',
+    imports: [KbqTabHeader, CdkMonitorFocus, KbqTabLabelWrapper, KbqTooltipTrigger, CdkPortalOutlet, KbqTabBody],
     templateUrl: './tab-group.html',
     styleUrls: ['./tab-group.scss', './tabs-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTabGroup',
     host: {
         class: 'kbq-tab-group',
         '[class.kbq-tab-group_filled]': '!transparent',

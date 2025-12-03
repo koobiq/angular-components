@@ -20,20 +20,19 @@ interface ExampleFileData {
 }
 
 @Component({
-    standalone: true,
+    selector: 'docs-live-example-viewer',
     imports: [
         DocsStackblitzButtonComponent,
         KbqLinkModule,
         KbqCodeBlockModule,
         NgComponentOutlet
     ],
-    selector: 'docs-live-example-viewer',
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-live-example-viewer kbq-markdown'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     isSourceShown: boolean = false;

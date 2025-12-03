@@ -8,12 +8,11 @@ const STEP: number = 4;
 const MAX_PERCENT: number = 100;
 
 @Component({
-    standalone: true,
-    imports: [KbqProgressSpinnerModule, FormsModule],
     selector: 'dev-app',
+    imports: [KbqProgressSpinnerModule, FormsModule],
     templateUrl: './template.html',
-    encapsulation: ViewEncapsulation.None,
     styleUrls: ['./styles.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp implements OnDestroy {

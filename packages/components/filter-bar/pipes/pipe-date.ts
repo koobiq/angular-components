@@ -22,7 +22,7 @@ import {
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
@@ -36,23 +36,11 @@ import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
-    standalone: true,
     selector: 'kbq-pipe-date',
-    templateUrl: 'pipe-date.html',
-    styleUrls: ['base-pipe.scss', 'pipe-date.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        {
-            provide: KbqBasePipe,
-            useExisting: this
-        }
-    ],
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
-        KbqIcon,
+        KbqIconModule,
         KbqInputModule,
         KbqDividerModule,
         KbqPopoverModule,
@@ -66,6 +54,17 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqTitleModule,
         KbqPipeTitleDirective,
         FormsModule
+    ],
+    templateUrl: 'pipe-date.html',
+    styleUrls: ['base-pipe.scss', 'pipe-date.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        {
+            provide: KbqBasePipe,
+            useExisting: this
+        }
     ]
 })
 export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {

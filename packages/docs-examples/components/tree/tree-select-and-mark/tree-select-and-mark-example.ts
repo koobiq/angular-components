@@ -112,8 +112,6 @@ export const DATA_OBJECT = [
  * @title tree-select-and-mark
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-select-and-mark-example',
     imports: [
         KbqTreeModule,
@@ -153,7 +151,8 @@ export const DATA_OBJECT = [
                 <div class="kbq-text-normal">{{ modelValue.description }}</div>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectAndMarkExample {
     treeControl: FlatTreeControl<FileFlatNode>;

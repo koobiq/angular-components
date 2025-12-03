@@ -42,11 +42,9 @@ let nextUniqueId = 0;
     exportAs: 'kbqTagInput, kbqTagInputFor',
     host: {
         class: 'kbq-tag-input',
-
         '[id]': 'id',
         '[attr.disabled]': 'disabled || null',
         '[attr.placeholder]': 'placeholder || null',
-
         '(keydown)': 'onKeydown($event)',
         '(blur)': 'blur($event)',
         '(focus)': 'onFocus()',

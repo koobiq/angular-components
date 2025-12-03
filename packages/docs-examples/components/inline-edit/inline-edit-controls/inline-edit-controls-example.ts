@@ -15,7 +15,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Inline edit controls
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-controls-example',
     imports: [
         NgTemplateOutlet,
         ReactiveFormsModule,
@@ -29,7 +29,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqBadgeModule,
         KbqTagsModule
     ],
-    selector: 'inline-edit-controls-example',
     template: `
         <form style="width: 100%" [formGroup]="form">
             <kbq-dl>
@@ -157,10 +156,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             white-space: pre-wrap;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditControlsExample {
     protected readonly maxRows = 20;

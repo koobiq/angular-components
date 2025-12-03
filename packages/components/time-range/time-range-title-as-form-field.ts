@@ -6,7 +6,6 @@ import { KbqTimeRange } from './time-range';
 
 /** Directive for easy using styles of time-range placeholder publicly. */
 @Directive({
-    standalone: true,
     selector: '[kbqTimeRangeTitlePlaceholder]',
     host: {
         class: 'kbq-time-range-title__placeholder'
@@ -16,7 +15,6 @@ export class KbqTimeRangeTitlePlaceholder {}
 
 /** Component simulates `KbqFormFieldControl` allowing to provide custom content inside `KbqFormField` */
 @Component({
-    standalone: true,
     selector: 'kbq-time-range-title-as-control',
     template: `
         <ng-content />

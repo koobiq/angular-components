@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 import { KbqIcon } from './icon.component';
 
 @Component({
-    standalone: true,
     selector: `[kbq-icon-item]`,
     template: '<ng-content />',
     styleUrls: ['icon-item.scss', 'icon-item-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq kbq-icon-item kbq-icon-item_filled',
         '[class.kbq-icon-item_normal]': '!big',

@@ -74,7 +74,7 @@ import { DevThemeToggle } from '../theme-toggle';
 import { DevBreadcrumbsHydration } from './components/breadcrumbs';
 
 @Component({
-    standalone: true,
+    selector: 'dev-examples',
     imports: [
         AccordionOverviewExample,
         ActionsPanelOverviewExample,
@@ -141,7 +141,6 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         TreeSelectChildSelectionOverviewExample,
         UsernameOverviewExample
     ],
-    selector: 'dev-examples',
     template: `
         <accordion-overview-example />
         <hr />
@@ -276,17 +275,16 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
-    imports: [DevExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
-    hostDirectives: [
-        // Required for components with overlays that use scrolling strategies
-        CdkScrollable
-    ],
     selector: 'dev-app',
+    imports: [DevExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [
+        // Required for components with overlays that use scrolling strategies
+        CdkScrollable
+    ]
 })
 export class DevApp {
     constructor() {

@@ -6,14 +6,12 @@
         "@schematics/angular:component": {
             "style": "scss",
             "changeDetection": "OnPush",
-            "standalone": true,
             "inlineTemplate": true,
             "inlineStyle": true,
             "skipTests": true
         },
         "@schematics/angular:application": {
             "strict": true,
-            "standalone": true,
             "inlineTemplate": true,
             "inlineStyle": true,
             "skipTests": true,
@@ -1726,36 +1724,6 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "buildTarget": "dev-overflow-items:build"
-                    }
-                }
-            }
-        },
-        "dev-panel": {
-            "projectType": "application",
-            "root": "packages/components-dev/panel",
-            "sourceRoot": "packages/components-dev/panel",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:application",
-                    "options": {
-                        "outputPath": {
-                            "base": "dist/components-dev/panel"
-                        },
-                        "tsConfig": "packages/components-dev/panel/tsconfig.app.json",
-                        "index": "packages/components-dev/index.html",
-                        "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
-                        "extractLicenses": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "browser": "packages/components-dev/panel/main.ts"
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "dev-panel:build"
                     }
                 }
             }

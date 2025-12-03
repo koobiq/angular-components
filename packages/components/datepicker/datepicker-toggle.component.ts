@@ -29,7 +29,6 @@ import { KbqDatepicker } from './datepicker.component';
 export class KbqDatepickerToggleIcon {}
 
 @Component({
-    standalone: true,
     selector: 'kbq-datepicker-toggle-icon',
     imports: [KbqIconModule],
     template: `

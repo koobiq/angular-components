@@ -28,8 +28,8 @@ export class KbqProgressBarCaption {}
     selector: 'kbq-progress-bar',
     templateUrl: './progress-bar.component.html',
     styleUrls: ['./progress-bar.scss', './progress-bar-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[attr.id]': 'id',
         class: 'kbq-progress-bar',

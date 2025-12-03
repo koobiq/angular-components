@@ -111,7 +111,6 @@ export class KbqTagTrailingIcon {}
  * Directive to add submit behavior for the editable tag.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTagEditSubmit]',
     exportAs: 'kbqTagEditSubmit',
     host: {
@@ -130,7 +129,6 @@ export class KbqTagEditSubmit {
  * Directive to add input behavior for the editable tag.
  */
 @Directive({
-    standalone: true,
     selector: '[kbqTagEditInput]',
     exportAs: 'kbqTagEditInput',
     host: {
@@ -172,8 +170,6 @@ export class KbqTagEditInput {
 
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
-    exportAs: 'kbqTag',
-    hostDirectives: [CdkDrag],
     template: `
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
@@ -194,12 +190,14 @@ export class KbqTagEditInput {
         </div>
     `,
     styleUrls: ['./tag.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTag',
+    hostDirectives: [CdkDrag],
     host: {
         class: 'kbq-tag',
-
         '[attr.tabindex]': 'tabindex',
         '[attr.disabled]': 'disabled || null',
-
         '[class.kbq-selected]': 'selected',
         '[class.kbq-tag-with-avatar]': 'avatar',
         '[class.kbq-tag-with-icon]': 'contentChildren',
@@ -210,13 +208,10 @@ export class KbqTagEditInput {
         '[class.kbq-tag_removable]': 'removable',
         '[class.kbq-tag_selectable]': 'selectable',
         '[class.kbq-tag_draggable]': 'draggable',
-
         '(dblclick)': 'handleDblClick($event)',
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
 })
 export class KbqTag

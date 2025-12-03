@@ -1,4 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -60,14 +61,17 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 
 @Component({
     selector: 'kbq-autocomplete',
-    exportAs: 'kbqAutocomplete',
+    imports: [
+        NgClass
+    ],
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqAutocomplete',
     host: {
         class: 'kbq-autocomplete'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_OPTION_PARENT_COMPONENT,

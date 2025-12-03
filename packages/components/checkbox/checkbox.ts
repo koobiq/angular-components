@@ -1,4 +1,5 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -67,9 +68,14 @@ export class KbqCheckboxChange {
  */
 @Component({
     selector: 'kbq-checkbox',
-    exportAs: 'kbqCheckbox',
+    imports: [
+        CdkObserveContent
+    ],
     templateUrl: 'checkbox.html',
     styleUrls: ['checkbox.scss', 'checkbox-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqCheckbox',
     host: {
         class: 'kbq-checkbox',
         '[id]': 'id',
@@ -81,9 +87,7 @@ export class KbqCheckboxChange {
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-checkbox_label-before]': 'labelPosition == "before"'
     },
-    providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR]
 })
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     @Input() big: boolean = false;

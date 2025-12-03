@@ -18,9 +18,8 @@ import { map, timer } from 'rxjs';
 import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
 
 @Component({
-    standalone: true,
-    imports: [NavbarExamplesModule],
     selector: 'dev-examples',
+    imports: [NavbarExamplesModule],
     template: `
         <navbar-overview-example />
         <br />
@@ -33,7 +32,7 @@ import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqNavbarModule,
         KbqIconModule,
@@ -51,7 +50,6 @@ export class DevExamples {}
         AsyncPipe,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

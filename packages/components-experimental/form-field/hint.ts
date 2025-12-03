@@ -8,7 +8,6 @@ let nextUniqueId = 0;
 
 /** Hint text to be shown below the form field control. */
 @Component({
-    standalone: true,
     selector: 'kbq-hint',
     exportAs: 'kbqHint',
     templateUrl: './hint.html',
@@ -66,7 +65,6 @@ export class KbqHint {
 
 /** Error text to be shown below the form field control. */
 @Component({
-    standalone: true,
     selector: 'kbq-error',
     exportAs: 'kbqError',
     templateUrl: './hint.html',
@@ -99,9 +97,8 @@ export class KbqError extends KbqHint {
 
 /** Password hint to be shown below the password form field control. */
 @Component({
-    standalone: true,
-    imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
+    imports: [NgClass, KbqIconModule],
     template: `
         <i kbq-icon="" [ngClass]="icon"></i>
 
@@ -113,11 +110,11 @@ export class KbqError extends KbqHint {
         './hint.scss',
         './hint-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-password-hint___EXPERIMENTAL'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqPasswordHint extends KbqHint {
     /** Whether the form field control has an error. */

@@ -13,10 +13,7 @@ import { DateTime } from 'luxon';
  * @title Timepicker variations
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'timepicker-variations-example',
-    templateUrl: 'timepicker-variations-example.html',
     imports: [
         KbqRadioModule,
         FormsModule,
@@ -26,7 +23,9 @@ import { DateTime } from 'luxon';
         KbqIconModule,
         LuxonDateModule
     ],
-    styleUrls: ['timepicker-variations-example.css']
+    templateUrl: 'timepicker-variations-example.html',
+    styleUrls: ['timepicker-variations-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerVariationsExample {
     value: DateTime;

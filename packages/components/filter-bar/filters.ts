@@ -31,16 +31,7 @@ import { KbqFilterBarButton } from './filter-bar-button';
 import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
 
 @Component({
-    standalone: true,
-    exportAs: 'kbqFilters',
     selector: 'kbq-filters',
-    templateUrl: 'filters.html',
-    styleUrls: ['filters.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'kbq-filters'
-    },
     imports: [
         ReactiveFormsModule,
         KbqButtonModule,
@@ -58,7 +49,15 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
         FormsModule,
         KbqFormsModule,
         KbqAlertModule
-    ]
+    ],
+    templateUrl: 'filters.html',
+    styleUrls: ['filters.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqFilters',
+    host: {
+        class: 'kbq-filters'
+    }
 })
 export class KbqFilters implements OnInit {
     /** @docs-private */

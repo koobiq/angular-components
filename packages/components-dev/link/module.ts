@@ -5,9 +5,8 @@ import { LinkExamplesModule } from 'packages/docs-examples/components/link';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [LinkExamplesModule],
     selector: 'dev-examples',
+    imports: [LinkExamplesModule],
     template: `
         <link-application-example />
         <hr />
@@ -17,9 +16,8 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
-    imports: [KbqLinkModule, KbqIconModule, DevExamples, DevThemeToggle],
     selector: 'dev-app',
+    imports: [KbqLinkModule, KbqIconModule, DevExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

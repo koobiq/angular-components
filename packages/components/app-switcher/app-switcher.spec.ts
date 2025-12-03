@@ -57,13 +57,12 @@ describe('KbqAppSwitcher', () => {
 });
 
 @Component({
-    standalone: true,
     selector: 'app-switcher-simple',
-    template: `
-        <button kbqAppSwitcher>AppSwitcher Trigger</button>
-    `,
     imports: [
         KbqAppSwitcherModule
-    ]
+    ],
+    template: `
+        <button kbqAppSwitcher>AppSwitcher Trigger</button>
+    `
 })
 export class AppSwitcherSimple {}

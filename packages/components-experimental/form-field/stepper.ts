@@ -10,9 +10,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
 
 /** Component which allow to increment or decrement number value. */
 @Component({
-    standalone: true,
     selector: 'kbq-stepper',
-    exportAs: 'kbqStepper',
     imports: [KbqIconModule],
     template: `
         <i
@@ -35,11 +33,12 @@ const getKbqStepperToggleMissingControlError = (): Error => {
         ></i>
     `,
     styleUrl: './stepper.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqStepper',
     host: {
         class: 'kbq-stepper___EXPERIMENTAL'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqStepper {
     // @TODO fix types (#DS-2915)

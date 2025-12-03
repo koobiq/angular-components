@@ -16,17 +16,17 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i10 from '@koobiq/components/form-field';
-import * as i11 from '@koobiq/components/ellipsis-center';
-import * as i12 from '@koobiq/components/core';
-import * as i13 from '@koobiq/components/link';
-import * as i14 from '@angular/common';
-import * as i4 from '@angular/forms';
-import * as i5 from '@koobiq/components/tooltip';
-import * as i6 from '@koobiq/components/progress-spinner';
-import * as i7 from '@koobiq/components/icon';
-import * as i8 from '@koobiq/components/button';
-import * as i9 from '@koobiq/components/list';
+import * as i1 from '@angular/forms';
+import * as i10 from '@koobiq/components/link';
+import * as i11 from '@angular/common';
+import * as i2 from '@koobiq/components/tooltip';
+import * as i3 from '@koobiq/components/progress-spinner';
+import * as i4 from '@koobiq/components/icon';
+import * as i5 from '@koobiq/components/button';
+import * as i6 from '@koobiq/components/list';
+import * as i7 from '@koobiq/components/form-field';
+import * as i8 from '@koobiq/components/ellipsis-center';
+import * as i9 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { KbqLocaleService } from '@koobiq/components/core';
@@ -64,7 +64,7 @@ export class KbqFileDropDirective {
     onDragOver(event: DragEvent): void;
     onDrop(event: DragEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFileDropDirective, "[kbqFileDrop]", ["kbqFileDrop"], {}, { "filesDropped": "filesDropped"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFileDropDirective, "[kbqFileDrop]", ["kbqFileDrop"], {}, { "filesDropped": "filesDropped"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFileDropDirective, never>;
 }
@@ -107,12 +107,12 @@ export class KbqFileUploadModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFileUploadModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFileUploadModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, [typeof i1.KbqFileDropDirective, typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent], [typeof i4.FormsModule, typeof i4.ReactiveFormsModule, typeof i5.KbqToolTipModule, typeof i6.KbqProgressSpinnerModule, typeof i7.KbqIconModule, typeof i8.KbqButtonModule, typeof i9.KbqListModule, typeof i10.KbqFormFieldModule, typeof i11.KbqEllipsisCenterModule, typeof i12.KbqDataSizePipe, typeof i13.KbqLinkModule, typeof i14.AsyncPipe, typeof i14.NgClass, typeof i14.NgTemplateOutlet], [typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent, typeof i1.KbqFileDropDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, never, [typeof i1.FormsModule, typeof i1.ReactiveFormsModule, typeof i2.KbqToolTipModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqIconModule, typeof i5.KbqButtonModule, typeof i6.KbqListModule, typeof i7.KbqFormFieldModule, typeof i8.KbqEllipsisCenterModule, typeof i9.KbqDataSizePipe, typeof i10.KbqLinkModule, typeof i11.AsyncPipe, typeof i11.NgClass, typeof i11.NgTemplateOutlet, typeof i12.KbqFileDropDirective, typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent], [typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent, typeof i12.KbqFileDropDirective]>;
 }
 
 // @public @deprecated (undocumented)
@@ -210,7 +210,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     size: 'compact' | 'default';
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, never>;
 }
@@ -258,7 +258,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     showFileSize: boolean;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, never>;
 }

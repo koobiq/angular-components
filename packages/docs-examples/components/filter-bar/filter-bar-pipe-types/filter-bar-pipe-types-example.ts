@@ -31,8 +31,6 @@ const DATA_OBJECT = {
  * @title filter-bar-pipe-types
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-pipe-types-example',
     imports: [
         KbqFilterBarModule,
@@ -48,7 +46,8 @@ const DATA_OBJECT = {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarPipeTypesExample {
     activeFilter: KbqFilter = this.getDefaultFilter();

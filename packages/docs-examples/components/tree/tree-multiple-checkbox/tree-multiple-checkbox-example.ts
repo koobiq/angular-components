@@ -99,8 +99,6 @@ export const DATA_OBJECT = {
  * @title Tree multiple checkbox
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-multiple-checkbox-example',
     imports: [
         KbqTreeModule,
@@ -128,7 +126,8 @@ export const DATA_OBJECT = {
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeMultipleCheckboxExample {
     treeControl: FlatTreeControl<FileFlatNode>;

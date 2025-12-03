@@ -12,11 +12,10 @@ import {
  * @title Accordion in panel
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'accordion-in-panel-example',
+    imports: [KbqAccordionModule, KbqSidepanelModule, KbqButtonModule],
     templateUrl: 'accordion-in-panel-example.html',
-    imports: [KbqAccordionModule, KbqSidepanelModule, KbqButtonModule]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInPanelExample {
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;

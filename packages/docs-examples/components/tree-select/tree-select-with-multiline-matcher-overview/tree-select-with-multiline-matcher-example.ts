@@ -101,8 +101,6 @@ export const DATA_OBJECT = {
  * @title tree-select-with-multiline-matcher
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-select-with-multiline-matcher-example',
     imports: [KbqFormFieldModule, FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule],
     template: `
@@ -126,7 +124,8 @@ export const DATA_OBJECT = {
                 <kbq-cleaner #kbqSelectCleaner />
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectWithMultilineMatcherExample {
     selected = ['button-toggle', 'button', 'autocomplete', 'documentation', 'tools', 'source'];

@@ -42,13 +42,11 @@ let nextUniqueId = 0;
         class: 'kbq-textarea kbq-scrollbar',
         '[class.kbq-textarea-resizable]': '!canGrow',
         '[class.kbq-textarea_max-row-limit-reached]': 'maxRowLimitReached',
-
         '[attr.id]': 'id',
         '[attr.placeholder]': 'placeholder',
         '[attr.aria-invalid]': 'errorState',
         '[disabled]': 'disabled',
         '[required]': 'required',
-
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
         '(paste)': 'stateChanges.next()'

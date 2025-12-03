@@ -49,6 +49,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
+    KbqPseudoCheckbox,
     KbqPseudoCheckboxModule,
     KbqPseudoCheckboxState,
     ThemePalette,
@@ -57,6 +58,7 @@ import {
     kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import {
@@ -215,6 +217,11 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
 
 @Component({
     selector: 'basic-select',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
@@ -276,6 +283,10 @@ class BasicTreeSelect {
 
 @Component({
     selector: 'basic-events',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select
@@ -328,6 +339,10 @@ class BasicEvents {
 
 @Component({
     selector: 'many-selects',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="First">
@@ -381,6 +396,13 @@ class ManySelects {
 
 @Component({
     selector: 'select-with-search',
+    imports: [
+        KbqTreeModule,
+        KbqInputModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" [searchMinOptionsThreshold]="searchMinOptionsThreshold">
@@ -428,6 +450,10 @@ class SelectWithSearch implements OnInit {
 
 @Component({
     selector: 'select-with-change-event',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select (selectionChange)="selectionChangeListener($event)">
@@ -470,6 +496,11 @@ class SelectWithChangeEvent {
 
 @Component({
     selector: 'select-init-without-options',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food I want to eat right now" [formControl]="control" [(ngModel)]="selected">
@@ -514,6 +545,9 @@ class SelectInitWithoutOptions {
 
 @Component({
     selector: 'custom-select-accessor',
+    imports: [
+        KbqTreeSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select />
@@ -537,6 +571,10 @@ class CustomSelectAccessor implements ControlValueAccessor {
 
 @Component({
     selector: 'comp-with-custom-select',
+    imports: [
+        ReactiveFormsModule,
+        CustomSelectAccessor
+    ],
     template: `
         <custom-select-accessor [formControl]="ctrl" />
     `,
@@ -554,7 +592,22 @@ class CompWithCustomSelect {
 }
 
 @Component({
+    selector: 'throws-error-on-init',
+    template: ''
+})
+class ThrowsErrorOnInit implements OnInit {
+    ngOnInit() {
+        throw Error('Oh no!');
+    }
+}
+
+@Component({
     selector: 'select-infinite-loop',
+    imports: [
+        KbqTreeSelectModule,
+        FormsModule,
+        ThrowsErrorOnInit
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [(ngModel)]="value" />
@@ -567,18 +620,12 @@ class SelectWithErrorSibling {
 }
 
 @Component({
-    selector: 'throws-error-on-init',
-    template: ''
-})
-class ThrowsErrorOnInit implements OnInit {
-    ngOnInit() {
-        throw Error('Oh no!');
-    }
-}
-
-@Component({
     selector: 'basic-select-on-push',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control">
@@ -594,7 +641,8 @@ class ThrowsErrorOnInit implements OnInit {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicSelectOnPush {
     control = new UntypedFormControl();
@@ -619,7 +667,11 @@ class BasicSelectOnPush {
 
 @Component({
     selector: 'basic-select-on-push-preselected',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [formControl]="control">
@@ -635,7 +687,8 @@ class BasicSelectOnPush {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class BasicSelectOnPushPreselected {
     control = new UntypedFormControl('rootNode_1');
@@ -660,6 +713,11 @@ class BasicSelectOnPushPreselected {
 
 @Component({
     selector: 'multi-select',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [multiple]="true" [formControl]="control">
@@ -703,6 +761,9 @@ class MultiSelect {
 
 @Component({
     selector: 'select-with-plain-tabindex',
+    imports: [
+        KbqTreeSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select />
@@ -713,6 +774,9 @@ class EmptySelect {}
 
 @Component({
     selector: 'select-early-sibling-access',
+    imports: [
+        KbqTreeSelectModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect" />
@@ -723,6 +787,11 @@ class SelectEarlyAccessSibling {}
 
 @Component({
     selector: 'basic-select-with-theming',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field [color]="theme">
             <kbq-tree-select placeholder="Food">
@@ -764,6 +833,11 @@ class BasicSelectWithTheming {
 
 @Component({
     selector: 'reset-values-select',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control">
@@ -805,6 +879,11 @@ class ResetValuesSelect {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control">
@@ -846,6 +925,10 @@ class FalsyValueSelect {
 }
 
 @Component({
+    imports: [
+        KbqTreeSelectModule,
+        FormsModule
+    ],
     template: `
         <form>
             <kbq-form-field>
@@ -859,6 +942,11 @@ class InvalidSelectInForm {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <form [formGroup]="formGroup" (ngSubmit)="submitReactive()">
             <kbq-form-field>
@@ -912,6 +1000,11 @@ class SelectInsideFormGroup {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
@@ -953,6 +1046,11 @@ class BasicSelectWithoutForms {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
@@ -996,6 +1094,11 @@ class BasicSelectWithoutFormsPreselected {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [multiple]="true" [(ngModel)]="selectedFoods">
@@ -1038,6 +1141,11 @@ class BasicSelectWithoutFormsMultiple {
 
 @Component({
     selector: 'select-with-custom-trigger',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect" placeholder="Food" [formControl]="control">
@@ -1081,6 +1189,11 @@ class SelectWithCustomTrigger {
 
 @Component({
     selector: 'select-with-custom-matcher',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select #select="kbqTreeSelect" placeholder="Food" [formControl]="control">
@@ -1128,6 +1241,11 @@ class SelectWithCustomMatcher {
 
 @Component({
     selector: 'ng-model-compare-with',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [ngModel]="selectedModel">
@@ -1180,6 +1298,11 @@ class NgModelCompareWithFlatTreeControl {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-tree-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
@@ -1221,6 +1344,11 @@ class CustomErrorBehaviorSelect {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        FormsModule
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select placeholder="Food" [(ngModel)]="selectedFood">
@@ -1263,6 +1391,11 @@ class SingleSelectWithPreselectedArrayValues {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field>
             <!--<kbq-label>Select a thing</kbq-label>-->
@@ -1285,6 +1418,12 @@ class SelectWithFormFieldLabel {
 }
 
 @Component({
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule,
+        KbqPseudoCheckbox
+    ],
     template: `
         <kbq-form-field>
             <kbq-tree-select [multiple]="true" [formControl]="control" (selectionChange)="onSelectionChange($event)">
@@ -1390,6 +1529,11 @@ class ChildSelection {
 
 @Component({
     selector: 'basic-select',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
     template: `
         <kbq-form-field style="width: 300px;">
             <kbq-tree-select
@@ -1419,7 +1563,7 @@ class ChildSelection {
 })
 class LocalizedTreeSelect extends BasicTreeSelect {}
 
-describe(KbqTreeSelect.name, () => {
+describe('KbqTreeSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
     let dir: { value: 'ltr' | 'rtl' };
@@ -1444,9 +1588,9 @@ describe(KbqTreeSelect.name, () => {
                 FormsModule,
                 NoopAnimationsModule,
                 KbqPseudoCheckboxModule,
-                KbqLocaleServiceModule
+                KbqLocaleServiceModule,
+                ...declarations
             ],
-            declarations,
             providers: [
                 { provide: Directionality, useFactory: () => (dir = { value: 'ltr' }) },
                 {
@@ -3424,9 +3568,9 @@ describe(KbqTreeSelect.name, () => {
                     KbqTreeSelectModule,
                     ReactiveFormsModule,
                     FormsModule,
-                    NoopAnimationsModule
+                    NoopAnimationsModule,
+                    SelectInsideFormGroup
                 ],
-                declarations: [SelectInsideFormGroup],
                 providers: [kbqErrorStateMatcherProvider(errorStateMatcher)]
             });
 

@@ -7,19 +7,18 @@ import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
  * Resets form control by click.
  */
 @Component({
-    standalone: true,
-    imports: [KbqIconModule],
     selector: 'kbq-cleaner',
-    exportAs: 'kbqCleaner',
+    imports: [KbqIconModule],
     template: `
         <ng-content />
     `,
     styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqCleaner',
     host: {
         class: 'kbq-cleaner kbq kbq-xmark-circle_16'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqCleaner extends KbqIconButton {
     constructor() {

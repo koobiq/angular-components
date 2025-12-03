@@ -7,8 +7,6 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
  * @title Empty-state actions
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-actions-example',
     imports: [
         KbqEmptyStateModule,
@@ -25,7 +23,8 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
                 <button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Filled">Объединить группы</button>
             </div>
         </kbq-empty-state>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateActionsExample {
     readonly styles = KbqButtonStyles;

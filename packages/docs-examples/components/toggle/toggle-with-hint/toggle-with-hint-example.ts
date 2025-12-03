@@ -6,7 +6,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle With Hint
  */
 @Component({
-    standalone: true,
     selector: 'toggle-with-hint-example',
     imports: [KbqToggleModule, KbqFormFieldModule],
     template: `

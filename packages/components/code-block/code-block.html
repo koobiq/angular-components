@@ -4,12 +4,12 @@
     @if (!hideTabs) {
         <div class="kbq-code-block__header-tabs">
             <div kbqTabNavBar transparent [tabNavPanel]="tabPanel">
-                @for (file of files; track file; let index = $index) {
+                @for (file of files; track file) {
                     <div
                         kbqTabLink
-                        [active]="activeFileIndex === index"
-                        [disabled]="files.length === 1"
-                        (click)="onSelectedTabChange(index)"
+                        [active]="activeFileIndex === $index"
+                        [disabled]="$count === 1"
+                        (click)="onSelectedTabChange($index)"
                     >
                         {{ file.filename || fallbackFileName }}
                     </div>

@@ -8,9 +8,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Content panel overview
  */
 @Component({
-    standalone: true,
-    imports: [KbqButtonModule, KbqContentPanelModule, KbqIconModule],
     selector: 'content-panel-overview-example',
+    imports: [KbqButtonModule, KbqContentPanelModule, KbqIconModule],
     template: `
         <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
             <div class="example-content-panel-container__content">

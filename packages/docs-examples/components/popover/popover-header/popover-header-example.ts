@@ -8,16 +8,15 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover Header
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-header-example',
-    templateUrl: 'popover-header-example.html',
     imports: [
         KbqDlModule,
         KbqPopoverModule,
         KbqButtonModule,
         KbqBadgeModule
-    ]
+    ],
+    templateUrl: 'popover-header-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverHeaderExample {
     badgeColors = KbqBadgeColors;

@@ -24,7 +24,6 @@ type ExampleAction = {
  * @title TopBar Actions
  */
 @Component({
-    standalone: true,
     selector: 'top-bar-actions-example',
     imports: [
         KbqTopBarModule,

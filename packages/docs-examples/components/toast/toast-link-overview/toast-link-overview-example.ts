@@ -7,12 +7,11 @@ import { KbqToastService } from '@koobiq/components/toast';
  * @title Toast link
  */
 @Component({
-    standalone: true,
+    selector: 'toast-link-overview-example',
     imports: [
         KbqLinkModule,
         KbqButtonModule
     ],
-    selector: 'toast-link-overview-example',
     templateUrl: 'toast-link-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

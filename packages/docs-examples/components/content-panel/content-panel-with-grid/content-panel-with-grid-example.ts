@@ -26,9 +26,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 type ExampleRowData = Record<string, string>;
 
 @Component({
-    standalone: true,
-    imports: [AgGridModule, KbqAgGridThemeModule],
     selector: 'example-grid',
+    imports: [AgGridModule, KbqAgGridThemeModule],
     template: `
         <ag-grid-angular
             kbqAgGridTheme
@@ -95,7 +94,7 @@ export class ExampleGrid {
 }
 
 @Component({
-    standalone: true,
+    selector: 'example-content-panel',
     imports: [
         KbqButtonModule,
         KbqBadgeModule,
@@ -105,7 +104,6 @@ export class ExampleGrid {
         KbqModalModule,
         ExampleGrid
     ],
-    selector: 'example-content-panel',
     template: `
         <kbq-modal-title class="example-modal-title">
             <div>Click any table row to open Content panel</div>
@@ -128,7 +126,7 @@ export class ExampleGrid {
                         @for (_i of [0, 1, 2, 3]; track $index) {
                             <button
                                 kbq-button
-                                [class.kbq-active]="$index === 0"
+                                [class.kbq-active]="$first"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
                             >
@@ -292,9 +290,8 @@ export class ExampleContentPanel {
  * @title Content panel with grid
  */
 @Component({
-    standalone: true,
-    imports: [KbqButtonModule, KbqModalModule],
     selector: 'content-panel-with-grid-example',
+    imports: [KbqButtonModule, KbqModalModule],
     template: `
         <button kbq-button (click)="openModal()">Show example</button>
     `,

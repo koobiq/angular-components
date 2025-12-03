@@ -15,12 +15,12 @@ import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/cdk/overlay';
-import * as i4 from '@angular/cdk/portal';
-import * as i5 from '@koobiq/components/button';
-import * as i6 from '@koobiq/components/icon';
-import * as i7 from '@koobiq/components/title';
-import * as i8 from '@angular/cdk/a11y';
+import * as i1 from '@angular/cdk/overlay';
+import * as i2 from '@angular/cdk/portal';
+import * as i3 from '@koobiq/components/button';
+import * as i4 from '@koobiq/components/icon';
+import * as i5 from '@koobiq/components/title';
+import * as i6 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -49,7 +49,7 @@ export const KBQ_SIDEPANEL_WITH_SHADOW: InjectionToken<boolean>;
 // @public
 export class KbqSidepanelActions {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelActions, "kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelActions, "kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelActions, never>;
 }
@@ -57,7 +57,7 @@ export class KbqSidepanelActions {
 // @public
 export class KbqSidepanelBody {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelBody, never>;
 }
@@ -76,7 +76,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     // (undocumented)
     sidepanelResult: any;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelClose, [{ optional: true; }, null, null]>;
 }
@@ -135,7 +135,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     // (undocumented)
     withShadow: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelContainerComponent, "kbq-sidepanel-container", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelContainerComponent, "kbq-sidepanel-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelContainerComponent, never>;
 }
@@ -143,7 +143,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 // @public
 export class KbqSidepanelFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelFooter, "kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelFooter, "kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelFooter, never>;
 }
@@ -157,7 +157,7 @@ export class KbqSidepanelHeader {
     static ngAcceptInputType_truncateText: unknown;
     truncateText: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelHeader, "kbq-sidepanel-header", never, { "closeable": { "alias": "closeable"; "required": false; }; "truncateText": { "alias": "truncateText"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelHeader, "kbq-sidepanel-header", never, { "closeable": { "alias": "closeable"; "required": false; }; "truncateText": { "alias": "truncateText"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelHeader, never>;
 }
@@ -168,11 +168,11 @@ export class KbqSidepanelModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidepanelModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, [typeof i1.KbqSidepanelContainerComponent, typeof i2.KbqSidepanelClose, typeof i2.KbqSidepanelHeader, typeof i2.KbqSidepanelBody, typeof i2.KbqSidepanelFooter, typeof i2.KbqSidepanelActions], [typeof i3.OverlayModule, typeof i4.PortalModule, typeof i5.KbqButtonModule, typeof i6.KbqIconModule, typeof i7.KbqTitleModule, typeof i8.A11yModule], [typeof i1.KbqSidepanelContainerComponent, typeof i2.KbqSidepanelClose, typeof i2.KbqSidepanelHeader, typeof i2.KbqSidepanelBody, typeof i2.KbqSidepanelFooter, typeof i2.KbqSidepanelActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof i7.KbqSidepanelContainerComponent, typeof i8.KbqSidepanelClose, typeof i8.KbqSidepanelHeader, typeof i8.KbqSidepanelBody, typeof i8.KbqSidepanelFooter, typeof i8.KbqSidepanelActions], [typeof i7.KbqSidepanelContainerComponent, typeof i8.KbqSidepanelClose, typeof i8.KbqSidepanelHeader, typeof i8.KbqSidepanelBody, typeof i8.KbqSidepanelFooter, typeof i8.KbqSidepanelActions]>;
 }
 
 // @public (undocumented)

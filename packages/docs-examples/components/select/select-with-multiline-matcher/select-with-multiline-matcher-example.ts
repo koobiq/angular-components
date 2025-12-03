@@ -6,12 +6,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select with panelWidth attribute
  */
 @Component({
-    standalone: true,
+    selector: 'select-with-multiline-matcher-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule
     ],
-    selector: 'select-with-multiline-matcher-example',
     template: `
         <div>
             <kbq-form-field>

@@ -26,9 +26,8 @@ type MultipleUploadState = {
 };
 
 @Component({
-    standalone: true,
-    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
     selector: 'dev-file-upload-state-and-style',
+    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
     template: `
         <div>
             <table data-testid="e2eSingleFileUploadTable">
@@ -77,11 +76,11 @@ type MultipleUploadState = {
             </table>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
         'data-testid': 'e2eFileUploadStateAndStyle'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class DevFileUploadStateAndStyle {
     protected readonly iconClass = { error: 'kbq-info-circle_16', default: 'kbq-file-o_16' };

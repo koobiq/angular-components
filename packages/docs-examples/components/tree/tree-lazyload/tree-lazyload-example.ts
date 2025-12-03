@@ -165,9 +165,12 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
  * @title Tree lazyload
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-lazyload-example',
+    imports: [
+        KbqTreeModule,
+        FormsModule,
+        KbqProgressSpinnerModule
+    ],
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -184,11 +187,7 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
             </kbq-tree-option>
         </kbq-tree-selection>
     `,
-    imports: [
-        KbqTreeModule,
-        FormsModule,
-        KbqProgressSpinnerModule
-    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [LazyLoadDataService]
 })
 export class TreeLazyloadExample {

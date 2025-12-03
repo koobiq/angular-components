@@ -8,21 +8,20 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title popover-paddings
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-paddings-example',
-    templateUrl: 'popover-paddings-example.html',
     imports: [
         KbqPopoverModule,
         KbqButtonModule,
         KbqListModule
     ],
+    templateUrl: 'popover-paddings-example.html',
     styles: `
         ::ng-deep .popover-custom-paddings-example .kbq-popover__content {
             margin: 4px;
             width: 376px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverPaddingsExample {
     popUpSizes = PopUpSizes;

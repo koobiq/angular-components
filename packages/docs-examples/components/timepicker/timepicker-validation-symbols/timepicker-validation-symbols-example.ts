@@ -12,8 +12,6 @@ import { DateTime } from 'luxon';
  * @title Timepicker validation symbols
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'timepicker-validation-symbols-example',
     imports: [KbqFormFieldModule, KbqToolTipModule, KbqIconModule, FormsModule, KbqTimepickerModule, LuxonDateModule],
     template: `
@@ -23,7 +21,8 @@ import { DateTime } from 'luxon';
                 <input kbqTimepicker [format]="timeFormats.HHmm" [kbqValidationTooltip]="tooltip" [(ngModel)]="time" />
             </kbq-form-field>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerValidationSymbolsExample {
     timeFormats = TimeFormats;

@@ -14,7 +14,7 @@ let id = 0;
 
 /** @docs-private */
 @Component({
-    standalone: true,
+    selector: 'kbq-notification-item',
     imports: [
         NgTemplateOutlet,
         KbqIconModule,
@@ -23,16 +23,15 @@ let id = 0;
         KbqButtonModule,
         KbqTooltipTrigger
     ],
-    selector: 'kbq-notification-item',
     templateUrl: './notification-item.html',
     styleUrls: ['./notification-item.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-notification-item',
         '[class]': 'style'
     },
-    hostDirectives: [KbqReadStateDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    hostDirectives: [KbqReadStateDirective]
 })
 export class KbqNotificationItemComponent {
     private readonly adapter = inject(DateAdapter);

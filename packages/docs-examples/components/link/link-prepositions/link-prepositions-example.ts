@@ -5,8 +5,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link preposition
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'link-prepositions-example',
     imports: [KbqLinkModule],
     template: `
@@ -14,6 +12,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
             Обратитесь
             <a href="#" kbq-link>в Центр технической поддержки</a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkPrepositionsExample {}

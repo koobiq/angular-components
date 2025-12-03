@@ -19,8 +19,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Filesize formatter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filesize-formatter-overview-example',
     imports: [
         ReactiveFormsModule,
@@ -33,9 +31,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule,
         KbqNormalizeWhitespace
     ],
-    host: {
-        class: 'example-filesize-formatter__container layout-gap-3xl layout-margin-bottom-s'
-    },
     template: `
         <form class="kbq-form-vertical" novalidate>
             <div class="kbq-form__fieldset">
@@ -136,7 +131,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 width: 240px;
             }
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'example-filesize-formatter__container layout-gap-3xl layout-margin-bottom-s'
+    }
 })
 export class FilesizeFormatterOverviewExample {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });

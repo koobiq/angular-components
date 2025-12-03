@@ -6,8 +6,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Badge content
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'badge-content-example',
     imports: [
         KbqBadgeModule,
@@ -35,7 +33,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <i kbq-icon="kbq-cloud-o_16"></i>
             </kbq-badge>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeContentExample {
     colors = KbqBadgeColors;

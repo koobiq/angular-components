@@ -7,9 +7,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File-upload single error
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-single-error-overview-example',
+    imports: [
+        KbqFileUploadModule,
+        KbqFormFieldModule,
+        KbqIconModule
+    ],
     template: `
         <kbq-single-file-upload
             inputId="file-upload-single-error-overview"
@@ -28,11 +31,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             }
         </kbq-single-file-upload>
     `,
-    imports: [
-        KbqFileUploadModule,
-        KbqFormFieldModule,
-        KbqIconModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleErrorOverviewExample {
     errors: string[] = [];

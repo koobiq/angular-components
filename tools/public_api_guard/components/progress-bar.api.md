@@ -5,7 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/platform';
+import * as i1 from '@angular/cdk/platform';
 import { KbqColorDirective } from '@koobiq/components/core';
 
 // @public (undocumented)
@@ -20,7 +20,7 @@ export class KbqProgressBar extends KbqColorDirective {
     // (undocumented)
     value: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBar, never>;
 }
@@ -28,7 +28,7 @@ export class KbqProgressBar extends KbqColorDirective {
 // @public (undocumented)
 export class KbqProgressBarCaption {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressBarCaption, "[kbq-progress-bar-caption]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressBarCaption, "[kbq-progress-bar-caption]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarCaption, never>;
 }
@@ -39,16 +39,16 @@ export class KbqProgressBarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressBarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption], [typeof i2.PlatformModule], [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, never, [typeof i1.PlatformModule, typeof i2.KbqProgressBar, typeof i2.KbqProgressBarText, typeof i2.KbqProgressBarCaption], [typeof i2.KbqProgressBar, typeof i2.KbqProgressBarText, typeof i2.KbqProgressBarCaption]>;
 }
 
 // @public (undocumented)
 export class KbqProgressBarText {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressBarText, "[kbq-progress-bar-text]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressBarText, "[kbq-progress-bar-text]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarText, never>;
 }

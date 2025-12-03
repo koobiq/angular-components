@@ -25,7 +25,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 /** @title Form field with CustomErrorStateMatcher which set by `errorStateMatcher` attribute */
 @Component({
-    standalone: true,
     selector: 'form-field-with-custom-error-state-matcher-set-by-attribute-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule, KbqButtonModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

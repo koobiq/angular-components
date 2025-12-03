@@ -6,7 +6,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field with kbqPrefix and kbqSuffix */
 @Component({
-    standalone: true,
     selector: 'experimental-form-field-with-prefix-and-suffix-example',
     imports: [
         KbqFormFieldModule,

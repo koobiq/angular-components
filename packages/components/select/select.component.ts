@@ -1,9 +1,11 @@
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -86,6 +88,7 @@ import {
     kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { BehaviorSubject, Observable, Subject, Subscription, defer, merge } from 'rxjs';
@@ -138,26 +141,32 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
 
 @Component({
     selector: 'kbq-select',
-    exportAs: 'kbqSelect',
+    imports: [
+        CdkOverlayOrigin,
+        KbqTag,
+        NgTemplateOutlet,
+        CdkMonitorFocus,
+        CdkConnectedOverlay,
+        NgClass,
+        KbqIconModule
+    ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqSelect',
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
-
         '(click)': 'toggle()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
         '(blur)': 'onBlur()',
-
         // @TODO: turn event listener only for specific conditions (#DS-4253)
         '(window:resize)': 'calculateHiddenItems()'
     },
@@ -854,7 +863,7 @@ export class KbqSelect
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
                 }
 
-                const overlayContainer = this.overlayContainer.getContainerElement();
+                const overlayContainer = this.overlayContainer?.getContainerElement();
 
                 if (overlayContainer.childNodes.length === 1) {
                     this._renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');

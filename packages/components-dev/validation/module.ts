@@ -38,9 +38,8 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
 }
 
 @Component({
-    standalone: true,
-    imports: [ValidationExamplesModule],
     selector: 'dev-examples',
+    imports: [ValidationExamplesModule],
     template: `
         <validation-on-open-example />
         <validation-optional-label-example />
@@ -59,7 +58,7 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         ReactiveFormsModule,
         FormsModule,
@@ -79,7 +78,6 @@ export class DevExamples {}
         KbqLuxonDateModule,
         DevExamples
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

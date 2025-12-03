@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -33,14 +34,17 @@ export class KbqCalendarCell {
  */
 @Component({
     selector: '[kbq-calendar-body]',
-    exportAs: 'kbqCalendarBody',
+    imports: [
+        NgClass
+    ],
     templateUrl: 'calendar-body.html',
     styleUrls: ['calendar-body.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqCalendarBody',
     host: {
         class: 'kbq-calendar__body'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqCalendarBody implements OnChanges {
     /** The cells to display in the table. */

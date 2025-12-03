@@ -22,8 +22,8 @@ describe('KbqAccordion', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqAccordionModule],
-            declarations: [
+            imports: [
+                KbqAccordionModule,
                 TestApp,
                 AccordionVariants,
                 AccordionDefaultValue,
@@ -263,6 +263,7 @@ describe('KbqAccordion', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion>
             <kbq-accordion-item>
@@ -278,6 +279,7 @@ class TestApp {}
 
 @Component({
     selector: 'accordion-variant',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [variant]="selectedVariant">
             <kbq-accordion-item>
@@ -295,6 +297,7 @@ class AccordionVariants {
 
 @Component({
     selector: 'accordion-default-value',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [defaultValue]="defaultValue">
             <kbq-accordion-item [value]="'item-1'">
@@ -312,6 +315,7 @@ class AccordionDefaultValue {
 
 @Component({
     selector: 'accordion-value',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [value]="value">
             <kbq-accordion-item [value]="'item-1'">
@@ -335,6 +339,7 @@ class AccordionValue {
 
 @Component({
     selector: 'accordion-disabled',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [disabled]="disabled">
             <kbq-accordion-item>
@@ -358,6 +363,7 @@ class AccordionDisabled {
 
 @Component({
     selector: 'accordion-disabled-item',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion>
             <kbq-accordion-item [disabled]="disabledItem">
@@ -381,6 +387,7 @@ class AccordionDisabledItem {
 
 @Component({
     selector: 'accordion-type',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [type]="type">
             <kbq-accordion-item>
@@ -404,6 +411,7 @@ class AccordionType {
 
 @Component({
     selector: 'accordion-collapsible',
+    imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [collapsible]="false">
             <kbq-accordion-item>

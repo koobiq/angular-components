@@ -12,12 +12,7 @@ describe('KbqTitleDirective', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [BrowserAnimationsModule],
-            declarations: [
-                KbqTitleDirective,
-                BaseKbqTitleComponent,
-                WithParamsKbqTitleComponent
-            ],
+            imports: [BrowserAnimationsModule, BaseKbqTitleComponent, WithParamsKbqTitleComponent],
             providers: [
                 KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER
             ]
@@ -108,17 +103,8 @@ describe('KbqTitleDirective', () => {
 });
 
 @Component({
-    styles: [
-        `
-            .parent {
-                display: inline-block;
-                flex-grow: 1;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-        `
-
+    imports: [
+        KbqTitleDirective
     ],
     template: `
         <div class="parent" id="parent1" style="max-width: 150px;" kbq-title>
@@ -137,7 +123,19 @@ describe('KbqTitleDirective', () => {
         >
             <span #kbqTitleText>Protocol: udp/nbns</span>
         </div>
-    `
+    `,
+    styles: [
+        `
+            .parent {
+                display: inline-block;
+                flex-grow: 1;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        `
+
+    ]
 })
 class BaseKbqTitleComponent {
     defaultValue = 'Just a text';
@@ -145,6 +143,26 @@ class BaseKbqTitleComponent {
 }
 
 @Component({
+    imports: [
+        KbqTitleDirective
+    ],
+    template: `
+        <div id="parent1" style="max-width: 150px" kbq-title>
+            <div #kbqTitleContainer class="parent">
+                <div #kbqTitleText class="child">
+                    {{ longValue }}
+                </div>
+            </div>
+        </div>
+
+        <div id="parent2" style="max-width: 600px" kbq-title>
+            <div #kbqTitleContainer class="parent">
+                <div #kbqTitleText class="child">
+                    {{ defaultValue }}
+                </div>
+            </div>
+        </div>
+    `,
     styles: [
         `
             .parent {
@@ -165,24 +183,7 @@ class BaseKbqTitleComponent {
             }
         `
 
-    ],
-    template: `
-        <div id="parent1" style="max-width: 150px" kbq-title>
-            <div #kbqTitleContainer class="parent">
-                <div #kbqTitleText class="child">
-                    {{ longValue }}
-                </div>
-            </div>
-        </div>
-
-        <div id="parent2" style="max-width: 600px" kbq-title>
-            <div #kbqTitleContainer class="parent">
-                <div #kbqTitleText class="child">
-                    {{ defaultValue }}
-                </div>
-            </div>
-        </div>
-    `
+    ]
 })
 class WithParamsKbqTitleComponent {
     defaultValue = 'Just a text';

@@ -49,7 +49,6 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
 );
 
 @Component({
-    standalone: true,
     selector: 'example-top-bar-breadcrumbs',
     providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     imports: [
@@ -192,9 +191,8 @@ export class ExampleTopBarBreadcrumbs {
  * @title Top Bar Breadcrumbs Adaptive
  */
 @Component({
-    standalone: true,
-    imports: [ExampleTopBarBreadcrumbs],
     selector: 'top-bar-breadcrumbs-adaptive-example',
+    imports: [ExampleTopBarBreadcrumbs],
     template: `
         <div class="layout-margin-bottom-l">
             {{ text().breadcrumbShortening }}

@@ -3,9 +3,8 @@ import { MarkdownExamplesModule } from 'packages/docs-examples/components/markdo
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [MarkdownExamplesModule],
     selector: 'dev-examples',
+    imports: [MarkdownExamplesModule],
     template: `
         <markdown-article-example />
         <hr />
@@ -42,12 +41,11 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
-    imports: [DevExamples, DevThemeToggle],
     selector: 'dev-app',
+    imports: [DevExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {}

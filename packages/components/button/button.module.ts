@@ -10,16 +10,14 @@ import { KbqButtonDropdownTrigger } from './button.dropdown-trigger.directive';
         A11yModule,
         PlatformModule,
         ObserversModule,
-        KbqButtonDropdownTrigger
+        KbqButtonDropdownTrigger,
+        KbqButton,
+        KbqButtonCssStyler
     ],
     exports: [
         KbqButton,
         KbqButtonCssStyler,
         KbqButtonDropdownTrigger
-    ],
-    declarations: [
-        KbqButton,
-        KbqButtonCssStyler
     ]
 })
 export class KbqButtonModule {}

@@ -5,12 +5,17 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
  * @title Splitter
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'splitter-overview-example',
     imports: [
         KbqSplitterModule
     ],
+    template: `
+        <kbq-splitter>
+            <div kbq-splitter-area>first</div>
+            <div class="flex" kbq-splitter-area>second</div>
+            <div kbq-splitter-area>third</div>
+        </kbq-splitter>
+    `,
     styles: `
         kbq-splitter {
             border: 1px solid black;
@@ -22,12 +27,6 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
             background: #c5c0c0;
         }
     `,
-    template: `
-        <kbq-splitter>
-            <div kbq-splitter-area>first</div>
-            <div class="flex" kbq-splitter-area>second</div>
-            <div kbq-splitter-area>third</div>
-        </kbq-splitter>
-    `
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterOverviewExample {}

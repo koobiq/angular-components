@@ -10,7 +10,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit unfilled
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-unfilled-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
@@ -19,7 +19,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqDlModule,
         NgTemplateOutlet
     ],
-    selector: 'inline-edit-unfilled-example',
     template: `
         <div class="flex">
             <form [formGroup]="form">

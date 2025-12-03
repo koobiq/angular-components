@@ -4,7 +4,6 @@ import { KbqHint } from './hint';
 
 /** Error text to be shown below the form field control. */
 @Component({
-    standalone: true,
     selector: 'kbq-error',
     exportAs: 'kbqError',
     templateUrl: './hint.html',

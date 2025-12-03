@@ -55,7 +55,6 @@ const getViewAllButtonElement = (debugElement: DebugElement): HTMLButtonElement 
 };
 
 @Component({
-    standalone: true,
     imports: [KbqCodeBlockModule],
     template: `
         <kbq-code-block

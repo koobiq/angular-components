@@ -6,8 +6,6 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
  * @title filter-bar-required
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-required-example',
     imports: [
         KbqFilterBarModule,
@@ -25,7 +23,8 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
                 <kbq-filter-reset (onResetFilter)="onReset()" />
             }
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarRequiredExample {
     activeFilter: KbqFilter | null = this.getDefaultFilter();

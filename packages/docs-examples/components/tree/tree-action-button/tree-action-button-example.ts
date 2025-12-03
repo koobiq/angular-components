@@ -103,8 +103,6 @@ export const DATA_OBJECT = {
  * @title Tree action button
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tree-action-button-example',
     imports: [
         KbqTreeModule,
@@ -162,7 +160,8 @@ export const DATA_OBJECT = {
             <button kbq-dropdown-item>action 2</button>
             <button kbq-dropdown-item>action 3</button>
         </kbq-dropdown>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeActionButtonExample {
     popUpPlacements = PopUpPlacements;

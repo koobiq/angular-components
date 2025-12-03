@@ -5,18 +5,21 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@radix-ng/primitives/roving-focus';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfiguration>;
@@ -78,7 +81,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     size: KbqDefaultSizes;
     wrapMode: KbqBreadcrumbsWrapMode;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof i2.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -128,6 +131,85 @@ export class KbqBreadcrumbView {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbView, never>;
 }
+
+// @public (undocumented)
+export class RdxRovingFocusGroupDirective {
+    readonly currentTabStopId: WritableSignal<string | null>;
+    // (undocumented)
+    readonly currentTabStopIdChange: EventEmitter<string | null>;
+    get dataOrientation(): Orientation;
+    // Warning: (ae-forgotten-export) The symbol "Direction" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    dir: Direction;
+    // (undocumented)
+    readonly entryFocus: EventEmitter<Event>;
+    readonly focusableItems: WritableSignal<HTMLElement[]>;
+    getFocusableItemsCount(): number;
+    handleBlur(): void;
+    handleFocus(event: FocusEvent): void;
+    handleMouseDown(): void;
+    handleMouseUp(): void;
+    // (undocumented)
+    loop: boolean;
+    // (undocumented)
+    static ngAcceptInputType_loop: unknown;
+    // (undocumented)
+    static ngAcceptInputType_preventScrollOnEntryFocus: unknown;
+    onFocusableItemAdd(): void;
+    onFocusableItemRemove(): void;
+    onItemFocus(tabStopId: string): void;
+    onItemShiftTab(): void;
+    // Warning: (ae-forgotten-export) The symbol "Orientation" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    orientation: Orientation | undefined;
+    // (undocumented)
+    preventScrollOnEntryFocus: boolean;
+    registerItem(item: HTMLElement): void;
+    get tabIndex(): 0 | -1;
+    unregisterItem(item: HTMLElement): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<RdxRovingFocusGroupDirective, "[rdxRovingFocusGroup]", never, { "orientation": { "alias": "orientation"; "required": false; }; "dir": { "alias": "dir"; "required": false; }; "loop": { "alias": "loop"; "required": false; }; "preventScrollOnEntryFocus": { "alias": "preventScrollOnEntryFocus"; "required": false; }; }, { "entryFocus": "entryFocus"; "currentTabStopIdChange": "currentTabStopIdChange"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RdxRovingFocusGroupDirective, never>;
+}
+
+// @public (undocumented)
+export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
+    // (undocumented)
+    active: boolean;
+    // (undocumented)
+    allowShiftKey: boolean;
+    // (undocumented)
+    focusable: boolean;
+    handleKeydown(event: KeyboardEvent): void;
+    handleMouseDown(event: MouseEvent): void;
+    readonly isCurrentTabStop: Signal<boolean>;
+    // (undocumented)
+    static ngAcceptInputType_active: unknown;
+    // (undocumented)
+    static ngAcceptInputType_allowShiftKey: unknown;
+    // (undocumented)
+    static ngAcceptInputType_focusable: unknown;
+    ngOnDestroy(): void;
+    ngOnInit(): void;
+    onFocus(): void;
+    // (undocumented)
+    protected readonly parent: RdxRovingFocusGroupDirective;
+    get tabIndex(): 0 | -1;
+    // (undocumented)
+    tabStopId: string;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<RdxRovingFocusItemDirective, "[rdxRovingFocusItem]", never, { "focusable": { "alias": "focusable"; "required": false; }; "active": { "alias": "active"; "required": false; }; "tabStopId": { "alias": "tabStopId"; "required": false; }; "allowShiftKey": { "alias": "allowShiftKey"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RdxRovingFocusItemDirective, never>;
+}
+
+// Warnings were encountered during analysis:
+//
+// dist/components/breadcrumbs/breadcrumbs.d.ts:27:134 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+// dist/components/breadcrumbs/breadcrumbs.d.ts:124:450 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -8,11 +8,10 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
  * @title Sidepanel overlayed
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'sidepanel-overlayed-example',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
-    templateUrl: './sidepanel-overlayed-example.html'
+    templateUrl: './sidepanel-overlayed-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverlayedExample {
     position = KbqSidepanelPosition.Right;

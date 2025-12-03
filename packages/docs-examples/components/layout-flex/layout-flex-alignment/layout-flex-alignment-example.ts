@@ -6,10 +6,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  * @title Layout-flex alignment
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'layout-flex-alignment-example',
-    styleUrls: ['layout-flex-alignment-example.css'],
     imports: [
         KbqRadioModule,
         FormsModule
@@ -47,7 +44,9 @@ import { KbqRadioModule } from '@koobiq/components/radio';
             <div class="example-block">block 2</div>
             <div class="example-block">block 3</div>
         </div>
-    `
+    `,
+    styleUrls: ['layout-flex-alignment-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutFlexAlignmentExample {
     layoutHorizontalAlignment: string = '-start';

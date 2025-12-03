@@ -8,8 +8,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Empty-state align
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-align-example',
     imports: [
         KbqEmptyStateModule,
@@ -40,7 +38,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </div>
             </kbq-empty-state>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateAlignExample {
     readonly colors = KbqComponentColors;

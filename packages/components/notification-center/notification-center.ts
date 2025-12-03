@@ -73,18 +73,7 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /** @docs-private */
 @Component({
-    standalone: true,
     selector: 'kbq-notification-center',
-    templateUrl: './notification-center.html',
-    styleUrls: ['./notification-center.scss'],
-    preserveWhitespaces: false,
-    host: {
-        class: 'kbq-notification-center',
-        '[class.kbq-notification-center_popover]': 'popoverMode',
-        '(keydown.escape)': 'escapeHandler()'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         KbqIconModule,
         KbqBadgeModule,
@@ -97,6 +86,16 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         KbqNotificationItemComponent,
         KbqLoaderOverlayModule
     ],
+    templateUrl: './notification-center.html',
+    styleUrls: ['./notification-center.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
+    host: {
+        class: 'kbq-notification-center',
+        '[class.kbq-notification-center_popover]': 'popoverMode',
+        '(keydown.escape)': 'escapeHandler()'
+    },
     animations: [KbqNotificationCenterAnimations.state]
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit {
@@ -220,7 +219,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 }
 
 @Directive({
-    standalone: true,
     selector: '[kbqNotificationCenterTrigger]',
     exportAs: 'kbqNotificationCenterTrigger',
     host: {

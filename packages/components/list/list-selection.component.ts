@@ -52,8 +52,10 @@ import {
 import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
+    KbqActionContainer,
     KbqOptgroup,
     KbqOptionActionComponent,
+    KbqPseudoCheckbox,
     KbqTitleTextRef,
     MultipleMode
 } from '@koobiq/components/core';
@@ -103,19 +105,17 @@ export class KbqListCopyEvent<T> {
 
 @Component({
     selector: 'kbq-list-selection',
-    exportAs: 'kbqListSelection',
     template: `
         <ng-content />
     `,
     styleUrls: ['./list.scss', 'list-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqListSelection',
     host: {
         class: 'kbq-list-selection',
-
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         '(keydown)': 'onKeyDown($event)',
         '(focus)': 'focus()',
         '(blur)': 'blur()',
@@ -656,30 +656,30 @@ export class KbqListOptionCaption {}
  * if the current item is selected.
  */
 @Component({
-    exportAs: 'kbqListOption',
     selector: 'kbq-list-option',
+    imports: [
+        KbqPseudoCheckbox,
+        KbqActionContainer
+    ],
     templateUrl: './list-option.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqListOption',
     host: {
         class: 'kbq-list-option',
-
         '[class.kbq-selected]': 'selected',
         '[class.kbq-list-option_multiple]': 'listSelection.multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
-
         '[class.kbq-action-button-focused]': 'actionButton?.active',
-
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
-
         '(focusin)': 'focus()',
         '(blur)': 'blur()',
         '(click)': 'handleClick($event)',
         '(keydown)': 'onKeydown($event)'
     },
-    encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqListOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption }

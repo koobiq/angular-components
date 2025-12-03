@@ -18,7 +18,6 @@ const getInputNativeElement = ({ debugElement }: ComponentFixture<unknown>): HTM
 
 @Component({
     selector: 'test-field-sizing-content',
-    standalone: true,
     imports: [KbqFieldSizingContent],
     template: `
         <input kbqFieldSizingContent />

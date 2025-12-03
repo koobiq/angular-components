@@ -12,7 +12,6 @@ import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
  * @title Popover arrow and offset example
  */
 @Component({
-    standalone: true,
     selector: 'popover-arrow-and-offset-example',
     imports: [
         KbqButtonModule,

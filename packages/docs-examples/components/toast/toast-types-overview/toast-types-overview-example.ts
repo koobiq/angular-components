@@ -9,13 +9,12 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  * @title Toast types
  */
 @Component({
-    standalone: true,
+    selector: 'toast-types-overview-example',
     imports: [
         KbqLinkModule,
         NgTemplateOutlet,
         KbqButtonModule
     ],
-    selector: 'toast-types-overview-example',
     templateUrl: 'toast-types-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

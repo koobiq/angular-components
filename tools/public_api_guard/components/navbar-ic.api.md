@@ -105,7 +105,7 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
     // (undocumented)
     protected updateTabIndex(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusable, never, never, { "tabindex": { "alias": "tabindex"; "required": false; }; }, {}, ["focusableItems"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusable, never, never, { "tabindex": { "alias": "tabindex"; "required": false; }; }, {}, ["focusableItems"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusable, never>;
 }
@@ -130,7 +130,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     configuration: any;
     // (undocumented)
     get currentWidth(): number;
-    dropdownTrigger: Signal<readonly any[]>;
+    readonly dropdownTrigger: Signal<readonly any[]>;
     // (undocumented)
     get expanded(): boolean;
     set expanded(value: boolean);
@@ -150,7 +150,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     get hasOpenedPopUp(): boolean;
     // (undocumented)
     readonly hovered: BehaviorSubject<boolean>;
-    items: Signal<readonly any[]>;
+    readonly items: Signal<readonly any[]>;
     protected readonly localeService: KbqLocaleService | null;
     // (undocumented)
     static ngAcceptInputType_collapsedWidth: unknown;
@@ -161,17 +161,17 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     // (undocumented)
     static ngAcceptInputType_pinned: unknown;
     ngAfterContentInit(): void;
-    notificationCenterTrigger: Signal<readonly any[]>;
+    readonly notificationCenterTrigger: Signal<readonly any[]>;
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     pinned: boolean;
-    popoverTrigger: Signal<readonly any[]>;
-    rectangleElements: Signal<readonly any[]>;
+    readonly popoverTrigger: Signal<readonly any[]>;
+    readonly rectangleElements: Signal<readonly any[]>;
     // (undocumented)
     readonly state: BehaviorSubject<"expanded" | "collapsed" | null>;
     // (undocumented)
     toggle(): void;
-    toggleElement: Signal<readonly any[]>;
+    readonly toggleElement: Signal<readonly any[]>;
     // (undocumented)
     protected updateExpandedStateForItems: () => void;
     // (undocumented)

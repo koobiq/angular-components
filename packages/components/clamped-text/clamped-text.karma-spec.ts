@@ -47,7 +47,6 @@ const getClampedTextToggleDebugElement = (debugElement: DebugElement): DebugElem
 
 @Component({
     selector: 'clamped-text-overview-example',
-    standalone: true,
     imports: [KbqClampedText],
     template: `
         <div class="layout-margin-bottom-l" [style.max-width.px]="width()" [style.width.px]="width()">

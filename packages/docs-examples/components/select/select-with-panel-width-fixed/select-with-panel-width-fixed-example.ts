@@ -6,12 +6,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select with panelWidth fixed
  */
 @Component({
-    standalone: true,
+    selector: 'select-with-panel-width-fixed-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule
     ],
-    selector: 'select-with-panel-width-fixed-example',
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" [panelWidth]="400" [(value)]="value">
@@ -26,10 +25,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             width: 320px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-l layout-align-center-center layout-row'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class SelectWithPanelWidthFixedExample {
     readonly options = [

@@ -6,7 +6,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select disabled
  */
 @Component({
-    standalone: true,
     selector: 'select-disabled-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
@@ -25,8 +24,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <div class="kbq-form__label">For options</div>
             <kbq-form-field>
                 <kbq-select placeholder="Placeholder" [value]="selected">
-                    @for (option of options; track option; let odd = $odd) {
-                        <kbq-option [disabled]="odd" [value]="option">{{ option }}</kbq-option>
+                    @for (option of options; track option) {
+                        <kbq-option [disabled]="$odd" [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
             </kbq-form-field>
@@ -47,7 +46,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </kbq-form-field>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .example-row {
             display: flex;
@@ -62,7 +60,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectDisabledExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);

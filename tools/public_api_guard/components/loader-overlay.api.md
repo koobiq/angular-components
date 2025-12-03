@@ -6,9 +6,9 @@
 
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@angular/cdk/platform';
-import * as i4 from '@koobiq/components/progress-spinner';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/platform';
+import * as i3 from '@koobiq/components/progress-spinner';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -47,7 +47,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     transparent: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
 }
@@ -55,7 +55,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
 // @public (undocumented)
 export class KbqLoaderOverlayCaption {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayCaption, "[kbq-loader-overlay-caption]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayCaption, "[kbq-loader-overlay-caption]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayCaption, never>;
 }
@@ -63,7 +63,7 @@ export class KbqLoaderOverlayCaption {
 // @public (undocumented)
 export class KbqLoaderOverlayIndicator {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayIndicator, "[kbq-loader-overlay-indicator]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayIndicator, "[kbq-loader-overlay-indicator]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayIndicator, never>;
 }
@@ -74,16 +74,16 @@ export class KbqLoaderOverlayModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqLoaderOverlayModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, [typeof i1.KbqLoaderOverlay, typeof i1.KbqLoaderOverlayIndicator, typeof i1.KbqLoaderOverlayText, typeof i1.KbqLoaderOverlayCaption], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.KbqProgressSpinnerModule], [typeof i1.KbqLoaderOverlay, typeof i1.KbqLoaderOverlayIndicator, typeof i1.KbqLoaderOverlayText, typeof i1.KbqLoaderOverlayCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqLoaderOverlay, typeof i4.KbqLoaderOverlayIndicator, typeof i4.KbqLoaderOverlayText, typeof i4.KbqLoaderOverlayCaption], [typeof i4.KbqLoaderOverlay, typeof i4.KbqLoaderOverlayIndicator, typeof i4.KbqLoaderOverlayText, typeof i4.KbqLoaderOverlayCaption]>;
 }
 
 // @public (undocumented)
 export class KbqLoaderOverlayText {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayText, "[kbq-loader-overlay-text]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLoaderOverlayText, "[kbq-loader-overlay-text]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayText, never>;
 }

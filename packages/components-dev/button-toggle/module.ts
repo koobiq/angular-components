@@ -10,7 +10,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { ButtonToggleExamplesModule } from '../../docs-examples/components/button-toggle';
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         ButtonToggleExamplesModule,
         KbqButtonModule,
@@ -22,7 +22,6 @@ import { ButtonToggleExamplesModule } from '../../docs-examples/components/butto
         KbqTextareaModule,
         KbqPopoverModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

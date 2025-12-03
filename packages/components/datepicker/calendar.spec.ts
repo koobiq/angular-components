@@ -1,7 +1,7 @@
 import { Component, LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
+import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { DateAdapter } from '@koobiq/components/core';
@@ -15,16 +15,6 @@ describe('KbqCalendar', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                KbqLuxonDateModule,
-                KbqDatepickerModule
-            ],
-            declarations: [
-                StandardCalendar,
-                CalendarWithMinMax,
-                CalendarWithDateFilter,
-                CalendarWithSelectableMinDate
-            ],
             providers: [
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
@@ -342,6 +332,7 @@ describe('KbqCalendar', () => {
 });
 
 @Component({
+    imports: [KbqDatepickerModule],
     template: `
         <kbq-calendar
             [startAt]="startDate"
@@ -361,6 +352,7 @@ class StandardCalendar {
 }
 
 @Component({
+    imports: [KbqDatepickerModule],
     template: `
         <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate" />
     `
@@ -374,6 +366,7 @@ class CalendarWithMinMax {
 }
 
 @Component({
+    imports: [KbqDatepickerModule],
     template: `
         <kbq-calendar [startAt]="startDate" [dateFilter]="dateFilter" [(selected)]="selected" />
     `
@@ -390,6 +383,7 @@ class CalendarWithDateFilter {
 }
 
 @Component({
+    imports: [KbqDatepickerModule],
     template: `
         <kbq-calendar
             [startAt]="startAt"

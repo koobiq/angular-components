@@ -37,9 +37,7 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 /** Component which allow to increment or decrement number value. */
 @Component({
-    standalone: true,
     selector: 'kbq-stepper',
-    exportAs: 'kbqStepper',
     imports: [KbqIconModule],
     template: `
         <i
@@ -62,11 +60,12 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
         ></i>
     `,
     styleUrls: ['stepper.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqStepper',
     host: {
         class: 'kbq-stepper'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });

@@ -7,16 +7,11 @@ import { KbqTagsModule } from '@koobiq/components/tags';
  * @title Tag fill and style
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tag-fill-and-style-example',
     imports: [
         KbqTagsModule,
         KbqIconModule
     ],
-    host: {
-        class: 'layout-row layout-wrap layout-gap-l layout-margin-5xl layout-align-center-center'
-    },
     template: `
         <kbq-tag [color]="colors.ContrastFade">
             <i kbq-icon="kbq-check-circle_16"></i>
@@ -38,7 +33,11 @@ import { KbqTagsModule } from '@koobiq/components/tags';
             Warning
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row layout-wrap layout-gap-l layout-margin-5xl layout-align-center-center'
+    }
 })
 export class TagFillAndStyleExample {
     colors = KbqComponentColors;

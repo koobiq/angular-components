@@ -18,7 +18,6 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
  * @title Tag input draggable
  */
 @Component({
-    standalone: true,
     selector: 'tag-input-draggable-example',
     imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],

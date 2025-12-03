@@ -23,10 +23,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
  * @title Tags autocomplete onpaste off
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tags-autocomplete-onpaste-off-example',
-    templateUrl: 'tags-autocomplete-onpaste-off-example.html',
     imports: [
         KbqTagsModule,
         KbqFormFieldModule,
@@ -35,6 +32,8 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         KbqAutocompleteModule,
         AsyncPipe
     ],
+    templateUrl: 'tags-autocomplete-onpaste-off-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     // turn off tag add on paste with InjectionToken
     providers: [
         {

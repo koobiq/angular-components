@@ -45,7 +45,6 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Directive({
-    standalone: true,
     selector: '[exampleResetTouchedOnFirstInput]',
     exportAs: 'exampleResetTouchedOnFirstInput'
 })
@@ -74,7 +73,7 @@ class ExampleResetTouchedOnFirstInput {
  * @title Inline edit validation
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-validation-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
@@ -84,7 +83,6 @@ class ExampleResetTouchedOnFirstInput {
         KbqToolTipModule,
         ExampleResetTouchedOnFirstInput
     ],
-    selector: 'inline-edit-validation-example',
     template: `
         <kbq-inline-edit [validationTooltip]="'Error message'" [tooltipPlacement]="tooltipPlacement">
             <kbq-label>Not empty</kbq-label>
@@ -139,13 +137,13 @@ class ExampleResetTouchedOnFirstInput {
             white-space: nowrap;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditValidationExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);

@@ -18,7 +18,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  */
 @Component({
     selector: 'validation-required-label-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,

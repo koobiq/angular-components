@@ -15,7 +15,6 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { delay } from 'rxjs/operators';
 
 @Component({
-    standalone: true,
     selector: 'kbq-split-button, [kbq-split-button]',
     template: `
         <ng-content select="[kbq-button]" />
@@ -23,15 +22,15 @@ import { delay } from 'rxjs/operators';
         <ng-content select="[kbq-button]" />
     `,
     styleUrls: ['./split-button.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-split-button',
         '[class]': 'kbqStyle',
         '[class.kbq-split-button_styles-for-nested]': 'buttons.length > 1',
         '[class.kbq-split-button_first-disabled]': 'firstDisabled',
         '[class.kbq-split-button_second-disabled]': 'secondDisabled'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
     private nativeElement = kbqInjectNativeElement();

@@ -5,8 +5,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link general
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'link-general-example',
     imports: [KbqLinkModule],
     template: `
@@ -15,6 +13,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 Отчет сканирования
             </a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkGeneralExample {}

@@ -7,16 +7,11 @@ import { KbqTagsModule } from '@koobiq/components/tags';
  * @title Tag Long Text
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tag-long-text-example',
     imports: [
         KbqTagsModule,
         KbqIconModule
     ],
-    host: {
-        class: 'layout-margin-top-5xl layout-margin-bottom-5xl layout-margin-left-m layout-margin-right-m layout-align-center-center layout-row'
-    },
     template: `
         <kbq-tag [color]="colors.ContrastFade">
             Typically, tags are associated with the «Delete» button, allowing users to remove the selected value from
@@ -24,7 +19,11 @@ import { KbqTagsModule } from '@koobiq/components/tags';
             which case the cross must be concealed.
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-5xl layout-margin-bottom-5xl layout-margin-left-m layout-margin-right-m layout-align-center-center layout-row'
+    }
 })
 export class TagLongTextExample {
     colors = KbqComponentColors;

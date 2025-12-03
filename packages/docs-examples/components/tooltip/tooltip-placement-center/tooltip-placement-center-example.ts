@@ -6,10 +6,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip placement center
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tooltip-placement-center-example',
-    styleUrls: ['tooltip-placement-center-example.css'],
     imports: [KbqToolTipModule],
     template: `
         <div class="example-tooltip__visual-box">
@@ -17,12 +14,18 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 <div
                     class="example-tooltip__trigger example-tooltip__trigger_{{ placement }}"
                     [kbqPlacement]="placement"
-                    [kbqTooltip]="'kbqPlacement: ' + placement"
+                    [kbqTooltip]="getText(placement)"
                 ></div>
             }
         </div>
-    `
+    `,
+    styleUrls: ['tooltip-placement-center-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipPlacementCenterExample {
     placements = [PopUpPlacements.Top, PopUpPlacements.Right, PopUpPlacements.Bottom, PopUpPlacements.Left];
+
+    getText(placement: PopUpPlacements): string {
+        return `kbqPlacement: ${placement}`;
+    }
 }

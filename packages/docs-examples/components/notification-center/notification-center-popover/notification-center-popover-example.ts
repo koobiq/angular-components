@@ -47,16 +47,7 @@ enum NavbarIcItems {
  * @title notification-center-popover
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'notification-center-popover-example',
-    templateUrl: 'notification-center-popover-example.html',
-    styles: `
-        :host {
-            display: block;
-            min-height: 480px;
-        }
-    `,
     imports: [
         KbqNotificationCenterModule,
         KbqBadgeModule,
@@ -72,6 +63,14 @@ enum NavbarIcItems {
         LuxonDateModule,
         KbqFormattersModule
     ],
+    templateUrl: 'notification-center-popover-example.html',
+    styles: `
+        :host {
+            display: block;
+            min-height: 480px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
 })

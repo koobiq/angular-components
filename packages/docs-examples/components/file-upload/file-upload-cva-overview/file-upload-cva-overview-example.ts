@@ -7,9 +7,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File-upload with control value accessor
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'file-upload-cva-overview-example',
+    imports: [
+        KbqFileUploadModule,
+        ReactiveFormsModule,
+        KbqIconModule
+    ],
     template: `
         <div class="kbq-form-horizontal">
             <div class="kbq-form__row layout-margin-bottom-m">
@@ -20,11 +23,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </div>
         </div>
     `,
-    imports: [
-        KbqFileUploadModule,
-        ReactiveFormsModule,
-        KbqIconModule
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadCvaOverviewExample {
     control = new FormControl<KbqFileItem | null>(null);

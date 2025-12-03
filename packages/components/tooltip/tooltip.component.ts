@@ -55,17 +55,16 @@ export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
 export const MIN_TIME_FOR_DELAY = 2000;
 
 @Component({
-    standalone: true,
+    selector: 'kbq-tooltip-component',
     imports: [
         NgClass,
         NgTemplateOutlet
     ],
-    selector: 'kbq-tooltip-component',
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
-    animations: [kbqTooltipAnimations.tooltipState],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [kbqTooltipAnimations.tooltipState],
     providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER]
 })
 export class KbqTooltipComponent extends KbqPopUp {
@@ -120,7 +119,6 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 };
 
 @Directive({
-    standalone: true,
     selector: '[kbqTooltip]',
     exportAs: 'kbqTooltip',
     host: {
@@ -377,7 +375,6 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 }
 
 @Directive({
-    standalone: true,
     selector: '[kbqWarningTooltip]',
     exportAs: 'kbqWarningTooltip',
     host: {
@@ -403,7 +400,6 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
 }
 
 @Directive({
-    standalone: true,
     selector: '[kbqExtendedTooltip]',
     exportAs: 'kbqExtendedTooltip',
     host: {

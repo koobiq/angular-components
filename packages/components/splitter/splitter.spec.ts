@@ -13,11 +13,7 @@ import {
 
 function createTestComponent<T>(component: Type<T>) {
     TestBed.resetTestingModule()
-        .configureTestingModule({
-            imports: [KbqSplitterModule],
-            declarations: [component],
-            providers: []
-        })
+        .configureTestingModule({ imports: [KbqSplitterModule, component] })
         .compileComponents();
 
     return TestBed.createComponent<T>(component);
@@ -47,6 +43,9 @@ function checkDirection<T>(
 
 @Component({
     selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
     template: `
         <kbq-splitter>
             <div kbq-splitter-area>first</div>
@@ -59,6 +58,9 @@ class KbqSplitterDefaultDirection {}
 
 @Component({
     selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
     template: `
         <kbq-splitter [direction]="direction">
             <div kbq-splitter-area>first</div>
@@ -73,6 +75,9 @@ class KbqSplitterDirection {
 
 @Component({
     selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
     template: `
         <kbq-splitter (gutterPositionChange)="gutterPositionChange()">
             <div #areaA kbq-splitter-area (sizeChange)="areaASizeChange($event)">first</div>
@@ -90,6 +95,9 @@ class KbqSplitterEvents {
 
 @Component({
     selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
     template: `
         <kbq-splitter #splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             <div #areaA kbq-splitter-area style="flex: 1">first</div>
@@ -106,6 +114,9 @@ class KbqSplitterGhost {
 
 @Component({
     selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
     template: `
         <kbq-splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             @if (isFirstRendered) {

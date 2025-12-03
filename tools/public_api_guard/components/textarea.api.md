@@ -10,8 +10,8 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@angular/forms';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/forms';
 import * as i4 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -93,7 +93,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     get value(): string;
     set value(value: string);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; }; "maxRows": { "alias": "maxRows"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; }; "maxRows": { "alias": "maxRows"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextarea, [null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, { optional: true; host: true; }, null]>;
 }
@@ -104,10 +104,10 @@ export class KbqTextareaModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextareaModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTextareaModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, [typeof i1.KbqTextarea], [typeof i2.A11yModule, typeof i3.FormsModule], [typeof i1.KbqTextarea, typeof i4.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqTextarea], [typeof i3.KbqTextarea, typeof i4.KbqFormFieldModule]>;
 }
 
 // (No @packageDocumentation comment for this package)

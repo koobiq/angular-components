@@ -10,9 +10,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@angular/cdk/platform';
-import * as i4 from '@angular/cdk/observers';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/platform';
+import * as i3 from '@angular/cdk/observers';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -66,7 +66,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
@@ -85,7 +85,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
     // (undocumented)
     updateClassModifierForIcons(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonCssStyler, "[kbq-button]", never, {}, {}, ["icons"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonCssStyler, "[kbq-button]", never, {}, {}, ["icons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonCssStyler, [null, null, { skipSelf: true; }]>;
 }
@@ -106,11 +106,11 @@ export class KbqButtonModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, [typeof i1.KbqButton, typeof i1.KbqButtonCssStyler], [typeof i2.A11yModule, typeof i3.PlatformModule, typeof i4.ObserversModule, typeof i5.KbqButtonDropdownTrigger], [typeof i1.KbqButton, typeof i1.KbqButtonCssStyler, typeof i5.KbqButtonDropdownTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i4.KbqButtonDropdownTrigger]>;
 }
 
 // @public (undocumented)

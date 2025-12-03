@@ -52,13 +52,13 @@
     </form>
     <div class="example-popover-close__list">
         <div class="example-popover-close__list-title">Members</div>
-        @for (member of members; track member; let i = $index) {
+        @for (member of members; track member) {
             <div class="example-popover-close__list-item">
                 <div class="example-popover-close__list-item-left">
                     <img
-                        class="example-popover-close__list-item-image"
                         alt="{{ member.name }}"
-                        src="https://koobiq.io/assets/images/popover/list-member-{{ i + 1 }}.png"
+                        src="https://koobiq.io/assets/images/popover/list-member-{{ $index + 1 }}.png"
+                        class="example-popover-close__list-item-image"
                     />
                     <div class="example-popover-close__list-item-name">{{ member.name }}</div>
                 </div>

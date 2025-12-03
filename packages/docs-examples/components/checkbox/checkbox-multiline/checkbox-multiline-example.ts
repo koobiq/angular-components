@@ -6,7 +6,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
  * @title Checkbox multiline example
  */
 @Component({
-    standalone: true,
     selector: 'checkbox-multiline-example',
     imports: [KbqCheckboxModule, KbqFormFieldModule],
     template: `

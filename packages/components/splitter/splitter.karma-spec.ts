@@ -13,9 +13,7 @@ import {
 function createTestComponent<T>(component: Type<T>) {
     TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [KbqSplitterModule],
-            declarations: [component],
-            providers: []
+            imports: [KbqSplitterModule, component]
         })
         .compileComponents();
 
@@ -24,6 +22,9 @@ function createTestComponent<T>(component: Type<T>) {
 
 @Component({
     selector: 'kbq-demo-splitter',
+    imports: [
+        KbqSplitterModule
+    ],
     template: `
         <kbq-splitter #splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             <div #areaA kbq-splitter-area style="flex: 1">first</div>

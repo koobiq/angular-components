@@ -25,8 +25,23 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
 
 @Component({
-    standalone: true,
     selector: 'color-pipe',
+    imports: [
+        KbqButtonModule,
+        KbqFormFieldModule,
+        KbqPopoverModule,
+        KbqInputModule,
+        KbqDividerModule,
+        FormsModule,
+        KbqTextareaModule,
+        NgClass,
+        ReactiveFormsModule,
+        KbqTitleModule,
+        KbqPipeState,
+        KbqPipeTitleDirective,
+        KbqPipeMinWidth,
+        KbqPipeButton
+    ],
     template: `
         <button
             kbq-button
@@ -67,29 +82,13 @@ import { KbqTitleModule } from '@koobiq/components/title';
         </ng-template>
     `,
     styleUrls: ['../../../../components/filter-bar/pipes/base-pipe.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ],
-    imports: [
-        KbqButtonModule,
-        KbqFormFieldModule,
-        KbqPopoverModule,
-        KbqInputModule,
-        KbqDividerModule,
-        FormsModule,
-        KbqTextareaModule,
-        NgClass,
-        ReactiveFormsModule,
-        KbqTitleModule,
-        KbqPipeState,
-        KbqPipeTitleDirective,
-        KbqPipeMinWidth,
-        KbqPipeButton
     ]
 })
 export class ColorPipeComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
@@ -131,8 +130,6 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
  * @title filter-bar-custom-pipe
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'filter-bar-custom-pipe-example',
     imports: [
         KbqFilterBarModule,
@@ -151,6 +148,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
             }
         </kbq-filter-bar>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILTER_BAR_PIPES,

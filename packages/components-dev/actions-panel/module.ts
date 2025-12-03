@@ -5,9 +5,8 @@ import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    standalone: true,
-    imports: [ActionsPanelExamplesModule],
     selector: 'dev-examples',
+    imports: [ActionsPanelExamplesModule],
     template: `
         <actions-panel-with-dropdown-and-popover-example />
         <hr />
@@ -24,12 +23,11 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-page-1',
     imports: [
         RouterLink,
         DevExamples
     ],
-    selector: 'dev-page-1',
     template: `
         <h2>Page1</h2>
         <a routerLink="/page-2">Go to page-2</a>
@@ -37,33 +35,31 @@ export class DevExamples {}
 
         <dev-examples />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevPage1 {}
 
 @Component({
-    standalone: true,
-    imports: [RouterLink],
     selector: 'dev-page-2',
+    imports: [RouterLink],
     template: `
         <h2>Page2</h2>
         <a routerLink="/page-1">Go to page-1</a>
         <hr />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevPage2 {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         DevThemeToggle,
         DevLocaleSelector,
         RouterOutlet
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

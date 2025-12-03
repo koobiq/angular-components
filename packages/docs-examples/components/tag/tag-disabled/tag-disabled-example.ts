@@ -7,22 +7,21 @@ import { KbqTagsModule } from '@koobiq/components/tags';
  * @title Tag Disabled
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'tag-disabled-example',
     imports: [
         KbqTagsModule,
         KbqIconModule
     ],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     template: `
         <kbq-tag [color]="colors.ContrastFade" [disabled]="true">
             Tag
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class TagDisabledExample {
     colors = KbqComponentColors;

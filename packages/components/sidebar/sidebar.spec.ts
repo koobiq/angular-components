@@ -8,9 +8,9 @@ describe(KbqSidebarModule.name, () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                KbqSidebarModule
-            ],
-            declarations: [TestSidebar]
+                KbqSidebarModule,
+                TestSidebar
+            ]
         }).compileComponents();
     });
 
@@ -110,6 +110,7 @@ describe(KbqSidebarModule.name, () => {
 });
 
 @Component({
+    imports: [KbqSidebarModule],
     template: `
         @if (showContainer) {
             <div>

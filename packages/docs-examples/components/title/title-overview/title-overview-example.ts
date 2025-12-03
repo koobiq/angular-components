@@ -6,8 +6,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
  * @title Title
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'title-overview-example',
     imports: [
         KbqTitleModule,
@@ -39,7 +37,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
             <button kbq-button (click)="field = defaultValue">Set Default text</button>
         </div>
     `,
-    styleUrls: ['./title-overview-example.css']
+    styleUrls: ['./title-overview-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleOverviewExample {
     defaultValue = 'Just a text';

@@ -333,17 +333,17 @@ export class KbqNavbarRectangleElement {
 
 @Component({
     selector: 'kbq-navbar-item, [kbq-navbar-item]',
-    exportAs: 'kbqNavbarItem',
     templateUrl: './navbar-item.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqNavbarItem',
     host: {
         class: 'kbq-navbar-item',
         '[class.kbq-navbar-item_collapsed]': 'isCollapsed',
         '[class.kbq-navbar-item_with-title]': '!!title',
 
         '(keydown)': 'onKeyDown($event)'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
     @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;

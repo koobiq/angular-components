@@ -44,7 +44,6 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Directive({
-    standalone: true,
     selector: '[exampleResetTouchedOnFirstInput]',
     exportAs: 'exampleResetTouchedOnFirstInput'
 })
@@ -73,7 +72,6 @@ class ExampleResetTouchedOnFirstInput {
  */
 @Component({
     selector: 'validation-on-blur-filled-example',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,

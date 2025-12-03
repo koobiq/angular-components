@@ -21,6 +21,7 @@ import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
 import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
+    KbqActionContainer,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -53,9 +54,15 @@ let uniqueIdCounter: number = 0;
 
 @Component({
     selector: 'kbq-tree-option',
-    exportAs: 'kbqTreeOption',
+    imports: [
+        KbqPseudoCheckbox,
+        KbqActionContainer
+    ],
     templateUrl: './tree-option.html',
     styleUrls: ['./tree-option.scss', './tree-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqTreeOption',
     host: {
         class: 'kbq-tree-option',
         '[class.kbq-tree-option_multiple]': 'tree.multiple',
@@ -63,19 +70,14 @@ let uniqueIdCounter: number = 0;
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-action-button-focused]': 'actionButton?.active',
-
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
         '[attr.disabled]': 'disabled || null',
-
         '(focusin)': 'focus()',
         '(blur)': 'blur()',
-
         '(click)': 'selectViaInteraction($event)',
         '(keydown)': 'onKeydown($event)'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: KbqTreeNode, useExisting: KbqTreeOption },
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTreeOption },

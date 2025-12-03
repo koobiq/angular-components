@@ -6,8 +6,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link icons
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'link-icons-example',
     imports: [KbqLinkModule, KbqIconModule],
     template: `
@@ -17,6 +15,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 <span class="kbq-link__text">Отчет сканирования</span>
             </a>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkIconsExample {}

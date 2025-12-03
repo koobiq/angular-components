@@ -3,7 +3,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
 @Component({
-    standalone: true,
     selector: 'custom-modal',
     imports: [
         KbqModalModule,
@@ -36,7 +35,6 @@ export class CustomModalComponent {
  * @title Modal component
  */
 @Component({
-    standalone: true,
     selector: 'modal-component-example',
     imports: [
         KbqModalModule,

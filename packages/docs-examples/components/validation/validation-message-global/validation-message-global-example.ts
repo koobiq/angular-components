@@ -29,7 +29,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  */
 @Component({
     selector: 'validation-message-global-example',
-    standalone: true,
     imports: [
         KbqAlertModule,
         KbqIconModule,

@@ -12,11 +12,11 @@ import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
 
 @Component({
     selector: 'kbq-list',
-    host: { class: 'kbq-list' },
     template: '<ng-content />',
     styleUrls: ['./list.scss', 'list-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    host: { class: 'kbq-list' }
 })
 export class KbqList {}
 

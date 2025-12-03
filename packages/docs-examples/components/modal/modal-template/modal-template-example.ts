@@ -6,7 +6,6 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
  * @title Modal template
  */
 @Component({
-    standalone: true,
     selector: 'modal-template-example',
     imports: [
         KbqModalModule,

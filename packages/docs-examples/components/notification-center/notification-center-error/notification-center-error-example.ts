@@ -38,15 +38,7 @@ enum NavbarIcItems {
  * @title notification-center-error
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'notification-center-error-example',
-    templateUrl: 'notification-center-error-example.html',
-    styles: `
-        ::ng-deep .example-notification-center-panel {
-            margin-top: -98px;
-        }
-    `,
     imports: [
         KbqNotificationCenterModule,
         KbqNavbarIcModule,
@@ -61,6 +53,13 @@ enum NavbarIcItems {
         LuxonDateModule,
         KbqFormattersModule
     ],
+    templateUrl: 'notification-center-error-example.html',
+    styles: `
+        ::ng-deep .example-notification-center-panel {
+            margin-top: -98px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
 })

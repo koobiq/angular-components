@@ -11,7 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Inline edit content alignment
  */
 @Component({
-    standalone: true,
+    selector: 'inline-edit-content-alignment-example',
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
@@ -20,7 +20,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         NgTemplateOutlet,
         KbqAlertModule
     ],
-    selector: 'inline-edit-content-alignment-example',
     template: `
         <div class="example__hover-divider"></div>
         <kbq-alert
@@ -105,13 +104,13 @@ import { KbqInputModule } from '@koobiq/components/input';
             white-space: nowrap;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class InlineEditContentAlignmentExample {
     protected readonly placeholder = 'Placeholder';

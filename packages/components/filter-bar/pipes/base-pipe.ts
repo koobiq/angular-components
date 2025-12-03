@@ -25,7 +25,6 @@ export function getId(item: KbqPipeTemplate): KbqPipeType | string | number {
 }
 
 @Directive({
-    standalone: true,
     host: {
         class: 'kbq-pipe',
         '[class]': '"kbq-pipe__" + data.type',
@@ -152,7 +151,6 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 }
 
 @Directive({
-    standalone: true,
     selector: '[kbqPipeMinWidth]',
     host: {
         '[style.min-width]': 'minWidth'

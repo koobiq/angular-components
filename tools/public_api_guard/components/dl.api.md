@@ -6,15 +6,15 @@
 
 import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@angular/cdk/platform';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/platform';
 import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public (undocumented)
 export class KbqDdComponent {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDdComponent, "kbq-dd", never, {}, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDdComponent, "kbq-dd", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDdComponent, never>;
 }
@@ -34,7 +34,7 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     // (undocumented)
     wide: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "minWidth": { "alias": "minWidth"; "required": false; }; "wide": { "alias": "wide"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "minWidth": { "alias": "minWidth"; "required": false; }; "wide": { "alias": "wide"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlComponent, never>;
 }
@@ -45,16 +45,16 @@ export class KbqDlModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDlModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, [typeof i1.KbqDlComponent, typeof i1.KbqDtComponent, typeof i1.KbqDdComponent], [typeof i2.A11yModule, typeof i3.PlatformModule], [typeof i1.KbqDlComponent, typeof i1.KbqDtComponent, typeof i1.KbqDdComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqDlComponent, typeof i3.KbqDtComponent, typeof i3.KbqDdComponent], [typeof i3.KbqDlComponent, typeof i3.KbqDtComponent, typeof i3.KbqDdComponent]>;
 }
 
 // @public (undocumented)
 export class KbqDtComponent {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDtComponent, "kbq-dt", never, {}, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDtComponent, "kbq-dt", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDtComponent, never>;
 }

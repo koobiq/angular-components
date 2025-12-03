@@ -7,14 +7,12 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover width
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-width-example',
-    templateUrl: 'popover-width-example.html',
     imports: [
         KbqPopoverModule,
         KbqButtonModule
     ],
+    templateUrl: 'popover-width-example.html',
     styles: `
         ::ng-deep .kbq-popover.popover-width-example p:first-child {
             margin-top: 0;
@@ -27,7 +25,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         ::ng-deep .kbq-popover.kbq-popover_medium.popover-width-custom-example {
             max-width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverWidthExample {
     popUpSizes = PopUpSizes;

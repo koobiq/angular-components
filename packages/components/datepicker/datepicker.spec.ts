@@ -40,13 +40,14 @@ describe('KbqDatepicker', () => {
                 KbqInputModule,
                 NoopAnimationsModule,
                 ReactiveFormsModule,
-                ...imports
+                ...imports,
+                component,
+                ...entryComponents
             ],
             providers: [
                 { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
                 ...providers
-            ],
-            declarations: [component, ...entryComponents]
+            ]
         });
 
         TestBed.overrideModule(BrowserDynamicTestingModule, {}).compileComponents();
@@ -1238,6 +1239,9 @@ describe('KbqDatepicker', () => {
 });
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [disabled]="disabled" [opened]="opened" />
@@ -1252,6 +1256,9 @@ class StandardDatepicker {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <input [kbqDatepicker]="d" />
         <input [kbqDatepicker]="d" />
@@ -1261,6 +1268,9 @@ class StandardDatepicker {
 class MultiInputDatepicker {}
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <kbq-datepicker #d />
     `
@@ -1270,6 +1280,9 @@ class NoInputDatepicker {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [value]="date" />
         <kbq-datepicker #d [startAt]="startDate" />
@@ -1282,6 +1295,10 @@ class DatepickerWithStartAt {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule,
+        FormsModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d />
@@ -1296,6 +1313,10 @@ class DatepickerWithNgModel {
 }
 
 @Component({
+    imports: [
+        ReactiveFormsModule,
+        KbqDatepickerModule
+    ],
     template: `
         <input [formControl]="formControl" [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d" />
@@ -1310,6 +1331,11 @@ class DatepickerWithFormControl {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerInput,
+        KbqDatepicker,
+        KbqDatepickerToggle
+    ],
     template: `
         <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d" />
@@ -1322,6 +1348,9 @@ class DatepickerWithToggle {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [for]="d">
@@ -1333,6 +1362,10 @@ class DatepickerWithToggle {
 class DatepickerWithCustomIcon {}
 
 @Component({
+    imports: [
+        KbqDatepickerModule,
+        FormsModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [min]="minDate" [max]="maxDate" [(ngModel)]="date" />
         <kbq-datepicker-toggle [for]="d" />
@@ -1347,6 +1380,10 @@ class DatepickerWithMinAndMaxValidation {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule,
+        FormsModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [kbqDatepickerFilter]="filter" [(ngModel)]="date" />
         <kbq-datepicker-toggle [for]="d" />
@@ -1360,6 +1397,10 @@ class DatepickerWithFilterAndValidation {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule,
+        FormsModule
+    ],
     template: `
         <input
             [kbqDatepicker]="d"
@@ -1383,6 +1424,10 @@ class DatepickerWithChangeAndInputEvents {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule,
+        FormsModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="date" />
         <kbq-datepicker #d />
@@ -1395,6 +1440,10 @@ class DatepickerWithi18n {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule,
+        FormsModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [min]="min" [max]="max" [(ngModel)]="value" />
         <kbq-datepicker #d [startAt]="startAt" />
@@ -1410,6 +1459,10 @@ class DatepickerWithISOStrings {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule,
+        FormsModule
+    ],
     template: `
         <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d (opened)="openedSpy()" (closed)="closedSpy()" />
@@ -1423,6 +1476,9 @@ class DatepickerWithEvents {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <input [kbqDatepicker]="d" (focus)="d.open()" />
         <kbq-datepicker #d="kbqDatepicker" />
@@ -1433,6 +1489,9 @@ class DatepickerOpeningOnFocus {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <input [kbqDatepicker]="assignedDatepicker" [value]="date" />
         <kbq-datepicker #d />
@@ -1446,6 +1505,9 @@ class DelayedDatepicker {
 }
 
 @Component({
+    imports: [
+        KbqDatepickerModule
+    ],
     template: `
         <input [kbqDatepicker]="d" />
         <kbq-datepicker-toggle [tabIndex]="7" [for]="d">

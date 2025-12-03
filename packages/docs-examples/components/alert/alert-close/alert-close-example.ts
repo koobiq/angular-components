@@ -9,17 +9,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Alert close
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'alert-close-example',
-    animations: [
-        trigger('hideShowAnimator', [
-            state('true', style({ opacity: 1, display: '' })),
-            state('false', style({ opacity: 0, display: 'none' })),
-            transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))])
-
-    ],
     imports: [
         KbqAlertModule,
         KbqIconModule
@@ -35,7 +25,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 (click)="state = !state"
             ></i>
         </kbq-alert>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('hideShowAnimator', [
+            state('true', style({ opacity: 1, display: '' })),
+            state('false', style({ opacity: 0, display: 'none' })),
+            transition('false => true', animate('.5s')),
+            transition('true => false', animate('.2s'))])
+
+    ]
 })
 export class AlertCloseExample {
     colors = KbqComponentColors;

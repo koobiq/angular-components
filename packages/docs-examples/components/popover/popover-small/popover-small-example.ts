@@ -9,16 +9,15 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title popover-small
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'popover-small-example',
-    templateUrl: 'popover-small-example.html',
     imports: [
         KbqPopoverModule,
         KbqButtonModule,
         KbqLinkModule,
         KbqIcon
-    ]
+    ],
+    templateUrl: 'popover-small-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverSmallExample {
     popUpSizes = PopUpSizes;

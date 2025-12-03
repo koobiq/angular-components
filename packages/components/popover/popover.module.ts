@@ -19,7 +19,14 @@ import {
 } from './popover.component';
 
 @NgModule({
-    declarations: [
+    imports: [
+        OverlayModule,
+        KbqButtonModule,
+        A11yModule,
+        KbqIconModule,
+        CdkObserveContent,
+        NgClass,
+        NgTemplateOutlet,
         KbqPopoverComponent,
         KbqPopoverTrigger,
         KbqPopoverConfirmComponent,
@@ -30,15 +37,6 @@ import {
         KbqPopoverTrigger,
         KbqPopoverConfirmComponent,
         KbqPopoverConfirmTrigger
-    ],
-    imports: [
-        OverlayModule,
-        KbqButtonModule,
-        A11yModule,
-        KbqIconModule,
-        CdkObserveContent,
-        NgClass,
-        NgTemplateOutlet
     ],
     providers: [
         KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,

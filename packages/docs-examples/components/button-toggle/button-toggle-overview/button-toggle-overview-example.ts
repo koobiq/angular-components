@@ -6,13 +6,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Button toggle
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'button-toggle-overview-example',
-    templateUrl: 'button-toggle-overview-example.html',
     imports: [
         KbqButtonToggleModule,
         KbqIconModule
-    ]
+    ],
+    templateUrl: 'button-toggle-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleOverviewExample {}

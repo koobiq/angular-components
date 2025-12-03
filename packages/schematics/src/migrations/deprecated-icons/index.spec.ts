@@ -1,7 +1,7 @@
+import { workspaces } from '@angular-devkit/core';
 import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { ProjectDefinition } from '@schematics/angular/utility';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
@@ -11,7 +11,7 @@ const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'deprecated-icons';
 const DEPRECATED_SCOPE = 'pt-icons';
 
-const getProjectContent = (tree: UnitTestTree | Tree, project: ProjectDefinition) => {
+const getProjectContent = (tree: UnitTestTree | Tree, project: workspaces.ProjectDefinition) => {
     return [
         tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
         tree.read(`/${project.root}/src/app/app.component.ts`)?.toString() || '',
@@ -93,7 +93,7 @@ class TestApp {
 
     describe('class replacements in styles, template, typescript', () => {
         const { replace } = iconsMapping[0];
-        let currentProject: ProjectDefinition;
+        let currentProject: workspaces.ProjectDefinition;
         let currentProjectKey: string;
 
         beforeEach(async () => {
@@ -102,8 +102,8 @@ class TestApp {
 
             const workspace = await getWorkspace(appTree);
 
-            projects = workspace.projects as unknown as ProjectDefinitionCollection;
-            currentProjectKey = projects.keys().next().value;
+            projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
+            currentProjectKey = projects.keys().next().value!;
             currentProject = projects.get(currentProjectKey)!;
         });
 
@@ -117,7 +117,7 @@ class TestApp {
             html?: string;
             ts?: string;
             styles?: string;
-            project: ProjectDefinition;
+            project: workspaces.ProjectDefinition;
             tree: Tree;
         }) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;

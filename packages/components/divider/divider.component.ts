@@ -3,17 +3,17 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 
 @Component({
     selector: 'kbq-divider',
+    template: '',
+    styleUrls: ['divider.scss', 'divider-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-divider',
         '[class.kbq-divider_vertical]': 'vertical',
         '[class.kbq-divider_horizontal]': '!vertical',
         '[class.kbq-divider_inset]': 'inset',
         '[class.kbq-divider_paddings]': 'paddings'
-    },
-    template: '',
-    styleUrls: ['divider.scss', 'divider-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqDivider {
     // Whether the divider is vertically aligned.

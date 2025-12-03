@@ -6,9 +6,7 @@ import { KbqBadge, KbqBadgeCaption, KbqBadgeCssStyler } from './badge.component'
 @NgModule({
     imports: [
         A11yModule,
-        PlatformModule
-    ],
-    declarations: [
+        PlatformModule,
         KbqBadge,
         KbqBadgeCaption,
         KbqBadgeCssStyler

@@ -12,9 +12,7 @@ import { KbqInputPassword } from './input-password';
     imports: [
         A11yModule,
         FormsModule,
-        KbqIconModule
-    ],
-    declarations: [
+        KbqIconModule,
         KbqInput,
         KbqNumberInput,
         KbqInputPassword,

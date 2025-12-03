@@ -6,13 +6,22 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
  * @title Splitter dynamic data
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'splitter-dynamic-data-example',
     imports: [
         KbqButtonModule,
         KbqSplitterModule
     ],
+    template: `
+        <button kbq-button (click)="isFirstVisible = !isFirstVisible">Change first area visibility</button>
+
+        <kbq-splitter>
+            @if (isFirstVisible) {
+                <div kbq-splitter-area>first</div>
+            }
+            <div class="flex" kbq-splitter-area>second</div>
+            <div kbq-splitter-area>third</div>
+        </kbq-splitter>
+    `,
     styles: `
         kbq-splitter {
             display: flex;
@@ -25,17 +34,7 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
             background: #c5c0c0;
         }
     `,
-    template: `
-        <button kbq-button (click)="isFirstVisible = !isFirstVisible">Change first area visibility</button>
-
-        <kbq-splitter>
-            @if (isFirstVisible) {
-                <div kbq-splitter-area>first</div>
-            }
-            <div class="flex" kbq-splitter-area>second</div>
-            <div kbq-splitter-area>third</div>
-        </kbq-splitter>
-    `
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterDynamicDataExample {
     isFirstVisible = true;

@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -17,12 +18,12 @@ describe('KbqEmptyState', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                BrowserModule,
+                CommonModule,
                 KbqEmptyStateModule,
                 KbqIconModule,
-                KbqButtonModule
-            ],
-            declarations: [EmptyStateWithParams]
+                KbqButtonModule,
+                EmptyStateWithParams
+            ]
         }).compileComponents();
     });
 
@@ -48,6 +49,7 @@ describe('KbqEmptyState', () => {
 
 @Component({
     selector: 'empty-state-with-params',
+    imports: [CommonModule, KbqEmptyStateModule, KbqIconModule, KbqButtonModule],
     template: `
         <kbq-empty-state>
             <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [fade]="true" [big]="true" [color]="'contrast'"></i>

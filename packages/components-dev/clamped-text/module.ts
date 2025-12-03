@@ -4,9 +4,8 @@ import { ClampedTextExamplesModule } from '../../docs-examples/components/clampe
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    standalone: true,
-    imports: [ClampedTextExamplesModule],
     selector: 'dev-examples',
+    imports: [ClampedTextExamplesModule],
     template: `
         <clamped-text-overview-example />
     `,
@@ -15,13 +14,12 @@ import { DevLocaleSelector } from '../locale-selector';
 export class DevExamples {}
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         DevExamples,
         DevLocaleSelector,
         KbqLocaleServiceModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

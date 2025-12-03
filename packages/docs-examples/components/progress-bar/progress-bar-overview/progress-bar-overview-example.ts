@@ -8,14 +8,7 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
  * @title Progress bar
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'progress-bar-overview-example',
-    styles: `
-        .example-progress-bar {
-            margin-bottom: var(--kbq-size-m);
-        }
-    `,
     imports: [
         KbqProgressBarModule,
         KbqFormFieldModule,
@@ -28,7 +21,13 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
             <input kbqInput kbqNumberInput [min]="0" [max]="100" [step]="5" [(ngModel)]="percent" />
             <kbq-stepper />
         </kbq-form-field>
-    `
+    `,
+    styles: `
+        .example-progress-bar {
+            margin-bottom: var(--kbq-size-m);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgressBarOverviewExample {
     readonly percent = model(30);

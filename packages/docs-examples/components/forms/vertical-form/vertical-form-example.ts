@@ -8,16 +8,15 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Vertical form
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'vertical-form-example',
-    templateUrl: 'vertical-form-example.html',
     imports: [
         FormsModule,
         KbqFormsModule,
         KbqFormFieldModule,
         KbqInputModule
-    ]
+    ],
+    templateUrl: 'vertical-form-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerticalFormExample {
     value: any;

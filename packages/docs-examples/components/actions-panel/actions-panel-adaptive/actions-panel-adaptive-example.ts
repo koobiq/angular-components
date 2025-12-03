@@ -21,7 +21,7 @@ type ExampleAction = {
 };
 
 @Component({
-    standalone: true,
+    selector: 'example-actions-panel',
     imports: [
         KbqOverflowItemsModule,
         KbqButtonModule,
@@ -29,8 +29,6 @@ type ExampleAction = {
         KbqDropdownModule,
         KbqDividerModule
     ],
-    providers: [KbqActionsPanel],
-    selector: 'example-actions-panel',
     template: `
         <button kbq-button (click)="open()">open</button>
 
@@ -117,7 +115,8 @@ type ExampleAction = {
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqActionsPanel]
 })
 export class ExampleActionsPanel {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
@@ -165,9 +164,8 @@ export class ExampleActionsPanel {
  * @title Actions panel adaptive
  */
 @Component({
-    standalone: true,
-    imports: [ExampleActionsPanel],
     selector: 'actions-panel-adaptive-example',
+    imports: [ExampleActionsPanel],
     template: `
         <div>First, the number of records is hidden</div>
         <example-actions-panel [style.width.px]="377" />

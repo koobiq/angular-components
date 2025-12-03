@@ -6,7 +6,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle multiline example
  */
 @Component({
-    standalone: true,
     selector: 'toggle-multiline-example',
     imports: [KbqToggleModule, KbqFormFieldModule],
     template: `

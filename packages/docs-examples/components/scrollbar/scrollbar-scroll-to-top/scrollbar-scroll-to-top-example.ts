@@ -6,7 +6,6 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
  * @title Scrollbar scroll to top
  */
 @Component({
-    standalone: true,
     selector: 'scrollbar-scroll-to-top-example',
     imports: [
         KbqScrollbarModule,

@@ -5,6 +5,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
+import { KbqTabsModule } from './tabs.module';
 
 describe('KbqTabHeader', () => {
     let fixture: ComponentFixture<SimpleTabHeaderApp>;
@@ -12,8 +13,7 @@ describe('KbqTabHeader', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [PortalModule, ScrollingModule],
-            declarations: [KbqTabHeader, KbqTabLabelWrapper, SimpleTabHeaderApp]
+            imports: [PortalModule, ScrollingModule, KbqTabHeader, KbqTabLabelWrapper, SimpleTabHeaderApp]
         });
 
         TestBed.compileComponents();
@@ -48,6 +48,7 @@ interface ITab {
 }
 
 @Component({
+    imports: [PortalModule, ScrollingModule, KbqTabsModule],
     template: `
         <div [dir]="dir">
             <kbq-tab-header
@@ -55,7 +56,7 @@ interface ITab {
                 (indexFocused)="focusedIndex = $event"
                 (selectFocusedIndex)="selectedIndex = $event"
             >
-                @for (tab of tabs; track tab; let i = $index) {
+                @for (tab of tabs; track tab) {
                     <div
                         class="label-content"
                         kbqTabLabelWrapper

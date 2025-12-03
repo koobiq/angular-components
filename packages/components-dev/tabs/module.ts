@@ -6,7 +6,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqIconModule,
         KbqTabsModule,
@@ -14,7 +14,6 @@ import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
         KbqButtonModule,
         NgClass
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

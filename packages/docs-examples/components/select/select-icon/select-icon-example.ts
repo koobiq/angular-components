@@ -7,10 +7,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Select icon
  */
 @Component({
-    standalone: true,
     selector: 'select-icon-example',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <i kbqPrefix color="contrast-fade" kbq-icon="kbq-globe_16"></i>
@@ -41,7 +39,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectIconExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);

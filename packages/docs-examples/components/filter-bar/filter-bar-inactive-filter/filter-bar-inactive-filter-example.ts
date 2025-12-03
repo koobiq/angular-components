@@ -5,7 +5,6 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/
  * @title filter-bar-readonly-pipe
  */
 @Component({
-    standalone: true,
     selector: 'filter-bar-inactive-filter-example',
     imports: [
         KbqFilterBarModule

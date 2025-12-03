@@ -5,12 +5,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 
 @Component({
-    standalone: true,
-    imports: [KbqTagsModule, KbqIconModule],
     selector: 'dev-tag-state-and-style',
-    host: {
-        'data-testid': 'e2eTagStateAndStyle'
-    },
+    imports: [KbqTagsModule, KbqIconModule],
     template: `
         <table data-testid="e2eScreenshotTarget">
             <tbody>
@@ -48,7 +44,10 @@ import { KbqTagsModule } from '@koobiq/components/tags';
             margin-bottom: var(--kbq-size-xs);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTagStateAndStyle'
+    }
 })
 export class DevTagStateAndStyle {
     readonly states = ['normal', 'hovered', 'focused', 'disabled'] as const;
@@ -62,12 +61,8 @@ export class DevTagStateAndStyle {
 }
 
 @Component({
-    standalone: true,
-    imports: [KbqTagsModule, KbqIconModule, FormsModule],
     selector: 'dev-tag-editable',
-    host: {
-        'data-testid': 'e2eTagEditable'
-    },
+    imports: [KbqTagsModule, KbqIconModule, FormsModule],
     template: `
         <kbq-tag editable>
             <i kbq-icon="kbq-check-circle_16"></i>
@@ -100,7 +95,10 @@ export class DevTagStateAndStyle {
             padding: var(--kbq-size-xs);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTagEditable'
+    }
 })
 export class DevTagEditable {
     readonly tag = model('Editable tag');

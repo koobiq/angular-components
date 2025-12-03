@@ -15,7 +15,7 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 @Component({
-    standalone: true,
+    selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
         KbqNavbarModule,
@@ -27,7 +27,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqOptionModule,
         KbqSelectModule
     ],
-    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

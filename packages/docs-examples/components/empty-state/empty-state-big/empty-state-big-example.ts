@@ -7,8 +7,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Empty-state big
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'empty-state-big-example',
     imports: [
         KbqEmptyStateModule,
@@ -26,7 +24,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </button>
             </div>
         </kbq-empty-state>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateBigExample {
     buttonText = 'Создать группу';

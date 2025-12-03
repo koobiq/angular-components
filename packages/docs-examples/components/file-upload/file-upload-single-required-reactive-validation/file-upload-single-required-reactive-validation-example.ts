@@ -10,8 +10,14 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File upload single required reactive validation example
  */
 @Component({
-    standalone: true,
     selector: 'file-upload-single-required-reactive-validation-example',
+    imports: [
+        ReactiveFormsModule,
+        KbqFileUploadModule,
+        KbqFormFieldModule,
+        KbqButtonModule,
+        KbqIconModule
+    ],
     template: `
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <kbq-file-upload
@@ -30,13 +36,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFileUploadModule,
-        KbqFormFieldModule,
-        KbqButtonModule,
-        KbqIconModule
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleRequiredReactiveValidationExample {

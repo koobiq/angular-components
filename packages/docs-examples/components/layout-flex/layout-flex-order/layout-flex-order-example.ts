@@ -6,10 +6,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Layout-flex order
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'layout-flex-order-example',
-    styleUrls: ['layout-flex-order-example.css'],
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
         <div class="example-layout-flex-order layout-margin-top-4xl">
@@ -59,7 +56,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 <div class="flex example-block {{ selectedThirdBlockOrder }}">Block 3</div>
             </div>
         </div>
-    `
+    `,
+    styleUrls: ['layout-flex-order-example.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutFlexOrderExample {
     selectedFirstBlockOrder: string = 'flex-order-0';

@@ -6,7 +6,6 @@ import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
  */
 @Component({
     selector: 'username-overview-example',
-    standalone: true,
     imports: [KbqUsername],
     template: `
         <kbq-username [userInfo]="userInfo" />
