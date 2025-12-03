@@ -500,6 +500,16 @@
             .layout-#{$indent}-left-#{$name} {
                 #{$indent}-left: $value !important;
             }
+
+            .layout-#{$indent}-vertical-#{$name} {
+                #{$indent}-top: $value !important;
+                #{$indent}-bottom: $value !important;
+            }
+
+            .layout-#{$indent}-horizontal-#{$name} {
+                #{$indent}-left: $value !important;
+                #{$indent}-right: $value !important;
+            }
         }
 
         .layout-#{$indent}-no-top {
