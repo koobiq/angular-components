@@ -23,6 +23,7 @@ import {
     ENTER,
     ESCAPE,
     FF_MINUS,
+    hasModifierKey,
     HOME,
     isCopy,
     isFunctionKey,
@@ -207,11 +208,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.control;
     }
 
-    protected get fractionSeparator() {
+    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'] {
         return this.config.fractionSeparator;
     }
 
-    protected get groupSeparator() {
+    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'] {
         return this.config.groupSeparator;
     }
 
@@ -301,13 +302,19 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const arrows = [LEFT_ARROW, RIGHT_ARROW];
         const allowedKeys = [HOME, END].concat(arrows).concat(serviceKeys).concat(minuses);
 
-        if (
-            (this.integer && this.isPeriod(event)) ||
-            (minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0)) ||
-            (this.isPeriod(event) &&
-                event.key === this.fractionSeparator &&
-                this.viewValue.indexOf(this.fractionSeparator) !== -1)
-        ) {
+        // should parse normalized fractionSeparator
+        const viewValueToBeChecked = normalizeNumber(this.viewValue, this.config);
+
+        const shouldSkipForIntegerMode = this.integer && this.isPeriod(event);
+        const isMinusAllowed = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0);
+        const isSignAndFractionSepAlreadyExists =
+            this.isPeriod(event) &&
+            [this.fractionSeparator, '.'].includes(event.key) &&
+            viewValueToBeChecked.indexOf('.') !== -1;
+
+        // when double press SPACE on macOS dot will be added without event
+
+        if (shouldSkipForIntegerMode || isMinusAllowed || isSignAndFractionSepAlreadyExists) {
             event.preventDefault();
 
             return;
@@ -326,8 +333,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             return;
         }
 
+        const isLetter = !isNumberKey(event) && !isNumpadKey(event);
+        const isHotkey = hasModifierKey(event, 'metaKey', 'ctrlKey');
+
         // Ensure that it is not a number and stop the keypress
-        if (event.shiftKey || (!isNumberKey(event) && !isNumpadKey(event))) {
+        if (event.shiftKey || (isLetter && !isHotkey)) {
             event.preventDefault();
 
             // process steps

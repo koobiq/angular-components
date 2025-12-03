@@ -13,6 +13,7 @@ import {
 import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
 import { tkTMLocaleData } from './tk-TM';
+import { KbqNumberInputLocaleConfig } from './types';
 
 export const KBQ_LOCALE_ID = new InjectionToken<string>('KbqLocaleId');
 
@@ -107,31 +108,13 @@ export class KbqLocaleService {
 }
 
 // todo code below need refactor or delete in DS-3603
-export function numberByParts(
-    value: string,
-    fractionSeparator: string,
-    groupSeparator: string
-): { integer: string; fraction: string } {
-    const result = { integer: '', fraction: '' };
+// Helper function to parse number with a given config
+const parseWithConfig = (value: string, config: KbqNumberInputLocaleConfig): number | null => {
+    const [integer, fraction] = normalizeNumber(value, config).split('.');
+    const normalized = fraction ? +`${integer}.${fraction}` : +integer;
 
-    const isNegative = value.startsWith('-');
-    const numberByParts = value.split(fractionSeparator);
-
-    if (numberByParts.length > 1) {
-        result.fraction = numberByParts.pop() || '';
-        result.integer = numberByParts
-            .join()
-            .replace(groupSeparator, '')
-            .replace(fractionSeparator, '')
-            .replace(/\D/g, '');
-    } else {
-        result.integer = numberByParts.join().replace(groupSeparator[0], '').replace(/\D/g, '');
-    }
-
-    if (isNegative) result.integer = `-${result.integer}`;
-
-    return result;
-}
+    return Number.isNaN(normalized) ? null : normalized;
+};
 
 /**
  * Function that returns a string representation of a number without localized separators
@@ -154,44 +137,24 @@ export function normalizeNumber(
  */
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null {
     if (num === null || num === undefined) return null;
+    if (!/\d/.test(num)) return +num;
 
     const locales = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
 
     if (locale && locales[locale]) {
-        const config = locales[locale].input.number;
-        let normalized: number;
+        const result = parseWithConfig(num, locales[locale].input.number);
 
-        if (!/\d/g.test(num)) return +num;
-
-        const { groupSeparator, fractionSeparator } = config;
-        const { integer, fraction } = numberByParts(num, fractionSeparator, groupSeparator.join(''));
-
-        const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
-
-        if (fraction) {
-            normalized = +[integer, fraction].join('.');
-        } else {
-            normalized = +integer.replace(fractionSeparatorRegexp, '.');
-        }
-
-        if (!Number.isNaN(normalized)) {
-            return normalized;
-        }
+        if (result !== null) return result;
     }
 
     /* if some locale input config satisfies pasted number, try to normalise with selected locale config */
-    let numberOutput: number | null = null;
-
     for (const config of locales.items.map(({ id }) => locales[id].input.number)) {
-        const normalized = +normalizeNumber(num, config);
+        const result = parseWithConfig(num, config);
 
-        if (!Number.isNaN(normalized)) {
-            numberOutput = normalized;
-            break;
-        }
+        if (result !== null) return result;
     }
 
-    return numberOutput;
+    return null;
 }
 
 // todo code above need refactor or delete in DS-3603
