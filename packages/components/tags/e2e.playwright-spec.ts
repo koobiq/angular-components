@@ -1,8 +1,8 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../utils';
+import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqTagModule', () => {
-    test.describe('DevTagStateAndStyle', () => {
+    test.describe('E2eTagStateAndStyle', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eTagStateAndStyle');
         const getScreenshotTarget = (locator: Locator): Locator => locator.getByTestId('e2eScreenshotTarget');
 
@@ -18,7 +18,7 @@ test.describe('KbqTagModule', () => {
         });
     });
 
-    test.describe('DevTagEditable', () => {
+    test.describe('E2eTagEditable', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eTagEditable');
         const getLastTag = (locator: Locator): Locator => locator.locator('kbq-tag').last();
 

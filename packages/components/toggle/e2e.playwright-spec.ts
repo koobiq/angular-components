@@ -1,12 +1,12 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../utils';
+import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqToggleModule', () => {
     const getScreenshotTarget = (locator: Locator): Locator => locator.getByTestId('e2eScreenshotTarget');
     const getIndeterminateToggle = (locator: Locator): Locator => locator.getByTestId('e2eIndeterminateToggle');
     const getBigToggle = (locator: Locator): Locator => locator.getByTestId('e2eBigToggle');
 
-    test.describe('DevToggleStateAndStyle', () => {
+    test.describe('E2eToggleStateAndStyle', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eToggleStateAndStyle');
         const getFirstToggle = (locator: Locator): Locator => locator.locator('kbq-toggle').first();
 
@@ -46,7 +46,7 @@ test.describe('KbqToggleModule', () => {
         });
     });
 
-    test.describe('DevToggleWithTextAndCaption', () => {
+    test.describe('E2eToggleWithTextAndCaption', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eToggleWithTextAndCaption');
 
         test('default', async ({ page }) => {

@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 
 @Component({
-    selector: 'dev-actions-panel-with-overlay-container',
+    selector: 'e2e-actions-panel-with-overlay-container',
     imports: [KbqButtonModule, KbqIconModule, KbqOverflowItemsModule, KbqDropdownModule],
     template: `
         <button data-testid="e2eActionsPanelOpenButton" kbq-button (click)="open()">Open</button>
@@ -73,7 +73,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
         'data-testid': 'e2eActionsPanelWithOverlayContainer'
     }
 })
-export class DevActionsPanelWithOverlayContainer {
+export class E2eActionsPanelWithOverlayContainer {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly overlayContainer = viewChild.required('overlayContainer', { read: ElementRef });

@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagsModule } from './index';
 
 @Component({
-    selector: 'dev-tag-state-and-style',
+    selector: 'e2e-tag-state-and-style',
     imports: [KbqTagsModule, KbqIconModule],
     template: `
         <table data-testid="e2eScreenshotTarget">
@@ -49,7 +49,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
         'data-testid': 'e2eTagStateAndStyle'
     }
 })
-export class DevTagStateAndStyle {
+export class E2eTagStateAndStyle {
     readonly states = ['normal', 'hovered', 'focused', 'disabled'] as const;
     readonly colors = [
         KbqComponentColors.Theme,
@@ -61,7 +61,7 @@ export class DevTagStateAndStyle {
 }
 
 @Component({
-    selector: 'dev-tag-editable',
+    selector: 'e2e-tag-editable',
     imports: [KbqTagsModule, KbqIconModule, FormsModule],
     template: `
         <kbq-tag editable>
@@ -100,7 +100,7 @@ export class DevTagStateAndStyle {
         'data-testid': 'e2eTagEditable'
     }
 })
-export class DevTagEditable {
+export class E2eTagEditable {
     readonly tag = model('Editable tag');
     readonly color = KbqComponentColors;
 }

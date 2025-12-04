@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../utils';
+import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqActionsPanel', () => {
     test.describe('DevActionsPanelWithOverlayContainer', () => {

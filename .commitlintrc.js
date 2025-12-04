@@ -30,6 +30,7 @@ const config = {
                 'experimental',
                 'schematics',
                 'dev',
+                'e2e',
                 'examples',
 
                 // data-grid

@@ -6,4 +6,5 @@ bootstrapApplication(DevApp, {
     providers: [
         provideNoopAnimations()
     ]
+    // eslint-disable-next-line no-console
 }).catch((error) => console.error(error));

@@ -26,7 +26,7 @@ type MultipleUploadState = {
 };
 
 @Component({
-    selector: 'dev-file-upload-state-and-style',
+    selector: 'e2e-file-upload-state-and-style',
     imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
     template: `
         <div>
@@ -82,7 +82,7 @@ type MultipleUploadState = {
         'data-testid': 'e2eFileUploadStateAndStyle'
     }
 })
-export class DevFileUploadStateAndStyle {
+export class E2eFileUploadStateAndStyle {
     protected readonly iconClass = { error: 'kbq-info-circle_16', default: 'kbq-file-o_16' };
 
     protected readonly singleFileUploadRows: SingleUploadState[][] = [

@@ -5,7 +5,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
-    selector: 'dev-toggle-state-and-style',
+    selector: 'e2e-toggle-state-and-style',
     imports: [KbqToggleModule, FormsModule],
     template: `
         <input type="checkbox" data-testid="e2eIndeterminateToggle" [(ngModel)]="indeterminate" />
@@ -55,7 +55,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         'data-testid': 'e2eToggleStateAndStyle'
     }
 })
-export class DevToggleStateAndStyle {
+export class E2eToggleStateAndStyle {
     readonly states = ['normal', 'hovered', 'focused', 'disabled', 'loading'] as const;
     readonly colors = [KbqComponentColors.Theme, KbqComponentColors.Error];
     readonly types = ['default', 'checked'] as const;
@@ -110,7 +110,7 @@ export class DevToggleStateAndStyle {
         'data-testid': 'e2eToggleWithTextAndCaption'
     }
 })
-export class DevToggleWithTextAndCaption {
+export class E2eToggleWithTextAndCaption {
     readonly states = ['normal', 'disabled'] as const;
     readonly positions = ['left', 'right'] as const;
 

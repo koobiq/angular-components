@@ -1,0 +1,27 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DevThemeToggle } from '../components-dev/theme-toggle';
+import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
+import { E2eButtonStateAndStyle } from '../components/button/e2e';
+import { E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
+import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
+import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
+import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
+
+@Component({
+    selector: 'dev-app',
+    imports: [
+        DevThemeToggle,
+        E2eButtonStateAndStyle,
+        E2eSplitButtonStateAndStyle,
+        E2eFileUploadStateAndStyle,
+        E2eActionsPanelWithOverlayContainer,
+        E2eTagStateAndStyle,
+        E2eTagEditable,
+        E2eToggleStateAndStyle,
+        E2eToggleWithTextAndCaption
+    ],
+    templateUrl: 'template.html',
+    styleUrl: 'main.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevApp {}

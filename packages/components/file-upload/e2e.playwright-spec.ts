@@ -1,8 +1,8 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../utils';
+import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqFileUploadModule', () => {
-    test.describe('DevFileUploadStateAndStyle', () => {
+    test.describe('E2eFileUploadStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFileUploadStateAndStyle');
         const getSingleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eSingleFileUploadTable');
         const getMultipleFileUploadTable = (locator: Locator) => locator.getByTestId('e2eMultipleFileUploadTable');
