@@ -113,9 +113,15 @@ export function numberByParts(
     groupSeparator: string
 ): { integer: string; fraction: string } {
     const result = { integer: '', fraction: '' };
+    let parsedValue = value;
+
+    // normalize only when '.', ',' are used as fractionSeparators
+    if (groupSeparator.includes(' ') && fractionSeparator === ',') {
+        parsedValue = parsedValue.replace(/\./g, ',');
+    }
 
     const isNegative = value.startsWith('-');
-    const numberByParts = value.split(fractionSeparator).filter(Boolean);
+    const numberByParts = parsedValue.split(fractionSeparator).filter(Boolean);
 
     if (numberByParts.length > 1) {
         result.fraction = numberByParts.pop() || '';
@@ -164,7 +170,7 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
         if (!/\d/g.test(num)) return +num;
 
         const { groupSeparator, fractionSeparator } = config;
-        const { integer, fraction } = numberByParts(num, fractionSeparator, groupSeparator.join(''));
+        const { integer, fraction } = numberByParts(num, fractionSeparator, groupSeparator);
 
         const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
 
