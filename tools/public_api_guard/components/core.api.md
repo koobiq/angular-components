@@ -1608,6 +1608,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             number: {
                 groupSeparator: string[];
                 fractionSeparator: string;
+                viewGroupSeparator: string;
             };
         };
         sizeUnits: {
@@ -3836,6 +3837,7 @@ export const tkTMFormattersData: {
         number: {
             groupSeparator: string[];
             fractionSeparator: string;
+            viewGroupSeparator: string;
         };
     };
     sizeUnits: {

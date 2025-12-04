@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqNumberInput with masked thousand separators should paste properly 1`] = `
+[
+  "1",
+  "1",
+  "1,2",
+  "1,2",
+  "12,2",
+  "2",
+  "2,2",
+  "2,2",
+  "22,2",
+]
+`;

@@ -1258,6 +1258,39 @@ describe('KbqNumberInput', () => {
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
         }));
 
+        it('should paste properly', fakeAsync(() => {
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            flush();
+
+            const testOutput = [
+                '1',
+                '1.',
+                '1.2',
+                '1.2.',
+                '1.2.2',
+                '2,',
+                '2,2',
+                '2,2,',
+                '2,2,2'
+            ].map((value) => {
+                inputElementDebug.triggerEventHandler('paste', {
+                    preventDefault: () => null,
+                    clipboardData: {
+                        getData: () => value
+                    }
+                });
+                fixture.detectChanges();
+                fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+                fixture.detectChanges();
+                flush();
+
+                return inputElement.value;
+            });
+
+            expect(testOutput).toMatchSnapshot();
+        }));
+
         it('should check and normalize localized number when pasted number in different locale', fakeAsync(() => {
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
