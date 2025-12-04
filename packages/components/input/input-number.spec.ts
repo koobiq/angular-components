@@ -1285,7 +1285,7 @@ describe('KbqNumberInput', () => {
                 fixture.detectChanges();
                 flush();
 
-                return inputElement.value;
+                return `${value} -> ${inputElement.value}`;
             });
 
             expect(testOutput).toMatchSnapshot();
