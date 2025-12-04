@@ -207,11 +207,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.control;
     }
 
-    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'] {
+    protected get fractionSeparator() {
         return this.config.fractionSeparator;
     }
 
-    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'] {
+    protected get groupSeparator() {
         return this.config.groupSeparator;
     }
 
