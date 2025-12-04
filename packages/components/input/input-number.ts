@@ -23,7 +23,6 @@ import {
     ENTER,
     ESCAPE,
     FF_MINUS,
-    hasModifierKey,
     HOME,
     isCopy,
     isFunctionKey,
@@ -334,10 +333,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         }
 
         const isLetter = !isNumberKey(event) && !isNumpadKey(event);
-        const isHotkey = hasModifierKey(event, 'metaKey', 'ctrlKey');
 
         // Ensure that it is not a number and stop the keypress
-        if (event.shiftKey || (isLetter && !isHotkey)) {
+        if (event.shiftKey || isLetter) {
             event.preventDefault();
 
             // process steps
