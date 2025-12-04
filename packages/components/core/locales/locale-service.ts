@@ -13,6 +13,7 @@ import {
 import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
 import { tkTMLocaleData } from './tk-TM';
+import { KbqNumberInputLocaleConfig } from './types';
 
 export const KBQ_LOCALE_ID = new InjectionToken<string>('KbqLocaleId');
 
@@ -107,11 +108,15 @@ export class KbqLocaleService {
 }
 
 // todo code below need refactor or delete in DS-3603
+/** @docs-private */
+export const KBQ_DEFAULT_PRECISION_SEPARATOR = '.';
+
+/** @docs-private */
 export function numberByParts(
     value: string,
-    fractionSeparator: string,
-    groupSeparator: string
+    customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>
 ): { integer: string; fraction: string } {
+    const { groupSeparator, fractionSeparator } = customConfig;
     const result = { integer: '', fraction: '' };
     let parsedValue = value;
 
@@ -120,14 +125,14 @@ export function numberByParts(
         parsedValue = parsedValue.replace(/\./g, ',');
     }
 
-    const isNegative = value.startsWith('-');
+    const isNegative = parsedValue.startsWith('-');
     const numberByParts = parsedValue.split(fractionSeparator).filter(Boolean);
 
     if (numberByParts.length > 1) {
         result.fraction = numberByParts.pop() || '';
         result.integer = numberByParts
             .join()
-            .replace(groupSeparator, '')
+            .replace(groupSeparator.join(''), '')
             .replace(fractionSeparator, '')
             .replace(/\D/g, '');
     } else {
@@ -144,7 +149,7 @@ export function numberByParts(
  */
 export function normalizeNumber(
     value: string | null | undefined,
-    customConfig: { groupSeparator: string[]; fractionSeparator: string }
+    customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>
 ): string {
     if (value === null || value === undefined) return '';
 
@@ -169,15 +174,12 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
 
         if (!/\d/g.test(num)) return +num;
 
-        const { groupSeparator, fractionSeparator } = config;
-        const { integer, fraction } = numberByParts(num, fractionSeparator, groupSeparator);
-
-        const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
+        const { integer, fraction } = numberByParts(num, config);
 
         if (fraction) {
             normalized = +[integer, fraction].join('.');
         } else {
-            normalized = +integer.replace(fractionSeparatorRegexp, '.');
+            normalized = +normalizeNumber(integer, config);
         }
 
         if (!Number.isNaN(normalized)) {

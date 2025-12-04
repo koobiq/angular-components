@@ -41,6 +41,7 @@ import {
 import {
     checkAndNormalizeLocalizedNumber,
     formatNumberWithLocale,
+    KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqNumberInputLocaleConfig,
@@ -207,11 +208,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.control;
     }
 
-    protected get fractionSeparator() {
+    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'] {
         return this.config.fractionSeparator;
     }
 
-    protected get groupSeparator() {
+    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'] {
         return this.config.groupSeparator;
     }
 
@@ -308,10 +309,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const isMinusAllowed = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0);
         const isSignAndFractionSepAlreadyExists =
             this.isPeriod(event) &&
-            [this.fractionSeparator, '.'].includes(event.key) &&
-            viewValueToBeChecked.indexOf('.') !== -1;
-
-        // when double press SPACE on macOS dot will be added without event
+            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&
+            viewValueToBeChecked.indexOf(KBQ_DEFAULT_PRECISION_SEPARATOR) !== -1;
 
         if (shouldSkipForIntegerMode || isMinusAllowed || isSignAndFractionSepAlreadyExists) {
             event.preventDefault();
