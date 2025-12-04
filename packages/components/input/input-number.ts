@@ -57,7 +57,7 @@ export const BIG_STEP = 10;
 export const SMALL_STEP = 1;
 
 export function normalizeSplitter(value: string): string {
-    return value ? value.replace(/,/g, '.') : value;
+    return value ? value.replace(/,/g, KBQ_DEFAULT_PRECISION_SEPARATOR) : value;
 }
 
 export function isFloat(value: string): boolean {
@@ -73,7 +73,7 @@ export function isDigit(value: string): boolean {
 }
 
 export function getPrecision(value: number): number {
-    const arr = value.toString().split('.');
+    const arr = value.toString().split(KBQ_DEFAULT_PRECISION_SEPARATOR);
 
     return arr.length === 1 ? 1 : Math.pow(10, arr[1].length);
 }
@@ -453,7 +453,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     };
 
     private isPeriod = (event: KeyboardEvent) => {
-        return this.groupSeparator.includes(event.key) || [this.fractionSeparator, '.'].includes(event.key);
+        return (
+            this.groupSeparator.includes(event.key) ||
+            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key)
+        );
     };
 
     private cvaOnChange: (value: any) => void = () => {};
@@ -506,7 +509,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     private formatNumber(value: number | null | undefined): string | null {
         if (value === null || value === undefined) return null;
 
-        const [intPart, fractionPart] = value.toString().split('.');
+        const [intPart, fractionPart] = value.toString().split(KBQ_DEFAULT_PRECISION_SEPARATOR);
 
         return this.createLocalizedNumberFromParts(+intPart, fractionPart);
     }

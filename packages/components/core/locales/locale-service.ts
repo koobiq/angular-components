@@ -157,7 +157,10 @@ export function normalizeNumber(
     const groupSeparatorRegexp = new RegExp(`[${groupSeparator.join('')}]`, 'g');
     const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
 
-    return value.toString().replace(groupSeparatorRegexp, '').replace(fractionSeparatorRegexp, '.');
+    return value
+        .toString()
+        .replace(groupSeparatorRegexp, '')
+        .replace(fractionSeparatorRegexp, KBQ_DEFAULT_PRECISION_SEPARATOR);
 }
 
 /**
