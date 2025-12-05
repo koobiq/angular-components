@@ -17,6 +17,9 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [ListExamplesModule],
     template: `
+        <list-intermediate-state-example />
+        <br />
+        <br />
         <list-action-button-example />
         <br />
         <br />
