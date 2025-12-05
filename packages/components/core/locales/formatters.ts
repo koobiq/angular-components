@@ -175,8 +175,9 @@ export const tkTMFormattersData = {
     },
     input: {
         number: {
-            groupSeparator: [' '],
-            fractionSeparator: ','
+            groupSeparator: [' ', ' ', '\u2009'],
+            fractionSeparator: ',',
+            viewGroupSeparator: '\u2009'
         } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {

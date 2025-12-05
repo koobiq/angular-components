@@ -20,6 +20,7 @@ import * as i8 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
+import { KbqNumberInputLocaleConfig } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { OnChanges } from '@angular/core';
@@ -234,9 +235,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     focused: boolean;
     // (undocumented)
-    protected get fractionSeparator(): string;
+    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'];
     // (undocumented)
-    protected get groupSeparator(): string[];
+    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'];
     // (undocumented)
     id: string;
     integer: boolean;
