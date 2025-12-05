@@ -2053,7 +2053,7 @@ export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 // @public (undocumented)
 export const KbqDefaultThemes: KbqTheme[];
 
-// @public @deprecated
+// @public
 export const kbqDisableLegacyValidationDirectiveProvider: () => Provider;
 
 // @public
