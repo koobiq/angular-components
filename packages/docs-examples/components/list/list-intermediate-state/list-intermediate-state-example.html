@@ -30,9 +30,10 @@
 <ng-template #customContent>
     <kbq-scrollbar style="height: 374px">
         <kbq-list-selection
-            class="layout-padding-horizontal-xxs layout-padding-top-xxs"
+            class="layout-padding-horizontal-xxs layout-padding-vertical-xxs"
             multiple="checkbox"
             [(ngModel)]="selected"
+            (selectionChange)="onSelectionChange($event)"
         >
             @for (user of filteredUsers | async; track user) {
                 <kbq-list-option [showCheckbox]="false" [value]="user">

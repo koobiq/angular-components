@@ -7,7 +7,7 @@ import { KbqEmptyState } from '@koobiq/components/empty-state';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { KbqListModule } from '@koobiq/components/list';
+import { KbqListModule, KbqListSelectionChange } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqUsernameModule } from '@koobiq/components/username';
@@ -218,9 +218,10 @@ export class ListIntermediateStateExample {
         }
     ];
 
-    usersSelectedInOtherGroups: ExampleUser[] = [this.users[0], this.users[5], this.users[10]];
+    usersSelectedInOtherGroups: ExampleUser[] = [this.users[0]];
+    savedUsersSelectedInOtherGroups: ExampleUser[] = [];
 
-    selected: ExampleUser[] = [];
+    selected: ExampleUser[] = [this.users[5], this.users[8], this.users[11]];
     savedSelection: ExampleUser[] = [];
     needRestore: boolean = true;
 
@@ -262,6 +263,12 @@ export class ListIntermediateStateExample {
         this.popover.focus();
     }
 
+    onSelectionChange(event: KbqListSelectionChange) {
+        if (!event.option.selected) {
+            this.usersSelectedInOtherGroups.splice(event.option.value, 1);
+        }
+    }
+
     private getFilteredUsers(value): ExampleUser[] {
         const searchFilter = value.toLowerCase();
 
@@ -276,10 +283,12 @@ export class ListIntermediateStateExample {
 
     private saveSelectionState() {
         this.savedSelection = [...this.selected];
+        this.savedUsersSelectedInOtherGroups = [...this.usersSelectedInOtherGroups];
         this.needRestore = true;
     }
 
     private restoreSelectionState() {
         this.selected = [...this.savedSelection];
+        this.usersSelectedInOtherGroups = [...this.savedUsersSelectedInOtherGroups];
     }
 }
