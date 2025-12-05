@@ -1608,6 +1608,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             number: {
                 groupSeparator: string[];
                 fractionSeparator: string;
+                viewGroupSeparator: string;
             };
         };
         sizeUnits: {
@@ -1798,6 +1799,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
 
 // @public (undocumented)
 export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
+
+// @public
+export const KBQ_DEFAULT_PRECISION_SEPARATOR = ".";
 
 // @public
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
@@ -3018,16 +3022,13 @@ export enum MultipleMode {
 }
 
 // @public
-export function normalizeNumber(value: string | null | undefined, customConfig: {
-    groupSeparator: string[];
-    fractionSeparator: string;
-}): string;
+export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>): string;
 
 // @public (undocumented)
 export const NUMBER_FORMAT_REGEXP: RegExp;
 
-// @public (undocumented)
-export function numberByParts(value: string, fractionSeparator: string, groupSeparator: string): {
+// @public
+export function numberByParts(value: string, customConfig: Pick<KbqNumberInputLocaleConfig, 'fractionSeparator' | 'groupSeparator'>): {
     integer: string;
     fraction: string;
 };
@@ -3836,6 +3837,7 @@ export const tkTMFormattersData: {
         number: {
             groupSeparator: string[];
             fractionSeparator: string;
+            viewGroupSeparator: string;
         };
     };
     sizeUnits: {
