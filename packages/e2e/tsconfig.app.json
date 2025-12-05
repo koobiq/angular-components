@@ -1,0 +1,18 @@
+{
+    "extends": "../../tsconfig.json",
+    "include": ["**/*.d.ts"],
+
+    "compilerOptions": {
+        "outDir": "../../dist/out-tsc"
+    },
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "checks": {
+                "optionalChainNotNullable": "suppress"
+            }
+        }
+    },
+    "files": [
+        "main.ts"
+    ]
+}
