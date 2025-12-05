@@ -41,6 +41,7 @@ import {
 import {
     checkAndNormalizeLocalizedNumber,
     formatNumberWithLocale,
+    KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqNumberInputLocaleConfig,
@@ -56,7 +57,7 @@ export const BIG_STEP = 10;
 export const SMALL_STEP = 1;
 
 export function normalizeSplitter(value: string): string {
-    return value ? value.replace(/,/g, '.') : value;
+    return value ? value.replace(/,/g, KBQ_DEFAULT_PRECISION_SEPARATOR) : value;
 }
 
 export function isFloat(value: string): boolean {
@@ -72,7 +73,7 @@ export function isDigit(value: string): boolean {
 }
 
 export function getPrecision(value: number): number {
-    const arr = value.toString().split('.');
+    const arr = value.toString().split(KBQ_DEFAULT_PRECISION_SEPARATOR);
 
     return arr.length === 1 ? 1 : Math.pow(10, arr[1].length);
 }
@@ -207,11 +208,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.control;
     }
 
-    protected get fractionSeparator() {
+    protected get fractionSeparator(): KbqNumberInputLocaleConfig['fractionSeparator'] {
         return this.config.fractionSeparator;
     }
 
-    protected get groupSeparator() {
+    protected get groupSeparator(): KbqNumberInputLocaleConfig['groupSeparator'] {
         return this.config.groupSeparator;
     }
 
@@ -301,13 +302,17 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const arrows = [LEFT_ARROW, RIGHT_ARROW];
         const allowedKeys = [HOME, END].concat(arrows).concat(serviceKeys).concat(minuses);
 
-        if (
-            (this.integer && this.isPeriod(event)) ||
-            (minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0)) ||
-            (this.isPeriod(event) &&
-                event.key === this.fractionSeparator &&
-                this.viewValue.indexOf(this.fractionSeparator) !== -1)
-        ) {
+        // should parse normalized fractionSeparator
+        const viewValueToBeChecked = normalizeNumber(this.viewValue, this.config);
+
+        const shouldSkipForIntegerMode = this.integer && this.isPeriod(event);
+        const isMinusAllowed = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0);
+        const isSignAndFractionSepAlreadyExists =
+            this.isPeriod(event) &&
+            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&
+            viewValueToBeChecked.indexOf(KBQ_DEFAULT_PRECISION_SEPARATOR) !== -1;
+
+        if (shouldSkipForIntegerMode || isMinusAllowed || isSignAndFractionSepAlreadyExists) {
             event.preventDefault();
 
             return;
@@ -326,8 +331,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             return;
         }
 
+        const isLetter = !isNumberKey(event) && !isNumpadKey(event);
+
         // Ensure that it is not a number and stop the keypress
-        if (event.shiftKey || (!isNumberKey(event) && !isNumpadKey(event))) {
+        if (event.shiftKey || isLetter) {
             event.preventDefault();
 
             // process steps
@@ -446,7 +453,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     };
 
     private isPeriod = (event: KeyboardEvent) => {
-        return this.groupSeparator.includes(event.key) || [this.fractionSeparator, '.'].includes(event.key);
+        return (
+            this.groupSeparator.includes(event.key) ||
+            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key)
+        );
     };
 
     private cvaOnChange: (value: any) => void = () => {};
@@ -499,7 +509,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     private formatNumber(value: number | null | undefined): string | null {
         if (value === null || value === undefined) return null;
 
-        const [intPart, fractionPart] = value.toString().split('.');
+        const [intPart, fractionPart] = value.toString().split(KBQ_DEFAULT_PRECISION_SEPARATOR);
 
         return this.createLocalizedNumberFromParts(+intPart, fractionPart);
     }
