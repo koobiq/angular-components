@@ -6,7 +6,7 @@ test.describe('KbqBreadcrumbsModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eBreadcrumbsStateAndStyle');
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eBreadcrumbsTable');
         const getTestRow = (locator: Locator) => locator.getByTestId('e2eBreadcrumbsDropdownRow');
-        const focusLastItem = (locator: Locator) => locator.locator('.kbq-breadcrumb-item')?.last()?.focus();
+        const hoverLastItem = (locator: Locator) => locator.locator('.kbq-breadcrumb-item').last().hover();
 
         test('KbqBreadcrumbs states', async ({ page }) => {
             await devGoToRootPage(page);
@@ -34,7 +34,7 @@ test.describe('KbqBreadcrumbsModule', () => {
 
             const screenshotTarget = getTestRow(locator);
 
-            await focusLastItem(screenshotTarget);
+            await hoverLastItem(screenshotTarget);
 
             await expect(screenshotTarget).toHaveScreenshot();
         });
