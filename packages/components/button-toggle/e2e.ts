@@ -25,7 +25,7 @@ type E2eButtonOrientation = Partial<{
 type DevButton = E2eButtonState & E2eButtonOrientation;
 
 @Component({
-    selector: 'e2e-button-toggle-state-and-style',
+    selector: 'e2e-button-toggle-states',
     imports: [KbqIconModule, FormsModule, KbqCheckboxModule, KbqButtonToggle, KbqButtonToggleGroup, KbqButtonModule],
     template: `
         <div class="dev-options">
