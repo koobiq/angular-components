@@ -1,12 +1,15 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-button-toggle-state($state-name) {
-    background: var(--kbq-button-toggle-item-#{$state-name}-background);
+    & > .kbq-button,
+    & > .kbq-icon-button {
+        background: var(--kbq-button-toggle-item-#{$state-name}-background);
 
-    color: var(--kbq-button-toggle-item-#{$state-name}-text);
+        color: var(--kbq-button-toggle-item-#{$state-name}-text);
 
-    & .kbq-icon.kbq-empty {
-        color: var(--kbq-button-toggle-item-#{$state-name}-icon);
+        & .kbq-icon.kbq-empty {
+            color: var(--kbq-button-toggle-item-#{$state-name}-icon);
+        }
     }
 }
 
@@ -15,37 +18,37 @@
         background: var(--kbq-button-toggle-container-background);
 
         .kbq-button-toggle {
-            & > .kbq-button,
-            & > .kbq-icon-button {
-                @include kbq-button-toggle-state(default);
+            @include kbq-button-toggle-state(default);
 
-                &:hover:not(.kbq-disabled) {
-                    @include kbq-button-toggle-state(states-hover);
+            &.kbq-hover:not(.kbq-disabled),
+            &:hover:not(.kbq-disabled) {
+                @include kbq-button-toggle-state(states-hover);
+            }
+
+            &.kbq-active:not(.kbq-disabled),
+            &:active:not(.kbq-disabled) {
+                @include kbq-button-toggle-state(states-active);
+            }
+
+            &.kbq-selected:not(.kbq-disabled) {
+                @include kbq-button-toggle-state(states-selected);
+
+                &.kbq-active,
+                &:active {
+                    @include kbq-button-toggle-state(states-selected-active);
                 }
+            }
 
-                &:active:not(.kbq-disabled) {
-                    @include kbq-button-toggle-state(states-active);
-                }
+            &.kbq-disabled {
+                @include kbq-button-toggle-state(states-disabled);
+            }
 
-                &.kbq-selected:not(.kbq-disabled) {
-                    @include kbq-button-toggle-state(states-selected);
+            &.kbq-disabled.kbq-selected {
+                @include kbq-button-toggle-state(states-selected-disabled);
+            }
 
-                    &:active {
-                        @include kbq-button-toggle-state(states-selected-active);
-                    }
-                }
-
-                &.kbq-disabled {
-                    @include kbq-button-toggle-state(states-disabled);
-                }
-
-                &.kbq-disabled.kbq-selected {
-                    @include kbq-button-toggle-state(states-selected-disabled);
-                }
-
-                &.cdk-keyboard-focused {
-                    border-color: var(--kbq-button-toggle-item-states-focused-outline);
-                }
+            &.cdk-keyboard-focused {
+                border-color: var(--kbq-button-toggle-item-states-focused-outline);
             }
         }
     }
