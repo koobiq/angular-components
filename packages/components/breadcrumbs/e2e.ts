@@ -72,7 +72,7 @@ type BreadcrumbState = {
                     </td>
                 </tr>
 
-                <tr id="e2eBreadcrumbsDropdownRow">
+                <tr data-testid="e2eBreadcrumbsDropdownRow">
                     <td>
                         <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">
                             @for (breadcrumb of items; track breadcrumb) {
