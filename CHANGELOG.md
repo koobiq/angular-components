@@ -1,3 +1,11 @@
+## 18.38.1 (2025-12-08)
+
+### Koobiq
+
+ * bug fix  **dropdown:** disable flexible dimensions ([#DS-4504](https://github.com/koobiq/angular-components/issues/issue/DS-4504)) ([#1172](https://github.com/koobiq/angular-components/issues/1172)) ([9296042](https://github.com/koobiq/angular-components/commit/92960427db0c78b2037037a84d7881ac18a8af01))
+ * bug fix  **input:** handle fraction part properly ([#DS-4514](https://github.com/koobiq/angular-components/issues/issue/DS-4514)) ([#1166](https://github.com/koobiq/angular-components/issues/1166)) ([#1169](https://github.com/koobiq/angular-components/issues/1169)) ([1044dee](https://github.com/koobiq/angular-components/commit/1044dee245c7258e07d9c4063782bd3146c95500))
+ * bug fix  **title:** vertical overflown ([#DS-4517](https://github.com/koobiq/angular-components/issues/issue/DS-4517)) ([daee2c1](https://github.com/koobiq/angular-components/commit/daee2c16ee66eb0ac33613999707aca63aac2240))
+
 # 18.38.0 (2025-12-02)
 
 ### Koobiq
