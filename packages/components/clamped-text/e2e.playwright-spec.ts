@@ -1,46 +1,29 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
 
-test.describe('KbqActionsPanel', () => {
-    test.describe('DevActionsPanelWithOverlayContainer', () => {
-        const getComponent = (page: Page) => page.getByTestId('e2eActionsPanelWithOverlayContainer');
-        const getOpenButton = (locator: Locator) => locator.getByTestId('e2eActionsPanelOpenButton');
-        const getOverlayContainer = (locator: Locator) => locator.getByTestId('e2eActionsPanelOverlayContainer');
-        const getScreenshotTarget = (locator: Locator) => getOverlayContainer(locator);
-        const getOverflowItemsResultButton = (page: Page) =>
-            page.getByTestId('e2eActionsPanelOverflowItemsResultButton');
+test.describe('KbqClampedText', () => {
+    test.describe('E2eClampedTextStateAndStyle', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eClampedTextStateAndStyle');
+        const getTestTable = (locator: Locator) => locator.getByTestId('e2eClampedTextTable');
 
-        test('should display the actions panel inside custom overlay container', async ({ page }) => {
+        test('KbqClampedText states', async ({ page }) => {
             await devGoToRootPage(page);
             const locator = getComponent(page);
 
-            await getOpenButton(locator).click();
+            const screenshotTarget = getTestTable(locator);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot();
         });
 
-        test('should update the actions panel container position/size when overlay container is resized', async ({
-            page
-        }) => {
+        test(`KbqClampedText states (dark theme)`, async ({ page }) => {
             await devGoToRootPage(page);
-            const locator = getComponent(page);
-
-            await getOpenButton(locator).click();
-            await getOverlayContainer(locator).evaluate(({ style }) => (style.width = '600px'));
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('should show hidden actions when button is clicked', async ({ page }) => {
-            await devGoToRootPage(page);
-            const locator = getComponent(page);
-
             await devEnableDarkTheme(page);
-            await getOpenButton(locator).click();
-            await getOverlayContainer(locator).evaluate(({ style }) => (style.width = '600px'));
-            await getOverflowItemsResultButton(page).click();
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            const locator = getComponent(page);
+
+            const screenshotTarget = getTestTable(locator);
+
+            await expect(screenshotTarget).toHaveScreenshot();
         });
     });
 });
