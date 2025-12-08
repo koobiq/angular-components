@@ -38,11 +38,22 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
     get isOverflown(): boolean {
         /** For special cases where the difference is a fraction of a pixel */
-        if (this.child.scrollWidth === 0 || this.parent.offsetWidth === this.child.scrollWidth) {
+        if (
+            !this.isVerticalOverflown &&
+            (this.child.scrollWidth === 0 || this.parent.offsetWidth === this.child.scrollWidth)
+        ) {
             return this.parent.getBoundingClientRect().width < this.child.getBoundingClientRect().width;
         }
 
+        return this.isHorizontalOverflown || this.isVerticalOverflown;
+    }
+
+    get isHorizontalOverflown(): boolean {
         return this.parent.offsetWidth < this.child.scrollWidth;
+    }
+
+    get isVerticalOverflown(): boolean {
+        return this.parent?.offsetHeight < this.child.scrollHeight;
     }
 
     get viewValue(): string {
