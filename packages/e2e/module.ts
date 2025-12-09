@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
+import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
 import { E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
@@ -26,7 +27,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eBreadcrumbsStateAndStyle,
         E2eButtonToggleStates,
         E2eClampedTextStateAndStyle,
-        E2eAlertStateAndStyle
+        E2eAlertStateAndStyle,
+        E2eAccordionStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
