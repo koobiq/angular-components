@@ -82,10 +82,7 @@ type BreadcrumbState = {
                                         tabindex="-1"
                                         kbq-button
                                         kbqBreadcrumb
-                                        [focusable]="!$last"
                                         [routerLink]="breadcrumb"
-                                        [disabled]="$last"
-                                        [attr.aria-current]="$last ? 'page' : null"
                                     >
                                         {{ breadcrumb }}
                                         <i kbq-icon="kbq-file-code-o_16"></i>
