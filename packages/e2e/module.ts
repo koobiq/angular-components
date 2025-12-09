@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
-import { E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
+import { E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
 import { E2eButtonStateAndStyle } from '../components/button/e2e';
 import { E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
