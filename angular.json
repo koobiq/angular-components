@@ -79,7 +79,12 @@
                         "stylePreprocessorOptions": {
                             "includePaths": ["dist", "apps/docs/src"]
                         },
-                        "styles": ["apps/docs/src/main.scss"],
+                        "styles": [
+                            "apps/docs/src/main.scss",
+                            "apps/docs/src/styles/koobiq/default-theme/css-tokens.css",
+                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css",
+                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css"
+                        ],
                         "scripts": [],
                         "namedChunks": true,
                         "browser": "apps/docs/src/main.ts",

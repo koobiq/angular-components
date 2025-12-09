@@ -7,10 +7,6 @@
 @use './styles/examples';
 @use './styles/code-snippet';
 
-@use './styles/koobiq/default-theme/css-tokens.css';
-@use './styles/koobiq/default-theme/css-tokens-dark.css';
-@use './styles/koobiq/default-theme/css-tokens-light.css';
-
 // Import theme
 // https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md
 @use '@koobiq/ag-grid-angular-theme';
