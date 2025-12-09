@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
@@ -29,7 +29,6 @@ import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
-    KbqFocusMonitor,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -141,12 +140,11 @@ export class KbqInlineEditMenu {
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
     },
-    hostDirectives: [KbqFocusMonitor],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION]
 })
 export class KbqInlineEdit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly kbqFocusMonitor = inject(KbqFocusMonitor, { host: true });
+    private readonly focusMonitor = inject(FocusMonitor);
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
 
@@ -247,7 +245,7 @@ export class KbqInlineEdit {
 
         event.preventDefault();
         event.stopPropagation();
-        this.kbqFocusMonitor.focusVia(this.overlayOrigin().elementRef, 'program');
+        this.focusMonitor.focusVia(this.overlayOrigin().elementRef, 'program');
 
         this.toggleMode();
     }
