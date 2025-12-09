@@ -1,4 +1,6 @@
-@if (showCheckbox) {
+@if (externalPseudoCheckbox) {
+    <ng-content select="kbq-pseudo-checkbox" />
+} @else if (showCheckbox) {
     <kbq-pseudo-checkbox [disabled]="disabled" [state]="selected ? 'checked' : 'unchecked'" />
 }
 

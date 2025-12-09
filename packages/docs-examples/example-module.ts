@@ -2600,6 +2600,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-groups-example.ts",
     "importPath": "components/list"
   },
+  "list-intermediate-state": {
+    "packagePath": "components/list/list-intermediate-state",
+    "title": "List multiple checkbox",
+    "componentName": "ListIntermediateStateExample",
+    "files": [
+      "list-intermediate-state-example.ts",
+      "./list-intermediate-state-example.html"
+    ],
+    "selector": "list-intermediate-state-example",
+    "additionalComponents": [],
+    "primaryFile": "list-intermediate-state-example.ts",
+    "importPath": "components/list"
+  },
   "list-multiple-checkbox": {
     "packagePath": "components/list/list-multiple-checkbox",
     "title": "List multiple checkbox",
@@ -4505,16 +4518,64 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tags-input-onpaste-off-example.ts",
     "importPath": "components/tag"
   },
-  "text-area-overview": {
-    "packagePath": "components/textarea/text-area-overview",
-    "title": "Textarea",
-    "componentName": "TextAreaOverviewExample",
+  "textarea-can-grow": {
+    "packagePath": "components/textarea/textarea-can-grow",
+    "title": "Textarea with canGrow attribute",
+    "componentName": "TextareaCanGrowExample",
     "files": [
-      "text-area-overview-example.ts"
+      "textarea-can-grow-example.ts"
     ],
-    "selector": "text-area-overview-example",
+    "selector": "textarea-can-grow-example",
     "additionalComponents": [],
-    "primaryFile": "text-area-overview-example.ts",
+    "primaryFile": "textarea-can-grow-example.ts",
+    "importPath": "components/textarea"
+  },
+  "textarea-disabled": {
+    "packagePath": "components/textarea/textarea-disabled",
+    "title": "Textarea disabled",
+    "componentName": "TextareaDisabledExample",
+    "files": [
+      "textarea-disabled-example.ts"
+    ],
+    "selector": "textarea-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "textarea-disabled-example.ts",
+    "importPath": "components/textarea"
+  },
+  "textarea-error-state": {
+    "packagePath": "components/textarea/textarea-error-state",
+    "title": "Textarea error state",
+    "componentName": "TextareaErrorStateExample",
+    "files": [
+      "textarea-error-state-example.ts"
+    ],
+    "selector": "textarea-error-state-example",
+    "additionalComponents": [],
+    "primaryFile": "textarea-error-state-example.ts",
+    "importPath": "components/textarea"
+  },
+  "textarea-max-rows": {
+    "packagePath": "components/textarea/textarea-max-rows",
+    "title": "Textarea with maxRows attribute",
+    "componentName": "TextareaMaxRowsExample",
+    "files": [
+      "textarea-max-rows-example.ts"
+    ],
+    "selector": "textarea-max-rows-example",
+    "additionalComponents": [],
+    "primaryFile": "textarea-max-rows-example.ts",
+    "importPath": "components/textarea"
+  },
+  "textarea-overview": {
+    "packagePath": "components/textarea/textarea-overview",
+    "title": "Textarea overview",
+    "componentName": "TextareaOverviewExample",
+    "files": [
+      "textarea-overview-example.ts"
+    ],
+    "selector": "textarea-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "textarea-overview-example.ts",
     "importPath": "components/textarea"
   },
   "time-range-as-form-field": {
@@ -5985,6 +6046,8 @@ return import('@koobiq/docs-examples/components/link');
 return import('@koobiq/docs-examples/components/list');
   case 'list-groups':
 return import('@koobiq/docs-examples/components/list');
+  case 'list-intermediate-state':
+return import('@koobiq/docs-examples/components/list');
   case 'list-multiple-checkbox':
 return import('@koobiq/docs-examples/components/list');
   case 'list-multiple-keyboard':
@@ -6293,7 +6356,15 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tags-input-onpaste-off':
 return import('@koobiq/docs-examples/components/tag');
-  case 'text-area-overview':
+  case 'textarea-can-grow':
+return import('@koobiq/docs-examples/components/textarea');
+  case 'textarea-disabled':
+return import('@koobiq/docs-examples/components/textarea');
+  case 'textarea-error-state':
+return import('@koobiq/docs-examples/components/textarea');
+  case 'textarea-max-rows':
+return import('@koobiq/docs-examples/components/textarea');
+  case 'textarea-overview':
 return import('@koobiq/docs-examples/components/textarea');
   case 'time-range-as-form-field':
 return import('@koobiq/docs-examples/components/time-range');
