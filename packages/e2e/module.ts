@@ -4,6 +4,7 @@ import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
 import { E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
 import { E2eButtonStateAndStyle } from '../components/button/e2e';
+import { E2eDividerStateAndStyle } from '../components/divider/e2e';
 import { E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
@@ -22,7 +23,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eToggleStateAndStyle,
         E2eToggleWithTextAndCaption,
         E2eBreadcrumbsStateAndStyle,
-        E2eAlertStateAndStyle
+        E2eAlertStateAndStyle,
+        E2eDividerStateAndStyle
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
