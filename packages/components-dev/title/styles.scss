@@ -35,6 +35,17 @@
     text-overflow: ellipsis;
 }
 
+.dev-vertical-overflown {
+    width: 200px;
+
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
+}
+
 .dev-text-with-tooltip {
     max-width: 150px;
 

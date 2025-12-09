@@ -100,6 +100,28 @@ describe('KbqTitleDirective', () => {
             expect(tooltipInstance).toBeNull();
         }));
     });
+
+    describe('on html elements with vertical overflown', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(VerticalOverflownKbqTitleComponent);
+            debugElement = fixture.debugElement;
+            fixture.detectChanges();
+        });
+
+        it('should open tooltip for overflown', fakeAsync(() => {
+            dispatchMouseEvent(
+                debugElement.query(By.css('.vertical-overflown')).nativeElement as HTMLDivElement,
+                'mouseenter'
+            );
+
+            fixture.detectChanges();
+            flush();
+
+            const tooltipInstance = document.querySelector('.kbq-tooltip');
+
+            expect(tooltipInstance).not.toBeNull();
+        }));
+    });
 });
 
 @Component({
@@ -186,6 +208,36 @@ class BaseKbqTitleComponent {
     ]
 })
 class WithParamsKbqTitleComponent {
+    defaultValue = 'Just a text';
+    longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
+}
+
+@Component({
+    imports: [
+        KbqTitleDirective
+    ],
+    template: `
+        <div kbq-title class="vertical-overflown">
+            {{ longValue }}
+        </div>
+    `,
+    styles: [
+        `
+            .vertical-overflown {
+                width: 200px;
+
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                word-wrap: break-word;
+            }
+        `
+
+    ]
+})
+class VerticalOverflownKbqTitleComponent {
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
 }
