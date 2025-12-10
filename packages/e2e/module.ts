@@ -26,10 +26,9 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eToggleWithTextAndCaption,
         E2eBreadcrumbsStateAndStyle,
         E2eAlertStateAndStyle,
-        E2eEmptyStateStateAndStyle
+        E2eEmptyStateStateAndStyle,
         E2eButtonToggleStates,
-        E2eClampedTextStateAndStyle,
-        E2eAlertStateAndStyle
+        E2eClampedTextStateAndStyle
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
