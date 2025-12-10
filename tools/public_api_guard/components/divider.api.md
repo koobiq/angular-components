@@ -9,7 +9,7 @@ import * as i1 from '@angular/common';
 
 // @public (undocumented)
 export class KbqDivider {
-    // (undocumented)
+    // @deprecated
     get inset(): boolean;
     set inset(value: boolean);
     // (undocumented)

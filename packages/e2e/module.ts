@@ -27,7 +27,7 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eToggleWithTextAndCaption,
         E2eBreadcrumbsStateAndStyle,
         E2eAlertStateAndStyle,
-        E2eDividerStateAndStyle
+        E2eDividerStateAndStyle,
         E2eButtonToggleStates,
         E2eClampedTextStateAndStyle,
         E2eAccordionStates
