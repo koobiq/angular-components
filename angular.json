@@ -28,6 +28,11 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
+                        "optimization": {
+                            "styles": {
+                                "inlineCritical": false
+                            }
+                        },
                         "outputPath": {
                             "base": "dist/releases/koobiq-docs"
                         },
@@ -80,10 +85,7 @@
                             "includePaths": ["dist", "apps/docs/src"]
                         },
                         "styles": [
-                            "apps/docs/src/main.scss",
-                            "apps/docs/src/styles/koobiq/default-theme/css-tokens.css",
-                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css",
-                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css"
+                            "apps/docs/src/main.scss"
                         ],
                         "scripts": [],
                         "namedChunks": true,

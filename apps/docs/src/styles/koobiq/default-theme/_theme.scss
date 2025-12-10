@@ -1,9 +1,0 @@
-@use 'sass:meta';
-
-@use '../dist/components/core/styles/theming/theming';
-@use 'tokens';
-
-$tokens: meta.module-variables(tokens);
-
-$light: theming.kbq-light-theme($tokens);
-$dark: theming.kbq-dark-theme($tokens);
