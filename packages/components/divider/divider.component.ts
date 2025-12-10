@@ -28,7 +28,10 @@ export class KbqDivider {
 
     private _vertical: boolean = false;
 
-    // Whether the divider is an inset divider.
+    /**
+     *  Whether the divider is an inset divider.
+     *  @deprecated Will be removed in the next major release
+     */
     @Input()
     get inset(): boolean {
         return this._inset;
