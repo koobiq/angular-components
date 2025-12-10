@@ -6,7 +6,6 @@ export { CanColor, CanColorCtor, KbqColorDirective, KbqComponentColors, mixinCol
 export { KBQ_SANITY_CHECKS, KbqCommonModule } from './common-module';
 export { CanDisable, CanDisableCtor, mixinDisabled } from './disabled';
 export { CanUpdateErrorState, CanUpdateErrorStateCtor, KbqErrorStateTracker, mixinErrorState } from './error-state';
-export * from './focus-monitor';
 export * from './hover';
 export * from './orientation';
 export * from './read-state';

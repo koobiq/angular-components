@@ -7,7 +7,6 @@
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import * as i0 from '@angular/core';
-import * as i1 from '@koobiq/components/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -74,7 +73,7 @@ export class KbqInlineEdit {
     protected readonly tooltipTrigger: Signal<KbqTooltipTrigger | undefined>;
     readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRef"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.KbqFocusMonitor; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRef"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
 }
@@ -94,10 +93,10 @@ export class KbqInlineEditModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqInlineEditModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu], [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof i1.KbqInlineEdit, typeof i1.KbqInlineEditPlaceholder, typeof i1.KbqInlineEditMenu], [typeof i1.KbqInlineEdit, typeof i1.KbqInlineEditPlaceholder, typeof i1.KbqInlineEditMenu]>;
 }
 
 // @public
