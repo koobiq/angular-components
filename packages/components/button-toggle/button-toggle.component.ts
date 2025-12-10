@@ -317,7 +317,9 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     exportAs: 'kbqButtonToggle',
     host: {
         class: 'kbq-button-toggle',
-        '[class]': '"kbq-button-toggle" + iconType'
+        '[class]': '"kbq-button-toggle" + iconType',
+        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-selected]': 'checked'
     }
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {

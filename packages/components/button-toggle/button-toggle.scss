@@ -40,11 +40,11 @@
             border-width: 0;
 
             padding: kbq-difference-series-css-variables(
-                    [ button-toggle-size-item-padding-vertical,
+                    [button-toggle-size-item-padding-vertical,
                     button-toggle-size-item-focus-outline-width]
                 )
                 kbq-difference-series-css-variables(
-                    [ button-toggle-size-item-padding-horizontal,
+                    [button-toggle-size-item-padding-horizontal,
                     button-toggle-size-item-focus-outline-width]
                 );
 
