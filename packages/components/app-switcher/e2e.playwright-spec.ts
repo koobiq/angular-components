@@ -6,21 +6,17 @@ test.describe('KbqAppSwitcherModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eAppSwitcherStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('datepicker default', async ({ page }) => {
+        test('AppSwitcher default', async ({ page }) => {
             await devGoToRootPage(page);
-
-            await page.getByTestId('e2eAppSwitcherToggle').click();
 
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot();
         });
 
-        test('datepicker (dark theme)', async ({ page }) => {
+        test('AppSwitcher (dark theme)', async ({ page }) => {
             await devGoToRootPage(page);
             await devEnableDarkTheme(page);
-
-            await page.getByTestId('e2eAppSwitcherToggle').click();
 
             const locator = getComponent(page);
 
@@ -32,21 +28,17 @@ test.describe('KbqAppSwitcherModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eAppSwitcherWithSitesStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('datepicker default', async ({ page }) => {
+        test('AppSwitcher default', async ({ page }) => {
             await devGoToRootPage(page);
-
-            await page.getByTestId('e2eAppSwitcherWithSitesToggle').click();
 
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot();
         });
 
-        test('datepicker (dark theme)', async ({ page }) => {
+        test('AppSwitcher (dark theme)', async ({ page }) => {
             await devGoToRootPage(page);
             await devEnableDarkTheme(page);
-
-            await page.getByTestId('e2eAppSwitcherWithSitesToggle').click();
 
             const locator = getComponent(page);
 

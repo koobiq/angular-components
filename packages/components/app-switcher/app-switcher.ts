@@ -176,7 +176,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-app-switcher';
 
     /** @docs-private */
-    trigger: KbqAppSwitcherTrigger;
+    @Input() trigger: KbqAppSwitcherTrigger;
 
     /** @docs-private */
     isTrapFocus: boolean = false;

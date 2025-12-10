@@ -1,22 +1,23 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
+import {
+    KbqAppSwitcherApp,
+    KbqAppSwitcherComponent,
+    KbqAppSwitcherModule,
+    KbqAppSwitcherSite
+} from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
     selector: 'e2e-app-switcher-states',
-    imports: [KbqAppSwitcherModule, KbqButtonModule, KbqIconModule],
+    imports: [KbqAppSwitcherModule, KbqButtonModule, KbqIconModule, KbqAppSwitcherComponent],
     template: `
-        <div data-testid="e2eScreenshotTarget" style="width: 330px; height: 390px;">
-            <button
-                kbq-button
-                kbqAppSwitcher
-                data-testid="e2eAppSwitcherToggle"
-                [apps]="apps"
-                [(selectedApp)]="selected"
-            >
+        <div data-testid="e2eScreenshotTarget" style="width: 330px; height: 390px; padding: 8px">
+            <button #trigger="kbqAppSwitcher" kbq-button kbqAppSwitcher [apps]="apps" [(selectedApp)]="selected">
                 <i kbq-icon="kbq-bento-menu_16"></i>
             </button>
+
+            <kbq-app-switcher [trigger]="trigger" />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,19 +82,21 @@ export class E2eAppSwitcherStates {
 
 @Component({
     selector: 'e2e-app-switcher-with-sites-states',
-    imports: [KbqAppSwitcherModule, KbqButtonModule, KbqIconModule],
+    imports: [KbqAppSwitcherModule, KbqButtonModule, KbqIconModule, KbqAppSwitcherComponent],
     template: `
-        <div data-testid="e2eScreenshotTarget" style="width: 330px; height: 912px;">
+        <div data-testid="e2eScreenshotTarget" style="width: 330px; height: 912px; padding: 8px">
             <button
+                #trigger="kbqAppSwitcher"
                 kbq-button
                 kbqAppSwitcher
-                data-testid="e2eAppSwitcherWithSitesToggle"
                 [sites]="sites"
                 [(selectedSite)]="selectedSite"
                 [(selectedApp)]="selectedApp"
             >
                 <i kbq-icon="kbq-bento-menu_16"></i>
             </button>
+
+            <kbq-app-switcher [trigger]="trigger" />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
