@@ -1,5 +1,5 @@
-import { Directive, ElementRef, inject } from '@angular/core';
-import { KbqAccordionItemDirective } from './accordion-item.directive';
+import { afterNextRender, Directive, ElementRef, inject } from '@angular/core';
+import { KbqAccordionItem } from './accordion-item';
 
 @Directive({
     selector: '[kbqAccordionContent]',
@@ -14,10 +14,10 @@ import { KbqAccordionItemDirective } from './accordion-item.directive';
     }
 })
 export class KbqAccordionContentDirective {
-    protected readonly item = inject(KbqAccordionItemDirective);
+    protected readonly item = inject(KbqAccordionItem);
     protected readonly nativeElement = inject(ElementRef).nativeElement;
 
-    protected hidden = false;
+    protected hidden = true;
 
     protected onAnimationEnd() {
         this.hidden = !this.item.expanded;
@@ -35,6 +35,17 @@ export class KbqAccordionContentDirective {
             '--radix-accordion-content-width',
             'var(--radix-collapsible-content-width)'
         );
+    }
+
+    constructor() {
+        afterNextRender({
+            write: () => {
+                console.log('KbqAccordionContentDirective afterNextRender write: ');
+            },
+            read: () => {
+                console.log('KbqAccordionContentDirective afterNextRender read: ');
+            }
+        });
     }
 
     onToggle() {
