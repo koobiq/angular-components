@@ -17,13 +17,13 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
+import { KbqPopUpPlacementValues } from '@koobiq/components/core';
+import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import { PopUpPlacements } from '@koobiq/components/core';
-import { PopUpSizes } from '@koobiq/components/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
@@ -104,7 +104,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     readonly searchControl: FormControl<string | null>;
     selectAppInSite(site: KbqAppSwitcherSite, app: KbqAppSwitcherApp): void;
     trigger: KbqAppSwitcherTrigger;
-    updateClassMap(placement: string, customClass: string, size: PopUpSizes): void;
+    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, { "trigger": { "alias": "trigger"; "required": false; }; }, {}, never, never, true, never>;
@@ -220,7 +220,7 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     originalSites: KbqAppSwitcherSite[];
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
-    placement: PopUpPlacements;
+    placement: KbqPopUpPlacementValues;
     readonly placementChange: EventEmitter<any>;
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;

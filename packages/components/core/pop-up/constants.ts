@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import { TooltipSizeArrowSize } from '@koobiq/design-tokens';
 import { Observable } from 'rxjs';
+import { EnumValues } from '../utils';
 
 export interface KbqParentPopup {
     closedStream: Observable<boolean>;
@@ -26,6 +27,12 @@ export enum PopUpPlacements {
     BottomRight = 'bottomRight'
 }
 
+export type KbqPopUpPlacementValues = EnumValues<PopUpPlacements>;
+
+export type KbqStickToWindowPlacementValues = EnumValues<
+    PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left
+>;
+
 export enum PopUpVisibility {
     Initial = 'initial',
     Visible = 'visible',
@@ -47,6 +54,8 @@ export enum PopUpSizes {
     Normal = 'medium',
     Large = 'large'
 }
+
+export type KbqPopUpSizeValues = EnumValues<PopUpSizes>;
 
 /**
  * Default value when configuring overlay in popups (Autocomplete, Datepicker, Dropdown, Select, Tags Autocomplete,

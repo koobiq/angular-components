@@ -36,7 +36,13 @@ import {
     POSITION_PRIORITY_STRATEGY,
     POSITION_TO_CSS_MAP
 } from '../overlay/overlay-position-map';
-import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT, PopUpPlacements, PopUpTriggers } from './constants';
+import {
+    ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
+    KbqPopUpPlacementValues,
+    KbqStickToWindowPlacementValues,
+    PopUpPlacements,
+    PopUpTriggers
+} from './constants';
 import { KbqPopUp } from './pop-up';
 
 type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
@@ -114,7 +120,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     overlayRef: OverlayRef | null;
 
-    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
+    stickToWindow: KbqStickToWindowPlacementValues;
 
     container: HTMLElement;
 
@@ -130,7 +136,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected abstract originSelector: string;
     protected abstract overlayConfig: OverlayConfig;
 
-    protected placement = PopUpPlacements.Top;
+    protected placement: KbqPopUpPlacementValues = PopUpPlacements.Top;
     protected placementPriority: string | string[] | null = null;
 
     protected visible = false;
@@ -176,7 +182,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.listeners.clear();
     }
 
-    updatePlacement(value: PopUpPlacements) {
+    updatePlacement(value: KbqPopUpPlacementValues) {
         if (POSITION_TO_CSS_MAP[value]) {
             this.placement = value;
 

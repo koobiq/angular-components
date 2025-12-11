@@ -17,14 +17,15 @@ import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
+import { KbqPopUpPlacementValues } from '@koobiq/components/core';
+import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
+import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
 import { KbqToastData } from '@koobiq/components/toast';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { Observable } from 'rxjs';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import { PopUpPlacements } from '@koobiq/components/core';
-import { PopUpSizes } from '@koobiq/components/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -87,7 +88,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     // (undocumented)
     switcher: KbqButton;
     trigger: KbqNotificationCenterTrigger;
-    updateClassMap(placement: string, customClass: string, size: PopUpSizes): void;
+    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNotificationCenterComponent, "kbq-notification-center", never, {}, {}, never, never, true, never>;
@@ -165,7 +166,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
     panelClass: string;
-    placement: PopUpPlacements;
+    placement: KbqPopUpPlacementValues;
     readonly placementChange: EventEmitter<any>;
     get popoverHeight(): string;
     set popoverHeight(value: string);
@@ -174,7 +175,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
-    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
+    stickToWindow: KbqStickToWindowPlacementValues;
     trigger: string;
     get unreadItemsCounter(): Observable<string>;
     updateClassMap(newPlacement?: string): void;

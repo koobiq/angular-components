@@ -27,7 +27,10 @@ import {
     DateAdapter,
     KBQ_LOCALE_SERVICE,
     KbqPopUp,
+    KbqPopUpPlacementValues,
+    KbqPopUpSizeValues,
     KbqPopUpTrigger,
+    KbqStickToWindowPlacementValues,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
@@ -181,7 +184,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 
     /** @docs-private */
-    updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
+    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -243,7 +246,7 @@ export class KbqNotificationCenterTrigger
     /** @docs-private */
     private hasBackdrop: boolean = false;
     /** @docs-private */
-    private size: PopUpSizes = PopUpSizes.Medium;
+    private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
     content: string | TemplateRef<any>;
     /** @docs-private */
@@ -257,7 +260,7 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Placement of popUp */
-    @Input('kbqNotificationCenterPlacement') placement: PopUpPlacements = PopUpPlacements.Right;
+    @Input('kbqNotificationCenterPlacement') placement: KbqPopUpPlacementValues = PopUpPlacements.Right;
 
     /** Class that will be used in the background */
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
@@ -317,12 +320,7 @@ export class KbqNotificationCenterTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    @Input() stickToWindow:
-        | PopUpPlacements.Top
-        | PopUpPlacements.Right
-        | PopUpPlacements.Bottom
-        | PopUpPlacements.Left
-        | string;
+    @Input() stickToWindow: KbqStickToWindowPlacementValues;
 
     /** Container for additional positioning, used with stickToWindow */
     @Input() container: HTMLElement;

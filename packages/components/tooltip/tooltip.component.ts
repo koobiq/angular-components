@@ -29,6 +29,7 @@ import {
     KbqComponentColors,
     KbqParentPopup,
     KbqPopUp,
+    KbqPopUpPlacementValues,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
@@ -150,7 +151,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     }
 
     @Input('kbqPlacement')
-    get tooltipPlacement(): PopUpPlacements {
+    get tooltipPlacement(): KbqPopUpPlacementValues {
         return this.placement;
     }
 
@@ -160,7 +161,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
      */
     @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
 
-    set tooltipPlacement(value: PopUpPlacements) {
+    set tooltipPlacement(value: KbqPopUpPlacementValues) {
         super.updatePlacement(value);
     }
 
@@ -349,7 +350,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected applyRelativeToPointer() {
         if (
             !this.strategy ||
-            ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement) ||
+            ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement as any) ||
             this.triggerName !== 'mouseenter'
         ) {
             this.resetOrigin();

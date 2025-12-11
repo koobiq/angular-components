@@ -21,13 +21,14 @@ import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
+import { KbqPopUpPlacementValues } from '@koobiq/components/core';
+import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
+import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import { PopUpPlacements } from '@koobiq/components/core';
-import { PopUpSizes } from '@koobiq/components/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -95,7 +96,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     trigger: KbqPopoverTrigger;
     // (undocumented)
-    updateClassMap(placement: string, customClass: string, size: PopUpSizes): void;
+    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     // (undocumented)
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
@@ -224,8 +225,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     readonly placementChange: EventEmitter<any>;
     // (undocumented)
-    get popoverPlacement(): PopUpPlacements;
-    set popoverPlacement(value: PopUpPlacements);
+    get popoverPlacement(): KbqPopUpPlacementValues;
+    set popoverPlacement(value: KbqPopUpPlacementValues);
     // (undocumented)
     get popoverPlacementPriority(): string | string[] | null;
     set popoverPlacementPriority(value: string | string[] | null);
@@ -236,9 +237,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;
     // (undocumented)
-    get size(): PopUpSizes;
-    set size(value: PopUpSizes);
-    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
+    get size(): KbqPopUpSizeValues;
+    set size(value: KbqPopUpSizeValues);
+    stickToWindow: KbqStickToWindowPlacementValues;
     // (undocumented)
     get trigger(): string;
     set trigger(value: string);

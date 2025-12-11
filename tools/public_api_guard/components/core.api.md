@@ -246,6 +246,9 @@ export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
 }
 
 // @public (undocumented)
+export type EnumValues<T extends string | number> = `${T}`;
+
+// @public (undocumented)
 export const enUSFormattersData: {
     formatters: {
         number: {
@@ -2550,6 +2553,12 @@ export abstract class KbqPopUp implements OnDestroy {
 }
 
 // @public (undocumented)
+export type KbqPopUpPlacementValues = EnumValues<PopUpPlacements>;
+
+// @public (undocumented)
+export type KbqPopUpSizeValues = EnumValues<PopUpSizes>;
+
+// @public (undocumented)
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     abstract arrow: boolean;
@@ -2636,7 +2645,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     overlayRef: OverlayRef | null;
     // (undocumented)
-    protected placement: PopUpPlacements;
+    protected placement: KbqPopUpPlacementValues;
     // (undocumented)
     abstract placementChange: EventEmitter<string>;
     // (undocumented)
@@ -2657,7 +2666,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     show(delay?: number): void;
     // (undocumented)
-    stickToWindow: PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left | string;
+    stickToWindow: KbqStickToWindowPlacementValues;
     // (undocumented)
     protected strategy: FlexibleConnectedPositionStrategy;
     // (undocumented)
@@ -2671,7 +2680,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     abstract updateData(): void;
     // (undocumented)
-    updatePlacement(value: PopUpPlacements): void;
+    updatePlacement(value: KbqPopUpPlacementValues): void;
     // (undocumented)
     updatePlacementPriority(value: any): void;
     updatePosition(reapplyPosition?: boolean): void;
@@ -2856,6 +2865,9 @@ export interface KbqSizeUnitsConfig {
         [KbqMeasurementSystem.IEC]: KbqUnitSystem;
     };
 }
+
+// @public (undocumented)
+export type KbqStickToWindowPlacementValues = EnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {

@@ -35,3 +35,5 @@ export function isMac(): boolean {
     // eslint-disable-next-line no-restricted-globals
     return /^mac/i.test(navigator?.platform);
 }
+
+export type EnumValues<T extends string | number> = `${T}`;
