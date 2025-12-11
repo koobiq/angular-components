@@ -1,9 +1,0 @@
-@use 'sass:meta';
-
-@use 'components/core/styles/typography/typography';
-@use 'default-theme/tokens';
-
-$tokens: meta.module-variables(tokens);
-
-$typography-config: typography.kbq-typography-config($tokens);
-$markdown-typography-config: typography.kbq-markdown-typography-config($tokens);

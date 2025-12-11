@@ -1,4 +1,3 @@
-@forward 'typography';
-
-@forward 'default-theme/theme' as default-theme-*;
-@forward 'default-theme/tokens' as default-tokens-*;
+@forward 'default-theme/css-tokens.css';
+@forward 'default-theme/css-tokens-dark.css';
+@forward 'default-theme/css-tokens-light.css';

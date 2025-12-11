@@ -28,6 +28,11 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
+                        "optimization": {
+                            "styles": {
+                                "inlineCritical": false
+                            }
+                        },
                         "outputPath": {
                             "base": "dist/releases/koobiq-docs"
                         },
@@ -79,7 +84,9 @@
                         "stylePreprocessorOptions": {
                             "includePaths": ["dist", "apps/docs/src"]
                         },
-                        "styles": ["apps/docs/src/main.scss"],
+                        "styles": [
+                            "apps/docs/src/main.scss"
+                        ],
                         "scripts": [],
                         "namedChunks": true,
                         "browser": "apps/docs/src/main.ts",
