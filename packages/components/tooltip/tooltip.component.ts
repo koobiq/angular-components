@@ -350,7 +350,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected applyRelativeToPointer() {
         if (
             !this.strategy ||
-            ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement as any) ||
+            ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement as PopUpPlacements) ||
             this.triggerName !== 'mouseenter'
         ) {
             this.resetOrigin();

@@ -245,7 +245,7 @@ export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     preventFocus(): void;
 }
 
-// @public (undocumented)
+// @public
 export type EnumValues<T extends string | number> = `${T}`;
 
 // @public (undocumented)

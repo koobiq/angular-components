@@ -36,4 +36,6 @@ export function isMac(): boolean {
     return /^mac/i.test(navigator?.platform);
 }
 
+/** Converts an enumeration (enum) type into a string literal type containing
+ * all possible string representations of the values. */
 export type EnumValues<T extends string | number> = `${T}`;
