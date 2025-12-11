@@ -107,7 +107,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     updateClassMap(placement: string, customClass: string, size: PopUpSizes): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherComponent, "kbq-app-switcher", never, { "trigger": { "alias": "trigger"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherComponent, never>;
 }
