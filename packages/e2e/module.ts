@@ -7,6 +7,7 @@ import { E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
 import { E2eButtonToggleStates } from '../components/button-toggle/e2e';
 import { E2eButtonStateAndStyle } from '../components/button/e2e';
 import { E2eClampedTextStateAndStyle } from '../components/clamped-text/e2e';
+import { E2eDatepickerStates } from '../components/datepicker/e2e';
 import { E2eDividerStateAndStyle } from '../components/divider/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
@@ -32,7 +33,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eDividerStateAndStyle,
         E2eButtonToggleStates,
         E2eClampedTextStateAndStyle,
-        E2eAccordionStates
+        E2eAccordionStates,
+        E2eDatepickerStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
