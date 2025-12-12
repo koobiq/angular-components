@@ -108,7 +108,7 @@ export class KbqFilterBarSearch implements AfterViewInit {
     @Output() readonly onSearch = new EventEmitter<string>();
 
     ngAfterViewInit(): void {
-        this.filterBar.filterReset?.onResetFilter.pipe(takeUntilDestroyed()).subscribe(this.onReset);
+        this.filterBar.filterReset?.onResetFilter.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.onReset);
 
         this.searchControl.valueChanges
             .pipe(
