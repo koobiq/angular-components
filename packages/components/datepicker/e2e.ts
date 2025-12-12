@@ -25,5 +25,5 @@ import { KbqDatepickerModule } from './datepicker-module';
 export class E2eDatepickerStates {
     adapter = inject(DateAdapter<DateTime>);
 
-    date = this.adapter.createDate(2025, 11, 9);
+    date = this.adapter.createDate(2025, 10, 9);
 }
