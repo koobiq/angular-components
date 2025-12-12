@@ -1,3 +1,10 @@
+# 18.39.0 (2025-12-12)
+
+### Koobiq
+
+ * feature  **filter-bar:** added onSearchTimeout and emitValueByEnter ([#DS-4463](https://github.com/koobiq/angular-components/issues/issue/DS-4463), [#DS-4464](https://github.com/koobiq/angular-components/issues/issue/DS-4464)) ([#1188](https://github.com/koobiq/angular-components/issues/1188)) ([e906268](https://github.com/koobiq/angular-components/commit/e9062686431848f1217907b1b320d74560e4de2c))
+ * feature  **list:** list with indeterminate state (#DS-4509)
+
 ## 18.38.1 (2025-12-08)
 
 ### Koobiq
