@@ -245,9 +245,6 @@ export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     preventFocus(): void;
 }
 
-// @public
-export type EnumValues<T extends string | number> = `${T}`;
-
 // @public (undocumented)
 export const enUSFormattersData: {
     formatters: {
@@ -2059,6 +2056,9 @@ export const KbqDefaultThemes: KbqTheme[];
 export const kbqDisableLegacyValidationDirectiveProvider: () => Provider;
 
 // @public
+export type KbqEnumValues<T extends string | number> = `${T}`;
+
+// @public
 export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMatcher> | ErrorStateMatcher) => Provider;
 
 // @public
@@ -2553,10 +2553,10 @@ export abstract class KbqPopUp implements OnDestroy {
 }
 
 // @public (undocumented)
-export type KbqPopUpPlacementValues = EnumValues<PopUpPlacements>;
+export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 
 // @public (undocumented)
-export type KbqPopUpSizeValues = EnumValues<PopUpSizes>;
+export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
 // @public (undocumented)
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
@@ -2867,7 +2867,7 @@ export interface KbqSizeUnitsConfig {
 }
 
 // @public (undocumented)
-export type KbqStickToWindowPlacementValues = EnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
+export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
