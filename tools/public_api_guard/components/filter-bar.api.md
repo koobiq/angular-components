@@ -16,6 +16,7 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -44,6 +45,9 @@ import { UntypedFormControl } from '@angular/forms';
 
 // @public
 export const defaultFilterBarPipes: [string, unknown][];
+
+// @public (undocumented)
+export const defaultOnSearchTimeout = 0;
 
 // @public
 export function getId(item: KbqPipeTemplate): KbqPipeType | string | number;
@@ -197,7 +201,7 @@ export class KbqFilterBar {
     saveFilterState(filter?: KbqFilter): void;
     selectedAllEqualsSelectedNothing: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; }; "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-search, [kbq-filter-search]", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; }; "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-search, [kbq-filter-search], kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -245,20 +249,24 @@ export class KbqFilterBarRefresher {
 }
 
 // @public (undocumented)
-export class KbqFilterBarSearch {
-    constructor();
+export class KbqFilterBarSearch implements AfterViewInit {
+    readonly emitValueByEnter: InputSignalWithTransform<boolean, unknown>;
     isSearchActive: boolean;
     get localeData(): any;
+    // (undocumented)
+    ngAfterViewInit(): void;
     onBlur(): void;
     onClear(): void;
+    onEnter(): void;
     onEscape(): void;
     onReset: () => void;
     readonly onSearch: EventEmitter<string>;
+    readonly onSearchTimeout: InputSignalWithTransform<number, unknown>;
     // (undocumented)
     openSearch(): void;
     searchControl: UntypedFormControl;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-search, [kbq-filter-search]", never, {}, { "onSearch": "onSearch"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-search, [kbq-filter-search]", never, { "onSearchTimeout": { "alias": "onSearchTimeout"; "required": false; "isSignal": true; }; "emitValueByEnter": { "alias": "emitValueByEnter"; "required": false; "isSignal": true; }; }, { "onSearch": "onSearch"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarSearch, never>;
 }
