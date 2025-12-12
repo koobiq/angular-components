@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, DebugElement, inject, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -219,6 +219,7 @@ describe('KbqFilterBar', () => {
             expect(fixture.componentInstance.onSearchFilter).not.toHaveBeenCalled();
 
             fixture.componentInstance.search.searchControl.setValue('value');
+            tick(1);
             flush();
             fixture.detectChanges();
 

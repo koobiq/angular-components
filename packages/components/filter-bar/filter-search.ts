@@ -1,9 +1,14 @@
 import {
+    AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     EventEmitter,
     inject,
+    input,
+    numberAttribute,
     Output,
     ViewChild,
     ViewEncapsulation
@@ -16,7 +21,11 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
+
+export const defaultOnSearchTimeout = 0;
 
 @Component({
     selector: 'kbq-filter-search, [kbq-filter-search]',
@@ -51,6 +60,7 @@ import { KbqFilterBar } from './filter-bar';
                 [formControl]="searchControl"
                 (blur)="onBlur()"
                 (keydown.escape)="onEscape()"
+                (keydown.enter)="onEnter()"
             />
 
             <kbq-cleaner (click)="onClear()" />
@@ -63,10 +73,11 @@ import { KbqFilterBar } from './filter-bar';
         class: 'kbq-filter-search'
     }
 })
-export class KbqFilterBarSearch {
+export class KbqFilterBarSearch implements AfterViewInit {
     /** KbqFilterBar instance */
     private readonly filterBar = inject(KbqFilterBar);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
 
     @ViewChild(KbqInput) private input: KbqInput;
     @ViewChild(KbqButton) private button: KbqButton;
@@ -84,13 +95,36 @@ export class KbqFilterBarSearch {
         return this.filterBar.configuration.search;
     }
 
+    /**
+    /** Timeout in milliseconds for emit event. The default value is taken from defaultOnSearchTimeout
+     * @default 0
+     */
+    readonly onSearchTimeout = input(defaultOnSearchTimeout, { transform: numberAttribute });
+
+    /** Emit event by enter or not. Default is false */
+    readonly emitValueByEnter = input(false, { transform: booleanAttribute });
+
+    /** Value of the field after initialization */
+    readonly initialValue = input();
+
     /** event that is generated whenever a user performs a search. */
     @Output() readonly onSearch = new EventEmitter<string>();
 
-    constructor() {
-        this.searchControl.valueChanges.subscribe(this.onSearch);
+    ngAfterViewInit(): void {
+        this.filterBar.filterReset?.onResetFilter.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.onReset);
 
-        this.filterBar.filterReset?.onResetFilter.pipe(takeUntilDestroyed()).subscribe(this.onReset);
+        if (this.initialValue()) {
+            this.searchControl.setValue(this.initialValue(), { emitEvent: false });
+        }
+
+        this.searchControl.valueChanges
+            .pipe(
+                distinctUntilChanged(),
+                filter(() => !this.emitValueByEnter()),
+                debounceTime(this.onSearchTimeout()),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(this.onSearch);
     }
 
     openSearch(): void {
@@ -113,6 +147,13 @@ export class KbqFilterBarSearch {
         this.button.focusViaKeyboard();
 
         this.tooltip.hide();
+    }
+
+    /** @docs-private */
+    onEnter(): void {
+        if (this.emitValueByEnter()) {
+            this.onSearch.emit(this.searchControl.value);
+        }
     }
 
     /** @docs-private */

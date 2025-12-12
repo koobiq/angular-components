@@ -40,7 +40,7 @@ import { getId } from './pipes/base-pipe';
         </div>
 
         <div class="kbq-filter-bar__right">
-            <ng-content select="kbq-filter-search, [kbq-filter-search]" />
+            <ng-content select="kbq-filter-search, [kbq-filter-search], kbq-search-expandable" />
 
             <ng-content select="kbq-filter-refresher, [kbq-filter-refresher]" />
         </div>
