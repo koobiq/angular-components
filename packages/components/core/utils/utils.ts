@@ -38,4 +38,4 @@ export function isMac(): boolean {
 
 /** Converts an enumeration (enum) type into a string literal type containing
  * all possible string representations of the values. */
-export type EnumValues<T extends string | number> = `${T}`;
+export type KbqEnumValues<T extends string | number> = `${T}`;
