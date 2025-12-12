@@ -2,62 +2,30 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    contentChild,
+    computed,
     Directive,
+    ElementRef,
     inject,
     input,
-    OnInit,
     output,
     signal,
     viewChild
 } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
 import { KbqFileItem } from './file-upload';
 
 /**
  * File upload context.
- * Responsible for CVA, localeService
- * and ErrorStateMatcher
  */
 @Directive({
-    selector: '[kbqFileUploadPrimitive]'
+    selector: '[kbqFileUploadPrimitive]',
+    exportAs: 'kbqFileUploadPrimitive'
 })
-export class KbqFileUploadPrimitive implements ControlValueAccessor, OnInit {
+export class KbqFileUploadPrimitive {
+    id = input();
     disabled = input(false);
-
-    readonly fileList = contentChild(KbqFileList);
-    fileLoader = contentChild(KbqFileLoader);
-
-    innerDisabled = signal<boolean | undefined>(undefined);
-
-    ngOnInit(): void {
-        this.innerDisabled.set(this.disabled());
-    }
-
-    /** @docs-private */
-    writeValue(fileList: KbqFileItem[] | null): void {
-        const updatedList = fileList === null ? [] : fileList;
-
-        this.fileList()?.list.set(updatedList);
-    }
-    /** @docs-private */
-    cvaOnChange = (_: KbqFileItem[]) => {};
-
-    /** @docs-private */
-    onTouched = () => {};
-
-    /** @docs-private */
-    registerOnChange(fn: any): void {
-        this.cvaOnChange = fn;
-    }
-    /** @docs-private */
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
-    /** @docs-private */
-    setDisabledState?(isDisabled: boolean): void {
-        this.innerDisabled.set(isDisabled);
-    }
+    multiple = input(undefined, { transform: booleanAttribute });
+    accept = input<string | null>(null);
+    onlyDirectory = input(undefined, { transform: booleanAttribute });
 }
 
 /**
@@ -65,6 +33,7 @@ export class KbqFileUploadPrimitive implements ControlValueAccessor, OnInit {
  */
 @Component({
     selector: '[kbqFileLoader]',
+    exportAs: 'kbqFileLoader',
     template: `
         <ng-content />
         <input
@@ -72,23 +41,34 @@ export class KbqFileUploadPrimitive implements ControlValueAccessor, OnInit {
             tabindex="0"
             type="file"
             class="cdk-visually-hidden"
+            aria-hidden="true"
             [attr.multiple]="multiple()"
+            [attr.webkitdirectory]="onlyDirectory()"
             [accept]="accept()"
             [disabled]="disabled()"
             [id]="for()"
-            (change)="change.emit($event)"
+            (change)="fileChange.emit($event)"
         />
     `,
+    host: {
+        class: 'kbq-file-loader',
+        '(click)': 'input()?.nativeElement?.click()'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqFileLoader {
-    for = input.required<string>();
-    disabled = input<boolean>(false);
-    accept = input.required<string>();
-    multiple = input(undefined, { transform: booleanAttribute });
-    readonly change = output<Event>();
+    private fileUpload = inject(KbqFileUploadPrimitive, { host: true, optional: true });
 
-    input = viewChild.required<HTMLInputElement>('input');
+    disabled = computed(() => this.fileUpload?.disabled() ?? false);
+    multiple = computed(() => this.fileUpload?.multiple() ?? false);
+    accept = computed(() => this.fileUpload?.accept() ?? null);
+    for = computed(() => this.fileUpload?.id() ?? null);
+    onlyDirectory = computed(() => this.fileUpload?.onlyDirectory() ?? null);
+
+    /** Event fires when file selected in file-picker. */
+    readonly fileChange = output<Event>();
+
+    input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 }
 
 /**
@@ -99,28 +79,25 @@ export class KbqFileLoader {
     exportAs: 'kbqFileList'
 })
 export class KbqFileList {
-    list = signal<any[]>([]);
+    list = signal<KbqFileItem[]>([]);
 
-    private fileUpload = inject(KbqFileUploadPrimitive, { host: true, optional: true });
-
-    private update(fn: (current: any[]) => any[]) {
+    private update(fn: (current: KbqFileItem[]) => KbqFileItem[]) {
         this.list.update(fn);
-        this.fileUpload?.cvaOnChange(this.list());
     }
 
-    add<T>(item: T) {
+    add(item: KbqFileItem): void {
         this.update((current) => [...current, item]);
     }
 
-    addArray<T>(items: T[]) {
+    addArray(items: KbqFileItem[]): void {
         this.update((current) => [...current, ...items]);
     }
 
-    remove(item: KbqFileItem) {
+    remove(item: KbqFileItem): void {
         this.update((current) => current.filter((i) => i !== item));
     }
 
-    removeAt(index: number) {
+    removeAt(index: number): void {
         if (index >= 0 && index < this.list().length) {
             this.update((current) => {
                 current.splice(index, 1);
