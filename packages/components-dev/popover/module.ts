@@ -5,7 +5,14 @@ import { ChangeDetectionStrategy, Component, QueryList, ViewChildren, ViewEncaps
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqFormsModule, PopUpPlacements, PopUpSizes, ThemePalette } from '@koobiq/components/core';
+import {
+    KbqFormsModule,
+    KbqPopUpSizeValues,
+    KbqStickToWindowPlacementValues,
+    PopUpPlacements,
+    PopUpSizes,
+    ThemePalette
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -96,9 +103,9 @@ export class DevApp {
     selectedElement: string = this.ELEMENTS.BUTTON;
     selectedPlacement: PopUpPlacements = PopUpPlacements.Left;
     selectedTrigger: string = this.TRIGGERS.CLICK;
-    selectedSize: PopUpSizes = PopUpSizes.Medium;
+    selectedSize: KbqPopUpSizeValues = PopUpSizes.Medium;
     layoutClass: string = 'layout-row layout-align-center-center';
-    stickToWindow: PopUpPlacements;
+    stickToWindow: KbqStickToWindowPlacementValues;
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];

@@ -13,12 +13,12 @@ import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqParentPopup } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
+import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import { PopUpPlacements } from '@koobiq/components/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
@@ -159,8 +159,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;
     // (undocumented)
-    get tooltipPlacement(): PopUpPlacements;
-    set tooltipPlacement(value: PopUpPlacements);
+    get tooltipPlacement(): KbqPopUpPlacementValues;
+    set tooltipPlacement(value: KbqPopUpPlacementValues);
     // (undocumented)
     get tooltipPlacementPriority(): string | string[] | null;
     set tooltipPlacementPriority(value: string | string[] | null);

@@ -33,6 +33,8 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqOptionModule,
     KbqPopUp,
+    KbqPopUpPlacementValues,
+    KbqPopUpSizeValues,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
@@ -221,7 +223,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     }
 
     /** @docs-private */
-    updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
+    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -298,7 +300,7 @@ export class KbqAppSwitcherTrigger
     /** @docs-private */
     private hasBackdrop: boolean = false;
     /** @docs-private */
-    private size: PopUpSizes = PopUpSizes.Medium;
+    private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
     content: string | TemplateRef<any>;
     /** @docs-private */
@@ -339,7 +341,7 @@ export class KbqAppSwitcherTrigger
     @Input() selectedApp: KbqAppSwitcherApp;
 
     /** Placement of popUp */
-    @Input('kbqAppSwitcherPlacement') placement: PopUpPlacements = PopUpPlacements.BottomLeft;
+    @Input('kbqAppSwitcherPlacement') placement: KbqPopUpPlacementValues = PopUpPlacements.BottomLeft;
 
     /** Class that will be used in the background */
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';

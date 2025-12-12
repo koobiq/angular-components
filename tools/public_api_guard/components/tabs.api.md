@@ -27,10 +27,10 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
+import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { PopUpPlacements } from '@koobiq/components/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
@@ -107,7 +107,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     set templateLabel(value: KbqTabLabel);
     textLabel: string;
     // (undocumented)
-    tooltipPlacement: PopUpPlacements;
+    tooltipPlacement: KbqPopUpPlacementValues;
     // (undocumented)
     get tooltipTitle(): string;
     set tooltipTitle(value: string);

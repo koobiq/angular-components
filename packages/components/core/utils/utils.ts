@@ -35,3 +35,7 @@ export function isMac(): boolean {
     // eslint-disable-next-line no-restricted-globals
     return /^mac/i.test(navigator?.platform);
 }
+
+/** Converts an enumeration (enum) type into a string literal type containing
+ * all possible string representations of the values. */
+export type KbqEnumValues<T extends string | number> = `${T}`;

@@ -17,6 +17,7 @@ import {
 import {
     KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KbqPopUpPlacementValues,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY } from '@koobiq/components/dropdown';
@@ -88,7 +89,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     private _disabled: boolean = false;
 
-    @Input() tooltipPlacement: PopUpPlacements = PopUpPlacements.Right;
+    @Input() tooltipPlacement: KbqPopUpPlacementValues = PopUpPlacements.Right;
 
     /** Plain text label for the tab, used when there is no template label. */
     @Input('label') textLabel = '';

@@ -34,9 +34,11 @@ import { KbqButton } from '@koobiq/components/button';
 import {
     KbqComponentColors,
     KbqPopUp,
+    KbqPopUpPlacementValues,
+    KbqPopUpSizeValues,
     KbqPopUpTrigger,
+    KbqStickToWindowPlacementValues,
     POSITION_TO_CSS_MAP,
-    PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
     applyPopupMargins
@@ -127,7 +129,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         super.detectChanges();
     }
 
-    updateClassMap(placement: string, customClass: string, size: PopUpSizes) {
+    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -192,11 +194,11 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     @Input('kbqPopoverPlacement')
-    get popoverPlacement(): PopUpPlacements {
+    get popoverPlacement(): KbqPopUpPlacementValues {
         return this.placement;
     }
 
-    set popoverPlacement(value: PopUpPlacements) {
+    set popoverPlacement(value: KbqPopUpPlacementValues) {
         super.updatePlacement(value);
     }
 
@@ -213,12 +215,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    @Input('kbqPopoverStickToWindow') stickToWindow:
-        | PopUpPlacements.Top
-        | PopUpPlacements.Right
-        | PopUpPlacements.Bottom
-        | PopUpPlacements.Left
-        | string;
+    @Input('kbqPopoverStickToWindow') stickToWindow: KbqStickToWindowPlacementValues;
 
     /** Container for additional positioning, used with kbqPopoverStickToWindow */
     @Input() container: HTMLElement;
@@ -307,12 +304,12 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
 
     @Input('kbqPopoverSize')
-    get size(): PopUpSizes {
+    get size(): KbqPopUpSizeValues {
         return this._size;
     }
 
-    set size(value: PopUpSizes) {
-        if ([PopUpSizes.Small, PopUpSizes.Medium, PopUpSizes.Large].includes(value)) {
+    set size(value: KbqPopUpSizeValues) {
+        if ([PopUpSizes.Small, PopUpSizes.Medium, PopUpSizes.Large].includes(value as PopUpSizes)) {
             this._size = value;
 
             this.updateClassMap();
@@ -321,7 +318,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         }
     }
 
-    private _size: PopUpSizes = PopUpSizes.Medium;
+    private _size: KbqPopUpSizeValues = PopUpSizes.Medium;
 
     @Input('kbqPopoverClass')
     get customClass() {
