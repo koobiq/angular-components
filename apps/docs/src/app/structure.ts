@@ -614,7 +614,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'list',
                     hasApi: true,
                     apiId: 'list',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.LoaderOverlay,

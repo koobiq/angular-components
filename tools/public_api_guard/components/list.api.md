@@ -22,6 +22,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqLine } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOptionActionComponent } from '@koobiq/components/core';
+import { KbqPseudoCheckbox } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { MultipleMode } from '@koobiq/components/core';
@@ -101,6 +102,8 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     dropdownTrigger: KbqDropdownTrigger;
     // (undocumented)
+    get externalPseudoCheckbox(): boolean;
+    // (undocumented)
     focus(): void;
     getHeight(): number;
     // (undocumented)
@@ -131,6 +134,8 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     preventBlur: boolean;
     // (undocumented)
+    pseudoCheckbox: KbqPseudoCheckbox;
+    // (undocumented)
     get selected(): boolean;
     set selected(value: boolean);
     // (undocumented)
@@ -152,7 +157,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     get value(): any;
     set value(newValue: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "tooltipTrigger", "dropdownTrigger"], ["[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "tooltipTrigger", "dropdownTrigger", "pseudoCheckbox"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption, [null, null, null, null, { optional: true; }]>;
 }

@@ -1,0 +1,62 @@
+<button
+    #kbqPopover="kbqPopover"
+    kbq-button
+    kbqPopover
+    [kbqPopoverSize]="PopUpSizes.Medium"
+    [kbqPopoverHeader]="customHeader"
+    [kbqPopoverContent]="customContent"
+    [kbqPopoverFooter]="customFooter"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverOffset]="4"
+    [kbqPopoverPlacement]="PopUpPlacements.BottomLeft"
+    [kbqPopoverPlacementPriority]="PopUpPlacements.BottomLeft"
+    [defaultPaddings]="false"
+    (kbqPopoverVisibleChange)="onVisibleChange($event)"
+>
+    <i kbq-icon="kbq-user_16"></i>
+    Назначить пользователей
+    <i kbq-icon="kbq-chevron-down_16"></i>
+</button>
+
+<ng-template #customHeader>
+    <div style="border-bottom: 1px solid var(--kbq-line-contrast-less)" [style.width.px]="400">
+        <kbq-form-field class="layout-padding-vertical-xxs" noBorders>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <input kbqInput placeholder="Пользователь" autocomplete="off" [formControl]="searchControl" />
+        </kbq-form-field>
+    </div>
+</ng-template>
+
+<ng-template #customContent>
+    <kbq-scrollbar style="height: 374px">
+        <kbq-list-selection
+            class="layout-padding-horizontal-xxs layout-padding-vertical-xxs"
+            multiple="checkbox"
+            [(ngModel)]="selected"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            @for (user of filteredUsers | async; track user) {
+                <kbq-list-option [showCheckbox]="false" [value]="user">
+                    <kbq-pseudo-checkbox [state]="getCheckboxState(user)" />
+                    <kbq-username [userInfo]="user" />
+                </kbq-list-option>
+            }
+        </kbq-list-selection>
+
+        @if (!(filteredUsers | async)?.length) {
+            <kbq-empty-state style="margin-top: 132px">
+                <span kbq-empty-state-text>Ничего не найдено</span>
+            </kbq-empty-state>
+        }
+    </kbq-scrollbar>
+</ng-template>
+
+<ng-template #customFooter>
+    <div
+        class="layout-row layout-gap-l layout-padding-vertical-l layout-padding-horizontal-xxl"
+        style="border-top: 1px solid var(--kbq-line-contrast-less)"
+    >
+        <button kbq-button [color]="'contrast'" (click)="onApply()">Применить</button>
+        <button kbq-button (click)="popover.hide(0)">Отмена</button>
+    </div>
+</ng-template>

@@ -54,6 +54,7 @@ import {
     KBQ_TITLE_TEXT_REF,
     KbqOptgroup,
     KbqOptionActionComponent,
+    KbqPseudoCheckbox,
     KbqTitleTextRef,
     MultipleMode
 } from '@koobiq/components/core';
@@ -696,6 +697,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     @ContentChild(KbqOptionActionComponent) actionButton: KbqOptionActionComponent;
     @ContentChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
     @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
+    @ContentChild(KbqPseudoCheckbox) pseudoCheckbox: KbqPseudoCheckbox;
 
     @ViewChild('text', { static: false }) text: ElementRef;
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -766,6 +768,10 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     get tabIndex(): any {
         return this.disabled ? null : -1;
+    }
+
+    get externalPseudoCheckbox(): boolean {
+        return !!this.pseudoCheckbox;
     }
 
     constructor(
