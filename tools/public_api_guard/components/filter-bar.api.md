@@ -16,6 +16,7 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
@@ -251,6 +252,7 @@ export class KbqFilterBarRefresher {
 // @public (undocumented)
 export class KbqFilterBarSearch implements AfterViewInit {
     readonly emitValueByEnter: InputSignalWithTransform<boolean, unknown>;
+    readonly initialValue: InputSignal<unknown>;
     isSearchActive: boolean;
     get localeData(): any;
     // (undocumented)
@@ -266,7 +268,7 @@ export class KbqFilterBarSearch implements AfterViewInit {
     openSearch(): void;
     searchControl: UntypedFormControl;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-search, [kbq-filter-search]", never, { "onSearchTimeout": { "alias": "onSearchTimeout"; "required": false; "isSignal": true; }; "emitValueByEnter": { "alias": "emitValueByEnter"; "required": false; "isSignal": true; }; }, { "onSearch": "onSearch"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-search, [kbq-filter-search]", never, { "onSearchTimeout": { "alias": "onSearchTimeout"; "required": false; "isSignal": true; }; "emitValueByEnter": { "alias": "emitValueByEnter"; "required": false; "isSignal": true; }; "initialValue": { "alias": "initialValue"; "required": false; "isSignal": true; }; }, { "onSearch": "onSearch"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarSearch, never>;
 }

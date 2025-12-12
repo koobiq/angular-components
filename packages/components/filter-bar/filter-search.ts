@@ -104,11 +104,18 @@ export class KbqFilterBarSearch implements AfterViewInit {
     /** Emit event by enter or not. Default is false */
     readonly emitValueByEnter = input(false, { transform: booleanAttribute });
 
+    /** Value of the field after initialization */
+    readonly initialValue = input();
+
     /** event that is generated whenever a user performs a search. */
     @Output() readonly onSearch = new EventEmitter<string>();
 
     ngAfterViewInit(): void {
         this.filterBar.filterReset?.onResetFilter.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.onReset);
+
+        if (this.initialValue()) {
+            this.searchControl.setValue(this.initialValue(), { emitEvent: false });
+        }
 
         this.searchControl.valueChanges
             .pipe(
