@@ -16,16 +16,22 @@
                     <div class="kbq-file-multiple__header">{{ config.title }}</div>
                     <div>
                         <!-- prettier-ignore -->
-                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<ng-container *ngTemplateOutlet="inputTemplate" /></label>{{ separatedCaptionText[1] }}</div>
+                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [disabled]="disabled" [tabIndex]="-1" [for]="inputId" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</div>
                     </div>
                 </div>
             } @else {
                 <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                 <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
                     {{ separatedCaptionTextForCompactSize[0] }}
-                    <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
+                    <label
+                        kbq-link
+                        pseudo
+                        kbqFileLoader
+                        [disabled]="disabled"
+                        [tabIndex]="-1"
+                        (fileChange)="onFileSelectedViaClick($event)"
+                    >
                         {{ config.browseLink }}
-                        <ng-container *ngTemplateOutlet="inputTemplate" />
                     </label>
                     {{ separatedCaptionTextForCompactSize[1] }}
                 </span>
@@ -101,9 +107,15 @@
                     <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                     <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
                         {{ separatedCaptionTextWhenSelected[0] }}
-                        <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
+                        <label
+                            kbq-link
+                            pseudo
+                            kbqFileLoader
+                            [disabled]="disabled"
+                            [tabIndex]="-1"
+                            (change)="onFileSelectedViaClick($event)"
+                        >
                             {{ config.browseLink }}
-                            <ng-container *ngTemplateOutlet="inputTemplate" />
                         </label>
                         {{ separatedCaptionTextWhenSelected[1] }}
                     </span>

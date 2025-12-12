@@ -9,7 +9,7 @@
         <div class="kbq-file-dropzone">
             <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
             <!-- prettier-ignore -->
-            <span class="kbq-file-dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo [disabled]="disabled" [tabIndex]="-1" [for]="inputId">{{ config.browseLink }}<input #input type="file" class="cdk-visually-hidden" tabindex="0" [id]="inputId" [accept]="acceptedFiles" [disabled]="disabled" (change)="onFileSelectedViaClick($event)"></label>{{ separatedCaptionText[1] }}</span>
+            <span class="kbq-file-dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [disabled]="disabled" [tabIndex]="-1" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</span>
         </div>
     } @else {
         @if (file) {

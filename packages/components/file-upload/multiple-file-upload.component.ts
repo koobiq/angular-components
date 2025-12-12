@@ -30,6 +30,7 @@ import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
 import { KbqFileDropDirective } from './file-drop';
+import { KbqFileLoader, KbqFileUploadPrimitive } from './file-picker';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -69,7 +70,8 @@ const fileSizeCellPadding = 16;
         KbqProgressSpinnerModule,
         AsyncPipe,
         NgTemplateOutlet,
-        KbqEllipsisCenterDirective
+        KbqEllipsisCenterDirective,
+        KbqFileLoader
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
@@ -77,7 +79,13 @@ const fileSizeCellPadding = 16;
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-multiple-file-upload'
-    }
+    },
+    hostDirectives: [
+        {
+            directive: KbqFileUploadPrimitive,
+            inputs: ['id', 'disabled', 'multiple', 'accept', 'onlyDirectory']
+        }
+    ]
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase

@@ -29,6 +29,7 @@ import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/prog
 import { BehaviorSubject, skip } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { KbqFileDropDirective } from './file-drop';
+import { KbqFileLoader } from './file-picker';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -52,7 +53,8 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
         KbqProgressSpinner,
         AsyncPipe,
         KbqEllipsisCenterDirective,
-        KbqDataSizePipe
+        KbqDataSizePipe,
+        KbqFileLoader
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],

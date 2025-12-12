@@ -7,6 +7,7 @@ import {
     inject,
     Input,
     Output,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,21 +21,28 @@ import {
     ValidationErrors,
     Validators
 } from '@angular/forms';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqBadge } from '@koobiq/components/badge';
+import { KbqButton, KbqButtonCssStyler, KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { FileValidators, KbqLocaleServiceModule, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
+    KbqFile,
+    KbqFileDropDirective,
     KbqFileItem,
+    KbqFileList,
+    KbqFileLoader,
     KbqFileUploadModule,
+    KbqFileUploadPrimitive,
     KbqFileValidatorFn
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { interval, takeWhile, timer } from 'rxjs';
+import { BehaviorSubject, interval, takeWhile, timer } from 'rxjs';
+import { E2eFileUploadStateAndStyle } from '../../components/file-upload/e2e';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { DevLocaleSelector } from '../locale-selector';
 
@@ -182,6 +190,94 @@ export class DevMultipleFileUploadCompact {
 }
 
 @Component({
+    selector: 'dev-file-upload-primitive',
+    imports: [
+        KbqFileUploadPrimitive,
+        KbqFileLoader,
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqIcon,
+        KbqFileList,
+        KbqFileDropDirective,
+        KbqBadge,
+        KbqIconButton
+    ],
+    template: `
+        <div
+            kbqFileUploadPrimitive
+            kbqFileDrop
+            multiple
+            [id]="'custom-file-upload'"
+            [disabled]="false"
+            [accept]="'.webp'"
+            (filesDropped)="onFilesDropped($event)"
+        >
+            <label kbqFileLoader (fileChange)="onFileClicked($event)">
+                <button kbq-button>
+                    <i kbq-icon="kbq-plus_16"></i>
+                </button>
+            </label>
+        </div>
+
+        <div #list="kbqFileList" kbqFileList>
+            @for (item of list.list(); track item) {
+                <div>
+                    <kbq-badge>{{ item.file.name }}</kbq-badge>
+                    <i kbq-icon-button="kbq-minus_16" (click)="list.removeAt($index)"></i>
+                </div>
+            }
+        </div>
+    `,
+    styles: `
+        .kbq-file-drop {
+            height: 200px;
+            width: 200px;
+            background: var(--kbq-background-card);
+            border: 1px solid var(--kbq-line-contrast-less);
+            border-radius: 8px;
+        }
+
+        .kbq-file-drop.kbq-file-drop_dragover {
+            background: var(--kbq-background-theme-less);
+            border-color: var(--kbq-line-theme-less);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevFileUploadPrimitive {
+    list = viewChild.required(KbqFileList);
+
+    onFileClicked({ target }: Event) {
+        if (!(target instanceof HTMLInputElement)) return;
+        const fileToAdd = target.files?.item(0);
+
+        if (fileToAdd) {
+            this.list().add({
+                file: fileToAdd,
+                hasError: false,
+                loading: new BehaviorSubject<boolean>(false),
+                progress: new BehaviorSubject<number>(0)
+            });
+        }
+
+        target.value = null as any;
+    }
+
+    onFilesDropped(files: KbqFile[] | null): void {
+        if (!files) return;
+
+        this.list().addArray(
+            Array.from(files).map((file: File) => ({
+                file,
+                hasError: false,
+                loading: new BehaviorSubject<boolean>(false),
+                progress: new BehaviorSubject<number>(0)
+            }))
+        );
+    }
+}
+
+@Component({
     selector: 'dev-app',
     imports: [
         DevExamples,
@@ -198,7 +294,9 @@ export class DevMultipleFileUploadCompact {
         KbqCheckboxModule,
         KbqRadioModule,
         DevMultipleFileUploadCompact,
-        DevCustomTextDirective
+        DevCustomTextDirective,
+        E2eFileUploadStateAndStyle,
+        DevFileUploadPrimitive
     ],
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
