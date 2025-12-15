@@ -6,7 +6,7 @@ import {
 } from './types';
 
 export const enUSLocaleData = {
-    select: { hiddenItemsText: '{{ number }} more' },
+    select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'yyyy-mm-dd',
         dateInput: 'yyyy-MM-dd'

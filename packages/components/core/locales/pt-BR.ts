@@ -6,7 +6,7 @@ import {
 } from './types';
 
 export const ptBRLocaleData = {
-    select: { hiddenItemsText: '{{ number }} mais' },
+    select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'dd/mm/yyyy'
     },

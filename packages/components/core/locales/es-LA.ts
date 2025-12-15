@@ -6,7 +6,7 @@ import {
 } from './types';
 
 export const esLALocaleData = {
-    select: { hiddenItemsText: '{{ number }} más' },
+    select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'dd/mm/aaaa'
     },
