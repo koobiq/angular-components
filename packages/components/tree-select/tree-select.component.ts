@@ -282,7 +282,7 @@ export class KbqTreeSelect
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
-    @Input() hiddenItemsText: string = 'еще {{ number }}';
+    @Input() hiddenItemsText: string = '+{{ number }}';
 
     /** Event emitted when the select panel has been toggled. */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
