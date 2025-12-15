@@ -25,9 +25,9 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
-      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-xmark-circle_16"
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-circle-xmark_16"
       color="contrast-fade"
-      kbq-icon-button="kbq-xmark-circle_16"
+      kbq-icon-button="kbq-circle-xmark_16"
       tabindex="0"
     />
   </kbq-cleaner>,
@@ -184,9 +184,9 @@ DebugElement {
     style="visibility: hidden;"
   >
     <i
-      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-xmark-circle_16"
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-circle-xmark_16"
       color="contrast-fade"
-      kbq-icon-button="kbq-xmark-circle_16"
+      kbq-icon-button="kbq-circle-xmark_16"
       tabindex="0"
     />
   </kbq-cleaner>,

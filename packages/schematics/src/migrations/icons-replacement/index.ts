@@ -11,7 +11,7 @@ export const replaceIcons = (contentToBeUpdated: string, replacementData: Replac
     let res = contentToBeUpdated;
 
     for (const { from, to } of replacementData) {
-        res = res!.replace(new RegExp(`kbq-${from}`, 'g'), `kbq-${to}`);
+        res = res!.replace(new RegExp(from, 'g'), to);
     }
 
     return res;

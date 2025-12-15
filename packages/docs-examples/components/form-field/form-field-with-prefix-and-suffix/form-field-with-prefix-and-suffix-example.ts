@@ -14,7 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
             <input kbqInput placeholder="Search" [formControl]="formControl" />
-            <i kbqSuffix kbq-icon="kbq-info-circle_16"></i>
+            <i kbqSuffix kbq-icon="kbq-circle-info_16"></i>
             <kbq-cleaner />
         </kbq-form-field>
     `,

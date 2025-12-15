@@ -11,7 +11,7 @@ import { KbqFormField } from './form-field';
     selector: 'kbq-cleaner',
     imports: [KbqIconModule],
     template: `
-        <i color="contrast-fade" kbq-icon-button="kbq-xmark-circle_16" [autoColor]="true"></i>
+        <i color="contrast-fade" kbq-icon-button="kbq-circle-xmark_16" [autoColor]="true"></i>
     `,
     styleUrl: './cleaner.scss',
     encapsulation: ViewEncapsulation.None,

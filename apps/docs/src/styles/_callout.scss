@@ -23,7 +23,7 @@
 
         &::before {
             @extend .kbq;
-            @extend .kbq-question-circle_16;
+            @extend .kbq-circle-question_16;
         }
     }
 
@@ -73,7 +73,7 @@
 
             &::before {
                 @extend .kbq;
-                @extend .kbq-exclamation-circle_16;
+                @extend .kbq-circle-exclamation_16;
             }
         }
     }
@@ -87,7 +87,7 @@
 
             &::before {
                 @extend .kbq;
-                @extend .kbq-check-circle_16;
+                @extend .kbq-circle-check_16;
             }
         }
     }
@@ -101,7 +101,7 @@
 
             &::before {
                 @extend .kbq;
-                @extend .kbq-exclamation-triangle_16;
+                @extend .kbq-triangle-exclamation_16;
             }
         }
     }
@@ -115,7 +115,7 @@
 
             &::before {
                 @extend .kbq;
-                @extend .kbq-minus-circle_16;
+                @extend .kbq-circle-minus_16;
             }
         }
     }

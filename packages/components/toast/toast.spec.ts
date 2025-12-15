@@ -72,7 +72,7 @@ describe('ToastService', () => {
 
             const toastIcon: HTMLElement = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
 
-            expect(toastIcon.classList).toContain('kbq-exclamation-triangle_16');
+            expect(toastIcon.classList).toContain('kbq-triangle-exclamation_16');
         });
 
         it('should create one sticky warning toast with custom icon', () => {

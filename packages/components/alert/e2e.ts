@@ -58,7 +58,7 @@ import {
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
                             <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                <i kbq-icon-item="kbq-info-circle_16"></i>
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis risus ac varius
                                 ultricies. Aenean maximus ex at ornare tempus. Pellentesque habitant morbi tristique
@@ -78,7 +78,7 @@ import {
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
                             <kbq-alert [compact]="true" [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                <i kbq-icon-item="kbq-info-circle_16"></i>
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
                                 <i
@@ -96,7 +96,7 @@ import {
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
                             <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                <i kbq-icon-item="kbq-info-circle_16"></i>
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
                                 <i
@@ -114,7 +114,7 @@ import {
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
                             <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Colored">
-                                <i kbq-icon-item="kbq-info-circle_16"></i>
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
                                 <i
@@ -132,7 +132,7 @@ import {
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
                             <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Colored" [compact]="true">
-                                <i kbq-icon-item="kbq-info-circle_16"></i>
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
                                 <i
@@ -161,7 +161,7 @@ import {
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
                             <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Colored">
-                                <i kbq-icon-item="kbq-info-circle_16"></i>
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
                                 <i

@@ -53,7 +53,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                 [class.layout-margin-bottom-l]="showServerErrors()"
             >
                 <kbq-alert class="example-alert" alertColor="error" alertStyle="colored" [compact]="true">
-                    <i color="error" kbq-icon="kbq-info-circle_16"></i>
+                    <i color="error" kbq-icon="kbq-circle-info_16"></i>
                     The server didn’t respond while sending data. Please try again.
                 </kbq-alert>
             </div>

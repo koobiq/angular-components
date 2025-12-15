@@ -47,7 +47,7 @@ type EmptyStateState = {
                                     @if (cell.withIcon) {
                                         <i
                                             kbq-empty-state-icon
-                                            kbq-icon-item="kbq-exclamation-triangle_16"
+                                            kbq-icon-item="kbq-triangle-exclamation_16"
                                             [big]="true"
                                             [fade]="true"
                                         ></i>

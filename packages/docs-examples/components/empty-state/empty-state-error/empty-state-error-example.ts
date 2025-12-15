@@ -17,7 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         <kbq-empty-state style="min-height: 216px" [errorColor]="true">
             <i
                 kbq-empty-state-icon
-                kbq-icon-item="kbq-exclamation-triangle_16"
+                kbq-icon-item="kbq-triangle-exclamation_16"
                 [big]="true"
                 [color]="'contrast'"
                 [fade]="true"

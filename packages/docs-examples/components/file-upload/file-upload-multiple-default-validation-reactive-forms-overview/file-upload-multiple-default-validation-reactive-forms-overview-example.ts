@@ -30,7 +30,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
                     <i kbq-icon="kbq-file-o_16"></i>
                 }
                 @if (file.hasError) {
-                    <i kbq-icon="kbq-exclamation-triangle_16"></i>
+                    <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
             </ng-template>
 

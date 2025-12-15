@@ -83,7 +83,7 @@ type MultipleUploadState = {
     }
 })
 export class E2eFileUploadStateAndStyle {
-    protected readonly iconClass = { error: 'kbq-info-circle_16', default: 'kbq-file-o_16' };
+    protected readonly iconClass = { error: 'kbq-circle-info_16', default: 'kbq-file-o_16' };
 
     protected readonly singleFileUploadRows: SingleUploadState[][] = [
         // Row 1: Simple (no file selected)

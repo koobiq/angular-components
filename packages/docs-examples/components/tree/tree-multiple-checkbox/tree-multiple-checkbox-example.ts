@@ -113,13 +113,13 @@ export const DATA_OBJECT = {
             [(ngModel)]="modelValue"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
-                <i kbq-icon="kbq-info-circle_16"></i>
+                <i kbq-icon="kbq-circle-info_16"></i>
 
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 
             <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
-                <i kbq-icon="kbq-info-circle_16"></i>
+                <i kbq-icon="kbq-circle-info_16"></i>
 
                 <kbq-tree-node-toggle [node]="node" />
 

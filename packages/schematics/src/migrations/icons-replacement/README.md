@@ -8,6 +8,8 @@ This schematic provides migration for new icons naming attribute. It includes:
 
 #### Usage for Angular Cli:
 
+Apply for project and log file path and icon name should be replaced
+
 ```shell
 ng g @koobiq/components:icons-replacement --project <your project>
 ```
@@ -18,8 +20,10 @@ ng g @koobiq/components:icons-replacement --project <your project>
 ng g @koobiq/components:icons-replacement --project <your project> --replacement-data-path <path-as-json>
 ```
 
+Apply for project and replace icon name.
+
 ```shell
-ng g @koobiq/components:icons-replacement --project <your project>
+ng g @koobiq/components:icons-replacement --project <your project>  --fix=true
 ```
 
 #### Usage for Nx:
