@@ -175,6 +175,9 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
     }
 }
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Directive({
     selector: 'kbq-navbar-ic-container',
     host: {
@@ -183,6 +186,9 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
 })
 export class KbqNavbarIcContainer {}
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Component({
     selector: 'kbq-navbar-ic',
     template: `

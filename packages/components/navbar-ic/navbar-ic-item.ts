@@ -45,6 +45,9 @@ export interface KbqNavbarFocusableItemEvent {
     item: KbqNavbarIcFocusableItem;
 }
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Directive({
     selector: '[kbqNavbarIcLogo]',
     host: {
@@ -53,6 +56,9 @@ export interface KbqNavbarFocusableItemEvent {
 })
 export class KbqNavbarIcLogo {}
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Directive({
     selector: '[kbqNavbarIcTitle]',
     host: {
@@ -100,6 +106,9 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     }
 }
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Directive({
     selector: '[kbqNavbarIcDivider]',
     host: {
@@ -108,6 +117,9 @@ export class KbqNavbarIcTitle implements AfterViewInit {
 })
 export class KbqNavbarIcDivider {}
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Directive({
     selector:
         'kbq-navbar-ic-item, [kbq-navbar-ic-item], kbq-navbar-ic-header, [kbq-navbar-ic-header], kbq-navbar-ic-toggle',
@@ -243,6 +255,9 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     }
 }
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Component({
     selector: 'kbq-navbar-ic-item, [kbq-navbar-ic-item]',
     imports: [KbqIcon],
@@ -389,6 +404,9 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     }
 }
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Component({
     selector: 'kbq-navbar-ic-toggle',
     imports: [KbqIcon],

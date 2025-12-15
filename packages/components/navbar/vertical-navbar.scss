@@ -3,9 +3,12 @@
 @use './navbar-theme' as *;
 
 .kbq-vertical-navbar {
+    display: flex;
+    flex-shrink: 0;
+
     position: relative;
 
-    min-width: var(--kbq-size-5xl);
+    min-width: var(--kbq-size-6xl);
     height: 100%;
 
     &:not(:hover, .cdk-keyboard-focused) .kbq-navbar-toggle {
