@@ -668,7 +668,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'notification-center',
                     hasApi: true,
                     apiId: 'notification-center',
-                    hasExamples: false,
+                    hasExamples: true,
                     isNew: expiresAt('2025-11-10')
                 },
                 {

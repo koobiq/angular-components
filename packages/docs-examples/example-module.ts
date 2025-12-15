@@ -3110,6 +3110,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "notification-center-popover-example.ts",
     "importPath": "components/notification-center"
   },
+  "notification-center-push": {
+    "packagePath": "components/notification-center/notification-center-push",
+    "title": "notification-center",
+    "componentName": "NotificationCenterPushExample",
+    "files": [
+      "notification-center-push-example.ts",
+      "notification-center-push-example.html"
+    ],
+    "selector": "notification-center-push-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-push-example.ts",
+    "importPath": "components/notification-center"
+  },
   "number-formatter-overview": {
     "packagePath": "components/number-formatter/number-formatter-overview",
     "title": "Number-formatter",
@@ -6125,6 +6138,8 @@ return import('@koobiq/docs-examples/components/notification-center');
   case 'notification-center-overview':
 return import('@koobiq/docs-examples/components/notification-center');
   case 'notification-center-popover':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-push':
 return import('@koobiq/docs-examples/components/notification-center');
   case 'number-formatter-overview':
 return import('@koobiq/docs-examples/components/number-formatter');

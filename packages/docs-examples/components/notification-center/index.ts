@@ -3,19 +3,22 @@ import { NotificationCenterEmptyExample } from './notification-center-empty/noti
 import { NotificationCenterErrorExample } from './notification-center-error/notification-center-error-example';
 import { NotificationCenterOverviewExample } from './notification-center-overview/notification-center-overview-example';
 import { NotificationCenterPopoverExample } from './notification-center-popover/notification-center-popover-example';
+import { NotificationCenterPushExample } from './notification-center-push/notification-center-push-example';
 
 export {
     NotificationCenterEmptyExample,
     NotificationCenterErrorExample,
     NotificationCenterOverviewExample,
-    NotificationCenterPopoverExample
+    NotificationCenterPopoverExample,
+    NotificationCenterPushExample
 };
 
 const EXAMPLES = [
     NotificationCenterOverviewExample,
     NotificationCenterEmptyExample,
     NotificationCenterErrorExample,
-    NotificationCenterPopoverExample
+    NotificationCenterPopoverExample,
+    NotificationCenterPushExample
 ];
 
 @NgModule({
