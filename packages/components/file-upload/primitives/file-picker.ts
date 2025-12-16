@@ -17,18 +17,26 @@ import {
  * File upload context.
  */
 @Directive({
-    selector: '[kbqFileUploadPrimitive]',
-    exportAs: 'kbqFileUploadPrimitive'
+    selector: '[kbqFileUploadContext]',
+    exportAs: 'kbqFileUploadContext'
 })
-export class KbqFileUploadPrimitive {
+export class KbqFileUploadContext {
+    /** id for file input  */
     id = input<string | null>(null);
+    /** Whether file input selectable or not */
     disabled = input(false);
+    /** Selection mode for file input */
     multiple = input(null, { transform: booleanAttribute });
+    /** File type specifiers */
     accept = input<string | null>(null);
+    /**
+     * Reflects webkitdirectory attribute, which indicates that elements can only select directories instead of files.
+     */
     onlyDirectory = input(null, { transform: booleanAttribute });
 
+    /** @docs-private */
     innerDisabled = signal<boolean | null>(null);
-
+    /** @docs-private */
     computedDisabled = computed(() => this.innerDisabled() ?? this.disabled());
 }
 
@@ -59,11 +67,15 @@ export class KbqFileUploadPrimitive {
     }
 })
 export class KbqFileLoader {
-    private fileUpload = inject(KbqFileUploadPrimitive, { optional: true });
+    private fileUploadContext = inject(KbqFileUploadContext, { optional: true });
 
+    /** Whether file input selectable or not */
     disabled = input<boolean>(false);
+    /** Selection mode for file input */
     multiple = input<boolean | null>(null);
+    /** File type specifiers */
     accept = input<string | null>(null);
+    /** id for file input  */
     for = input<string | null>(null);
     /**
      * Reflects webkitdirectory attribute,
@@ -77,11 +89,18 @@ export class KbqFileLoader {
 
     readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
-    protected readonly innerDisabled = computed(() => this.fileUpload?.computedDisabled() ?? this.disabled());
-    protected readonly innerMultiple = computed(() => this.fileUpload?.multiple() ?? this.multiple());
-    protected readonly innerAccept = computed(() => this.fileUpload?.accept() ?? this.accept());
-    protected readonly innerFor = computed(() => this.fileUpload?.id() ?? this.for());
-    protected readonly innerOnlyDirectory = computed(() => this.fileUpload?.onlyDirectory() ?? this.onlyDirectory());
+    /** @docs-private */
+    protected readonly innerDisabled = computed(() => this.fileUploadContext?.computedDisabled() ?? this.disabled());
+    /** @docs-private */
+    protected readonly innerMultiple = computed(() => this.fileUploadContext?.multiple() ?? this.multiple());
+    /** @docs-private */
+    protected readonly innerAccept = computed(() => this.fileUploadContext?.accept() ?? this.accept());
+    /** @docs-private */
+    protected readonly innerFor = computed(() => this.fileUploadContext?.id() ?? this.for());
+    /** @docs-private */
+    protected readonly innerOnlyDirectory = computed(
+        () => this.fileUploadContext?.onlyDirectory() ?? this.onlyDirectory()
+    );
 }
 
 /**
@@ -95,28 +114,29 @@ export class KbqFileLoader {
     }
 })
 export class KbqFileList<T> {
+    /** Current list of items. */
     list = model<T[]>([]);
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.
      */
     readonly itemRemoved = output<[T, number]>();
+    /** Emits array of items that were added to the list. */
     readonly itemsAdded = output<T[]>();
 
-    private update(fn: (current: T[]) => T[]) {
-        this.list.update(fn);
-    }
-
+    /** Adds a single item to the list and emits event */
     add(item: T): void {
         this.update((current) => [...current, item]);
         this.itemsAdded.emit([item]);
     }
 
+    /** Adds multiple items to the list and emits event */
     addArray(items: T[]): void {
         this.update((current) => [...current, ...items]);
         this.itemsAdded.emit(items);
     }
 
+    /** Removes the first occurrence of the specified item. Returns removed items and emits event. */
     remove(item: T): T[] {
         const removed: T[] = [];
 
@@ -135,6 +155,7 @@ export class KbqFileList<T> {
         return removed;
     }
 
+    /** Removes item at specified index. Returns removed items and emits event. */
     removeAt(index: number): T[] {
         const removed: T[] = [];
 
@@ -148,5 +169,9 @@ export class KbqFileList<T> {
         this.itemRemoved.emit([removed[0], index]);
 
         return removed;
+    }
+
+    private update(fn: (current: T[]) => T[]) {
+        this.list.update(fn);
     }
 }
