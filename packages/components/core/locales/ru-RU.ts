@@ -6,7 +6,7 @@ import {
 } from './types';
 
 export const ruRULocaleData = {
-    select: { hiddenItemsText: 'еще {{ number }}' },
+    select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'дд.мм.гггг',
         dateInput: 'dd.MM.yyyy'

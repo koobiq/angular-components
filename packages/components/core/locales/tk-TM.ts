@@ -6,7 +6,7 @@ import {
 } from './types';
 
 export const tkTMLocaleData = {
-    select: { hiddenItemsText: 'ýene {{ number }}' },
+    select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'gg.aa.ýý.',
         dateInput: 'gg.aa.ýý.'

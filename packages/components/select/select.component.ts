@@ -302,7 +302,7 @@ export class KbqSelect
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
-    @Input() hiddenItemsText: string = 'еще {{ number }}';
+    @Input() hiddenItemsText: string = '+{{ number }}';
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
     @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
