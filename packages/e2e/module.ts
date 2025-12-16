@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { E2eBadgeStyles } from 'packages/components/badge/e2e';
 import { E2eTimepickerStates } from 'packages/components/timepicker/e2e';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
 import { E2eAccordionStates } from '../components/accordion/e2e';
@@ -44,6 +45,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eFilterBarStates,
         E2eTimepickerStates,
         E2eIconStateAndStyle
+        E2eTimepickerStates
+        E2eBadgeStyles
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
