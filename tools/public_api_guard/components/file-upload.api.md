@@ -149,12 +149,12 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
 // @public
 export class KbqFileUploadContext {
     accept: InputSignal<string | null>;
-    computedDisabled: Signal<boolean>;
-    disabled: InputSignal<boolean>;
+    computedDisabled: Signal<boolean | null>;
+    disabled: InputSignal<boolean | null>;
     id: InputSignal<string | null>;
     innerDisabled: WritableSignal<boolean | null>;
     multiple: InputSignalWithTransform<boolean | null, unknown>;
-    onlyDirectory: InputSignalWithTransform<boolean | null, unknown>;
+    onlyDirectory: InputSignal<boolean | null>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFileUploadContext, "[kbqFileUploadContext]", ["kbqFileUploadContext"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "onlyDirectory": { "alias": "onlyDirectory"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -178,7 +178,7 @@ export class KbqFileUploadModule {
 // @public @deprecated (undocumented)
 export type KbqFileValidatorFn = (file: File) => string | null;
 
-// @public @deprecated
+// @public (undocumented)
 export interface KbqInputFile {
     // (undocumented)
     accept?: string[];
@@ -216,7 +216,7 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 }
 
 // @public (undocumented)
-export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, ControlValueAccessor, DoCheck {
+export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
@@ -276,7 +276,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
 }
 
 // @public (undocumented)
-export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, ControlValueAccessor, DoCheck {
+export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
     constructor();
     accept?: string[];
     get acceptedFiles(): string;

@@ -95,6 +95,7 @@ import { BehaviorSubject } from 'rxjs';
             box-shadow: var(--kbq-shadow-card);
             padding: var(--kbq-size-s);
             margin: var(--kbq-size-m);
+            border-radius: var(--kbq-size-border-radius);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

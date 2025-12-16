@@ -24,7 +24,7 @@ export class KbqFileUploadContext {
     /** id for file input  */
     id = input<string | null>(null);
     /** Whether file input selectable or not */
-    disabled = input(false);
+    disabled = input<boolean | null>(false);
     /** Selection mode for file input */
     multiple = input(null, { transform: booleanAttribute });
     /** File type specifiers */
@@ -32,7 +32,7 @@ export class KbqFileUploadContext {
     /**
      * Reflects webkitdirectory attribute, which indicates that elements can only select directories instead of files.
      */
-    onlyDirectory = input(null, { transform: booleanAttribute });
+    onlyDirectory = input<boolean | null>(null);
 
     /** @docs-private */
     innerDisabled = signal<boolean | null>(null);
@@ -162,7 +162,7 @@ export class KbqFileList<T> {
         this.update((current) => {
             const removedItem = current.splice(index, 1);
 
-            removed.concat(removedItem);
+            removed.push(...removedItem);
 
             return current;
         });

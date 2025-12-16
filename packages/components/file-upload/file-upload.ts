@@ -90,7 +90,7 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
 
     /** @docs-private */
     get disabled(): boolean {
-        return this.fileUploadContext.computedDisabled();
+        return this.fileUploadContext.computedDisabled() ?? false;
     }
 
     /** @docs-private */
