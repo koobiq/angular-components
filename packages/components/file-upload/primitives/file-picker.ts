@@ -25,7 +25,7 @@ export class KbqFileUploadPrimitive {
     disabled = input(false);
     multiple = input(null, { transform: booleanAttribute });
     accept = input<string | null>(null);
-    onlyDirectory = input(undefined, { transform: booleanAttribute });
+    onlyDirectory = input(null, { transform: booleanAttribute });
 
     innerDisabled = signal<boolean | null>(null);
 
@@ -91,7 +91,7 @@ export class KbqFileLoader {
     selector: '[kbqFileList]',
     exportAs: 'kbqFileList',
     host: {
-        class: 'kbq-items-list'
+        class: 'kbq-file-list'
     }
 })
 export class KbqFileList<T> {
