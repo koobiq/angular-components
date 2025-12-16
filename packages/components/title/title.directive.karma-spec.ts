@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
-import { KbqTitleDirective } from './title.directive';
+import { KbqTitleModule } from './title.module';
 
 describe('KbqTitleDirective', () => {
     let fixture: ComponentFixture<any>;
@@ -12,9 +12,8 @@ describe('KbqTitleDirective', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [BrowserAnimationsModule],
+            imports: [BrowserAnimationsModule, KbqTitleModule],
             declarations: [
-                KbqTitleDirective,
                 BaseKbqTitleComponent,
                 WithParamsKbqTitleComponent
             ],
@@ -212,8 +211,9 @@ class WithParamsKbqTitleComponent {
 }
 
 @Component({
+    standalone: true,
     imports: [
-        KbqTitleDirective
+        KbqTitleModule
     ],
     template: `
         <div kbq-title class="vertical-overflown">
