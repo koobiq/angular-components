@@ -23,7 +23,7 @@ import { KbqFileItem } from './file-upload';
 export class KbqFileUploadPrimitive {
     id = input();
     disabled = input(false);
-    multiple = input(undefined, { transform: booleanAttribute });
+    multiple = input(null, { transform: booleanAttribute });
     accept = input<string | null>(null);
     onlyDirectory = input(undefined, { transform: booleanAttribute });
 }
@@ -41,34 +41,43 @@ export class KbqFileUploadPrimitive {
             tabindex="0"
             type="file"
             class="cdk-visually-hidden"
-            aria-hidden="true"
-            [attr.multiple]="multiple()"
-            [attr.webkitdirectory]="onlyDirectory()"
-            [accept]="accept()"
-            [disabled]="disabled()"
-            [id]="for()"
+            [attr.multiple]="innerMultiple()"
+            [attr.webkitdirectory]="innerOnlyDirectory()"
+            [accept]="innerAccept()"
+            [disabled]="innerDisabled()"
+            [id]="innerFor()"
             (change)="fileChange.emit($event)"
         />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'kbq-file-loader',
-        '(click)': 'input()?.nativeElement?.click()'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+        class: 'kbq-file-loader'
+    }
 })
 export class KbqFileLoader {
-    private fileUpload = inject(KbqFileUploadPrimitive, { host: true, optional: true });
+    private fileUpload = inject(KbqFileUploadPrimitive, { optional: true });
 
-    disabled = computed(() => this.fileUpload?.disabled() ?? false);
-    multiple = computed(() => this.fileUpload?.multiple() ?? false);
-    accept = computed(() => this.fileUpload?.accept() ?? null);
-    for = computed(() => this.fileUpload?.id() ?? null);
-    onlyDirectory = computed(() => this.fileUpload?.onlyDirectory() ?? null);
+    disabled = input<boolean>(false);
+    multiple = input<boolean | null>(null);
+    accept = input<string | null>(null);
+    for = input<string | null>(null);
+    /**
+     * Reflects webkitdirectory attribute,
+     * which indicates that elements can only select directories instead of files.
+     * @link [`HTMLInputElement: webkitdirectory property`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
+     */
+    onlyDirectory = input<boolean | null>(null);
 
     /** Event fires when file selected in file-picker. */
     readonly fileChange = output<Event>();
 
-    input = viewChild.required<ElementRef<HTMLInputElement>>('input');
+    readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
+
+    protected readonly innerDisabled = computed(() => this.fileUpload?.disabled() ?? this.disabled());
+    protected readonly innerMultiple = computed(() => this.fileUpload?.multiple() ?? this.multiple());
+    protected readonly innerAccept = computed(() => this.fileUpload?.accept() ?? this.accept());
+    protected readonly innerFor = computed(() => this.fileUpload?.id() ?? this.for());
+    protected readonly innerOnlyDirectory = computed(() => this.fileUpload?.onlyDirectory() ?? this.onlyDirectory());
 }
 
 /**
