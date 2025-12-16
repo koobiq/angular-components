@@ -5,9 +5,12 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
+import { AfterContentInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter } from '@koobiq/components/core';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
@@ -48,15 +51,17 @@ export const KBQ_TIMEPICKER_VALIDATORS: any;
 export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
+export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
     constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, dateAdapter: DateAdapter<any>, localeService?: KbqLocaleService | undefined);
     controlType: string;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     get empty(): boolean;
-    // (undocumented)
-    errorState: boolean;
+    get errorState(): boolean;
+    set errorState(value: boolean);
+    get errorStateMatcher(): ErrorStateMatcher;
+    set errorStateMatcher(value: ErrorStateMatcher);
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -87,7 +92,11 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get min(): D | null;
     set min(value: D | null);
     // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
     get ngControl(): any;
+    // (undocumented)
+    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -119,6 +128,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     setDisabledState(isDisabled: boolean): void;
     readonly stateChanges: Subject<void>;
     get timeFormatPlaceholder(): string;
+    updateErrorState(): void;
     // (undocumented)
     validate(control: AbstractControl): ValidationErrors | null;
     // (undocumented)
@@ -129,7 +139,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     writeValue(value: D | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimepicker<any>, "input[kbqTimepicker]", ["kbqTimepicker"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "format": { "alias": "format"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "value": { "alias": "value"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
