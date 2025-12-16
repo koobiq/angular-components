@@ -10,7 +10,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
+import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
@@ -41,7 +41,6 @@ enum NavbarIcItems {
     selector: 'notification-center-error-example',
     imports: [
         KbqNotificationCenterModule,
-        KbqNavbarIcModule,
         KbqBadgeModule,
         KbqIconModule,
         KbqEmptyStateModule,
@@ -51,12 +50,13 @@ enum NavbarIcItems {
         AsyncPipe,
         KbqLinkModule,
         LuxonDateModule,
-        KbqFormattersModule
+        KbqFormattersModule,
+        KbqNavbarModule
     ],
     templateUrl: 'notification-center-error-example.html',
     styles: `
         ::ng-deep .example-notification-center-panel {
-            margin-top: -98px;
+            margin-top: -139px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

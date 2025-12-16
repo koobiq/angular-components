@@ -6,7 +6,6 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { NotificationCenterExamplesModule } from '../../docs-examples/components/notification-center';
-import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
@@ -31,7 +30,6 @@ export class DevExamples {}
     selector: 'dev-app',
     imports: [
         DevExamples,
-        DevThemeToggle,
         KbqButtonModule,
         KbqNotificationCenterModule,
         KbqIcon,

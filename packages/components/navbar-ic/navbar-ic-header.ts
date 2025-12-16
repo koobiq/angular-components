@@ -16,6 +16,9 @@ import { KbqNavbarIc } from './navbar-ic';
 import { KbqNavbarIcLogo, KbqNavbarIcTitle } from './navbar-ic-item';
 import { toggleNavbarIcItemAnimation } from './navbar-ic.animation';
 
+/**
+ * @deprecated Will be removed in the next major release.
+ */
 @Component({
     selector: 'kbq-navbar-ic-header, [kbq-navbar-ic-header]',
     template: `

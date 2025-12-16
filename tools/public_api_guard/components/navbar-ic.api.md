@@ -119,7 +119,7 @@ export interface KbqNavbarFocusableItemEvent {
     item: KbqNavbarIcFocusableItem;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     constructor();
     // (undocumented)
@@ -184,7 +184,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIc, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcContainer {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarIcContainer, "kbq-navbar-ic-container", never, {}, {}, never, never, true, never>;
@@ -192,7 +192,7 @@ export class KbqNavbarIcContainer {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcContainer, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcDivider {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarIcDivider, "[kbqNavbarIcDivider]", never, {}, {}, never, never, true, never>;
@@ -200,7 +200,7 @@ export class KbqNavbarIcDivider {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcDivider, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     blurHandler(): void;
     button: KbqButton;
@@ -246,7 +246,7 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcFocusableItem, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContentInit {
     constructor();
     // (undocumented)
@@ -273,7 +273,7 @@ export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContent
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcHeader, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentInit {
     constructor();
     button: KbqButtonCssStyler;
@@ -313,7 +313,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcItem, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcLogo {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarIcLogo, "[kbqNavbarIcLogo]", never, {}, {}, never, never, true, never>;
@@ -335,7 +335,7 @@ export class KbqNavbarIcModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarIcModule, never, [typeof i1_2.A11yModule, typeof i2.PlatformModule, typeof i3.KbqIconModule, typeof i4.KbqToolTipModule, typeof i5.KbqNavbarIc, typeof i6.KbqNavbarIcTitle, typeof i6.KbqNavbarIcItem, typeof i7.KbqNavbarIcHeader, typeof i6.KbqNavbarIcLogo, typeof i6.KbqNavbarIcToggle, typeof i6.KbqNavbarIcDivider, typeof i6.KbqNavbarIcFocusableItem, typeof i5.KbqNavbarIcContainer, typeof i1.KbqRectangleItem], [typeof i5.KbqNavbarIc, typeof i5.KbqNavbarIcContainer, typeof i6.KbqNavbarIcTitle, typeof i6.KbqNavbarIcItem, typeof i7.KbqNavbarIcHeader, typeof i6.KbqNavbarIcLogo, typeof i6.KbqNavbarIcToggle, typeof i6.KbqNavbarIcDivider, typeof i6.KbqNavbarIcFocusableItem]>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcTitle implements AfterViewInit {
     // (undocumented)
     checkTextOverflown(): void;
@@ -363,7 +363,7 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcTitle, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqNavbarIcToggle {
     constructor();
     // (undocumented)

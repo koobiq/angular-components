@@ -333,6 +333,9 @@ export class KbqNavbarRectangleElement {
 
 @Component({
     selector: 'kbq-navbar-item, [kbq-navbar-item]',
+    imports: [
+        KbqIcon
+    ],
     templateUrl: './navbar-item.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -459,6 +462,13 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     }
 
     ngAfterContentInit(): void {
+        if (this.dropdownTrigger?.dropdown) {
+            this.dropdownTrigger.dropdown.overlapTriggerX = false;
+            this.dropdownTrigger.dropdown.overlapTriggerY = true;
+            // needs to shift dropdown to the left by 8 pixels
+            this.dropdownTrigger.offsetX = -8;
+        }
+
         this.updateTooltip();
     }
 
