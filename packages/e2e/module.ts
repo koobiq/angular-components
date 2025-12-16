@@ -18,7 +18,7 @@ import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 
 @Component({
-    selector: 'dev-app',
+    selector: 'e2e-app',
     imports: [
         DevThemeToggle,
         E2eButtonStateAndStyle,
@@ -45,4 +45,4 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
     styleUrl: 'main.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevApp {}
+export class E2eApp {}

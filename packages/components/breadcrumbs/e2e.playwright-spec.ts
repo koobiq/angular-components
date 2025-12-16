@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqBreadcrumbsModule', () => {
     test.describe('E2eBreadcrumbsStateAndStyle', () => {
@@ -9,7 +9,7 @@ test.describe('KbqBreadcrumbsModule', () => {
         const hoverLastItem = (locator: Locator) => locator.locator('.kbq-breadcrumb-item').last().hover();
 
         test('KbqBreadcrumbs states', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
             const locator = getComponent(page);
 
             const screenshotTarget = getTestTable(locator);
@@ -18,8 +18,8 @@ test.describe('KbqBreadcrumbsModule', () => {
         });
 
         test(`KbqBreadcrumbs states (dark theme)`, async ({ page }) => {
-            await devGoToRootPage(page);
-            await devEnableDarkTheme(page);
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
 
@@ -29,7 +29,7 @@ test.describe('KbqBreadcrumbsModule', () => {
         });
 
         test('KbqBreadcrumbs Dropdown Hover', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
             const locator = getComponent(page);
 
             const screenshotTarget = getTestRow(locator);

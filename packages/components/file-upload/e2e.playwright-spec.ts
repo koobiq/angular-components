@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqFileUploadModule', () => {
     test.describe('E2eFileUploadStateAndStyle', () => {
@@ -9,7 +9,7 @@ test.describe('KbqFileUploadModule', () => {
         const focusFileItem = (locator: Locator) => locator.locator('.dev-focused .kbq-list-selection')?.focus();
 
         test('KbqSingleFileUploadComponent states', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
             const locator = getComponent(page);
 
             const screenshotTarget = getSingleFileUploadTable(locator);
@@ -18,8 +18,8 @@ test.describe('KbqFileUploadModule', () => {
         });
 
         test(`KbqSingleFileUploadComponent states (dark theme)`, async ({ page }) => {
-            await devGoToRootPage(page);
-            await devEnableDarkTheme(page);
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
 
@@ -29,7 +29,7 @@ test.describe('KbqFileUploadModule', () => {
         });
 
         test('KbqMultipleFileUploadComponent states', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
             const locator = getComponent(page);
 
             const screenshotTarget = getMultipleFileUploadTable(locator);
@@ -38,8 +38,8 @@ test.describe('KbqFileUploadModule', () => {
         });
 
         test(`KbqMultipleFileUploadComponent states (dark theme)`, async ({ page }) => {
-            await devGoToRootPage(page);
-            await devEnableDarkTheme(page);
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
 

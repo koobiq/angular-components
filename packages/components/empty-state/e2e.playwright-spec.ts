@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqEmptyStateModule', () => {
     test.describe('E2eEmptyStateStateAndStyle', () => {
@@ -7,7 +7,7 @@ test.describe('KbqEmptyStateModule', () => {
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eEmptyStateTable');
 
         test('KbqEmptyState states', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
             const locator = getComponent(page);
 
             const screenshotTarget = getTestTable(locator);
@@ -16,8 +16,8 @@ test.describe('KbqEmptyStateModule', () => {
         });
 
         test(`KbqEmptyState states (dark theme)`, async ({ page }) => {
-            await devGoToRootPage(page);
-            await devEnableDarkTheme(page);
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
 

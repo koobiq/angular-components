@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqFilterBarModule', () => {
     test.describe('E2eFilterBarStates', () => {
@@ -7,7 +7,7 @@ test.describe('KbqFilterBarModule', () => {
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
         test('FilterBar default', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
 
             const locator = getComponent(page);
 
@@ -15,8 +15,8 @@ test.describe('KbqFilterBarModule', () => {
         });
 
         test('FilterBar (dark theme)', async ({ page }) => {
-            await devGoToRootPage(page);
-            await devEnableDarkTheme(page);
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
 
