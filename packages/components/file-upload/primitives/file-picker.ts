@@ -101,6 +101,7 @@ export class KbqFileList<T> {
      * Useful when handle removed files, skipping filtering file list.
      */
     readonly itemRemoved = output<[T, number]>();
+    readonly itemsAdded = output<T[]>();
 
     private update(fn: (current: T[]) => T[]) {
         this.list.update(fn);
@@ -108,14 +109,30 @@ export class KbqFileList<T> {
 
     add(item: T): void {
         this.update((current) => [...current, item]);
+        this.itemsAdded.emit([item]);
     }
 
     addArray(items: T[]): void {
         this.update((current) => [...current, ...items]);
+        this.itemsAdded.emit(items);
     }
 
-    remove(item: T): void {
-        this.update((current) => current.filter((i) => i !== item));
+    remove(item: T): T[] {
+        const removed: T[] = [];
+
+        this.update((current) =>
+            current.filter((currentItem) => {
+                const isRemoved = currentItem !== item;
+
+                if (isRemoved) {
+                    removed.push(currentItem);
+                }
+
+                return isRemoved;
+            })
+        );
+
+        return removed;
     }
 
     removeAt(index: number): T[] {

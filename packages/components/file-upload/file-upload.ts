@@ -10,6 +10,7 @@ import {
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { KbqFileList, KbqFileUploadPrimitive } from './primitives';
 
 export interface KbqFile extends File {
     /* used when directory dropped */

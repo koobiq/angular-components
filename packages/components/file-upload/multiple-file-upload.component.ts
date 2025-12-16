@@ -84,7 +84,7 @@ const fileSizeCellPadding = 16;
             directive: KbqFileUploadPrimitive,
             inputs: ['id', 'disabled', 'onlyDirectory']
         },
-        { directive: KbqFileList, outputs: ['listChange: filesChange'] }
+        { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
     ]
 })
 export class KbqMultipleFileUploadComponent
