@@ -85,7 +85,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
     describe('with focus and keyboard', () => {
         it('should toggle label focus state on input focused/blurred', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
 
             // Simulate focus via keyboard.
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
@@ -106,7 +106,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         }));
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
 
             component.disabled = true;
             fixture.detectChanges();
@@ -125,7 +125,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
     describe('with file queue change', () => {
         const emitRemoveEvent = () => {
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
@@ -138,7 +138,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.onChange).toHaveBeenCalledTimes(1);
@@ -150,7 +150,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = true;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
 
             expect(component.onChange).toHaveBeenCalledTimes(0);
         });
@@ -175,7 +175,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             flush();
 
-            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
+            expect(document.activeElement).toBe(component.fileUpload.input!.nativeElement);
         }));
 
         it('should NOT throw error on detectChanges in handler', () => {
@@ -186,7 +186,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             jest.spyOn(component.fileUpload, 'deleteFile');
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             const event = createMouseEvent('click');
@@ -207,7 +207,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(fakeFile));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(fakeFile));
             fixture.detectChanges();
 
             setTimeout(() => {
@@ -260,7 +260,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();
@@ -302,7 +302,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
     describe('with focus and keyboard', () => {
         it('should toggle label focus state on input focused/blurred', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
 
             // Simulate focus via keyboard.
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
@@ -323,7 +323,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         }));
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
 
             component.disabled = true;
             fixture.detectChanges();
@@ -342,7 +342,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
     describe('with file queue change', () => {
         const emitRemoveEvent = () => {
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
@@ -353,7 +353,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.onChange).toHaveBeenCalledTimes(1);
@@ -366,7 +366,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = true;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
 
             expect(component.onChange).toHaveBeenCalledTimes(0);
             expect(component.file).toBeUndefined();
@@ -392,7 +392,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             flush();
 
-            expect(document.activeElement).toBe(component.fileUpload.input.nativeElement);
+            expect(document.activeElement).toBe(component.fileUpload.input!.nativeElement);
         }));
     });
 
@@ -403,7 +403,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(fakeFile));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(fakeFile));
             fixture.detectChanges();
             flush();
 
@@ -429,7 +429,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(fakeFile));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(fakeFile));
             fixture.detectChanges();
 
             setTimeout(() => {
@@ -478,7 +478,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();

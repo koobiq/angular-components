@@ -16,7 +16,6 @@ import {
     PLATFORM_ID,
     QueryList,
     viewChild,
-    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -117,9 +116,6 @@ export class KbqSingleFileUploadComponent
         new EventEmitter<KbqFileItem | null>();
 
     /** @docs-private */
-    @ViewChild('input') input: ElementRef<HTMLInputElement>;
-
-    /** @docs-private */
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
 
     /** @docs-private */
@@ -136,6 +132,11 @@ export class KbqSingleFileUploadComponent
      * @docs-private
      */
     onTouched = () => {};
+
+    /** @docs-private */
+    get input(): ElementRef<HTMLInputElement> | undefined {
+        return this.fileLoader()?.input();
+    }
 
     /** @docs-private */
     get acceptedFiles(): string {
@@ -274,7 +275,7 @@ export class KbqSingleFileUploadComponent
 
         if (this.file === null) {
             setTimeout(() => {
-                const input = this.fileLoader()?.input().nativeElement;
+                const input = this.input?.nativeElement;
 
                 if (input) {
                     this.focusMonitor.focusVia(input, origin ?? 'keyboard');

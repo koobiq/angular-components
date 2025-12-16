@@ -150,8 +150,6 @@ export class KbqMultipleFileUploadComponent
     @ContentChild('kbqFileIcon', { static: false, read: TemplateRef })
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
 
-    /** @docs-private */
-    @ViewChild('input') readonly input: ElementRef<HTMLInputElement>;
     @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
@@ -179,6 +177,11 @@ export class KbqMultipleFileUploadComponent
     /** onTouch function registered via registerOnTouch (ControlValueAccessor).
      * @docs-private */
     onTouched = () => {};
+
+    /** @docs-private */
+    get input(): ElementRef<HTMLInputElement> | undefined {
+        return this.fileLoader()?.input();
+    }
 
     /** @docs-private */
     get acceptedFiles(): string {
@@ -343,7 +346,7 @@ export class KbqMultipleFileUploadComponent
 
         if (this.files.length === 0) {
             setTimeout(() => {
-                const input = this.fileLoader()?.input().nativeElement;
+                const input = this.input?.nativeElement;
 
                 if (input) {
                     this.focusMonitor.focusVia(input, origin ?? 'keyboard');
