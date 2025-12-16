@@ -1007,8 +1007,6 @@ describe('KbqSelect', () => {
             TestBed.configureTestingModule({
                 imports: [
                     KbqSelectModule,
-                    KbqInputModule,
-                    KbqTagsModule,
                     ReactiveFormsModule,
                     FormsModule,
                     NoopAnimationsModule,

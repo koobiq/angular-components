@@ -8,7 +8,6 @@ import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
-    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -35,6 +34,7 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
+    afterNextRender,
     booleanAttribute,
     inject,
     isDevMode,
@@ -91,8 +91,18 @@ import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/component
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { BehaviorSubject, Observable, Subject, Subscription, defer, merge } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
+import {
+    debounceTime,
+    delay,
+    distinctUntilChanged,
+    filter,
+    map,
+    startWith,
+    switchMap,
+    take,
+    takeUntil
+} from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -166,9 +176,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         '(click)': 'toggle()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
-        '(blur)': 'onBlur()',
-        // @TODO: turn event listener only for specific conditions (#DS-4253)
-        '(window:resize)': 'calculateHiddenItems()'
+        '(blur)': 'onBlur()'
     },
     animations: [
         kbqSelectAnimations.transformPanel,
@@ -184,7 +192,6 @@ export class KbqSelect
     extends KbqAbstractSelect
     implements
         AfterContentInit,
-        AfterViewInit,
         OnDestroy,
         OnInit,
         DoCheck,
@@ -672,6 +679,14 @@ export class KbqSelect
 
         // Force setter to be called in case id was not specified.
         this.id = this.id;
+
+        afterNextRender(() => {
+            if (this.multiple && !this.multiline) {
+                merge(fromEvent(this.window, 'resize'), this.tags.changes)
+                    .pipe(delay(0), debounceTime(50), takeUntilDestroyed(this.destroyRef))
+                    .subscribe(this.calculateHiddenItems);
+            }
+        });
     }
 
     ngOnInit() {
@@ -740,12 +755,6 @@ export class KbqSelect
                 filter(() => !this.keyManager.activeItem)
             )
             .subscribe(() => this.keyManager.updateActiveItem(0));
-    }
-
-    ngAfterViewInit(): void {
-        this.tags.changes.subscribe(() => {
-            setTimeout(() => this.calculateHiddenItems(), 0);
-        });
     }
 
     ngOnDestroy() {
@@ -1022,13 +1031,13 @@ export class KbqSelect
         option.deselect();
     }
 
-    calculateHiddenItems(): void {
+    calculateHiddenItems = () => {
         if (
             !this.isBrowser ||
             this.customTrigger ||
+            this.customMatcher ||
             this.empty ||
             !this.multiple ||
-            this.customMatcher ||
             this.multiline
         )
             return;
@@ -1065,7 +1074,7 @@ export class KbqSelect
         }
 
         this._changeDetectorRef.markForCheck();
-    }
+    };
 
     getItemHeight(): number {
         return this.options.first ? this.options.first.getHeight() : 0;
