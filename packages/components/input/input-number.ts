@@ -291,6 +291,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             this.focused = isFocused;
             this.stateChanges.next();
         }
+
+        if (!isFocused) this.onTouched();
     }
 
     onTouched = () => {};
