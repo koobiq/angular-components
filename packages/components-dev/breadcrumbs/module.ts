@@ -30,7 +30,7 @@ import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadc
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-products-page',
@@ -63,7 +63,7 @@ export class DevAboutPage {}
 
 @Component({
     selector: 'dev-app',
-    imports: [RouterOutlet, RouterLink, DevExamples],
+    imports: [RouterOutlet, RouterLink, DevDocsExamples],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

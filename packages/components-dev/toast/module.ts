@@ -61,7 +61,7 @@ import { ToastExamplesModule } from '../../docs-examples/components/toast';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-toast-component',
@@ -98,7 +98,7 @@ export class DevToastComponent extends KbqToastComponent {
         KbqSidepanelModule,
         KbqScrollbarModule,
         DevToastComponent,
-        DevExamples
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

@@ -13,14 +13,14 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     imports: [
         DevThemeToggle,
         DevLocaleSelector,
-        DevExamples
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

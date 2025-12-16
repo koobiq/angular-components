@@ -25,14 +25,14 @@ import { SplitButtonExamplesModule } from '../../docs-examples/components/split-
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
         KbqSplitButtonModule,
-        DevExamples,
+        DevDocsExamples,
         KbqButtonModule,
         KbqIconModule
     ],

@@ -35,7 +35,7 @@ import { DevThemeToggle } from '../theme-toggle';
         class: 'layout-column'
     }
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -52,7 +52,7 @@ class DevExamples {}
         KbqRadioModule,
         DevLocaleSelector,
         DevThemeToggle,
-        DevExamples
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

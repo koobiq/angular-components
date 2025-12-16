@@ -139,7 +139,7 @@ export class DevCustomTextDirective {}
         class: 'layout-column'
     }
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-file-upload-compact',
@@ -184,7 +184,7 @@ export class DevMultipleFileUploadCompact {
 @Component({
     selector: 'dev-app',
     imports: [
-        DevExamples,
+        DevDocsExamples,
         FileUploadExamplesModule,
         DevLocaleSelector,
         FormsModule,

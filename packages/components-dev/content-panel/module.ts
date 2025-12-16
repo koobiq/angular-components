@@ -148,12 +148,12 @@ export class DevContentPanelOverview {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     imports: [
-        DevExamples,
+        DevDocsExamples,
         DevThemeToggle,
         DevContentPanelOverview
     ],

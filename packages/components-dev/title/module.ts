@@ -59,7 +59,7 @@ const options = [
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -76,7 +76,7 @@ export class DevExamples {}
         ReactiveFormsModule,
         KbqDividerModule,
         AsyncPipe,
-        DevExamples
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
