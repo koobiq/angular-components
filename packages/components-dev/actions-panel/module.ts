@@ -20,13 +20,13 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-page-1',
     imports: [
         RouterLink,
-        DevExamples
+        DevDocsExamples
     ],
     template: `
         <h2>Page1</h2>

@@ -95,7 +95,7 @@ const DEV_DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -105,7 +105,7 @@ export class DevExamples {}
         KbqDividerModule,
         KbqButtonModule,
         KbqLuxonDateModule,
-        DevExamples,
+        DevDocsExamples,
         DevLocaleSelector,
         JsonPipe
     ],

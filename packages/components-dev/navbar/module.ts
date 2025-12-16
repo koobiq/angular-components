@@ -29,7 +29,7 @@ import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -48,7 +48,7 @@ export class DevExamples {}
         KbqBadgeModule,
         KbqDividerModule,
         AsyncPipe,
-        DevExamples
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

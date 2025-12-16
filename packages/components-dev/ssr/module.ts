@@ -272,11 +272,11 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [DevExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
+    imports: [DevDocsExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

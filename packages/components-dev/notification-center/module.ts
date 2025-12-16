@@ -27,12 +27,12 @@ import { NotificationCenterExamplesModule } from '../../docs-examples/components
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     imports: [
-        DevExamples,
+        DevDocsExamples,
         KbqButtonModule,
         KbqNotificationCenterModule,
         KbqIcon,

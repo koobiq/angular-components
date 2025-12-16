@@ -14,14 +14,14 @@ import { SearchExpandableExamplesModule } from '../../docs-examples/components/s
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     imports: [
         KbqLocaleServiceModule,
         KbqSearchExpandableModule,
-        DevExamples,
+        DevDocsExamples,
         FormsModule
     ],
     templateUrl: './template.html',

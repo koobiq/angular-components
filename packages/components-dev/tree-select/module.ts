@@ -37,7 +37,7 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -54,7 +54,7 @@ class DevExamples {}
         ReactiveFormsModule,
         KbqPseudoCheckboxModule,
         KbqTitleModule,
-        DevExamples
+        DevDocsExamples
     ],
     providers: [
         kbqTreeSelectOptionsProvider({

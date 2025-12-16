@@ -28,7 +28,7 @@ import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-modal-custom-long-component',
@@ -132,7 +132,7 @@ export class DevModalFullCustomComponent {
         KbqButtonModule,
         KbqDropdownModule,
         KbqToolTipModule,
-        DevExamples
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

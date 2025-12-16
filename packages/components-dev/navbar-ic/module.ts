@@ -33,7 +33,7 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -48,7 +48,7 @@ export class DevExamples {}
         KbqToolTipModule,
         KbqBadgeModule,
         AsyncPipe,
-        DevExamples,
+        DevDocsExamples,
         DevThemeToggle
     ],
     templateUrl: './template.html',

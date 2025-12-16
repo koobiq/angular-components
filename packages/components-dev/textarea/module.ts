@@ -33,11 +33,11 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevExamples, DevThemeToggle],
+    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

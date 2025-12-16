@@ -10,11 +10,11 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [DevExamples, DevThemeToggle],
+    imports: [DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

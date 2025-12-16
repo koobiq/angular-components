@@ -38,7 +38,7 @@ import { DevThemeToggle } from '../theme-toggle';
         class: 'layout-column'
     }
 })
-class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -47,7 +47,7 @@ class DevExamples {}
         KbqEmptyStateModule,
         KbqButtonModule,
         KbqIconModule,
-        DevExamples,
+        DevDocsExamples,
         DevThemeToggle,
         EmptyStateSizeExample
     ],

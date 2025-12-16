@@ -1,3 +1,3 @@
 import { Page } from '@playwright/test';
 
-export const devGoToRootPage = (page: Page) => page.goto('/');
+export const e2eGoToRootPage = (page: Page) => page.goto('/');

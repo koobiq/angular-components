@@ -13,11 +13,11 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqLinkModule, KbqIconModule, DevExamples, DevThemeToggle],
+    imports: [KbqLinkModule, KbqIconModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

@@ -13,11 +13,11 @@ import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqButtonModule, KbqIconModule, DevExamples],
+    imports: [KbqButtonModule, KbqIconModule, DevDocsExamples],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,

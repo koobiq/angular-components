@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { devEnableDarkTheme, devGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqAppSwitcherModule', () => {
     test.describe('E2AppSwitcherStates', () => {
@@ -7,7 +7,7 @@ test.describe('KbqAppSwitcherModule', () => {
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
         test('AppSwitcher default', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
 
             const locator = getComponent(page);
 
@@ -15,8 +15,8 @@ test.describe('KbqAppSwitcherModule', () => {
         });
 
         test('AppSwitcher (dark theme)', async ({ page }) => {
-            await devGoToRootPage(page);
-            await devEnableDarkTheme(page);
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
 
@@ -29,7 +29,7 @@ test.describe('KbqAppSwitcherModule', () => {
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
         test('AppSwitcher default', async ({ page }) => {
-            await devGoToRootPage(page);
+            await e2eGoToRootPage(page);
 
             const locator = getComponent(page);
 
@@ -37,8 +37,8 @@ test.describe('KbqAppSwitcherModule', () => {
         });
 
         test('AppSwitcher (dark theme)', async ({ page }) => {
-            await devGoToRootPage(page);
-            await devEnableDarkTheme(page);
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
 

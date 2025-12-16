@@ -15,13 +15,13 @@ import { TimezoneExamplesModule } from 'packages/docs-examples/components/timezo
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
     imports: [
         KbqTimezoneModule,
-        DevExamples
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

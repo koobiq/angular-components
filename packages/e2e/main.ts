@@ -1,9 +1,9 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { DevApp } from './module';
+import { E2eApp } from './module';
 
-bootstrapApplication(DevApp, {
+bootstrapApplication(E2eApp, {
     providers: [
         provideNoopAnimations(),
         provideRouter([])]

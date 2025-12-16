@@ -41,7 +41,7 @@ import { InputExamplesModule } from '../../docs-examples/components/input';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevExamples {}
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -54,7 +54,7 @@ export class DevExamples {}
         KbqInputModule,
         KbqToolTipModule,
         KbqIconModule,
-        DevExamples,
+        DevDocsExamples,
         KbqNormalizeWhitespace
     ],
     templateUrl: './template.html',
