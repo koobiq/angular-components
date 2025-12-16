@@ -18,11 +18,6 @@
     }
 
     .kbq-alert.kbq-alert_default {
-        // Will be replaced with `kbq-alert_info` in next major release (#DS-3651)
-        &.kbq-alert_contrast {
-            @include kbq-alert-style(default, contrast);
-        }
-
         &.kbq-alert_error {
             @include kbq-alert-style(default, error);
         }
@@ -35,18 +30,14 @@
             @include kbq-alert-style(default, success);
         }
 
+        &.kbq-alert_info,
         // Will be removed and replaced with `kbq-alert_info` in next major release (#DS-3651)
-        &.kbq-alert_theme {
-            @include kbq-alert-style(default, theme);
+        &.kbq-alert_contrast {
+            @include kbq-alert-style(default, info);
         }
     }
 
     .kbq-alert.kbq-alert_colored {
-        // Will be removed in next major release (#DS-3651)
-        &.kbq-alert_contrast {
-            @include kbq-alert-style(colored, contrast);
-        }
-
         &.kbq-alert_error {
             @include kbq-alert-style(colored, error);
         }
@@ -59,9 +50,10 @@
             @include kbq-alert-style(colored, success);
         }
 
+        &.kbq-alert_info,
         // Will be replaced with `kbq-alert_info` in next major release (#DS-3651)
-        &.kbq-alert_theme {
-            @include kbq-alert-style(colored, theme);
+        &.kbq-alert_contrast {
+            @include kbq-alert-style(colored, info);
         }
     }
 }
