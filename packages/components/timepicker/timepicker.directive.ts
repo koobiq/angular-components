@@ -89,11 +89,6 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
     multi: true
 };
 
-/**
- * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
- * Used to sync control's errorState and icon's errorState, since now timepicker-input is validating on initial.
- * After merging form-fields, default error-state matcher will be used
- */
 @Injectable()
 class KbqTimepickerErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: AbstractControl | null): boolean {
@@ -101,10 +96,6 @@ class KbqTimepickerErrorStateMatcher implements ErrorStateMatcher {
     }
 }
 
-/**
- * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
- * After merging form-fields, default error-state matcher will be used
- */
 const KBQ_TIMEPICKER_ERROR_STATE_MATCHER: Provider = {
     provide: ErrorStateMatcher,
     useClass: KbqTimepickerErrorStateMatcher
