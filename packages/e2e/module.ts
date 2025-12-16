@@ -14,6 +14,7 @@ import { E2eDividerStateAndStyle } from '../components/divider/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eFilterBarStates } from '../components/filter-bar/e2e';
+import { E2eIconStateAndStyle } from '../components/icon/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
@@ -41,7 +42,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eAppSwitcherStates,
         E2eAppSwitcherWithSitesStates,
         E2eFilterBarStates,
-        E2eTimepickerStates
+        E2eTimepickerStates,
+        E2eIconStateAndStyle
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
