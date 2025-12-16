@@ -37,7 +37,7 @@ import {
     KbqInputFile,
     KbqInputFileLabel
 } from './file-upload';
-import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadPrimitive } from './primitives';
+import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
 let nextSingleFileUploadUniqueId = 0;
 
@@ -64,7 +64,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
     },
     hostDirectives: [
         {
-            directive: KbqFileUploadPrimitive,
+            directive: KbqFileUploadContext,
             inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
         },
         { directive: KbqFileList, outputs: ['listChange: fileChange'] }

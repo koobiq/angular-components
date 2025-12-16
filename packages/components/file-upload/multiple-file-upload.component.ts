@@ -38,7 +38,7 @@ import {
     KbqInputFile,
     KbqInputFileLabel
 } from './file-upload';
-import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadPrimitive } from './primitives';
+import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
 let nextMultipleFileUploadUniqueId = 0;
 
@@ -81,7 +81,7 @@ const fileSizeCellPadding = 16;
     },
     hostDirectives: [
         {
-            directive: KbqFileUploadPrimitive,
+            directive: KbqFileUploadContext,
             inputs: ['id', 'disabled', 'onlyDirectory']
         },
         { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
