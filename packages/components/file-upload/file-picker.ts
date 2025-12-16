@@ -106,13 +106,15 @@ export class KbqFileList {
         this.update((current) => current.filter((i) => i !== item));
     }
 
-    removeAt(index: number): void {
-        if (index >= 0 && index < this.list().length) {
-            this.update((current) => {
-                current.splice(index, 1);
+    removeAt(index: number): KbqFileItem[] {
+        const removed: KbqFileItem[] = [];
 
-                return current;
-            });
-        }
+        this.update((current) => {
+            removed.push(...current.splice(index, 1));
+
+            return current;
+        });
+
+        return removed;
     }
 }
