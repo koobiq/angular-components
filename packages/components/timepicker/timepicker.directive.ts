@@ -1,21 +1,29 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentInit,
     Directive,
+    DoCheck,
     ElementRef,
     EventEmitter,
     forwardRef,
+    inject,
     Inject,
+    Injectable,
     Input,
     OnDestroy,
     Optional,
     Output,
+    Provider,
     Renderer2
 } from '@angular/core';
 import {
     AbstractControl,
     ControlValueAccessor,
+    FormGroupDirective,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
+    NgControl,
+    NgForm,
     ValidationErrors,
     Validator,
     ValidatorFn,
@@ -41,7 +49,9 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     DateAdapter,
+    ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
+    KbqErrorStateTracker,
     KbqLocaleService,
     validationTooltipHideDelay,
     validationTooltipShowDelay
@@ -79,6 +89,18 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
     multi: true
 };
 
+@Injectable()
+class KbqTimepickerErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null): boolean {
+        return !!control?.invalid;
+    }
+}
+
+const KBQ_TIMEPICKER_ERROR_STATE_MATCHER: Provider = {
+    provide: ErrorStateMatcher,
+    useClass: KbqTimepickerErrorStateMatcher
+};
+
 let uniqueComponentIdSuffix: number = 0;
 
 const shortFormatSize: number = 5;
@@ -108,16 +130,17 @@ const fullFormatSize: number = 8;
     providers: [
         KBQ_TIMEPICKER_VALIDATORS,
         KBQ_TIMEPICKER_VALUE_ACCESSOR,
+        KBQ_TIMEPICKER_ERROR_STATE_MATCHER,
         { provide: KbqFormFieldControl, useExisting: KbqTimepicker }]
 })
-export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
+export class KbqTimepicker<D>
+    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
+{
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
     readonly stateChanges: Subject<void> = new Subject<void>();
-
-    errorState: boolean;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -130,6 +153,16 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
      * @docs-private
      */
     controlType: string = 'timepicker';
+
+    /** Object used to control when error messages are shown. */
+    @Input()
+    get errorStateMatcher() {
+        return this.errorStateTracker.errorStateMatcher;
+    }
+
+    set errorStateMatcher(value: ErrorStateMatcher) {
+        this.errorStateTracker.errorStateMatcher = value;
+    }
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -334,6 +367,15 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         );
     }
 
+    /** @docs-private */
+    get errorState(): boolean {
+        return this.errorStateTracker.errorState;
+    }
+
+    set errorState(value: boolean) {
+        this.errorStateTracker.errorState = value;
+    }
+
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
     private readonly validator: ValidatorFn | null;
@@ -349,6 +391,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     private onTouched: () => void;
 
     private localeSubscription = Subscription.EMPTY;
+
+    private errorStateTracker: KbqErrorStateTracker;
 
     constructor(
         private elementRef: ElementRef<HTMLInputElement>,
@@ -370,7 +414,28 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         // Force setter to be called in case id was not specified.
         this.id = this.id;
 
+        this.errorStateTracker = new KbqErrorStateTracker(
+            inject(ErrorStateMatcher),
+            null,
+            inject(FormGroupDirective, { optional: true }),
+            inject(NgForm, { optional: true }),
+            this.stateChanges
+        );
+
         this.localeSubscription = dateAdapter.localeChanges.subscribe(this.updateLocaleParams);
+    }
+
+    ngDoCheck() {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
+        }
+    }
+
+    ngAfterContentInit() {
+        this.updateErrorState();
     }
 
     ngOnDestroy(): void {
@@ -919,6 +984,11 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         this.setViewValue(formattedValue);
     }
 
+    /** @docs-private */
+    updateErrorState() {
+        this.errorStateTracker.updateErrorState();
+    }
+
     private setControl(control: AbstractControl) {
         if (this.control) {
             return;
@@ -927,6 +997,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         this.control = control;
 
         this.control.valueChanges.subscribe((value) => (this._value = value));
+
+        // @TODO resolve types
+        this.errorStateTracker.ngControl = { control } as unknown as NgControl;
     }
 
     private validatorOnChange = () => {};
