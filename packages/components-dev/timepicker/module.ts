@@ -16,7 +16,18 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
+import { TimepickerFieldValidationExample } from 'packages/docs-examples/components/timepicker';
 import { DevLocaleSelector } from '../locale-selector';
+
+@Component({
+    selector: 'dev-examples',
+    imports: [TimepickerFieldValidationExample],
+    template: `
+        <timepicker-field-validation-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -31,7 +42,8 @@ import { DevLocaleSelector } from '../locale-selector';
         KbqRadioModule,
         JsonPipe,
         DevLocaleSelector,
-        KbqIcon
+        KbqIcon,
+        DevExamples
     ],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],

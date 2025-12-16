@@ -67,6 +67,10 @@
 
 <!-- example(timepicker-validation-symbols) -->
 
+#### Проверка с использованием ReactiveFormsModule
+
+<!-- example(timepicker-field-validation) -->
+
 ### Фокус и работа с клавиатурой
 
 | <div style="min-width: 170px;">Клавиша</div>                                                                                                 | Действие                                                                                                                                                                                  |

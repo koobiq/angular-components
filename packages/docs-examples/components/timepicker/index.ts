@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
+import { TimepickerFieldValidationExample } from './timepicker-field-validation/timepicker-field-validation-example';
 import { TimepickerValidationSymbolsExample } from './timepicker-validation-symbols/timepicker-validation-symbols-example';
 import { TimepickerVariationsExample } from './timepicker-variations/timepicker-variations-example';
 
-export { TimepickerValidationSymbolsExample, TimepickerVariationsExample };
+export { TimepickerFieldValidationExample, TimepickerValidationSymbolsExample, TimepickerVariationsExample };
 
 const EXAMPLES = [
     TimepickerVariationsExample,
-    TimepickerValidationSymbolsExample
+    TimepickerValidationSymbolsExample,
+    TimepickerFieldValidationExample
 ];
 
 @NgModule({
