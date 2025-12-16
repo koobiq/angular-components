@@ -429,6 +429,23 @@ describe('KbqNumberInput', () => {
 
             expect(fixture.componentInstance.formControl.value).toBe(9);
         }));
+
+        it('should mark as touched on blur', () => {
+            const fixture = createComponent(KbqNumberInputWithFormControl);
+
+            fixture.detectChanges();
+
+            const inputElementDebugElement = fixture.debugElement.query(By.directive(KbqNumberInput));
+            const formFieldDebugElement = fixture.debugElement.query(By.directive(KbqFormField));
+
+            expect(formFieldDebugElement.classes['ng-touched']).toBeFalsy();
+
+            dispatchFakeEvent(inputElementDebugElement.nativeElement, 'focus');
+            dispatchFakeEvent(inputElementDebugElement.nativeElement, 'blur');
+            fixture.detectChanges();
+
+            expect(formFieldDebugElement.classes['ng-touched']).toBeTruthy();
+        });
     });
 
     describe('formControlName', () => {
