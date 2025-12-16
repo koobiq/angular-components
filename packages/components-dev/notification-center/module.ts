@@ -11,6 +11,9 @@ import { NotificationCenterExamplesModule } from '../../docs-examples/components
     selector: 'dev-examples',
     imports: [NotificationCenterExamplesModule],
     template: `
+        <notification-center-push-example />
+        <br />
+        <br />
         <notification-center-overview-example />
         <br />
         <br />

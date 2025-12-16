@@ -1,0 +1,130 @@
+<kbq-dropdown #issuesDropdown="kbqDropdown">
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Open</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">In Progress</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Complete</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Closed</a>
+</kbq-dropdown>
+
+<kbq-dropdown #securityDropdown="kbqDropdown">
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Identity</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Members and guests</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Data retension</a>
+</kbq-dropdown>
+
+<ng-template #captionTemplate>
+    <span>
+        Advanced threat detection system blocked sophisticated APT attack
+        <a kbq-link href="">Server-CRIT-01</a>
+    </span>
+</ng-template>
+
+<ng-template #actionsTemplate>
+    <a kbq-link pseudo>Action 1</a>
+    <a kbq-link pseudo>Action 2</a>
+</ng-template>
+
+<div class="layout-row" style="margin: -20px; height: 498px">
+    <kbq-vertical-navbar>
+        <kbq-navbar-container>
+            <kbq-navbar-item bento>
+                <i kbq-icon="kbq-bento-menu_16"></i>
+            </kbq-navbar-item>
+
+            <a href="#" kbq-navbar-brand>
+                <div kbq-navbar-logo>
+                    <!-- prettier-ignore -->
+                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
+                </div>
+
+                <div kbq-navbar-title>Short App Name</div>
+            </a>
+
+            <a
+                href="#"
+                kbq-navbar-item
+                [class.kbq-active]="selected === items.Assets"
+                (click)="selected = items.Assets"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbq-navbar-title>Assets</div>
+            </a>
+
+            <kbq-navbar-item
+                #issuesDropdownTrigger="kbqDropdownTrigger"
+                [class.kbq-active]="selected === items.Issues"
+                [kbqDropdownTriggerFor]="issuesDropdown"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbq-navbar-title>Issues</div>
+            </kbq-navbar-item>
+
+            <a
+                href="#"
+                kbq-navbar-item
+                [class.kbq-active]="selected === items.Incidents"
+                (click)="selected = items.Incidents"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbq-navbar-title>Incidents</div>
+            </a>
+
+            <a
+                href="#"
+                kbq-navbar-item
+                [class.kbq-active]="selected === items.Policies"
+                (click)="selected = items.Policies"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbq-navbar-title>Policies</div>
+            </a>
+
+            <kbq-navbar-item
+                #securityDropdownTrigger="kbqDropdownTrigger"
+                [class.kbq-active]="selected === items.Security"
+                [kbqDropdownTriggerFor]="securityDropdown"
+            >
+                <i kbq-icon="kbq-diamond_16"></i>
+                <div kbq-navbar-title>Security</div>
+            </kbq-navbar-item>
+        </kbq-navbar-container>
+
+        <kbq-navbar-container>
+            <div
+                #trigger="kbqNotificationCenterTrigger"
+                kbq-navbar-item
+                kbqNotificationCenterTrigger
+                [popoverHeight]="'500px'"
+                [kbqNotificationCenterPanelClass]="'example-notification-center-panel'"
+            >
+                <i kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
+                <div kbq-navbar-title>Notifications</div>
+                @if (trigger.unreadItemsCounter | async; as unreadItems) {
+                    <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>
+                }
+            </div>
+
+            <a href="#" kbq-navbar-item>
+                <i kbq-icon="kbq-circle_16" [color]="'success'"></i>
+                <div kbq-navbar-title>System Monitor</div>
+            </a>
+
+            <a href="#" kbq-navbar-item>
+                <i kbq-icon="kbq-user_16"></i>
+                <span kbq-navbar-title>Administrator</span>
+            </a>
+        </kbq-navbar-container>
+
+        <kbq-navbar-toggle />
+    </kbq-vertical-navbar>
+
+    <div class="layout layout-fill layout-align-center-center">
+        <button
+            kbq-button
+            [color]="KbqComponentColors.Contrast"
+            [kbqStyle]="KbqButtonStyles.Filled"
+            (click)="pushNotification()"
+        >
+            push notification
+        </button>
+    </div>
+</div>
