@@ -83,6 +83,16 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
     readonly stateChanges = new Subject<void>();
 
     /** @docs-private */
+    protected readonly fileUploadContext = inject(KbqFileUploadPrimitive, { host: true });
+    /** @docs-private */
+    protected readonly fileList = inject<KbqFileList<KbqFileItem>>(KbqFileList, { host: true });
+
+    /** @docs-private */
+    get disabled(): boolean {
+        return this.fileUploadContext.computedDisabled();
+    }
+
+    /** @docs-private */
     protected readonly cdr = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly renderer = inject(Renderer2);

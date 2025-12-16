@@ -67,8 +67,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
             directive: KbqFileUploadPrimitive,
             inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
         },
-        KbqFileList
-
+        { directive: KbqFileList, outputs: ['listChange: fileChange'] }
     ]
 })
 export class KbqSingleFileUploadComponent
@@ -81,7 +80,6 @@ export class KbqSingleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     /** Array of file type specifiers */
     @Input() accept?: string[];
-    @Input() disabled: boolean = false;
     /**
      * @deprecated use `FormControl.errors`
      */
@@ -172,7 +170,6 @@ export class KbqSingleFileUploadComponent
         optional: true
     });
 
-    protected readonly fileList = inject(KbqFileList, { host: true });
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
@@ -252,15 +249,13 @@ export class KbqSingleFileUploadComponent
      * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.fileUploadContext.innerDisabled.set(isDisabled);
         this.cdr.markForCheck();
     }
 
     /** @docs-private */
     onFileSelectedViaClick({ target }: Event): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         const fileToAdd = (target as HTMLInputElement).files?.item(0);
 

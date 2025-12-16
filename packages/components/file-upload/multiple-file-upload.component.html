@@ -16,7 +16,7 @@
                     <div class="kbq-file-multiple__header">{{ config.title }}</div>
                     <div>
                         <!-- prettier-ignore -->
-                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [accept]="acceptedFiles" [disabled]="disabled" [for]="inputId" [tabIndex]="-1" [multiple]="true" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</div>
+                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [accept]="acceptedFiles" [disabled]="disabled" [for]="fileUploadContext.id() || inputId" [tabIndex]="-1" [multiple]="true" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</div>
                     </div>
                 </div>
             } @else {
@@ -27,6 +27,7 @@
                         kbq-link
                         pseudo
                         kbqFileLoader
+                        [for]="fileUploadContext.id() || inputId"
                         [multiple]="true"
                         [accept]="acceptedFiles"
                         [disabled]="disabled"
@@ -115,7 +116,7 @@
                             kbqFileLoader
                             [multiple]="true"
                             [accept]="acceptedFiles"
-                            [for]="inputId"
+                            [for]="fileUploadContext.id() || inputId"
                             [disabled]="disabled"
                             [tabIndex]="-1"
                             (fileChange)="onFileSelectedViaClick($event)"

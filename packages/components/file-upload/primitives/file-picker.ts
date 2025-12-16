@@ -7,11 +7,11 @@ import {
     ElementRef,
     inject,
     input,
+    model,
     output,
     signal,
     viewChild
 } from '@angular/core';
-import { KbqFileItem } from '../file-upload';
 
 /**
  * File upload context.
@@ -21,11 +21,15 @@ import { KbqFileItem } from '../file-upload';
     exportAs: 'kbqFileUploadPrimitive'
 })
 export class KbqFileUploadPrimitive {
-    id = input();
+    id = input<string | null>(null);
     disabled = input(false);
     multiple = input(null, { transform: booleanAttribute });
     accept = input<string | null>(null);
     onlyDirectory = input(undefined, { transform: booleanAttribute });
+
+    innerDisabled = signal<boolean | null>(null);
+
+    computedDisabled = computed(() => this.innerDisabled() ?? this.disabled());
 }
 
 /**
@@ -73,7 +77,7 @@ export class KbqFileLoader {
 
     readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
-    protected readonly innerDisabled = computed(() => this.fileUpload?.disabled() ?? this.disabled());
+    protected readonly innerDisabled = computed(() => this.fileUpload?.computedDisabled() ?? this.disabled());
     protected readonly innerMultiple = computed(() => this.fileUpload?.multiple() ?? this.multiple());
     protected readonly innerAccept = computed(() => this.fileUpload?.accept() ?? this.accept());
     protected readonly innerFor = computed(() => this.fileUpload?.id() ?? this.for());
@@ -85,35 +89,46 @@ export class KbqFileLoader {
  */
 @Directive({
     selector: '[kbqFileList]',
-    exportAs: 'kbqFileList'
+    exportAs: 'kbqFileList',
+    host: {
+        class: 'kbq-items-list'
+    }
 })
-export class KbqFileList {
-    list = signal<KbqFileItem[]>([]);
+export class KbqFileList<T> {
+    list = model<T[]>([]);
+    /**
+     * Emits an event containing a tuple of file and file's index when removed from the file list.
+     * Useful when handle removed files, skipping filtering file list.
+     */
+    readonly itemRemoved = output<[T, number]>();
 
-    private update(fn: (current: KbqFileItem[]) => KbqFileItem[]) {
+    private update(fn: (current: T[]) => T[]) {
         this.list.update(fn);
     }
 
-    add(item: KbqFileItem): void {
+    add(item: T): void {
         this.update((current) => [...current, item]);
     }
 
-    addArray(items: KbqFileItem[]): void {
+    addArray(items: T[]): void {
         this.update((current) => [...current, ...items]);
     }
 
-    remove(item: KbqFileItem): void {
+    remove(item: T): void {
         this.update((current) => current.filter((i) => i !== item));
     }
 
-    removeAt(index: number): KbqFileItem[] {
-        const removed: KbqFileItem[] = [];
+    removeAt(index: number): T[] {
+        const removed: T[] = [];
 
         this.update((current) => {
-            removed.push(...current.splice(index, 1));
+            const removedItem = current.splice(index, 1);
+
+            removed.concat(removedItem);
 
             return current;
         });
+        this.itemRemoved.emit([removed[0], index]);
 
         return removed;
     }

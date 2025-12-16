@@ -82,10 +82,9 @@ const fileSizeCellPadding = 16;
     hostDirectives: [
         {
             directive: KbqFileUploadPrimitive,
-            inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
+            inputs: ['id', 'disabled', 'onlyDirectory']
         },
-        KbqFileList
-
+        { directive: KbqFileList, outputs: ['listChange: filesChange'] }
     ]
 })
 export class KbqMultipleFileUploadComponent
@@ -98,7 +97,6 @@ export class KbqMultipleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     /** Array of file type specifiers */
     @Input() accept?: string[];
-    @Input() disabled: boolean;
     /**
      * @deprecated use `FormControl.errors`
      */
@@ -220,7 +218,6 @@ export class KbqMultipleFileUploadComponent
         optional: true
     });
 
-    protected readonly fileList = inject(KbqFileList, { host: true });
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
@@ -289,7 +286,7 @@ export class KbqMultipleFileUploadComponent
      * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.fileUploadContext.innerDisabled.set(isDisabled);
         this.cdr.markForCheck();
     }
 
