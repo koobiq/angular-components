@@ -16,7 +16,7 @@
                     <div class="kbq-file-multiple__header">{{ config.title }}</div>
                     <div>
                         <!-- prettier-ignore -->
-                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [disabled]="disabled" [tabIndex]="-1" [for]="inputId" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</div>
+                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [accept]="acceptedFiles" [disabled]="disabled" [for]="inputId" [tabIndex]="-1" [multiple]="true" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</div>
                     </div>
                 </div>
             } @else {
@@ -27,6 +27,8 @@
                         kbq-link
                         pseudo
                         kbqFileLoader
+                        [multiple]="true"
+                        [accept]="acceptedFiles"
                         [disabled]="disabled"
                         [tabIndex]="-1"
                         (fileChange)="onFileSelectedViaClick($event)"
@@ -93,7 +95,7 @@
                                 </div>
                                 <div
                                     class="kbq-file-upload__action kbq-file-upload__grid-cell"
-                                    (click)="deleteFile($index, $event)"
+                                    (click)="deleteFile($index, $event, 'program')"
                                 >
                                     <i kbq-icon-button="kbq-xmark-circle_16" tabindex="-1" [disabled]="disabled"></i>
                                 </div>
@@ -111,9 +113,12 @@
                             kbq-link
                             pseudo
                             kbqFileLoader
+                            [multiple]="true"
+                            [accept]="acceptedFiles"
+                            [for]="inputId"
                             [disabled]="disabled"
                             [tabIndex]="-1"
-                            (change)="onFileSelectedViaClick($event)"
+                            (fileChange)="onFileSelectedViaClick($event)"
                         >
                             {{ config.browseLink }}
                         </label>
@@ -130,17 +135,3 @@
         <ng-content select="kbq-hint" />
     </div>
 }
-
-<ng-template #inputTemplate>
-    <input
-        #input
-        multiple
-        tabindex="0"
-        type="file"
-        class="cdk-visually-hidden"
-        [accept]="acceptedFiles"
-        [disabled]="disabled"
-        [id]="inputId"
-        (change)="onFileSelectedViaClick($event)"
-    />
-</ng-template>

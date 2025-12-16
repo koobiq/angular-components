@@ -212,7 +212,12 @@ export class DevMultipleFileUploadCompact {
             [accept]="'.webp'"
             (filesDropped)="onFilesDropped($event)"
         >
-            <label kbqFileLoader (fileChange)="onFileClicked($event)">
+            <label
+                #ref="kbqFileLoader"
+                kbqFileLoader
+                (click)="ref.input().nativeElement.click()"
+                (fileChange)="onFileClicked($event)"
+            >
                 <button kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
                 </button>

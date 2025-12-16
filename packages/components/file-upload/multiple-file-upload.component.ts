@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -16,6 +16,7 @@ import {
     PLATFORM_ID,
     QueryList,
     TemplateRef,
+    viewChild,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -83,7 +84,7 @@ const fileSizeCellPadding = 16;
     hostDirectives: [
         {
             directive: KbqFileUploadPrimitive,
-            inputs: ['id', 'disabled', 'multiple', 'accept', 'onlyDirectory']
+            inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
         }
     ]
 })
@@ -218,6 +219,8 @@ export class KbqMultipleFileUploadComponent
         optional: true
     });
 
+    protected readonly fileLoader = viewChild(KbqFileLoader);
+
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
@@ -327,7 +330,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** @docs-private */
-    deleteFile(index: number, event?: MouseEvent) {
+    deleteFile(index: number, event?: MouseEvent, origin?: FocusOrigin) {
         if (this.disabled) return;
 
         event?.stopPropagation();
@@ -340,7 +343,11 @@ export class KbqMultipleFileUploadComponent
 
         if (this.files.length === 0) {
             setTimeout(() => {
-                this.focusMonitor.focusVia(this.input, 'keyboard');
+                const input = this.fileLoader()?.input().nativeElement;
+
+                if (input) {
+                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
+                }
             });
 
             return;

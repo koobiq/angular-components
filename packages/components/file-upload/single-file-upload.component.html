@@ -9,7 +9,7 @@
         <div class="kbq-file-dropzone">
             <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
             <!-- prettier-ignore -->
-            <span class="kbq-file-dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [disabled]="disabled" [tabIndex]="-1" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</span>
+            <span class="kbq-file-dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [accept]="acceptedFiles" [disabled]="disabled" [tabIndex]="-1" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</span>
         </div>
     } @else {
         @if (file) {
@@ -34,7 +34,7 @@
                     kbq-icon-button="kbq-xmark-circle_16"
                     class="kbq-file-upload__action"
                     [disabled]="disabled"
-                    (click)="deleteItem($event)"
+                    (click)="deleteItem($event, 'program')"
                     (keydown.backspace)="deleteItem()"
                     (keydown.delete)="deleteItem()"
                 ></i>

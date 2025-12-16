@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
@@ -15,6 +15,7 @@ import {
     Output,
     PLATFORM_ID,
     QueryList,
+    viewChild,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -162,6 +163,7 @@ export class KbqSingleFileUploadComponent
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
+    private readonly fileLoader = viewChild(KbqFileLoader);
 
     constructor() {
         super();
@@ -260,7 +262,7 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    deleteItem(event?: MouseEvent): void {
+    deleteItem(event?: MouseEvent, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();
@@ -272,7 +274,11 @@ export class KbqSingleFileUploadComponent
 
         if (this.file === null) {
             setTimeout(() => {
-                this.focusMonitor.focusVia(this.input, 'keyboard');
+                const input = this.fileLoader()?.input().nativeElement;
+
+                if (input) {
+                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
+                }
             });
 
             return;
