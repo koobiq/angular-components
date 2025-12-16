@@ -24,8 +24,8 @@ import { ControlValueAccessor } from '@angular/forms';
 import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
@@ -35,7 +35,6 @@ import {
     KbqFileItem,
     KbqFileUploadBase,
     KbqFileValidatorFn,
-    KbqInputFile,
     KbqInputFileLabel
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
@@ -61,14 +60,15 @@ const fileSizeCellPadding = 16;
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     imports: [
+        AsyncPipe,
+        NgTemplateOutlet,
         KbqFileDropDirective,
-        KbqIconModule,
-        KbqLinkModule,
+        KbqIconButton,
+        KbqIcon,
+        KbqLink,
         KbqListModule,
         KbqDataSizePipe,
         KbqProgressSpinnerModule,
-        AsyncPipe,
-        NgTemplateOutlet,
         KbqEllipsisCenterDirective,
         KbqFileLoader
     ],
@@ -89,7 +89,7 @@ const fileSizeCellPadding = 16;
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck
+    implements AfterViewInit, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.

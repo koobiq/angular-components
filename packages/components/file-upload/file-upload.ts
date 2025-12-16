@@ -24,6 +24,10 @@ export interface KbqFileItem {
     progress?: BehaviorSubject<number>;
 }
 
+/**
+ * @docs-private
+ * @deprecated Will be removed in next major release
+ */
 export interface KbqInputFile {
     disabled: boolean;
     accept?: string[];

@@ -87,6 +87,7 @@ export class KbqFileLoader {
     /** Event fires when file selected in file-picker. */
     readonly fileChange = output<Event>();
 
+    /** Underlying file input element */
     readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
     /** @docs-private */

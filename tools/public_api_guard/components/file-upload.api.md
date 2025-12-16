@@ -113,7 +113,6 @@ export class KbqFileLoader {
     protected readonly innerFor: Signal<string | null>;
     protected readonly innerMultiple: Signal<boolean | null>;
     protected readonly innerOnlyDirectory: Signal<boolean | null>;
-    // (undocumented)
     readonly input: Signal<ElementRef<HTMLInputElement>>;
     multiple: InputSignal<boolean | null>;
     onlyDirectory: InputSignal<boolean | null>;
@@ -178,7 +177,7 @@ export class KbqFileUploadModule {
 // @public @deprecated (undocumented)
 export type KbqFileValidatorFn = (file: File) => string | null;
 
-// @public (undocumented)
+// @public @deprecated
 export interface KbqInputFile {
     // (undocumented)
     accept?: string[];
@@ -216,7 +215,7 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 }
 
 // @public (undocumented)
-export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
+export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, ControlValueAccessor, DoCheck {
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
@@ -276,7 +275,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
 }
 
 // @public (undocumented)
-export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
+export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, ControlValueAccessor, DoCheck {
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
