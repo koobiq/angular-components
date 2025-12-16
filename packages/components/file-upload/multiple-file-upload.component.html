@@ -3,7 +3,7 @@
     class="kbq-file-upload"
     [class.kbq-disabled]="disabled"
     [class.kbq-error]="invalid"
-    [class.kbq-selected]="files?.length"
+    [class.kbq-selected]="files.length"
     [class.kbq-file-upload_default]="size === 'default'"
     [class.kbq-file-upload_compact]="size === 'compact'"
     (filesDropped)="onFileDropped($event)"
