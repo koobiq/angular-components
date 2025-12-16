@@ -10,8 +10,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqFileDropDirective } from './file-drop';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
+import { KbqFileDropDirective } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
 @NgModule({

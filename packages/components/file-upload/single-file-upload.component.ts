@@ -28,8 +28,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { KbqFileDropDirective } from './file-drop';
-import { KbqFileList, KbqFileLoader, KbqFileUploadPrimitive } from './file-picker';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -39,6 +37,7 @@ import {
     KbqInputFile,
     KbqInputFileLabel
 } from './file-upload';
+import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadPrimitive } from './primitives';
 
 let nextSingleFileUploadUniqueId = 0;
 

@@ -11,7 +11,7 @@ import {
     signal,
     viewChild
 } from '@angular/core';
-import { KbqFileItem } from './file-upload';
+import { KbqFileItem } from '../file-upload';
 
 /**
  * File upload context.
