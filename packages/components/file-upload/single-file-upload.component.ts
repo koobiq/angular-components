@@ -15,7 +15,7 @@ import {
     Output,
     PLATFORM_ID,
     QueryList,
-    viewChild,
+    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -29,7 +29,7 @@ import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/prog
 import { BehaviorSubject, skip } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { KbqFileDropDirective } from './file-drop';
-import { KbqFileLoader } from './file-picker';
+import { KbqFileList, KbqFileLoader, KbqFileUploadPrimitive } from './file-picker';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -62,7 +62,15 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-single-file-upload'
-    }
+    },
+    hostDirectives: [
+        {
+            directive: KbqFileUploadPrimitive,
+            inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
+        },
+        KbqFileList
+
+    ]
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
@@ -88,16 +96,16 @@ export class KbqSingleFileUploadComponent
     /** An object used to control the error state of the component. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    private _file: KbqFileItem | null = null;
-
     @Input()
     get file(): KbqFileItem | null {
-        return this._file;
+        const files = this.fileList.list();
+
+        return files.length === 0 ? null : files[0];
     }
 
     set file(currentFile: KbqFileItem | null) {
-        this._file = currentFile;
-        this.cvaOnChange(this._file);
+        this.fileList.list.set(currentFile === null ? [] : [currentFile]);
+        this.cvaOnChange(currentFile);
         this.cdr.markForCheck();
     }
 
@@ -114,6 +122,9 @@ export class KbqSingleFileUploadComponent
      * public output will be renamed to fileChange in next major release (#DS-3700) */
     @Output('fileQueueChange') readonly fileChange: EventEmitter<KbqFileItem | null> =
         new EventEmitter<KbqFileItem | null>();
+
+    /** @docs-private */
+    @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
 
     /** @docs-private */
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
@@ -135,7 +146,7 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     get input(): ElementRef<HTMLInputElement> | undefined {
-        return this.fileLoader()?.input();
+        return this.fileLoader?.input();
     }
 
     /** @docs-private */
@@ -162,9 +173,9 @@ export class KbqSingleFileUploadComponent
         optional: true
     });
 
+    protected readonly fileList = inject(KbqFileList, { host: true });
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
-    private readonly fileLoader = viewChild(KbqFileLoader);
 
     constructor() {
         super();
@@ -201,8 +212,10 @@ export class KbqSingleFileUploadComponent
         this.ngControl?.statusChanges
             ?.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe((status: FormControlStatus) => {
-                if (this._file) {
-                    this._file.hasError = status === 'INVALID';
+                const file = this.file;
+
+                if (file) {
+                    file.hasError = status === 'INVALID';
                 }
 
                 this.errors = Object.values(this.ngControl?.errors || {});
@@ -287,7 +300,7 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    onFileDropped(files: FileList | KbqFile[]): void {
+    onFileDropped(files: KbqFile[]): void {
         if (this.disabled) {
             return;
         }
