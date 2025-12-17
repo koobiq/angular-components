@@ -7,14 +7,12 @@ type IconStates = {
 };
 
 type IconItemStates = IconStates & {
-    fade?: boolean;
-    big?: boolean;
+    state?: 'big' | 'fade';
 };
 
 type IconButtonStates = IconStates & {
     color: KbqComponentColors;
-    disabled?: boolean;
-    small?: boolean;
+    state: 'disabled' | 'small' | 'focused' | 'hover';
 };
 
 @Component({
@@ -44,8 +42,8 @@ type IconButtonStates = IconStates & {
                                 <i
                                     kbq-icon-item="kbq-chevron-down-s_16"
                                     [color]="cell.color"
-                                    [big]="cell.big ?? false"
-                                    [fade]="cell.fade ?? false"
+                                    [big]="cell.state === 'big'"
+                                    [fade]="cell.state === 'fade'"
                                 ></i>
                             </td>
                         }
@@ -59,8 +57,10 @@ type IconButtonStates = IconStates & {
                                 <i
                                     kbq-icon-button="kbq-chevron-down-s_16"
                                     [color]="cell.color"
-                                    [small]="cell.small ?? false"
-                                    [disabled]="cell.disabled ?? false"
+                                    [small]="cell.state === 'small'"
+                                    [disabled]="cell.state === 'disabled'"
+                                    [class.kbq-hovered]="cell.state === 'hover'"
+                                    [class.cdk-keyboard-focused]="cell.state === 'focused'"
                                 ></i>
                             </td>
                         }
@@ -100,24 +100,35 @@ export class E2eIconStateAndStyle {
 
         this.colors.map((color) => ({
             color,
-            big: true
+            state: 'big'
         })),
 
         this.colors.map((color) => ({
             color,
-            fade: true
+            state: 'fade'
         }))
 
     ];
 
     iconButtonStates: IconButtonStates[][] = [
         this.colors.map((color) => ({
-            color
+            color,
+            state: 'hover'
         })),
 
         this.colors.map((color) => ({
             color,
-            small: true
+            state: 'small'
+        })),
+
+        this.colors.map((color) => ({
+            color,
+            state: 'disabled'
+        })),
+
+        this.colors.map((color) => ({
+            color,
+            state: 'focused'
         }))
 
     ];

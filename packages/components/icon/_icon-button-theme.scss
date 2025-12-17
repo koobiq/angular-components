@@ -3,7 +3,8 @@
 @mixin _kbq-icon-button-color($map) {
     color: map.get($map, default);
 
-    &:hover {
+    &:hover,
+    &.kbq-hovered {
         color: map.get($map, hover);
     }
 
