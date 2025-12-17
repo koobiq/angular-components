@@ -20,14 +20,7 @@ export enum KbqAlertColors {
     Error = 'error',
     Warning = 'warning',
     Success = 'success',
-    /** Used the same value as `Theme` to not introduce breaking changes */
-    Info = 'theme',
-    /** @deprecated This color key doesn't correlate with design, use `Info` instead.
-     * Will be removed in next major release (#DS-3602) */
-    Theme = 'theme',
-    /** @deprecated This color key doesn't correlate with design.
-     * Will be removed and replaced with `Info` in next major release (#DS-3602) */
-    Contrast = 'contrast'
+    Info = 'info'
 }
 
 @Directive({
@@ -87,10 +80,10 @@ export class KbqAlert implements AfterContentInit {
     }
 
     set alertColor(value: string | KbqAlertColors) {
-        this._alertColor = value || KbqAlertColors.Contrast;
+        this._alertColor = value || KbqAlertColors.Info;
     }
 
-    private _alertColor: string | KbqAlertColors = KbqAlertColors.Contrast;
+    private _alertColor: string | KbqAlertColors = KbqAlertColors.Info;
 
     get isColored(): boolean {
         return this.alertStyle === KbqAlertStyles.Colored;
@@ -100,7 +93,7 @@ export class KbqAlert implements AfterContentInit {
         const icon = this.icon || this.iconItem;
 
         if (icon?.color === KbqComponentColors.Empty) {
-            icon.color = this._alertColor === KbqAlertColors.Info ? KbqAlertColors.Contrast : this._alertColor;
+            icon.color = this._alertColor === KbqAlertColors.Info ? KbqComponentColors.Contrast : this._alertColor;
         }
     }
 }

@@ -40,9 +40,6 @@
     --kbq-alert-size-compact-no-title-icon-margin-top: var(--kbq-size-m);
     --kbq-alert-size-compact-no-title-icon-padding-top: var(--kbq-size-3xs);
     /* THEME TOKENS */
-    --kbq-alert-default-contrast-container-background: var(--kbq-background-contrast-fade);
-    --kbq-alert-default-contrast-container-title: var(--kbq-foreground-contrast);
-    --kbq-alert-default-contrast-container-text: var(--kbq-foreground-contrast);
     --kbq-alert-default-error-container-background: var(--kbq-background-contrast-fade);
     --kbq-alert-default-error-container-title: var(--kbq-foreground-contrast);
     --kbq-alert-default-error-container-text: var(--kbq-foreground-contrast);
@@ -52,12 +49,9 @@
     --kbq-alert-default-success-container-background: var(--kbq-background-contrast-fade);
     --kbq-alert-default-success-container-title: var(--kbq-foreground-contrast);
     --kbq-alert-default-success-container-text: var(--kbq-foreground-contrast);
-    --kbq-alert-default-theme-container-background: var(--kbq-background-contrast-fade);
-    --kbq-alert-default-theme-container-title: var(--kbq-foreground-contrast);
-    --kbq-alert-default-theme-container-text: var(--kbq-foreground-contrast);
-    --kbq-alert-colored-contrast-container-background: var(--kbq-background-contrast-fade);
-    --kbq-alert-colored-contrast-container-title: var(--kbq-foreground-contrast);
-    --kbq-alert-colored-contrast-container-text: var(--kbq-foreground-contrast);
+    --kbq-alert-default-info-container-background: var(--kbq-background-contrast-fade);
+    --kbq-alert-default-info-container-title: var(--kbq-foreground-contrast);
+    --kbq-alert-default-info-container-text: var(--kbq-foreground-contrast);
     --kbq-alert-colored-error-container-background: var(--kbq-background-error-less);
     --kbq-alert-colored-error-container-title: var(--kbq-foreground-contrast);
     --kbq-alert-colored-error-container-text: var(--kbq-foreground-contrast);
@@ -67,7 +61,7 @@
     --kbq-alert-colored-success-container-background: var(--kbq-background-success-less);
     --kbq-alert-colored-success-container-title: var(--kbq-foreground-contrast);
     --kbq-alert-colored-success-container-text: var(--kbq-foreground-contrast);
-    --kbq-alert-colored-theme-container-background: var(--kbq-background-theme-less);
-    --kbq-alert-colored-theme-container-title: var(--kbq-foreground-contrast);
-    --kbq-alert-colored-theme-container-text: var(--kbq-foreground-contrast);
+    --kbq-alert-colored-info-container-background: var(--kbq-background-theme-less);
+    --kbq-alert-colored-info-container-title: var(--kbq-foreground-contrast);
+    --kbq-alert-colored-info-container-text: var(--kbq-foreground-contrast);
 }

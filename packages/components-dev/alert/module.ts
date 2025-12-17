@@ -1,21 +1,12 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { E2eAlertStateAndStyle } from '../../components/alert/e2e';
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqAlertModule, KbqIconModule, KbqButtonModule, KbqLinkModule],
+    imports: [E2eAlertStateAndStyle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevApp {
-    readonly colors = KbqComponentColors;
-    readonly alertColors = KbqAlertColors;
-    readonly alertStyles = KbqAlertStyles;
-    readonly buttonStyles = KbqButtonStyles;
-}
+export class DevApp {}
