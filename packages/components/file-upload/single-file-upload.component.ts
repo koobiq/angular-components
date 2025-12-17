@@ -249,7 +249,7 @@ export class KbqSingleFileUploadComponent
      * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
-        this.fileUploadContext.innerDisabled.set(isDisabled);
+        this.fileUploadContext.disabled.set(isDisabled);
         this.cdr.markForCheck();
     }
 

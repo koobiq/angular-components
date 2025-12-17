@@ -212,28 +212,6 @@ describe('KbqFileUploadContext', () => {
             expect(directive.onlyDirectory()).toBe(true);
         });
     });
-
-    describe('computedDisabled', () => {
-        it('should return disabled value when innerDisabled is null', () => {
-            fixture.componentInstance.disabled = true;
-            fixture.detectChanges();
-            expect(directive.computedDisabled()).toBe(true);
-        });
-
-        it('should return innerDisabled value when set', () => {
-            fixture.componentInstance.disabled = false;
-            fixture.detectChanges();
-            directive.innerDisabled.set(true);
-            expect(directive.computedDisabled()).toBe(true);
-        });
-
-        it('should prioritize innerDisabled over disabled', () => {
-            fixture.componentInstance.disabled = true;
-            fixture.detectChanges();
-            directive.innerDisabled.set(false);
-            expect(directive.computedDisabled()).toBe(false);
-        });
-    });
 });
 
 describe('KbqFileLoader', () => {

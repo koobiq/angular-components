@@ -42,7 +42,6 @@ import { Renderer2 } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public @deprecated (undocumented)
 export const isCorrectExtension: (file: File, accept?: string[]) => boolean;
@@ -149,14 +148,12 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
 // @public
 export class KbqFileUploadContext {
     accept: InputSignal<string | null>;
-    computedDisabled: Signal<boolean | null>;
-    disabled: InputSignal<boolean | null>;
+    disabled: ModelSignal<boolean | null>;
     id: InputSignal<string | null>;
-    innerDisabled: WritableSignal<boolean | null>;
     multiple: InputSignalWithTransform<boolean | null, unknown>;
     onlyDirectory: InputSignal<boolean | null>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFileUploadContext, "[kbqFileUploadContext]", ["kbqFileUploadContext"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "onlyDirectory": { "alias": "onlyDirectory"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFileUploadContext, "[kbqFileUploadContext]", ["kbqFileUploadContext"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "onlyDirectory": { "alias": "onlyDirectory"; "required": false; "isSignal": true; }; }, { "disabled": "disabledChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFileUploadContext, never>;
 }

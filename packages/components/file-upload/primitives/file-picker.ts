@@ -9,7 +9,6 @@ import {
     input,
     model,
     output,
-    signal,
     viewChild
 } from '@angular/core';
 
@@ -21,10 +20,10 @@ import {
     exportAs: 'kbqFileUploadContext'
 })
 export class KbqFileUploadContext {
-    /** id for file input  */
+    /** id for file input */
     id = input<string | null>(null);
     /** Whether file input selectable or not */
-    disabled = input<boolean | null>(false);
+    disabled = model<boolean | null>(null);
     /** Selection mode for file input */
     multiple = input(null, { transform: booleanAttribute });
     /** File type specifiers */
@@ -33,11 +32,6 @@ export class KbqFileUploadContext {
      * Reflects webkitdirectory attribute, which indicates that elements can only select directories instead of files.
      */
     onlyDirectory = input<boolean | null>(null);
-
-    /** @docs-private */
-    innerDisabled = signal<boolean | null>(null);
-    /** @docs-private */
-    computedDisabled = computed(() => this.innerDisabled() ?? this.disabled());
 }
 
 /**
@@ -90,7 +84,7 @@ export class KbqFileLoader {
     readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
     /** @docs-private */
-    protected readonly innerDisabled = computed(() => this.fileUploadContext?.computedDisabled() ?? this.disabled());
+    protected readonly innerDisabled = computed(() => this.fileUploadContext?.disabled() ?? this.disabled());
     /** @docs-private */
     protected readonly innerMultiple = computed(() => this.fileUploadContext?.multiple() ?? this.multiple());
     /** @docs-private */
