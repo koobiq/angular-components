@@ -5,11 +5,12 @@ import { KbqEmptyState } from '@koobiq/components/empty-state';
 import {
     KbqFile,
     KbqFileDropDirective,
+    KbqFileItem,
     KbqFileList,
     KbqFileLoader,
     KbqFileUploadContext
 } from '@koobiq/components/file-upload';
-import { KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 import { BehaviorSubject } from 'rxjs';
 
 /**
@@ -24,7 +25,7 @@ import { BehaviorSubject } from 'rxjs';
         KbqButton,
         KbqButtonCssStyler,
         KbqFileList,
-        KbqIconButton,
+        KbqIcon,
         KbqBadge,
         KbqEmptyState,
         KbqIconItem
@@ -58,11 +59,24 @@ import { BehaviorSubject } from 'rxjs';
                     </label>
                 </div>
             </kbq-empty-state>
-            <div #list="kbqFileList" kbqFileList>
+            <div
+                #list="kbqFileList"
+                kbqFileList
+                (itemRemoved)="onItemRemoved($event)"
+                (itemsAdded)="onItemsAdded($event)"
+                (listChange)="onListChange($event)"
+            >
                 @for (item of list.list(); track item) {
                     <div class="list-item">
                         <kbq-badge>{{ item.file.name }}</kbq-badge>
-                        <i kbq-icon-button="kbq-minus_16" (click)="list.removeAt($index)"></i>
+                        <button
+                            kbq-button
+                            [kbqStyle]="'transparent'"
+                            [color]="'contrast'"
+                            (click)="list.removeAt($index)"
+                        >
+                            <i kbq-icon="kbq-trash_16"></i>
+                        </button>
                     </div>
                 }
             </div>
@@ -130,5 +144,17 @@ export class FileUploadPrimitiveExample {
                 progress: new BehaviorSubject<number>(0)
             }))
         );
+    }
+
+    onListChange($event: KbqFileItem[]) {
+        console.log('onListChange: ', $event);
+    }
+
+    onItemRemoved($event: [KbqFileItem, number]) {
+        console.log('onItemRemoved: ', $event);
+    }
+
+    onItemsAdded($event: KbqFileItem[]) {
+        console.log('onItemsAdded: ', $event);
     }
 }
