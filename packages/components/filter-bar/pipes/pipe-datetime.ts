@@ -168,6 +168,10 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
         if (($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApplyPeriod();
         }
+
+        if ($event.keyCode === ENTER) {
+            $event.preventDefault();
+        }
     }
 
     /** @docs-private */
