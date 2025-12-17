@@ -408,7 +408,7 @@ class ManySelects {
             <kbq-tree-select [formControl]="control" [searchMinOptionsThreshold]="searchMinOptionsThreshold">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                    <input kbqInput type="text" [formControl]="searchControl" />
+                    <input class="search-input" kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
@@ -3210,9 +3210,9 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+            const searchInput: HTMLElement = overlayContainerElement.querySelector('.search-input')!;
 
-            expect(document.activeElement).toBe(options[0]);
+            expect(document.activeElement).toBe(searchInput);
         }));
 
         it('should show empty message', fakeAsync(() => {

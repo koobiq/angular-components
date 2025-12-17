@@ -659,9 +659,13 @@ export class KbqTreeSelect
                 if (this.panelOpen) {
                     this.scrollTop = 0;
 
-                    if (this.search) {
-                        this.search.focus();
-                    }
+                    setTimeout(() => {
+                        this.highlightCorrectOption();
+
+                        if (this.search) {
+                            this.search.focus();
+                        }
+                    });
 
                     this.openedChange.emit(true);
                 } else {
@@ -849,8 +853,6 @@ export class KbqTreeSelect
                 : '';
 
         this._panelOpen = true;
-
-        setTimeout(() => this.highlightCorrectOption());
 
         this.changeDetectorRef.markForCheck();
 
