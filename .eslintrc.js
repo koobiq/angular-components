@@ -315,7 +315,7 @@ const componentsExamplesRules = {
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const e2eRules = {
-    files: ['*.playwright-spec.ts', 'packages/e2e/**/*.ts'],
+    files: ['*.playwright-spec.ts', '**/e2e.ts', 'packages/e2e/**/*.ts'],
     rules: {
         // plugin:eslint
         // ignore `noRestrictedGlobalsOptionsForSSR` in e2e tests, because they are not executed in SSR context

@@ -26,6 +26,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     }
 })
 export class E2eAppSwitcherStates {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"
@@ -105,6 +106,7 @@ export class E2eAppSwitcherStates {
     }
 })
 export class E2eAppSwitcherWithSitesStates {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"
