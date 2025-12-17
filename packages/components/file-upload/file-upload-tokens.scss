@@ -17,7 +17,7 @@
     --kbq-file-upload-single-default-upload-icon-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-single-default-left-icon-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-single-default-text-block-color: var(--kbq-foreground-contrast);
-    --kbq-file-upload-single-default-icon-button-color: var(--kbq-icon-contrast);
+    --kbq-file-upload-single-default-icon-button-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-single-default-file-size-text-color: var(--kbq-foreground-contrast-secondary);
     --kbq-file-upload-single-states-on-drag-container-border: var(--kbq-line-theme-fade);
     --kbq-file-upload-single-states-on-drag-container-background: var(--kbq-background-theme-fade);
@@ -42,6 +42,8 @@
 }
 
 :where(.kbq-multiple-file-upload) {
+    --kbq-file-upload-size-multiple-min-height: 120px;
+    --kbq-file-upload-size-multiple-max-height: 150px;
     --kbq-file-upload-size-multiple-big-container-min-height: 192px;
     --kbq-file-upload-size-multiple-big-container-min-width: 320px;
     --kbq-file-upload-size-multiple-big-container-border-radius: var(--kbq-size-s);
@@ -62,7 +64,7 @@
     --kbq-file-upload-multiple-default-upload-icon-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-multiple-default-left-icon-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-multiple-default-text-block-color: var(--kbq-foreground-contrast);
-    --kbq-file-upload-multiple-default-icon-button-color: var(--kbq-icon-contrast);
+    --kbq-file-upload-multiple-default-icon-button-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-multiple-default-grid-divider-color: var(--kbq-line-contrast-less);
     --kbq-file-upload-multiple-default-file-size-text-color: var(--kbq-foreground-contrast-secondary);
     --kbq-file-upload-multiple-states-on-drag-container-border: var(--kbq-line-theme-fade);

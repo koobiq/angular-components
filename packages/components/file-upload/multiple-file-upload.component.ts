@@ -58,8 +58,6 @@ export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleCo
 export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig =
     ruRULocaleData.fileUpload.multiple;
 
-const fileSizeCellPadding = 16;
-
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     imports: [
@@ -156,7 +154,6 @@ export class KbqMultipleFileUploadComponent
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
 
     @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
-    @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
     @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
@@ -249,14 +246,6 @@ export class KbqMultipleFileUploadComponent
      */
     get invalid(): boolean {
         return this.errorState;
-    }
-
-    /**
-     * Set maxWidth for filesize cell to enable proper ellipsis center,
-     * @docs-private
-     */
-    protected get fileSizeCellMaxWidth() {
-        return this.fileSizeHeaderCell?.nativeElement.offsetWidth - fileSizeCellPadding;
     }
 
     /** @docs-private */

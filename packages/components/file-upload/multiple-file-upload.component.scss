@@ -42,23 +42,25 @@
         }
     }
 
-    .kbq-list-option.kbq-file-multiple__uploaded-item {
-        border-radius: 0;
-        padding: 0 calc(var(--kbq-size-3xs) - var(--kbq-file-upload-size-multiple-big-container-border-width));
-
-        .kbq-icon {
-            margin-right: 0;
-        }
-    }
-
     .kbq-file-upload__grid {
-        min-height: 144px;
+        --kbq-list-size-container-padding-vertical: var(--kbq-size-xxl);
+        // @todo
+        --kbq-list-size-container-padding-top: calc(var(--kbq-size-xxs) - var(--kbq-size-border-width));
+
+        min-height: var(--kbq-file-upload-size-multiple-min-height);
+        max-height: var(--kbq-file-upload-size-multiple-max-height);
+
+        overflow-y: auto;
+
+        padding-top: var(--kbq-list-size-container-padding-top);
+        padding-bottom: var(--kbq-list-size-container-padding-vertical);
     }
 
     .kbq-file-multiple-uploaded__header-inner,
     .kbq-file-upload__row {
         display: flex;
         align-items: center;
+        flex: 1;
 
         .kbq-file-upload__file {
             flex-grow: 1;
@@ -105,33 +107,6 @@
         }
     }
 
-    .kbq-file-multiple-uploaded__header {
-        margin: -1px;
-        border-bottom-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
-        border-bottom-style: solid;
-
-        padding: 0 var(--kbq-size-xxs);
-
-        .kbq-file-upload__grid-cell {
-            $header-cell-vertical-padding: 10px;
-            padding: $header-cell-vertical-padding var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal)
-                calc($header-cell-vertical-padding - var(--kbq-file-upload-size-multiple-big-container-border-width))
-                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal);
-        }
-
-        .kbq-file-upload__action {
-            min-height: var(--kbq-size-xxl);
-            min-width: var(--kbq-size-xxl);
-            padding: var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal)
-                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal)
-                calc(
-                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical) - var(
-                            --kbq-file-upload-size-multiple-big-container-border-width
-                        )
-                );
-        }
-    }
-
     .kbq-file-btn-upload {
         margin: -1px;
         padding: calc(var(--kbq-size-m) - var(--kbq-file-upload-size-multiple-big-container-border-width))
@@ -148,5 +123,24 @@
     .kbq-file-upload__dropzone {
         width: 100%;
         height: 100%;
+    }
+
+    .kbq-scrollbar-component {
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .kbq-file-multiple__uploaded-item {
+        border-radius: 0;
+        border: 0;
+        padding: 0 3px;
+
+        .kbq-file-upload__row {
+            border-radius: var(--kbq-size-xs);
+        }
+
+        .kbq-icon {
+            margin-right: 0;
+        }
     }
 }

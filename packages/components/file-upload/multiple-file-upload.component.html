@@ -20,7 +20,7 @@
                     </div>
                 </div>
             } @else {
-                <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
+                <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
                 <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
                     <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </span>
@@ -28,72 +28,55 @@
         </div>
     } @else {
         <div class="kbq-file-upload__dropzone">
-            <div class="kbq-file-upload__grid">
-                <div class="kbq-file-multiple-uploaded__header">
-                    <div class="kbq-file-multiple-uploaded__header-inner">
-                        <div #fileSizeHeaderCell class="kbq-file-upload__file kbq-file-upload__grid-cell">
-                            {{ localeData.gridHeaders.file }}
-                        </div>
-                        <div class="kbq-file-upload__size kbq-file-upload__grid-cell">
-                            {{ localeData.gridHeaders.size }}
-                        </div>
-                        <div class="kbq-file-upload__action kbq-file-upload__grid-cell"></div>
-                    </div>
-                </div>
-                <kbq-list-selection [autoSelect]="false" [disabled]="disabled">
-                    @for (file of files; track file) {
-                        <kbq-list-option
-                            class="kbq-file-multiple__uploaded-item"
-                            [value]="file.file.name"
-                            (keydown.backspace)="deleteFile($index)"
-                            (keydown.delete)="deleteFile($index)"
-                        >
-                            <div class="kbq-file-upload__row" [class.kbq-error]="file.hasError">
-                                <div
-                                    class="kbq-file-upload__file kbq-file-upload__grid-cell"
-                                    [style.max-width.px]="fileSizeCellMaxWidth"
-                                >
-                                    @if (
-                                        { loading: file.loading | async, progress: file.progress | async };
-                                        as asyncData
-                                    ) {
-                                        @if (!asyncData.loading) {
-                                            <ng-container
-                                                [ngTemplateOutlet]="$any(customFileIcon)"
-                                                [ngTemplateOutletContext]="{ $implicit: file }"
-                                            />
-                                        }
-                                        @if (asyncData.loading) {
-                                            <kbq-progress-spinner
-                                                class="kbq-file-upload-name-cell__icon"
-                                                [mode]="progressMode"
-                                                [value]="asyncData.progress || 0"
-                                            />
-                                        }
+            <kbq-list class="kbq-file-upload__grid kbq-scrollbar" role="list">
+                @for (file of files; track file) {
+                    <kbq-list-item
+                        role="listitem"
+                        class="kbq-file-multiple__uploaded-item"
+                        [class.kbq-disabled]="disabled"
+                        (keydown.backspace)="deleteFile($index)"
+                        (keydown.delete)="deleteFile($index)"
+                    >
+                        <div class="kbq-file-upload__row" [class.kbq-error]="file.hasError">
+                            <div class="kbq-file-upload__file kbq-file-upload__grid-cell">
+                                @if ({ loading: file.loading | async, progress: file.progress | async }; as asyncData) {
+                                    @if (!asyncData.loading) {
+                                        <ng-container
+                                            [ngTemplateOutlet]="$any(customFileIcon)"
+                                            [ngTemplateOutletContext]="{ $implicit: file }"
+                                        />
                                     }
-                                    <span
-                                        class="kbq-file-item__text"
-                                        [debounceInterval]="0"
-                                        [kbqEllipsisCenter]="file.file.name"
-                                    ></span>
-                                </div>
-                                <div class="kbq-file-upload__size kbq-file-upload__grid-cell">
-                                    {{ file.file.size | kbqDataSize }}
-                                </div>
-                                <div
-                                    class="kbq-file-upload__action kbq-file-upload__grid-cell"
-                                    (click)="deleteFile($index, $event, 'program')"
-                                >
-                                    <i kbq-icon-button="kbq-circle-xmark_16" tabindex="-1" [disabled]="disabled"></i>
-                                </div>
+                                    @if (asyncData.loading) {
+                                        <kbq-progress-spinner
+                                            class="kbq-file-upload-name-cell__icon"
+                                            [mode]="progressMode"
+                                            [value]="asyncData.progress || 0"
+                                        />
+                                    }
+                                }
+                                <span
+                                    class="kbq-file-item__text"
+                                    [debounceInterval]="0"
+                                    [kbqTooltipDisabled]="disabled"
+                                    [kbqEllipsisCenter]="file.file.name"
+                                ></span>
                             </div>
-                        </kbq-list-option>
-                    }
-                </kbq-list-selection>
-            </div>
+                            <div class="kbq-file-upload__size kbq-file-upload__grid-cell">
+                                {{ file.file.size | kbqDataSize }}
+                            </div>
+                            <div
+                                class="kbq-file-upload__action kbq-file-upload__grid-cell"
+                                (click)="deleteFile($index, $event, 'program')"
+                            >
+                                <i kbq-icon-button="kbq-xmark-circle_16" [disabled]="disabled" [small]="true"></i>
+                            </div>
+                        </div>
+                    </kbq-list-item>
+                }
+            </kbq-list>
             <div class="kbq-file-btn-upload">
                 <div class="kbq-file-dropzone">
-                    <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
+                    <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
                     <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
                         <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                     </span>

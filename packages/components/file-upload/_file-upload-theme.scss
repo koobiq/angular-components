@@ -1,5 +1,11 @@
 @use '../core/styles/common/tokens';
 
+@mixin _kbq-list-item($state-name) {
+    --kbq-option-background: var(--kbq-list-#{$state-name}-container-background);
+
+    background: var(--kbq-list-#{$state-name}-container-background);
+}
+
 @mixin kbq-file-upload-theme() {
     .kbq-single-file-upload {
         .kbq-file-upload {
@@ -105,11 +111,6 @@
                 border-top-color: var(--kbq-file-upload-multiple-default-container-border);
             }
 
-            .kbq-file-multiple-uploaded__header {
-                color: var(--kbq-foreground-contrast-secondary);
-                border-bottom-color: var(--kbq-file-upload-multiple-default-grid-divider-color);
-            }
-
             &:not(.kbq-disabled, .kbq-error) {
                 .kbq-file-dropzone__icon {
                     color: var(--kbq-file-upload-multiple-default-upload-icon-color);
@@ -122,10 +123,6 @@
 
                 .kbq-file-btn-upload {
                     border-top-color: var(--kbq-file-upload-multiple-states-on-drag-container-border);
-                }
-
-                .kbq-file-multiple-uploaded__header {
-                    border-bottom-color: var(--kbq-file-upload-multiple-states-on-drag-grid-divider-color) !important;
                 }
 
                 .kbq-file-dropzone__icon {
@@ -141,13 +138,8 @@
                     color: var(--kbq-file-upload-multiple-states-disabled-upload-icon-color);
                 }
 
-                .kbq-file-dropzone__text,
-                .kbq-file-multiple-uploaded__header {
+                .kbq-file-dropzone__text {
                     color: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
-                }
-
-                .kbq-file-multiple-uploaded__header {
-                    border-bottom-color: var(--kbq-file-upload-multiple-states-disabled-grid-divider-color) !important;
                 }
 
                 .kbq-file-multiple__uploaded-item {
@@ -175,15 +167,19 @@
                         color: var(--kbq-file-upload-multiple-states-error-upload-icon-color);
                     }
 
-                    .kbq-file-dropzone__text:not(.kbq-link),
-                    .kbq-file-multiple-uploaded__header {
+                    .kbq-file-dropzone__text:not(.kbq-link) {
                         color: var(--kbq-file-upload-multiple-states-error-text-block-color);
                     }
                 }
 
                 .kbq-file-multiple__uploaded-item {
                     &:has(.kbq-file-upload__row.kbq-error) {
-                        background-color: var(--kbq-background-error-less);
+                        &:hover,
+                        &.kbq-hovered {
+                            .kbq-file-upload__row {
+                                background-color: var(--kbq-states-background-error-less-hover);
+                            }
+                        }
 
                         .kbq-file-item__text,
                         .kbq-file-upload__size {
@@ -196,6 +192,21 @@
 
                         .kbq-file-upload__action .kbq-icon.kbq-empty {
                             color: var(--kbq-file-upload-multiple-states-error-icon-button-color);
+                        }
+                    }
+
+                    &:not(:has(.kbq-file-upload__row.kbq-error)) {
+                        &:hover,
+                        &.kbq-hovered {
+                            .kbq-file-upload__row {
+                                @include _kbq-list-item(states-hover);
+                            }
+                        }
+
+                        &.kbq-disabled {
+                            .kbq-file-upload__row {
+                                @include _kbq-list-item(states-disabled);
+                            }
                         }
                     }
                 }
@@ -240,32 +251,6 @@
     .kbq-multiple-file-upload {
         .kbq-file-multiple__header {
             @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
-        }
-
-        // @TODO: remove when redesign applied, use default font (#DS-3858)
-        .kbq-file-multiple__caption {
-            &,
-            .kbq-link {
-                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-            }
-        }
-
-        // @TODO: remove when redesign applied, use default font (#DS-3858)
-        .kbq-file-multiple-uploaded__header {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-        }
-
-        // @TODO: remove when redesign applied, use default font (#DS-3858)
-        .kbq-file-multiple__uploaded-item {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-        }
-
-        // @TODO: remove when redesign applied, use default font (#DS-3858)
-        .kbq-file-upload {
-            .kbq-list-item,
-            .kbq-list-option {
-                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-            }
         }
     }
 
