@@ -30,9 +30,7 @@
             @include kbq-alert-style(default, success);
         }
 
-        &.kbq-alert_info,
-        // Will be removed and replaced with `kbq-alert_info` in next major release (#DS-3651)
-        &.kbq-alert_contrast {
+        &.kbq-alert_info {
             @include kbq-alert-style(default, info);
         }
     }
@@ -50,9 +48,7 @@
             @include kbq-alert-style(colored, success);
         }
 
-        &.kbq-alert_info,
-        // Will be replaced with `kbq-alert_info` in next major release (#DS-3651)
-        &.kbq-alert_contrast {
+        &.kbq-alert_info {
             @include kbq-alert-style(colored, info);
         }
     }

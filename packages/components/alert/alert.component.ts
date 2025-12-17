@@ -20,11 +20,7 @@ export enum KbqAlertColors {
     Error = 'error',
     Warning = 'warning',
     Success = 'success',
-    /** Used the same value as `Theme` to not introduce breaking changes */
-    Info = 'info',
-    /** @deprecated This color key doesn't correlate with design.
-     * Will be removed and replaced with `Info` in next major release (#DS-3602) */
-    Contrast = 'contrast'
+    Info = 'info'
 }
 
 @Directive({
