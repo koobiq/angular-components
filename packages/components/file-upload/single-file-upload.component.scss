@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use './file-upload-theme';
 
 .kbq-single-file-upload .kbq-file-upload {
     padding: kbq-difference-series-css-variables(
@@ -39,4 +40,6 @@
             padding: var(--kbq-size-xxs);
         }
     }
+
+    @include file-upload-theme.kbq-single-file-upload-theme();
 }
