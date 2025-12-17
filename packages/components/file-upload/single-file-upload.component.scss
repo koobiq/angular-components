@@ -15,18 +15,6 @@
     border-width: var(--kbq-file-upload-size-single-container-border-width);
     border-style: dashed;
 
-    & .kbq-file-dropzone__text {
-        padding-top: var(--kbq-file-upload-size-single-text-block-padding-vertical);
-
-        padding-bottom: var(--kbq-file-upload-size-single-text-block-padding-vertical);
-
-        gap: var(--kbq-file-upload-size-single-text-block-content-gap-horizontal);
-    }
-
-    & .kbq-file-dropzone {
-        gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
-    }
-
     .kbq-file-item {
         width: 100%;
 

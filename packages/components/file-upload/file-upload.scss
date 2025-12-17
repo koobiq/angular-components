@@ -6,10 +6,15 @@
     align-items: center;
     position: relative;
 
-    .kbq-file-dropzone,
     .kbq-file-item {
         display: flex;
         align-items: center;
+    }
+
+    .kbq-file-dropzone {
+        display: flex;
+        align-items: center;
+        gap: var(--dropzone-gap, var(--kbq-file-upload-size-dropzone-content-gap-horizontal));
     }
 
     .kbq-ellipsis-center {

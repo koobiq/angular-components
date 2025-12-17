@@ -10,22 +10,22 @@
 >
     @let localeData = resolvedLocaleConfig();
     @if (!files.length) {
-        <div class="kbq-file-dropzone">
-            @if (size === 'default') {
-                <i kbq-icon="kbq-cloud-arrow-up-o_32" class="kbq-file-dropzone__icon"></i>
-                <div class="kbq-file-dropzone__text">
-                    <div class="kbq-file-multiple__header">{{ localeData.title }}</div>
-                    <div>
-                        <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
-                    </div>
+        @if (size === 'default') {
+            <i kbq-icon="kbq-cloud-arrow-up-o_32" class="kbq-file-dropzone__icon"></i>
+            <div class="kbq-file-dropzone__text">
+                <div class="kbq-file-multiple__header">{{ localeData.title }}</div>
+                <div>
+                    <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </div>
-            } @else {
+            </div>
+        } @else {
+            <div class="kbq-file-dropzone">
                 <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
                 <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
                     <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </span>
-            }
-        </div>
+            </div>
+        }
     } @else {
         <div class="kbq-file-upload__dropzone">
             <kbq-list class="kbq-file-upload__grid kbq-scrollbar" role="list">
@@ -64,23 +64,21 @@
                             <div class="kbq-file-upload__size kbq-file-upload__grid-cell">
                                 {{ file.file.size | kbqDataSize }}
                             </div>
-                            <div
+                            <i
+                                kbq-icon-button="kbq-xmark-circle_16"
                                 class="kbq-file-upload__action kbq-file-upload__grid-cell"
+                                [disabled]="disabled"
                                 (click)="deleteFile($index, $event, 'program')"
-                            >
-                                <i kbq-icon-button="kbq-xmark-circle_16" [disabled]="disabled" [small]="true"></i>
-                            </div>
+                            ></i>
                         </div>
                     </kbq-list-item>
                 }
             </kbq-list>
-            <div class="kbq-file-btn-upload">
-                <div class="kbq-file-dropzone">
-                    <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
-                    <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                        <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
-                    </span>
-                </div>
+            <div class="kbq-file-btn-upload kbq-file-dropzone">
+                <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
+                <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
+                    <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
+                </span>
             </div>
         </div>
     }

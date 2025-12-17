@@ -1,4 +1,5 @@
 :where(.kbq-file-upload) {
+    --kbq-file-upload-size-dropzone-content-gap-horizontal: var(--kbq-size-s);
     --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
 }
 
@@ -10,7 +11,7 @@
     --kbq-file-upload-size-single-container-padding-horizontal: var(--kbq-size-m);
     --kbq-file-upload-size-single-text-block-padding-vertical: var(--kbq-size-3xs);
     --kbq-file-upload-size-single-text-block-content-gap-horizontal: var(--kbq-size-xxs);
-    --kbq-file-upload-single-min-height: var(--kbq-size-5xl);
+    --kbq-file-upload-single-min-height: 44px;
     /* THEME TOKENS */
     --kbq-file-upload-single-default-container-border: var(--kbq-line-contrast-fade);
     --kbq-file-upload-single-default-container-background: var(--kbq-background-bg);

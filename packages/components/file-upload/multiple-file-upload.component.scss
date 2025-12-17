@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use './file-upload-theme';
 
 // todo нужно рефакторить со стилями тут сложно
 .kbq-multiple-file-upload .kbq-file-upload {
@@ -16,10 +17,6 @@
 
         min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
 
-        .kbq-file-dropzone {
-            gap: var(--kbq-file-upload-size-multiple-big-container-content-gap-horizontal);
-        }
-
         .kbq-file-dropzone__text {
             .kbq-file-multiple__caption {
                 padding-top: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-vertical);
@@ -30,16 +27,6 @@
     &.kbq-file-upload_compact:not(.kbq-selected) {
         padding: var(--kbq-file-upload-multiple-compact-container-padding-vertical)
             var(--kbq-file-upload-multiple-compact-container-padding-horizontal);
-
-        .kbq-file-dropzone {
-            gap: var(--kbq-file-upload-multiple-compact-container-content-gap-horizontal);
-
-            .kbq-file-dropzone__text.kbq-file-multiple__caption {
-                padding-top: var(--kbq-file-upload-multiple-compact-text-block-padding-vertical);
-
-                padding-bottom: var(--kbq-file-upload-multiple-compact-text-block-padding-vertical);
-            }
-        }
     }
 
     .kbq-file-upload__grid {
@@ -56,14 +43,24 @@
         padding-bottom: var(--kbq-list-size-container-padding-vertical);
     }
 
-    .kbq-file-multiple-uploaded__header-inner,
     .kbq-file-upload__row {
         display: flex;
         align-items: center;
         flex: 1;
 
+        .kbq-file-upload__grid-cell {
+            padding: 0 var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal);
+        }
+
         .kbq-file-upload__file {
+            display: flex;
+            align-items: center;
             flex-grow: 1;
+            gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
+
+            .kbq-file-item__text {
+                width: 90%;
+            }
         }
 
         .kbq-file-upload__size {
@@ -74,36 +71,9 @@
             flex-shrink: 1;
             text-align: left;
         }
-    }
-
-    .kbq-file-upload__row {
-        .kbq-file-upload__grid-cell {
-            padding: 0 var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal);
-        }
-
-        .kbq-file-upload__file {
-            display: flex;
-            align-items: center;
-            gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
-
-            .kbq-file-item__text {
-                width: 90%;
-            }
-        }
 
         .kbq-file-upload__action {
-            $list-option-border-width: var(--kbq-size-3xs);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding-top: calc(
-                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical) - $list-option-border-width
-            );
-            padding-bottom: calc(
-                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal) - $list-option-border-width
-            );
-            min-height: var(--kbq-size-xxl);
-            min-width: var(--kbq-size-xxl);
+            padding: var(--kbq-size-m);
         }
     }
 
@@ -125,22 +95,15 @@
         height: 100%;
     }
 
-    .kbq-scrollbar-component {
-        overflow-y: auto;
-        flex: 1;
-    }
-
     .kbq-file-multiple__uploaded-item {
         border-radius: 0;
         border: 0;
-        padding: 0 3px;
+        padding: 0 calc(var(--kbq-size-xxs) - var(--kbq-size-border-width));
 
         .kbq-file-upload__row {
             border-radius: var(--kbq-size-xs);
         }
-
-        .kbq-icon {
-            margin-right: 0;
-        }
     }
+
+    @include file-upload-theme.kbq-multiple-file-upload-theme();
 }
