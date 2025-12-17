@@ -69,7 +69,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     backdropClass: string;
     // (undocumented)
-    calculateHiddenItems(): void;
+    calculateHiddenItems: () => void;
     // (undocumented)
     get canShowCleaner(): boolean;
     // (undocumented)

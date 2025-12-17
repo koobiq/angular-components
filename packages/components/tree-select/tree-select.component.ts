@@ -33,6 +33,7 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
+    afterNextRender,
     booleanAttribute,
     inject,
     numberAttribute
@@ -80,8 +81,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { Observable, Subject, Subscription, audit, defer, merge } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
+import { Observable, Subject, Subscription, audit, defer, fromEvent, merge } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -164,9 +165,7 @@ export class KbqTreeSelectChange {
         '(click)': 'handleClick()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
-        '(blur)': 'onBlur()',
-        // @TODO: turn event listener only for specific conditions (#DS-4253)
-        '(window:resize)': 'calculateHiddenItems()'
+        '(blur)': 'onBlur()'
     },
     animations: [
         kbqSelectAnimations.transformPanel,
@@ -638,6 +637,14 @@ export class KbqTreeSelect
 
         // Force setter to be called in case id was not specified.
         this.id = this.id;
+
+        afterNextRender(() => {
+            if (this.multiple && !this.multiline) {
+                merge(fromEvent(this.window, 'resize'), this.tags.changes)
+                    .pipe(delay(0), debounceTime(50), takeUntilDestroyed(this.destroyRef))
+                    .subscribe(this.calculateHiddenItems);
+            }
+        });
     }
 
     ngOnInit() {
@@ -746,10 +753,6 @@ export class KbqTreeSelect
 
     ngAfterViewInit() {
         if (!this.tree) return;
-
-        this.tags.changes.pipe(startWith(null)).subscribe(() => {
-            this.calculateHiddenItems();
-        });
 
         this.tree.treeControl.expansionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -1050,13 +1053,13 @@ export class KbqTreeSelect
         this.onChange(this.selectedValues);
     }
 
-    calculateHiddenItems() {
+    calculateHiddenItems = () => {
         if (
             !this.isBrowser ||
             this.customTrigger ||
+            this.customMatcher ||
             this.empty ||
             !this.multiple ||
-            this.customMatcher ||
             this.multiline
         )
             return;
@@ -1093,7 +1096,7 @@ export class KbqTreeSelect
         }
 
         this.changeDetectorRef.markForCheck();
-    }
+    };
 
     triggerKeydownHandler(event: KeyboardEvent) {
         const keyCode = event.keyCode;

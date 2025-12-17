@@ -93,12 +93,12 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 }
 
 // @public (undocumented)
-export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
+export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
     constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef<HTMLElement>, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
     // (undocumented)
     backdropClass: string;
     // (undocumented)
-    calculateHiddenItems(): void;
+    calculateHiddenItems: () => void;
     // (undocumented)
     get canShowCleaner(): boolean;
     // (undocumented)
@@ -190,8 +190,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngControl: NgControl;
     // (undocumented)
