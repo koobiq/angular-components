@@ -44,7 +44,7 @@
 
 :where(.kbq-multiple-file-upload) {
     --kbq-file-upload-size-multiple-min-height: 120px;
-    --kbq-file-upload-size-multiple-max-height: 150px;
+    --kbq-file-upload-size-multiple-max-height: unset;
     --kbq-file-upload-size-multiple-big-container-min-height: 192px;
     --kbq-file-upload-size-multiple-big-container-min-width: 320px;
     --kbq-file-upload-size-multiple-big-container-border-radius: var(--kbq-size-s);

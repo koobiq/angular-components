@@ -9,13 +9,16 @@
 
     &.kbq-file-upload_default:not(.kbq-selected) {
         justify-content: center;
-
-        padding: var(--kbq-file-upload-size-multiple-big-container-padding-vertical)
-            var(--kbq-file-upload-size-multiple-big-container-padding-vertical);
-
         min-height: var(--kbq-file-upload-size-multiple-big-container-min-height);
 
         min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
+
+        .kbq-empty-state {
+            --kbq-empty-state-size-normal-image-addon-height: 0;
+            --kbq-empty-state-size-normal-padding-top: 49px;
+            --kbq-empty-state-size-normal-padding-bottom: 49px;
+            --kbq-empty-state-size-normal-padding-horizontal: 22px;
+        }
 
         .kbq-file-dropzone__text {
             .kbq-file-multiple__caption {

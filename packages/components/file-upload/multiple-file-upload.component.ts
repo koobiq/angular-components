@@ -32,6 +32,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
+import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
@@ -72,7 +73,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
         KbqProgressSpinnerModule,
         KbqEllipsisCenterDirective,
         KbqFileLoader,
-        KbqDynamicTranslationModule
+        KbqEmptyStateModule
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
