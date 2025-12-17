@@ -53,10 +53,9 @@ export class KbqAlertCloseButton {
 
 // @public (undocumented)
 export enum KbqAlertColors {
-    // @deprecated (undocumented)
-    Contrast = "contrast",
     // (undocumented)
     Error = "error",
+    // (undocumented)
     Info = "info",
     // (undocumented)
     Success = "success",
