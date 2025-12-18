@@ -33,6 +33,7 @@
     &:not(.kbq-disabled) {
         cursor: pointer;
 
+        &.kbq-hovered,
         &:hover,
         &.kbq-focused,
         &.kbq-action-button-focused {
