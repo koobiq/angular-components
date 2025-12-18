@@ -21,17 +21,17 @@ import {
 })
 export class KbqFileUploadContext {
     /** id for file input */
-    id = input<string | null>(null);
+    readonly id = input<string | null>(null);
     /** Whether file input selectable or not */
-    disabled = model<boolean | null>(null);
+    readonly disabled = model<boolean | null>(null);
     /** Selection mode for file input */
-    multiple = input(null, { transform: booleanAttribute });
+    readonly multiple = input(null, { transform: booleanAttribute });
     /** File type specifiers */
-    accept = input<string | null>(null);
+    readonly accept = input<string | null>(null);
     /**
      * Reflects webkitdirectory attribute, which indicates that elements can only select directories instead of files.
      */
-    onlyDirectory = input<boolean | null>(null);
+    readonly onlyDirectory = input<boolean | null>(null);
 }
 
 /**
@@ -64,19 +64,19 @@ export class KbqFileLoader {
     private fileUploadContext = inject(KbqFileUploadContext, { optional: true });
 
     /** Whether file input selectable or not */
-    disabled = input<boolean>(false);
+    readonly disabled = input<boolean>(false);
     /** Selection mode for file input */
-    multiple = input<boolean | null>(null);
+    readonly multiple = input<boolean | null>(null);
     /** File type specifiers */
-    accept = input<string | null>(null);
+    readonly accept = input<string | null>(null);
     /** id for file input  */
-    for = input<string | null>(null);
+    readonly for = input<string | null>(null);
     /**
      * Reflects webkitdirectory attribute,
      * which indicates that elements can only select directories instead of files.
      * @link [`HTMLInputElement: webkitdirectory property`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
      */
-    onlyDirectory = input<boolean | null>(null);
+    readonly onlyDirectory = input<boolean | null>(null);
 
     /** Event fires when file selected in file-picker. */
     readonly fileChange = output<Event>();
@@ -110,7 +110,7 @@ export class KbqFileLoader {
 })
 export class KbqFileList<T> {
     /** Current list of items. */
-    list = model<T[]>([]);
+    readonly list = model<T[]>([]);
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.
@@ -166,7 +166,7 @@ export class KbqFileList<T> {
         return removed;
     }
 
-    private update(fn: (current: T[]) => T[]) {
+    private update(fn: (current: T[]) => T[]): void {
         this.list.update(fn);
     }
 }

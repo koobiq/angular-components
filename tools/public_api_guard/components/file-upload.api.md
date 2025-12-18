@@ -92,7 +92,7 @@ export class KbqFileList<T> {
     addArray(items: T[]): void;
     readonly itemRemoved: OutputEmitterRef<[T, number]>;
     readonly itemsAdded: OutputEmitterRef<T[]>;
-    list: ModelSignal<T[]>;
+    readonly list: ModelSignal<T[]>;
     remove(item: T): T[];
     removeAt(index: number): T[];
     // (undocumented)
@@ -103,18 +103,18 @@ export class KbqFileList<T> {
 
 // @public
 export class KbqFileLoader {
-    accept: InputSignal<string | null>;
-    disabled: InputSignal<boolean>;
+    readonly accept: InputSignal<string | null>;
+    readonly disabled: InputSignal<boolean>;
     readonly fileChange: OutputEmitterRef<Event>;
-    for: InputSignal<string | null>;
+    readonly for: InputSignal<string | null>;
     protected readonly innerAccept: Signal<string | null>;
     protected readonly innerDisabled: Signal<boolean>;
     protected readonly innerFor: Signal<string | null>;
     protected readonly innerMultiple: Signal<boolean | null>;
     protected readonly innerOnlyDirectory: Signal<boolean | null>;
     readonly input: Signal<ElementRef<HTMLInputElement>>;
-    multiple: InputSignal<boolean | null>;
-    onlyDirectory: InputSignal<boolean | null>;
+    readonly multiple: InputSignal<boolean | null>;
+    readonly onlyDirectory: InputSignal<boolean | null>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFileLoader, "[kbqFileLoader]", ["kbqFileLoader"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "for": { "alias": "for"; "required": false; "isSignal": true; }; "onlyDirectory": { "alias": "onlyDirectory"; "required": false; "isSignal": true; }; }, { "fileChange": "fileChange"; }, never, ["*"], true, never>;
     // (undocumented)
@@ -146,11 +146,11 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
 
 // @public
 export class KbqFileUploadContext {
-    accept: InputSignal<string | null>;
-    disabled: ModelSignal<boolean | null>;
-    id: InputSignal<string | null>;
-    multiple: InputSignalWithTransform<boolean | null, unknown>;
-    onlyDirectory: InputSignal<boolean | null>;
+    readonly accept: InputSignal<string | null>;
+    readonly disabled: ModelSignal<boolean | null>;
+    readonly id: InputSignal<string | null>;
+    readonly multiple: InputSignalWithTransform<boolean | null, unknown>;
+    readonly onlyDirectory: InputSignal<boolean | null>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFileUploadContext, "[kbqFileUploadContext]", ["kbqFileUploadContext"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "onlyDirectory": { "alias": "onlyDirectory"; "required": false; "isSignal": true; }; }, { "disabled": "disabledChange"; }, never, never, true, never>;
     // (undocumented)
