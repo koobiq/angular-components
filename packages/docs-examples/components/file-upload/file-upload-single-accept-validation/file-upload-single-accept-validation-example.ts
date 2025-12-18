@@ -23,7 +23,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                     <i kbq-icon="kbq-file-o_16"></i>
                 }
                 @if (formGroup.get('fileControl')?.errors) {
-                    <i kbq-icon="kbq-exclamation-triangle_16"></i>
+                    <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
 
                 @if (formGroup.get('fileControl')?.hasError('fileExtensionMismatch')) {

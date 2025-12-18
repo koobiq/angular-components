@@ -102,7 +102,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
                 [kbqTooltipOffset]="16"
                 (click)="close()"
             >
-                <i kbq-icon="kbq-xmark-circle_16"></i>
+                <i kbq-icon="kbq-circle-xmark_16"></i>
             </button>
         }
     `,

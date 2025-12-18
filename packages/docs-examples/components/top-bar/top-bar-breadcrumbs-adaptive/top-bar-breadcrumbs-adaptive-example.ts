@@ -80,7 +80,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                             <button disabled aria-current="page" kbq-button kbqBreadcrumb>
                                 <span>Details</span>
                                 <i
-                                    kbq-icon="kbq-info-circle_16"
+                                    kbq-icon="kbq-circle-info_16"
                                     kbqTooltip="Info"
                                     [kbqPlacement]="PopUpPlacements.Bottom"
                                     [kbqTooltipArrow]="false"

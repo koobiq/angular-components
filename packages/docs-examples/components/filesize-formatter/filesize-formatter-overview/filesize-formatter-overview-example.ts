@@ -59,7 +59,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <label class="kbq-form__label">
                         Base
                         <i
-                            kbq-icon="kbq-question-circle_16"
+                            kbq-icon="kbq-circle-question_16"
                             [color]="'contrast-fade'"
                             [style.cursor]="'help'"
                             [kbqPlacement]="popUpPlacements.Right"

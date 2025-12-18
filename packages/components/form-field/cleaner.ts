@@ -17,7 +17,7 @@ import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqCleaner',
     host: {
-        class: 'kbq-cleaner kbq kbq-xmark-circle_16'
+        class: 'kbq-cleaner kbq kbq-circle-xmark_16'
     }
 })
 export class KbqCleaner extends KbqIconButton {

@@ -47,7 +47,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <kbq-label class="example-inline-text__content">
                 Badge
                 <i
-                    kbq-icon-button="kbq-question-circle_16"
+                    kbq-icon-button="kbq-circle-question_16"
                     [kbqTooltip]="'Tooltip on hover or focus'"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="popupPlacements.Top"

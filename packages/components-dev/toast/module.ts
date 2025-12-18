@@ -147,7 +147,7 @@ export class DevApp {
             title: 'Не удалось авторизовать 15 агентов',
             actions,
             icon: true,
-            iconClass: 'kbq-exclamation-triangle_16'
+            iconClass: 'kbq-triangle-exclamation_16'
         });
     }
 

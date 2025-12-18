@@ -28,7 +28,7 @@
         "@koobiq/angular-moment-adapter": "{{VERSION}}",
         "@koobiq/angular-luxon-adapter": "{{VERSION}}",
         "@koobiq/date-formatter": "^3.2.3",
-        "@koobiq/icons": "^10.4.0",
+        "@koobiq/icons": "^11.1.3",
         "@koobiq/tokens-builder": "3.11.0",
         "@koobiq/design-tokens": "3.14.0"
     },

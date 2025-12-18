@@ -14,22 +14,22 @@ import { KbqTagsModule } from '@koobiq/components/tags';
     ],
     template: `
         <kbq-tag [color]="colors.ContrastFade">
-            <i kbq-icon="kbq-check-circle_16"></i>
+            <i kbq-icon="kbq-circle-check_16"></i>
             Contrast
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
         <kbq-tag [color]="colors.Theme">
-            <i kbq-icon="kbq-check-circle_16"></i>
+            <i kbq-icon="kbq-circle-check_16"></i>
             Theme
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
         <kbq-tag [color]="colors.Error">
-            <i kbq-icon="kbq-check-circle_16"></i>
+            <i kbq-icon="kbq-circle-check_16"></i>
             Error
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
         <kbq-tag [color]="colors.Warning">
-            <i kbq-icon="kbq-check-circle_16"></i>
+            <i kbq-icon="kbq-circle-check_16"></i>
             Warning
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>

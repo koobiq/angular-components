@@ -51,7 +51,7 @@
                     [errorStateMatcher]="showOnFormSubmitErrorStateMatcher"
                     (fileQueueChange)="$event === null ? form.reset() : null"
                 >
-                    <i kbq-icon="kbq-info-circle_16"></i>
+                    <i kbq-icon="kbq-circle-info_16"></i>
                     @if (form.get('file-upload')?.hasError('maxFileSize')) {
                         <kbq-hint color="error">Слишком большой размер файла</kbq-hint>
                     }
@@ -72,7 +72,7 @@
             <div class="kbq-text-big-strong">with pdf/png files accepted</div>
             <br />
             <kbq-file-upload [accept]="accept" [disabled]="disabled">
-                <i kbq-icon="kbq-info-circle_16"></i>
+                <i kbq-icon="kbq-circle-info_16"></i>
                 <kbq-hint>{{ hintMessage }}</kbq-hint>
             </kbq-file-upload>
         </div>
@@ -90,7 +90,7 @@
                 [formControl]="singleFileControl"
                 [progressMode]="'indeterminate'"
             >
-                <i kbq-icon="kbq-info-circle_24"></i>
+                <i kbq-icon="kbq-circle-info_24"></i>
 
                 @if (singleFileControl.hasError('maxFileSize')) {
                     <kbq-hint color="error">Размер файла превысил 5 Мб</kbq-hint>

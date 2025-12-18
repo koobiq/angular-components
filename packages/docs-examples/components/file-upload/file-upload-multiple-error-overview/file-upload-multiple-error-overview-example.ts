@@ -26,7 +26,7 @@ const maxFileExceeded = (file: File): string | null => {
                     <i kbq-icon="kbq-file-o_16"></i>
                 }
                 @if (file.hasError) {
-                    <i kbq-icon="kbq-exclamation-triangle_16"></i>
+                    <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
             </ng-template>
             <kbq-hint>Maximum file size 5 MB</kbq-hint>

@@ -14,7 +14,7 @@ DebugElement {
 exports[`KbqFormField should display KbqCleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
-    class="kbq-cleaner kbq kbq-xmark-circle_16 kbq-icon-button kbq-icon kbq-contrast-fade"
+    class="kbq-cleaner kbq kbq-circle-xmark_16 kbq-icon-button kbq-icon kbq-contrast-fade"
     tabindex="0"
   />,
 }
