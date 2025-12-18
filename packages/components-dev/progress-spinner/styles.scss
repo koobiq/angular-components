@@ -21,4 +21,8 @@
     .dev-spinner-container {
         margin-top: 16px;
     }
+
+    .dev-spinner-container__with-overflow {
+        overflow-y: auto;
+    }
 }
