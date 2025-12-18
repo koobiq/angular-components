@@ -97,6 +97,16 @@
         .kbq-file-dropzone__icon {
             color: var(--kbq-file-upload-multiple-default-upload-icon-color);
         }
+
+        .kbq-file-multiple__caption {
+            color: var(--kbq-file-upload-multiple-default-text-block-color);
+        }
+
+        .kbq-file-dropzone__text,
+        .kbq-file-dropzone__caption {
+            --kbq-empty-state-title: var(--kbq-file-upload-multiple-default-text-block-color);
+            --kbq-empty-state-color: var(--kbq-file-upload-multiple-default-text-block-color);
+        }
     }
 
     &.kbq-file-drop_dragover {
@@ -120,7 +130,13 @@
             color: var(--kbq-file-upload-multiple-states-disabled-upload-icon-color);
         }
 
-        .kbq-file-dropzone__text {
+        .kbq-file-dropzone__text,
+        .kbq-file-dropzone__caption {
+            --kbq-empty-state-title: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
+            --kbq-empty-state-color: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
+        }
+
+        .kbq-file-multiple__caption {
             color: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
         }
 
@@ -149,8 +165,14 @@
                 color: var(--kbq-file-upload-multiple-states-error-upload-icon-color);
             }
 
-            .kbq-file-dropzone__text:not(.kbq-link) {
+            .kbq-file-multiple__caption {
                 color: var(--kbq-file-upload-multiple-states-error-text-block-color);
+            }
+
+            .kbq-file-dropzone__text:not(.kbq-link),
+            .kbq-file-dropzone__caption:not(.kbq-link) {
+                --kbq-empty-state-title: var(--kbq-file-upload-multiple-states-error-text-block-color);
+                --kbq-empty-state-color: var(--kbq-file-upload-multiple-states-error-text-block-color);
             }
         }
 
@@ -224,12 +246,6 @@
 @mixin kbq-file-upload-typography() {
     .kbq-file-upload {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-    }
-
-    .kbq-multiple-file-upload {
-        .kbq-file-multiple__header {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
-        }
     }
 
     .kbq-file-upload__hint .kbq-hint .kbq-hint__text {
