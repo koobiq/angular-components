@@ -48,8 +48,7 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eIconStateAndStyle,
         E2eBadgeStyles
         E2eCheckboxStateAndStyle,
-        E2eCheckboxWithTextAndCaption
-        E2eFilterBarStates,
+        E2eCheckboxWithTextAndCaption,
         E2eTimepickerStates
     ],
     templateUrl: 'template.html',

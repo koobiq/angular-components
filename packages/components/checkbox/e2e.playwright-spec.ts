@@ -20,8 +20,14 @@ test.describe('KbqCheckboxModule', () => {
     test.describe('E2eCheckboxWithTextAndCaption', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eCheckboxWithTextAndCaption');
 
-        test('default', async ({ page }) => {
+        test('light theme', async ({ page }) => {
             await e2eGoToRootPage(page);
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+
+        test('dark theme', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot();
         });
     });
