@@ -11,7 +11,6 @@ type IconItemStates = IconStates & {
 };
 
 type IconButtonStates = IconStates & {
-    color: KbqComponentColors;
     state: 'disabled' | 'small' | 'focused' | 'hover';
 };
 
@@ -84,7 +83,9 @@ type IconButtonStates = IconStates & {
     }
 })
 export class E2eIconStateAndStyle {
-    protected readonly colors = Array.from(new Set(Object.values(KbqComponentColors)).values());
+    protected readonly colors: KbqComponentColors[] = Array.from(
+        new Set(Object.values(KbqComponentColors)).values()
+    ).filter((color) => color !== KbqComponentColors.ThemeFade);
 
     iconStates: IconStates[][] = [
         this.colors.map((color) => ({
