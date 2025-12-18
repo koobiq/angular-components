@@ -7,29 +7,31 @@
     border-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
     border-style: dashed;
 
-    &.kbq-file-upload_default:not(.kbq-selected) {
-        justify-content: center;
-        min-height: var(--kbq-file-upload-size-multiple-big-container-min-height);
+    &:not(.kbq-selected) {
+        &.kbq-file-upload_default {
+            justify-content: center;
+            min-height: var(--kbq-file-upload-size-multiple-big-container-min-height);
 
-        min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
+            min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
 
-        .kbq-empty-state {
-            --kbq-empty-state-size-normal-image-addon-height: 0;
-            --kbq-empty-state-size-normal-padding-top: 49px;
-            --kbq-empty-state-size-normal-padding-bottom: 49px;
-            --kbq-empty-state-size-normal-padding-horizontal: 22px;
-        }
+            .kbq-empty-state {
+                --kbq-empty-state-size-normal-image-addon-height: 0;
+                --kbq-empty-state-size-normal-padding-top: 49px;
+                --kbq-empty-state-size-normal-padding-bottom: 49px;
+                --kbq-empty-state-size-normal-padding-horizontal: 22px;
+            }
 
-        .kbq-file-dropzone__text {
-            .kbq-file-multiple__caption {
-                padding-top: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-vertical);
+            .kbq-file-dropzone__text {
+                .kbq-file-multiple__caption {
+                    padding-top: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-vertical);
+                }
             }
         }
-    }
 
-    &.kbq-file-upload_compact:not(.kbq-selected) {
-        padding: var(--kbq-file-upload-multiple-compact-container-padding-vertical)
-            var(--kbq-file-upload-multiple-compact-container-padding-horizontal);
+        &.kbq-file-upload_compact {
+            padding: var(--kbq-file-upload-multiple-compact-container-padding-vertical)
+                var(--kbq-file-upload-multiple-compact-container-padding-horizontal);
+        }
     }
 
     .kbq-file-upload__grid {
@@ -87,10 +89,6 @@
 
         border-top-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
         border-top-style: dashed;
-
-        .kbq-file-dropzone {
-            gap: var(--kbq-file-upload-size-multiple-big-dropzone-content-gap-horizontal);
-        }
     }
 
     .kbq-file-upload__dropzone {

@@ -144,8 +144,6 @@ export class KbqSingleFileUploadComponent
     /** @docs-private */
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
 
-    /** @docs-private */
-
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
      */

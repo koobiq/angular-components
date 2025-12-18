@@ -93,10 +93,6 @@
     background-color: var(--kbq-file-upload-multiple-default-container-background);
     border-color: var(--kbq-file-upload-multiple-default-container-border) !important;
 
-    .kbq-file-btn-upload {
-        border-top-color: var(--kbq-file-upload-multiple-default-container-border);
-    }
-
     &:not(.kbq-disabled, .kbq-error) {
         .kbq-file-dropzone__icon {
             color: var(--kbq-file-upload-multiple-default-upload-icon-color);
@@ -196,6 +192,10 @@
                 }
             }
         }
+    }
+
+    .kbq-file-btn-upload {
+        border-top-color: var(--kbq-file-upload-multiple-default-container-border);
     }
 
     .kbq-file-multiple__uploaded-item {
