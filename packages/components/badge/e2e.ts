@@ -12,16 +12,16 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
         </div>
         <div>
             @for (color of colors; track $index) {
-                <kbq-badge [outline]="true" [badgeColor]="color">{{ color }}</kbq-badge>
-            }
-        </div>
-        <div>
-            @for (color of colors; track $index) {
                 <kbq-badge [compact]="true" [badgeColor]="color">{{ color }}</kbq-badge>
             }
         </div>
         <div>
-            @for (color of colors; track $index) {
+            @for (color of outlineColors; track $index) {
+                <kbq-badge [outline]="true" [badgeColor]="color">{{ color }}</kbq-badge>
+            }
+        </div>
+        <div>
+            @for (color of outlineColors; track $index) {
                 <kbq-badge [compact]="true" [outline]="true" [badgeColor]="color">{{ color }}</kbq-badge>
             }
         </div>
@@ -45,4 +45,12 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 })
 export class E2eBadgeStyles {
     protected readonly colors = Object.values(KbqBadgeColors);
+    protected readonly outlineColors = [
+        KbqBadgeColors.FadeContrast,
+        KbqBadgeColors.FadeTheme,
+        KbqBadgeColors.FadeSuccess,
+        KbqBadgeColors.FadeWarning,
+        KbqBadgeColors.FadeError,
+        KbqBadgeColors.Disabled
+    ];
 }
