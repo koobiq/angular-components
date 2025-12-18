@@ -65,7 +65,7 @@ export class E2eToggleStateAndStyle {
 }
 
 @Component({
-    selector: 'dev-toggle-with-text-and-caption',
+    selector: 'e2e-toggle-with-text-and-caption',
     imports: [KbqToggleModule, KbqFormFieldModule, FormsModule],
     template: `
         <input type="checkbox" data-testid="e2eBigToggle" [(ngModel)]="big" />
