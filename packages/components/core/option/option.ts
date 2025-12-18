@@ -17,7 +17,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ENTER, SPACE } from '@koobiq/cdk/keycodes';
+import { ENTER, hasModifierKey, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
@@ -45,6 +45,7 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 export interface KbqOptionParentComponent {
     multiple?: boolean;
     multiSelection?: boolean;
+    setSelectedOptionsByClick: (option: KbqOption) => void;
 }
 
 /**
@@ -145,7 +146,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         '[class.kbq-disabled]': 'disabled',
         '[id]': 'id',
 
-        '(click)': 'selectViaInteraction()',
+        '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
     providers: [
@@ -332,6 +333,15 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     /** Gets the label to be used when determining whether the option should be focused. */
     getLabel(): string {
         return this.viewValue;
+    }
+
+    /** @docs-private */
+    handleClick(event: MouseEvent): void {
+        if (hasModifierKey(event, 'shiftKey')) {
+            this.parent.setSelectedOptionsByClick(this);
+        } else {
+            this.selectViaInteraction();
+        }
     }
 
     /** Ensures the option is selected when activated from the keyboard. */

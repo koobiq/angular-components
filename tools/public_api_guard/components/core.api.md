@@ -2335,6 +2335,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     getTabIndex(): string;
     // (undocumented)
     readonly group: KbqOptgroup;
+    handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     get id(): string;
@@ -2460,6 +2461,8 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     // (undocumented)
     multiSelection?: boolean;
+    // (undocumented)
+    setSelectedOptionsByClick: (option: KbqOption) => void;
 }
 
 // @public

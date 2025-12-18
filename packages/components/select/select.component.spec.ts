@@ -4746,6 +4746,56 @@ describe('KbqSelect', () => {
             expect(testInstance.control.value).toEqual([null, 'pizza-1', null]);
         }));
 
+        it('should select options when pressing shift + click', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.select.keyManager.activeItemIndex).toBe(0);
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+            options[0].click();
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.control.value.length).toBe(1);
+
+            options[5].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.control.value.length).toBe(6);
+        }));
+
+        it('should deselect options when pressing shift + click', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.select.keyManager.activeItemIndex).toBe(0);
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+            options[0].click();
+            options[1].click();
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.control.value.length).toBe(2);
+
+            options[0].click();
+            options[5].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.control.value.length).toBe(0);
+        }));
+
         it('should select all options when pressing ctrl + a', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
             const options = fixture.componentInstance.options.toArray();

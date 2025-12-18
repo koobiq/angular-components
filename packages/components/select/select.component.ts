@@ -1087,6 +1087,41 @@ export class KbqSelect
     }
 
     /** @docs-private */
+    setSelectedOptionsByClick(option: KbqOption) {
+        if (this.multiple || this.multiline) {
+            this.keyManager.setActiveItem(option);
+            const options = this.options.toArray();
+
+            let fromIndex = this.keyManager.previousActiveItemIndex;
+            let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
+            const selectedOptionState = options[fromIndex].selected;
+
+            if (toIndex === fromIndex) {
+                this.selectionModel.toggle(option);
+
+                return;
+            }
+
+            if (fromIndex > toIndex) {
+                [fromIndex, toIndex] = [toIndex, fromIndex];
+            }
+
+            options
+                .slice(fromIndex, toIndex + 1)
+                .filter((item) => !item.disabled)
+                .forEach((option) => {
+                    if (selectedOptionState) {
+                        option.select();
+                    } else {
+                        option.deselect();
+                    }
+                });
+        } else {
+            this.selectionModel.toggle(option);
+        }
+    }
+
+    /** @docs-private */
     protected shouldShowSearch(): boolean {
         return isUndefined(this.searchMinOptionsThreshold) || this.options.length >= this.searchMinOptionsThreshold;
     }
