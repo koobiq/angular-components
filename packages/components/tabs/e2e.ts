@@ -8,7 +8,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <!-- base -->
         <kbq-tab-group>
-            @for (tab of tabs.slice().splice(0, 2); track tab) {
+            @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
@@ -41,14 +41,14 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 
         <!-- stretched -->
         <kbq-tab-group kbq-stretch-tabs [activeTab]="tabs[2]">
-            @for (tab of tabs.slice().splice(0, 2); track tab) {
+            @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [disabled]="$first" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
 
         <!-- stretched with icons -->
         <kbq-tab-group kbq-stretch-tabs>
-            @for (tab of tabs.slice().splice(0, 2); track tab) {
+            @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [tabId]="tab">
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
@@ -61,7 +61,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 
         <!-- stretched and underlined -->
         <kbq-tab-group kbq-stretch-tabs underlined>
-            @for (tab of tabs.slice().splice(0, 2); track tab) {
+            @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$last">
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
