@@ -15,28 +15,13 @@
                 <div class="kbq-file-dropzone__text">
                     <div class="kbq-file-multiple__header">{{ config.title }}</div>
                     <div>
-                        <!-- prettier-ignore -->
-                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [accept]="acceptedFiles" [disabled]="disabled" [for]="fileUploadContext.id() || inputId" [tabIndex]="-1" [multiple]="true" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</div>
+                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: text() }" />
                     </div>
                 </div>
             } @else {
                 <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                 <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                    {{ separatedCaptionTextForCompactSize[0] }}
-                    <label
-                        kbq-link
-                        pseudo
-                        kbqFileLoader
-                        [for]="fileUploadContext.id() || inputId"
-                        [multiple]="true"
-                        [accept]="acceptedFiles"
-                        [disabled]="disabled"
-                        [tabIndex]="-1"
-                        (fileChange)="onFileSelectedViaClick($event)"
-                    >
-                        {{ config.browseLink }}
-                    </label>
-                    {{ separatedCaptionTextForCompactSize[1] }}
+                    <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: text() }" />
                 </span>
             }
         </div>
@@ -109,21 +94,7 @@
                 <div class="kbq-file-dropzone">
                     <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                     <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                        {{ separatedCaptionTextWhenSelected[0] }}
-                        <label
-                            kbq-link
-                            pseudo
-                            kbqFileLoader
-                            [multiple]="true"
-                            [accept]="acceptedFiles"
-                            [for]="fileUploadContext.id() || inputId"
-                            [disabled]="disabled"
-                            [tabIndex]="-1"
-                            (fileChange)="onFileSelectedViaClick($event)"
-                        >
-                            {{ config.browseLink }}
-                        </label>
-                        {{ separatedCaptionTextWhenSelected[1] }}
+                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: text() }" />
                     </span>
                 </div>
             </div>
@@ -136,3 +107,35 @@
         <ng-content select="kbq-hint" />
     </div>
 }
+
+<ng-template #loaderLabel let-text>
+    <kbq-dynamic-translation [text]="text">
+        <label
+            *kbqDynamicTranslationSlot="'browseLink'; let context"
+            kbq-link
+            pseudo
+            kbqFileLoader
+            [onlyDirectory]="null"
+            [accept]="acceptedFiles"
+            [disabled]="disabled"
+            [for]="fileUploadContext.id() || inputId"
+            [tabIndex]="-1"
+            [multiple]="true"
+            (fileChange)="onFileSelectedViaClick($event)"
+        >
+            {{ context }}
+        </label>
+        <label
+            *kbqDynamicTranslationSlot="'browseLinkForFolder'; let context"
+            kbq-link
+            pseudo
+            kbqFileLoader
+            [onlyDirectory]="true"
+            [disabled]="disabled"
+            [tabIndex]="-1"
+            (fileChange)="onFileSelectedViaClick($event)"
+        >
+            {{ context }}
+        </label>
+    </kbq-dynamic-translation>
+</ng-template>

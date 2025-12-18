@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -18,21 +19,21 @@ export const esLALocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Arrastre el archivo aquí o {{ browseLink }}',
-            browseLink: 'elija'
+            captionText: 'Arrastre el archivo aquí o [[browseLink:choose file]]',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            browseLink: 'elija',
+            browseLinkForFolder: 'elija'
         },
         multiple: {
-            captionText: 'Arrastre aquí o {{ browseLink }}',
-            captionTextWhenSelected: 'Arrastre más archivos aquí o {{ browseLink }}',
-            captionTextForCompactSize: 'Arrastre archivos o {{ browseLink }}',
+            captionText: 'Arrastre aquí o [[browseLink:choose file]]',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionTextWhenSelected: 'Arrastre más archivos aquí o [[browseLink:choose file]]',
+            captionTextForCompactSize: 'Arrastre archivos o [[browseLink:choose file]]',
             browseLink: 'elija',
-            title: 'Cargue los archivos',
-            gridHeaders: {
-                file: 'Archivo',
-                size: 'Tamaño'
-            }
+            browseLinkForFolder: 'elija',
+            title: 'Cargue los archivos'
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Activar el ajuste de texto',
         softWrapOffTooltip: 'Desactivar el ajuste de texto',

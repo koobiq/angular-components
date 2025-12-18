@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -19,21 +20,21 @@ export const ruRULocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Перетащите файл или {{ browseLink }}',
-            browseLink: 'выберите'
+            captionText: 'Перетащите файл или [[browseLink:choose file]]',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            browseLink: 'выберите файл',
+            browseLinkForFolder: 'выберите'
         },
         multiple: {
-            captionText: 'Перетащите сюда или {{ browseLink }}',
-            captionTextWhenSelected: 'Перетащите еще или {{ browseLink }}',
-            captionTextForCompactSize: 'Перетащите файлы или {{ browseLink }}',
-            browseLink: 'выберите',
-            title: 'Загрузите файлы',
-            gridHeaders: {
-                file: 'Файл',
-                size: 'Размер'
-            }
+            captionText: 'Перетащите сюда или [[browseLink:choose file]]',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionTextWhenSelected: 'Перетащите еще или [[browseLink:choose file]]',
+            captionTextForCompactSize: 'Перетащите файлы или [[browseLink:choose file]]',
+            browseLink: 'выберите файлы',
+            browseLinkForFolder: 'выберите',
+            title: 'Загрузите файлы'
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Включить перенос по словам',
         softWrapOffTooltip: 'Выключить перенос по словам',

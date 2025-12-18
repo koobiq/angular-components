@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -19,21 +20,21 @@ export const tkTMLocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Faýly geçiriň ýa-da {{ browseLink }} ',
-            browseLink: 'saýlaň'
+            captionText: 'Faýly geçiriň ýa-da [[browseLink:choose file]] ',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            browseLink: 'saýlaň',
+            browseLinkForFolder: 'saýlaň'
         },
         multiple: {
-            captionText: 'Şu ýere geçiriň ýa-da {{ browseLink }}',
-            captionTextWhenSelected: 'Ýene geçiriň ýa-da {{ browseLink }}',
-            captionTextForCompactSize: 'Faýllary geçiriň ýa-da {{ browseLink }}',
+            captionText: 'Şu ýere geçiriň ýa-da [[browseLink:choose file]]',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionTextWhenSelected: 'Ýene geçiriň ýa-da [[browseLink:choose file]]',
+            captionTextForCompactSize: 'Faýllary geçiriň ýa-da [[browseLink:choose file]]',
             browseLink: 'saýlaň',
-            title: 'Faýl ýükläň',
-            gridHeaders: {
-                file: 'Faýl',
-                size: 'Ölçegi'
-            }
+            browseLinkForFolder: 'saýlaň',
+            title: 'Faýl ýükläň'
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Sözler boýunça geçirmäni işjeňleşdirmek',
         softWrapOffTooltip: 'Sözler boýunça geçirmäni öçürmek',

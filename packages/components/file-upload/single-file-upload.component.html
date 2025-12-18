@@ -8,8 +8,37 @@
     @if (!file) {
         <div class="kbq-file-dropzone">
             <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
-            <!-- prettier-ignore -->
-            <span class="kbq-file-dropzone__text">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [for]="fileUploadContext.id() || inputId" [accept]="acceptedFiles" [disabled]="disabled" [tabIndex]="-1" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</span>
+            @let text = fileUploadContext.onlyDirectory() ? config.captionText : config.captionTextWithFolder;
+            <kbq-dynamic-translation [text]="text">
+                <label
+                    *kbqDynamicTranslationSlot="'browseLink'; let context"
+                    kbq-link
+                    pseudo
+                    kbqFileLoader
+                    [onlyDirectory]="null"
+                    [accept]="acceptedFiles"
+                    [disabled]="disabled"
+                    [for]="fileUploadContext.id() || inputId"
+                    [tabIndex]="-1"
+                    [multiple]="true"
+                    (fileChange)="onFileSelectedViaClick($event)"
+                >
+                    {{ context }}
+                </label>
+
+                <label
+                    *kbqDynamicTranslationSlot="'browseLinkForFolder'; let context"
+                    kbq-link
+                    pseudo
+                    kbqFileLoader
+                    [onlyDirectory]="true"
+                    [disabled]="disabled"
+                    [tabIndex]="-1"
+                    (fileChange)="onFileSelectedViaClick($event)"
+                >
+                    {{ context }}
+                </label>
+            </kbq-dynamic-translation>
         </div>
     } @else {
         @if (file) {
@@ -30,15 +59,15 @@
                         {{ file.file.size | kbqDataSize }}
                     </div>
                 }
-                <i
-                    kbq-icon-button="kbq-circle-xmark_16"
-                    class="kbq-file-upload__action"
-                    [disabled]="disabled"
-                    (click)="deleteItem($event, 'program')"
-                    (keydown.backspace)="deleteItem()"
-                    (keydown.delete)="deleteItem()"
-                ></i>
             </div>
+            <i
+                kbq-icon-button="kbq-circle-xmark_16"
+                class="kbq-file-upload__action"
+                [disabled]="disabled"
+                (click)="deleteItem($event, 'program')"
+                (keydown.backspace)="deleteItem()"
+                (keydown.delete)="deleteItem()"
+            ></i>
         }
     }
 </div>

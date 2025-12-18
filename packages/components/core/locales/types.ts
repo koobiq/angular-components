@@ -66,3 +66,21 @@ export type KbqTimeRangeLocaleConfig = {
         option: FormatterDurationTemplate;
     };
 };
+
+export type KbqFileUploadLocaleConfig = {
+    single: {
+        captionText: string;
+        captionTextWithFolder: string;
+        browseLink: string;
+        browseLinkForFolder: string;
+    };
+    multiple: {
+        captionText: string;
+        captionTextWithFolder: string;
+        captionTextWhenSelected: string;
+        captionTextForCompactSize: string;
+        browseLink: string;
+        browseLinkForFolder: string;
+        title: string;
+    };
+};

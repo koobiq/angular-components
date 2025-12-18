@@ -20,7 +20,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
-import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqDataSizePipe, KbqFileUploadLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
+import { KbqDynamicTranslation, KbqDynamicTranslationSlot } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
@@ -40,7 +41,8 @@ import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext 
 
 let nextSingleFileUploadUniqueId = 0;
 
-export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = ruRULocaleData.fileUpload.single;
+export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['single'] =
+    ruRULocaleData.fileUpload.single;
 
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
@@ -53,7 +55,9 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
         KbqProgressSpinner,
         KbqEllipsisCenterDirective,
         KbqDataSizePipe,
-        KbqFileLoader
+        KbqFileLoader,
+        KbqDynamicTranslation,
+        KbqDynamicTranslationSlot
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
@@ -127,7 +131,7 @@ export class KbqSingleFileUploadComponent
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
 
     /** @docs-private */
-    config: KbqInputFileLabel;
+    config: KbqFileUploadLocaleConfig['single'];
     /** @docs-private */
     separatedCaptionText: string[];
 
@@ -307,9 +311,7 @@ export class KbqSingleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
-        this.config = this.buildConfig<KbqInputFileLabel>(
-            this.configuration || this.localeService?.getParams('fileUpload').multiple
-        );
+        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').multiple);
 
         this.getCaptionText();
 

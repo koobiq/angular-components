@@ -4,6 +4,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChild,
     ContentChildren,
     DoCheck,
@@ -21,7 +22,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
-import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqDataSizePipe, KbqFileUploadLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
+import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
@@ -52,7 +54,7 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
     [k: string | number | symbol]: unknown;
 }
 
-export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipleLabel =
+export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['multiple'] =
     ruRULocaleData.fileUpload.multiple;
 
 const fileSizeCellPadding = 16;
@@ -70,7 +72,8 @@ const fileSizeCellPadding = 16;
         KbqDataSizePipe,
         KbqProgressSpinnerModule,
         KbqEllipsisCenterDirective,
-        KbqFileLoader
+        KbqFileLoader,
+        KbqDynamicTranslationModule
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
@@ -156,7 +159,7 @@ export class KbqMultipleFileUploadComponent
     /** @docs-private */
     columnDefs: { header: string; cssClass: string }[];
     /** @docs-private */
-    config: KbqInputFileMultipleLabel;
+    config: KbqFileUploadLocaleConfig['multiple'];
 
     /** @docs-private */
     separatedCaptionText: string[];
@@ -214,12 +217,16 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration = inject<KbqInputFileMultipleLabel>(KBQ_FILE_UPLOAD_CONFIGURATION, {
+    readonly configuration = inject<KbqFileUploadLocaleConfig['multiple']>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
+
+    text = computed(() =>
+        this.fileUploadContext.onlyDirectory() ? this.config.captionText : this.config.captionTextWithFolder
+    );
 
     constructor() {
         super();

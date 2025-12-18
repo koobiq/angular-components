@@ -8,7 +8,12 @@ import {
     Renderer2
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
+    KBQ_LOCALE_SERVICE,
+    KbqFileUploadLocaleConfig
+} from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
 
@@ -50,7 +55,9 @@ export interface KbqInputFileLabel {
 export type KbqFileValidatorFn = (file: File) => string | null;
 
 /* Object for labels customization inside file upload component */
-export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<KbqInputFileLabel>('KbqFileUploadConfiguration');
+export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
+    KbqFileUploadLocaleConfig['single'] | KbqFileUploadLocaleConfig['multiple']
+>('KbqFileUploadConfiguration');
 
 /** @deprecated use `FileValidators.isCorrectExtension` instead. Will be removed in next major release. */
 export const isCorrectExtension = (file: File, accept?: string[]): boolean => {

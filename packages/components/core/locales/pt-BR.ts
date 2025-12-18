@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -18,21 +19,21 @@ export const ptBRLocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Arrastar o arquivo aqui ou {{ browseLink }}',
-            browseLink: 'escolher'
+            captionText: 'Arrastar o arquivo aqui ou [[browseLink:choose file]]',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            browseLink: 'escolher',
+            browseLinkForFolder: 'escolher'
         },
         multiple: {
-            captionText: 'Arrastar aqui ou {{ browseLink }}',
-            captionTextWhenSelected: 'Arrastar mais arquivos aqui ou {{ browseLink }}',
-            captionTextForCompactSize: 'Arrastar arquivos ou {{ browseLink }}',
+            captionText: 'Arrastar aqui ou [[browseLink:choose file]]',
+            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionTextWhenSelected: 'Arrastar mais arquivos aqui ou [[browseLink:choose file]]',
+            captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:choose file]]',
             browseLink: 'escolher',
-            title: 'Carregar arquivos',
-            gridHeaders: {
-                file: 'Arquivo',
-                size: 'Tamanho'
-            }
+            browseLinkForFolder: 'escolher',
+            title: 'Carregar arquivos'
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Ativar quebra de linha',
         softWrapOffTooltip: 'Desativar quebra de linha',
