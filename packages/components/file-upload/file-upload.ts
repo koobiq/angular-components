@@ -10,6 +10,7 @@ import {
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { KbqFileList, KbqFileUploadContext } from './primitives';
 
 export interface KbqFile extends File {
     /* used when directory dropped */
@@ -23,6 +24,10 @@ export interface KbqFileItem {
     progress?: BehaviorSubject<number>;
 }
 
+/**
+ * @docs-private
+ * @deprecated Will be removed in next major release
+ */
 export interface KbqInputFile {
     disabled: boolean;
     accept?: string[];
@@ -81,6 +86,16 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
      * @docs-private
      */
     readonly stateChanges = new Subject<void>();
+
+    /** @docs-private */
+    protected readonly fileUploadContext = inject(KbqFileUploadContext, { host: true });
+    /** @docs-private */
+    protected readonly fileList = inject<KbqFileList<KbqFileItem>>(KbqFileList, { host: true });
+
+    /** @docs-private */
+    get disabled(): boolean {
+        return this.fileUploadContext.disabled() ?? false;
+    }
 
     /** @docs-private */
     protected readonly cdr = inject(ChangeDetectorRef);

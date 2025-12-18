@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -24,21 +24,20 @@ import { ControlValueAccessor } from '@angular/forms';
 import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
-import { KbqFileDropDirective } from './file-drop';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
     KbqFileUploadBase,
     KbqFileValidatorFn,
-    KbqInputFile,
     KbqInputFileLabel
 } from './file-upload';
+import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
 let nextMultipleFileUploadUniqueId = 0;
 
@@ -61,15 +60,17 @@ const fileSizeCellPadding = 16;
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     imports: [
+        AsyncPipe,
+        NgTemplateOutlet,
         KbqFileDropDirective,
-        KbqIconModule,
-        KbqLinkModule,
+        KbqIconButton,
+        KbqIcon,
+        KbqLink,
         KbqListModule,
         KbqDataSizePipe,
         KbqProgressSpinnerModule,
-        AsyncPipe,
-        NgTemplateOutlet,
-        KbqEllipsisCenterDirective
+        KbqEllipsisCenterDirective,
+        KbqFileLoader
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
@@ -77,11 +78,18 @@ const fileSizeCellPadding = 16;
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-multiple-file-upload'
-    }
+    },
+    hostDirectives: [
+        {
+            directive: KbqFileUploadContext,
+            inputs: ['id', 'disabled', 'onlyDirectory']
+        },
+        { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
+    ]
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck
+    implements AfterViewInit, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -89,7 +97,6 @@ export class KbqMultipleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     /** Array of file type specifiers */
     @Input() accept?: string[];
-    @Input() disabled: boolean;
     /**
      * @deprecated use `FormControl.errors`
      */
@@ -107,17 +114,14 @@ export class KbqMultipleFileUploadComponent
     /** An object used to control the error state of the component. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    private _files: KbqFileItem[] = [];
-
     get files(): KbqFileItem[] {
-        return this._files;
+        return this.fileList.list();
     }
 
     @Input()
     set files(currentFileList: KbqFileItem[]) {
-        this._files = currentFileList;
-        this.cvaOnChange(this._files);
-        this.cdr.markForCheck();
+        this.fileList.list.set(currentFileList);
+        this.cvaOnChange(this.files);
     }
 
     /** Optional configuration to override default labels with localized text.*/
@@ -141,8 +145,7 @@ export class KbqMultipleFileUploadComponent
     @ContentChild('kbqFileIcon', { static: false, read: TemplateRef })
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
 
-    /** @docs-private */
-    @ViewChild('input') readonly input: ElementRef<HTMLInputElement>;
+    @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
     @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
@@ -170,6 +173,11 @@ export class KbqMultipleFileUploadComponent
     /** onTouch function registered via registerOnTouch (ControlValueAccessor).
      * @docs-private */
     onTouched = () => {};
+
+    /** @docs-private */
+    get input(): ElementRef<HTMLInputElement> | undefined {
+        return this.fileLoader?.input();
+    }
 
     /** @docs-private */
     get acceptedFiles(): string {
@@ -278,61 +286,51 @@ export class KbqMultipleFileUploadComponent
      * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.fileUploadContext.disabled.set(isDisabled);
         this.cdr.markForCheck();
     }
 
     /** @docs-private */
     onFileSelectedViaClick({ target }: Event) {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         const filesToAdd = this.mapToFileItem((target as HTMLInputElement).files);
 
-        this.files = [
-            ...this.files,
-            ...filesToAdd
-        ];
-        this.filesAdded.emit(filesToAdd);
-        this.filesChange.emit(this.files);
-        this.onTouched();
+        this.onFileAdded(filesToAdd);
         // allows the same file selection every time user clicks on the control.
         this.renderer.setProperty(target, 'value', null);
     }
 
     /** @docs-private */
-    onFileDropped(files: FileList | KbqFile[]) {
-        if (this.disabled) {
-            return;
-        }
+    onFileDropped(files: KbqFile[]) {
+        if (this.disabled) return;
 
         const filesToAdd = this.mapToFileItem(files);
 
-        this.files = [
-            ...this.files,
-            ...filesToAdd
-        ];
-        this.filesAdded.emit(filesToAdd);
-        this.filesChange.emit(this.files);
-        this.onTouched();
+        this.onFileAdded(filesToAdd);
     }
 
     /** @docs-private */
-    deleteFile(index: number, event?: MouseEvent) {
+    deleteFile(index: number, event?: MouseEvent, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();
-        const removedFile = this.files.splice(index, 1)[0];
 
-        this.files = [...this.files];
+        const removedFile = this.fileList.removeAt(index)[0];
+
+        this.cvaOnChange(this.files);
+
         this.fileRemoved.emit([removedFile, index]);
         this.filesChange.emit(this.files);
         this.onTouched();
 
         if (this.files.length === 0) {
             setTimeout(() => {
-                this.focusMonitor.focusVia(this.input, 'keyboard');
+                const input = this.input?.nativeElement;
+
+                if (input) {
+                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
+                }
             });
 
             return;
@@ -403,5 +401,15 @@ export class KbqMultipleFileUploadComponent
         this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
         this.separatedCaptionTextWhenSelected = this.config.captionTextWhenSelected.split('{{ browseLink }}');
         this.separatedCaptionTextForCompactSize = this.config.captionTextForCompactSize.split('{{ browseLink }}');
+    }
+
+    private onFileAdded(filesToAdd: KbqFileItem[]) {
+        this.fileList.addArray(filesToAdd);
+
+        this.cvaOnChange(this.files);
+
+        this.filesAdded.emit(filesToAdd);
+        this.filesChange.emit(this.files);
+        this.onTouched();
     }
 }

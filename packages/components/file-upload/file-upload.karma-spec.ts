@@ -153,7 +153,7 @@ describe('KbqMultipleFileUploadComponent', () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             const subscription = component.fileUpload.filesChange.subscribe((value) => {
@@ -278,7 +278,7 @@ describe('KbqSingleFileUploadComponent', () => {
         it('should remove file via button keydown.delete', () => {
             component.disabled = false;
             fixture.detectChanges();
-            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             const subscription = component.fileUpload.fileChange.subscribe((value) => {
@@ -408,7 +408,7 @@ class ControlValueAccessorSingleFileUpload {
 
     constructor(public elementRef: ElementRef) {}
 
-    onChange = (file: KbqFileItem) => {
+    onChange = (file: KbqFileItem | null) => {
         this.file = file;
     };
 }

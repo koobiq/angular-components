@@ -68,3 +68,9 @@ The examples use [FileValidators](https://github.com/koobiq/angular-components/b
 - **Multiple files**: Example of uploading multiple files using `Reactive Forms` with validation.
 
 <!-- example(file-upload-multiple-mixed-validation) -->
+
+### Primitives
+
+This example demonstrates the use of file upload component primitives.
+
+<!-- example(file-upload-primitive) -->

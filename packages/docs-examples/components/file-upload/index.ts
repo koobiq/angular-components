@@ -10,6 +10,7 @@ import { FileUploadMultipleDefaultValidationReactiveFormsOverviewExample } from 
 import { FileUploadMultipleErrorOverviewExample } from './file-upload-multiple-error-overview/file-upload-multiple-error-overview-example';
 import { FileUploadMultipleMixedValidationExample } from './file-upload-multiple-mixed-validation/file-upload-multiple-mixed-validation-example';
 import { FileUploadMultipleRequiredReactiveValidationExample } from './file-upload-multiple-required-reactive-validation/file-upload-multiple-required-reactive-validation-example';
+import { FileUploadPrimitiveExample } from './file-upload-primitive/file-upload-primitive-example';
 import { FileUploadSingleAcceptValidationExample } from './file-upload-single-accept-validation/file-upload-single-accept-validation-example';
 import { FileUploadSingleErrorOverviewExample } from './file-upload-single-error-overview/file-upload-single-error-overview-example';
 import { FileUploadSingleMixedValidationExample } from './file-upload-single-mixed-validation/file-upload-single-mixed-validation-example';
@@ -30,6 +31,7 @@ export {
     FileUploadMultipleErrorOverviewExample,
     FileUploadMultipleMixedValidationExample,
     FileUploadMultipleRequiredReactiveValidationExample,
+    FileUploadPrimitiveExample,
     FileUploadSingleAcceptValidationExample,
     FileUploadSingleErrorOverviewExample,
     FileUploadSingleMixedValidationExample,
@@ -57,7 +59,8 @@ const EXAMPLES = [
     FileUploadSingleAcceptValidationExample,
     FileUploadMultipleAcceptValidationExample,
     FileUploadSingleMixedValidationExample,
-    FileUploadMultipleMixedValidationExample
+    FileUploadMultipleMixedValidationExample,
+    FileUploadPrimitiveExample
 ];
 
 @NgModule({

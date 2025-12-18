@@ -35,6 +35,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
+import { E2eFileUploadStateAndStyle } from '../../components/file-upload/e2e';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { DevLocaleSelector } from '../locale-selector';
 
@@ -133,6 +134,8 @@ export class DevCustomTextDirective {}
         <file-upload-multiple-mixed-validation-example />
         <hr />
         <file-upload-single-mixed-validation-example />
+        <hr />
+        <file-upload-primitive-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -198,7 +201,8 @@ export class DevMultipleFileUploadCompact {
         KbqCheckboxModule,
         KbqRadioModule,
         DevMultipleFileUploadCompact,
-        DevCustomTextDirective
+        DevCustomTextDirective,
+        E2eFileUploadStateAndStyle
     ],
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],

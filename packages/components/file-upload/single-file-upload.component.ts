@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
@@ -23,21 +23,20 @@ import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
 import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, skip } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { KbqFileDropDirective } from './file-drop';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
     KbqFileUploadBase,
     KbqFileValidatorFn,
-    KbqInputFile,
     KbqInputFileLabel
 } from './file-upload';
+import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
 let nextSingleFileUploadUniqueId = 0;
 
@@ -46,13 +45,15 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
     imports: [
-        KbqFileDropDirective,
-        KbqLinkModule,
-        KbqIconModule,
-        KbqProgressSpinner,
         AsyncPipe,
+        KbqFileDropDirective,
+        KbqLink,
+        KbqIcon,
+        KbqIconButton,
+        KbqProgressSpinner,
         KbqEllipsisCenterDirective,
-        KbqDataSizePipe
+        KbqDataSizePipe,
+        KbqFileLoader
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
@@ -60,11 +61,18 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-single-file-upload'
-    }
+    },
+    hostDirectives: [
+        {
+            directive: KbqFileUploadContext,
+            inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
+        },
+        { directive: KbqFileList, outputs: ['listChange: fileChange'] }
+    ]
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck
+    implements AfterViewInit, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -72,7 +80,6 @@ export class KbqSingleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     /** Array of file type specifiers */
     @Input() accept?: string[];
-    @Input() disabled: boolean = false;
     /**
      * @deprecated use `FormControl.errors`
      */
@@ -86,16 +93,16 @@ export class KbqSingleFileUploadComponent
     /** An object used to control the error state of the component. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    private _file: KbqFileItem | null = null;
-
     @Input()
     get file(): KbqFileItem | null {
-        return this._file;
+        const files = this.fileList.list();
+
+        return files.length === 0 ? null : files[0];
     }
 
     set file(currentFile: KbqFileItem | null) {
-        this._file = currentFile;
-        this.cvaOnChange(this._file);
+        this.fileList.list.set(currentFile === null ? [] : [currentFile]);
+        this.cvaOnChange(currentFile);
         this.cdr.markForCheck();
     }
 
@@ -114,7 +121,7 @@ export class KbqSingleFileUploadComponent
         new EventEmitter<KbqFileItem | null>();
 
     /** @docs-private */
-    @ViewChild('input') input: ElementRef<HTMLInputElement>;
+    @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
 
     /** @docs-private */
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
@@ -133,6 +140,11 @@ export class KbqSingleFileUploadComponent
      * @docs-private
      */
     onTouched = () => {};
+
+    /** @docs-private */
+    get input(): ElementRef<HTMLInputElement> | undefined {
+        return this.fileLoader?.input();
+    }
 
     /** @docs-private */
     get acceptedFiles(): string {
@@ -196,8 +208,10 @@ export class KbqSingleFileUploadComponent
         this.ngControl?.statusChanges
             ?.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe((status: FormControlStatus) => {
-                if (this._file) {
-                    this._file.hasError = status === 'INVALID';
+                const file = this.file;
+
+                if (file) {
+                    file.hasError = status === 'INVALID';
                 }
 
                 this.errors = Object.values(this.ngControl?.errors || {});
@@ -235,15 +249,13 @@ export class KbqSingleFileUploadComponent
      * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.fileUploadContext.disabled.set(isDisabled);
         this.cdr.markForCheck();
     }
 
     /** @docs-private */
     onFileSelectedViaClick({ target }: Event): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         const fileToAdd = (target as HTMLInputElement).files?.item(0);
 
@@ -258,7 +270,20 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    deleteItem(event?: MouseEvent): void {
+    onFileDropped(files: KbqFile[]): void {
+        if (this.disabled) return;
+
+        if (files?.length) {
+            this.file = this.mapToFileItem(files[0]);
+            this.fileChange.emit(this.file);
+        }
+
+        // mark as touched after file drop even if file wasn't correct
+        this.onTouched();
+    }
+
+    /** @docs-private */
+    deleteItem(event?: MouseEvent, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();
@@ -270,26 +295,15 @@ export class KbqSingleFileUploadComponent
 
         if (this.file === null) {
             setTimeout(() => {
-                this.focusMonitor.focusVia(this.input, 'keyboard');
+                const input = this.input?.nativeElement;
+
+                if (input) {
+                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
+                }
             });
 
             return;
         }
-    }
-
-    /** @docs-private */
-    onFileDropped(files: FileList | KbqFile[]): void {
-        if (this.disabled) {
-            return;
-        }
-
-        if (files?.length) {
-            this.file = this.mapToFileItem(files[0]);
-            this.fileChange.emit(this.file);
-        }
-
-        // mark as touched after file drop even if file wasn't correct
-        this.onTouched();
     }
 
     private updateLocaleParams = () => {
