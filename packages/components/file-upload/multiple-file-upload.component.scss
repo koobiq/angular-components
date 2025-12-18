@@ -20,12 +20,6 @@
                 --kbq-empty-state-size-normal-padding-bottom: 49px;
                 --kbq-empty-state-size-normal-padding-horizontal: 22px;
             }
-
-            .kbq-file-dropzone__text {
-                .kbq-file-multiple__caption {
-                    padding-top: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-vertical);
-                }
-            }
         }
 
         &.kbq-file-upload_compact {
