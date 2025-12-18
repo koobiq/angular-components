@@ -44,9 +44,7 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eAppSwitcherWithSitesStates,
         E2eFilterBarStates,
         E2eTimepickerStates,
-        E2eTimepickerStates,
-        E2eIconStateAndStyle
-        E2eTimepickerStates
+        E2eIconStateAndStyle,
         E2eBadgeStyles
     ],
     templateUrl: 'template.html',
