@@ -31,15 +31,15 @@
                         {{ file.file.size | kbqDataSize }}
                     </div>
                 }
-                <i
-                    kbq-icon-button="kbq-circle-xmark_16"
-                    class="kbq-file-upload__action"
-                    [disabled]="disabled"
-                    (click)="deleteItem($event, 'program')"
-                    (keydown.backspace)="deleteItem()"
-                    (keydown.delete)="deleteItem()"
-                ></i>
             </div>
+            <i
+                kbq-icon-button="kbq-circle-xmark_16"
+                class="kbq-file-upload__action"
+                [disabled]="disabled"
+                (click)="deleteItem($event, 'program')"
+                (keydown.backspace)="deleteItem()"
+                (keydown.delete)="deleteItem()"
+            ></i>
         }
     }
 </div>

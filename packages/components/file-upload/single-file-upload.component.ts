@@ -72,7 +72,8 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'kbq-single-file-upload'
+        class: 'kbq-single-file-upload',
+        '[class.kbq-single-file-upload_selected]': '!!file'
     },
     hostDirectives: [
         {

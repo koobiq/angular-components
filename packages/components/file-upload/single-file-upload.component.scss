@@ -1,45 +1,64 @@
 @use '../core/styles/common/tokens' as *;
 @use './file-upload-theme';
 
-.kbq-single-file-upload .kbq-file-upload {
-    padding: kbq-difference-series-css-variables(
-            [ file-upload-size-single-container-padding-vertical,
-            file-upload-size-single-container-border-width]
-        )
-        kbq-difference-series-css-variables(
-            [ file-upload-size-single-container-padding-horizontal,
-            file-upload-size-single-container-border-width]
-        );
-    min-height: var(--kbq-file-upload-single-min-height);
-
-    border-radius: var(--kbq-file-upload-size-single-container-border-radius);
-    border-width: var(--kbq-file-upload-size-single-container-border-width);
-    border-style: dashed;
-
-    .kbq-file-item {
-        width: 100%;
-
-        .kbq-file-item__text-wrapper {
-            display: flex;
-            align-items: center;
-            width: 100%;
-
-            gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
-
-            .kbq-file-item__text {
-                width: 120px;
-                flex-grow: 1;
-            }
-        }
-
-        .kbq-file-item__size {
-            padding: 0 var(--kbq-size-s);
-        }
-
-        .kbq-file-upload__action {
-            padding: var(--kbq-size-xxs);
+.kbq-single-file-upload {
+    &.kbq-single-file-upload_selected .kbq-file-upload {
+        .kbq-file-item {
+            padding: kbq-difference-series-css-variables(
+                    [ file-upload-size-single-container-padding-vertical,
+                    file-upload-size-single-container-border-width]
+                )
+                kbq-difference-series-css-variables(
+                    [ file-upload-size-single-container-padding-horizontal,
+                    file-upload-size-single-container-border-width]
+                );
+            padding-right: 0;
         }
     }
 
-    @include file-upload-theme.kbq-single-file-upload-theme();
+    &:not(.kbq-single-file-upload_selected) .kbq-file-upload {
+        padding: kbq-difference-series-css-variables(
+                [ file-upload-size-single-container-padding-vertical,
+                file-upload-size-single-container-border-width]
+            )
+            kbq-difference-series-css-variables(
+                [ file-upload-size-single-container-padding-horizontal,
+                file-upload-size-single-container-border-width]
+            );
+    }
+
+    .kbq-file-upload {
+        min-height: var(--kbq-file-upload-single-min-height);
+
+        border-radius: var(--kbq-file-upload-size-single-container-border-radius);
+        border-width: var(--kbq-file-upload-size-single-container-border-width);
+        border-style: dashed;
+
+        .kbq-file-item {
+            width: 100%;
+
+            .kbq-file-item__text-wrapper {
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
+
+                .kbq-file-item__text {
+                    width: 120px;
+                    flex-grow: 1;
+                }
+            }
+
+            .kbq-file-item__size {
+                padding: 0 var(--kbq-size-s);
+            }
+        }
+
+        .kbq-file-upload__action {
+            padding: 13px;
+        }
+
+        @include file-upload-theme.kbq-single-file-upload-theme();
+    }
 }
