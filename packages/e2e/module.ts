@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { E2eTimepickerStates } from 'packages/components/timepicker/e2e';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
 import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
@@ -39,7 +40,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eDatepickerStates,
         E2eAppSwitcherStates,
         E2eAppSwitcherWithSitesStates,
-        E2eFilterBarStates
+        E2eFilterBarStates,
+        E2eTimepickerStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
