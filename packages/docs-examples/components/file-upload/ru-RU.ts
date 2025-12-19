@@ -8,7 +8,7 @@ export const ruRULocaleData: KbqMultipleFileUploadLocaleConfig = {
     captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
     browseLink: 'выберите файлы',
     title: 'Добавьте фотографии',
-    browseLinkForFolder: 'выберите',
+    browseLinkForFolder: 'папку',
     gridHeaders: {
         file: 'Файл',
         size: 'Размер'

@@ -26,10 +26,10 @@ export const enUSLocaleData = {
             browseLinkForFolder: 'choose'
         },
         multiple: {
-            captionText: 'Drag here or [[browseLink:choose file]]',
-            captionTextWithFolder: 'Drag here or [[browseLink:choose file]] or [[browseLinkForFolder:folder]]',
-            captionTextWhenSelected: 'Drag more files or [[browseLink:choose file]]',
-            captionTextForCompactSize: 'Drag files or [[browseLink:choose file]]',
+            captionText: 'Drag here or [[browseLink:choose files]]',
+            captionTextWithFolder: 'Drag here or [[browseLink:choose files]] or [[browseLinkForFolder:folder]]',
+            captionTextWhenSelected: 'Drag more or [[browseLink:choose files]]',
+            captionTextForCompactSize: 'Drag files or [[browseLink:choose files]]',
             browseLink: 'choose file',
             browseLinkForFolder: 'folder',
             title: 'Upload files',

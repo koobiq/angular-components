@@ -1,12 +1,12 @@
 import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 
 export const ptBRLocaleData: KbqMultipleFileUploadLocaleConfig = {
-    captionText: 'Перетащите файл или [[browseLink:choose file]]',
-    captionTextWhenSelected: 'Arrastar arquivos ou [[browseLink:choose file]]',
-    captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
-    captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:choose file]]',
+    captionText: 'Arrastar aqui ou [[browseLink:escolher]]',
+    captionTextWhenSelected: 'Arrastar arquivos ou [[browseLink:escolher]]',
+    captionTextWithFolder: 'Arrastar aqui ou [[browseLink:escolher]] ou [[browseLinkForFolder:pasta]]',
+    captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:escolher]]',
     browseLink: 'escolher',
-    browseLinkForFolder: 'escolher',
+    browseLinkForFolder: 'pasta',
     title: 'Adicionar fotos',
     gridHeaders: {
         file: 'Arquivo',
