@@ -32,7 +32,11 @@ export const enUSLocaleData = {
             captionTextForCompactSize: 'Drag files or [[browseLink:choose file]]',
             browseLink: 'choose file',
             browseLinkForFolder: 'folder',
-            title: 'Upload files'
+            title: 'Upload files',
+            gridHeaders: {
+                file: 'File',
+                size: 'Size'
+            }
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

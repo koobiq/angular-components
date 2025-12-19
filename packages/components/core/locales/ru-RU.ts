@@ -33,7 +33,11 @@ export const ruRULocaleData = {
             captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
             browseLink: 'выберите файлы',
             browseLinkForFolder: 'папку',
-            title: 'Загрузите файлы'
+            title: 'Загрузите файлы',
+            gridHeaders: {
+                file: 'Файл',
+                size: 'Размер'
+            }
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

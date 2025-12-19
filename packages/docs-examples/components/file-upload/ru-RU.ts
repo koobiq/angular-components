@@ -1,6 +1,6 @@
-import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 
-export const ruRULocaleData: KbqFileUploadLocaleConfig['multiple'] = {
+export const ruRULocaleData: KbqMultipleFileUploadLocaleConfig = {
     // captionText: 'Перетащите сюда или',
     captionText: 'Перетащите сюда или [[browseLink:choose file]]',
     captionTextWithFolder: 'Перетащите сюда или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
@@ -8,5 +8,9 @@ export const ruRULocaleData: KbqFileUploadLocaleConfig['multiple'] = {
     captionTextForCompactSize: 'Перетащите сюда или [[browseLink:choose file]]',
     browseLink: 'выберите',
     title: 'Добавьте фотографии',
-    browseLinkForFolder: 'выберите'
+    browseLinkForFolder: 'выберите',
+    gridHeaders: {
+        file: 'Файл',
+        size: 'Размер'
+    }
 };

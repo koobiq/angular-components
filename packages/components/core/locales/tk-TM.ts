@@ -32,7 +32,11 @@ export const tkTMLocaleData = {
             captionTextForCompactSize: 'Faýllary geçiriň ýa-da [[browseLink:saýlaň]]',
             browseLink: 'saýlaň',
             browseLinkForFolder: 'bukja',
-            title: 'Faýl ýükläň'
+            title: 'Faýl ýükläň',
+            gridHeaders: {
+                file: 'Faýl',
+                size: 'Ölçegi'
+            }
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

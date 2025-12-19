@@ -32,7 +32,11 @@ export const ptBRLocaleData = {
             captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:escolher]]',
             browseLink: 'escolher',
             browseLinkForFolder: 'pasta',
-            title: 'Carregar arquivos'
+            title: 'Carregar arquivos',
+            gridHeaders: {
+                file: 'Arquivo',
+                size: 'Tamanho'
+            }
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

@@ -20,6 +20,7 @@ class FileUploadConfiguration {
     captionTextWithFolder: string;
     captionTextWhenSelected: string;
     captionTextForCompactSize: string;
+    gridHeaders: { file: string; size: string };
     browseLink: string;
     browseLinkForFolder: string;
     title: string;
@@ -35,6 +36,7 @@ class FileUploadConfiguration {
         this.captionTextWithFolder = data.captionTextWithFolder;
         this.captionTextWhenSelected = data.captionTextWhenSelected;
         this.captionTextForCompactSize = data.captionTextForCompactSize;
+        this.gridHeaders = localeData[locale].gridHeaders;
         this.browseLink = data.browseLink;
         this.browseLinkForFolder = data.browseLinkForFolder;
         this.title = data.title;

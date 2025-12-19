@@ -82,5 +82,9 @@ export type KbqFileUploadLocaleConfig = {
         browseLink: string;
         browseLinkForFolder: string;
         title: string;
+        gridHeaders: {
+            file: string;
+            size: string;
+        };
     };
 };
