@@ -4,6 +4,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChild,
     ContentChildren,
     DoCheck,
@@ -15,15 +16,15 @@ import {
     Output,
     PLATFORM_ID,
     QueryList,
-    signal,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import {
     ErrorStateMatcher,
+    KBQ_DEFAULT_LOCALE_ID,
     KbqDataSizePipe,
     KbqMultipleFileUploadLocaleConfig,
     ruRULocaleData
@@ -35,7 +36,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, skip } from 'rxjs';
+import { BehaviorSubject, of, skip } from 'rxjs';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -82,7 +83,7 @@ const fileSizeCellPadding = 16;
     hostDirectives: [
         {
             directive: KbqFileUploadContext,
-            inputs: ['id', 'disabled', 'onlyDirectory']
+            inputs: ['id', 'disabled']
         },
         { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
     ]
@@ -123,6 +124,12 @@ export class KbqMultipleFileUploadComponent
         this.fileList.list.set(currentFileList);
         this.cvaOnChange(this.files);
     }
+
+    /**
+     * Determines which kind of items the upload component can accept.
+     * @default mixed
+     */
+    allowed = input<'file' | 'mixed'>('mixed');
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqInputFileMultipleLabel>>();
@@ -214,7 +221,32 @@ export class KbqMultipleFileUploadComponent
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
-    text = signal<string | null>(null);
+    protected readonly text = computed(() => {
+        const config = this.configComputed();
+
+        switch (this.allowed()) {
+            case 'mixed': {
+                return config.captionTextWithFolder;
+            }
+            case 'file': {
+                return this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
+            }
+            default: {
+                return config.captionText;
+            }
+        }
+    });
+
+    private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
+
+    protected readonly configComputed = computed<KbqMultipleFileUploadLocaleConfig>(() => {
+        const localeId = this.localeId();
+        const localeConfig = this.localeConfig();
+
+        return this.localeService && localeId
+            ? { ...(this.configuration || this.localeService.getParams('fileUpload').multiple), ...localeConfig }
+            : { ...KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION, ...localeConfig };
+    });
 
     constructor() {
         super();
@@ -333,15 +365,11 @@ export class KbqMultipleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
-        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').multiple);
-
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
             { header: this.config.gridHeaders.size, cssClass: 'size' },
             { header: '', cssClass: 'action' }
         ];
-
-        this.getCaptionText();
 
         this.cdr.markForCheck();
     };
@@ -381,21 +409,13 @@ export class KbqMultipleFileUploadComponent
     }
 
     private initDefaultParams() {
-        this.config = this.buildConfig(KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
-
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
             { header: this.config.gridHeaders.size, cssClass: 'size' },
             { header: '', cssClass: 'action' }
         ];
 
-        this.getCaptionText();
-    }
-
-    private getCaptionText() {
-        this.text.set(
-            this.fileUploadContext.onlyDirectory() ? this.config.captionText : this.config.captionTextWithFolder
-        );
+        this.cdr.markForCheck();
     }
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {

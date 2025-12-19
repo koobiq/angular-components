@@ -5,6 +5,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChildren,
     DoCheck,
     ElementRef,
@@ -18,16 +19,23 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
-import { ErrorStateMatcher, KbqDataSizePipe, KbqFileUploadLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
+import {
+    ErrorStateMatcher,
+    KBQ_DEFAULT_LOCALE_ID,
+    KbqBaseFileUploadLocaleConfig,
+    KbqDataSizePipe,
+    KbqFileUploadLocaleConfig,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { KbqDynamicTranslation, KbqDynamicTranslationSlot } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, skip } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -69,7 +77,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     hostDirectives: [
         {
             directive: KbqFileUploadContext,
-            inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
+            inputs: ['id', 'disabled', 'multiple']
         },
         { directive: KbqFileList, outputs: ['listChange: fileChange'] }
     ]
@@ -115,6 +123,12 @@ export class KbqSingleFileUploadComponent
      * @default true
      */
     @Input({ transform: booleanAttribute }) showFileSize: boolean = true;
+
+    /**
+     * Determines which kind of items the upload component can accept.
+     * @default mixed
+     */
+    allowed = input<'file' | 'mixed'>('mixed');
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqInputFileLabel>>();
@@ -172,28 +186,44 @@ export class KbqSingleFileUploadComponent
         optional: true
     });
 
+    protected readonly text = computed(() => {
+        const config = this.configComputed();
+
+        switch (this.allowed()) {
+            case 'mixed': {
+                return config.captionTextWithFolder;
+            }
+            case 'file': {
+                return config.captionText;
+            }
+            default: {
+                return config.captionText;
+            }
+        }
+    });
+
+    private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
+
+    private readonly configComputed = computed<KbqBaseFileUploadLocaleConfig>(() => {
+        const localeId = this.localeId();
+        const localeConfig = this.localeConfig();
+
+        return this.localeService && localeId
+            ? { ...(this.configuration || this.localeService.getParams('fileUpload').single), ...localeConfig }
+            : { ...KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION, ...localeConfig };
+    });
+
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
     constructor() {
         super();
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
-
-        toObservable(this.localeConfig)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(() => {
-                this.localeService ? this.updateLocaleParams() : this.initDefaultParams();
-            });
     }
 
     ngDoCheck() {
@@ -308,12 +338,6 @@ export class KbqSingleFileUploadComponent
         }
     }
 
-    private updateLocaleParams = () => {
-        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').single);
-
-        this.cdr.markForCheck();
-    };
-
     private mapToFileItem(file: File): KbqFileItem {
         return {
             file,
@@ -335,9 +359,5 @@ export class KbqSingleFileUploadComponent
             .filter(Boolean) as string[];
 
         return !!this.errors.length;
-    }
-
-    private initDefaultParams() {
-        this.config = this.buildConfig(KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
     }
 }

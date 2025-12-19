@@ -8,12 +8,13 @@
     [class.kbq-file-upload_compact]="size === 'compact'"
     (filesDropped)="onFileDropped($event)"
 >
+    @let localeData = configComputed();
     @if (!files.length) {
         <div class="kbq-file-dropzone">
             @if (size === 'default') {
                 <i kbq-icon="kbq-cloud-arrow-up-o_32" class="kbq-file-dropzone__icon"></i>
                 <div class="kbq-file-dropzone__text">
-                    <div class="kbq-file-multiple__header">{{ config.title }}</div>
+                    <div class="kbq-file-multiple__header">{{ localeData.title }}</div>
                     <div>
                         <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: text() }" />
                     </div>
@@ -31,10 +32,10 @@
                 <div class="kbq-file-multiple-uploaded__header">
                     <div class="kbq-file-multiple-uploaded__header-inner">
                         <div #fileSizeHeaderCell class="kbq-file-upload__file kbq-file-upload__grid-cell">
-                            {{ config.gridHeaders.file }}
+                            {{ localeData.gridHeaders.file }}
                         </div>
                         <div class="kbq-file-upload__size kbq-file-upload__grid-cell">
-                            {{ config.gridHeaders.size }}
+                            {{ localeData.gridHeaders.size }}
                         </div>
                         <div class="kbq-file-upload__action kbq-file-upload__grid-cell"></div>
                     </div>

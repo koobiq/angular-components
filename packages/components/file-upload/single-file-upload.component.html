@@ -8,8 +8,7 @@
     @if (!file) {
         <div class="kbq-file-dropzone">
             <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
-            @let text = fileUploadContext.onlyDirectory() ? config.captionText : config.captionTextWithFolder;
-            <kbq-dynamic-translation class="kbq-file-dropzone__text" [text]="text">
+            <kbq-dynamic-translation class="kbq-file-dropzone__text" [text]="text()">
                 <label
                     *kbqDynamicTranslationSlot="'browseLink'; let context"
                     kbq-link
