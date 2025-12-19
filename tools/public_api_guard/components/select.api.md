@@ -260,6 +260,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly selectionChange: EventEmitter<KbqSelectChange>;
     selectionModel: SelectionModel<KbqOptionBase>;
     setDisabledState(isDisabled: boolean): void;
+    setSelectedOptionsByClick(option: KbqOption): void;
     protected shouldShowSearch(): boolean;
     sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
     readonly stateChanges: Subject<void>;
