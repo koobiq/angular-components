@@ -26,11 +26,13 @@
     .kbq-list-option {
         @include _kbq-list-item(default);
 
+        &.kbq-hovered:not(.kbq-disabled),
         &:hover:not(.kbq-disabled),
         &.kbq-action-button-focused:not(.kbq-disabled) {
             @include _kbq-list-item(states-hover);
         }
 
+        &.kbq-active:not(.kbq-disabled),
         &:active:not(.kbq-disabled) {
             @include _kbq-list-item(states-active);
         }
@@ -38,10 +40,12 @@
         &.kbq-selected:not(.kbq-disabled) {
             @include _kbq-list-item(states-selected);
 
+            &.kbq-hovered,
             &:hover {
                 @include _kbq-list-item(states-selected-hover);
             }
 
+            &.kbq-active,
             &:active {
                 @include _kbq-list-item(states-selected-active);
             }
@@ -56,10 +60,12 @@
         &.kbq-selected:not(.kbq-disabled) {
             @include _kbq-list-item(multiple-states-selected);
 
+            &.kbq-hovered,
             &:hover {
                 @include _kbq-list-item(multiple-states-selected-hover);
             }
 
+            &.kbq-active,
             &:active {
                 @include _kbq-list-item(multiple-states-selected-active);
             }
