@@ -93,11 +93,7 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
                 browseLink: 'выберите файлы',
                 browseLinkFolder: 'выберите папку',
                 browseLinkFolderMixed: 'папку',
-                title: 'Загрузите фотографии',
-                gridHeaders: {
-                    file: 'Файл',
-                    size: 'Размер'
-                }
+                title: 'Загрузите фотографии'
             } satisfies KbqMultipleFileUploadLocaleConfig
         }
     ]

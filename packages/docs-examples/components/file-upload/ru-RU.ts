@@ -5,13 +5,9 @@ export const ruRULocaleData: KbqMultipleFileUploadLocaleConfig = {
     captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
     captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
     captionTextWhenSelected: 'Перетащите еще или {{ browseLink }}',
-    captionTextForCompactSize: 'Перетащите сюда или {{ browseLink }}',
-    browseLink: 'выберите файлы',
+    captionTextForCompactSize: 'Перетащите файлы или {{ browseLink }}',
+    browseLink: 'выберите',
     browseLinkFolder: 'выберите папку',
     browseLinkFolderMixed: 'папку',
-    title: 'Добавьте фотографии',
-    gridHeaders: {
-        file: 'Файл',
-        size: 'Размер'
-    }
+    title: 'Добавьте фотографии'
 };

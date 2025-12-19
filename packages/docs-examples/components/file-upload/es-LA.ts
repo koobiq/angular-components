@@ -9,9 +9,5 @@ export const esLALocaleData: KbqMultipleFileUploadLocaleConfig = {
     browseLink: 'elija',
     browseLinkFolder: 'carpeta',
     browseLinkFolderMixed: 'carpeta',
-    title: 'Agregar fotos',
-    gridHeaders: {
-        file: 'Archivo',
-        size: 'Tamaño'
-    }
+    title: 'Agregar fotos'
 };

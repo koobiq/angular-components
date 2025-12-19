@@ -23,7 +23,7 @@ export const enUSLocaleData = {
             captionText: 'Drag file here or {{ browseLink }}',
             captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',
             captionTextWithFolder: 'Drag here or {{ browseLink }} or {{ browseLinkFolderMixed }}',
-            browseLink: 'choose file',
+            browseLink: 'choose',
             browseLinkFolder: 'choose folder',
             browseLinkFolderMixed: 'folder'
         },
@@ -31,16 +31,12 @@ export const enUSLocaleData = {
             captionText: 'Drag here or {{ browseLink }}',
             captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',
             captionTextWithFolder: 'Drag here or {{ browseLink }} or {{ browseLinkFolderMixed }}',
-            captionTextWhenSelected: 'Drag more or {{ browseLink }}',
+            captionTextWhenSelected: 'Drag more files or {{ browseLink }}',
             captionTextForCompactSize: 'Drag files or {{ browseLink }}',
-            browseLink: 'choose files',
+            browseLink: 'choose',
             browseLinkFolder: 'choose folder',
             browseLinkFolderMixed: 'folder',
-            title: 'Upload files',
-            gridHeaders: {
-                file: 'File',
-                size: 'Size'
-            }
+            title: 'Upload files'
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

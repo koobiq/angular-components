@@ -28,19 +28,15 @@ export const ruRULocaleData = {
             browseLinkFolderMixed: 'папку'
         },
         multiple: {
-            captionText: 'Перетащите сюда или {{ browseLink }}',
+            captionText: 'Перетащите файл или {{ browseLink }}',
             captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
-            captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
+            captionTextWithFolder: 'Перетащите файл или {{ browseLink }} или {{ browseLinkFolderMixed }}',
             captionTextWhenSelected: 'Перетащите еще или {{ browseLink }}',
-            captionTextForCompactSize: 'Перетащите сюда или {{ browseLink }}',
-            browseLink: 'выберите файлы',
+            captionTextForCompactSize: 'Перетащите файлы или {{ browseLink }}',
+            browseLink: 'выберите',
             browseLinkFolder: 'выберите папку',
-            browseLinkFolderMixed: 'папку',
-            title: 'Загрузите файлы',
-            gridHeaders: {
-                file: 'Файл',
-                size: 'Размер'
-            }
+            browseLinkFolderMixed: 'выберите папку',
+            title: 'Загрузите файлы'
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

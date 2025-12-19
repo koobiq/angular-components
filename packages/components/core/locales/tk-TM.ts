@@ -36,11 +36,7 @@ export const tkTMLocaleData = {
             browseLink: 'saýlaň',
             browseLinkFolder: 'bukja',
             browseLinkFolderMixed: 'bukja',
-            title: 'Faýl ýükläň',
-            gridHeaders: {
-                file: 'Faýl',
-                size: 'Ölçegi'
-            }
+            title: 'Faýl ýükläň'
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
