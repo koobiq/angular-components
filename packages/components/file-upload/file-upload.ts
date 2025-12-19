@@ -12,7 +12,8 @@ import {
     CanUpdateErrorState,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
-    KbqFileUploadLocaleConfig
+    KbqBaseFileUploadLocaleConfig,
+    KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
@@ -56,7 +57,7 @@ export type KbqFileValidatorFn = (file: File) => string | null;
 
 /* Object for labels customization inside file upload component */
 export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
-    KbqFileUploadLocaleConfig['single'] | KbqFileUploadLocaleConfig['multiple']
+    KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig
 >('KbqFileUploadConfiguration');
 
 /** @deprecated use `FileValidators.isCorrectExtension` instead. Will be removed in next major release. */
@@ -78,7 +79,7 @@ export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
 };
 
 /** @docs-private */
-export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpdateErrorState {
+export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
     protected abstract localeConfig: InputSignal<Partial<T> | undefined>;
     /** Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed. */

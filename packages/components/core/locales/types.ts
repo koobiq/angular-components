@@ -67,24 +67,24 @@ export type KbqTimeRangeLocaleConfig = {
     };
 };
 
+export interface KbqBaseFileUploadLocaleConfig {
+    captionText: string;
+    captionTextWithFolder: string;
+    browseLink: string;
+    browseLinkForFolder: string;
+}
+
+export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLocaleConfig {
+    captionTextWhenSelected: string;
+    captionTextForCompactSize: string;
+    title: string;
+    gridHeaders: {
+        file: string;
+        size: string;
+    };
+}
+
 export type KbqFileUploadLocaleConfig = {
-    single: {
-        captionText: string;
-        captionTextWithFolder: string;
-        browseLink: string;
-        browseLinkForFolder: string;
-    };
-    multiple: {
-        captionText: string;
-        captionTextWithFolder: string;
-        captionTextWhenSelected: string;
-        captionTextForCompactSize: string;
-        browseLink: string;
-        browseLinkForFolder: string;
-        title: string;
-        gridHeaders: {
-            file: string;
-            size: string;
-        };
-    };
+    single: KbqBaseFileUploadLocaleConfig;
+    multiple: KbqMultipleFileUploadLocaleConfig;
 };

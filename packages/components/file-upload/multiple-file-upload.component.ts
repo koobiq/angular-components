@@ -22,7 +22,12 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
-import { ErrorStateMatcher, KbqDataSizePipe, KbqFileUploadLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
+import {
+    ErrorStateMatcher,
+    KbqDataSizePipe,
+    KbqMultipleFileUploadLocaleConfig,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
@@ -36,25 +41,17 @@ import {
     KbqFile,
     KbqFileItem,
     KbqFileUploadBase,
-    KbqFileValidatorFn,
-    KbqInputFileLabel
+    KbqFileValidatorFn
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
 let nextMultipleFileUploadUniqueId = 0;
 
-export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
-    captionTextWhenSelected: string;
-    captionTextForCompactSize: string;
-    gridHeaders: {
-        file: string;
-        size: string;
-    };
-
+export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfig {
     [k: string | number | symbol]: unknown;
 }
 
-export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['multiple'] =
+export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig =
     ruRULocaleData.fileUpload.multiple;
 
 const fileSizeCellPadding = 16;
@@ -159,7 +156,7 @@ export class KbqMultipleFileUploadComponent
     /** @docs-private */
     columnDefs: { header: string; cssClass: string }[];
     /** @docs-private */
-    config: KbqFileUploadLocaleConfig['multiple'];
+    config: KbqMultipleFileUploadLocaleConfig;
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -210,7 +207,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration = inject<KbqFileUploadLocaleConfig['multiple']>(KBQ_FILE_UPLOAD_CONFIGURATION, {
+    readonly configuration = inject<KbqMultipleFileUploadLocaleConfig>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
 

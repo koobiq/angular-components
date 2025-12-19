@@ -9,8 +9,7 @@ const localeData = {
     'en-US': {
         single: {
             captionText: 'Drop file here or {{ browseLink }}',
-            browseLink: 'secure upload',
-            title: 'Submit security file'
+            browseLink: 'secure upload'
         } satisfies Partial<KbqInputFileLabel>,
 
         multiple: {
@@ -25,8 +24,7 @@ const localeData = {
     'es-LA': {
         single: {
             captionText: 'Arrastra archivo aquí o {{ browseLink }}',
-            browseLink: 'subida segura',
-            title: 'Enviar archivo de seguridad'
+            browseLink: 'subida segura'
         } satisfies Partial<KbqInputFileLabel>,
 
         multiple: {
@@ -41,8 +39,7 @@ const localeData = {
     'pt-BR': {
         single: {
             captionText: 'Arraste arquivo aqui ou {{ browseLink }}',
-            browseLink: 'upload seguro',
-            title: 'Enviar arquivo de segurança'
+            browseLink: 'upload seguro'
         } satisfies Partial<KbqInputFileLabel>,
 
         multiple: {
@@ -57,8 +54,7 @@ const localeData = {
     'ru-RU': {
         single: {
             captionText: 'Перетащите файл сюда или {{ browseLink }}',
-            browseLink: 'безопасная загрузка',
-            title: 'Загрузка файла безопасности'
+            browseLink: 'безопасная загрузка'
         } satisfies Partial<KbqInputFileLabel>,
 
         multiple: {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqFileUploadLocaleConfig, KbqLocaleService } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 import { KBQ_FILE_UPLOAD_CONFIGURATION, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { enUSLocaleData } from '../en-US';
@@ -14,7 +14,7 @@ const localeData = {
     'ru-RU': ruRULocaleData
 };
 
-class FileUploadConfiguration {
+class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
     [k: string | number | symbol]: unknown;
     captionText: string;
     captionTextWithFolder: string;
@@ -30,7 +30,7 @@ class FileUploadConfiguration {
     }
 
     update = (locale: string) => {
-        const data: KbqFileUploadLocaleConfig['multiple'] = localeData[locale];
+        const data: KbqMultipleFileUploadLocaleConfig = localeData[locale];
 
         this.captionText = data.captionText;
         this.captionTextWithFolder = data.captionTextWithFolder;

@@ -2,11 +2,11 @@ import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 
 export const ruRULocaleData: KbqMultipleFileUploadLocaleConfig = {
     // captionText: 'Перетащите сюда или',
-    captionText: 'Перетащите сюда или [[browseLink:choose file]]',
-    captionTextWithFolder: 'Перетащите сюда или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
-    captionTextWhenSelected: 'Перетащите еще или [[browseLink:choose file]]',
-    captionTextForCompactSize: 'Перетащите сюда или [[browseLink:choose file]]',
-    browseLink: 'выберите',
+    captionText: 'Перетащите сюда или [[browseLink:выберите файлы]]',
+    captionTextWithFolder: 'Перетащите сюда или [[browseLink:выберите файлы]] или [[browseLinkForFolder:папку]]',
+    captionTextWhenSelected: 'Перетащите еще или [[browseLink:выберите файлы]]',
+    captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
+    browseLink: 'выберите файлы',
     title: 'Добавьте фотографии',
     browseLinkForFolder: 'выберите',
     gridHeaders: {
