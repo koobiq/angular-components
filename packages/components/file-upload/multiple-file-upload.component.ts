@@ -4,7 +4,6 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    computed,
     ContentChild,
     ContentChildren,
     DoCheck,
@@ -16,6 +15,7 @@ import {
     Output,
     PLATFORM_ID,
     QueryList,
+    signal,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
@@ -161,13 +161,6 @@ export class KbqMultipleFileUploadComponent
     /** @docs-private */
     config: KbqFileUploadLocaleConfig['multiple'];
 
-    /** @docs-private */
-    separatedCaptionText: string[];
-    /** @docs-private */
-    separatedCaptionTextWhenSelected: string[];
-    /** @docs-private */
-    separatedCaptionTextForCompactSize: string[];
-
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
      */
@@ -224,9 +217,7 @@ export class KbqMultipleFileUploadComponent
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
-    text = computed(() =>
-        this.fileUploadContext.onlyDirectory() ? this.config.captionText : this.config.captionTextWithFolder
-    );
+    text = signal<string | null>(null);
 
     constructor() {
         super();
@@ -405,9 +396,9 @@ export class KbqMultipleFileUploadComponent
     }
 
     private getCaptionText() {
-        this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
-        this.separatedCaptionTextWhenSelected = this.config.captionTextWhenSelected.split('{{ browseLink }}');
-        this.separatedCaptionTextForCompactSize = this.config.captionTextForCompactSize.split('{{ browseLink }}');
+        this.text.set(
+            this.fileUploadContext.onlyDirectory() ? this.config.captionText : this.config.captionTextWithFolder
+        );
     }
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {

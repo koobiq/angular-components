@@ -1,11 +1,11 @@
-export const esLALocaleData = {
-    captionText: 'Arrastre aquí o {{ browseLink }}',
-    captionTextWhenSelected: 'Arrastre más archivos aquí o {{ browseLink }}',
-    captionTextForCompactSize: 'Arrastre archivos o {{ browseLink }}',
+import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
+
+export const esLALocaleData: KbqFileUploadLocaleConfig['multiple'] = {
+    captionText: 'Arrastre aquí o [[browseLink:elija]]',
+    captionTextWhenSelected: 'Arrastre más archivos aquí o [[browseLink:elija]]',
+    captionTextWithFolder: 'Arrastre aquí o [[browseLink:choose file]] o [[browseLinkForFolder:folder]]',
+    captionTextForCompactSize: 'Arrastre archivos o [[browseLink:elija]]',
     browseLink: 'elija',
-    title: 'Agregar fotos',
-    gridHeaders: {
-        file: 'Archivo',
-        size: 'Tamaño'
-    }
+    browseLinkForFolder: 'elija',
+    title: 'Agregar fotos'
 };

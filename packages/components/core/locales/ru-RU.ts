@@ -20,18 +20,19 @@ export const ruRULocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Перетащите файл или [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionText: 'Перетащите сюда или [[browseLink:выберите файл]]',
+            captionTextWithFolder: 'Перетащите сюда или [[browseLink:выберите файл]] или [[browseLinkForFolder:папку]]',
             browseLink: 'выберите файл',
-            browseLinkForFolder: 'выберите'
+            browseLinkForFolder: 'папку'
         },
         multiple: {
-            captionText: 'Перетащите сюда или [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
-            captionTextWhenSelected: 'Перетащите еще или [[browseLink:choose file]]',
-            captionTextForCompactSize: 'Перетащите файлы или [[browseLink:choose file]]',
+            captionText: 'Перетащите сюда или [[browseLink:выберите файлы]]',
+            captionTextWithFolder:
+                'Перетащите сюда или [[browseLink:выберите файлы]] или [[browseLinkForFolder:папку]]',
+            captionTextWhenSelected: 'Перетащите еще или [[browseLink:выберите файлы]]',
+            captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
             browseLink: 'выберите файлы',
-            browseLinkForFolder: 'выберите',
+            browseLinkForFolder: 'папку',
             title: 'Загрузите файлы'
         }
     } satisfies KbqFileUploadLocaleConfig,

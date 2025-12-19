@@ -20,18 +20,18 @@ export const tkTMLocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Faýly geçiriň ýa-da [[browseLink:choose file]] ',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionText: 'Faýly geçiriň ýa-da [[browseLink:saýlaň]] ',
+            captionTextWithFolder: 'Faýly geçiriň ýa-da [[browseLink:saýlaň]] ýa-da [[browseLinkForFolder:bukja]]',
             browseLink: 'saýlaň',
-            browseLinkForFolder: 'saýlaň'
+            browseLinkForFolder: 'bukja'
         },
         multiple: {
-            captionText: 'Şu ýere geçiriň ýa-da [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
-            captionTextWhenSelected: 'Ýene geçiriň ýa-da [[browseLink:choose file]]',
-            captionTextForCompactSize: 'Faýllary geçiriň ýa-da [[browseLink:choose file]]',
+            captionText: 'Şu ýere geçiriň ýa-da [[browseLink:saýlaň]]',
+            captionTextWithFolder: 'Şu ýere geçiriň ýa-da [[browseLink:saýlaň]] ýa-da [[browseLinkForFolder:bukja]]',
+            captionTextWhenSelected: 'Ýene geçiriň ýa-da [[browseLink:saýlaň]]',
+            captionTextForCompactSize: 'Faýllary geçiriň ýa-da [[browseLink:saýlaň]]',
             browseLink: 'saýlaň',
-            browseLinkForFolder: 'saýlaň',
+            browseLinkForFolder: 'bukja',
             title: 'Faýl ýükläň'
         }
     } satisfies KbqFileUploadLocaleConfig,

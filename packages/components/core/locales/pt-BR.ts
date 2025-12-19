@@ -20,17 +20,18 @@ export const ptBRLocaleData = {
     fileUpload: {
         single: {
             captionText: 'Arrastar o arquivo aqui ou [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionTextWithFolder:
+                'Arrastar o arquivo aqui ou [[browseLink:choose file]] ou [[browseLinkForFolder:pasta]]',
             browseLink: 'escolher',
             browseLinkForFolder: 'escolher'
         },
         multiple: {
-            captionText: 'Arrastar aqui ou [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
-            captionTextWhenSelected: 'Arrastar mais arquivos aqui ou [[browseLink:choose file]]',
-            captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:choose file]]',
+            captionText: 'Arrastar aqui ou [[browseLink:escolher]]',
+            captionTextWithFolder: 'Arrastar aqui ou [[browseLink:escolher]] ou [[browseLinkForFolder:pasta]]',
+            captionTextWhenSelected: 'Arrastar mais arquivos aqui ou [[browseLink:escolher]]',
+            captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:escolher]]',
             browseLink: 'escolher',
-            browseLinkForFolder: 'escolher',
+            browseLinkForFolder: 'pasta',
             title: 'Carregar arquivos'
         }
     } satisfies KbqFileUploadLocaleConfig,

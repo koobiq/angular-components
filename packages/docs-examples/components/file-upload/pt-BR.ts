@@ -1,11 +1,11 @@
-export const ptBRLocaleData = {
-    captionText: 'Arrastar aqui ou {{ browseLink }}',
-    captionTextWhenSelected: 'Arrastar mais arquivos aqui ou {{ browseLink }}',
-    captionTextForCompactSize: 'Arrastar arquivos ou {{ browseLink }}',
+import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
+
+export const ptBRLocaleData: KbqFileUploadLocaleConfig['multiple'] = {
+    captionText: 'Перетащите файл или [[browseLink:choose file]]',
+    captionTextWhenSelected: 'Arrastar arquivos ou [[browseLink:choose file]]',
+    captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+    captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:choose file]]',
     browseLink: 'escolher',
-    title: 'Adicionar fotos',
-    gridHeaders: {
-        file: 'Arquivo',
-        size: 'Tamanho'
-    }
+    browseLinkForFolder: 'escolher',
+    title: 'Adicionar fotos'
 };

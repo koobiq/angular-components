@@ -21,17 +21,17 @@ export const enUSLocaleData = {
     fileUpload: {
         single: {
             captionText: 'Drag file here or [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionTextWithFolder: 'Drag file here or [[browseLink:choose file]] or [[browseLinkForFolder:folder]]',
             browseLink: 'choose',
             browseLinkForFolder: 'choose'
         },
         multiple: {
             captionText: 'Drag here or [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionTextWithFolder: 'Drag here or [[browseLink:choose file]] or [[browseLinkForFolder:folder]]',
             captionTextWhenSelected: 'Drag more files or [[browseLink:choose file]]',
             captionTextForCompactSize: 'Drag files or [[browseLink:choose file]]',
-            browseLink: 'choose',
-            browseLinkForFolder: 'choose',
+            browseLink: 'choose file',
+            browseLinkForFolder: 'folder',
             title: 'Upload files'
         }
     } satisfies KbqFileUploadLocaleConfig,

@@ -132,8 +132,6 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     config: KbqFileUploadLocaleConfig['single'];
-    /** @docs-private */
-    separatedCaptionText: string[];
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -311,9 +309,7 @@ export class KbqSingleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
-        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').multiple);
-
-        this.getCaptionText();
+        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').single);
 
         this.cdr.markForCheck();
     };
@@ -343,11 +339,5 @@ export class KbqSingleFileUploadComponent
 
     private initDefaultParams() {
         this.config = this.buildConfig(KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
-
-        this.getCaptionText();
-    }
-
-    private getCaptionText() {
-        this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
     }
 }

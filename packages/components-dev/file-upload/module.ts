@@ -22,7 +22,12 @@ import {
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { FileValidators, KbqLocaleServiceModule, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
+import {
+    FileValidators,
+    KbqFileUploadLocaleConfig,
+    KbqLocaleServiceModule,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
@@ -80,16 +85,15 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
             useValue: {
-                captionText: 'Перетащите сюда или ',
-                captionTextWhenSelected: 'Перетащите еще или ',
-                captionTextForCompactSize: 'Перетащите файлы или ',
-                browseLink: 'выберите',
+                captionText: 'Перетащите сюда или [[browseLink:выберите файлы]]',
+                captionTextWithFolder:
+                    'Перетащите сюда или [[browseLink:выберите файлы]] или [[browseLinkForFolder:папку]]',
+                captionTextWhenSelected: 'Перетащите еще или [[browseLink:выберите файлы]]',
+                captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
+                browseLink: 'выберите файлы',
                 title: 'Загрузите фотографии',
-                gridHeaders: {
-                    file: 'Файл',
-                    size: 'Размер'
-                }
-            }
+                browseLinkForFolder: 'папку'
+            } satisfies KbqFileUploadLocaleConfig['multiple']
         }
     ]
 })

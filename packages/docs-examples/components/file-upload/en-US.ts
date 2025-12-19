@@ -1,11 +1,11 @@
-export const enUSLocaleData = {
-    captionText: 'Drag here or {{ browseLink }}',
-    captionTextWhenSelected: 'Drag more files or {{ browseLink }}',
-    captionTextForCompactSize: 'Drag files or {{ browseLink }}',
+import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
+
+export const enUSLocaleData: KbqFileUploadLocaleConfig['multiple'] = {
+    captionText: 'Drag here or [[browseLink:choose file]]',
+    captionTextWithFolder: 'Drag here or [[browseLink:choose file]] or [[browseLinkForFolder:folder]]',
+    captionTextWhenSelected: 'Drag more files or [[browseLink:choose file]]',
+    captionTextForCompactSize: 'Drag here or [[browseLink:choose file]]',
     browseLink: 'choose',
-    title: 'Add photos',
-    gridHeaders: {
-        file: 'File',
-        size: 'Size'
-    }
+    browseLinkForFolder: 'choose',
+    title: 'Add photos'
 };

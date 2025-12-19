@@ -19,18 +19,18 @@ export const esLALocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Arrastre el archivo aquí o [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
+            captionText: 'Arrastre el archivo aquí o [[browseLink:elija]]',
+            captionTextWithFolder: 'Arrastre el archivo aquí o [[browseLink:elija]] o [[browseLinkForFolder:carpeta]]',
             browseLink: 'elija',
             browseLinkForFolder: 'elija'
         },
         multiple: {
-            captionText: 'Arrastre aquí o [[browseLink:choose file]]',
-            captionTextWithFolder: 'Перетащите файл или [[browseLink:choose file]] или [[browseLinkForFolder:folder]]',
-            captionTextWhenSelected: 'Arrastre más archivos aquí o [[browseLink:choose file]]',
-            captionTextForCompactSize: 'Arrastre archivos o [[browseLink:choose file]]',
+            captionText: 'Arrastre aquí o [[browseLink:elija]]',
+            captionTextWithFolder: 'Arrastre aquí o [[browseLink:elija]] o [[browseLinkForFolder:carpeta]]',
+            captionTextWhenSelected: 'Arrastre más archivos aquí o [[browseLink:elija]]',
+            captionTextForCompactSize: 'Arrastre archivos o [[browseLink:elija]]',
             browseLink: 'elija',
-            browseLinkForFolder: 'elija',
+            browseLinkForFolder: 'carpeta',
             title: 'Cargue los archivos'
         }
     } satisfies KbqFileUploadLocaleConfig,
