@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { E2eBadgeStyles } from 'packages/components/badge/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from 'packages/components/checkbox/e2e';
+import { E2eCodeBlockStates } from 'packages/components/code-block/e2e';
 import { E2eTimepickerStates } from 'packages/components/timepicker/e2e';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
 import { E2eAccordionStates } from '../components/accordion/e2e';
@@ -36,6 +37,7 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eToggleWithTextAndCaption,
         E2eBreadcrumbsStateAndStyle,
         E2eEmptyStateStateAndStyle,
+        E2eCodeBlockStates,
         E2eAlertStateAndStyle,
         E2eDividerStateAndStyle,
         E2eButtonToggleStates,
