@@ -301,13 +301,17 @@ export const enUSLocaleData: {
     fileUpload: {
         single: {
             captionText: string;
+            captionTextWithFolder: string;
             browseLink: string;
+            browseLinkForFolder: string;
         };
         multiple: {
             captionText: string;
+            captionTextWithFolder: string;
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkForFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -526,13 +530,17 @@ export const esLALocaleData: {
     fileUpload: {
         single: {
             captionText: string;
+            captionTextWithFolder: string;
             browseLink: string;
+            browseLinkForFolder: string;
         };
         multiple: {
             captionText: string;
+            captionTextWithFolder: string;
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkForFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -830,13 +838,17 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         fileUpload: {
             single: {
                 captionText: string;
+                captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkForFolder: string;
             };
             multiple: {
                 captionText: string;
+                captionTextWithFolder: string;
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkForFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1036,13 +1048,17 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         fileUpload: {
             single: {
                 captionText: string;
+                captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkForFolder: string;
             };
             multiple: {
                 captionText: string;
+                captionTextWithFolder: string;
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkForFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1238,13 +1254,17 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         fileUpload: {
             single: {
                 captionText: string;
+                captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkForFolder: string;
             };
             multiple: {
                 captionText: string;
+                captionTextWithFolder: string;
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkForFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1446,13 +1466,17 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         fileUpload: {
             single: {
                 captionText: string;
+                captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkForFolder: string;
             };
             multiple: {
                 captionText: string;
+                captionTextWithFolder: string;
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkForFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1650,13 +1674,17 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         fileUpload: {
             single: {
                 captionText: string;
+                captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkForFolder: string;
             };
             multiple: {
                 captionText: string;
+                captionTextWithFolder: string;
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkForFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1943,6 +1971,18 @@ export enum KbqAnimationDurations {
     Rapid = "100ms"
 }
 
+// @public (undocumented)
+export interface KbqBaseFileUploadLocaleConfig {
+    // (undocumented)
+    browseLink: string;
+    // (undocumented)
+    browseLinkForFolder: string;
+    // (undocumented)
+    captionText: string;
+    // (undocumented)
+    captionTextWithFolder: string;
+}
+
 // @public
 export type KbqCheckedState = 'true' | 'false' | 'mixed';
 
@@ -2085,6 +2125,12 @@ export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<
 
 // @public
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
+
+// @public (undocumented)
+export type KbqFileUploadLocaleConfig = {
+    single: KbqBaseFileUploadLocaleConfig;
+    multiple: KbqMultipleFileUploadLocaleConfig;
+};
 
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
@@ -2270,6 +2316,21 @@ export class KbqMeasureScrollbarService {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMeasureScrollbarService, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
+}
+
+// @public (undocumented)
+export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLocaleConfig {
+    // (undocumented)
+    captionTextForCompactSize: string;
+    // (undocumented)
+    captionTextWhenSelected: string;
+    // (undocumented)
+    gridHeaders: {
+        file: string;
+        size: string;
+    };
+    // (undocumented)
+    title: string;
 }
 
 // @public (undocumented)
@@ -3183,13 +3244,17 @@ export const ptBRLocaleData: {
     fileUpload: {
         single: {
             captionText: string;
+            captionTextWithFolder: string;
             browseLink: string;
+            browseLinkForFolder: string;
         };
         multiple: {
             captionText: string;
+            captionTextWithFolder: string;
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkForFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -3589,13 +3654,17 @@ export const ruRULocaleData: {
     fileUpload: {
         single: {
             captionText: string;
+            captionTextWithFolder: string;
             browseLink: string;
+            browseLinkForFolder: string;
         };
         multiple: {
             captionText: string;
+            captionTextWithFolder: string;
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkForFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -3889,13 +3958,17 @@ export const tkTMLocaleData: {
     fileUpload: {
         single: {
             captionText: string;
+            captionTextWithFolder: string;
             browseLink: string;
+            browseLinkForFolder: string;
         };
         multiple: {
             captionText: string;
+            captionTextWithFolder: string;
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkForFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
