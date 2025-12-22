@@ -21,6 +21,7 @@ import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eFilterBarStates } from '../components/filter-bar/e2e';
 import { E2eIconStateAndStyle } from '../components/icon/e2e';
+import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eListStates } from '../components/list/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
@@ -62,7 +63,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eCheckboxStateAndStyle,
         E2eCheckboxWithTextAndCaption,
         E2eMarkdownStates,
-        E2eSearchExpandableStates
+        E2eSearchExpandableStates,
+        E2eInputStateAndStyle
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
