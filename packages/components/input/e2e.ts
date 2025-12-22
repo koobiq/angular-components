@@ -34,8 +34,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 @for (state of states; track $index) {
                     <div class="e2e__row">
                         @for (cell of state; track $index) {
-                            <div class="has_ellipsis">{{ cell.state }}</div>
-
                             <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
@@ -49,25 +47,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                         [ngModel]="cell.state.join().includes('placeholder') ? '' : inputValue()"
                                         (ngModelChange)="inputValue.set($event)"
                                     />
-                                </kbq-form-field>
-                            </div>
-
-                            <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
-                                <kbq-form-field
-                                    [class.cdk-keyboard-focused]="cell.state.includes('focused')"
-                                    [class.cdk-focused]="cell.state.includes('focused')"
-                                    [class.kbq-disabled]="cell.state.includes('disabled')"
-                                >
-                                    <input
-                                        kbqInputPassword
-                                        placeholder="kbqInputPassword"
-                                        [errorStateMatcher]="errorStateMatcher(cell.state)"
-                                        [disabled]="cell.state.includes('disabled')"
-                                        [ngModel]="cell.state.join().includes('placeholder') ? '' : inputMonoValue()"
-                                        (ngModelChange)="inputMonoValue.set($event)"
-                                    />
-
-                                    <kbq-password-toggle />
                                 </kbq-form-field>
                             </div>
 
