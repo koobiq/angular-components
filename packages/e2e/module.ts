@@ -3,6 +3,7 @@ import { E2eBadgeStyles } from 'packages/components/badge/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from 'packages/components/checkbox/e2e';
 import { E2eCodeBlockStates } from 'packages/components/code-block/e2e';
 import { E2eTabsStates } from 'packages/components/tabs/e2e';
+import { E2eTextareaStates } from 'packages/components/textarea/e2e';
 import { E2eTimepickerStates } from 'packages/components/timepicker/e2e';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
 import { E2eAccordionStates } from '../components/accordion/e2e';
@@ -21,6 +22,7 @@ import { E2eFilterBarStates } from '../components/filter-bar/e2e';
 import { E2eIconStateAndStyle } from '../components/icon/e2e';
 import { E2eListStates } from '../components/list/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
+import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
@@ -46,6 +48,7 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eTabsStates,
         E2eClampedTextStateAndStyle,
         E2eAccordionStates,
+        E2eTextareaStates,
         E2eDatepickerStates,
         E2eAppSwitcherStates,
         E2eAppSwitcherWithSitesStates,
@@ -56,7 +59,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eListStates,
         E2eCheckboxStateAndStyle,
         E2eCheckboxWithTextAndCaption,
-        E2eMarkdownStates
+        E2eMarkdownStates,
+        E2eSearchExpandableStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
