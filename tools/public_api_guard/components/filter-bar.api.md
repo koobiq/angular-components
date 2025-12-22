@@ -71,8 +71,10 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         saveAsNewFilter: string;
-        saveChanges: string;
-        saveAsNew: string;
+        saveChangesHeader: string;
+        saveChangesButton: string;
+        saveAsNewHeader: string;
+        saveAsNewButton: string;
         change: string;
         resetChanges: string;
         remove: string;
