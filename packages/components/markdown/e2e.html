@@ -1,0 +1,68 @@
+        <div data-testid="e2eScreenshotTarget" style="width: 500px">
+            <kbq-markdown ngPreserveWhitespaces>
+# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6
+
+---
+
+Inline code example. Use the `bypassSecurityTrustHtml()` function
+
+---
+
+```html
+Code block example
+&#60;!DOCTYPE html&#62;
+&#60;html lang="en"&#62;
+&#60;head&#62;
+&#60;meta charset="UTF-8"&#62;
+&#60;meta name="viewport" content="width=device-width, initial-scale=1.0"&#62;
+&#60;title&#62;Koobiq&#60;/title&#62;
+&#60;/head&#62;
+&#60;body&#62;
+&#60;app&#62;&#60;/app&#62;
+&#60;/body&#62;
+&#60;/html&#62;
+```
+---
+
+## Headers combination example
+### Security Levels
+#### Threat Types
+
+Recommended password length is 12 characters, encryption key length is 256 bits. Weak passwords are not rejected, the system raises security requirements.
+
+### Attack Detection
+
+Monitoring happens in real time. Multiple incidents form a unified threat picture. New events are displayed in the security log. If there are many threats, critical ones are highlighted with priority. Most often attacks are detected automatically, but an administrator can initiate a manual check.
+
+Line breaks&#32;&#32;
+Second line
+
+---
+
+> Markdown quote. A [brute-force attack](#) is a cryptanalytic attack that can, in theory, be used to attempt to decrypt any encrypted data (except for data encrypted in an information-theoretically secure manner).
+
+### Markdown list selection
+**bold**&#32;&#32;
+__bold__
+
+_italic_&#32;&#32;
+*italic*
+
+***bold and italic***&#32;&#32;
+___bold and italic___
+
+| Default    | Left align | Center align | Right align |
+| ---------- | :--------- | :----------: | ----------: |
+| Babable    | Zillya     |    ClamAV    |     Acronis |
+| Cybereason | McAfee     |    Cyren     |       Zoner |
+| ESET NOD32 | Alibaba    |    eScan     |      Dr.Web |
+            </kbq-markdown>
+
+
+<e2e-markdown-line-break-with-markdown-text-input-example />
+</div>
