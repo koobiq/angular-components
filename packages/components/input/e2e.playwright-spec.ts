@@ -4,30 +4,55 @@ import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 test.describe('KbqInputModule', () => {
     test.describe('E2eInputStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eInputStateAndStyle');
-        const getTestTable = (locator: Locator) => locator.getByTestId('e2eInputTable');
-        const getInputPasswordTestRow = (locator: Locator) => locator.getByTestId('e2eInputPassword');
 
-        test('KbqInput states', async ({ page }) => {
-            await e2eGoToRootPage(page);
-            const locator = getComponent(page);
+        test.describe('KbqInput', () => {
+            const getTestTable = (locator: Locator) => locator.getByTestId('e2eInputTable');
 
-            const screenshotTarget = getTestTable(locator);
+            test('states', async ({ page }) => {
+                await e2eGoToRootPage(page);
+                const locator = getComponent(page);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
+                const screenshotTarget = getTestTable(locator);
 
-        test(`KbqInput states (dark theme)`, async ({ page }) => {
-            await e2eGoToRootPage(page);
-            await e2eEnableDarkTheme(page);
+                await expect(screenshotTarget).toHaveScreenshot();
+            });
 
-            const locator = getComponent(page);
+            test(`states (dark theme)`, async ({ page }) => {
+                await e2eGoToRootPage(page);
+                await e2eEnableDarkTheme(page);
 
-            const screenshotTarget = getTestTable(locator);
+                const locator = getComponent(page);
 
-            await expect(screenshotTarget).toHaveScreenshot();
+                const screenshotTarget = getTestTable(locator);
+
+                await expect(screenshotTarget).toHaveScreenshot();
+            });
         });
 
         test.describe('KbqInputPassword', () => {
+            const getTestTable = (locator: Locator) => locator.getByTestId('e2eInputPasswordTable');
+            const getInputPasswordTestRow = (locator: Locator) => locator.getByTestId('e2eInputPasswordWithHints');
+
+            test('states', async ({ page }) => {
+                await e2eGoToRootPage(page);
+                const locator = getComponent(page);
+
+                const screenshotTarget = getTestTable(locator);
+
+                await expect(screenshotTarget).toHaveScreenshot();
+            });
+
+            test(`states (dark theme)`, async ({ page }) => {
+                await e2eGoToRootPage(page);
+                await e2eEnableDarkTheme(page);
+
+                const locator = getComponent(page);
+
+                const screenshotTarget = getTestTable(locator);
+
+                await expect(screenshotTarget).toHaveScreenshot();
+            });
+
             test('default hints', async ({ page }) => {
                 await e2eGoToRootPage(page);
                 const locator = getComponent(page);

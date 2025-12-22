@@ -118,25 +118,57 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             </div>
         </div>
 
-        <kbq-form-field style="margin-top: 16px; width: 200px" data-testid="e2eInputPassword">
-            <input
-                kbqInputPassword
-                placeholder="kbqInputPassword"
-                [ngModel]="inputMonoValue()"
-                (ngModelChange)="inputMonoValue.set($event)"
-            />
+        <div>
+            <div class="e2e__grid" data-testid="e2eInputPasswordTable">
+                @for (state of states; track $index) {
+                    <div class="e2e__row">
+                        @for (cell of state; track $index) {
+                            <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
+                                <kbq-form-field
+                                    [class.cdk-keyboard-focused]="cell.state.includes('focused')"
+                                    [class.cdk-focused]="cell.state.includes('focused')"
+                                    [class.kbq-disabled]="cell.state.includes('disabled')"
+                                >
+                                    <input
+                                        kbqInputPassword
+                                        placeholder="kbqInputPassword"
+                                        [errorStateMatcher]="errorStateMatcher(cell.state)"
+                                        [disabled]="cell.state.includes('disabled')"
+                                        [ngModel]="cell.state.join().includes('placeholder') ? '' : inputMonoValue()"
+                                        (ngModelChange)="inputMonoValue.set($event)"
+                                    />
 
-            <kbq-password-toggle />
+                                    <kbq-password-toggle />
+                                </kbq-form-field>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            <div>
+                <kbq-form-field style="margin-top: 16px; width: 200px" data-testid="e2eInputPasswordWithHints">
+                    <input
+                        kbqInputPassword
+                        placeholder="kbqInputPassword"
+                        [ngModel]="inputMonoValue()"
+                        (ngModelChange)="inputMonoValue.set($event)"
+                    />
 
-            <kbq-password-hint [min]="8" [max]="15" [rule]="passwordRules.Length">8 - 15 symbols</kbq-password-hint>
+                    <kbq-password-toggle />
 
-            <kbq-reactive-password-hint [hasError]="true">Min length</kbq-reactive-password-hint>
-        </kbq-form-field>
+                    <kbq-password-hint [min]="8" [max]="15" [rule]="passwordRules.Length">
+                        8 - 15 symbols
+                    </kbq-password-hint>
+
+                    <kbq-reactive-password-hint [hasError]="true">Min length</kbq-reactive-password-hint>
+                </kbq-form-field>
+            </div>
+        </div>
     `,
     styles: `
         :host {
             .e2e__grid {
-                display: flex;
+                display: inline-flex;
                 flex-direction: column;
                 gap: 4px;
             }
