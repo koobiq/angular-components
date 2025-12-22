@@ -29,7 +29,7 @@
         "@koobiq/date-adapter": "^3.4.0",
         "@koobiq/date-formatter": "^3.4.0",
         "@koobiq/design-tokens": "3.14.0",
-        "@koobiq/icons": "^11.1.3",
+        "@koobiq/icons": "^11.2.0",
         "@koobiq/luxon-date-adapter": "^3.4.0",
         "@koobiq/moment-date-adapter": "^3.4.0",
         "@messageformat/core": "^3.0.0",
