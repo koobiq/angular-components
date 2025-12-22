@@ -11,7 +11,7 @@
     min-width: var(--kbq-size-6xl);
     height: 100%;
 
-    &:not(:hover, .cdk-keyboard-focused) .kbq-navbar-toggle {
+    &:not(:hover, .kbq-hovered, .cdk-keyboard-focused) .kbq-navbar-toggle {
         display: none;
     }
 

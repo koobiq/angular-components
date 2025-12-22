@@ -44,6 +44,7 @@ button {
 
         @include kbq-navbar-item(default);
 
+        &.kbq-hovered:not(.kbq-disabled),
         &:hover:not(.kbq-disabled) {
             @include kbq-navbar-item(states-hover);
         }

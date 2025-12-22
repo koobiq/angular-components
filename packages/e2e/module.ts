@@ -25,6 +25,7 @@ import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eListStates } from '../components/list/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
+import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
@@ -66,7 +67,9 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eMarkdownStates,
         E2eSearchExpandableStates,
         E2eProgressBarStateAndStyle,
-        E2eInputStateAndStyle
+        E2eInputStateAndStyle,
+        E2eHorizontalNavbarStates,
+        E2eVerticalNavbarStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
