@@ -17,6 +17,7 @@
                     color: var(--kbq-foreground-contrast);
                 }
 
+                &.kbq-hovered td,
                 &:hover td {
                     background-color: var(--kbq-states-background-transparent-hover);
                 }
