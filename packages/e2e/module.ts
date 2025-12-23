@@ -68,8 +68,7 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eSearchExpandableStates,
         E2eInputStateAndStyle,
         E2eRadioStateAndStyle,
-        E2eProgressBarStateAndStyle,
-        E2eInputStateAndStyle
+        E2eProgressBarStateAndStyle
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
