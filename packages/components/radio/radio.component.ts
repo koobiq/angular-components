@@ -385,11 +385,16 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     /** Whether this radio is required. */
     private _required: boolean;
 
-    /** Whether the label should appear after or before the radio button. Defaults to 'after' */
+    /**
+     * Whether the label should appear after or before the radio button. Defaults to 'after'
+     * @TODO: doesn't affect anything. Should be removed or implemented (#DS-4571)
+     * @docs-private
+     */
     @Input()
     get labelPosition(): 'before' | 'after' {
         return this._labelPosition || (this.radioGroup && this.radioGroup.labelPosition) || 'after';
     }
+    /** @docs-private */
     set labelPosition(value) {
         this._labelPosition = value;
     }
