@@ -211,13 +211,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     accept?: string[];
     get acceptedFiles(): string;
     allowed: InputSignal<"file" | "mixed">;
-    columnDefs: {
-        header: string;
-        cssClass: string;
-    }[];
-    config: KbqMultipleFileUploadLocaleConfig;
-    // (undocumented)
-    protected readonly configComputed: Signal<KbqMultipleFileUploadLocaleConfig>;
+    readonly config: Signal<KbqMultipleFileUploadLocaleConfig>;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
@@ -273,7 +267,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     accept?: string[];
     get acceptedFiles(): string;
     allowed: InputSignal<"file" | "mixed">;
-    config: KbqFileUploadLocaleConfig['single'];
+    readonly config: Signal<KbqBaseFileUploadLocaleConfig>;
     readonly configuration: KbqInputFileLabel | null;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
@@ -318,7 +312,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
 
 // Warnings were encountered during analysis:
 //
-// dist/components/file-upload/multiple-file-upload.component.d.ts:138:921 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+// dist/components/file-upload/multiple-file-upload.component.d.ts:130:921 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

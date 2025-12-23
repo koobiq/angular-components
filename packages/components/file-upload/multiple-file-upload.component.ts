@@ -20,7 +20,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import {
     ErrorStateMatcher,
@@ -36,7 +36,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, of, skip } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -160,8 +160,6 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     hasFocus = false;
-    /** @docs-private */
-    columnDefs: { header: string; cssClass: string }[];
 
     /** @docs-private */
     readonly config = computed<KbqMultipleFileUploadLocaleConfig>(() => {
@@ -252,21 +250,12 @@ export class KbqMultipleFileUploadComponent
 
     constructor() {
         super();
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
-
-        toObservable(this.localeConfig)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(() => (this.localeService ? this.updateLocaleParams() : this.initDefaultParams()));
     }
 
     ngDoCheck() {
@@ -366,18 +355,6 @@ export class KbqMultipleFileUploadComponent
         }
     }
 
-    private updateLocaleParams = () => {
-        const config = this.config();
-
-        this.columnDefs = [
-            { header: config.gridHeaders.file, cssClass: 'file' },
-            { header: config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' }
-        ];
-
-        this.cdr.markForCheck();
-    };
-
     private mapToFileItem(files: FileList | KbqFile[] | null): KbqFileItem[] {
         if (!files) {
             return [];
@@ -410,18 +387,6 @@ export class KbqMultipleFileUploadComponent
         ];
 
         return !!errorsPerFile.length;
-    }
-
-    private initDefaultParams() {
-        const config = this.config();
-
-        this.columnDefs = [
-            { header: config.gridHeaders.file, cssClass: 'file' },
-            { header: config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' }
-        ];
-
-        this.cdr.markForCheck();
     }
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {
