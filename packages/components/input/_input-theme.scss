@@ -6,7 +6,8 @@
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
-    .kbq-input.kbq-input-password {
+    .kbq-input.kbq-input-password,
+    .kbq-input.kbq-input_monospace {
         @include kbq-typography-level-to-styles-css-variables(typography, mono-normal);
         // disable font-specific symbols replacements
         font-variant-ligatures: none;
