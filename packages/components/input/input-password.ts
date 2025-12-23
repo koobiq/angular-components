@@ -88,7 +88,7 @@ export class KbqInputPassword
      */
     @Input()
     get disabled(): boolean {
-        if (this.ngControl?.disabled !== null) {
+        if (this.ngControl && this.ngControl.disabled !== null) {
             return this.ngControl.disabled;
         }
 
