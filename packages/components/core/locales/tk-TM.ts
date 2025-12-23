@@ -21,17 +21,17 @@ export const tkTMLocaleData = {
     fileUpload: {
         single: {
             captionText: 'Faýly geçiriň ýa-da [[browseLink:saýlaň]] ',
+            captionTextOnlyFolder: 'Faýly geçiriň ýa-da [[browseLinkForFolder:bukja]]',
             captionTextWithFolder: 'Faýly geçiriň ýa-da [[browseLink:saýlaň]] ýa-da [[browseLinkForFolder:bukja]]',
-            browseLink: 'saýlaň',
-            browseLinkForFolder: 'bukja'
+            browseLink: 'saýlaň'
         },
         multiple: {
             captionText: 'Şu ýere geçiriň ýa-da [[browseLink:saýlaň]]',
+            captionTextOnlyFolder: 'Şu ýere geçiriň ýa-da [[browseLinkForFolder:bukja]]',
             captionTextWithFolder: 'Şu ýere geçiriň ýa-da [[browseLink:saýlaň]] ýa-da [[browseLinkForFolder:bukja]]',
             captionTextWhenSelected: 'Ýene geçiriň ýa-da [[browseLink:saýlaň]]',
             captionTextForCompactSize: 'Faýllary geçiriň ýa-da [[browseLink:saýlaň]]',
             browseLink: 'saýlaň',
-            browseLinkForFolder: 'bukja',
             title: 'Faýl ýükläň',
             gridHeaders: {
                 file: 'Faýl',

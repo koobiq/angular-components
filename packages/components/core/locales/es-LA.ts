@@ -20,17 +20,17 @@ export const esLALocaleData = {
     fileUpload: {
         single: {
             captionText: 'Arrastre el archivo aquí o [[browseLink:elija]]',
+            captionTextOnlyFolder: 'Arrastre el archivo aquí o [[browseLinkForFolder:carpeta]]',
             captionTextWithFolder: 'Arrastre el archivo aquí o [[browseLink:elija]] o [[browseLinkForFolder:carpeta]]',
-            browseLink: 'elija',
-            browseLinkForFolder: 'elija'
+            browseLink: 'elija'
         },
         multiple: {
             captionText: 'Arrastre aquí o [[browseLink:elija]]',
+            captionTextOnlyFolder: 'Arrastre aquí o [[browseLinkForFolder:carpeta]]',
             captionTextWithFolder: 'Arrastre aquí o [[browseLink:elija]] o [[browseLinkForFolder:carpeta]]',
             captionTextWhenSelected: 'Arrastre más archivos aquí o [[browseLink:elija]]',
             captionTextForCompactSize: 'Arrastre archivos o [[browseLink:elija]]',
             browseLink: 'elija',
-            browseLinkForFolder: 'carpeta',
             title: 'Cargue los archivos',
             gridHeaders: {
                 file: 'Archivo',

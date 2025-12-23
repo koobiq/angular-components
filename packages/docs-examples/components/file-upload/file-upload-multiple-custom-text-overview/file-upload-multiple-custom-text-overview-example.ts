@@ -17,12 +17,12 @@ const localeData = {
 class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
     [k: string | number | symbol]: unknown;
     captionText: string;
+    captionTextOnlyFolder: string;
     captionTextWithFolder: string;
     captionTextWhenSelected: string;
     captionTextForCompactSize: string;
     gridHeaders: { file: string; size: string };
     browseLink: string;
-    browseLinkForFolder: string;
     title: string;
 
     constructor(localeService: KbqLocaleService) {
@@ -33,12 +33,12 @@ class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
         const data: KbqMultipleFileUploadLocaleConfig = localeData[locale];
 
         this.captionText = data.captionText;
+        this.captionTextOnlyFolder = data.captionTextOnlyFolder;
         this.captionTextWithFolder = data.captionTextWithFolder;
         this.captionTextWhenSelected = data.captionTextWhenSelected;
         this.captionTextForCompactSize = data.captionTextForCompactSize;
         this.gridHeaders = localeData[locale].gridHeaders;
         this.browseLink = data.browseLink;
-        this.browseLinkForFolder = data.browseLinkForFolder;
         this.title = data.title;
     };
 }

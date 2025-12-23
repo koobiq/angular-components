@@ -50,6 +50,9 @@ export interface KbqInputFileLabel {
     title?: string | undefined;
 }
 
+/** Allowed upload modes for the upload component. */
+export type KbqFileUploadAllowedType = 'file' | 'folder' | 'mixed';
+
 /**
  * @deprecated use FormControl for validation
  */

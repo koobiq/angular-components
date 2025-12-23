@@ -21,18 +21,18 @@ export const ruRULocaleData = {
     fileUpload: {
         single: {
             captionText: 'Перетащите сюда или [[browseLink:выберите файл]]',
+            captionTextOnlyFolder: 'Перетащите сюда или [[browseLinkForFolder:выберите папку]]',
             captionTextWithFolder: 'Перетащите сюда или [[browseLink:выберите файл]] или [[browseLinkForFolder:папку]]',
-            browseLink: 'выберите файл',
-            browseLinkForFolder: 'папку'
+            browseLink: 'выберите файл'
         },
         multiple: {
             captionText: 'Перетащите сюда или [[browseLink:выберите файлы]]',
+            captionTextOnlyFolder: 'Перетащите сюда или [[browseLinkForFolder:выберите папку]]',
             captionTextWithFolder:
                 'Перетащите сюда или [[browseLink:выберите файлы]] или [[browseLinkForFolder:папку]]',
             captionTextWhenSelected: 'Перетащите еще или [[browseLink:выберите файлы]]',
             captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
             browseLink: 'выберите файлы',
-            browseLinkForFolder: 'папку',
             title: 'Загрузите файлы',
             gridHeaders: {
                 file: 'Файл',

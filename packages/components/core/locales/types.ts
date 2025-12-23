@@ -69,9 +69,9 @@ export type KbqTimeRangeLocaleConfig = {
 
 export interface KbqBaseFileUploadLocaleConfig {
     captionText: string;
+    captionTextOnlyFolder: string;
     captionTextWithFolder: string;
     browseLink: string;
-    browseLinkForFolder: string;
 }
 
 export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLocaleConfig {

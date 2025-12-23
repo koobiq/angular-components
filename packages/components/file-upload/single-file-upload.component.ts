@@ -41,6 +41,7 @@ import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
+    KbqFileUploadAllowedType,
     KbqFileUploadBase,
     KbqFileValidatorFn,
     KbqInputFileLabel
@@ -128,7 +129,7 @@ export class KbqSingleFileUploadComponent
      * Determines which kind of items the upload component can accept.
      * @default mixed
      */
-    allowed = input<'file' | 'mixed'>('mixed');
+    allowed = input<KbqFileUploadAllowedType>('file');
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqInputFileLabel>>();
@@ -192,9 +193,10 @@ export class KbqSingleFileUploadComponent
             case 'mixed': {
                 return config.captionTextWithFolder;
             }
-            case 'file': {
-                return config.captionText;
+            case 'folder': {
+                return config.captionTextOnlyFolder;
             }
+            case 'file':
             default: {
                 return config.captionText;
             }

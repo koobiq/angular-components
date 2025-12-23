@@ -21,17 +21,17 @@ export const enUSLocaleData = {
     fileUpload: {
         single: {
             captionText: 'Drag file here or [[browseLink:choose file]]',
-            captionTextWithFolder: 'Drag file here or [[browseLink:choose file]] or [[browseLinkForFolder:folder]]',
-            browseLink: 'choose',
-            browseLinkForFolder: 'choose'
+            captionTextOnlyFolder: 'Drag here or [[browseLinkForFolder:choose folder]]',
+            captionTextWithFolder: 'Drag here or [[browseLink:choose file]] or [[browseLinkForFolder:folder]]',
+            browseLink: 'choose'
         },
         multiple: {
             captionText: 'Drag here or [[browseLink:choose files]]',
+            captionTextOnlyFolder: 'Drag here or [[browseLinkForFolder:choose folder]]',
             captionTextWithFolder: 'Drag here or [[browseLink:choose files]] or [[browseLinkForFolder:folder]]',
             captionTextWhenSelected: 'Drag more or [[browseLink:choose files]]',
             captionTextForCompactSize: 'Drag files or [[browseLink:choose files]]',
             browseLink: 'choose file',
-            browseLinkForFolder: 'folder',
             title: 'Upload files',
             gridHeaders: {
                 file: 'File',

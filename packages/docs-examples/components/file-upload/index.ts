@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FileUploadAllowedExample } from './file-upload-allowed/file-upload-allowed-example';
 import { FileUploadCustomTextViaInputExample } from './file-upload-custom-text-via-input/file-upload-custom-text-via-input-example';
 import { FileUploadCvaOverviewExample } from './file-upload-cva-overview/file-upload-cva-overview-example';
 import { FileUploadIndeterminateLoadingOverviewExample } from './file-upload-indeterminate-loading-overview/file-upload-indeterminate-loading-overview-example';
@@ -20,6 +21,7 @@ import { FileUploadSingleValidationReactiveFormsOverviewExample } from './file-u
 import { FileUploadSingleWithSignalExample } from './file-upload-single-with-signal/file-upload-single-with-signal-example';
 
 export {
+    FileUploadAllowedExample,
     FileUploadCustomTextViaInputExample,
     FileUploadCvaOverviewExample,
     FileUploadIndeterminateLoadingOverviewExample,
@@ -42,6 +44,7 @@ export {
 };
 
 const EXAMPLES = [
+    FileUploadAllowedExample,
     FileUploadCustomTextViaInputExample,
     FileUploadSingleErrorOverviewExample,
     FileUploadMultipleErrorOverviewExample,
