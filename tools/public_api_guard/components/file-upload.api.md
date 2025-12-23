@@ -125,6 +125,9 @@ export class KbqFileLoader {
 }
 
 // @public
+export type KbqFileUploadAllowedType = 'file' | 'folder' | 'mixed';
+
+// @public
 export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
     protected buildConfig<T>(config: T): T;
     protected readonly cdr: ChangeDetectorRef;
@@ -210,7 +213,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
-    allowed: InputSignal<"file" | "mixed">;
+    allowed: InputSignal<KbqFileUploadAllowedType>;
     readonly config: Signal<KbqMultipleFileUploadLocaleConfig>;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
@@ -266,7 +269,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
-    allowed: InputSignal<"file" | "mixed">;
+    allowed: InputSignal<KbqFileUploadAllowedType>;
     readonly config: Signal<KbqBaseFileUploadLocaleConfig>;
     readonly configuration: KbqInputFileLabel | null;
     // @deprecated (undocumented)
