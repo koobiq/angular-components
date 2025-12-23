@@ -3,6 +3,7 @@ import { E2eBadgeStyles } from 'packages/components/badge/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from 'packages/components/checkbox/e2e';
 import { E2eCodeBlockStates } from 'packages/components/code-block/e2e';
 import { E2eContentPanelState } from 'packages/components/content-panel/e2e';
+import { E2eDropdownStates } from 'packages/components/dropdown/e2e';
 import { E2eDlStates } from 'packages/components/dl/e2e';
 import { E2eTableStates } from 'packages/components/table/e2e';
 import { E2eTabsStates } from 'packages/components/tabs/e2e';
@@ -70,6 +71,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eBadgeStyles,
         E2eListStates,
         E2eCheckboxStateAndStyle,
+        E2eDropdownStates,
         E2eCheckboxWithTextAndCaption,
         E2eMarkdownStates,
         E2eSearchExpandableStates,
