@@ -162,8 +162,19 @@ export class KbqMultipleFileUploadComponent
     hasFocus = false;
     /** @docs-private */
     columnDefs: { header: string; cssClass: string }[];
+
     /** @docs-private */
-    config: KbqMultipleFileUploadLocaleConfig;
+    readonly config = computed<KbqMultipleFileUploadLocaleConfig>(() => {
+        const localeId = this.localeId();
+        const localeConfig = this.localeConfig();
+
+        const baseLocaleConfig: KbqMultipleFileUploadLocaleConfig =
+            this.localeService && localeId
+                ? this.configuration || this.localeService.getParams('fileUpload').multiple
+                : KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+
+        return { ...baseLocaleConfig, ...localeConfig };
+    });
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -222,7 +233,7 @@ export class KbqMultipleFileUploadComponent
     private readonly platformId = inject(PLATFORM_ID);
 
     protected readonly text = computed(() => {
-        const config = this.configComputed();
+        const config = this.config();
 
         switch (this.allowed()) {
             case 'mixed': {
@@ -238,15 +249,6 @@ export class KbqMultipleFileUploadComponent
     });
 
     private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
-
-    protected readonly configComputed = computed<KbqMultipleFileUploadLocaleConfig>(() => {
-        const localeId = this.localeId();
-        const localeConfig = this.localeConfig();
-
-        return this.localeService && localeId
-            ? { ...(this.configuration || this.localeService.getParams('fileUpload').multiple), ...localeConfig }
-            : { ...KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION, ...localeConfig };
-    });
 
     constructor() {
         super();
@@ -365,9 +367,11 @@ export class KbqMultipleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
+        const config = this.config();
+
         this.columnDefs = [
-            { header: this.config.gridHeaders.file, cssClass: 'file' },
-            { header: this.config.gridHeaders.size, cssClass: 'size' },
+            { header: config.gridHeaders.file, cssClass: 'file' },
+            { header: config.gridHeaders.size, cssClass: 'size' },
             { header: '', cssClass: 'action' }
         ];
 
@@ -409,9 +413,11 @@ export class KbqMultipleFileUploadComponent
     }
 
     private initDefaultParams() {
+        const config = this.config();
+
         this.columnDefs = [
-            { header: this.config.gridHeaders.file, cssClass: 'file' },
-            { header: this.config.gridHeaders.size, cssClass: 'size' },
+            { header: config.gridHeaders.file, cssClass: 'file' },
+            { header: config.gridHeaders.size, cssClass: 'size' },
             { header: '', cssClass: 'action' }
         ];
 

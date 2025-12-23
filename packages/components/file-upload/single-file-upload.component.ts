@@ -145,7 +145,6 @@ export class KbqSingleFileUploadComponent
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
 
     /** @docs-private */
-    config: KbqFileUploadLocaleConfig['single'];
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -187,7 +186,7 @@ export class KbqSingleFileUploadComponent
     });
 
     protected readonly text = computed(() => {
-        const config = this.configComputed();
+        const config = this.config();
 
         switch (this.allowed()) {
             case 'mixed': {
@@ -204,7 +203,8 @@ export class KbqSingleFileUploadComponent
 
     private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
 
-    private readonly configComputed = computed<KbqBaseFileUploadLocaleConfig>(() => {
+    /** @docs-private */
+    readonly config = computed<KbqBaseFileUploadLocaleConfig>(() => {
         const localeId = this.localeId();
         const localeConfig = this.localeConfig();
 

@@ -8,7 +8,7 @@
     [class.kbq-file-upload_compact]="size === 'compact'"
     (filesDropped)="onFileDropped($event)"
 >
-    @let localeData = configComputed();
+    @let localeData = config();
     @if (!files.length) {
         <div class="kbq-file-dropzone">
             @if (size === 'default') {
