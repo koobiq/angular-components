@@ -20,7 +20,8 @@
         color: var(--kbq-radio-#{$type-name}-default-caption);
     }
 
-    &:hover {
+    &:hover,
+    &.kbq-hovered {
         @include kbq-radio-state($type-name, states-hover);
     }
 
