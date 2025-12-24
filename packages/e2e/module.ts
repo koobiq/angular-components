@@ -33,6 +33,7 @@ import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
 import { E2eScrollbarStateAndStyle } from '../components/scrollbar/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
+import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
@@ -81,6 +82,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eScrollbarStateAndStyle,
         E2eRadioStateAndStyle,
         E2eProgressBarStateAndStyle,
+        E2eSidepanelStateAndStyle,
         E2eHorizontalNavbarStates,
         E2eVerticalNavbarStates,
         E2eUsernameStateAndStyle,
