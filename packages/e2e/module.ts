@@ -37,6 +37,7 @@ import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
+import { E2eTooltipStates } from '../components/tooltip/e2e';
 import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 @Component({
@@ -85,7 +86,8 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eVerticalNavbarStates,
         E2eUsernameStateAndStyle,
         E2eToastStates,
-        E2eNotificationCenterStates
+        E2eNotificationCenterStates,
+        E2eTooltipStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
