@@ -29,6 +29,56 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
     ],
     template: `
         <div>
+            <kbq-top-bar [withShadow]="true">
+                <div
+                    class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
+                    kbqTopBarContainer
+                    placement="start"
+                >
+                    <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                </div>
+
+                <div kbqTopBarSpacer></div>
+
+                <div kbqTopBarContainer placement="end">
+                    <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                        @for (action of actions; track action.id) {
+                            <button
+                                kbq-button
+                                [kbqOverflowItem]="action.id"
+                                [kbqStyle]="action.style"
+                                [color]="action.color"
+                            >
+                                {{ action.text }}
+                            </button>
+                        }
+
+                        <div kbqOverflowItemsResult>
+                            <button
+                                kbq-button
+                                [kbqStyle]="buttonStyles.Transparent"
+                                [color]="componentColors.Contrast"
+                                [kbqDropdownTriggerFor]="appDropdown"
+                            >
+                                <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                            </button>
+
+                            <kbq-dropdown #appDropdown="kbqDropdown">
+                                @for (action of actions; track action.id) {
+                                    @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
+                                        <button kbq-dropdown-item>
+                                            {{ action.text || action.id }}
+                                        </button>
+                                    }
+                                }
+                            </kbq-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </kbq-top-bar>
+        </div>
+
+        <div>
             <kbq-top-bar style="width: 380px">
                 <div
                     class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
@@ -190,56 +240,6 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
                 </div>
             </kbq-top-bar>
         </div>
-
-        <div>
-            <kbq-top-bar [withShadow]="true">
-                <div
-                    class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
-                    kbqTopBarContainer
-                    placement="start"
-                >
-                    <div class="kbq-title kbq-truncate-line">Dashboards</div>
-                </div>
-
-                <div kbqTopBarSpacer></div>
-
-                <div kbqTopBarContainer placement="end">
-                    <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
-                        @for (action of actions; track action.id) {
-                            <button
-                                kbq-button
-                                [kbqOverflowItem]="action.id"
-                                [kbqStyle]="action.style"
-                                [color]="action.color"
-                            >
-                                {{ action.text }}
-                            </button>
-                        }
-
-                        <div kbqOverflowItemsResult>
-                            <button
-                                kbq-button
-                                [kbqStyle]="buttonStyles.Transparent"
-                                [color]="componentColors.Contrast"
-                                [kbqDropdownTriggerFor]="appDropdown"
-                            >
-                                <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                            </button>
-
-                            <kbq-dropdown #appDropdown="kbqDropdown">
-                                @for (action of actions; track action.id) {
-                                    @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                        <button kbq-dropdown-item>
-                                            {{ action.text || action.id }}
-                                        </button>
-                                    }
-                                }
-                            </kbq-dropdown>
-                        </div>
-                    </div>
-                </div>
-            </kbq-top-bar>
-        </div>
     `,
     styles: `
         :host {
@@ -247,7 +247,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
             flex-direction: column;
             gap: var(--kbq-size-m);
             padding: var(--kbq-size-xxs);
-            max-width: 800px;
+            max-width: 550px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
