@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
 test.describe('KbqAutocompleteModule', () => {
     test.describe('E2eAutocompleteStates', () => {
@@ -15,6 +15,7 @@ test.describe('KbqAutocompleteModule', () => {
 
         test('dark theme', async ({ page }) => {
             await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
             await getAutocompleteInput(page).focus();
             await page.keyboard.press('ArrowDown');
             await expect(getComponent(page)).toHaveScreenshot();
