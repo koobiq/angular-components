@@ -3,8 +3,6 @@ import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
 const prefix = 'e2e-sidepanel';
 
-test.use({ deviceScaleFactor: 1 });
-
 test.describe('KbqSidepanel', () => {
     test.describe('E2eSidepanelStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSidepanelStateAndStyle');
