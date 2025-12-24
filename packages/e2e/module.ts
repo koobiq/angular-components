@@ -81,11 +81,11 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eScrollbarStateAndStyle,
         E2eRadioStateAndStyle,
         E2eProgressBarStateAndStyle,
+        E2eSidepanelStateAndStyle,
         E2eHorizontalNavbarStates,
         E2eVerticalNavbarStates,
         E2eUsernameStateAndStyle,
-        E2eToastStates,
-        E2eSidepanelStateAndStyle
+        E2eToastStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',

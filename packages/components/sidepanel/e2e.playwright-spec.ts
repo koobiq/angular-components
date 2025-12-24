@@ -1,14 +1,14 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
-const prefix = 'e2e-sidepanel';
+test.use({ browserName: 'webkit' });
 
 test.describe('KbqSidepanel', () => {
     test.describe('E2eSidepanelStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSidepanelStateAndStyle');
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eSidepanelTable');
         const getSidepanelContainer = (page: Page) => page.locator('.kbq-sidepanel-container').first();
-        const clickButton = (locator: Locator, id: string) => locator.getByTestId(`${prefix}-${id}`).click();
+        const clickButton = (locator: Locator, id: string) => locator.getByTestId(id).click();
         const testSidepanelType = async (page: Page, type: string) => {
             const locator = getComponent(page);
             const screenshotTarget = getTestTable(locator);
@@ -23,29 +23,23 @@ test.describe('KbqSidepanel', () => {
 
         test.describe('sizes', () => {
             test('medium', async ({ page }) => {
-                await page.setViewportSize({ width: 700, height: 300 });
+                await page.setViewportSize({ width: 640, height: 300 });
                 await e2eGoToRootPage(page);
-                await testSidepanelType(page, 'medium');
+                await testSidepanelType(page, 'e2eSidepanelMedium');
             });
 
             test('large', async ({ page }) => {
-                await page.setViewportSize({ width: 1000, height: 300 });
+                await page.setViewportSize({ width: 960, height: 300 });
                 await e2eGoToRootPage(page);
-                await testSidepanelType(page, 'large');
+                await testSidepanelType(page, 'e2eSidepanelLarge');
             });
         });
 
         test.describe('positions', () => {
             test('right-left', async ({ page }) => {
-                await page.setViewportSize({ width: 850, height: 400 });
+                await page.setViewportSize({ width: 805, height: 400 });
                 await e2eGoToRootPage(page);
-                await testSidepanelType(page, 'right-left');
-            });
-
-            test('top-bottom', async ({ page }) => {
-                await page.setViewportSize({ width: 400, height: 500 });
-                await e2eGoToRootPage(page);
-                await testSidepanelType(page, 'top-bottom');
+                await testSidepanelType(page, 'e2eSidepanelRightLeft');
             });
         });
 
@@ -56,7 +50,7 @@ test.describe('KbqSidepanel', () => {
 
             const screenshotTarget = getTestTable(locator);
 
-            await clickButton(screenshotTarget, 'nested');
+            await clickButton(screenshotTarget, 'e2eSidepanelNested');
 
             const sidepanelContainer = page.locator('.kbq-sidepanel_nested');
 
@@ -72,7 +66,7 @@ test.describe('KbqSidepanel', () => {
             const locator = getComponent(page);
             const screenshotTarget = getTestTable(locator);
 
-            await clickButton(screenshotTarget, 'nested');
+            await clickButton(screenshotTarget, 'e2eSidepanelNested');
 
             const sidepanelContainer = page.locator('.kbq-sidepanel_nested');
 

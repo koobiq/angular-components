@@ -19,28 +19,27 @@ type SidepanelState = {
     template: `
         <div data-testid="e2eSidepanelTable">
             <div style="width: 75px" class="layout-column">
-                @for (size of sizes; track $index) {
-                    <button kbq-button [attr.data-testid]="getId(size)" (click)="open({ size })">{{ size }}</button>
-                }
+                <button kbq-button data-testid="e2eSidepanelMedium" (click)="open({ size: sidepanelSize.Medium })">
+                    {{ sidepanelSize.Medium }}
+                </button>
+                <button kbq-button data-testid="e2eSidepanelLarge" (click)="open({ size: sidepanelSize.Large })">
+                    {{ sidepanelSize.Large }}
+                </button>
                 <button
                     kbq-button
-                    [attr.data-testid]="getId('right-left')"
+                    data-testid="e2eSidepanelRightLeft"
                     (click)="openAtPositions([sidepanelPosition.Right, sidepanelPosition.Left])"
                 >
                     right left
                 </button>
                 <button
                     kbq-button
-                    [attr.data-testid]="getId('top-bottom')"
+                    data-testid="e2eSidepanelTopBottom"
                     (click)="openAtPositions([sidepanelPosition.Top, sidepanelPosition.Bottom])"
                 >
                     top bottom
                 </button>
-                <button
-                    kbq-button
-                    [attr.data-testid]="getId('nested')"
-                    (click)="openNested({ size: sidepanelSize.Small })"
-                >
+                <button kbq-button data-testid="e2eSidepanelNested" (click)="openNested({ size: sidepanelSize.Small })">
                     nested
                 </button>
             </div>
@@ -82,9 +81,6 @@ export class E2eSidepanelStateAndStyle implements OnDestroy {
 
     protected readonly sidepanelSize = KbqSidepanelSize;
     protected readonly sidepanelPosition = KbqSidepanelPosition;
-
-    protected readonly sizes = Object.values(KbqSidepanelSize);
-    protected readonly positions = Object.values(KbqSidepanelPosition);
 
     getId(type: string) {
         return `e2e-sidepanel-${type}`;
