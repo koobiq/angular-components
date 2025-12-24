@@ -30,6 +30,7 @@ import { E2eListStates } from '../components/list/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
 import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
+import { E2ePopoverStates } from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
 import { E2eScrollbarStateAndStyle } from '../components/scrollbar/e2e';
@@ -93,6 +94,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eUsernameStateAndStyle,
         E2eToastStates,
         E2eNotificationCenterStates,
+        E2ePopoverStates,
         E2eTooltipStates,
         E2eTopBarStates,
         E2eTimezoneStates

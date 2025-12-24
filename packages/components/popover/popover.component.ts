@@ -30,7 +30,7 @@ import {
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KbqButton } from '@koobiq/components/button';
+import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqComponentColors,
     KbqPopUp,
@@ -43,7 +43,7 @@ import {
     PopUpTriggers,
     applyPopupMargins
 } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { NEVER, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
@@ -55,8 +55,8 @@ export const defaultOffsetYWithArrow = 8;
     imports: [
         NgTemplateOutlet,
         CdkObserveContent,
-        KbqButton,
-        KbqIcon,
+        KbqButtonModule,
+        KbqIconModule,
         CdkTrapFocus,
         NgClass
     ],
