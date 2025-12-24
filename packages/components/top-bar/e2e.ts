@@ -252,7 +252,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eTopbarStates'
+        'data-testid': 'e2eTopBarStates'
     }
 })
 export class E2eTopBarStates {
