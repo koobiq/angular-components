@@ -34,6 +34,7 @@ import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
+import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 @Component({
     selector: 'e2e-app',
@@ -77,6 +78,7 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eProgressBarStateAndStyle,
         E2eHorizontalNavbarStates,
         E2eVerticalNavbarStates,
+        E2eUsernameStateAndStyle,
         E2eToastStates
     ],
     templateUrl: 'template.html',
