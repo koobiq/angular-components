@@ -1,6 +1,8 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
 
+test.use({ browserName: 'webkit' });
+
 test.describe('KbqScrollbar', () => {
     test.describe('E2eScrollbarStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eScrollbarStateAndStyle');
