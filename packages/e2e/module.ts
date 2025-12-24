@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { E2eAutocompleteStates } from 'packages/components/autocomplete/e2e';
 import { E2eBadgeStyles } from 'packages/components/badge/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from 'packages/components/checkbox/e2e';
 import { E2eCodeBlockStates } from 'packages/components/code-block/e2e';
@@ -71,6 +72,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eIconStateAndStyle,
         E2eBadgeStyles,
         E2eListStates,
+        E2eAutocompleteStates,
         E2eCheckboxStateAndStyle,
         E2eDropdownStates,
         E2eCheckboxWithTextAndCaption,
