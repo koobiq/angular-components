@@ -77,7 +77,6 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eProgressBarStateAndStyle,
         E2eHorizontalNavbarStates,
         E2eVerticalNavbarStates,
-        E2eInputStateAndStyle,
         E2eToastStates
     ],
     templateUrl: 'template.html',
