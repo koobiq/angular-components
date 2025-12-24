@@ -2,25 +2,27 @@
 
 @mixin kbq-scrollbar-component-theme() {
     .kbq-scrollbar-component {
+        &.kbq-hover .os-scrollbar .os-scrollbar-handle,
+        & .os-scrollbar .os-scrollbar-handle:hover {
+            &::before {
+                border-color: var(--kbq-scrollbar-thumb-hover-background);
+                background-color: var(--kbq-scrollbar-thumb-hover-background);
+            }
+        }
+
+        &.kbq-active .os-scrollbar .os-scrollbar-handle,
+        & .os-scrollbar .os-scrollbar-handle:active {
+            &::before {
+                border-color: var(--kbq-scrollbar-thumb-active-background);
+                background-color: var(--kbq-scrollbar-thumb-active-background);
+            }
+        }
+
         .os-scrollbar {
             .os-scrollbar-handle {
                 &::before {
                     border-color: var(--kbq-scrollbar-thumb-default-background);
                     background-color: var(--kbq-scrollbar-thumb-default-background);
-                }
-
-                &:hover {
-                    &::before {
-                        border-color: var(--kbq-scrollbar-thumb-hover-background);
-                        background-color: var(--kbq-scrollbar-thumb-hover-background);
-                    }
-                }
-
-                &:active {
-                    &::before {
-                        border-color: var(--kbq-scrollbar-thumb-active-background);
-                        background-color: var(--kbq-scrollbar-thumb-active-background);
-                    }
                 }
             }
 

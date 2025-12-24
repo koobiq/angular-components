@@ -3,6 +3,20 @@
 @use '../common/tokens';
 @use './scrollbar-tokens';
 
+@mixin _scrollbar-state($state, $color) {
+    &.kbq-#{$state} {
+        &::-webkit-scrollbar-thumb,
+        ::-webkit-scrollbar-thumb {
+            background-color: $color;
+        }
+    }
+
+    &::-webkit-scrollbar-thumb:#{$state},
+    ::-webkit-scrollbar-thumb:#{$state} {
+        background-color: $color;
+    }
+}
+
 @mixin _kbq-scrollbar() {
     // For Firefox compatibility
     @supports not selector(::-webkit-scrollbar) {
@@ -69,18 +83,10 @@
             // https://stackoverflow.com/a/16829330/6386666
             background-clip: content-box;
             background-color: var(--kbq-scrollbar-thumb-default-background);
-
-            &:hover {
-                background-color: var(--kbq-scrollbar-thumb-hover-background);
-            }
-
-            &:disabled {
-                background-color: var(--kbq-scrollbar-thumb-disabled-background);
-            }
-
-            &:active {
-                background-color: var(--kbq-scrollbar-thumb-active-background);
-            }
         }
+
+        @include _scrollbar-state(hover, var(--kbq-scrollbar-thumb-hover-background));
+        @include _scrollbar-state(disabled, var(--kbq-scrollbar-thumb-disabled-background));
+        @include _scrollbar-state(active, var(--kbq-scrollbar-thumb-active-background));
     }
 }
