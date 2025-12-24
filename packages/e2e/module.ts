@@ -32,6 +32,7 @@ import { E2eRadioStateAndStyle } from '../components/radio/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
+import { E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 
 @Component({
@@ -75,7 +76,8 @@ import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../componen
         E2eRadioStateAndStyle,
         E2eProgressBarStateAndStyle,
         E2eHorizontalNavbarStates,
-        E2eVerticalNavbarStates
+        E2eVerticalNavbarStates,
+        E2eToastStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
