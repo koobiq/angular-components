@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, TemplateRef, viewChild } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqSidepanelPosition, KbqSidepanelSize } from './sidepanel-config';
 import { KbqSidepanelModule } from './sidepanel.module';
@@ -22,11 +22,20 @@ type SidepanelState = {
                 @for (size of sizes; track $index) {
                     <button kbq-button [attr.data-testid]="getId(size)" (click)="open({ size })">{{ size }}</button>
                 }
-                @for (position of positions; track $index) {
-                    <button kbq-button [attr.data-testid]="getId(position)" (click)="open({ position })">
-                        {{ position }}
-                    </button>
-                }
+                <button
+                    kbq-button
+                    [attr.data-testid]="getId('right-left')"
+                    (click)="openAtPositions([sidepanelPosition.Right, sidepanelPosition.Left])"
+                >
+                    right left
+                </button>
+                <button
+                    kbq-button
+                    [attr.data-testid]="getId('top-bottom')"
+                    (click)="openAtPositions([sidepanelPosition.Top, sidepanelPosition.Bottom])"
+                >
+                    top bottom
+                </button>
                 <button
                     kbq-button
                     [attr.data-testid]="getId('nested')"
@@ -40,6 +49,10 @@ type SidepanelState = {
                 <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
                 <kbq-sidepanel-body>
                     <div class="kbq-subheading">Sidepanel Template Body</div>
+
+                    @for (item of items; track $index) {
+                        <div>{{ item }}</div>
+                    }
                 </kbq-sidepanel-body>
 
                 <kbq-sidepanel-footer>
@@ -65,13 +78,15 @@ export class E2eSidepanelStateAndStyle implements OnDestroy {
     protected readonly template = viewChild.required<TemplateRef<any>>('sidepanel');
     protected readonly sidepanelService = inject(KbqSidepanelService);
 
-    protected readonly sizes = Object.values(KbqSidepanelSize);
+    protected readonly items = Array.from({ length: 50 }, (_, i) => `Item #${i}`);
+
     protected readonly sidepanelSize = KbqSidepanelSize;
+    protected readonly sidepanelPosition = KbqSidepanelPosition;
+
+    protected readonly sizes = Object.values(KbqSidepanelSize);
     protected readonly positions = Object.values(KbqSidepanelPosition);
 
-    protected readonly states = signal<SidepanelState[][]>([]);
-
-    getId(type) {
+    getId(type: string) {
         return `e2e-sidepanel-${type}`;
     }
 
@@ -79,6 +94,15 @@ export class E2eSidepanelStateAndStyle implements OnDestroy {
         this.sidepanelService.open(this.template(), {
             position: position ?? KbqSidepanelPosition.Right,
             size
+        });
+    }
+
+    openAtPositions(positions: KbqSidepanelPosition[]): void {
+        positions.forEach((position) => {
+            this.sidepanelService.open(this.template(), {
+                position,
+                size: KbqSidepanelSize.Small
+            });
         });
     }
 
