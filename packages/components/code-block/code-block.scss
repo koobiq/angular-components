@@ -139,8 +139,8 @@
             display: none;
             position: absolute;
             top: 0;
-            right: 0;
-            padding: var(--kbq-size-s) var(--kbq-size-m);
+            right: var(--kbq-size-m);
+            padding: var(--kbq-size-s) 0 var(--kbq-size-s) var(--kbq-size-m);
         }
 
         .kbq-code-block__main {
