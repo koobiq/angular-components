@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
 import { ErrorStateMatcher, kbqDisableLegacyValidationDirectiveProvider, KbqOptgroup } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
+import {
+    getZonesGroupedByCountry,
+    KbqTimezoneGroup,
+    KbqTimezoneModule,
+    KbqTimezoneZone
+} from '@koobiq/components/timezone';
 import { timezones } from '../../docs-examples/components/timezone/mock';
-import { KbqTimezoneOption } from './timezone-option.component';
-import { KbqTimezoneOptionTooltip } from './timezone-option.directive';
-import { KbqTimezoneSelect } from './timezone-select.component';
-import { KbqTimezoneGroup, KbqTimezoneZone } from './timezone.models';
-import { getZonesGroupedByCountry } from './timezone.utils';
 
 class CustomErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(_control: AbstractControl | null, _form: FormGroupDirective | NgForm | null): boolean {
@@ -20,9 +21,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     imports: [
         KbqFormField,
         KbqOptgroup,
-        KbqTimezoneOption,
-        KbqTimezoneOptionTooltip,
-        KbqTimezoneSelect,
+        KbqTimezoneModule,
         FormsModule
     ],
     template: `
