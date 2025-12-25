@@ -9,17 +9,17 @@ test.describe('KbqTimezoneModule', () => {
 
         test('light theme', async ({ page }) => {
             await e2eGoToRootPage(page);
+            const screenshotTarget = getComponent(page);
+            const timezone = getTimezoneSelect(screenshotTarget);
+
+            await timezone.click();
+
             await expect(getComponent(page)).toHaveScreenshot();
         });
 
         test('dark theme', async ({ page }) => {
             await e2eGoToRootPage(page);
             await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('opened by click', async ({ page }) => {
-            await e2eGoToRootPage(page);
             const screenshotTarget = getComponent(page);
             const timezone = getTimezoneSelect(screenshotTarget);
 

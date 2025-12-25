@@ -124,7 +124,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             gap: var(--kbq-size-xxs);
             padding: var(--kbq-size-xxs);
             width: 300px;
-            height: 310px;
+            height: 500px;
         }
 
         ::ng-deep .custom-select-panel.kbq-select__panel .kbq-select__content {
