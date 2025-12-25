@@ -6,7 +6,7 @@ import { KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobi
     selector: 'e2e-popover-states',
     imports: [KbqPopoverModule, KbqButton, KbqButtonCssStyler],
     template: `
-        <div data-testid="e2eScreenshotTarget" class="layout-padding-l" style="width: 1300px; height: 620px">
+        <div data-testid="e2eScreenshotTarget" class="layout-padding-l" style="width: 1300px; height: 650px">
             <ng-template #customHeader>customHeaderTemplate</ng-template>
 
             <ng-template #customContent>customContentTemplate</ng-template>
