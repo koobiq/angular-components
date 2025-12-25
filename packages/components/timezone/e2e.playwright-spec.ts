@@ -5,6 +5,7 @@ test.describe('KbqTimezoneModule', () => {
     test.describe('E2eTimezoneStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTimezoneStates');
         const getTimezoneSelect = (locator: Locator) => locator.getByTestId('e2eTimezoneSelect');
+        const getTimezoneSelectWithSearch = (locator: Locator) => locator.getByTestId('e2eTimezoneSelectWithSearch');
 
         test('light theme', async ({ page }) => {
             await e2eGoToRootPage(page);
@@ -30,7 +31,7 @@ test.describe('KbqTimezoneModule', () => {
         test('opened by Enter', async ({ page }) => {
             await e2eGoToRootPage(page);
             const screenshotTarget = getComponent(page);
-            const timezone = getTimezoneSelect(screenshotTarget);
+            const timezone = getTimezoneSelectWithSearch(screenshotTarget);
 
             await timezone.focus();
             await page.keyboard.press('Enter');
