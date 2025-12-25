@@ -35,6 +35,12 @@ import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
 import { E2eScrollbarStateAndStyle } from '../components/scrollbar/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
+import {
+    E2eMultilineSelectStates,
+    E2eMultiSelectStates,
+    E2eSelectStates,
+    E2eSelectWithSearchAndFooter
+} from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
@@ -97,7 +103,11 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2ePopoverStates,
         E2eTooltipStates,
         E2eTopBarStates,
-        E2eTimezoneStates
+        E2eTimezoneStates,
+        E2eSelectStates,
+        E2eMultiSelectStates,
+        E2eMultilineSelectStates,
+        E2eSelectWithSearchAndFooter
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
