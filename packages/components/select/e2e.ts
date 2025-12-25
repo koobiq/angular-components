@@ -11,7 +11,7 @@ import { KbqSelectModule } from './select.module';
         FormsModule
     ],
     template: `
-        <div class="layout-row" style="width: 300px; height: 350px; gap: 16px">
+        <div class="layout-row" style="width: 300px; height: 350px; gap: 16px" data-testid="e2eSelectStates">
             <kbq-form-field>
                 <kbq-select data-testid="e2eSelect" [value]="'selected'">
                     <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
@@ -26,10 +26,7 @@ import { KbqSelectModule } from './select.module';
             </kbq-form-field>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'data-testid': 'e2eSelectStates'
-    }
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eSelectStates {}
 
@@ -40,7 +37,7 @@ export class E2eSelectStates {}
         FormsModule
     ],
     template: `
-        <div class="layout-row" style="width: 300px; height: 350px; gap: 16px">
+        <div class="layout-row" style="width: 300px; height: 350px; gap: 16px" data-testid="e2eMultiselectStates">
             <kbq-form-field style="width: 200px">
                 <kbq-select
                     data-testid="e2eMultiSelect"
@@ -60,10 +57,7 @@ export class E2eSelectStates {}
             </kbq-form-field>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'data-testid': 'e2eMultiselectStates'
-    }
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eMultiSelectStates {}
 
@@ -74,7 +68,7 @@ export class E2eMultiSelectStates {}
         FormsModule
     ],
     template: `
-        <div class="layout-row" style="width: 300px; height: 350px; gap: 16px">
+        <div class="layout-row" style="width: 300px; height: 350px; gap: 16px" data-testid="e2eMultilineSelectStates">
             <kbq-form-field style="width: 200px">
                 <kbq-select
                     data-testid="e2eMultilineSelect"
@@ -95,10 +89,7 @@ export class E2eMultiSelectStates {}
             </kbq-form-field>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'data-testid': 'e2eMultilineSelectStates'
-    }
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eMultilineSelectStates {}
 
@@ -111,7 +102,11 @@ export class E2eMultilineSelectStates {}
         KbqIconModule
     ],
     template: `
-        <div class="layout-row" style="width: 300px; height: 350px; gap: 16px">
+        <div
+            class="layout-row"
+            style="width: 300px; height: 350px; gap: 16px"
+            data-testid="e2eSelectWithSearchAndFooter"
+        >
             <kbq-form-field style="width: 200px">
                 <kbq-select data-testid="e2eSelect" [value]="'selected'">
                     <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
@@ -137,9 +132,6 @@ export class E2eMultilineSelectStates {}
             </kbq-form-field>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'data-testid': 'e2eSelectWithSearchAndFooter'
-    }
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eSelectWithSearchAndFooter {}
