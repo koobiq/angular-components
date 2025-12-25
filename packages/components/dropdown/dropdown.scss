@@ -32,6 +32,7 @@
 }
 
 .kbq-dropdown__panel {
+    overflow: auto;
     min-width: var(--kbq-dropdown-size-container-width-min);
     max-width: var(--kbq-dropdown-size-container-width-max);
 
