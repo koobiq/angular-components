@@ -37,6 +37,7 @@ import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
+import { E2eTimezoneStates } from '../components/timezone/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 import { E2eTooltipStates } from '../components/tooltip/e2e';
@@ -93,7 +94,8 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eToastStates,
         E2eNotificationCenterStates,
         E2eTooltipStates,
-        E2eTopBarStates
+        E2eTopBarStates,
+        E2eTimezoneStates
     ],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',

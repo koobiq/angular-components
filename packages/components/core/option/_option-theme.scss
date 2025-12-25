@@ -20,10 +20,12 @@
     .kbq-option {
         @include kbq-option(default);
 
+        &.kbq-hovered:not(.kbq-disabled),
         &:hover:not(.kbq-disabled) {
             @include kbq-option(states-hover);
         }
 
+        &.kbq-active:not(.kbq-disabled),
         &:active:not(.kbq-disabled) {
             @include kbq-option(states-active);
         }
@@ -31,10 +33,12 @@
         &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(states-selected);
 
+            &.kbq-hovered,
             &:hover {
                 @include kbq-option(states-selected-hover);
             }
 
+            &.kbq-active,
             &:active {
                 @include kbq-option(states-selected-active);
             }
