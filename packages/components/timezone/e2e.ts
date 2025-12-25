@@ -96,12 +96,22 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-timezone-select data-testid="e2eTimezoneSelect" [(value)]="selected">
+            <kbq-timezone-select data-testid="e2eTimezoneSelect" [panelClass]="'custom-select-panel'">
                 @for (group of data; track group) {
                     <kbq-optgroup [label]="group.countryName">
-                        @for (timezone of group.zones; track timezone) {
-                            <kbq-timezone-option [timezone]="timezone" />
-                        }
+                        <kbq-timezone-option [timezone]="group.zones[0]" />
+
+                        <kbq-timezone-option class="kbq-hovered" [timezone]="group.zones[1]" />
+
+                        <kbq-timezone-option class="kbq-active" [timezone]="group.zones[2]" />
+
+                        <kbq-timezone-option class="kbq-selected" [timezone]="group.zones[3]" />
+
+                        <kbq-timezone-option [disabled]="true" [timezone]="group.zones[4]" />
+
+                        <kbq-timezone-option class="kbq-hovered kbq-selected" [timezone]="group.zones[5]" />
+
+                        <kbq-timezone-option class="kbq-active kbq-selected" [timezone]="group.zones[6]" />
                     </kbq-optgroup>
                 }
             </kbq-timezone-select>
@@ -116,6 +126,10 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             width: 300px;
             height: 310px;
         }
+
+        ::ng-deep .custom-select-panel.kbq-select__panel .kbq-select__content {
+            --kbq-select-panel-size-max-height: 308px;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -127,7 +141,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 })
 export class E2eTimezoneStates {
     control = model('');
-    selected = 'America/Buenos_Aires';
+    selected = 'Europe/Kaliningrad';
 
     data: KbqTimezoneGroup[];
 
