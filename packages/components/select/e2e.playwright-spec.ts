@@ -55,7 +55,7 @@ test.describe('KbqSelectModule', () => {
     });
 
     test.describe('E2eMultilineSelectStates', () => {
-        const getComponent = (page: Page) => page.getByTestId('e2eMultilineSelect');
+        const getComponent = (page: Page) => page.getByTestId('e2eMultilineSelectStates');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eMultilineSelect');
 
         test('Multiline default', async ({ page }) => {
@@ -69,6 +69,32 @@ test.describe('KbqSelectModule', () => {
         });
 
         test('Multiline (dark theme)', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
+            const screenshotTarget = getComponent(page);
+            const select = getSelect(screenshotTarget);
+
+            await select.click();
+
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+    });
+
+    test.describe('E2eSelectWithSearchAndFooter', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eSelectWithSearchAndFooter');
+        const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');
+
+        test('SelectWithSearchAndFooter default', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            const screenshotTarget = getComponent(page);
+            const select = getSelect(screenshotTarget);
+
+            await select.click();
+
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+
+        test('SelectWithSearchAndFooter (dark theme)', async ({ page }) => {
             await e2eGoToRootPage(page);
             await e2eEnableDarkTheme(page);
             const screenshotTarget = getComponent(page);

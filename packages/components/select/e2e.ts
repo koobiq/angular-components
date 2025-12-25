@@ -97,7 +97,7 @@ export class E2eMultiSelectStates {}
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eMultilineStates'
+        'data-testid': 'e2eMultilineSelectStates'
     }
 })
 export class E2eMultilineSelectStates {}
@@ -113,7 +113,7 @@ export class E2eMultilineSelectStates {}
     template: `
         <div class="layout-row" style="width: 300px; height: 350px; gap: 16px">
             <kbq-form-field style="width: 200px">
-                <kbq-select data-testid="e2eMultilineSelect" [value]="'selected'">
+                <kbq-select data-testid="e2eSelect" [value]="'selected'">
                     <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                         <input kbqInput type="text" [ngModel]="''" />
