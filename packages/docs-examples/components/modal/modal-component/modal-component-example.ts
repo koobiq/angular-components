@@ -1,18 +1,87 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqOptgroup } from '@koobiq/components/core';
+import { KbqDivider } from '@koobiq/components/divider';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { KbqTitleDirective } from '@koobiq/components/title';
 
 @Component({
     standalone: true,
     selector: 'custom-modal',
     imports: [
         KbqModalModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqDivider,
+        KbqDropdownModule,
+        KbqIcon,
+        KbqOptgroup,
+        KbqTitleDirective
     ],
     template: `
         <kbq-modal-title>{{ title }}</kbq-modal-title>
 
-        <kbq-modal-body>{{ subtitle }}</kbq-modal-body>
+        <kbq-modal-body>
+            <div class="layout-margin-bottom-l">{{ subtitle }}</div>
+            <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
+                dropdown
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
+            </button>
+
+            <kbq-dropdown #appDropdown="kbqDropdown">
+                <button kbq-dropdown-item>Text Normal</button>
+
+                <button kbq-dropdown-item>
+                    <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
+                    Text Normal
+                </button>
+
+                <button kbq-dropdown-item>
+                    Text Normal
+                    <div class="kbq-dropdown-item__caption">Caption</div>
+                </button>
+
+                <button kbq-dropdown-item>
+                    <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
+                    Text Normal
+                    <div class="kbq-dropdown-item__caption">Caption</div>
+                </button>
+
+                <button kbq-dropdown-item>
+                    <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
+                    Text Normal
+                </button>
+
+                <button kbq-dropdown-item kbq-title>
+                    Text Normal and very long text Text Normal and very long text Text Normal and very long text Text
+                    Normal and very long text
+                </button>
+
+                <kbq-divider />
+
+                <div class="kbq-dropdown__group-header">Header</div>
+
+                <button disabled kbq-dropdown-item>Disabled</button>
+
+                <kbq-divider />
+
+                <kbq-optgroup label="Subheading" />
+
+                <button disabled kbq-dropdown-item>
+                    <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
+                    Disabled with icon
+                </button>
+
+                <kbq-divider />
+
+                <button kbq-dropdown-item>Point 2</button>
+
+                <button kbq-dropdown-item>Point 3</button>
+
+                <button kbq-dropdown-item>Link</button>
+            </kbq-dropdown>
+        </kbq-modal-body>
 
         <div kbq-modal-footer>
             <button kbq-button [color]="'contrast'" (click)="destroyModal('save')">Save</button>

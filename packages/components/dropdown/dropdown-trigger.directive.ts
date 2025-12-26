@@ -444,9 +444,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             positionStrategy: this.overlay
                 .position()
                 .flexibleConnectedTo(this.elementRef)
-                .withLockedPosition()
-                .withTransformOriginOn('.kbq-dropdown__panel')
-                .withFlexibleDimensions(false),
+                .withTransformOriginOn('.kbq-dropdown__panel'),
             backdropClass: this.dropdown.backdropClass || 'cdk-overlay-transparent-backdrop',
             scrollStrategy: this.scrollStrategy(),
             direction: this.dir
