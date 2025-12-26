@@ -28,6 +28,7 @@ import { E2eFilterBarStates } from '../components/filter-bar/e2e';
 import { E2eIconStateAndStyle } from '../components/icon/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eListStates } from '../components/list/e2e';
+import { E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
 import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
@@ -81,6 +82,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eBadgeStyles,
         E2eLinkStates,
         E2eListStates,
+        E2eLoaderOverlayStates,
         E2eAutocompleteStates,
         E2eCheckboxStateAndStyle,
         E2eDropdownStates,
