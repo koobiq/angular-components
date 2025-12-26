@@ -1,19 +1,30 @@
 import { Path } from '@angular-devkit/core';
 import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import fs from 'fs';
 import * as path from 'path';
 
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { iconReplacements, newIconsPackData } from './data';
+import { iconReplacements, newIconsPackData, ReplaceData } from './data';
 import { Schema } from './schema';
 
-const data = newIconsPackData;
+function readJsonFile<T>(filePath: string): T {
+    const absolutePath = path.resolve(filePath);
+    const fileContents = fs.readFileSync(absolutePath, 'utf-8');
+
+    return JSON.parse(fileContents) as T;
+}
 
 export default function newIconsPack(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
 
     return async (tree: Tree, context: SchematicContext) => {
-        const { project, fix, stylesExt } = options;
+        const { project, fix, stylesExt, updatePrefix = true, customDataPath, customIconReplacementPath } = options;
+
+        const resolvedData = customDataPath ? readJsonFile<ReplaceData[]>(customDataPath) : newIconsPackData;
+        const resolvedIconsReplacements = customIconReplacementPath
+            ? readJsonFile<ReplaceData[]>(customIconReplacementPath)
+            : iconReplacements;
 
         try {
             const projectDefinition = await setupOptions(project, tree);
@@ -26,11 +37,11 @@ export default function newIconsPack(options: Schema): Rule {
         const { logger } = context;
         const handleDeprecatedIcons = (newContent: string | undefined, filePath: Path) => {
             if (fix) {
-                data.forEach(({ replace, replaceWith }) => {
-                    newContent = newContent!.replace(new RegExp(`kbq-${replace}`, 'g'), `kbq-${replaceWith}`);
+                resolvedData.forEach(({ replace, replaceWith }) => {
+                    newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
                 });
             } else {
-                const foundIcons = data.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
+                const foundIcons = resolvedData.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
 
                 if (foundIcons.length) {
                     const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
@@ -57,7 +68,7 @@ export default function newIconsPack(options: Schema): Rule {
                 let newContent = initialContent;
 
                 if (newContent) {
-                    iconReplacements.forEach(({ replace, replaceWith }) => {
+                    resolvedIconsReplacements.forEach(({ replace, replaceWith }) => {
                         newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
                     });
 
@@ -83,7 +94,9 @@ export default function newIconsPack(options: Schema): Rule {
 
                 if (newContent) {
                     // replace icons in styles
-                    newContent = newContent.replace(new RegExp('mc-', 'g'), 'kbq-');
+                    if (updatePrefix) {
+                        newContent = newContent.replace(new RegExp('mc-', 'g'), 'kbq-');
+                    }
 
                     newContent = handleDeprecatedIcons(newContent, path);
                 }
