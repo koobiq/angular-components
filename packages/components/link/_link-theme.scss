@@ -121,6 +121,7 @@
 
         transition: color ease-out 300ms;
 
+        &.kbq-hovered,
         &:hover {
             transition: color 0ms;
 
@@ -146,9 +147,11 @@
             }
         }
 
+        &.kbq-link_use-visited.kbq-visited:not(.kbq-disabled),
         &.kbq-link_use-visited:not(.kbq-disabled):visited {
             @include kbq-link-state(state-visited);
 
+            &.kbq-hovered,
             &:hover {
                 @include kbq-link-state(state-visited-hover);
             }
