@@ -1,9 +1,4 @@
 {
-    "16": {
-        "version": "16.0.0-beta.18",
-        "date": "2024-03-01T05:21:48.677Z",
-        "url": "https://v16.koobiq.io/"
-    },
     "17": {
         "version": "17.8.1",
         "date": "2024-09-26T12:59:39.373Z",
@@ -13,6 +8,11 @@
         "version": "18.0.0",
         "date": "2024-09-27T08:43:00.007Z",
         "url": "https://v18.koobiq.io/"
+    },
+    "19": {
+        "version": "19.0.0",
+        "date": "2024-09-27T08:43:00.007Z",
+        "url": "https://v19.koobiq.io/"
     },
     "next": {
         "version": "Next",
