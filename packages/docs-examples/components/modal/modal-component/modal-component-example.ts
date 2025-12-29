@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOptgroup } from '@koobiq/components/core';
-import { KbqDivider } from '@koobiq/components/divider';
+import { KbqOptionModule } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { KbqTitleDirective } from '@koobiq/components/title';
+import { KbqTitleModule } from '@koobiq/components/title';
 
 @Component({
     standalone: true,
@@ -13,11 +13,11 @@ import { KbqTitleDirective } from '@koobiq/components/title';
     imports: [
         KbqModalModule,
         KbqButtonModule,
-        KbqDivider,
+        KbqDividerModule,
         KbqDropdownModule,
-        KbqIcon,
-        KbqOptgroup,
-        KbqTitleDirective
+        KbqIconModule,
+        KbqOptionModule,
+        KbqTitleModule
     ],
     template: `
         <kbq-modal-title>{{ title }}</kbq-modal-title>

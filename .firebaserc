@@ -5,17 +5,8 @@
   "targets": {
     "koobiq": {
       "hosting": {
-        "stable": [
-          "koobiq"
-        ],
-        "next": [
-          "koobiq-next"
-        ],
-        "v17": [
-          "koobiq-v17"
-        ],
-        "v16": [
-          "koobiq-v16"
+        "v18": [
+          "koobiq-v18"
         ]
       }
     }

@@ -25,7 +25,7 @@ jobs:
       - uses: ./.github/workflows/actions/build-docs
 
       - name: Deploy
-        run: npx firebase deploy --only hosting:stable --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
+        run: npx firebase deploy --only hosting:v18 --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
 
       - name: Run Algolia DocSearch Crawler
         uses: algolia/algoliasearch-crawler-github-actions@v1.1.12
