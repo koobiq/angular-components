@@ -12,9 +12,6 @@
         "type": "git",
         "url": "https://github.com/koobiq/angular-components.git"
     },
-    "engines": {
-        "node": "^18.19.0"
-    },
     "packageManager": "yarn@4.1.1",
     "requiredAngularVersion": "^19.0.0",
     "dependencies": {
@@ -97,7 +94,7 @@
         "@types/license-checker": "^25.0.6",
         "@types/luxon": "^3.7.1",
         "@types/merge2": "^0.3.30",
-        "@types/node": "^18.19.0",
+        "@types/node": "^24.10.4",
         "@types/nunjucks": "^3.2.1",
         "@types/spdx-satisfies": "^0.1.2",
         "@types/ws": "<8.18.2",

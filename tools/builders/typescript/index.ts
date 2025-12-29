@@ -15,10 +15,12 @@ export async function executeCommand(command: string, cwd?: string): Promise<str
 
     return new Promise((resolve, reject) => {
         exec(command, options, (err, stdout) => {
+            const output: string = typeof stdout === 'string' ? stdout : stdout.toString();
+
             if (err !== null) {
-                reject(stdout);
+                reject(output);
             } else {
-                resolve(stdout);
+                resolve(output);
             }
         });
     });
