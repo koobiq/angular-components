@@ -7413,12 +7413,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.19.0":
-  version: 18.19.110
-  resolution: "@types/node@npm:18.19.110"
+"@types/node@npm:^24.10.4":
+  version: 24.10.4
+  resolution: "@types/node@npm:24.10.4"
   dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10c0/d90ccd5d437a5c93c1cd73ad6fd463db9e7571dbaf1b6314dcf9e45a0928c791dd4f2611b184680785b440d87b5d50ee279a6f217787cd78d1ca3e8f8b96609e
+    undici-types: "npm:~7.16.0"
+  checksum: 10c0/069639cb7233ee747df1897b5e784f6b6c5da765c96c94773c580aac888fa1a585048d2a6e95eb8302d89c7a9df75801c8b5a0b7d0221d4249059cf09a5f4228
   languageName: node
   linkType: hard
 
@@ -16105,7 +16105,7 @@ __metadata:
     "@types/license-checker": "npm:^25.0.6"
     "@types/luxon": "npm:^3.7.1"
     "@types/merge2": "npm:^0.3.30"
-    "@types/node": "npm:^18.19.0"
+    "@types/node": "npm:^24.10.4"
     "@types/nunjucks": "npm:^3.2.1"
     "@types/spdx-satisfies": "npm:^0.1.2"
     "@types/ws": "npm:<8.18.2"
@@ -22624,6 +22624,13 @@ __metadata:
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
   checksum: 10c0/bb673d7876c2d411b6eb6c560e0c571eef4a01c1c19925175d16e3a30c4c428181fb8d7ae802a261f283e4166a0ac435e2f505743aa9e45d893f9a3df017b501
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~7.16.0":
+  version: 7.16.0
+  resolution: "undici-types@npm:7.16.0"
+  checksum: 10c0/3033e2f2b5c9f1504bdc5934646cb54e37ecaca0f9249c983f7b1fc2e87c6d18399ebb05dc7fd5419e02b2e915f734d872a65da2e3eeed1813951c427d33cc9a
   languageName: node
   linkType: hard
 
