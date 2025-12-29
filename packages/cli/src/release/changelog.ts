@@ -85,7 +85,7 @@ export async function prependChangelogFromLatestTag(
             mergedCompleteChangelog
                 .pipe(createWriteStream(changelogPath))
                 .once('error', reject)
-                .once('finish', resolve);
+                .once('finish', () => resolve(null));
         });
     });
 }
