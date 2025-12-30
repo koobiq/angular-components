@@ -46,7 +46,13 @@ import {
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
-import { E2eTagEditable, E2eTagStateAndStyle } from '../components/tags/e2e';
+import {
+    E2eTagAutocompleteStates,
+    E2eTagEditable,
+    E2eTagInputStates,
+    E2eTagListStates,
+    E2eTagStateAndStyle
+} from '../components/tags/e2e';
 import { E2eTimezoneStates } from '../components/timezone/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
@@ -87,11 +93,13 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eAppSwitcherStates,
         E2eContentPanelState,
         E2eAppSwitcherWithSitesStates,
+        E2eTagAutocompleteStates,
         E2eFilterBarStates,
         E2eTimepickerStates,
         E2eIconStateAndStyle,
         E2eBadgeStyles,
         E2eLinkStates,
+        E2eTagInputStates,
         E2eListStates,
         E2eLoaderOverlayStates,
         E2eAutocompleteStates,
@@ -113,6 +121,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eNotificationCenterStates,
         E2ePopoverStates,
         E2eTooltipStates,
+        E2eTagListStates,
         E2eTopBarStates,
         E2eTimezoneStates,
         E2eSelectStates,

@@ -43,4 +43,57 @@ test.describe('KbqTagModule', () => {
             await expect(component).toHaveScreenshot();
         });
     });
+
+    test.describe('E2eTagAutocompleteStates', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eTagAutocompleteStates');
+        const getAutocompleteInput = (page: Page): Locator => page.getByTestId('e2eTagAutocompleteInput');
+
+        test('light theme', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await getAutocompleteInput(page).focus();
+            await page.keyboard.press('ArrowDown');
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+
+        test('dark theme', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
+            await getAutocompleteInput(page).focus();
+            await page.keyboard.press('ArrowDown');
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+    });
+
+    test.describe('E2eTagInputStates', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eTagInputStates');
+        const getTagInput = (page: Page): Locator => page.getByTestId('e2eTagInput');
+
+        test('light theme', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await getTagInput(page).focus();
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+
+        test('dark theme', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
+            await getTagInput(page).focus();
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+    });
+
+    test.describe('E2eTagList', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eTagListStates');
+
+        test('light theme', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+
+        test('dark theme', async ({ page }) => {
+            await e2eGoToRootPage(page);
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot();
+        });
+    });
 });
