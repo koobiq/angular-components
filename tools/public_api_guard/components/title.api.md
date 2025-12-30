@@ -20,6 +20,8 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)
+    get hasOnlyText(): boolean;
+    // (undocumented)
     hideTooltip(): void;
     // (undocumented)
     get isHorizontalOverflown(): boolean;
