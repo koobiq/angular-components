@@ -143,7 +143,7 @@ describe('KbqTitleDirective', () => {
             style="width: 121px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
             kbq-title
         >
-            <span #kbqTitleText>Protocol: udp/nbns</span>
+            Protocol: udp/nbns
         </div>
     `,
     styles: [
