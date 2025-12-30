@@ -20,6 +20,19 @@
             "type": "string",
             "description": "Use this option to specify styles extension preferred in your project",
             "default": "scss"
+        },
+        "updatePrefix": {
+            "type": "boolean",
+            "description": "Whether to change icon prefixes",
+            "default": false
+        },
+        "customDataPath": {
+            "type": "string",
+            "description": "Use this option to specify styles extension preferred in your project"
+        },
+        "customIconReplacementPath": {
+            "type": "string",
+            "description": "Use this option to specify styles extension preferred in your project"
         }
     }
 }
