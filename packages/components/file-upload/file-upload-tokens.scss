@@ -37,10 +37,6 @@
     --kbq-file-upload-single-states-disabled-text-block-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-single-states-disabled-file-size-text-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-single-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-
-    --kbq-file-upload-single-default-icon-button-color: var(--kbq-icon-contrast-fade);
-    --kbq-file-upload-single-states-error-icon-button-color: var(--kbq-icon-error);
-    --kbq-file-upload-single-states-disabled-icon-button-color: var(--kbq-states-icon-disabled);
 }
 
 :where(.kbq-multiple-file-upload) {
@@ -90,11 +86,6 @@
     --kbq-file-upload-multiple-states-disabled-text-block-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-multiple-states-disabled-grid-divider-color: var(--kbq-states-line-disabled);
     --kbq-file-upload-multiple-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
-
-    --kbq-file-upload-multiple-default-icon-button-color: var(--kbq-icon-contrast-fade);
-    --kbq-file-upload-multiple-states-on-drag-icon-button-color: var(--kbq-icon-contrast);
-    --kbq-file-upload-multiple-states-error-icon-button-color: var(--kbq-icon-error);
-    --kbq-file-upload-multiple-states-disabled-icon-button-color: var(--kbq-states-icon-disabled);
 }
 
 :where(.kbq-file-upload.kbq-file-upload_compact) {
