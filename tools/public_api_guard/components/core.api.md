@@ -317,10 +317,6 @@ export const enUSLocaleData: {
             browseLinkFolder: string;
             browseLinkFolderMixed: string;
             title: string;
-            gridHeaders: {
-                file: string;
-                size: string;
-            };
         };
     };
     codeBlock: {
@@ -550,10 +546,6 @@ export const esLALocaleData: {
             browseLinkFolder: string;
             browseLinkFolderMixed: string;
             title: string;
-            gridHeaders: {
-                file: string;
-                size: string;
-            };
         };
     };
     codeBlock: {
@@ -862,10 +854,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 browseLinkFolder: string;
                 browseLinkFolderMixed: string;
                 title: string;
-                gridHeaders: {
-                    file: string;
-                    size: string;
-                };
             };
         };
         codeBlock: {
@@ -1076,10 +1064,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 browseLinkFolder: string;
                 browseLinkFolderMixed: string;
                 title: string;
-                gridHeaders: {
-                    file: string;
-                    size: string;
-                };
             };
         };
         codeBlock: {
@@ -1286,10 +1270,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 browseLinkFolder: string;
                 browseLinkFolderMixed: string;
                 title: string;
-                gridHeaders: {
-                    file: string;
-                    size: string;
-                };
             };
         };
         codeBlock: {
@@ -1502,10 +1482,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 browseLinkFolder: string;
                 browseLinkFolderMixed: string;
                 title: string;
-                gridHeaders: {
-                    file: string;
-                    size: string;
-                };
             };
         };
         codeBlock: {
@@ -1714,10 +1690,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 browseLinkFolder: string;
                 browseLinkFolderMixed: string;
                 title: string;
-                gridHeaders: {
-                    file: string;
-                    size: string;
-                };
             };
         };
         codeBlock: {
@@ -3292,10 +3264,6 @@ export const ptBRLocaleData: {
             browseLinkFolder: string;
             browseLinkFolderMixed: string;
             title: string;
-            gridHeaders: {
-                file: string;
-                size: string;
-            };
         };
     };
     codeBlock: {
@@ -3706,10 +3674,6 @@ export const ruRULocaleData: {
             browseLinkFolder: string;
             browseLinkFolderMixed: string;
             title: string;
-            gridHeaders: {
-                file: string;
-                size: string;
-            };
         };
     };
     codeBlock: {
@@ -4014,10 +3978,6 @@ export const tkTMLocaleData: {
             browseLinkFolder: string;
             browseLinkFolderMixed: string;
             title: string;
-            gridHeaders: {
-                file: string;
-                size: string;
-            };
         };
     };
     codeBlock: {
