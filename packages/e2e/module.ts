@@ -7,6 +7,7 @@ import { E2eContentPanelState } from 'packages/components/content-panel/e2e';
 import { E2eDlStates } from 'packages/components/dl/e2e';
 import { E2eDropdownStates } from 'packages/components/dropdown/e2e';
 import { E2eLinkStates } from 'packages/components/link/e2e';
+import { E2eModalStates } from 'packages/components/modal/e2e';
 import { E2eTableStates } from 'packages/components/table/e2e';
 import { E2eTabsStates } from 'packages/components/tabs/e2e';
 import { E2eTextareaStates } from 'packages/components/textarea/e2e';
@@ -100,6 +101,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
         E2eBadgeStyles,
         E2eLinkStates,
         E2eTagInputStates,
+        E2eModalStates,
         E2eListStates,
         E2eLoaderOverlayStates,
         E2eAutocompleteStates,
