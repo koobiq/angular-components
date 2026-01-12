@@ -73,7 +73,9 @@
     --kbq-file-upload-multiple-states-on-drag-left-icon-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-multiple-states-on-drag-text-block-color: var(--kbq-foreground-contrast);
     --kbq-file-upload-multiple-states-on-drag-grid-divider-color: var(--kbq-line-contrast-less);
-    --kbq-file-upload-multiple-states-error-grid-cell-background: var(--kbq-background-error-less);
+
+    --kbq-file-upload-multiple-states-error-container-border: var(--kbq-line-error);
+    --kbq-file-upload-multiple-states-error-container-background: var(--kbq-background-error-less);
     --kbq-file-upload-multiple-states-error-upload-icon-color: var(--kbq-icon-error);
     --kbq-file-upload-multiple-states-error-dropzone-icon-color: var(--kbq-icon-error);
     --kbq-file-upload-multiple-states-error-left-icon-color: var(--kbq-icon-error);

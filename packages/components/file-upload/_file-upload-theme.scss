@@ -153,8 +153,8 @@
 
     &:not(.kbq-disabled) {
         &.kbq-error {
-            background-color: var(--kbq-background-error-less);
-            border-color: var(--kbq-line-error) !important;
+            background-color: var(--kbq-file-upload-multiple-states-error-container-background);
+            border-color: var(--kbq-file-upload-multiple-states-error-container-border) !important;
 
             .kbq-file-dropzone__icon {
                 color: var(--kbq-file-upload-multiple-states-error-dropzone-icon-color);
@@ -172,6 +172,10 @@
             .kbq-file-dropzone__caption:not(.kbq-link) {
                 --kbq-empty-state-title: var(--kbq-file-upload-multiple-states-error-text-block-color);
                 --kbq-empty-state-color: var(--kbq-file-upload-multiple-states-error-text-block-color);
+            }
+
+            .kbq-file-btn-upload {
+                border-top-color: var(--kbq-file-upload-multiple-states-error-container-border);
             }
         }
 
