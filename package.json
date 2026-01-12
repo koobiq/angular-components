@@ -57,7 +57,7 @@
         "@angular/ssr": "19.2.19",
         "@commitlint/cli": "^19.8.1",
         "@commitlint/config-conventional": "^19.8.1",
-        "@cspell/dict-markdown": "^2.0.13",
+        "@cspell/dict-markdown": "^2.0.14",
         "@cspell/dict-ru_ru": "^2.3.2",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.5.0",
         "@koobiq/design-tokens": "^3.14.0",
