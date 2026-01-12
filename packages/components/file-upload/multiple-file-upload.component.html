@@ -11,12 +11,11 @@
     @let localeData = resolvedLocaleConfig();
     @if (!files.length) {
         @if (size === 'default') {
-            <kbq-empty-state [size]="'normal'" [errorColor]="invalid">
+            <kbq-empty-state class="kbq-multiple-file-upload__empty-state" [size]="'normal'" [errorColor]="invalid">
                 <i
-                    class="kbq-file-dropzone__icon"
+                    class="kbq-multiple-file-upload__empty-state-upload-icon"
                     kbq-empty-state-icon
                     kbq-icon="kbq-cloud-arrow-up-o_24"
-                    [color]="invalid ? 'error' : 'contrast'"
                 ></i>
                 <div kbq-empty-state-title class="kbq-file-dropzone__text">{{ localeData.title }}</div>
                 <div kbq-empty-state-text class="kbq-file-dropzone__caption">
@@ -72,6 +71,7 @@
                             <i
                                 kbq-icon-button="kbq-circle-xmark_16"
                                 class="kbq-file-upload__action kbq-file-upload__grid-cell"
+                                [color]="file.hasError ? 'error' : 'contrast-fade'"
                                 [disabled]="disabled"
                                 (click)="deleteFile($index, $event, 'program')"
                             ></i>

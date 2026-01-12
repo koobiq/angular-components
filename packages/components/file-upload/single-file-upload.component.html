@@ -35,6 +35,7 @@
             <i
                 kbq-icon-button="kbq-circle-xmark_16"
                 class="kbq-file-upload__action"
+                [color]="invalid ? 'error' : 'contrast-fade'"
                 [disabled]="disabled"
                 (click)="deleteItem($event, 'program')"
                 (keydown.backspace)="deleteItem()"

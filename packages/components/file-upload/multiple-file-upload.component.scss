@@ -28,6 +28,11 @@
         }
     }
 
+    .kbq-multiple-file-upload__empty-state {
+        --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-m);
+        --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xs);
+    }
+
     .kbq-file-upload__grid {
         --kbq-list-size-container-padding-vertical: var(--kbq-size-xxl);
         // @todo
