@@ -41,6 +41,10 @@ export interface KbqInputFile {
     onFileDropped(files: FileList | KbqFile[]): void;
 }
 
+/**
+ * @docs-private
+ * @deprecated Will be removed in next major release
+ */
 export interface KbqInputFileLabel {
     /* Text for description, used with `browseLink` */
     captionText: string;

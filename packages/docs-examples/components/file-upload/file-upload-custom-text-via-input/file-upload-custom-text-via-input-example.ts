@@ -1,69 +1,88 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
-import { KbqFileUploadModule, KbqInputFileLabel, KbqInputFileMultipleLabel } from '@koobiq/components/file-upload';
+import {
+    KBQ_LOCALE_SERVICE,
+    KbqBaseFileUploadLocaleConfig,
+    KbqMultipleFileUploadLocaleConfig
+} from '@koobiq/components/core';
+import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { of, skip } from 'rxjs';
 
 const localeData = {
     'en-US': {
         single: {
-            captionText: 'Drop file here or {{ browseLink }}',
+            captionText: 'Drop file here or [[browseLink:secure upload]]',
             browseLink: 'secure upload'
-        } satisfies Partial<KbqInputFileLabel>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Drop reports here or {{ browseLink }}',
-            captionTextWhenSelected: 'Add more evidence or {{ browseLink }}',
-            captionTextForCompactSize: 'Attach logs or {{ browseLink }}',
+            captionText: 'Drop reports here or [[browseLink:secure upload]]',
+            captionTextWhenSelected: 'Add more evidence or [[browseLink:secure upload]]',
+            captionTextForCompactSize: 'Attach logs or [[browseLink:secure upload]]',
             browseLink: 'secure upload',
             title: 'Submit security files'
-        } satisfies Partial<KbqInputFileMultipleLabel>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
     },
 
     'es-LA': {
         single: {
-            captionText: 'Arrastra archivo aquí o {{ browseLink }}',
+            captionText: 'Arrastra archivo aquí o [[browseLink:subida segura]]',
             browseLink: 'subida segura'
-        } satisfies Partial<KbqInputFileLabel>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Arrastra reportes aquí o {{ browseLink }}',
-            captionTextWhenSelected: 'Agrega evidencia o {{ browseLink }}',
-            captionTextForCompactSize: 'Adjunta logs o {{ browseLink }}',
+            captionText: 'Arrastra reportes aquí o [[browseLink:subida segura]]',
+            captionTextWhenSelected: 'Agrega evidencia o [[browseLink:subida segura]]',
+            captionTextForCompactSize: 'Adjunta logs o [[browseLink:subida segura]]',
             browseLink: 'subida segura',
             title: 'Enviar archivos de seguridad'
-        } satisfies Partial<KbqInputFileMultipleLabel>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
     },
 
     'pt-BR': {
         single: {
-            captionText: 'Arraste arquivo aqui ou {{ browseLink }}',
+            captionText: 'Arraste arquivo aqui ou [[browseLink:upload seguro]]',
             browseLink: 'upload seguro'
-        } satisfies Partial<KbqInputFileLabel>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Arraste relatórios aqui ou {{ browseLink }}',
-            captionTextWhenSelected: 'Adicione evidências ou {{ browseLink }}',
-            captionTextForCompactSize: 'Anexe logs ou {{ browseLink }}',
+            captionText: 'Arraste relatórios aqui ou [[browseLink:upload seguro]]',
+            captionTextWhenSelected: 'Adicione evidências ou [[browseLink:upload seguro]]',
+            captionTextForCompactSize: 'Anexe logs ou [[browseLink:upload seguro]]',
             browseLink: 'upload seguro',
             title: 'Enviar arquivos de segurança'
-        } satisfies Partial<KbqInputFileMultipleLabel>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
     },
 
     'ru-RU': {
         single: {
-            captionText: 'Перетащите файл сюда или {{ browseLink }}',
+            captionText: 'Перетащите файл сюда или [[browseLink:безопасная загрузка]]',
             browseLink: 'безопасная загрузка'
-        } satisfies Partial<KbqInputFileLabel>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Перетащите отчёты сюда или {{ browseLink }}',
-            captionTextWhenSelected: 'Добавьте доказательства или {{ browseLink }}',
-            captionTextForCompactSize: 'Прикрепите логи или {{ browseLink }}',
+            captionText: 'Перетащите отчёты сюда или [[browseLink:безопасная загрузка]]',
+            captionTextWhenSelected: 'Добавьте доказательства или [[browseLink:безопасная загрузка]]',
+            captionTextForCompactSize: 'Прикрепите логи или [[browseLink:безопасная загрузка]]',
             browseLink: 'безопасная загрузка',
             title: 'Загрузка файлов безопасности'
-        } satisfies Partial<KbqInputFileMultipleLabel>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
+    },
+
+    'tk-TM': {
+        single: {
+            captionText: 'Faýly şu ýere taşlaň ýa-da [[browseLink:howpsuz ýükleme]]',
+            browseLink: 'howpsuz ýükleme'
+        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
+
+        multiple: {
+            captionText: 'Hasabatlary şu ýere taşlaň ýa-da [[browseLink:howpsuz ýükleme]]',
+            captionTextWhenSelected: 'Has köp subutnamalary goşuň ýa-da [[browseLink:howpsuz ýükleme]]',
+            captionTextForCompactSize: 'Loglary goşuň ýa-da [[browseLink:howpsuz ýükleme]]',
+            browseLink: 'howpsuz ýükleme',
+            title: 'Howpsuzlyk faýllaryny iber'
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
     }
 };
 

@@ -192,7 +192,7 @@ export interface KbqInputFile {
     onFileSelectedViaClick(event: Event): void;
 }
 
-// @public (undocumented)
+// @public @deprecated
 export interface KbqInputFileLabel {
     // (undocumented)
     browseLink: string;
@@ -271,7 +271,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     get acceptedFiles(): string;
     allowed: InputSignal<KbqFileUploadAllowedType>;
     readonly config: Signal<KbqBaseFileUploadLocaleConfig>;
-    readonly configuration: KbqInputFileLabel | null;
+    readonly configuration: KbqBaseFileUploadLocaleConfig | null;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
     cvaOnChange: (_: KbqFileItem | null) => void;
@@ -289,7 +289,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     // (undocumented)
     inputId: string;
     get invalid(): boolean;
-    readonly localeConfig: InputSignal<Partial<KbqInputFileLabel> | undefined>;
+    readonly localeConfig: InputSignal<Partial<KbqBaseFileUploadLocaleConfig> | undefined>;
     // (undocumented)
     static ngAcceptInputType_showFileSize: unknown;
     // (undocumented)

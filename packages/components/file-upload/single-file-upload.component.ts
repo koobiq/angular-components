@@ -43,8 +43,7 @@ import {
     KbqFileItem,
     KbqFileUploadAllowedType,
     KbqFileUploadBase,
-    KbqFileValidatorFn,
-    KbqInputFileLabel
+    KbqFileValidatorFn
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
@@ -132,7 +131,7 @@ export class KbqSingleFileUploadComponent
     allowed = input<KbqFileUploadAllowedType>('file');
 
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqInputFileLabel>>();
+    readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfig>>();
 
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
@@ -182,7 +181,7 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration: KbqInputFileLabel | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
+    readonly configuration: KbqBaseFileUploadLocaleConfig | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
 

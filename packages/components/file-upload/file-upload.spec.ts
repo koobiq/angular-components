@@ -12,7 +12,8 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
-import { KbqFileItem, KbqFileValidatorFn, KbqInputFileLabel } from './file-upload';
+import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
@@ -487,7 +488,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
     describe('with localeConfig input property', () => {
         it('should use default properties if they not provided with localeConfig', () => {
-            const updatedConfig: Partial<KbqInputFileLabel> = { captionText: 'TEST {{ browseLink }}' };
+            const updatedConfig: Partial<KbqBaseFileUploadLocaleConfig> = { captionText: 'TEST {{ browseLink }}' };
 
             component.localeConfig.set(updatedConfig);
             fixture.detectChanges();
@@ -520,7 +521,7 @@ class BasicSingleFileUpload {
     accept: string[] = [];
     validation: KbqFileValidatorFn[] = [];
 
-    localeConfig = signal<Partial<KbqInputFileLabel>>({});
+    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
     constructor(public elementRef: ElementRef) {}
 
@@ -579,7 +580,7 @@ class BasicMultipleFileUpload {
     files: KbqFileItem[];
     validation: KbqFileValidatorFn[] = [];
 
-    localeConfig = signal<Partial<KbqInputFileLabel>>({});
+    localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
     constructor(
         public elementRef: ElementRef,
