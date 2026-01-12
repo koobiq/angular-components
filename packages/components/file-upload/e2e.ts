@@ -175,7 +175,19 @@ export class E2eFileUploadStateAndStyle {
         // Row 4: Misc
         [
             { files: [this.testKbqFileItem], icon: this.iconClass.error, type: 'error', dragover: true },
-            { files: [this.testKbqFileItem], className: 'dev-focused' }
+            { files: [this.testKbqFileItem], className: 'dev-focused' },
+            { files: [this.testKbqFileItem], className: 'dev-focused', type: 'error' },
+            { files: [this.testKbqFileItem], className: 'dev-focused', type: 'error', dragover: true }
+        ],
+        [
+            { files: [this.testKbqFileItem], className: 'dev-hover' },
+            { files: [this.testKbqFileItem], className: 'dev-hover', error: true },
+            { files: [this.testKbqFileItem], className: 'dev-hover', type: 'error' },
+            { files: [this.testKbqFileItem], className: 'dev-hover', type: 'error', dragover: true }
+        ],
+        [
+            { files: [this.testKbqFileItem], className: 'dev-hover', error: true, type: 'error' },
+            { files: [this.testKbqFileItem], className: 'dev-hover', dragover: true }
         ]
     ];
 
@@ -200,7 +212,14 @@ export class E2eFileUploadStateAndStyle {
                 .querySelectorAll('.dev-error .kbq-file-upload')
                 .forEach((el) => this.renderer.addClass(el, 'kbq-error'));
 
-            (this.document.querySelector('.dev-focused .kbq-list-selection') satisfies HTMLElement | null)?.focus();
+            this.document.querySelectorAll<HTMLElement>('.dev-focused .kbq-file-upload__action').forEach((button) => {
+                button.classList.add('cdk-focused');
+                button.classList.add('cdk-keyboard-focused');
+            });
+
+            this.document.querySelectorAll<HTMLElement>('.dev-hover .kbq-file-upload__item').forEach((item) => {
+                item.classList.add('kbq-hovered');
+            });
         });
 
         this.multipleFileUploadRows.forEach((row) =>
