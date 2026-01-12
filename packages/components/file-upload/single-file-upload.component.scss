@@ -86,13 +86,15 @@
     }
 
     &:not(.kbq-single-file-upload_selected) .kbq-file-upload {
-        padding: kbq-difference-series-css-variables(
-                [ file-upload-size-single-container-padding-vertical,
-                file-upload-size-single-container-border-width]
+        padding: calc(
+                var(--kbq-file-upload-size-single-container-padding-vertical) - var(
+                        --kbq-file-upload-size-single-container-border-width
+                    )
             )
-            kbq-difference-series-css-variables(
-                [ file-upload-size-single-container-padding-horizontal,
-                file-upload-size-single-container-border-width]
+            calc(
+                var(--kbq-file-upload-size-single-container-padding-horizontal) - var(
+                        --kbq-file-upload-size-single-container-border-width
+                    )
             );
     }
 

@@ -13,7 +13,7 @@
 
     .kbq-file-dropzone {
         display: flex;
-        align-items: center;
+        align-items: baseline;
         gap: var(--dropzone-gap, var(--kbq-file-upload-size-dropzone-content-gap-horizontal));
     }
 

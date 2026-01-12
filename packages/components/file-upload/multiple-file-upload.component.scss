@@ -218,6 +218,7 @@
             align-items: center;
             flex-grow: 1;
             gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
+            padding-left: var(--kbq-size-m);
 
             .kbq-file-item__text {
                 width: 90%;
@@ -240,8 +241,7 @@
 
     .kbq-file-upload__list-footer {
         margin: -1px;
-        padding: calc(var(--kbq-size-m) - var(--kbq-file-upload-size-multiple-big-container-border-width))
-            var(--kbq-size-m) var(--kbq-size-m) var(--kbq-size-m);
+        padding: var(--kbq-size-m) var(--kbq-size-l);
 
         border-top-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
         border-top-style: dashed;
