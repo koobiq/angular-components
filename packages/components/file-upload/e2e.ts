@@ -8,6 +8,9 @@ import {
     KbqFileUploadModule,
     KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
+import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { ErrorStateMatcher } from '@koobiq/components/core';
+import { KbqFileItem, KbqFileUploadModule, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 type SingleUploadState = {
@@ -33,9 +36,15 @@ type MultipleUploadState = {
     allowed?: KbqFileUploadAllowedTypeValues;
 };
 
+class CustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(_control: AbstractControl | null, _form: FormGroupDirective | NgForm | null): boolean {
+        return true;
+    }
+}
+
 @Component({
     selector: 'e2e-file-upload-state-and-style',
-    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
+    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule, FormsModule],
     template: `
         <div>
             <table data-testid="e2eSingleFileUploadTable">
@@ -50,6 +59,8 @@ type MultipleUploadState = {
                                     [disabled]="!!cell.disabled"
                                     [class.dev-error]="!!cell.error"
                                     [class.dev-dragover]="!!cell.dragover"
+                                    [errorStateMatcher]="getErrorStateMatcher(!!cell.error)"
+                                    [(ngModel)]="cell.file"
                                 >
                                     <i kbq-icon="" [class]="cell.icon || iconClass.default"></i>
                                 </kbq-file-upload>
@@ -74,6 +85,7 @@ type MultipleUploadState = {
                                     [files]="cell.files"
                                     [disabled]="cell.disabled || false"
                                     [size]="cell.size || 'default'"
+                                    [errorStateMatcher]="getErrorStateMatcher(!!cell.error)"
                                 >
                                     <ng-template #kbqFileIcon>
                                         <i kbq-icon="" [class]="cell.icon || iconClass.default"></i>
@@ -172,6 +184,10 @@ export class E2eFileUploadStateAndStyle {
 
     protected get testKbqFileItem(): KbqFileItem {
         return { file: new File(['test'] satisfies BlobPart[], 'test.file') } satisfies KbqFileItem;
+    }
+
+    getErrorStateMatcher(isError: boolean): any {
+        return isError ? new CustomErrorStateMatcher() : null;
     }
 
     constructor() {
