@@ -36,7 +36,7 @@
                 @for (file of files; track file) {
                     <kbq-list-item
                         role="listitem"
-                        class="kbq-file-multiple__uploaded-item"
+                        class="kbq-file-upload__item"
                         [class.kbq-disabled]="disabled"
                         (keydown.backspace)="deleteFile($index)"
                         (keydown.delete)="deleteFile($index)"
@@ -79,7 +79,7 @@
                     </kbq-list-item>
                 }
             </kbq-list>
-            <div class="kbq-file-btn-upload kbq-file-dropzone">
+            <div class="kbq-file-upload__list-footer kbq-file-dropzone">
                 <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-upload__dropzone-icon"></i>
                 <span class="kbq-file-upload__dropzone-caption">
                     <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
