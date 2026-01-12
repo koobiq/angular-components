@@ -13,7 +13,7 @@ export default defineConfig({
     testDir: __dirname,
     testMatch: ['**/*.playwright-spec.ts'],
     tsconfig: 'tsconfig.playwright-spec.json',
-    timeout: 10 * 60 * 1000,
+    timeout: 10 * 1000,
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 2 : 0,
