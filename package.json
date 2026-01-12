@@ -24,7 +24,7 @@
         "@angular/platform-browser": "19.2.17",
         "@docsearch/css": "^3.9.0",
         "@docsearch/js": "^3.9.0",
-        "@fontsource/inter": "^5.2.6",
+        "@fontsource/inter": "^5.2.8",
         "@fontsource/jetbrains-mono": "^5.2.6",
         "@koobiq/ag-grid-angular-theme": "^34.0.0",
         "@koobiq/date-adapter": "^3.4.0",
