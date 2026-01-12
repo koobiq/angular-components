@@ -156,7 +156,6 @@ describe('KbqTitleDirective', () => {
                 text-overflow: ellipsis;
             }
         `
-
     ]
 })
 class BaseKbqTitleComponent {
@@ -204,7 +203,6 @@ class BaseKbqTitleComponent {
                 text-overflow: ellipsis;
             }
         `
-
     ]
 })
 class WithParamsKbqTitleComponent {
@@ -234,7 +232,6 @@ class WithParamsKbqTitleComponent {
                 word-wrap: break-word;
             }
         `
-
     ]
 })
 class VerticalOverflownKbqTitleComponent {

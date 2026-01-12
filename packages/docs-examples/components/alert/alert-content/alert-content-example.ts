@@ -25,8 +25,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
             state('true', style({ opacity: 1, display: '' })),
             state('false', style({ opacity: 0, display: 'none' })),
             transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))])
-
+            transition('true => false', animate('.2s'))
+        ])
     ]
 })
 export class AlertContentExample {

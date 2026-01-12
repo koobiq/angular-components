@@ -229,7 +229,8 @@ export class DevApp {
         {
             'file-upload': new FormControl<KbqFileItem | null>(null, [
                 Validators.required,
-                FileValidators.maxFileSize(MAX_FILE_SIZE)])
+                FileValidators.maxFileSize(MAX_FILE_SIZE)
+            ])
         },
         { updateOn: 'submit' }
     );

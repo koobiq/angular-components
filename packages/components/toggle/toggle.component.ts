@@ -67,8 +67,8 @@ export class KbqToggleChange {
             transition(
                 `${TransitionCheckState.Indeterminate} => *`,
                 animate(`${KbqAnimationDurations.Instant} ${KbqAnimationCurves.EaseInOut}`)
-            )])
-
+            )
+        ])
     ],
     providers: [
         {

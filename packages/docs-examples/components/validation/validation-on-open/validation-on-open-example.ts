@@ -46,7 +46,8 @@ type DocsFormData = {
     `,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsNameFormComponent {

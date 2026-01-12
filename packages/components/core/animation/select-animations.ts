@@ -30,11 +30,12 @@ export const kbqSelectAnimations: {
         transition(
             'void => *',
             group([
-                animate('0ms cubic-bezier(0.25, 0.8, 0.25, 1)')])
+                animate('0ms cubic-bezier(0.25, 0.8, 0.25, 1)')
+            ])
         ),
         transition('* => void', [
-            animate('0ms 0ms linear', style({ opacity: 0 }))])
-
+            animate('0ms 0ms linear', style({ opacity: 0 }))
+        ])
     ]),
 
     /**
@@ -46,8 +47,8 @@ export const kbqSelectAnimations: {
         state('showing', style({ opacity: 1 })),
         transition('void => showing', [
             style({ opacity: 0 }),
-            animate('0ms 0ms cubic-bezier(0.55, 0, 0.55, 0.2)')])
-
+            animate('0ms 0ms cubic-bezier(0.55, 0, 0.55, 0.2)')
+        ])
     ])
 };
 

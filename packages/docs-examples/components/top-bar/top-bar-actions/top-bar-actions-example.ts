@@ -146,7 +146,6 @@ export class TopBarActionsExample {
             color: KbqComponentColors.ContrastFade,
             style: ''
         }))
-
     ];
 
     // only show tooltip on button icon

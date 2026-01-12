@@ -319,7 +319,6 @@ interface ITab {
                 width: 130px;
             }
         `
-
     ]
 })
 class SimpleTabHeaderApp {

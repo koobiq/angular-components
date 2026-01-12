@@ -46,8 +46,8 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
         animate(
             `${KbqAnimationDurations.Instant} ${KbqAnimationCurves.DecelerationCurve}`,
             style({ transform: 'translateY(0%)', opacity: 1 })
-        )])
-
+        )
+    ])
 ]);
 
 const baseClass = 'kbq-inline-edit';

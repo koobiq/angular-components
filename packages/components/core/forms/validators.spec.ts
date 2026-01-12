@@ -115,7 +115,8 @@ describe('Validators', () => {
 
             it('should work with KbqFileItem', () => {
                 const control = new FormControl<KbqFileItem | File | null>(null, [
-                    FileValidators.maxFileSize(maxFileSize)]);
+                    FileValidators.maxFileSize(maxFileSize)
+                ]);
                 const kbqFileItem: KbqFileItem = { file: new File(['content'], 'test.txt', { type: 'text/plain' }) };
 
                 control.setValue(kbqFileItem);

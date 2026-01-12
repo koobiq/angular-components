@@ -85,7 +85,8 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(RequiredErrorStateMatcher)]
+        kbqErrorStateMatcherProvider(RequiredErrorStateMatcher)
+    ]
 })
 export class InputChangePasswordExample {
     protected readonly destroyRef = inject(DestroyRef);
@@ -121,7 +122,8 @@ export class InputChangePasswordExample {
             confirmNewPassword: new FormControl<string>('', [
                 Validators.required,
                 Validators.maxLength(5),
-                compareWith('newPassword')])
+                compareWith('newPassword')
+            ])
         });
 
         // run validation for confirmNewPassword after newPassword changed

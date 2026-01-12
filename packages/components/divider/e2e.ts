@@ -48,6 +48,5 @@ export class E2eDividerStateAndStyle {
             { vertical: false, paddings: true },
             { vertical: true, paddings: true }
         ]
-
     ];
 }

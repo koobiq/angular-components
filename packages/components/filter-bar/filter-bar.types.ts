@@ -51,7 +51,6 @@ export const defaultFilterBarPipes: [string, unknown][] = [
     [KbqPipeTypes.MultiTreeSelect, KbqPipeMultiTreeSelectComponent],
     [KbqPipeTypes.Date, KbqPipeDateComponent],
     [KbqPipeTypes.Datetime, KbqPipeDatetimeComponent]
-
 ];
 
 export interface KbqDateTimeValue {

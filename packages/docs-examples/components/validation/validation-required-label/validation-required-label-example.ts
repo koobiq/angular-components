@@ -127,7 +127,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationRequiredLabelExample {

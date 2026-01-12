@@ -46,12 +46,12 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
                 })
             ),
             transition('fadeIn => fadeOut', [
-                animate('300ms ease-out')]),
+                animate('300ms ease-out')
+            ]),
             transition('fadeOut => fadeIn', [
-                animate('300ms ease-out')])
-
+                animate('300ms ease-out')
+            ])
         ])
-
     ]
 })
 export class DocsAppComponent {

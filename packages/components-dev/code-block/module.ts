@@ -49,7 +49,6 @@ export class DevDocsExamples {}
             viewLessText: '*dev* Show less',
             openExternalSystemTooltip: '*dev* Open in the external system'
         })
-
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

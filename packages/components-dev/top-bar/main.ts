@@ -8,5 +8,6 @@ bootstrapApplication(DevApp, {
     providers: [
         provideAnimations(),
         { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
-        provideRouter([])]
+        provideRouter([])
+    ]
 }).catch((error) => console.error(error));

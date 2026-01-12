@@ -39,7 +39,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 margin-bottom: var(--kbq-size-xl);
             }
         `
-
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -39,13 +39,14 @@ const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
         animate(
             `${KbqAnimationDurations.Entering} ${KbqAnimationCurves.DecelerationCurve}`,
             style({ transform: 'translateX(0%)' })
-        )]),
+        )
+    ]),
     transition(':leave', [
         animate(
             `${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.AccelerationCurve}`,
             style({ transform: 'translateX(100%)' })
-        )])
-
+        )
+    ])
 ]);
 
 @Component({

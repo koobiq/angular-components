@@ -37,7 +37,8 @@ export const kbqDropdownAnimations: {
             'void => enter',
             group([
                 query('.kbq-dropdown__content', animate('0ms linear', style({ opacity: 1 }))),
-                animate('0ms cubic-bezier(0, 0, 0.2, 1)', style({ transform: 'scale(1)' }))])
+                animate('0ms cubic-bezier(0, 0, 0.2, 1)', style({ transform: 'scale(1)' }))
+            ])
         ),
         transition('* => void', animate('50ms 25ms linear', style({ opacity: 0 })))
     ]),
@@ -51,7 +52,8 @@ export const kbqDropdownAnimations: {
         state('showing', style({ opacity: 1 })),
         transition('void => *', [
             style({ opacity: 0 }),
-            animate('0ms 0ms cubic-bezier(0.55, 0, 0.55, 0.2)')])
+            animate('0ms 0ms cubic-bezier(0.55, 0, 0.55, 0.2)')
+        ])
     ])
 };
 

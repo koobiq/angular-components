@@ -105,7 +105,8 @@ class ExampleResetTouchedOnFirstInput {
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnBlurExample {

@@ -20,7 +20,6 @@ export default defineConfig({
     reporter: [
         ['list', { printSteps: true }],
         ['html', { open: 'never' }]
-
     ],
     projects: [
         {

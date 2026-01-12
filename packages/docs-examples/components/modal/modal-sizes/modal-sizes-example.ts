@@ -32,7 +32,6 @@ import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/m
                 margin-bottom: var(--kbq-size-m);
             }
         `
-
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

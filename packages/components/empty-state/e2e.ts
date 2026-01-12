@@ -185,7 +185,6 @@ export class E2eEmptyStateStateAndStyle {
                 text: this.defaultText
             }
         ]
-
     ];
     protected readonly colors = KbqComponentColors;
     protected readonly styles = KbqButtonStyles;

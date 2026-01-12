@@ -104,13 +104,15 @@ class ExampleResetTouchedOnFirstInput {
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnBlurFilledExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
     protected readonly ipAddressControl = new FormControl('123...12123123', [
-        Validators.pattern(IP_PATTERN)]);
+        Validators.pattern(IP_PATTERN)
+    ]);
 
     constructor() {
         afterNextRender(() => {
