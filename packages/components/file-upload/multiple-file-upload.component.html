@@ -17,7 +17,7 @@
                     kbq-empty-state-icon
                     kbq-icon="kbq-cloud-arrow-up-o_24"
                 ></i>
-                <div kbq-empty-state-title class="kbq-file-dropzone__text">{{ localeData.title }}</div>
+                <div kbq-empty-state-title class="kbq-file-upload__dropzone-caption">{{ localeData.title }}</div>
                 <div kbq-empty-state-text class="kbq-file-dropzone__caption">
                     <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </div>
@@ -25,14 +25,14 @@
         } @else {
             <div class="kbq-file-dropzone">
                 <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
-                <span class="kbq-file-multiple__caption">
+                <span class="kbq-file-upload__dropzone-caption">
                     <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </span>
             </div>
         }
     } @else {
-        <div class="kbq-file-upload__dropzone">
-            <kbq-list class="kbq-file-upload__grid kbq-scrollbar" role="list">
+        <div class="kbq-file-upload__wrapper">
+            <kbq-list class="kbq-file-upload__list kbq-scrollbar" role="list">
                 @for (file of files; track file) {
                     <kbq-list-item
                         role="listitem"
@@ -80,8 +80,8 @@
                 }
             </kbq-list>
             <div class="kbq-file-btn-upload kbq-file-dropzone">
-                <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
-                <span class="kbq-file-multiple__caption">
+                <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-upload__dropzone-icon"></i>
+                <span class="kbq-file-upload__dropzone-caption">
                     <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </span>
             </div>
