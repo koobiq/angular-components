@@ -81,6 +81,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
     /** selected value */
     get selected() {
+        if (this.selectedAllEqualsSelectedNothing) {
+            return this.internalSelected;
+        }
+
         return this.data.value;
     }
 
@@ -130,6 +134,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             .every((option) => option.selected);
     }
 
+    private internalSelected: KbqSelectValue[] | null;
+
     constructor() {
         super();
 
@@ -148,6 +154,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     ngOnInit(): void {
+        if (this.selectedAllEqualsSelectedNothing) {
+            this.internalSelected = this.data.value?.slice() || [];
+        }
+
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
 
@@ -176,11 +186,17 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
         this.toggleParents(option.data.parent);
 
-        this.data.value = this.select.selectedValues;
+        setTimeout(() => {
+            if (this.selectedAllEqualsSelectedNothing && this.allVisibleOptionsSelected) {
+                this.data.value = [];
+            } else {
+                this.data.value = this.select.selectedValues;
+            }
 
-        this.emitChangePipeEvent();
+            this.emitChangePipeEvent();
 
-        this.stateChanges.next();
+            this.stateChanges.next();
+        });
     }
 
     searchKeydownHandler() {
@@ -209,13 +225,19 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             }
         }
 
-        this.data.value = [...this.select.selectedValues];
+        setTimeout(() => {
+            if (this.selectedAllEqualsSelectedNothing && this.allVisibleOptionsSelected) {
+                this.data.value = [];
+            } else {
+                this.data.value = [...this.select.selectedValues];
+            }
 
-        if (emitEvent) {
-            this.emitChangePipeEvent();
-        }
+            if (emitEvent) {
+                this.emitChangePipeEvent();
+            }
 
-        this.stateChanges.next();
+            this.stateChanges.next();
+        });
     }
 
     /** updates values for selection and value template */
