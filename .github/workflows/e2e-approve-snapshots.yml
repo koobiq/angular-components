@@ -43,4 +43,4 @@ jobs:
       - uses: thollander/actions-comment-pull-request@v3
         if: ${{ failure() && steps.update-snapshots.outcome == 'failure' }}
         with:
-          message: 🚨 Failed to [update]((https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})) snapshots.
+          message: 🚨 Failed to [update](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) snapshots.
