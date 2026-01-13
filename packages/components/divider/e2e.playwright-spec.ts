@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqDivider', () => {
     test.describe('E2eDividerStateAndStyle', () => {
@@ -7,7 +7,7 @@ test.describe('KbqDivider', () => {
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eDividerTable');
 
         test('KbqDivider states', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eDividerStateAndStyle');
             const locator = getComponent(page);
 
             const screenshotTarget = getTestTable(locator);
@@ -16,7 +16,7 @@ test.describe('KbqDivider', () => {
         });
 
         test(`KbqDivider states (dark theme)`, async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eDividerStateAndStyle');
             await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);

@@ -25,3 +25,9 @@ body {
 hr {
     margin: var(--kbq-size-xxl) 0;
 }
+
+.e2e-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kbq-size-xs);
+}

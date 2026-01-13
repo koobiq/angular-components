@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqAutocompleteModule', () => {
     test.describe('E2eAutocompleteStates', () => {
@@ -7,14 +7,14 @@ test.describe('KbqAutocompleteModule', () => {
         const getAutocompleteInput = (page: Page): Locator => page.getByTestId('e2eAutocompleteInput');
 
         test('light theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eAutocompleteStates');
             await getAutocompleteInput(page).focus();
             await page.keyboard.press('ArrowDown');
             await expect(getComponent(page)).toHaveScreenshot();
         });
 
         test('dark theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eAutocompleteStates');
             await e2eEnableDarkTheme(page);
             await getAutocompleteInput(page).focus();
             await page.keyboard.press('ArrowDown');

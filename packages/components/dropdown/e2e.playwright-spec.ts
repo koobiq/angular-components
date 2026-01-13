@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqDropdownModule', () => {
     test.describe('E2eDropdownStates', () => {
@@ -9,7 +9,7 @@ test.describe('KbqDropdownModule', () => {
         const getSubmenu2ItemWithIcon = (page: Page) => page.getByTestId('e2eSubmenu2ItemWithIcon');
 
         test('light theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eDropdownStates');
             const component = getComponent(page);
 
             await component.scrollIntoViewIfNeeded();
@@ -23,7 +23,7 @@ test.describe('KbqDropdownModule', () => {
         });
 
         test('dark theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eDropdownStates');
             await e2eEnableDarkTheme(page);
             const component = getComponent(page);
 

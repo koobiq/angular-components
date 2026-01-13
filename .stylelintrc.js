@@ -59,6 +59,20 @@ const componentsDevRules = [
 ];
 
 /**
+ * Override rules for packages/e2e
+ *
+ * @type {import('stylelint').Config['overrides']}
+ */
+const e2eRules = [
+    {
+        files: ['packages/e2e/**/*.scss', 'packages/e2e/**/*.css'],
+        rules: {
+            'selector-class-pattern': makeSelectorClassPatternOptions(['e2e-'])
+        }
+    }
+];
+
+/**
  * Override rules for packages/docs-examples
  *
  * @type {import('stylelint').Config['overrides']}
@@ -138,7 +152,8 @@ const config = {
         ...componentsRules,
         ...componentsDevRules,
         ...componentsExamplesRules,
-        ...docsRules
+        ...docsRules,
+        ...e2eRules
     ]
 };
 

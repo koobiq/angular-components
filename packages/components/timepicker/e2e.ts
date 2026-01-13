@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -8,7 +9,14 @@ import { DateTime } from 'luxon';
 
 @Component({
     selector: 'e2e-timepicker-states',
-    imports: [KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, FormsModule, ReactiveFormsModule],
+    imports: [
+        KbqFormFieldModule,
+        KbqTimepickerModule,
+        KbqIconModule,
+        FormsModule,
+        ReactiveFormsModule,
+        KbqLuxonDateModule
+    ],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <!-- empty state -->

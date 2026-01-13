@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.use({ browserName: 'webkit' });
 
@@ -24,13 +24,13 @@ test.describe('KbqSidepanel', () => {
         test.describe('sizes', () => {
             test('medium', async ({ page }) => {
                 await page.setViewportSize({ width: 640, height: 300 });
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eSidepanelStateAndStyle');
                 await testSidepanelType(page, 'e2eSidepanelMedium');
             });
 
             test('large', async ({ page }) => {
                 await page.setViewportSize({ width: 960, height: 300 });
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eSidepanelStateAndStyle');
                 await testSidepanelType(page, 'e2eSidepanelLarge');
             });
         });
@@ -38,14 +38,14 @@ test.describe('KbqSidepanel', () => {
         test.describe('positions', () => {
             test('right-left', async ({ page }) => {
                 await page.setViewportSize({ width: 805, height: 400 });
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eSidepanelStateAndStyle');
                 await testSidepanelType(page, 'e2eSidepanelRightLeft');
             });
         });
 
         test('nested', async ({ page }) => {
             await page.setViewportSize({ width: 800, height: 300 });
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eSidepanelStateAndStyle');
             const locator = getComponent(page);
 
             const screenshotTarget = getTestTable(locator);
@@ -60,7 +60,7 @@ test.describe('KbqSidepanel', () => {
 
         test('nested (dark theme)', async ({ page }) => {
             await page.setViewportSize({ width: 800, height: 300 });
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eSidepanelStateAndStyle');
             await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);

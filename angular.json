@@ -1000,13 +1000,36 @@
                         "optimization": false,
                         "namedChunks": true,
                         "browser": "packages/e2e/main.ts"
-                    }
+                    },
+                    "configurations": {
+                        "production": {
+                            "outputHashing": "all",
+                            "fileReplacements": [
+                                {
+                                    "replace": "packages/e2e/environments/environment.ts",
+                                    "with": "packages/e2e/environments/environment.prod.ts"
+                                }
+                            ]
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "dev-e2e:build"
-                    }
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "dev-e2e:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "dev-e2e:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
                 }
             }
         },

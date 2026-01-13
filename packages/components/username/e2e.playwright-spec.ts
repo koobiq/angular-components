@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqUsername', () => {
     test.describe('E2eUsernameStateAndStyle', () => {
@@ -7,14 +7,14 @@ test.describe('KbqUsername', () => {
         const screenshotTarget = (locator: Locator) => locator.getByTestId('e2eUsernameTable');
 
         test('KbqUsername states', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eUsernameStateAndStyle');
             const locator = getComponent(page);
 
             await expect(screenshotTarget(locator)).toHaveScreenshot();
         });
 
         test(`KbqUsername states (dark theme)`, async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eUsernameStateAndStyle');
             await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);

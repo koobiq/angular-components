@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqTreeSelectModule', () => {
     test.describe('E2eTreeSelectStates', () => {
@@ -7,7 +7,7 @@ test.describe('KbqTreeSelectModule', () => {
         const getTreeSelect = (locator: Locator) => locator.getByTestId('e2eTreeSelect');
 
         test('select default', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eTreeSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
 
@@ -17,7 +17,7 @@ test.describe('KbqTreeSelectModule', () => {
         });
 
         test('select (dark theme)', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eTreeSelectStates');
             await e2eEnableDarkTheme(page);
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
@@ -33,7 +33,7 @@ test.describe('KbqTreeSelectModule', () => {
         const getTreeSelect = (locator: Locator) => locator.getByTestId('e2eMultiTreeSelect');
 
         test('MultiTreeSelect default', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eMultiTreeSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
 
@@ -44,7 +44,7 @@ test.describe('KbqTreeSelectModule', () => {
         });
 
         test('MultiTreeSelect (dark theme)', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eMultiTreeSelectStates');
             await e2eEnableDarkTheme(page);
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
@@ -61,7 +61,7 @@ test.describe('KbqTreeSelectModule', () => {
         const getTreeSelect = (locator: Locator) => locator.getByTestId('e2eMultilineTreeSelect');
 
         test('MultilineTreeSelect default', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eMultilineTreeSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
 
@@ -72,7 +72,7 @@ test.describe('KbqTreeSelectModule', () => {
         });
 
         test('MultilineTreeSelect (dark theme)', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eMultilineTreeSelectStates');
             await e2eEnableDarkTheme(page);
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);

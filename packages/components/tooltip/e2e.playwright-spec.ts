@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqTooltipModule', () => {
     test.describe('E2eTooltipStates', () => {
@@ -7,14 +7,14 @@ test.describe('KbqTooltipModule', () => {
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
         test('tooltip default', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eTooltipStates');
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot();
         });
 
         test('tooltip (dark theme)', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eTooltipStates');
             await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);

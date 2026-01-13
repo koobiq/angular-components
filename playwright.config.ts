@@ -6,7 +6,7 @@ const viewport: ViewportSize = {
     height: 720
 };
 const baseURL = process.env.BASE_URL || 'http://localhost:4200';
-const webServerCommand = process.env.WEB_SERVER_COMMAND || 'yarn run dev:e2e';
+const webServerCommand = process.env.WEB_SERVER_COMMAND || 'yarn run dev:e2e --configuration=production';
 
 /** @see https://playwright.dev/docs/test-configuration */
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 2 : 0,
-    workers: isCI ? 1 : undefined,
+    workers: isCI ? '100%' : undefined,
     reporter: [
         ['list', { printSteps: true }],
         ['html', { open: 'never' }]
