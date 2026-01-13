@@ -23,6 +23,7 @@ test.describe('KbqFileUploadModule', () => {
             await page.goto('/E2eFileUploadStateAndStyle');
             await page.setViewportSize({ width: 1400, height: 320 });
             await e2eEnableDarkTheme(page);
+            await page.setViewportSize({ width: 1400, height: 320 });
 
             const locator = getComponent(page);
 
@@ -35,6 +36,8 @@ test.describe('KbqFileUploadModule', () => {
             await page.goto('/E2eFileUploadStateAndStyle');
             const locator = getComponent(page);
 
+            await page.setViewportSize({ width: 1400, height: 900 });
+
             const screenshotTarget = getMultipleFileUploadTable(locator);
 
             await expect(screenshotTarget).toHaveScreenshot();
@@ -43,6 +46,7 @@ test.describe('KbqFileUploadModule', () => {
         test(`KbqMultipleFileUploadComponent states (dark theme)`, async ({ page }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
             await e2eEnableDarkTheme(page);
+            await page.setViewportSize({ width: 1400, height: 900 });
 
             const locator = getComponent(page);
 
