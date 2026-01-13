@@ -101,7 +101,8 @@ export function getClassWithUpdatedDecorator(
     const updatedDecorators = decoratorIndex !== -1 ? [
                   ...nodeDecorators.slice(0, decoratorIndex),
                   updatedDecorator,
-                  ...nodeDecorators.slice(decoratorIndex + 1, nodeDecorators.length)] : nodeDecorators;
+                  ...nodeDecorators.slice(decoratorIndex + 1, nodeDecorators.length)
+              ] : nodeDecorators;
     const modifiers = node.modifiers ? node.modifiers.filter((modifier) => modifier !== decorator) : [];
 
     return ts.factory.replaceDecoratorsAndModifiers(node, [...updatedDecorators, ...modifiers]);

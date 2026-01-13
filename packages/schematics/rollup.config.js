@@ -69,7 +69,6 @@ module.exports = [
             typescript({
                 tsconfig: path.join(__dirname, 'tsconfig.rollup.json')
             })
-
         ]
     }
 ];

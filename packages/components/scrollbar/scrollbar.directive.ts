@@ -46,7 +46,6 @@ const createDefer = (): Defer => {
             );
         },
         clear
-
     ];
 };
 

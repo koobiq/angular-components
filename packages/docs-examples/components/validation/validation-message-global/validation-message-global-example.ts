@@ -130,7 +130,8 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {

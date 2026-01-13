@@ -99,7 +99,6 @@ export class DevDocsExamples {}
         kbqSelectOptionsProvider({
             // panelWidth: 200
         })
-
     ]
 })
 export class DevApp implements OnInit {

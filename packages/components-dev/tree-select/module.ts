@@ -60,7 +60,6 @@ export class DevDocsExamples {}
         kbqTreeSelectOptionsProvider({
             // panelWidth: 700
         })
-
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',

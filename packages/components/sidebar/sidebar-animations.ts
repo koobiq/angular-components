@@ -27,6 +27,5 @@ export const kbqSidebarAnimations: { readonly sidebarState: AnimationTriggerMeta
         ),
         transition('opened => closed', [animate('0.1s')]),
         transition('closed => opened', [animate('0.2s')])
-
     ])
 };

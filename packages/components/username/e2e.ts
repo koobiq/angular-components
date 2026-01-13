@@ -56,7 +56,6 @@ export class E2eUsernameStateAndStyle {
                 type: <KbqUsernameStyle>'default',
                 mode
             }))
-
         ],
         [
             { mode: 'inline', type: 'default' },
@@ -64,6 +63,5 @@ export class E2eUsernameStateAndStyle {
             { mode: 'inline', type: 'error' },
             { mode: 'inline', type: 'inherit' }
         ]
-
     ]);
 }

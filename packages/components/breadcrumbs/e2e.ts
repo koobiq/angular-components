@@ -148,6 +148,5 @@ export class E2eBreadcrumbsStateAndStyle {
                 max: 2
             }
         ]
-
     ];
 }

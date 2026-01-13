@@ -69,5 +69,6 @@ export class FormFieldPasswordOverviewExample {
         PasswordValidators.minUppercase(2),
         PasswordValidators.minLowercase(2),
         PasswordValidators.minNumber(2),
-        PasswordValidators.minSpecial(2)]);
+        PasswordValidators.minSpecial(2)
+    ]);
 }

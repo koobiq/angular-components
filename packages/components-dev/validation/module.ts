@@ -109,7 +109,8 @@ export class DevApp {
     formWithCustomValidator = new UntypedFormGroup({
         login: new UntypedFormControl('', [
             Validators.required,
-            ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/)]),
+            ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/)
+        ]),
         password: new UntypedFormControl('', Validators.required)
     });
 
@@ -149,7 +150,8 @@ export class DevApp {
             date: new UntypedFormControl(null, Validators.required),
             reactiveInputValue: new UntypedFormControl('', [
                 Validators.required,
-                Validators.pattern('[a-zA-Z]*')]),
+                Validators.pattern('[a-zA-Z]*')
+            ]),
             reactiveSelectValue: new UntypedFormControl('', [Validators.required]),
             reactiveTreeSelectValue: new UntypedFormControl('', [Validators.required]),
             reactiveTypeaheadValue: new UntypedFormControl([], Validators.required),

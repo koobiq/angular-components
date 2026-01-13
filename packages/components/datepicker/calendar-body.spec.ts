@@ -117,7 +117,6 @@ class StandardCalendarBody {
     rows = [
         [1, 2, 3, 4, 5],
         [6, 7, 8, 9, 10, 11, 12]
-
     ].map((row) => {
         return row.map((cell) => new KbqCalendarCell(cell, `${cell}`, true, cell % 2 === 0 ? 'even' : undefined));
     });

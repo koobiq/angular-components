@@ -38,7 +38,8 @@ export default function deprecatedIcons(options: Schema): Rule {
                     logMessage(logger, [
                         `Please pay attention! Found deprecated icons in file: `,
                         parsedFilePath,
-                        foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')]);
+                        foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')
+                    ]);
                 }
             }
 

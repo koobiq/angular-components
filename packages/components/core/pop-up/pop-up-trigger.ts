@@ -481,7 +481,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
                 return listener.call(this);
             }
-
         ];
     }
 

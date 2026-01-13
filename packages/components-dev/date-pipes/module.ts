@@ -158,35 +158,42 @@ export class DevApp {
 
         this.iso.range.short.date.currentMonth = [
             this.dateAdapter.toIso8601(now.set({ day: 1 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10 }))
+        ];
         this.iso.range.short.date.notCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ day: 1, month: 1 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10, month: 2 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10, month: 2 }))
+        ];
         this.iso.range.short.date.startsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ day: 1, month: 1 }).minus({ years: 1 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10, month: 2 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10, month: 2 }))
+        ];
         this.iso.range.short.date.endsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ day: 1, month: 1 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10, month: 2 }).plus({ years: 1 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10, month: 2 }).plus({ years: 1 }))
+        ];
         this.iso.range.short.dateTime.sameDateCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ day: 10, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10, hour: 11, minute: 28 }))
+        ];
         this.iso.range.short.dateTime.sameDateNotCurrentYear = [
             this.dateAdapter.toIso8601(
                 now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 })
             ),
-            this.dateAdapter.toIso8601(
-                now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 })
-            )];
+            this.dateAdapter.toIso8601(now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }))
+        ];
         this.iso.range.short.dateTime.notCurrentMonth = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))
+        ];
         this.iso.range.short.dateTime.startsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))
+        ];
         this.iso.range.short.dateTime.endsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ day: 1, month: 2 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 1, month: 2 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }))
+        ];
 
         console.log('populateRangeShort: ');
     }
@@ -221,26 +228,30 @@ export class DevApp {
 
         this.iso.range.middle.dateTime.currentYear = [
             this.dateAdapter.toIso8601(now.set({ day: 1 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10 }))
+        ];
         this.iso.range.middle.dateTime.sameDateCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ day: 10, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10, hour: 10, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10, hour: 10, minute: 28 }))
+        ];
         this.iso.range.middle.dateTime.sameDateNotCurrentYear = [
             this.dateAdapter.toIso8601(
                 now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 })
             ),
-            this.dateAdapter.toIso8601(
-                now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 })
-            )];
+            this.dateAdapter.toIso8601(now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }))
+        ];
         this.iso.range.middle.dateTime.notCurrentMonth = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))
+        ];
         this.iso.range.middle.dateTime.startsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 11, minute: 28 }))
+        ];
         this.iso.range.middle.dateTime.endsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }))
+        ];
     }
 
     populateRangeLong() {
@@ -282,37 +293,42 @@ export class DevApp {
 
         this.iso.range.long.date.currentMonth = [
             this.dateAdapter.toIso8601(now.set({ day: 1 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10 }))
+        ];
         this.iso.range.long.date.notCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 10 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 10 }))
+        ];
         this.iso.range.long.date.startsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 }).minus({ years: 1 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 10 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 10 }))
+        ];
         this.iso.range.long.date.endsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 10 }).plus({ years: 1 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 10 }).plus({ years: 1 }))
+        ];
         this.iso.range.long.dateTime.sameDateCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ day: 10, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ day: 10, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ day: 10, hour: 11, minute: 28 }))
+        ];
         this.iso.range.long.dateTime.sameDateNotCurrentYear = [
             this.dateAdapter.toIso8601(
                 now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 10, minute: 14 })
             ),
-            this.dateAdapter.toIso8601(
-                now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 })
-            )];
+            this.dateAdapter.toIso8601(now.set({ month: 1, day: 11 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }))
+        ];
         this.iso.range.long.dateTime.notCurrentMonth = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))
+        ];
         this.iso.range.long.dateTime.startsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 }).minus({ years: 1 }).set({ hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1, hour: 11, minute: 28 }))
+        ];
         this.iso.range.long.dateTime.endsNotCurrentYear = [
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1, hour: 10, minute: 14 })),
-            this.dateAdapter.toIso8601(
-                now.set({ month: 2, day: 1 }).minus({ years: 1 }).set({ hour: 11, minute: 28 })
-            )];
+            this.dateAdapter.toIso8601(now.set({ month: 2, day: 1 }).minus({ years: 1 }).set({ hour: 11, minute: 28 }))
+        ];
     }
 
     populateRelativeShort() {

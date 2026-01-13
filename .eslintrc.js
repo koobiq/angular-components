@@ -284,7 +284,8 @@ const componentsDevRules = {
         // plugin:@typescript-eslint
         '@typescript-eslint/naming-convention': [
             1,
-            ...makeNamingConventionOptions('dev')]
+            ...makeNamingConventionOptions('dev')
+        ]
     }
 };
 
@@ -344,7 +345,8 @@ const e2eRules = {
         // plugin:@typescript-eslint
         '@typescript-eslint/naming-convention': [
             1,
-            ...makeNamingConventionOptions('e2e')]
+            ...makeNamingConventionOptions('e2e')
+        ]
     }
 };
 
@@ -401,7 +403,8 @@ const appDocsRules = {
         // plugin:@typescript-eslint
         '@typescript-eslint/naming-convention': [
             1,
-            ...makeNamingConventionOptions('docs')]
+            ...makeNamingConventionOptions('docs')
+        ]
     }
 };
 

@@ -91,7 +91,6 @@ export class E2eIconStateAndStyle {
         this.colors.map((color) => ({
             color
         }))
-
     ];
 
     iconItemStates: IconItemStates[][] = [
@@ -108,7 +107,6 @@ export class E2eIconStateAndStyle {
             color,
             state: 'fade'
         }))
-
     ];
 
     iconButtonStates: IconButtonStates[][] = [
@@ -131,6 +129,5 @@ export class E2eIconStateAndStyle {
             color,
             state: 'focused'
         }))
-
     ];
 }

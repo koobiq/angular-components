@@ -93,7 +93,6 @@ export class E2eRadioStateAndStyle {
             { size: 'big', hint: true, labelPosition: 'after', disabled: true },
             { size: 'normal', hint: true, labelPosition: 'after', color: ThemePalette.Error, disabled: true }
         ]
-
     ];
     protected readonly kbqComponentColors = KbqComponentColors;
 }

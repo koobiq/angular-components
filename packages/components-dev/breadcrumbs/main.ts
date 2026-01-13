@@ -33,7 +33,8 @@ export const devRoutes: Routes = [
 export const devAppConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
-        provideRouter(devRoutes)]
+        provideRouter(devRoutes)
+    ]
 };
 
 bootstrapApplication(DevApp, devAppConfig).catch((error) => console.error(error));

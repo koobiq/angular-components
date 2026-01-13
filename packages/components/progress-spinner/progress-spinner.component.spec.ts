@@ -8,7 +8,6 @@ const percentPairs = [
     [40, 0.4],
     [-50, 0],
     [140, 1]
-
 ];
 
 describe('KbqProgressSpinner', () => {

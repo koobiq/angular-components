@@ -269,7 +269,6 @@ describe(KbqCodeBlock.name, () => {
                 viewLessText: '*unit_test* Show less',
                 openExternalSystemTooltip: '*unit_test* Open in the external system'
             })
-
         ]);
 
         expect(geCodeBlockDebugElement(debugElement).componentInstance.localeConfiguration).toMatchSnapshot();

@@ -6,6 +6,7 @@ import { E2eApp } from './module';
 bootstrapApplication(E2eApp, {
     providers: [
         provideNoopAnimations(),
-        provideRouter([])]
+        provideRouter([])
+    ]
     // eslint-disable-next-line no-console
 }).catch((error) => console.error(error));

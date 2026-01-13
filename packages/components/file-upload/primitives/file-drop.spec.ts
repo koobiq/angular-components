@@ -94,7 +94,8 @@ describe('FileDropDirective', () => {
         event.initCustomEvent('drop');
         const fakeFiles = [
             createFSFile('test1'),
-            createFSFile('test2')];
+            createFSFile('test2')
+        ];
 
         const fakeDirectoryItem = {
             kind: 'file',

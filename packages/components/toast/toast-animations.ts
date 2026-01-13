@@ -9,7 +9,8 @@ export const kbqToastAnimations: {
         transition(
             '* => void',
             animate('300ms ease-in', style({ transform: 'translateX(50%)', opacity: 0, height: 0 }))
-        )])
+        )
+    ])
 };
 
 export const toastState = kbqToastAnimations.toastState;

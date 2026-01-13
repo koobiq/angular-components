@@ -26,7 +26,8 @@ export const logReplacement = ({ logger, replacementData, contentToBeUpdated, fi
         logMessage(logger, [
             `Please pay attention! Found deprecated icons in file: `,
             parsedFilePath,
-            foundIcons.map(({ from, to }) => `\t${from} -> \t${to}`).join('\n')]);
+            foundIcons.map(({ from, to }) => `\t${from} -> \t${to}`).join('\n')
+        ]);
     }
 };
 

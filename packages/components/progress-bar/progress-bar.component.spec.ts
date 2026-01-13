@@ -7,7 +7,6 @@ const percentPairs = [
     [40, 40],
     [-50, 0],
     [140, 100]
-
 ];
 
 describe('KbqProgressBar', () => {

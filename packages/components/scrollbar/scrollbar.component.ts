@@ -31,7 +31,8 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             // merge & check listeners
             obj[name] = [
                 emitListener,
-                ...(Array.isArray(eventListener) ? eventListener : [eventListener]).filter(Boolean)];
+                ...(Array.isArray(eventListener) ? eventListener : [eventListener]).filter(Boolean)
+            ];
 
             return obj;
         },

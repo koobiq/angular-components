@@ -30,7 +30,6 @@ const docsContent = async () => {
             ],
             dest: 'dist/docs-content/examples'
         })
-
     ]) {
         await task();
     }
