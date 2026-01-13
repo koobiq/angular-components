@@ -24,7 +24,8 @@ jobs:
           message: 🔄 [Updating](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) snapshots.
       - uses: ./.github/workflows/actions/setup-node
       - run: yarn run e2e:setup
-      - run: |
+      - id: update-snapshots
+        run: |
           yarn run e2e:components --update-snapshots
       - uses: stefanzweifel/git-auto-commit-action@v5
         id: commit-and-push
@@ -39,3 +40,7 @@ jobs:
         if: ${{ steps.commit-and-push.outputs.changes_detected != 'true' }}
         with:
           message: ⚠️ No snapshot changes detected.
+      - uses: thollander/actions-comment-pull-request@v3
+        if: ${{ failure() && steps.update-snapshots.outcome == 'failure' }}
+        with:
+          message: 🚨 Failed to [update](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) snapshots.
