@@ -128,7 +128,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
-            fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
+            fixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
             fixture.detectChanges();
         };
 
