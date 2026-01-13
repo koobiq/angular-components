@@ -11,6 +11,9 @@ export enum KbqRiskLevelColors {
     Error = 'error'
 }
 
+/**
+ * @deprecated Will be removed in next major release, use `KbqBadgeModule` instead.
+ */
 @Component({
     selector: 'kbq-risk-level',
     template: '<ng-content />',
