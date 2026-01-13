@@ -154,9 +154,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     ngOnInit(): void {
-        if (this.selectedAllEqualsSelectedNothing) {
-            this.internalSelected = this.data.value?.slice() || [];
-        }
+        this.updateInternalSelected();
 
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
@@ -267,14 +265,20 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         setTimeout(() => this.select.open());
     }
 
+    override onClear() {
+        super.onClear();
+
+        this.updateInternalSelected();
+    }
+
+    /** @docs-private */
     onOpen() {
         this.treeControl.expandAll();
     }
 
+    /** @docs-private */
     onClose() {
-        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
-            this.toggleSelectAllNode(false);
-        }
+        this.updateInternalSelected();
     }
 
     /** handler for select all options in select */
@@ -283,6 +287,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
         this.toggleSelectAllNode();
     };
+
+    private updateInternalSelected() {
+        if (this.selectedAllEqualsSelectedNothing) {
+            this.internalSelected = this.data.value?.slice() || [];
+        }
+    }
 
     private emitChangePipeEvent() {
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
