@@ -32,6 +32,7 @@ test.describe('KbqActionsPanel', () => {
         });
 
         test('should show hidden actions when button is clicked', async ({ page }) => {
+            await page.setViewportSize({ width: 800, height: 200 });
             await page.goto('/E2eActionsPanelWithOverlayContainer');
             const locator = getComponent(page);
 
