@@ -82,16 +82,16 @@ test.describe('KbqTagModule', () => {
         });
     });
 
-    test.describe('E2eTagList', () => {
+    test.describe('E2eTagListStates', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eTagListStates');
 
         test('light theme', async ({ page }) => {
-            await page.goto('/E2eTagList');
+            await page.goto('/E2eTagListStates');
             await expect(getComponent(page)).toHaveScreenshot();
         });
 
         test('dark theme', async ({ page }) => {
-            await page.goto('/E2eTagList');
+            await page.goto('/E2eTagListStates');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot();
         });
