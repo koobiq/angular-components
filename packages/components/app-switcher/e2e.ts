@@ -13,7 +13,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     imports: [KbqAppSwitcherModule, KbqButtonModule, KbqIconModule, KbqAppSwitcherComponent],
     template: `
         <div data-testid="e2eScreenshotTarget" style="width: 330px; height: 390px; padding: 8px">
-            <button #trigger="kbqAppSwitcher" kbq-button kbqAppSwitcher [apps]="apps" [(selectedApp)]="selected">
+            <button #trigger="kbqAppSwitcher" kbq-button kbqAppSwitcher [sites]="sites" [(selectedApp)]="selected">
                 <i kbq-icon="kbq-bento-menu_16"></i>
             </button>
 
@@ -37,48 +37,54 @@ export class E2eAppSwitcherStates {
                 fill="white" />
         </svg>
     `;
-    apps: KbqAppSwitcherApp[] = [
+    sites: KbqAppSwitcherSite[] = [
         {
-            name: 'Byte Sentinel',
-            caption: 'Byte 001',
-            id: 'SZFO_01',
-            icon: this.SVGIcon
-        },
-        {
-            name: 'CryptoWall',
-            id: 'SZFO_02',
-            icon: this.SVGIcon
-        },
-        {
-            name: 'App Instance 1',
-            caption: 'Instance Alias One',
-            id: 'SZFO_03',
-            icon: this.SVGIcon
-        },
-        {
-            name: 'App Instance 2',
-            id: 'SZFO_04',
-            icon: this.SVGIcon
-        },
-        {
-            name: 'App Instance 3',
-            caption: 'Instance Alias Three',
-            id: 'SZFO_05',
-            icon: this.SVGIcon
-        },
-        {
-            name: 'App Instance 4',
-            caption: 'Instance Alias Four',
-            id: 'SZFO_06',
-            icon: this.SVGIcon
-        },
-        {
-            name: 'Phantom Gate',
-            id: 'SZFO_07',
-            icon: this.SVGIcon
+            name: 'СЗФО',
+            id: '02',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'SZFO_01',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'SZFO_02',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 1',
+                    caption: 'Instance Alias One',
+                    id: 'SZFO_03',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 2',
+                    id: 'SZFO_04',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 3',
+                    caption: 'Instance Alias Three',
+                    id: 'SZFO_05',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 4',
+                    caption: 'Instance Alias Four',
+                    id: 'SZFO_06',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'SZFO_07',
+                    icon: this.SVGIcon
+                }
+            ]
         }
     ];
-    selected: KbqAppSwitcherApp = this.apps[0];
+    selected: KbqAppSwitcherApp = this.sites[0].apps[0];
 }
 
 @Component({

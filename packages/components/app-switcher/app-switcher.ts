@@ -322,17 +322,16 @@ export class KbqAppSwitcherTrigger
             return this.originalSites.reduce((acc, site) => acc + site.apps.length, 0);
         }
 
-        return this.originalApps.length;
+        return this.originalSites[0].apps.length;
     }
 
     /** Whether the sites are used or not
      * @docs-private */
     get sitesMode(): boolean {
-        return this.originalSites?.length > 0;
+        return this.originalSites.length > 1;
     }
 
-    /** Whether the sites are used or not
-     * @docs-private */
+    /** @docs-private */
     get currentApps() {
         return this.sitesMode ? this.selectedSite.apps : this._parsedApps;
     }
@@ -358,20 +357,29 @@ export class KbqAppSwitcherTrigger
     set sites(value: KbqAppSwitcherSite[]) {
         this.originalSites = value;
 
-        this._parsedSites = [];
+        if (this.originalSites.length > 1) {
+            this._parsedSites = [];
 
-        value.forEach((site: KbqAppSwitcherSite) => {
-            const newSite: KbqAppSwitcherSite = { ...site, apps: [] };
+            value.forEach((site: KbqAppSwitcherSite) => {
+                const newSite: KbqAppSwitcherSite = { ...site, apps: [] };
 
-            newSite.apps = this.makeGroupsForApps(site.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
+                newSite.apps = this.makeGroupsForApps(site.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
 
-            this._parsedSites.push(newSite);
-        });
+                this._parsedSites.push(newSite);
+            });
+        } else {
+            this._parsedApps = this.makeGroupsForApps(
+                this.originalSites[0].apps,
+                KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING
+            );
+        }
     }
 
     private _parsedSites: KbqAppSwitcherSite[];
 
-    /** Array of applications */
+    /**
+     * @deprecated Will be removed in next major release, use `sites` with one element instead.
+     */
     @Input()
     get apps(): KbqAppSwitcherApp[] {
         return this._parsedApps;
