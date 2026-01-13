@@ -55,6 +55,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-file-upload
                                     [allowed]="cell.allowed ?? kbqFileUploadAllowedTypes.File"
                                     [file]="cell.file"
+                                    [class]="cell.className"
                                     [showFileSize]="cell.showFileSize ?? true"
                                     [disabled]="!!cell.disabled"
                                     [class.dev-error]="!!cell.error"
@@ -144,6 +145,12 @@ export class E2eFileUploadStateAndStyle {
                 showFileSize: false,
                 dragover: true
             }
+        ],
+        [
+            { file: this.testKbqFileItem, showFileSize: false, className: 'dev-focused' },
+            { file: this.testKbqFileItem, showFileSize: true, className: 'dev-focused' },
+            { file: this.testKbqFileItem, showFileSize: true, className: 'dev-focused', error: true },
+            { file: this.testKbqFileItem, showFileSize: true, className: 'dev-focused', dragover: true }
         ]
     ];
 
@@ -219,6 +226,15 @@ export class E2eFileUploadStateAndStyle {
 
             this.document.querySelectorAll<HTMLElement>('.dev-hover .kbq-file-upload__item').forEach((item) => {
                 item.classList.add('kbq-hovered');
+            });
+
+            setTimeout(() => {
+                this.document
+                    .querySelectorAll<HTMLElement>('.kbq-single-file-upload.dev-focused .kbq-file-upload__action')
+                    .forEach((button) => {
+                        button.classList.add('cdk-focused');
+                        button.classList.add('cdk-keyboard-focused');
+                    });
             });
         });
 
