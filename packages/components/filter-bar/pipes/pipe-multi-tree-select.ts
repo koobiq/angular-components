@@ -278,7 +278,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
     /** @docs-private */
     onClose() {
-        this.updateInternalSelected();
+        if (this.allOptionsSelected) {
+            this.updateInternalSelected();
+        }
     }
 
     /** handler for select all options in select */

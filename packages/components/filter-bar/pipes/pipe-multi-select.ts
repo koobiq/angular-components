@@ -212,7 +212,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** @docs-private */
     onClose() {
-        this.updateInternalSelected();
+        if (this.allOptionsSelected) {
+            this.updateInternalSelected();
+        }
     }
 
     /** opens select */
