@@ -2,7 +2,7 @@ import { expect, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from 'packages/e2e/utils';
 
 test.describe('KbqTableModule', () => {
-    test.fixme('E2eTableStates', () => {
+    test.describe('E2eTableStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTableStates');
 
         test('light theme', async ({ page }) => {
