@@ -75,6 +75,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** selected value */
     get selected() {
+        if (this.selectedAllEqualsSelectedNothing) {
+            return this.internalSelected;
+        }
+
         return this.data.value;
     }
 
@@ -119,9 +123,12 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     private selectionAllInProgress = false;
+    private internalSelected: KbqSelectValue[] | null;
 
     /** @docs-private */
     ngOnInit(): void {
+        this.updateInternalSelected();
+
         this.filteredOptions = merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
             map(this.getFilteredOptions),
             takeUntilDestroyed(this.destroyRef)
@@ -140,7 +147,11 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onSelect(item: KbqSelectValue[]) {
         if (this.selectionAllInProgress) return;
 
-        this.data.value = item;
+        if (this.selectedAllEqualsSelectedNothing && this.allVisibleOptionsSelected) {
+            this.data.value = [];
+        } else {
+            this.data.value = item;
+        }
 
         this.emitChangePipeEvent();
 
@@ -150,6 +161,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     /** @docs-private */
     onClear() {
         this.data.value = [];
+
+        this.updateInternalSelected();
 
         this.filterBar?.onClearPipe.emit(this.data);
         this.filterBar?.onChangePipe.emit(this.data);
@@ -175,21 +188,17 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
         this.selectionAllInProgress = false;
 
-        this.data.value = [...this.select.value];
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
+            this.data.value = [];
+        } else {
+            this.data.value = [...this.select.value];
+        }
 
         if (emitEvent) {
             this.emitChangePipeEvent();
         }
 
         this.stateChanges.next();
-    }
-
-    private emitChangePipeEvent() {
-        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
-            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-        } else {
-            this.filterBar?.onChangePipe.emit(this.data);
-        }
     }
 
     /** Comparator of selected options */
@@ -202,15 +211,30 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.toggleSelectionAll();
     };
 
+    /** @docs-private */
     onClose() {
-        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
-            this.toggleSelectionAll(false);
+        if (this.allOptionsSelected) {
+            this.updateInternalSelected();
         }
     }
 
     /** opens select */
     override open() {
         this.select.open();
+    }
+
+    private updateInternalSelected() {
+        if (this.selectedAllEqualsSelectedNothing) {
+            this.internalSelected = this.data.value?.slice() || [];
+        }
+    }
+
+    private emitChangePipeEvent() {
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
+            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
+        } else {
+            this.filterBar?.onChangePipe.emit(this.data);
+        }
     }
 
     private getFilteredOptions = (): KbqSelectValue[] => {

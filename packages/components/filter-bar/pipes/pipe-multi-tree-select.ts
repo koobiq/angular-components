@@ -82,6 +82,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
     /** selected value */
     get selected() {
+        if (this.selectedAllEqualsSelectedNothing) {
+            return this.internalSelected;
+        }
+
         return this.data.value;
     }
 
@@ -131,6 +135,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             .every((option) => option.selected);
     }
 
+    private internalSelected: KbqSelectValue[] | null;
+
     constructor() {
         super();
 
@@ -149,6 +155,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     ngOnInit(): void {
+        this.updateInternalSelected();
+
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
 
@@ -177,11 +185,17 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
         this.toggleParents(option.data.parent);
 
-        this.data.value = this.select.selectedValues;
+        setTimeout(() => {
+            if (this.selectedAllEqualsSelectedNothing && this.allVisibleOptionsSelected) {
+                this.data.value = [];
+            } else {
+                this.data.value = this.select.selectedValues;
+            }
 
-        this.emitChangePipeEvent();
+            this.emitChangePipeEvent();
 
-        this.stateChanges.next();
+            this.stateChanges.next();
+        });
     }
 
     searchKeydownHandler() {
@@ -210,13 +224,19 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             }
         }
 
-        this.data.value = [...this.select.selectedValues];
+        setTimeout(() => {
+            if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
+                this.data.value = [];
+            } else {
+                this.data.value = [...this.select.selectedValues];
+            }
 
-        if (emitEvent) {
-            this.emitChangePipeEvent();
-        }
+            if (emitEvent) {
+                this.emitChangePipeEvent();
+            }
 
-        this.stateChanges.next();
+            this.stateChanges.next();
+        });
     }
 
     /** updates values for selection and value template */
@@ -246,13 +266,21 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         setTimeout(() => this.select.open());
     }
 
+    override onClear() {
+        super.onClear();
+
+        this.updateInternalSelected();
+    }
+
+    /** @docs-private */
     onOpen() {
         this.treeControl.expandAll();
     }
 
+    /** @docs-private */
     onClose() {
-        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
-            this.toggleSelectAllNode(false);
+        if (this.allOptionsSelected) {
+            this.updateInternalSelected();
         }
     }
 
@@ -262,6 +290,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
         this.toggleSelectAllNode();
     };
+
+    private updateInternalSelected() {
+        if (this.selectedAllEqualsSelectedNothing) {
+            this.internalSelected = this.data.value?.slice() || [];
+        }
+    }
 
     private emitChangePipeEvent() {
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {

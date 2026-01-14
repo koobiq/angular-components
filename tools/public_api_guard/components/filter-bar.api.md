@@ -552,7 +552,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     ngAfterViewInit(): void;
     ngOnInit(): void;
     onClear(): void;
-    // (undocumented)
     onClose(): void;
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
