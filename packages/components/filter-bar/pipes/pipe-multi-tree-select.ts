@@ -224,7 +224,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         }
 
         setTimeout(() => {
-            if (this.selectedAllEqualsSelectedNothing && this.allVisibleOptionsSelected) {
+            if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
             } else {
                 this.data.value = [...this.select.selectedValues];

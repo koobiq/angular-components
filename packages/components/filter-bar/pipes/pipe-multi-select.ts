@@ -187,7 +187,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
         this.selectionAllInProgress = false;
 
-        if (this.selectedAllEqualsSelectedNothing && this.allVisibleOptionsSelected) {
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.data.value = [];
         } else {
             this.data.value = [...this.select.value];
