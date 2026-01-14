@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqTimezoneModule', () => {
     test.describe('E2eTimezoneStates', () => {
@@ -8,7 +8,7 @@ test.describe('KbqTimezoneModule', () => {
         const getTimezoneSelectWithSearch = (locator: Locator) => locator.getByTestId('e2eTimezoneSelectWithSearch');
 
         test('light theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eTimezoneStates');
             const screenshotTarget = getComponent(page);
             const timezone = getTimezoneSelect(screenshotTarget);
 
@@ -18,7 +18,7 @@ test.describe('KbqTimezoneModule', () => {
         });
 
         test('dark theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eTimezoneStates');
             await e2eEnableDarkTheme(page);
             const screenshotTarget = getComponent(page);
             const timezone = getTimezoneSelect(screenshotTarget);
@@ -29,7 +29,7 @@ test.describe('KbqTimezoneModule', () => {
         });
 
         test('opened by Enter', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eTimezoneStates');
             const screenshotTarget = getComponent(page);
             const timezone = getTimezoneSelectWithSearch(screenshotTarget);
 

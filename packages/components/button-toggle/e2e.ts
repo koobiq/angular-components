@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { combineLatest } from 'rxjs';
-import { KbqButtonToggle, KbqButtonToggleGroup } from './button-toggle.component';
 
 type E2eButtonState = Partial<{
     title: string;
@@ -26,7 +26,7 @@ type DevButton = E2eButtonState & E2eButtonOrientation;
 
 @Component({
     selector: 'e2e-button-toggle-states',
-    imports: [KbqIconModule, FormsModule, KbqCheckboxModule, KbqButtonToggle, KbqButtonToggleGroup, KbqButtonModule],
+    imports: [KbqIconModule, FormsModule, KbqCheckboxModule, KbqButtonToggleModule, KbqButtonModule],
     template: `
         <div class="dev-options">
             <kbq-checkbox data-testid="e2eShowPrefixIcon" [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>

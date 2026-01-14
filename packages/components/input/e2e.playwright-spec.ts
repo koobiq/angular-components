@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqInputModule', () => {
     test.fixme('E2eInputStateAndStyle', () => {
@@ -9,7 +9,7 @@ test.describe('KbqInputModule', () => {
             const getTestTable = (locator: Locator) => locator.getByTestId('e2eInputTable');
 
             test('states', async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
 
                 const screenshotTarget = getTestTable(locator);
@@ -18,7 +18,7 @@ test.describe('KbqInputModule', () => {
             });
 
             test(`states (dark theme)`, async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 await e2eEnableDarkTheme(page);
 
                 const locator = getComponent(page);
@@ -34,7 +34,7 @@ test.describe('KbqInputModule', () => {
             const getInputPasswordTestRow = (locator: Locator) => locator.getByTestId('e2eInputPasswordWithHints');
 
             test('states', async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
 
                 const screenshotTarget = getTestTable(locator);
@@ -43,7 +43,7 @@ test.describe('KbqInputModule', () => {
             });
 
             test(`states (dark theme)`, async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 await e2eEnableDarkTheme(page);
 
                 const locator = getComponent(page);
@@ -54,7 +54,7 @@ test.describe('KbqInputModule', () => {
             });
 
             test('default hints', async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
 
                 const screenshotTarget = getInputPasswordTestRow(locator);
@@ -63,7 +63,7 @@ test.describe('KbqInputModule', () => {
             });
 
             test('text visibile', async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
 
                 const screenshotTarget = getInputPasswordTestRow(locator);
@@ -76,7 +76,7 @@ test.describe('KbqInputModule', () => {
             });
 
             test('default hints (dark theme)', async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 await e2eEnableDarkTheme(page);
 
                 const locator = getComponent(page);
@@ -87,7 +87,7 @@ test.describe('KbqInputModule', () => {
             });
 
             test('hints on blur', async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
 
                 const screenshotTarget = getInputPasswordTestRow(locator);
@@ -101,7 +101,7 @@ test.describe('KbqInputModule', () => {
             });
 
             test('hints on blur (dark theme)', async ({ page }) => {
-                await e2eGoToRootPage(page);
+                await page.goto('/E2eInputStateAndStyle');
                 await e2eEnableDarkTheme(page);
 
                 const locator = getComponent(page);

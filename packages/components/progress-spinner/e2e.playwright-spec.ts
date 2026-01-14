@@ -1,12 +1,12 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqProgressSpinnerModule', () => {
     test.fixme('E2eProgressSpinnerStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eProgressSpinnerStates');
 
         test('light theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eProgressSpinnerStates');
 
             await page.waitForTimeout(50);
 
@@ -14,7 +14,7 @@ test.describe('KbqProgressSpinnerModule', () => {
         });
 
         test('dark theme', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eProgressSpinnerStates');
             await e2eEnableDarkTheme(page);
 
             await page.waitForTimeout(50);

@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
@@ -26,7 +27,7 @@ const DEV_DATA_OBJECT = {
 
 @Component({
     selector: 'e2e-filter-bar-states',
-    imports: [KbqFilterBarModule, KbqIcon],
+    imports: [KbqFilterBarModule, KbqIcon, KbqLuxonDateModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
             <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[0]">

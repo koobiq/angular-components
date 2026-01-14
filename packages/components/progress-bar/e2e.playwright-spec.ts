@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqProgressBar', () => {
     test.describe('E2eProgressBarStateAndStyle', () => {
@@ -7,7 +7,7 @@ test.describe('KbqProgressBar', () => {
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eProgressBarTable');
 
         test('KbqProgressBar states', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eProgressBarStateAndStyle');
             const locator = getComponent(page);
 
             const screenshotTarget = getTestTable(locator);
@@ -18,7 +18,7 @@ test.describe('KbqProgressBar', () => {
         });
 
         test(`KbqProgressBar states (dark theme)`, async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eProgressBarStateAndStyle');
             await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);

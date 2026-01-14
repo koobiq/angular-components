@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqModalModule', () => {
     test.describe('E2eModalStates', () => {
@@ -9,7 +9,7 @@ test.describe('KbqModalModule', () => {
 
         test('light theme', async ({ page }) => {
             await page.setViewportSize({ width: 400, height: 350 });
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eModalStates');
 
             const component = getComponent(page);
 
@@ -20,7 +20,7 @@ test.describe('KbqModalModule', () => {
 
         test('dark theme', async ({ page }) => {
             await page.setViewportSize({ width: 400, height: 350 });
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eModalStates');
             await e2eEnableDarkTheme(page);
 
             const component = getComponent(page);
@@ -32,7 +32,7 @@ test.describe('KbqModalModule', () => {
 
         test('open multiple modals', async ({ page }) => {
             await page.setViewportSize({ width: 400, height: 350 });
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eModalStates');
 
             const component = getComponent(page);
 

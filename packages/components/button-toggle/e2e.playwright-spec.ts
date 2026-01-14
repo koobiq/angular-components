@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eGoToRootPage } from '../../e2e/utils';
+import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqButtonToggleModule', () => {
     test.describe('E2eButtonToggleStates', () => {
@@ -10,14 +10,14 @@ test.describe('KbqButtonToggleModule', () => {
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
         test('button-toggle with title', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eButtonToggleStates');
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot();
         });
 
         test('button-toggle with icon', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eButtonToggleStates');
             const locator = getComponent(page);
 
             await togglePrefix(locator);
@@ -27,7 +27,7 @@ test.describe('KbqButtonToggleModule', () => {
         });
 
         test('button-toggle with title, prefix and suffix', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eButtonToggleStates');
             const locator = getComponent(page);
 
             await togglePrefix(locator);
@@ -37,7 +37,7 @@ test.describe('KbqButtonToggleModule', () => {
         });
 
         test('button-toggle with title, prefix and suffix (dark theme)', async ({ page }) => {
-            await e2eGoToRootPage(page);
+            await page.goto('/E2eButtonToggleStates');
             await e2eEnableDarkTheme(page);
 
             const locator = getComponent(page);
