@@ -2,7 +2,7 @@ import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqInputModule', () => {
-    test.fixme('E2eInputStateAndStyle', () => {
+    test.describe('E2eInputStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eInputStateAndStyle');
 
         test.describe('KbqInput', () => {
