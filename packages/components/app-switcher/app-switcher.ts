@@ -318,11 +318,7 @@ export class KbqAppSwitcherTrigger
     /** Number of applications to choose from
      * @docs-private */
     get appsCount(): number {
-        if (this.sitesMode) {
-            return this.originalSites.reduce((acc, site) => acc + site.apps.length, 0);
-        }
-
-        return this.originalSites[0].apps.length;
+        return this.originalSites.reduce((acc, site) => acc + site.apps.length, 0);
     }
 
     /** Whether the sites are used or not
@@ -357,7 +353,12 @@ export class KbqAppSwitcherTrigger
     set sites(value: KbqAppSwitcherSite[]) {
         this.originalSites = value;
 
-        if (this.originalSites.length > 1) {
+        if (this.originalSites.length === 1) {
+            this._parsedApps = this.makeGroupsForApps(
+                this.originalSites[0].apps,
+                KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING
+            );
+        } else {
             this._parsedSites = [];
 
             value.forEach((site: KbqAppSwitcherSite) => {
@@ -367,11 +368,6 @@ export class KbqAppSwitcherTrigger
 
                 this._parsedSites.push(newSite);
             });
-        } else {
-            this._parsedApps = this.makeGroupsForApps(
-                this.originalSites[0].apps,
-                KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING
-            );
         }
     }
 
