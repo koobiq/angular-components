@@ -61,6 +61,15 @@ const init = async () => {
         }
     }
 
+    await copyFileWrapper(
+        resolvePath('../src/migrations/new-icons-pack/migration.json'),
+        join(schematicsPath, 'migrations', 'new-icons-pack', 'migration.json')
+    );
+    await copyFileWrapper(
+        resolvePath('../src/migrations/new-icons-pack/replacement.json'),
+        join(schematicsPath, 'migrations', 'new-icons-pack', 'replacement.json')
+    );
+
     await copyFileWrapper(resolvePath('../dist/utils/package-config.js'), join(utilsPath, 'package-config.js'));
     await copyFileWrapper(resolvePath('../dist/utils/messages.js'), join(utilsPath, 'messages.js'));
     await copyFileWrapper(resolvePath('../dist/utils/typescript.js'), join(utilsPath, 'typescript.js'));
