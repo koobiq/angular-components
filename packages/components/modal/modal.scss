@@ -110,7 +110,7 @@
     padding: var(--kbq-modal-size-content-padding-top-without-header) var(--kbq-modal-size-content-padding-horizontal)
         var(--kbq-modal-size-content-padding-bottom) var(--kbq-modal-size-content-padding-horizontal);
 
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     & > * {
         position: relative;

@@ -20,6 +20,7 @@
 @mixin _kbq-scrollbar() {
     // For Firefox compatibility
     @supports not selector(::-webkit-scrollbar) {
+        /* stylelint-disable-next-line no-invalid-position-declaration */
         scrollbar-width: auto;
     }
 

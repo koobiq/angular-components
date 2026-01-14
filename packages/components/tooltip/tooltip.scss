@@ -35,6 +35,7 @@ $trigger-margin_without-arrow: 4px;
 
 .kbq-tooltip__inner {
     border-radius: var(--kbq-tooltip-size-border-radius);
+    /* stylelint-disable-next-line declaration-property-value-keyword-no-deprecated */
     word-break: break-word;
 }
 
