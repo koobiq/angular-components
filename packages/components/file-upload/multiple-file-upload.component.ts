@@ -168,10 +168,12 @@ export class KbqMultipleFileUploadComponent
         const localeId = this.localeId();
         const localeConfig = this.localeConfig();
 
-        const baseLocaleConfig: KbqMultipleFileUploadLocaleConfig =
+        const defaultLocaleConfig: KbqMultipleFileUploadLocaleConfig =
             this.localeService && localeId
-                ? this.configuration || this.localeService.getParams('fileUpload').multiple
+                ? this.localeService.getParams('fileUpload').multiple
                 : KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+
+        const baseLocaleConfig: KbqMultipleFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
 
         return { ...baseLocaleConfig, ...localeConfig };
     });
@@ -229,7 +231,7 @@ export class KbqMultipleFileUploadComponent
         optional: true
     });
 
-    protected readonly text = computed(() => {
+    protected readonly captionText = computed(() => {
         const config = this.resolvedLocaleConfig();
 
         switch (this.allowed()) {
@@ -237,10 +239,10 @@ export class KbqMultipleFileUploadComponent
                 return config.captionTextWithFolder;
             }
             case KbqFileUploadAllowedType.Folder: {
-                return this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
+                return config.captionTextOnlyFolder;
             }
             case KbqFileUploadAllowedType.File: {
-                return config.captionTextOnlyFolder;
+                return this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
             }
             default: {
                 return config.captionText;

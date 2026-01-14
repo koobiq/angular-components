@@ -8,7 +8,7 @@
     @if (!file) {
         <div class="kbq-file-dropzone">
             <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
-            <kbq-dynamic-translation class="kbq-file-dropzone__text" [text]="text()">
+            <kbq-dynamic-translation class="kbq-file-dropzone__text" [text]="captionText()">
                 <label
                     *kbqDynamicTranslationSlot="'browseLink'; let context"
                     kbq-link

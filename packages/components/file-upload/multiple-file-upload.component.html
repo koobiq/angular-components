@@ -16,13 +16,13 @@
                 <div class="kbq-file-dropzone__text">
                     <div class="kbq-file-multiple__header">{{ localeData.title }}</div>
                     <div>
-                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: text() }" />
+                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: captionText() }" />
                     </div>
                 </div>
             } @else {
                 <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                 <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                    <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: text() }" />
+                    <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: captionText() }" />
                 </span>
             }
         </div>
@@ -95,7 +95,7 @@
                 <div class="kbq-file-dropzone">
                     <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                     <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: text() }" />
+                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: captionText() }" />
                     </span>
                 </div>
             </div>

@@ -186,7 +186,7 @@ export class KbqSingleFileUploadComponent
         optional: true
     });
 
-    protected readonly text = computed(() => {
+    protected readonly captionText = computed(() => {
         const config = this.resolvedLocaleConfig();
 
         switch (this.allowed()) {
@@ -210,9 +210,14 @@ export class KbqSingleFileUploadComponent
         const localeId = this.localeId();
         const localeConfig = this.localeConfig();
 
-        return this.localeService && localeId
-            ? { ...(this.configuration || this.localeService.getParams('fileUpload').single), ...localeConfig }
-            : { ...KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION, ...localeConfig };
+        const defaultLocaleConfig =
+            this.localeService && localeId
+                ? this.localeService.getParams('fileUpload').single
+                : KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+
+        const baseLocaleConfig: KbqBaseFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
+
+        return { ...baseLocaleConfig, ...localeConfig };
     });
 
     private readonly focusMonitor = inject(FocusMonitor);
