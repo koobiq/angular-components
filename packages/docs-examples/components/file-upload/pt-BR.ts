@@ -7,6 +7,7 @@ export const ptBRLocaleData: KbqMultipleFileUploadLocaleConfig = {
     captionTextOnlyFolder: 'Arrastar aqui ou [[browseLinkForFolder:pasta]]',
     captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:escolher]]',
     browseLink: 'escolher',
+    browseLinkFolder: 'pasta',
     title: 'Adicionar fotos',
     gridHeaders: {
         file: 'Arquivo',

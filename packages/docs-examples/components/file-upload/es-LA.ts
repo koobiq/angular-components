@@ -7,6 +7,7 @@ export const esLALocaleData: KbqMultipleFileUploadLocaleConfig = {
     captionTextWithFolder: 'Arrastre aquí o [[browseLink:elija]] o [[browseLinkForFolder:carpeta]]',
     captionTextForCompactSize: 'Arrastre archivos o [[browseLink:elija]]',
     browseLink: 'elija',
+    browseLinkFolder: 'carpeta',
     title: 'Agregar fotos',
     gridHeaders: {
         file: 'Archivo',

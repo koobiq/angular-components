@@ -7,6 +7,7 @@ export const enUSLocaleData: KbqMultipleFileUploadLocaleConfig = {
     captionTextWhenSelected: 'Drag more files or [[browseLink:choose file]]',
     captionTextForCompactSize: 'Drag here or [[browseLink:choose file]]',
     browseLink: 'choose',
+    browseLinkFolder: 'choose folder',
     title: 'Add photos',
     gridHeaders: {
         file: 'File',

@@ -12,7 +12,7 @@ import { of, skip } from 'rxjs';
 const localeData = {
     'en-US': {
         single: {
-            captionText: 'Drop file here or [[browseLink:secure upload]]',
+            captionText: 'Drop file here or {{ browseLink }}',
             browseLink: 'secure upload'
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
@@ -27,7 +27,7 @@ const localeData = {
 
     'es-LA': {
         single: {
-            captionText: 'Arrastra archivo aquí o [[browseLink:subida segura]]',
+            captionText: 'Arrastra archivo aquí o {{ browseLink }}',
             browseLink: 'subida segura'
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
@@ -42,7 +42,7 @@ const localeData = {
 
     'pt-BR': {
         single: {
-            captionText: 'Arraste arquivo aqui ou [[browseLink:upload seguro]]',
+            captionText: 'Arraste arquivo aqui ou {{ browseLink }}',
             browseLink: 'upload seguro'
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
@@ -57,7 +57,7 @@ const localeData = {
 
     'ru-RU': {
         single: {
-            captionText: 'Перетащите файл сюда или [[browseLink:безопасная загрузка]]',
+            captionText: 'Перетащите файл сюда или {{ browseLink }}',
             browseLink: 'безопасная загрузка'
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
@@ -72,7 +72,7 @@ const localeData = {
 
     'tk-TM': {
         single: {
-            captionText: 'Faýly şu ýere taşlaň ýa-da [[browseLink:howpsuz ýükleme]]',
+            captionText: 'Faýly şu ýere taşlaň ýa-da {{ browseLink }}',
             browseLink: 'howpsuz ýükleme'
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 

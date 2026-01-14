@@ -92,6 +92,7 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
                 captionTextWhenSelected: 'Перетащите еще или [[browseLink:выберите файлы]]',
                 captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
                 browseLink: 'выберите файлы',
+                browseLinkFolder: 'выберите папку',
                 title: 'Загрузите фотографии',
                 gridHeaders: {
                     file: 'Файл',

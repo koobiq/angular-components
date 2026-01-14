@@ -8,36 +8,9 @@
     @if (!file) {
         <div class="kbq-file-dropzone">
             <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
-            <kbq-dynamic-translation class="kbq-file-dropzone__text" [text]="captionText()">
-                <label
-                    *kbqDynamicTranslationSlot="'browseLink'; let context"
-                    kbq-link
-                    pseudo
-                    kbqFileLoader
-                    [onlyDirectory]="null"
-                    [accept]="acceptedFiles"
-                    [disabled]="disabled"
-                    [for]="fileUploadContext.id() || inputId"
-                    [tabIndex]="-1"
-                    [multiple]="true"
-                    (fileChange)="onFileSelectedViaClick($event)"
-                >
-                    {{ context }}
-                </label>
-
-                <label
-                    *kbqDynamicTranslationSlot="'browseLinkForFolder'; let context"
-                    kbq-link
-                    pseudo
-                    kbqFileLoader
-                    [onlyDirectory]="true"
-                    [disabled]="disabled"
-                    [tabIndex]="-1"
-                    (fileChange)="onFileSelectedViaClick($event)"
-                >
-                    {{ context }}
-                </label>
-            </kbq-dynamic-translation>
+            <span class="kbq-file-dropzone__text">
+                <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
+            </span>
         </div>
     } @else {
         @if (file) {
@@ -76,3 +49,47 @@
         <ng-content select="kbq-hint" />
     </div>
 }
+
+<ng-template
+    #captionText
+    let-captionText="captionText"
+    let-browseLink="browseLink"
+    let-captionTextSeparator="captionTextSeparator"
+    let-browseLinkFolder="browseLinkFolder"
+>
+    @if (captionText) {
+        {{ captionText }}
+    }
+    @if (browseLink) {
+        <label
+            kbq-link
+            pseudo
+            kbqFileLoader
+            [onlyDirectory]="null"
+            [accept]="acceptedFiles"
+            [disabled]="disabled"
+            [for]="fileUploadContext.id() || inputId"
+            [tabIndex]="-1"
+            [multiple]="true"
+            (fileChange)="onFileSelectedViaClick($event)"
+        >
+            {{ browseLink }}
+        </label>
+    }
+    @if (captionTextSeparator) {
+        {{ captionTextSeparator }}
+    }
+    @if (browseLinkFolder) {
+        <label
+            kbq-link
+            pseudo
+            kbqFileLoader
+            [onlyDirectory]="true"
+            [disabled]="disabled"
+            [tabIndex]="-1"
+            (fileChange)="onFileSelectedViaClick($event)"
+        >
+            {{ browseLinkFolder }}
+        </label>
+    }
+</ng-template>

@@ -20,10 +20,12 @@ export const ruRULocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Перетащите сюда или [[browseLink:выберите файл]]',
-            captionTextOnlyFolder: 'Перетащите сюда или [[browseLinkForFolder:выберите папку]]',
-            captionTextWithFolder: 'Перетащите сюда или [[browseLink:выберите файл]] или [[browseLinkForFolder:папку]]',
-            browseLink: 'выберите файл'
+            captionText: 'Перетащите сюда или {{ browseLink }}',
+            captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
+            browseLink: 'выберите файл',
+            browseLinkFolder: 'выберите папку',
+            browseLinkFolderMixed: 'папку'
         },
         multiple: {
             captionText: 'Перетащите сюда или [[browseLink:выберите файлы]]',
@@ -33,6 +35,7 @@ export const ruRULocaleData = {
             captionTextWhenSelected: 'Перетащите еще или [[browseLink:выберите файлы]]',
             captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
             browseLink: 'выберите файлы',
+            browseLinkFolder: 'выберите папку',
             title: 'Загрузите файлы',
             gridHeaders: {
                 file: 'Файл',

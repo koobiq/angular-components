@@ -19,11 +19,11 @@ export const ptBRLocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Arrastar o arquivo aqui ou [[browseLink:escolher]]',
-            captionTextOnlyFolder: 'Arrastar o arquivo aqui ou [[browseLinkForFolder:pasta]]',
-            captionTextWithFolder:
-                'Arrastar o arquivo aqui ou [[browseLink:escolher]] ou [[browseLinkForFolder:pasta]]',
-            browseLink: 'escolher'
+            captionText: 'Arrastar o arquivo aqui ou {{ browseLink }}',
+            captionTextOnlyFolder: 'Arrastar o arquivo aqui ou {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Arrastar o arquivo aqui ou {{ browseLink }} ou {{ browseLinkFolder }}',
+            browseLink: 'escolher',
+            browseLinkFolder: 'pasta'
         },
         multiple: {
             captionText: 'Arrastar aqui ou [[browseLink:escolher]]',
@@ -32,6 +32,7 @@ export const ptBRLocaleData = {
             captionTextWhenSelected: 'Arrastar mais arquivos aqui ou [[browseLink:escolher]]',
             captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:escolher]]',
             browseLink: 'escolher',
+            browseLinkFolder: 'pasta',
             title: 'Carregar arquivos',
             gridHeaders: {
                 file: 'Arquivo',

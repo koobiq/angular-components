@@ -1,5 +1,5 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { AsyncPipe, isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -29,7 +29,6 @@ import {
     KbqFileUploadLocaleConfig,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { KbqDynamicTranslation, KbqDynamicTranslationSlot } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
@@ -65,8 +64,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
         KbqEllipsisCenterDirective,
         KbqDataSizePipe,
         KbqFileLoader,
-        KbqDynamicTranslation,
-        KbqDynamicTranslationSlot
+        NgTemplateOutlet
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
@@ -186,19 +184,33 @@ export class KbqSingleFileUploadComponent
         optional: true
     });
 
-    protected readonly captionText = computed(() => {
+    /** @docs-private */
+    protected readonly captionContext = computed(() => {
         const config = this.resolvedLocaleConfig();
 
         switch (this.allowed()) {
             case KbqFileUploadAllowedType.Mixed: {
-                return config.captionTextWithFolder;
+                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+
+                const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
+
+                return {
+                    captionText: before,
+                    browseLink: config.browseLink,
+                    captionTextSeparator,
+                    browseLinkFolder: config.browseLinkFolderMixed
+                };
             }
             case KbqFileUploadAllowedType.Folder: {
-                return config.captionTextOnlyFolder;
+                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+
+                return { captionText: before, browseLinkFolder: config.browseLinkFolder };
             }
             case KbqFileUploadAllowedType.File:
             default: {
-                return config.captionText;
+                const [before] = config.captionTextWithFolder.split('{{ browseLink }}');
+
+                return { captionText: before, browseLink: config.browseLink };
             }
         }
     });

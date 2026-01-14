@@ -72,6 +72,8 @@ export interface KbqBaseFileUploadLocaleConfig {
     captionTextOnlyFolder: string;
     captionTextWithFolder: string;
     browseLink: string;
+    browseLinkFolder: string;
+    browseLinkFolderMixed?: string;
 }
 
 export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLocaleConfig {
