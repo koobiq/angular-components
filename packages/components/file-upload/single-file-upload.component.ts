@@ -42,6 +42,7 @@ import {
     KbqFile,
     KbqFileItem,
     KbqFileUploadAllowedType,
+    KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
     KbqFileValidatorFn
 } from './file-upload';
@@ -128,7 +129,7 @@ export class KbqSingleFileUploadComponent
      * Determines which kind of items the upload component can accept.
      * @default mixed
      */
-    allowed = input<KbqFileUploadAllowedType>('file');
+    allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfig>>();
@@ -186,16 +187,16 @@ export class KbqSingleFileUploadComponent
     });
 
     protected readonly text = computed(() => {
-        const config = this.config();
+        const config = this.resolvedLocaleConfig();
 
         switch (this.allowed()) {
-            case 'mixed': {
+            case KbqFileUploadAllowedType.Mixed: {
                 return config.captionTextWithFolder;
             }
-            case 'folder': {
+            case KbqFileUploadAllowedType.Folder: {
                 return config.captionTextOnlyFolder;
             }
-            case 'file':
+            case KbqFileUploadAllowedType.File:
             default: {
                 return config.captionText;
             }
@@ -205,7 +206,7 @@ export class KbqSingleFileUploadComponent
     private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
 
     /** @docs-private */
-    readonly config = computed<KbqBaseFileUploadLocaleConfig>(() => {
+    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfig>(() => {
         const localeId = this.localeId();
         const localeConfig = this.localeConfig();
 

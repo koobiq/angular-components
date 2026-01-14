@@ -275,7 +275,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.localeConfig.set(updatedConfig);
             fixture.detectChanges();
 
-            expect(component.fileUpload.config()).toMatchSnapshot();
+            expect(component.fileUpload.resolvedLocaleConfig()).toMatchSnapshot();
         });
     });
 });
@@ -493,7 +493,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.localeConfig.set(updatedConfig);
             fixture.detectChanges();
 
-            expect(component.fileUpload.config()).toMatchSnapshot();
+            expect(component.fileUpload.resolvedLocaleConfig()).toMatchSnapshot();
         });
     });
 });

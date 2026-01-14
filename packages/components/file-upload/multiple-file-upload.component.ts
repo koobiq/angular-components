@@ -26,6 +26,7 @@ import {
     ErrorStateMatcher,
     KBQ_DEFAULT_LOCALE_ID,
     KbqDataSizePipe,
+    KbqEnumValues,
     KbqMultipleFileUploadLocaleConfig,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -130,10 +131,10 @@ export class KbqMultipleFileUploadComponent
      * Determines which kind of items the upload component can accept.
      * @default mixed
      */
-    allowed = input<KbqFileUploadAllowedType>('file');
+    allowed = input<KbqEnumValues<KbqFileUploadAllowedType>>(KbqFileUploadAllowedType.File);
 
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqInputFileMultipleLabel>>();
+    readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
@@ -163,7 +164,7 @@ export class KbqMultipleFileUploadComponent
     hasFocus = false;
 
     /** @docs-private */
-    readonly config = computed<KbqMultipleFileUploadLocaleConfig>(() => {
+    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfig>(() => {
         const localeId = this.localeId();
         const localeConfig = this.localeConfig();
 
@@ -228,20 +229,17 @@ export class KbqMultipleFileUploadComponent
         optional: true
     });
 
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly platformId = inject(PLATFORM_ID);
-
     protected readonly text = computed(() => {
-        const config = this.config();
+        const config = this.resolvedLocaleConfig();
 
         switch (this.allowed()) {
-            case 'mixed': {
+            case KbqFileUploadAllowedType.Mixed: {
                 return config.captionTextWithFolder;
             }
-            case 'file': {
+            case KbqFileUploadAllowedType.Folder: {
                 return this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
             }
-            case 'folder': {
+            case KbqFileUploadAllowedType.File: {
                 return config.captionTextOnlyFolder;
             }
             default: {
@@ -251,6 +249,9 @@ export class KbqMultipleFileUploadComponent
     });
 
     private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
+
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly platformId = inject(PLATFORM_ID);
 
     constructor() {
         super();

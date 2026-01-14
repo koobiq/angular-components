@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
     KbqFileItem,
     KbqFileUploadAllowedType,
+    KbqFileUploadAllowedTypeValues,
     KbqFileUploadModule,
     KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
@@ -17,7 +18,7 @@ type SingleUploadState = {
     icon?: string;
     showFileSize?: boolean;
     className?: string;
-    allowed?: KbqFileUploadAllowedType;
+    allowed?: KbqFileUploadAllowedTypeValues;
 };
 
 type MultipleUploadState = {
@@ -29,7 +30,7 @@ type MultipleUploadState = {
     className?: string;
     size?: KbqMultipleFileUploadComponent['size'];
     type?: 'error';
-    allowed?: KbqFileUploadAllowedType;
+    allowed?: KbqFileUploadAllowedTypeValues;
 };
 
 @Component({
@@ -43,7 +44,7 @@ type MultipleUploadState = {
                         @for (cell of row; track $index) {
                             <td>
                                 <kbq-file-upload
-                                    [allowed]="cell.allowed ?? 'file'"
+                                    [allowed]="cell.allowed ?? kbqFileUploadAllowedTypes.File"
                                     [file]="cell.file"
                                     [showFileSize]="cell.showFileSize ?? true"
                                     [disabled]="!!cell.disabled"
@@ -66,7 +67,7 @@ type MultipleUploadState = {
                         @for (cell of row; track $index) {
                             <td>
                                 <kbq-multiple-file-upload
-                                    [allowed]="cell.allowed ?? 'file'"
+                                    [allowed]="cell.allowed ?? kbqFileUploadAllowedTypes.File"
                                     [class]="cell.className"
                                     [class.dev-error]="!!cell.error"
                                     [class.dev-dragover]="!!cell.dragover"
@@ -104,9 +105,9 @@ export class E2eFileUploadStateAndStyle {
 
         // File picker allowed types
         [
-            { file: null, allowed: 'folder' },
-            { file: null, allowed: 'mixed' },
-            { file: null, allowed: 'file' }
+            { file: null, allowed: KbqFileUploadAllowedType.Folder },
+            { file: null, allowed: KbqFileUploadAllowedType.Mixed },
+            { file: null, allowed: KbqFileUploadAllowedType.File }
         ],
         // File selected, fileSize shown
         [
@@ -142,9 +143,9 @@ export class E2eFileUploadStateAndStyle {
             { files: [], icon: this.iconClass.error, error: true },
             { files: [], dragover: true }],
         [
-            { files: [], allowed: 'folder' },
-            { files: [], allowed: 'mixed' },
-            { files: [], allowed: 'file' }
+            { files: [], allowed: KbqFileUploadAllowedType.Folder },
+            { files: [], allowed: KbqFileUploadAllowedType.Mixed },
+            { files: [], allowed: KbqFileUploadAllowedType.File }
         ],
         // Row 2: File selected
         [
@@ -194,4 +195,6 @@ export class E2eFileUploadStateAndStyle {
             })
         );
     }
+
+    protected readonly kbqFileUploadAllowedTypes = KbqFileUploadAllowedType;
 }

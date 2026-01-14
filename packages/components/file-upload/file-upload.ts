@@ -13,6 +13,7 @@ import {
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
     KbqBaseFileUploadLocaleConfig,
+    KbqEnumValues,
     KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -54,8 +55,14 @@ export interface KbqInputFileLabel {
     title?: string | undefined;
 }
 
+export enum KbqFileUploadAllowedType {
+    File = 'file',
+    Folder = 'folder',
+    Mixed = 'mixed'
+}
+
 /** Allowed upload modes for the upload component. */
-export type KbqFileUploadAllowedType = 'file' | 'folder' | 'mixed';
+export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedType>;
 
 /**
  * @deprecated use FormControl for validation

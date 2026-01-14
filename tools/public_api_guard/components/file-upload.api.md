@@ -32,6 +32,7 @@ import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqEnumValues } from '@koobiq/components/core';
 import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
@@ -124,8 +125,18 @@ export class KbqFileLoader {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFileLoader, never>;
 }
 
+// @public (undocumented)
+export enum KbqFileUploadAllowedType {
+    // (undocumented)
+    File = "file",
+    // (undocumented)
+    Folder = "folder",
+    // (undocumented)
+    Mixed = "mixed"
+}
+
 // @public
-export type KbqFileUploadAllowedType = 'file' | 'folder' | 'mixed';
+export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedType>;
 
 // @public
 export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
@@ -213,8 +224,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
-    allowed: InputSignal<KbqFileUploadAllowedType>;
-    readonly config: Signal<KbqMultipleFileUploadLocaleConfig>;
+    allowed: InputSignal<"file" | "folder" | "mixed">;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
@@ -241,7 +251,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     get input(): ElementRef<HTMLInputElement> | undefined;
     inputId: string;
     get invalid(): boolean;
-    readonly localeConfig: InputSignal<Partial<KbqInputFileMultipleLabel> | undefined>;
+    readonly localeConfig: InputSignal<Partial<KbqMultipleFileUploadLocaleConfig> | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -252,6 +262,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     progressMode: ProgressSpinnerMode;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
+    readonly resolvedLocaleConfig: Signal<KbqMultipleFileUploadLocaleConfig>;
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     size: 'compact' | 'default';
@@ -269,8 +280,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
-    allowed: InputSignal<KbqFileUploadAllowedType>;
-    readonly config: Signal<KbqBaseFileUploadLocaleConfig>;
+    allowed: InputSignal<"file" | "folder" | "mixed">;
     readonly configuration: KbqBaseFileUploadLocaleConfig | null;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
@@ -302,6 +312,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     progressMode: ProgressSpinnerMode;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
+    readonly resolvedLocaleConfig: Signal<KbqBaseFileUploadLocaleConfig>;
     setDisabledState(isDisabled: boolean): void;
     showFileSize: boolean;
     // (undocumented)
