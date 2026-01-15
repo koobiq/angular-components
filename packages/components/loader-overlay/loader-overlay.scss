@@ -46,7 +46,7 @@
 
         padding-right: var(--kbq-loader-overlay-size-big-overlay-padding-horizontal);
 
-        .kbq-progress-spinner {
+        .kbq-progress-spinner:has(+ .kbq-loader-overlay-text, + .kbq-loader-overlay-caption) {
             margin-bottom: var(--kbq-loader-overlay-size-big-loader-margin-bottom);
         }
 
@@ -60,7 +60,7 @@
 
         padding-right: var(--kbq-loader-overlay-size-normal-overlay-padding-horizontal);
 
-        .kbq-progress-spinner {
+        .kbq-progress-spinner:has(+ .kbq-loader-overlay-text, + .kbq-loader-overlay-caption) {
             margin-bottom: var(--kbq-loader-overlay-size-normal-loader-margin-bottom);
         }
 
@@ -74,7 +74,7 @@
 
         padding-right: var(--kbq-loader-overlay-size-compact-overlay-padding-horizontal);
 
-        .kbq-progress-spinner {
+        .kbq-progress-spinner:has(+ .kbq-loader-overlay-text, + .kbq-loader-overlay-caption) {
             margin-bottom: var(--kbq-loader-overlay-size-compact-loader-margin-bottom);
         }
 
