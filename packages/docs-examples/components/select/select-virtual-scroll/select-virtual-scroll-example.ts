@@ -11,9 +11,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selected" (openedChange)="openedChange($event)">
+            <kbq-select #select [(value)]="selected" (openedChange)="openedChange($event)">
+                <ng-container kbq-select-trigger>custom trigger {{ select.triggerValue['label'] }}</ng-container>
                 <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
-                    <kbq-option *cdkVirtualFor="let option of options" [value]="option">
+                    <kbq-option *cdkVirtualFor="let option of options" [value]="option" [viewValue]="option.label">
                         {{ option.label }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
@@ -35,8 +36,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectVirtualScrollExample {
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
-    readonly selected = this.options[0];
     readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
+
+    selected = this.options[0];
 
     openedChange(isOpened: boolean): void {
         if (!isOpened) return;
