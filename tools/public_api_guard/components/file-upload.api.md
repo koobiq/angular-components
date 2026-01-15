@@ -125,7 +125,7 @@ export class KbqFileLoader {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFileLoader, never>;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqFileUploadAllowedType {
     // (undocumented)
     File = "file",
@@ -160,6 +160,14 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     readonly stateChanges: Subject<void>;
     updateErrorState(): void;
 }
+
+// @public
+export type KbqFileUploadCaptionContext = {
+    captionText: string;
+    browseLink?: string;
+    captionTextSeparator?: string;
+    browseLinkFolder?: string;
+};
 
 // @public
 export class KbqFileUploadContext {
@@ -225,6 +233,8 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     accept?: string[];
     get acceptedFiles(): string;
     allowed: InputSignal<"file" | "folder" | "mixed">;
+    // (undocumented)
+    protected readonly captionText: Signal<string>;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
@@ -266,8 +276,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     size: 'compact' | 'default';
-    // (undocumented)
-    protected readonly text: Signal<string>;
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof i1_2.KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof i1_2.KbqFileList; inputs: {}; outputs: { "listChange": "filesChange"; "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
@@ -281,6 +289,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     accept?: string[];
     get acceptedFiles(): string;
     allowed: InputSignal<"file" | "folder" | "mixed">;
+    protected readonly captionContext: Signal<KbqFileUploadCaptionContext>;
     readonly configuration: KbqBaseFileUploadLocaleConfig | null;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
@@ -315,8 +324,6 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     readonly resolvedLocaleConfig: Signal<KbqBaseFileUploadLocaleConfig>;
     setDisabledState(isDisabled: boolean): void;
     showFileSize: boolean;
-    // (undocumented)
-    protected readonly text: Signal<string>;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, [{ directive: typeof i1_2.KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; "multiple": "multiple"; }; outputs: {}; }, { directive: typeof i1_2.KbqFileList; inputs: {}; outputs: { "listChange": "fileChange"; }; }]>;

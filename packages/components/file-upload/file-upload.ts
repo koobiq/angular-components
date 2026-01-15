@@ -55,6 +55,7 @@ export interface KbqInputFileLabel {
     title?: string | undefined;
 }
 
+/** Upload modes enum. */
 export enum KbqFileUploadAllowedType {
     File = 'file',
     Folder = 'folder',
@@ -63,6 +64,14 @@ export enum KbqFileUploadAllowedType {
 
 /** Allowed upload modes for the upload component. */
 export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedType>;
+
+/** @docs-private */
+export type KbqFileUploadCaptionContext = {
+    captionText: string;
+    browseLink?: string;
+    captionTextSeparator?: string;
+    browseLinkFolder?: string;
+};
 
 /**
  * @deprecated use FormControl for validation

@@ -43,6 +43,7 @@ import {
     KbqFileUploadAllowedType,
     KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
+    KbqFileUploadCaptionContext,
     KbqFileValidatorFn
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
@@ -185,7 +186,7 @@ export class KbqSingleFileUploadComponent
     });
 
     /** @docs-private */
-    protected readonly captionContext = computed(() => {
+    protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
         const config = this.resolvedLocaleConfig();
 
         switch (this.allowed()) {
