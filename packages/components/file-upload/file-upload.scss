@@ -1,4 +1,5 @@
 @use './file-upload-theme' as theme;
+@use '../form-field/form-field';
 
 .kbq-file-upload {
     box-sizing: border-box;
@@ -37,9 +38,7 @@
 }
 
 .kbq-file-upload__hint {
-    .kbq-hint {
-        margin-top: var(--kbq-size-xxs);
-    }
+    @include form-field.kbq-form-field-hint-geometry();
 }
 
 @include theme.kbq-file-upload-theme();

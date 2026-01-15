@@ -4,6 +4,8 @@
 }
 
 :where(.kbq-single-file-upload) {
+    --kbq-form-field-hint-size-margin-top: var(--kbq-size-xs);
+    --kbq-form-field-hint-size-gap: var(--kbq-size-xxs);
     --kbq-file-upload-size-single-container-border-radius: var(--kbq-size-s);
     --kbq-file-upload-size-single-container-border-width: 1px;
     --kbq-file-upload-size-single-container-content-gap-horizontal: var(--kbq-size-s);
@@ -40,6 +42,8 @@
 }
 
 :where(.kbq-multiple-file-upload) {
+    --kbq-form-field-hint-size-margin-top: var(--kbq-size-xs);
+    --kbq-form-field-hint-size-gap: var(--kbq-size-xxs);
     --kbq-file-upload-size-multiple-min-height: 120px;
     --kbq-file-upload-size-multiple-max-height: unset;
     --kbq-file-upload-size-multiple-big-container-min-height: 192px;
