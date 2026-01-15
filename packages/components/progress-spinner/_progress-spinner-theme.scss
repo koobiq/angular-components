@@ -1,9 +1,15 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-progress-spinner-theme() {
     .kbq-progress-spinner {
+        --stroke: var(--kbq-progress-spinner-circle-background);
+
         .kbq-progress-spinner__circle {
-            stroke: var(--kbq-progress-spinner-circle-background);
+            stroke: var(--stroke);
+        }
+
+        &.kbq-contrast {
+            --stroke: var(--kbq-progress-spinner-circle-contrast-background);
         }
     }
 
@@ -18,10 +24,10 @@
 
 @mixin kbq-progress-spinner-typography() {
     .kbq-progress-spinner-text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-progress-spinner-caption {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

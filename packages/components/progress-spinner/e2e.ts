@@ -11,6 +11,12 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
             <div kbq-progress-spinner-caption>Caption</div>
         </kbq-progress-spinner>
 
+        <kbq-progress-spinner mode="determinate" color="contrast" [value]="44" />
+        <kbq-progress-spinner mode="determinate" color="contrast" [value]="44">
+            <div kbq-progress-spinner-text>Text</div>
+            <div kbq-progress-spinner-caption>Caption</div>
+        </kbq-progress-spinner>
+
         <kbq-progress-spinner mode="indeterminate" [value]="44" />
         <kbq-progress-spinner mode="indeterminate" [value]="44">
             <div kbq-progress-spinner-text>Text</div>

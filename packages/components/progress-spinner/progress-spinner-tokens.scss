@@ -9,6 +9,11 @@
     --kbq-progress-spinner-size-big-content-gap-horizontal: var(--kbq-size-s);
     /* THEME TOKENS */
     --kbq-progress-spinner-circle-background: var(--kbq-icon-theme);
+    --kbq-progress-spinner-circle-contrast-background: var(--kbq-icon-contrast-fade);
     --kbq-progress-spinner-text-color: var(--kbq-foreground-contrast);
     --kbq-progress-spinner-caption-color: var(--kbq-foreground-contrast-secondary);
+}
+
+:where(.kbq-dark .kbq-progress-spinner) {
+    --kbq-progress-spinner-circle-contrast-background: var(--kbq-icon-contrast);
 }
