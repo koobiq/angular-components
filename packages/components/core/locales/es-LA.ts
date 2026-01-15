@@ -21,18 +21,20 @@ export const esLALocaleData = {
         single: {
             captionText: 'Arrastre el archivo aquí o {{ browseLink }}',
             captionTextOnlyFolder: 'Arrastre el archivo aquí o {{ browseLinkFolder }}',
-            captionTextWithFolder: 'Arrastre el archivo aquí o {{ browseLink }} o {{ browseLinkFolder }}',
-            browseLink: 'elija',
-            browseLinkFolder: 'carpeta'
-        },
-        multiple: {
-            captionText: 'Arrastre aquí o [[browseLink:elija]]',
-            captionTextOnlyFolder: 'Arrastre aquí o [[browseLinkForFolder:carpeta]]',
-            captionTextWithFolder: 'Arrastre aquí o [[browseLink:elija]] o [[browseLinkForFolder:carpeta]]',
-            captionTextWhenSelected: 'Arrastre más archivos aquí o [[browseLink:elija]]',
-            captionTextForCompactSize: 'Arrastre archivos o [[browseLink:elija]]',
+            captionTextWithFolder: 'Arrastre el archivo aquí o {{ browseLink }} o {{ browseLinkFolderMixed }}',
             browseLink: 'elija',
             browseLinkFolder: 'carpeta',
+            browseLinkFolderMixed: 'carpeta'
+        },
+        multiple: {
+            captionText: 'Arrastre aquí o {{ browseLink }}',
+            captionTextOnlyFolder: 'Arrastre aquí o {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Arrastre aquí o {{ browseLink }} o {{ browseLinkFolderMixed }}',
+            captionTextWhenSelected: 'Arrastre más archivos aquí o {{ browseLink }}',
+            captionTextForCompactSize: 'Arrastre archivos o {{ browseLink }}',
+            browseLink: 'elija',
+            browseLinkFolder: 'carpeta',
+            browseLinkFolderMixed: 'carpeta',
             title: 'Cargue los archivos',
             gridHeaders: {
                 file: 'Archivo',

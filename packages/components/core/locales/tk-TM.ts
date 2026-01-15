@@ -22,18 +22,20 @@ export const tkTMLocaleData = {
         single: {
             captionText: 'Faýly geçiriň ýa-da {{ browseLink }}',
             captionTextOnlyFolder: 'Faýly geçiriň ýa-da {{ browseLinkFolder }}',
-            captionTextWithFolder: 'Faýly geçiriň ýa-da {{ browseLink }} ýa-da {{ browseLinkFolder }}',
-            browseLink: 'saýlaň',
-            browseLinkFolder: 'bukja'
-        },
-        multiple: {
-            captionText: 'Şu ýere geçiriň ýa-da [[browseLink:saýlaň]]',
-            captionTextOnlyFolder: 'Şu ýere geçiriň ýa-da [[browseLinkForFolder:bukja]]',
-            captionTextWithFolder: 'Şu ýere geçiriň ýa-da [[browseLink:saýlaň]] ýa-da [[browseLinkForFolder:bukja]]',
-            captionTextWhenSelected: 'Ýene geçiriň ýa-da [[browseLink:saýlaň]]',
-            captionTextForCompactSize: 'Faýllary geçiriň ýa-da [[browseLink:saýlaň]]',
+            captionTextWithFolder: 'Faýly geçiriň ýa-da {{ browseLink }} ýa-da {{ browseLinkFolderMixed }}',
             browseLink: 'saýlaň',
             browseLinkFolder: 'bukja',
+            browseLinkFolderMixed: 'bukja'
+        },
+        multiple: {
+            captionText: 'Şu ýere geçiriň ýa-da {{ browseLink }}',
+            captionTextOnlyFolder: 'Şu ýere geçiriň ýa-da {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Şu ýere geçiriň ýa-da {{ browseLink }} ýa-da {{ browseLinkFolderMixed }}',
+            captionTextWhenSelected: 'Ýene geçiriň ýa-da {{ browseLink }}',
+            captionTextForCompactSize: 'Faýllary geçiriň ýa-da {{ browseLink }}',
+            browseLink: 'saýlaň',
+            browseLinkFolder: 'bukja',
+            browseLinkFolderMixed: 'bukja',
             title: 'Faýl ýükläň',
             gridHeaders: {
                 file: 'Faýl',

@@ -16,13 +16,13 @@
                 <div class="kbq-file-dropzone__text">
                     <div class="kbq-file-multiple__header">{{ localeData.title }}</div>
                     <div>
-                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: captionText() }" />
+                        <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                     </div>
                 </div>
             } @else {
                 <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                 <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                    <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: captionText() }" />
+                    <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </span>
             }
         </div>
@@ -95,7 +95,7 @@
                 <div class="kbq-file-dropzone">
                     <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                     <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                        <ng-container *ngTemplateOutlet="loaderLabel; context: { $implicit: captionText() }" />
+                        <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                     </span>
                 </div>
             </div>
@@ -109,10 +109,18 @@
     </div>
 }
 
-<ng-template #loaderLabel let-text>
-    <kbq-dynamic-translation [text]="text">
+<ng-template
+    #captionText
+    let-captionText="captionText"
+    let-browseLink="browseLink"
+    let-captionTextSeparator="captionTextSeparator"
+    let-browseLinkFolder="browseLinkFolder"
+>
+    @if (captionText) {
+        {{ captionText }}
+    }
+    @if (browseLink) {
         <label
-            *kbqDynamicTranslationSlot="'browseLink'; let context"
             kbq-link
             pseudo
             kbqFileLoader
@@ -124,10 +132,14 @@
             [multiple]="true"
             (fileChange)="onFileSelectedViaClick($event)"
         >
-            {{ context }}
+            {{ browseLink }}
         </label>
+    }
+    @if (captionTextSeparator) {
+        {{ captionTextSeparator }}
+    }
+    @if (browseLinkFolder) {
         <label
-            *kbqDynamicTranslationSlot="'browseLinkForFolder'; let context"
             kbq-link
             pseudo
             kbqFileLoader
@@ -136,7 +148,7 @@
             [tabIndex]="-1"
             (fileChange)="onFileSelectedViaClick($event)"
         >
-            {{ context }}
+            {{ browseLinkFolder }}
         </label>
-    </kbq-dynamic-translation>
+    }
 </ng-template>

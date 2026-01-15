@@ -17,9 +17,9 @@ const localeData = {
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Drop reports here or [[browseLink:secure upload]]',
-            captionTextWhenSelected: 'Add more evidence or [[browseLink:secure upload]]',
-            captionTextForCompactSize: 'Attach logs or [[browseLink:secure upload]]',
+            captionText: 'Drop reports here or {{ browseLink }}',
+            captionTextWhenSelected: 'Add more evidence or {{ browseLink }}',
+            captionTextForCompactSize: 'Attach logs or {{ browseLink }}',
             browseLink: 'secure upload',
             title: 'Submit security files'
         } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
@@ -32,9 +32,9 @@ const localeData = {
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Arrastra reportes aquí o [[browseLink:subida segura]]',
-            captionTextWhenSelected: 'Agrega evidencia o [[browseLink:subida segura]]',
-            captionTextForCompactSize: 'Adjunta logs o [[browseLink:subida segura]]',
+            captionText: 'Arrastra reportes aquí o {{ browseLink }}',
+            captionTextWhenSelected: 'Agrega evidencia o {{ browseLink }}',
+            captionTextForCompactSize: 'Adjunta logs o {{ browseLink }}',
             browseLink: 'subida segura',
             title: 'Enviar archivos de seguridad'
         } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
@@ -47,9 +47,9 @@ const localeData = {
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Arraste relatórios aqui ou [[browseLink:upload seguro]]',
-            captionTextWhenSelected: 'Adicione evidências ou [[browseLink:upload seguro]]',
-            captionTextForCompactSize: 'Anexe logs ou [[browseLink:upload seguro]]',
+            captionText: 'Arraste relatórios aqui ou {{ browseLink }}',
+            captionTextWhenSelected: 'Adicione evidências ou {{ browseLink }}',
+            captionTextForCompactSize: 'Anexe logs ou {{ browseLink }}',
             browseLink: 'upload seguro',
             title: 'Enviar arquivos de segurança'
         } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
@@ -62,9 +62,9 @@ const localeData = {
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Перетащите отчёты сюда или [[browseLink:безопасная загрузка]]',
-            captionTextWhenSelected: 'Добавьте доказательства или [[browseLink:безопасная загрузка]]',
-            captionTextForCompactSize: 'Прикрепите логи или [[browseLink:безопасная загрузка]]',
+            captionText: 'Перетащите отчёты сюда или {{ browseLink }}',
+            captionTextWhenSelected: 'Добавьте доказательства или {{ browseLink }}',
+            captionTextForCompactSize: 'Прикрепите логи или {{ browseLink }}',
             browseLink: 'безопасная загрузка',
             title: 'Загрузка файлов безопасности'
         } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
@@ -77,9 +77,9 @@ const localeData = {
         } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
 
         multiple: {
-            captionText: 'Hasabatlary şu ýere taşlaň ýa-da [[browseLink:howpsuz ýükleme]]',
-            captionTextWhenSelected: 'Has köp subutnamalary goşuň ýa-da [[browseLink:howpsuz ýükleme]]',
-            captionTextForCompactSize: 'Loglary goşuň ýa-da [[browseLink:howpsuz ýükleme]]',
+            captionText: 'Hasabatlary şu ýere taşlaň ýa-da {{ browseLink }}',
+            captionTextWhenSelected: 'Has köp subutnamalary goşuň ýa-da {{ browseLink }}',
+            captionTextForCompactSize: 'Loglary goşuň ýa-da {{ browseLink }}',
             browseLink: 'howpsuz ýükleme',
             title: 'Howpsuzlyk faýllaryny iber'
         } satisfies Partial<KbqMultipleFileUploadLocaleConfig>

@@ -44,6 +44,7 @@ import {
     KbqFileItem,
     KbqFileUploadAllowedType,
     KbqFileUploadBase,
+    KbqFileUploadCaptionContext,
     KbqFileValidatorFn
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
@@ -178,6 +179,38 @@ export class KbqMultipleFileUploadComponent
         return { ...baseLocaleConfig, ...localeConfig };
     });
 
+    /** @docs-private */
+    protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
+        const config = this.resolvedLocaleConfig();
+
+        switch (this.allowed()) {
+            case KbqFileUploadAllowedType.Mixed: {
+                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+
+                const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
+
+                return {
+                    captionText: before,
+                    browseLink: config.browseLink,
+                    captionTextSeparator,
+                    browseLinkFolder: config.browseLinkFolderMixed
+                };
+            }
+            case KbqFileUploadAllowedType.Folder: {
+                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+
+                return { captionText: before, browseLinkFolder: config.browseLinkFolder };
+            }
+            case KbqFileUploadAllowedType.File:
+            default: {
+                const caption = this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
+                const [before] = caption.split('{{ browseLink }}');
+
+                return { captionText: before, browseLink: config.browseLink };
+            }
+        }
+    });
+
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
      */
@@ -229,25 +262,6 @@ export class KbqMultipleFileUploadComponent
     /** @docs-private */
     readonly configuration = inject<KbqMultipleFileUploadLocaleConfig>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
-    });
-
-    protected readonly captionText = computed(() => {
-        const config = this.resolvedLocaleConfig();
-
-        switch (this.allowed()) {
-            case KbqFileUploadAllowedType.Mixed: {
-                return config.captionTextWithFolder;
-            }
-            case KbqFileUploadAllowedType.Folder: {
-                return config.captionTextOnlyFolder;
-            }
-            case KbqFileUploadAllowedType.File: {
-                return this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
-            }
-            default: {
-                return config.captionText;
-            }
-        }
     });
 
     private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));

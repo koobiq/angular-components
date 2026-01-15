@@ -4,11 +4,12 @@ exports[`KbqMultipleFileUploadComponent with localeConfig input property should 
 {
   "browseLink": "выберите файлы",
   "browseLinkFolder": "выберите папку",
+  "browseLinkFolderMixed": "папку",
   "captionText": "TEST {{ browseLink }}",
-  "captionTextForCompactSize": "Перетащите сюда или [[browseLink:выберите файлы]]",
-  "captionTextOnlyFolder": "Перетащите сюда или [[browseLinkForFolder:выберите папку]]",
-  "captionTextWhenSelected": "Перетащите еще или [[browseLink:выберите файлы]]",
-  "captionTextWithFolder": "Перетащите сюда или [[browseLink:выберите файлы]] или [[browseLinkForFolder:папку]]",
+  "captionTextForCompactSize": "Перетащите сюда или {{ browseLink }}",
+  "captionTextOnlyFolder": "Перетащите сюда или {{ browseLinkFolder }}",
+  "captionTextWhenSelected": "Перетащите еще или {{ browseLink }}",
+  "captionTextWithFolder": "Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}",
   "gridHeaders": {
     "file": "Файл",
     "size": "Размер",

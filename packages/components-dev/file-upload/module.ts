@@ -85,14 +85,14 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
             useValue: {
-                captionText: 'Перетащите сюда или [[browseLink:выберите файлы]]',
-                captionTextOnlyFolder: 'Перетащите сюда или [[browseLinkForFolder:выберите папку]]',
-                captionTextWithFolder:
-                    'Перетащите сюда или [[browseLink:выберите файлы]] или [[browseLinkForFolder:папку]]',
-                captionTextWhenSelected: 'Перетащите еще или [[browseLink:выберите файлы]]',
-                captionTextForCompactSize: 'Перетащите сюда или [[browseLink:выберите файлы]]',
+                captionText: 'Перетащите сюда или {{ browseLink }}',
+                captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
+                captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
+                captionTextWhenSelected: 'Перетащите еще или {{ browseLink }}',
+                captionTextForCompactSize: 'Перетащите сюда или {{ browseLink }}',
                 browseLink: 'выберите файлы',
                 browseLinkFolder: 'выберите папку',
+                browseLinkFolderMixed: 'папку',
                 title: 'Загрузите фотографии',
                 gridHeaders: {
                     file: 'Файл',

@@ -28,13 +28,14 @@ export const enUSLocaleData = {
             browseLinkFolderMixed: 'folder'
         },
         multiple: {
-            captionText: 'Drag here or [[browseLink:choose files]]',
-            captionTextOnlyFolder: 'Drag here or [[browseLinkForFolder:choose folder]]',
-            captionTextWithFolder: 'Drag here or [[browseLink:choose files]] or [[browseLinkForFolder:folder]]',
-            captionTextWhenSelected: 'Drag more or [[browseLink:choose files]]',
-            captionTextForCompactSize: 'Drag files or [[browseLink:choose files]]',
+            captionText: 'Drag here or {{ browseLink }}',
+            captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Drag here or {{ browseLink }} or {{ browseLinkFolderMixed }}',
+            captionTextWhenSelected: 'Drag more or {{ browseLink }}',
+            captionTextForCompactSize: 'Drag files or {{ browseLink }}',
             browseLink: 'choose files',
             browseLinkFolder: 'choose folder',
+            browseLinkFolderMixed: 'folder',
             title: 'Upload files',
             gridHeaders: {
                 file: 'File',

@@ -21,18 +21,20 @@ export const ptBRLocaleData = {
         single: {
             captionText: 'Arrastar o arquivo aqui ou {{ browseLink }}',
             captionTextOnlyFolder: 'Arrastar o arquivo aqui ou {{ browseLinkFolder }}',
-            captionTextWithFolder: 'Arrastar o arquivo aqui ou {{ browseLink }} ou {{ browseLinkFolder }}',
-            browseLink: 'escolher',
-            browseLinkFolder: 'pasta'
-        },
-        multiple: {
-            captionText: 'Arrastar aqui ou [[browseLink:escolher]]',
-            captionTextOnlyFolder: 'Arrastar aqui ou [[browseLinkForFolder:pasta]]',
-            captionTextWithFolder: 'Arrastar aqui ou [[browseLink:escolher]] ou [[browseLinkForFolder:pasta]]',
-            captionTextWhenSelected: 'Arrastar mais arquivos aqui ou [[browseLink:escolher]]',
-            captionTextForCompactSize: 'Arrastar arquivos ou [[browseLink:escolher]]',
+            captionTextWithFolder: 'Arrastar o arquivo aqui ou {{ browseLink }} ou {{ browseLinkFolderMixed }}',
             browseLink: 'escolher',
             browseLinkFolder: 'pasta',
+            browseLinkFolderMixed: 'pasta'
+        },
+        multiple: {
+            captionText: 'Arrastar aqui ou {{ browseLink }}',
+            captionTextOnlyFolder: 'Arrastar aqui ou {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Arrastar aqui ou {{ browseLink }} ou {{ browseLinkFolderMixed }}',
+            captionTextWhenSelected: 'Arrastar mais arquivos aqui ou {{ browseLink }}',
+            captionTextForCompactSize: 'Arrastar arquivos ou {{ browseLink }}',
+            browseLink: 'escolher',
+            browseLinkFolder: 'pasta',
+            browseLinkFolderMixed: 'pasta',
             title: 'Carregar arquivos',
             gridHeaders: {
                 file: 'Arquivo',
