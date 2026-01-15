@@ -190,6 +190,7 @@ export interface KbqAppSwitcherSite {
 
 // @public (undocumented)
 export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherComponent> implements AfterContentInit, OnInit {
+    // @deprecated (undocumented)
     get apps(): KbqAppSwitcherApp[];
     set apps(apps: KbqAppSwitcherApp[]);
     get appsCount(): number;

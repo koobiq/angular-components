@@ -126,7 +126,7 @@
             <kbq-dropdown [class]="'kbq-app-switcher-sites'">
                 <div kbqDropdownStaticContent class="kbq-app-switcher-site">
                     @for (site of filteredSites; track site) {
-                        @if (site.apps) {
+                        @if (trigger.sitesMode && site.apps) {
                             <kbq-optgroup label="{{ site.name }}" />
                         }
 
