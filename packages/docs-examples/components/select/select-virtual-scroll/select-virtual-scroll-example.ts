@@ -12,9 +12,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <kbq-form-field>
             <kbq-select #select [(value)]="selected" (openedChange)="openedChange($event)">
-                <ng-container kbq-select-trigger>custom trigger {{ select.triggerValue['label'] }}</ng-container>
+                <div kbq-select-trigger>{{ select.triggerValue['label'] }}</div>
                 <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
-                    <kbq-option *cdkVirtualFor="let option of options" [value]="option" [viewValue]="option.label">
+                    <kbq-option *cdkVirtualFor="let option of options" [value]="option">
                         {{ option.label }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
