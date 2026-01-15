@@ -1,22 +1,6 @@
-@use 'sass:map';
 @use '../core/styles/common/tokens' as *;
 
 @use './loader-overlay-theme' as *;
-
-@mixin _loader-overlay-state($state) {
-    & {
-        padding-left: map.get($state, padding-left);
-        padding-right: map.get($state, padding-right);
-    }
-
-    .kbq-progress-spinner:has(+ .kbq-loader-overlay-text, + .kbq-loader-overlay-caption) {
-        margin-bottom: map.get($state, loader-margin-bottom);
-    }
-
-    .kbq-loader-overlay-text {
-        margin-bottom: map.get($state, content-gap-vertical);
-    }
-}
 
 .kbq-loader-overlay_parent {
     position: relative;
@@ -57,37 +41,33 @@
         max-width: 80%;
     }
 
+    padding-left: var(--padding-horizontal);
+    padding-right: var(--padding-horizontal);
+
+    .kbq-progress-spinner:has(+ .kbq-loader-overlay-text, + .kbq-loader-overlay-caption) {
+        margin-bottom: var(--loader-margin-bottom);
+    }
+
+    .kbq-loader-overlay-text {
+        margin-bottom: var(--content-gap-vertical);
+    }
+
     &.kbq-loader-overlay_big {
-        @include _loader-overlay-state(
-            (
-                padding-left: var(--kbq-loader-overlay-size-big-overlay-padding-horizontal),
-                padding-right: var(--kbq-loader-overlay-size-big-overlay-padding-horizontal),
-                loader-margin-bottom: var(--kbq-loader-overlay-size-big-loader-margin-bottom),
-                content-gap-vertical: var(--kbq-loader-overlay-size-big-content-content-gap-vertical)
-            )
-        );
+        --padding-horizontal: var(--kbq-loader-overlay-size-big-overlay-padding-horizontal);
+        --loader-margin-bottom: var(--kbq-loader-overlay-size-big-loader-margin-bottom);
+        --content-gap-vertical: var(--kbq-loader-overlay-size-big-content-content-gap-vertical);
     }
 
     &.kbq-loader-overlay_normal {
-        @include _loader-overlay-state(
-            (
-                padding-left: var(--kbq-loader-overlay-size-normal-overlay-padding-horizontal),
-                padding-right: var(--kbq-loader-overlay-size-normal-overlay-padding-horizontal),
-                loader-margin-bottom: var(--kbq-loader-overlay-size-normal-loader-margin-bottom),
-                content-gap-vertical: var(--kbq-loader-overlay-size-normal-content-content-gap-vertical)
-            )
-        );
+        --padding-horizontal: var(--kbq-loader-overlay-size-normal-overlay-padding-horizontal);
+        --loader-margin-bottom: var(--kbq-loader-overlay-size-normal-loader-margin-bottom);
+        --content-gap-vertical: var(--kbq-loader-overlay-size-normal-content-content-gap-vertical);
     }
 
     &.kbq-loader-overlay_compact {
-        @include _loader-overlay-state(
-            (
-                padding-left: var(--kbq-loader-overlay-size-compact-overlay-padding-horizontal),
-                padding-right: var(--kbq-loader-overlay-size-compact-overlay-padding-horizontal),
-                loader-margin-bottom: var(--kbq-loader-overlay-size-compact-loader-margin-bottom),
-                content-gap-vertical: var(--kbq-loader-overlay-size-compact-content-content-gap-vertical)
-            )
-        );
+        --padding-horizontal: var(--kbq-loader-overlay-size-compact-overlay-padding-horizontal);
+        --loader-margin-bottom: var(--kbq-loader-overlay-size-compact-loader-margin-bottom);
+        --content-gap-vertical: var(--kbq-loader-overlay-size-compact-content-content-gap-vertical);
     }
 }
 
