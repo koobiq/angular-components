@@ -30,7 +30,7 @@ import { KbqButton } from '@koobiq/components/button';
 import { KbqDateFormats } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
-import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';

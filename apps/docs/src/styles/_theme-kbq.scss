@@ -55,9 +55,11 @@
 }
 
 @mixin kbq-docs-theme() {
-    background: var(--kbq-background-bg);
-    color: var(--kbq-foreground-contrast);
-
     @include koobiq-theme();
     @include docs-components-theme();
+
+    & {
+        background: var(--kbq-background-bg);
+        color: var(--kbq-foreground-contrast);
+    }
 }

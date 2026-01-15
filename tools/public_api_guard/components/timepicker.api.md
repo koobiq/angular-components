@@ -19,7 +19,7 @@ import * as i3 from '@angular/forms';
 import * as i5 from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
-import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
