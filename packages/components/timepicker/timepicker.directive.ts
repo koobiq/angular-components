@@ -382,7 +382,7 @@ export class KbqTimepicker<D>
 
     private lastValueValid = false;
 
-    private control: AbstractControl;
+    private control?: AbstractControl;
 
     private defaultPlaceholder = true;
     private separator = ':';
@@ -410,6 +410,7 @@ export class KbqTimepicker<D>
         this.validator = Validators.compose([this.parseValidator, this.minValidator, this.maxValidator]);
 
         this.onChange = noop;
+        this.onTouched = noop;
 
         // Force setter to be called in case id was not specified.
         this.id = this.id;
@@ -500,7 +501,7 @@ export class KbqTimepicker<D>
             if (!this.viewValue) {
                 this.onChange(null);
             } else {
-                this.control.updateValueAndValidity();
+                this.control?.updateValueAndValidity();
             }
 
             return;
@@ -990,9 +991,7 @@ export class KbqTimepicker<D>
     }
 
     private setControl(control: AbstractControl) {
-        if (this.control) {
-            return;
-        }
+        if (this.control) return;
 
         this.control = control;
 
