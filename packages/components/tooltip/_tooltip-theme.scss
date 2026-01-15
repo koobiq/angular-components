@@ -9,7 +9,6 @@
 
     & .kbq-tooltip__arrow {
         background-color: var(--kbq-tooltip-#{$style-name}-background);
-        box-shadow: var(--kbq-tooltip-borderless-shadow);
     }
 
     &.kbq-tooltip_arrowless {
@@ -18,11 +17,6 @@
 }
 
 @mixin kbq-tooltip-theme() {
-    .kbq-tooltip,
-    .kbq-tooltip__arrow {
-        box-shadow: var(--kbq-tooltip-borderless-shadow);
-    }
-
     .kbq-tooltip.kbq-theme {
         @include kbq-tooltip-color(theme-fade-off);
     }
@@ -33,6 +27,11 @@
 
     .kbq-tooltip.kbq-contrast-fade {
         @include kbq-tooltip-color(contrast-fade-on);
+
+        &.kbq-tooltip,
+        & .kbq-tooltip__arrow {
+            box-shadow: var(--kbq-shadow-popup);
+        }
     }
 
     .kbq-tooltip.kbq-warning {
