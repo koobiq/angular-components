@@ -27,7 +27,8 @@ export default defineConfig({
             name: 'Chrome',
             use: {
                 ...devices['Desktop Chrome HiDPI'],
-                viewport
+                viewport,
+                browserName: 'webkit'
             }
         }
     ],
