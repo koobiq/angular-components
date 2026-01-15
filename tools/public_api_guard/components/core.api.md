@@ -304,6 +304,8 @@ export const enUSLocaleData: {
             captionTextOnlyFolder: string;
             captionTextWithFolder: string;
             browseLink: string;
+            browseLinkFolder: string;
+            browseLinkFolderMixed: string;
         };
         multiple: {
             captionText: string;
@@ -312,6 +314,7 @@ export const enUSLocaleData: {
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -533,6 +536,7 @@ export const esLALocaleData: {
             captionTextOnlyFolder: string;
             captionTextWithFolder: string;
             browseLink: string;
+            browseLinkFolder: string;
         };
         multiple: {
             captionText: string;
@@ -541,6 +545,7 @@ export const esLALocaleData: {
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -841,6 +846,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextOnlyFolder: string;
                 captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkFolder: string;
+                browseLinkFolderMixed: string;
             };
             multiple: {
                 captionText: string;
@@ -849,6 +856,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1051,6 +1059,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextOnlyFolder: string;
                 captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkFolder: string;
             };
             multiple: {
                 captionText: string;
@@ -1059,6 +1068,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1257,6 +1267,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextOnlyFolder: string;
                 captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkFolder: string;
             };
             multiple: {
                 captionText: string;
@@ -1265,6 +1276,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1469,6 +1481,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextOnlyFolder: string;
                 captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkFolder: string;
+                browseLinkFolderMixed: string;
             };
             multiple: {
                 captionText: string;
@@ -1477,6 +1491,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1677,6 +1692,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextOnlyFolder: string;
                 captionTextWithFolder: string;
                 browseLink: string;
+                browseLinkFolder: string;
             };
             multiple: {
                 captionText: string;
@@ -1685,6 +1701,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 captionTextWhenSelected: string;
                 captionTextForCompactSize: string;
                 browseLink: string;
+                browseLinkFolder: string;
                 title: string;
                 gridHeaders: {
                     file: string;
@@ -1975,6 +1992,10 @@ export enum KbqAnimationDurations {
 export interface KbqBaseFileUploadLocaleConfig {
     // (undocumented)
     browseLink: string;
+    // (undocumented)
+    browseLinkFolder: string;
+    // (undocumented)
+    browseLinkFolderMixed?: string;
     // (undocumented)
     captionText: string;
     // (undocumented)
@@ -3247,6 +3268,7 @@ export const ptBRLocaleData: {
             captionTextOnlyFolder: string;
             captionTextWithFolder: string;
             browseLink: string;
+            browseLinkFolder: string;
         };
         multiple: {
             captionText: string;
@@ -3255,6 +3277,7 @@ export const ptBRLocaleData: {
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -3657,6 +3680,8 @@ export const ruRULocaleData: {
             captionTextOnlyFolder: string;
             captionTextWithFolder: string;
             browseLink: string;
+            browseLinkFolder: string;
+            browseLinkFolderMixed: string;
         };
         multiple: {
             captionText: string;
@@ -3665,6 +3690,7 @@ export const ruRULocaleData: {
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
@@ -3961,6 +3987,7 @@ export const tkTMLocaleData: {
             captionTextOnlyFolder: string;
             captionTextWithFolder: string;
             browseLink: string;
+            browseLinkFolder: string;
         };
         multiple: {
             captionText: string;
@@ -3969,6 +3996,7 @@ export const tkTMLocaleData: {
             captionTextWhenSelected: string;
             captionTextForCompactSize: string;
             browseLink: string;
+            browseLinkFolder: string;
             title: string;
             gridHeaders: {
                 file: string;
