@@ -229,7 +229,7 @@ class WithParamsKbqTitleComponent {
                 text-overflow: ellipsis;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
-                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
         `
     ]
