@@ -12,6 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -28,7 +29,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqSelectModule,
         KbqIconModule,
         KbqToggleModule,
-        NgClass
+        NgClass,
+        DevThemeToggle
     ],
     selector: 'dev-app',
     styleUrls: ['./styles.scss'],
