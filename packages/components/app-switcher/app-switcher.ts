@@ -60,7 +60,8 @@ export interface KbqAppSwitcherApp {
     name: string;
     id: string | number;
     type?: string | number;
-    icon: string;
+    icon?: string;
+    iconSrc?: string;
     caption?: string;
     aliases?: KbqAppSwitcherApp[];
     link?: string;
@@ -71,6 +72,7 @@ export interface KbqAppSwitcherSite {
     id: string | number;
     status?: string;
     icon?: string;
+    iconSrc?: string;
     apps: KbqAppSwitcherApp[];
 }
 
@@ -92,6 +94,7 @@ export function defaultGroupBy(
                 name: appType,
                 aliases: [app],
                 icon: app.icon,
+                iconSrc: app.iconSrc,
                 id: ''
             };
         }
