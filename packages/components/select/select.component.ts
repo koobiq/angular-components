@@ -568,8 +568,10 @@ export class KbqSelect
     }
 
     get triggerValue(): string {
-        if (this.empty) {
-            return '';
+        if (this.empty) return '';
+
+        if (this.selectionModel.selected[0] instanceof KbqVirtualOption) {
+            return this.selectionModel.selected[0].value;
         }
 
         return this.selectionModel.selected[0].viewValue;

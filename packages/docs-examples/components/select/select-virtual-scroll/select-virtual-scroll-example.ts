@@ -13,7 +13,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selected" (openedChange)="openedChange($event)">
+            <kbq-select #select [(value)]="selected" (openedChange)="openedChange($event)">
+                <div kbq-select-trigger>{{ select.triggerValue['label'] }}</div>
                 <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
                     <kbq-option *cdkVirtualFor="let option of options" [value]="option">
                         {{ option.label }}
@@ -36,8 +37,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectVirtualScrollExample {
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
-    readonly selected = this.options[0];
     readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
+
+    selected = this.options[0];
 
     openedChange(isOpened: boolean): void {
         if (!isOpened) return;

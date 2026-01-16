@@ -2475,6 +2475,8 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     // (undocumented)
     multiSelection?: boolean;
+    // (undocumented)
+    withVirtualScroll?: boolean;
 }
 
 // @public
