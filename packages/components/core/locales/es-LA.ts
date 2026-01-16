@@ -35,11 +35,7 @@ export const esLALocaleData = {
             browseLink: 'elija',
             browseLinkFolder: 'carpeta',
             browseLinkFolderMixed: 'carpeta',
-            title: 'Cargue los archivos',
-            gridHeaders: {
-                file: 'Archivo',
-                size: 'Tamaño'
-            }
+            title: 'Cargue los archivos'
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

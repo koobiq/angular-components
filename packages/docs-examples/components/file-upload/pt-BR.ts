@@ -9,9 +9,5 @@ export const ptBRLocaleData: KbqMultipleFileUploadLocaleConfig = {
     browseLink: 'escolher',
     browseLinkFolder: 'pasta',
     browseLinkFolderMixed: 'pasta',
-    title: 'Adicionar fotos',
-    gridHeaders: {
-        file: 'Arquivo',
-        size: 'Tamanho'
-    }
+    title: 'Adicionar fotos'
 };

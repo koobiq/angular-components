@@ -80,10 +80,6 @@ export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLoca
     captionTextWhenSelected: string;
     captionTextForCompactSize: string;
     title: string;
-    gridHeaders: {
-        file: string;
-        size: string;
-    };
 }
 
 export type KbqFileUploadLocaleConfig = {

@@ -9,9 +9,5 @@ export const enUSLocaleData: KbqMultipleFileUploadLocaleConfig = {
     browseLink: 'choose',
     browseLinkFolder: 'choose folder',
     browseLinkFolderMixed: 'choose folder',
-    title: 'Add photos',
-    gridHeaders: {
-        file: 'File',
-        size: 'Size'
-    }
+    title: 'Add photos'
 };

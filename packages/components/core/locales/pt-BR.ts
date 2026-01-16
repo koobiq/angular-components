@@ -35,11 +35,7 @@ export const ptBRLocaleData = {
             browseLink: 'escolher',
             browseLinkFolder: 'pasta',
             browseLinkFolderMixed: 'pasta',
-            title: 'Carregar arquivos',
-            gridHeaders: {
-                file: 'Arquivo',
-                size: 'Tamanho'
-            }
+            title: 'Carregar arquivos'
         }
     } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {

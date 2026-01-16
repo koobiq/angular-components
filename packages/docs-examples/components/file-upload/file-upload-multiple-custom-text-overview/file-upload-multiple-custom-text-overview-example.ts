@@ -21,7 +21,6 @@ class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
     captionTextWithFolder: string;
     captionTextWhenSelected: string;
     captionTextForCompactSize: string;
-    gridHeaders: { file: string; size: string };
     browseLink: string;
     browseLinkFolder: string;
     title: string;
@@ -38,7 +37,6 @@ class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
         this.captionTextWithFolder = data.captionTextWithFolder;
         this.captionTextWhenSelected = data.captionTextWhenSelected;
         this.captionTextForCompactSize = data.captionTextForCompactSize;
-        this.gridHeaders = localeData[locale].gridHeaders;
         this.browseLink = data.browseLink;
         this.browseLinkFolder = data.browseLinkFolder;
         this.title = data.title;

@@ -11,9 +11,9 @@ import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
-const fileItemRowCssClass = 'kbq-file-multiple__uploaded-item';
+const fileItemRowCssClass = 'kbq-file-upload__item';
 
-const fileItemCssClass = 'kbq-file-item';
+const fileUploadActionCssClass = 'kbq-file-upload__action';
 
 const FILE_NAME = 'test.file';
 
@@ -286,7 +286,7 @@ describe('KbqSingleFileUploadComponent', () => {
             });
 
             dispatchKeyboardEvent(
-                component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`),
+                component.elementRef.nativeElement.querySelector(`.${fileUploadActionCssClass}`),
                 'keydown',
                 DELETE
             );

@@ -1,4 +1,5 @@
 @use './file-upload-theme' as theme;
+@use '../form-field/form-field';
 
 .kbq-file-upload {
     box-sizing: border-box;
@@ -6,10 +7,15 @@
     align-items: center;
     position: relative;
 
-    .kbq-file-dropzone,
     .kbq-file-item {
         display: flex;
         align-items: center;
+    }
+
+    .kbq-file-dropzone {
+        display: flex;
+        align-items: baseline;
+        gap: var(--dropzone-gap, var(--kbq-file-upload-size-dropzone-content-gap-horizontal));
     }
 
     .kbq-ellipsis-center {
@@ -32,9 +38,7 @@
 }
 
 .kbq-file-upload__hint {
-    .kbq-hint {
-        margin-top: var(--kbq-size-xxs);
-    }
+    @include form-field.kbq-form-field-hint-geometry();
 }
 
 @include theme.kbq-file-upload-theme();

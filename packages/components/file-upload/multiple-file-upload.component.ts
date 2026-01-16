@@ -30,8 +30,8 @@ import {
     KbqMultipleFileUploadLocaleConfig,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
+import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
@@ -58,8 +58,6 @@ export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleCo
 export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig =
     ruRULocaleData.fileUpload.multiple;
 
-const fileSizeCellPadding = 16;
-
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     imports: [
@@ -74,7 +72,7 @@ const fileSizeCellPadding = 16;
         KbqProgressSpinnerModule,
         KbqEllipsisCenterDirective,
         KbqFileLoader,
-        KbqDynamicTranslationModule
+        KbqEmptyStateModule
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
@@ -156,7 +154,6 @@ export class KbqMultipleFileUploadComponent
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
 
     @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
-    @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
     @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
@@ -251,12 +248,9 @@ export class KbqMultipleFileUploadComponent
         return this.errorState;
     }
 
-    /**
-     * Set maxWidth for filesize cell to enable proper ellipsis center,
-     * @docs-private
-     */
-    protected get fileSizeCellMaxWidth() {
-        return this.fileSizeHeaderCell?.nativeElement.offsetWidth - fileSizeCellPadding;
+    /** @docs-private */
+    protected get captionTextWhenSelected(): string {
+        return this.resolvedLocaleConfig().captionTextWhenSelected.split('{{ browseLink }}')[0];
     }
 
     /** @docs-private */

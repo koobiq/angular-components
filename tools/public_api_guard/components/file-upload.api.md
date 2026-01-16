@@ -68,7 +68,7 @@ export interface KbqFile extends File {
 // @public (undocumented)
 export class KbqFileDropDirective {
     dragover: boolean;
-    readonly filesDropped: EventEmitter<KbqFile[]>;
+    readonly filesDropped: OutputEmitterRef<KbqFile[]>;
     onDragLeave(event: DragEvent): void;
     onDragOver(event: DragEvent): void;
     onDrop(event: DragEvent): void;
@@ -234,6 +234,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     get acceptedFiles(): string;
     allowed: InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: Signal<KbqFileUploadCaptionContext>;
+    protected get captionTextWhenSelected(): string;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
@@ -251,7 +252,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     set files(currentFileList: KbqFileItem[]);
     readonly filesAdded: EventEmitter<KbqFileItem[]>;
     readonly filesChange: EventEmitter<KbqFileItem[]>;
-    protected get fileSizeCellMaxWidth(): number;
     // @deprecated (undocumented)
     get hasErrors(): boolean;
     hasFocus: boolean;
@@ -332,7 +332,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
 
 // Warnings were encountered during analysis:
 //
-// dist/components/file-upload/multiple-file-upload.component.d.ts:131:921 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+// dist/components/file-upload/multiple-file-upload.component.d.ts:127:921 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
