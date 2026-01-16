@@ -44,6 +44,7 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 export interface KbqOptionParentComponent {
     multiple?: boolean;
     multiSelection?: boolean;
+    withVirtualScroll?: boolean;
 }
 
 /**
@@ -185,6 +186,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      */
     @Input()
     get viewValue(): string {
+        if (this.parent?.withVirtualScroll) return this.value;
+
         return this._viewValue || (this.getHostElement().textContent || '').trim();
     }
 
