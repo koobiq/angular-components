@@ -15,6 +15,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
 import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -54,7 +55,8 @@ class DevExamples {}
         KbqRadioModule,
         KbqLinkModule,
         DevExamples,
-        NgClass
+        NgClass,
+        DevThemeToggle
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
