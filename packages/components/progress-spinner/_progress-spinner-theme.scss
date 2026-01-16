@@ -11,6 +11,10 @@
         &.kbq-contrast {
             --stroke: var(--kbq-progress-spinner-circle-contrast-background);
         }
+
+        &.kbq-contrast-fade {
+            --stroke: var(--kbq-progress-spinner-circle-contrast-fade-background);
+        }
     }
 
     .kbq-progress-spinner-text {

@@ -10,6 +10,7 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
     template: `
         <kbq-progress-spinner class="layout-margin-right-s" size="big" mode="indeterminate" />
         <kbq-progress-spinner class="layout-margin-right-s" size="big" color="contrast" mode="indeterminate" />
+        <kbq-progress-spinner size="big" color="contrast-fade" mode="indeterminate" />
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
