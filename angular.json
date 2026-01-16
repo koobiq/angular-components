@@ -478,6 +478,13 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "packages/components-dev/app-switcher/assets",
+                                "output": "/assets"
+                            }
+                        ],
                         "outputPath": {
                             "base": "dist/components-dev/app-switcher"
                         },
