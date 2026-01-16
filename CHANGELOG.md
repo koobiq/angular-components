@@ -1,3 +1,18 @@
+# 19.1.0 (2026-01-16)
+
+### Koobiq
+
+ * bug fix  **app-switcher:** simplify operating modes ([#DS-4579](https://github.com/koobiq/angular-components/issues/issue/DS-4579)) ([#1273](https://github.com/koobiq/angular-components/issues/1273)) ([08bd6cb](https://github.com/koobiq/angular-components/commit/08bd6cb5d03bd4211036850b8ce44e663b593c65))
+ * bug fix  **checkbox:** unnecessary padding ([#DS-4564](https://github.com/koobiq/angular-components/issues/issue/DS-4564)) ([#1276](https://github.com/koobiq/angular-components/issues/1276)) ([3a753aa](https://github.com/koobiq/angular-components/commit/3a753aadcf024cf8d67d1153e48d9c4d5480115d))
+ * bug fix  **filter-bar:** don' t close if all options are selected ([#DS-4530](https://github.com/koobiq/angular-components/issues/issue/DS-4530)) ([#1257](https://github.com/koobiq/angular-components/issues/1257)) ([0a6f73b](https://github.com/koobiq/angular-components/commit/0a6f73bba062fb5a2263c7d46cdb391b2cd26ad3))
+ * bug fix  **loader-overlay:** removed extra margin when no text ([#DS-4567](https://github.com/koobiq/angular-components/issues/issue/DS-4567)) ([#1279](https://github.com/koobiq/angular-components/issues/1279)) ([50a78e6](https://github.com/koobiq/angular-components/commit/50a78e6055aa524162f624d0e8c51e9f1ab9b130))
+ * bug fix  **progress-spinner:** overflow scroll ([#DS-4606](https://github.com/koobiq/angular-components/issues/issue/DS-4606)) ([#1283](https://github.com/koobiq/angular-components/issues/1283)) ([7ecc142](https://github.com/koobiq/angular-components/commit/7ecc1426d198a0129cc5aaf01ec636fb26cdaaaa))
+ * bug fix  **select:** selected item is't displayed correctly with virtual scrolling. ([#DS-4612](https://github.com/koobiq/angular-components/issues/issue/DS-4612)) ([#1281](https://github.com/koobiq/angular-components/issues/1281)) ([ebfaea9](https://github.com/koobiq/angular-components/commit/ebfaea931ca2ad42f8e33a03ade37c42ec859e46))
+ * bug fix  **timepicker:** proper usage without FormsModule ([#DS-4561](https://github.com/koobiq/angular-components/issues/issue/DS-4561)) ([#1277](https://github.com/koobiq/angular-components/issues/1277)) ([af66adf](https://github.com/koobiq/angular-components/commit/af66adf696a37173f3f39a3b6d10742a09833c63))
+ * bug fix  **title:** not displayed if 1-2 characters don't fit ([#DS-4466](https://github.com/koobiq/angular-components/issues/issue/DS-4466)) ([#1259](https://github.com/koobiq/angular-components/issues/1259)) ([6d8c5ae](https://github.com/koobiq/angular-components/commit/6d8c5ae6095c32250f6accd6ccb908b6870bf379))
+ * bug fix  **tooltip, popover:** shadow for dark theme ([#DS-4541](https://github.com/koobiq/angular-components/issues/issue/DS-4541)) ([#1286](https://github.com/koobiq/angular-components/issues/1286)) ([d150109](https://github.com/koobiq/angular-components/commit/d1501099e3a5b280b07ad9bd24f8780d023e8622))
+ * feature  **progress-spinner:** added contrast, contrast-fade colors support ([#DS-4583](https://github.com/koobiq/angular-components/issues/issue/DS-4583)) ([#1285](https://github.com/koobiq/angular-components/issues/1285)) ([fec9db9](https://github.com/koobiq/angular-components/commit/fec9db9a92c99137d7f04766dd713a30d3bf0405))
+
 # 19.0.0 (2025-12-26)
 
 ### Koobiq
