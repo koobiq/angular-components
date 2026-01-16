@@ -10,7 +10,7 @@ test.describe('KbqTooltipModule', () => {
             await page.goto('/E2eTooltipStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
         });
 
         test('tooltip (dark theme)', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('KbqTooltipModule', () => {
 
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
         });
     });
 });

@@ -10,7 +10,7 @@ test.describe('KbqPopoverModule', () => {
             await page.goto('/E2ePopoverStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
         });
 
         test('popover (dark theme)', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('KbqPopoverModule', () => {
 
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
         });
     });
 });
