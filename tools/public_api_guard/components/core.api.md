@@ -2329,11 +2329,6 @@ export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLoca
     // (undocumented)
     captionTextWhenSelected: string;
     // (undocumented)
-    gridHeaders: {
-        file: string;
-        size: string;
-    };
-    // (undocumented)
     title: string;
 }
 

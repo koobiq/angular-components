@@ -2,18 +2,14 @@
 
 exports[`KbqMultipleFileUploadComponent with localeConfig input property should use default properties if they not provided with localeConfig 1`] = `
 {
-  "browseLink": "выберите файлы",
+  "browseLink": "выберите",
   "browseLinkFolder": "выберите папку",
-  "browseLinkFolderMixed": "папку",
+  "browseLinkFolderMixed": "выберите папку",
   "captionText": "TEST {{ browseLink }}",
-  "captionTextForCompactSize": "Перетащите сюда или {{ browseLink }}",
+  "captionTextForCompactSize": "Перетащите файлы или {{ browseLink }}",
   "captionTextOnlyFolder": "Перетащите сюда или {{ browseLinkFolder }}",
   "captionTextWhenSelected": "Перетащите еще или {{ browseLink }}",
-  "captionTextWithFolder": "Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}",
-  "gridHeaders": {
-    "file": "Файл",
-    "size": "Размер",
-  },
+  "captionTextWithFolder": "Перетащите файл или {{ browseLink }} или {{ browseLinkFolderMixed }}",
   "title": "Загрузите файлы",
 }
 `;

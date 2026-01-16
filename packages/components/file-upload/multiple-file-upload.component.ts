@@ -30,7 +30,6 @@ import {
     KbqMultipleFileUploadLocaleConfig,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqHint } from '@koobiq/components/form-field';
