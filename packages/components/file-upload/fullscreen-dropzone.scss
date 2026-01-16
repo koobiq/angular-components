@@ -1,0 +1,29 @@
+.kbq-local-dropzone {
+    --kbq-dropzone-margin: var(--kbq-size-s);
+    --kbq-dropzone-background: var(--kbq-background-theme-less);
+    --kbq-dropzone-border: var(--kbq-line-theme-fade);
+
+    --kbq-loader-overlay-transparent-overlay-background: transparent;
+    --kbq-loader-overlay-size-normal-overlay-padding-horizontal: var(--kbq-dropzone-margin);
+
+    padding: var(--kbq-dropzone-margin);
+
+    .kbq-dropzone__wrapper {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: var(--kbq-dropzone-background);
+        border-radius: var(--kbq-size-s);
+        border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border);
+    }
+}
+
+.kbq-fullscreen-dropzone {
+    --kbq-dropzone-background: var(--kbq-background-theme-less);
+
+    background-color: var(--kbq-dropzone-background);
+}

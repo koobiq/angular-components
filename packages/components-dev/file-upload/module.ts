@@ -104,8 +104,6 @@ export class DevCustomTextDirective {}
     selector: 'dev-examples',
     imports: [FileUploadExamplesModule],
     template: `
-        <file-upload-dropzone-example />
-        <hr />
         <file-upload-allowed-example />
         <hr />
         <file-upload-cva-overview-example />
