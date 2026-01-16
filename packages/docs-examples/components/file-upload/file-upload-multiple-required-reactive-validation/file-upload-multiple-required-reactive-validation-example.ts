@@ -34,6 +34,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 @if (kbqFileUpload.invalid && formMultiple.controls.fileUpload.hasError('required')) {
                     <kbq-hint color="error">File required</kbq-hint>
                 }
+                @if (kbqFileUpload.invalid && formMultiple.controls.fileUpload.hasError('minlength')) {
+                    @let minLengthError = formMultiple.controls.fileUpload.getError('minlength');
+                    <kbq-hint color="error">
+                        {{ minLengthError.actualLength }} / {{ minLengthError.requiredLength }} files provided.
+                    </kbq-hint>
+                }
             </kbq-file-upload>
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
@@ -44,7 +50,7 @@ export class FileUploadMultipleRequiredReactiveValidationExample {
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
     protected readonly formMultiple = new FormGroup({
-        fileUpload: new FormControl<FileList | KbqFileItem[]>([], Validators.required)
+        fileUpload: new FormControl<FileList | KbqFileItem[]>([], [Validators.required, Validators.minLength(2)])
     });
 
     onSubmit() {
