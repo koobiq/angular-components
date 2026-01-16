@@ -1,4 +1,3 @@
-@use '../core/styles/common/tokens' as *;
 @use './checkbox-theme' as *;
 
 .kbq-checkbox-checkmark,
@@ -27,10 +26,7 @@
 }
 
 .kbq-checkbox__layout {
-    $padding-left: kbq-sum-series-css-variables(
-        [checkbox-size-normal-width,
-        checkbox-size-normal-horizontal-content-padding]
-    );
+    --padding: calc(var(--kbq-checkbox-size-normal-width) + var(--kbq-checkbox-size-normal-horizontal-content-padding));
 
     box-sizing: initial;
 
@@ -39,7 +35,7 @@
 
     display: inline-flex;
 
-    max-width: calc(100% - $padding-left);
+    max-width: calc(100% - var(--padding));
 
     // `cursor: inherit` ensures that the wrapper element gets the same cursor as the kbq-checkbox
     // (e.g. pointer by default, regular when disabled), instead of the browser default.
@@ -49,7 +45,7 @@
 
     padding-bottom: var(--kbq-checkbox-size-normal-padding-bottom);
 
-    padding-left: $padding-left;
+    padding-left: var(--padding);
 
     vertical-align: top;
 }
@@ -104,16 +100,7 @@
 }
 
 .kbq-checkbox.kbq-checkbox_big {
-    & .kbq-checkbox__layout {
-        $padding-left: kbq-sum-series-css-variables(
-            [ checkbox-size-normal-width,
-            checkbox-size-normal-horizontal-content-padding]
-        );
-
-        max-width: calc(100% - $padding-left);
-
-        padding-left: $padding-left;
-    }
+    --padding: calc(var(--kbq-checkbox-size-big-width) + var(--kbq-checkbox-size-big-horizontal-content-padding));
 
     & .kbq-checkbox__inner-container {
         top: var(--kbq-checkbox-size-big-top);
@@ -152,10 +139,7 @@
 .kbq-checkbox_label-before {
     .kbq-checkbox__layout {
         padding-left: 0;
-        padding-right: kbq-sum-series-css-variables(
-            [ checkbox-size-normal-width,
-            checkbox-size-normal-horizontal-content-padding]
-        );
+        padding-right: var(--padding);
     }
 
     .kbq-checkbox__inner-container {
