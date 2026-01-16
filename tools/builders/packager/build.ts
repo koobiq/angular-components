@@ -6,6 +6,7 @@ import { promises as fs, writeFileSync } from 'fs';
 import { dirname, join, resolve } from 'path';
 import { IPackagerOptions } from './schema';
 
+const isCI = !!process.env.CI;
 const packageVersionFilePath = './packages/components/core/version.ts';
 
 export async function packager(options: IPackagerOptions, context: BuilderContext): Promise<BuilderOutput> {
@@ -18,7 +19,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
         project
     };
 
-    await fillKoobiqVersion(project);
+    if (isCI) await fillKoobiqVersion(project);
 
     let ngPackagrBuilderOptions: { project: string };
 
