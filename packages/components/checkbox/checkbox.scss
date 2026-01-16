@@ -1,7 +1,4 @@
-@use '../core/styles/common/tokens' as *;
 @use './checkbox-theme' as *;
-
-$_padding: kbq-sum-series-css-variables([checkbox-size-normal-width, checkbox-size-normal-horizontal-content-padding]);
 
 .kbq-checkbox-checkmark,
 .kbq-checkbox-mixedmark {
@@ -29,6 +26,8 @@ $_padding: kbq-sum-series-css-variables([checkbox-size-normal-width, checkbox-si
 }
 
 .kbq-checkbox__layout {
+    --padding: calc(var(--kbq-checkbox-size-normal-width) + var(--kbq-checkbox-size-normal-horizontal-content-padding));
+
     box-sizing: initial;
 
     // required for `.cdk-visually-hidden` input to be positioned correctly
@@ -36,7 +35,7 @@ $_padding: kbq-sum-series-css-variables([checkbox-size-normal-width, checkbox-si
 
     display: inline-flex;
 
-    max-width: calc(100% - $_padding);
+    max-width: calc(100% - var(--padding));
 
     // `cursor: inherit` ensures that the wrapper element gets the same cursor as the kbq-checkbox
     // (e.g. pointer by default, regular when disabled), instead of the browser default.
@@ -46,7 +45,7 @@ $_padding: kbq-sum-series-css-variables([checkbox-size-normal-width, checkbox-si
 
     padding-bottom: var(--kbq-checkbox-size-normal-padding-bottom);
 
-    padding-left: $_padding;
+    padding-left: var(--padding);
 
     vertical-align: top;
 }
@@ -101,17 +100,7 @@ $_padding: kbq-sum-series-css-variables([checkbox-size-normal-width, checkbox-si
 }
 
 .kbq-checkbox.kbq-checkbox_big {
-    $_padding: kbq-sum-series-css-variables([checkbox-size-big-width, checkbox-size-big-horizontal-content-padding]);
-
-    .kbq-checkbox__layout {
-        max-width: calc(100% - $_padding);
-        padding-left: $_padding;
-    }
-
-    &.kbq-checkbox_label-before .kbq-checkbox__layout {
-        padding-left: 0;
-        padding-right: $_padding;
-    }
+    --padding: calc(var(--kbq-checkbox-size-big-width) + var(--kbq-checkbox-size-big-horizontal-content-padding));
 
     & .kbq-checkbox__inner-container {
         top: var(--kbq-checkbox-size-big-top);
@@ -150,7 +139,7 @@ $_padding: kbq-sum-series-css-variables([checkbox-size-normal-width, checkbox-si
 .kbq-checkbox_label-before {
     .kbq-checkbox__layout {
         padding-left: 0;
-        padding-right: $_padding;
+        padding-right: var(--padding);
     }
 
     .kbq-checkbox__inner-container {
