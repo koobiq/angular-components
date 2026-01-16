@@ -249,6 +249,11 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** @docs-private */
+    protected get captionTextWhenSelected(): string {
+        return this.resolvedLocaleConfig().captionTextWhenSelected.split('{{ browseLink }}')[0];
+    }
+
+    /** @docs-private */
     readonly configuration = inject<KbqMultipleFileUploadLocaleConfig>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });

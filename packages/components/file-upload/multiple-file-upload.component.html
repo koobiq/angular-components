@@ -19,14 +19,14 @@
                 ></i>
                 <div kbq-empty-state-title class="kbq-file-upload__dropzone-caption">{{ localeData.title }}</div>
                 <div kbq-empty-state-text class="kbq-file-dropzone__caption">
-                    <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
+                    <ng-container *ngTemplateOutlet="captionText" />
                 </div>
             </kbq-empty-state>
         } @else {
             <div class="kbq-file-dropzone">
-                <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-dropzone__icon"></i>
+                <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-upload__dropzone-icon"></i>
                 <span class="kbq-file-upload__dropzone-caption">
-                    <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
+                    <ng-container *ngTemplateOutlet="captionText" />
                 </span>
             </div>
         }
@@ -82,7 +82,7 @@
             <div class="kbq-file-upload__list-footer kbq-file-dropzone">
                 <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-upload__dropzone-icon"></i>
                 <span class="kbq-file-upload__dropzone-caption">
-                    <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
+                    <ng-container *ngTemplateOutlet="captionText" />
                 </span>
             </div>
         </div>
@@ -95,17 +95,14 @@
     </div>
 }
 
-<ng-template
-    #captionText
-    let-captionText="captionText"
-    let-browseLink="browseLink"
-    let-captionTextSeparator="captionTextSeparator"
-    let-browseLinkFolder="browseLinkFolder"
->
-    @if (captionText) {
-        {{ captionText }}
+<ng-template #captionText>
+    @let context = captionContext();
+    @if (files.length) {
+        {{ captionTextWhenSelected }}
+    } @else if (context.captionText) {
+        {{ context.captionText }}
     }
-    @if (browseLink) {
+    @if (context.browseLink) {
         <label
             kbq-link
             pseudo
@@ -118,13 +115,13 @@
             [multiple]="true"
             (fileChange)="onFileSelectedViaClick($event)"
         >
-            {{ browseLink }}
+            {{ context.browseLink }}
         </label>
     }
-    @if (captionTextSeparator) {
-        {{ captionTextSeparator }}
+    @if (context.captionTextSeparator) {
+        {{ context.captionTextSeparator }}
     }
-    @if (browseLinkFolder) {
+    @if (context.browseLinkFolder) {
         <label
             kbq-link
             pseudo
@@ -134,7 +131,7 @@
             [tabIndex]="-1"
             (fileChange)="onFileSelectedViaClick($event)"
         >
-            {{ browseLinkFolder }}
+            {{ context.browseLinkFolder }}
         </label>
     }
 </ng-template>

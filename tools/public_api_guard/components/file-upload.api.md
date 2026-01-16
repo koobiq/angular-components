@@ -234,6 +234,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     get acceptedFiles(): string;
     allowed: InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: Signal<KbqFileUploadCaptionContext>;
+    protected get captionTextWhenSelected(): string;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
@@ -331,7 +332,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
 
 // Warnings were encountered during analysis:
 //
-// dist/components/file-upload/multiple-file-upload.component.d.ts:125:921 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+// dist/components/file-upload/multiple-file-upload.component.d.ts:127:921 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
