@@ -1,3 +1,20 @@
+## 18.39.1 (2026-01-16)
+
+### Koobiq
+
+ * bug fix  **app-switcher:** simplify operating modes ([#DS-4579](https://github.com/koobiq/angular-components/issues/issue/DS-4579)) ([#1273](https://github.com/koobiq/angular-components/issues/1273)) ([#1284](https://github.com/koobiq/angular-components/issues/1284)) ([7975797](https://github.com/koobiq/angular-components/commit/79757971d09cc68d9960966512777b720c378f00))
+ * bug fix  **checkbox:** unnecessary padding ([#DS-4564](https://github.com/koobiq/angular-components/issues/issue/DS-4564)) ([#1291](https://github.com/koobiq/angular-components/issues/1291)) ([6316985](https://github.com/koobiq/angular-components/commit/6316985cbf8f324c90e0e826b1e6df477147ecf9))
+ * bug fix  **code-block:** actionbar blocks scroll ([#DS-4544](https://github.com/koobiq/angular-components/issues/issue/DS-4544)) ([#1238](https://github.com/koobiq/angular-components/issues/1238)) ([1138d4d](https://github.com/koobiq/angular-components/commit/1138d4d4f9534637a0499638a1490dbfa4cbd942))
+ * bug fix  **dropdown:** aligned visibility on small viewport ([#DS-4460](https://github.com/koobiq/angular-components/issues/issue/DS-4460)) ([#1247](https://github.com/koobiq/angular-components/issues/1247)) ([#1250](https://github.com/koobiq/angular-components/issues/1250)) ([300096e](https://github.com/koobiq/angular-components/commit/300096ef814ac6d7c226d3a93e26d31856400b5a))
+ * bug fix  **filter-bar:** don' t close if all options are selected ([#DS-4530](https://github.com/koobiq/angular-components/issues/issue/DS-4530)) ([#1257](https://github.com/koobiq/angular-components/issues/1257)) ([23b601f](https://github.com/koobiq/angular-components/commit/23b601f742586c4b8f33f8cea002e9a5d63fc6e2))
+ * bug fix  **filter-bar:** preventDefault for enter key in date and datetime pipes ([#DS-4532](https://github.com/koobiq/angular-components/issues/issue/DS-4532)) ([#1209](https://github.com/koobiq/angular-components/issues/1209)) ([ca9852a](https://github.com/koobiq/angular-components/commit/ca9852a5004ed1ac234839cadceede24c4df1b77))
+ * bug fix  **input:** input-number mark touched on blur ([#DS-4546](https://github.com/koobiq/angular-components/issues/issue/DS-4546)) ([#1194](https://github.com/koobiq/angular-components/issues/1194)) ([#1197](https://github.com/koobiq/angular-components/issues/1197)) ([2e8009d](https://github.com/koobiq/angular-components/commit/2e8009d2a0110684196a5368af3fb738714e9173))
+ * bug fix  **loader-overlay:** removed extra margin when no text ([#DS-4567](https://github.com/koobiq/angular-components/issues/issue/DS-4567)) ([#1280](https://github.com/koobiq/angular-components/issues/1280)) ([3edb263](https://github.com/koobiq/angular-components/commit/3edb2633efc68b500349e2a05f622c11ad4b89e1))
+ * bug fix  **select:** selected item isn't displayed correctly with virtual scrolling. ([#DS-4612](https://github.com/koobiq/angular-components/issues/issue/DS-4612)) ([#1288](https://github.com/koobiq/angular-components/issues/1288)) ([12e8816](https://github.com/koobiq/angular-components/commit/12e88167b6d4eb5b69a1c345f7fa9f233d2add75))
+ * bug fix  **timepicker:** error state matcher ([#DS-4251](https://github.com/koobiq/angular-components/issues/issue/DS-4251)) ([5417425](https://github.com/koobiq/angular-components/commit/541742588834a80ddedfcdea42de525af54328ad))
+ * bug fix  **timepicker:** proper usage without FormsModule ([#DS-4561](https://github.com/koobiq/angular-components/issues/issue/DS-4561)) ([#1278](https://github.com/koobiq/angular-components/issues/1278)) ([f2f1128](https://github.com/koobiq/angular-components/commit/f2f11283f459b3242dc8f185c8e4d4e6ed008a1b))
+ * bug fix  **tooltip, popover:** shadow for dark theme ([#DS-4541](https://github.com/koobiq/angular-components/issues/issue/DS-4541)) ([#1286](https://github.com/koobiq/angular-components/issues/1286)) ([#1289](https://github.com/koobiq/angular-components/issues/1289)) ([454f8e7](https://github.com/koobiq/angular-components/commit/454f8e7b4fc78c5f41322107846959438a8e7917))
+
 # 18.39.0 (2025-12-12)
 
 ### Koobiq
