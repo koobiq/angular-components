@@ -99,6 +99,10 @@
             }
 
             .kbq-multiple-file-upload__empty-state {
+                --kbq-file-upload-multiple-states-error-text-block-color: var(
+                    --kbq-file-upload-multiple-default-text-block-color
+                );
+
                 --kbq-empty-state-title: var(--kbq-file-upload-multiple-states-error-text-block-color);
                 --kbq-empty-state-color: var(--kbq-file-upload-multiple-states-error-text-block-color);
             }
