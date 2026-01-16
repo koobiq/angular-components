@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import {
     KbqFileItem,
     KbqFileUploadAllowedType,
@@ -8,9 +9,6 @@ import {
     KbqFileUploadModule,
     KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
-import { ErrorStateMatcher } from '@koobiq/components/core';
-import { KbqFileItem, KbqFileUploadModule, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 type SingleUploadState = {
