@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 
 /**
@@ -7,20 +6,15 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
  */
 @Component({
     selector: 'progress-spinner-indeterminate-example',
-    imports: [
-        KbqProgressSpinnerModule
-    ],
+    imports: [KbqProgressSpinnerModule],
     template: `
-        <div class="layout-row">
-            <kbq-progress-spinner class="layout-margin-right-s" [mode]="'indeterminate'" />
-        </div>
-
-        <div class="layout-row">
-            <kbq-progress-spinner class="layout-margin-right-s" [mode]="'indeterminate'" [size]="'big'" />
-        </div>
+        <kbq-progress-spinner class="layout-margin-right-s" size="big" mode="indeterminate" />
+        <kbq-progress-spinner class="layout-margin-right-s" size="big" color="contrast" mode="indeterminate" />
+        <kbq-progress-spinner size="big" color="contrast-fade" mode="indeterminate" />
     `,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProgressSpinnerIndeterminateExample {
-    themePalette = ThemePalette;
-}
+export class ProgressSpinnerIndeterminateExample {}
