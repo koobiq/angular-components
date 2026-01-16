@@ -1,10 +1,11 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { AsyncPipe, isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChildren,
     DoCheck,
     ElementRef,
@@ -18,29 +19,39 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
-import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
+import {
+    ErrorStateMatcher,
+    KBQ_DEFAULT_LOCALE_ID,
+    KbqBaseFileUploadLocaleConfig,
+    KbqDataSizePipe,
+    KbqFileUploadLocaleConfig,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, skip } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
+    KbqFileUploadAllowedType,
+    KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
-    KbqFileValidatorFn,
-    KbqInputFileLabel
+    KbqFileUploadCaptionContext,
+    KbqFileValidatorFn
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
 let nextSingleFileUploadUniqueId = 0;
 
-export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = ruRULocaleData.fileUpload.single;
+export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['single'] =
+    ruRULocaleData.fileUpload.single;
 
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
@@ -53,7 +64,8 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
         KbqProgressSpinner,
         KbqEllipsisCenterDirective,
         KbqDataSizePipe,
-        KbqFileLoader
+        KbqFileLoader,
+        NgTemplateOutlet
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
@@ -65,7 +77,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
     hostDirectives: [
         {
             directive: KbqFileUploadContext,
-            inputs: ['id', 'disabled', 'multiple', 'onlyDirectory']
+            inputs: ['id', 'disabled', 'multiple']
         },
         { directive: KbqFileList, outputs: ['listChange: fileChange'] }
     ]
@@ -112,8 +124,14 @@ export class KbqSingleFileUploadComponent
      */
     @Input({ transform: booleanAttribute }) showFileSize: boolean = true;
 
+    /**
+     * Determines which kind of items the upload component can accept.
+     * @default mixed
+     */
+    allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
+
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqInputFileLabel>>();
+    readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfig>>();
 
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
@@ -127,9 +145,6 @@ export class KbqSingleFileUploadComponent
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
 
     /** @docs-private */
-    config: KbqInputFileLabel;
-    /** @docs-private */
-    separatedCaptionText: string[];
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -166,8 +181,56 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration: KbqInputFileLabel | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
+    readonly configuration: KbqBaseFileUploadLocaleConfig | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
+    });
+
+    /** @docs-private */
+    protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
+        const config = this.resolvedLocaleConfig();
+
+        switch (this.allowed()) {
+            case KbqFileUploadAllowedType.Mixed: {
+                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+
+                const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
+
+                return {
+                    captionText: before,
+                    browseLink: config.browseLink,
+                    captionTextSeparator,
+                    browseLinkFolder: config.browseLinkFolderMixed
+                };
+            }
+            case KbqFileUploadAllowedType.Folder: {
+                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+
+                return { captionText: before, browseLinkFolder: config.browseLinkFolder };
+            }
+            case KbqFileUploadAllowedType.File:
+            default: {
+                const [before] = config.captionTextWithFolder.split('{{ browseLink }}');
+
+                return { captionText: before, browseLink: config.browseLink };
+            }
+        }
+    });
+
+    private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
+
+    /** @docs-private */
+    readonly resolvedLocaleConfig = computed<KbqBaseFileUploadLocaleConfig>(() => {
+        const localeId = this.localeId();
+        const localeConfig = this.localeConfig();
+
+        const defaultLocaleConfig =
+            this.localeService && localeId
+                ? this.localeService.getParams('fileUpload').single
+                : KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+
+        const baseLocaleConfig: KbqBaseFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
+
+        return { ...baseLocaleConfig, ...localeConfig };
     });
 
     private readonly focusMonitor = inject(FocusMonitor);
@@ -175,23 +238,12 @@ export class KbqSingleFileUploadComponent
 
     constructor() {
         super();
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
-
-        toObservable(this.localeConfig)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(() => {
-                this.localeService ? this.updateLocaleParams() : this.initDefaultParams();
-            });
     }
 
     ngDoCheck() {
@@ -306,16 +358,6 @@ export class KbqSingleFileUploadComponent
         }
     }
 
-    private updateLocaleParams = () => {
-        this.config = this.buildConfig<KbqInputFileLabel>(
-            this.configuration || this.localeService?.getParams('fileUpload').multiple
-        );
-
-        this.getCaptionText();
-
-        this.cdr.markForCheck();
-    };
-
     private mapToFileItem(file: File): KbqFileItem {
         return {
             file,
@@ -337,15 +379,5 @@ export class KbqSingleFileUploadComponent
             .filter(Boolean) as string[];
 
         return !!this.errors.length;
-    }
-
-    private initDefaultParams() {
-        this.config = this.buildConfig(KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
-
-        this.getCaptionText();
-    }
-
-    private getCaptionText() {
-        this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
     }
 }

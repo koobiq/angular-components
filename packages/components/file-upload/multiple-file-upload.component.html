@@ -8,35 +8,21 @@
     [class.kbq-file-upload_compact]="size === 'compact'"
     (filesDropped)="onFileDropped($event)"
 >
+    @let localeData = resolvedLocaleConfig();
     @if (!files.length) {
         <div class="kbq-file-dropzone">
             @if (size === 'default') {
                 <i kbq-icon="kbq-cloud-arrow-up-o_32" class="kbq-file-dropzone__icon"></i>
                 <div class="kbq-file-dropzone__text">
-                    <div class="kbq-file-multiple__header">{{ config.title }}</div>
+                    <div class="kbq-file-multiple__header">{{ localeData.title }}</div>
                     <div>
-                        <!-- prettier-ignore -->
-                        <div class="kbq-file-multiple__caption">{{ separatedCaptionText[0] }}<label kbq-link pseudo kbqFileLoader [accept]="acceptedFiles" [disabled]="disabled" [for]="fileUploadContext.id() || inputId" [tabIndex]="-1" [multiple]="true" (fileChange)="onFileSelectedViaClick($event)">{{ config.browseLink }}</label>{{ separatedCaptionText[1] }}</div>
+                        <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                     </div>
                 </div>
             } @else {
                 <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                 <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                    {{ separatedCaptionTextForCompactSize[0] }}
-                    <label
-                        kbq-link
-                        pseudo
-                        kbqFileLoader
-                        [for]="fileUploadContext.id() || inputId"
-                        [multiple]="true"
-                        [accept]="acceptedFiles"
-                        [disabled]="disabled"
-                        [tabIndex]="-1"
-                        (fileChange)="onFileSelectedViaClick($event)"
-                    >
-                        {{ config.browseLink }}
-                    </label>
-                    {{ separatedCaptionTextForCompactSize[1] }}
+                    <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                 </span>
             }
         </div>
@@ -46,10 +32,10 @@
                 <div class="kbq-file-multiple-uploaded__header">
                     <div class="kbq-file-multiple-uploaded__header-inner">
                         <div #fileSizeHeaderCell class="kbq-file-upload__file kbq-file-upload__grid-cell">
-                            {{ config.gridHeaders.file }}
+                            {{ localeData.gridHeaders.file }}
                         </div>
                         <div class="kbq-file-upload__size kbq-file-upload__grid-cell">
-                            {{ config.gridHeaders.size }}
+                            {{ localeData.gridHeaders.size }}
                         </div>
                         <div class="kbq-file-upload__action kbq-file-upload__grid-cell"></div>
                     </div>
@@ -109,21 +95,7 @@
                 <div class="kbq-file-dropzone">
                     <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-file-dropzone__icon"></i>
                     <span class="kbq-file-dropzone__text kbq-file-multiple__caption">
-                        {{ separatedCaptionTextWhenSelected[0] }}
-                        <label
-                            kbq-link
-                            pseudo
-                            kbqFileLoader
-                            [multiple]="true"
-                            [accept]="acceptedFiles"
-                            [for]="fileUploadContext.id() || inputId"
-                            [disabled]="disabled"
-                            [tabIndex]="-1"
-                            (fileChange)="onFileSelectedViaClick($event)"
-                        >
-                            {{ config.browseLink }}
-                        </label>
-                        {{ separatedCaptionTextWhenSelected[1] }}
+                        <ng-container *ngTemplateOutlet="captionText; context: captionContext()" />
                     </span>
                 </div>
             </div>
@@ -136,3 +108,47 @@
         <ng-content select="kbq-hint" />
     </div>
 }
+
+<ng-template
+    #captionText
+    let-captionText="captionText"
+    let-browseLink="browseLink"
+    let-captionTextSeparator="captionTextSeparator"
+    let-browseLinkFolder="browseLinkFolder"
+>
+    @if (captionText) {
+        {{ captionText }}
+    }
+    @if (browseLink) {
+        <label
+            kbq-link
+            pseudo
+            kbqFileLoader
+            [onlyDirectory]="null"
+            [accept]="acceptedFiles"
+            [disabled]="disabled"
+            [for]="fileUploadContext.id() || inputId"
+            [tabIndex]="-1"
+            [multiple]="true"
+            (fileChange)="onFileSelectedViaClick($event)"
+        >
+            {{ browseLink }}
+        </label>
+    }
+    @if (captionTextSeparator) {
+        {{ captionTextSeparator }}
+    }
+    @if (browseLinkFolder) {
+        <label
+            kbq-link
+            pseudo
+            kbqFileLoader
+            [onlyDirectory]="true"
+            [disabled]="disabled"
+            [tabIndex]="-1"
+            (fileChange)="onFileSelectedViaClick($event)"
+        >
+            {{ browseLinkFolder }}
+        </label>
+    }
+</ng-template>

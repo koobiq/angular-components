@@ -22,7 +22,12 @@ import {
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { FileValidators, KbqLocaleServiceModule, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
+import {
+    FileValidators,
+    KbqLocaleServiceModule,
+    KbqMultipleFileUploadLocaleConfig,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
@@ -80,16 +85,20 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
             useValue: {
-                captionText: 'Перетащите сюда или ',
-                captionTextWhenSelected: 'Перетащите еще или ',
-                captionTextForCompactSize: 'Перетащите файлы или ',
-                browseLink: 'выберите',
+                captionText: 'Перетащите сюда или {{ browseLink }}',
+                captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
+                captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
+                captionTextWhenSelected: 'Перетащите еще или {{ browseLink }}',
+                captionTextForCompactSize: 'Перетащите сюда или {{ browseLink }}',
+                browseLink: 'выберите файлы',
+                browseLinkFolder: 'выберите папку',
+                browseLinkFolderMixed: 'папку',
                 title: 'Загрузите фотографии',
                 gridHeaders: {
                     file: 'Файл',
                     size: 'Размер'
                 }
-            }
+            } satisfies KbqMultipleFileUploadLocaleConfig
         }
     ]
 })
@@ -99,6 +108,8 @@ export class DevCustomTextDirective {}
     selector: 'dev-examples',
     imports: [FileUploadExamplesModule],
     template: `
+        <file-upload-allowed-example />
+        <hr />
         <file-upload-cva-overview-example />
         <hr />
         <file-upload-indeterminate-loading-overview-example />

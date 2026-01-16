@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -19,20 +20,28 @@ export const ptBRLocaleData = {
     fileUpload: {
         single: {
             captionText: 'Arrastar o arquivo aqui ou {{ browseLink }}',
-            browseLink: 'escolher'
+            captionTextOnlyFolder: 'Arrastar o arquivo aqui ou {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Arrastar o arquivo aqui ou {{ browseLink }} ou {{ browseLinkFolderMixed }}',
+            browseLink: 'escolher',
+            browseLinkFolder: 'pasta',
+            browseLinkFolderMixed: 'pasta'
         },
         multiple: {
             captionText: 'Arrastar aqui ou {{ browseLink }}',
+            captionTextOnlyFolder: 'Arrastar aqui ou {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Arrastar aqui ou {{ browseLink }} ou {{ browseLinkFolderMixed }}',
             captionTextWhenSelected: 'Arrastar mais arquivos aqui ou {{ browseLink }}',
             captionTextForCompactSize: 'Arrastar arquivos ou {{ browseLink }}',
             browseLink: 'escolher',
+            browseLinkFolder: 'pasta',
+            browseLinkFolderMixed: 'pasta',
             title: 'Carregar arquivos',
             gridHeaders: {
                 file: 'Arquivo',
                 size: 'Tamanho'
             }
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Ativar quebra de linha',
         softWrapOffTooltip: 'Desativar quebra de linha',

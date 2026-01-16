@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -19,20 +20,28 @@ export const esLALocaleData = {
     fileUpload: {
         single: {
             captionText: 'Arrastre el archivo aquí o {{ browseLink }}',
-            browseLink: 'elija'
+            captionTextOnlyFolder: 'Arrastre el archivo aquí o {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Arrastre el archivo aquí o {{ browseLink }} o {{ browseLinkFolderMixed }}',
+            browseLink: 'elija',
+            browseLinkFolder: 'carpeta',
+            browseLinkFolderMixed: 'carpeta'
         },
         multiple: {
             captionText: 'Arrastre aquí o {{ browseLink }}',
+            captionTextOnlyFolder: 'Arrastre aquí o {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Arrastre aquí o {{ browseLink }} o {{ browseLinkFolderMixed }}',
             captionTextWhenSelected: 'Arrastre más archivos aquí o {{ browseLink }}',
             captionTextForCompactSize: 'Arrastre archivos o {{ browseLink }}',
             browseLink: 'elija',
+            browseLinkFolder: 'carpeta',
+            browseLinkFolderMixed: 'carpeta',
             title: 'Cargue los archivos',
             gridHeaders: {
                 file: 'Archivo',
                 size: 'Tamaño'
             }
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Activar el ajuste de texto',
         softWrapOffTooltip: 'Desactivar el ajuste de texto',

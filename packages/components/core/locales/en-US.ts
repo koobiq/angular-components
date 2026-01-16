@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -20,20 +21,28 @@ export const enUSLocaleData = {
     fileUpload: {
         single: {
             captionText: 'Drag file here or {{ browseLink }}',
-            browseLink: 'choose'
+            captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Drag here or {{ browseLink }} or {{ browseLinkFolderMixed }}',
+            browseLink: 'choose file',
+            browseLinkFolder: 'choose folder',
+            browseLinkFolderMixed: 'folder'
         },
         multiple: {
             captionText: 'Drag here or {{ browseLink }}',
-            captionTextWhenSelected: 'Drag more files or {{ browseLink }}',
+            captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Drag here or {{ browseLink }} or {{ browseLinkFolderMixed }}',
+            captionTextWhenSelected: 'Drag more or {{ browseLink }}',
             captionTextForCompactSize: 'Drag files or {{ browseLink }}',
-            browseLink: 'choose',
+            browseLink: 'choose files',
+            browseLinkFolder: 'choose folder',
+            browseLinkFolderMixed: 'folder',
             title: 'Upload files',
             gridHeaders: {
                 file: 'File',
                 size: 'Size'
             }
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Enable word wrap',
         softWrapOffTooltip: 'Disable word wrap',

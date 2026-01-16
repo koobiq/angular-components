@@ -66,3 +66,27 @@ export type KbqTimeRangeLocaleConfig = {
         option: FormatterDurationTemplate;
     };
 };
+
+export interface KbqBaseFileUploadLocaleConfig {
+    captionText: string;
+    captionTextOnlyFolder: string;
+    captionTextWithFolder: string;
+    browseLink: string;
+    browseLinkFolder: string;
+    browseLinkFolderMixed?: string;
+}
+
+export interface KbqMultipleFileUploadLocaleConfig extends KbqBaseFileUploadLocaleConfig {
+    captionTextWhenSelected: string;
+    captionTextForCompactSize: string;
+    title: string;
+    gridHeaders: {
+        file: string;
+        size: string;
+    };
+}
+
+export type KbqFileUploadLocaleConfig = {
+    single: KbqBaseFileUploadLocaleConfig;
+    multiple: KbqMultipleFileUploadLocaleConfig;
+};

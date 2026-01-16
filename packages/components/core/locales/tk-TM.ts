@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -19,21 +20,29 @@ export const tkTMLocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Faýly geçiriň ýa-da {{ browseLink }} ',
-            browseLink: 'saýlaň'
+            captionText: 'Faýly geçiriň ýa-da {{ browseLink }}',
+            captionTextOnlyFolder: 'Faýly geçiriň ýa-da {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Faýly geçiriň ýa-da {{ browseLink }} ýa-da {{ browseLinkFolderMixed }}',
+            browseLink: 'saýlaň',
+            browseLinkFolder: 'bukja',
+            browseLinkFolderMixed: 'bukja'
         },
         multiple: {
             captionText: 'Şu ýere geçiriň ýa-da {{ browseLink }}',
+            captionTextOnlyFolder: 'Şu ýere geçiriň ýa-da {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Şu ýere geçiriň ýa-da {{ browseLink }} ýa-da {{ browseLinkFolderMixed }}',
             captionTextWhenSelected: 'Ýene geçiriň ýa-da {{ browseLink }}',
             captionTextForCompactSize: 'Faýllary geçiriň ýa-da {{ browseLink }}',
             browseLink: 'saýlaň',
+            browseLinkFolder: 'bukja',
+            browseLinkFolderMixed: 'bukja',
             title: 'Faýl ýükläň',
             gridHeaders: {
                 file: 'Faýl',
                 size: 'Ölçegi'
             }
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Sözler boýunça geçirmäni işjeňleşdirmek',
         softWrapOffTooltip: 'Sözler boýunça geçirmäni öçürmek',

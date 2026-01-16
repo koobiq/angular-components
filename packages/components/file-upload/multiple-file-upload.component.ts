@@ -4,6 +4,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChild,
     ContentChildren,
     DoCheck,
@@ -19,40 +20,42 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
-import { ErrorStateMatcher, KbqDataSizePipe, ruRULocaleData } from '@koobiq/components/core';
+import {
+    ErrorStateMatcher,
+    KBQ_DEFAULT_LOCALE_ID,
+    KbqDataSizePipe,
+    KbqEnumValues,
+    KbqMultipleFileUploadLocaleConfig,
+    ruRULocaleData
+} from '@koobiq/components/core';
+import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, skip } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
+    KbqFileUploadAllowedType,
     KbqFileUploadBase,
-    KbqFileValidatorFn,
-    KbqInputFileLabel
+    KbqFileUploadCaptionContext,
+    KbqFileValidatorFn
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
 let nextMultipleFileUploadUniqueId = 0;
 
-export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
-    captionTextWhenSelected: string;
-    captionTextForCompactSize: string;
-    gridHeaders: {
-        file: string;
-        size: string;
-    };
-
+export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfig {
     [k: string | number | symbol]: unknown;
 }
 
-export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipleLabel =
+export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig =
     ruRULocaleData.fileUpload.multiple;
 
 const fileSizeCellPadding = 16;
@@ -70,7 +73,8 @@ const fileSizeCellPadding = 16;
         KbqDataSizePipe,
         KbqProgressSpinnerModule,
         KbqEllipsisCenterDirective,
-        KbqFileLoader
+        KbqFileLoader,
+        KbqDynamicTranslationModule
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
@@ -82,7 +86,7 @@ const fileSizeCellPadding = 16;
     hostDirectives: [
         {
             directive: KbqFileUploadContext,
-            inputs: ['id', 'disabled', 'onlyDirectory']
+            inputs: ['id', 'disabled']
         },
         { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
     ]
@@ -124,8 +128,14 @@ export class KbqMultipleFileUploadComponent
         this.cvaOnChange(this.files);
     }
 
+    /**
+     * Determines which kind of items the upload component can accept.
+     * @default mixed
+     */
+    allowed = input<KbqEnumValues<KbqFileUploadAllowedType>>(KbqFileUploadAllowedType.File);
+
     /** Optional configuration to override default labels with localized text.*/
-    readonly localeConfig = input<Partial<KbqInputFileMultipleLabel>>();
+    readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
@@ -153,17 +163,53 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     hasFocus = false;
-    /** @docs-private */
-    columnDefs: { header: string; cssClass: string }[];
-    /** @docs-private */
-    config: KbqInputFileMultipleLabel;
 
     /** @docs-private */
-    separatedCaptionText: string[];
+    readonly resolvedLocaleConfig = computed<KbqMultipleFileUploadLocaleConfig>(() => {
+        const localeId = this.localeId();
+        const localeConfig = this.localeConfig();
+
+        const defaultLocaleConfig: KbqMultipleFileUploadLocaleConfig =
+            this.localeService && localeId
+                ? this.localeService.getParams('fileUpload').multiple
+                : KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+
+        const baseLocaleConfig: KbqMultipleFileUploadLocaleConfig = this.configuration || defaultLocaleConfig;
+
+        return { ...baseLocaleConfig, ...localeConfig };
+    });
+
     /** @docs-private */
-    separatedCaptionTextWhenSelected: string[];
-    /** @docs-private */
-    separatedCaptionTextForCompactSize: string[];
+    protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
+        const config = this.resolvedLocaleConfig();
+
+        switch (this.allowed()) {
+            case KbqFileUploadAllowedType.Mixed: {
+                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+
+                const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
+
+                return {
+                    captionText: before,
+                    browseLink: config.browseLink,
+                    captionTextSeparator,
+                    browseLinkFolder: config.browseLinkFolderMixed
+                };
+            }
+            case KbqFileUploadAllowedType.Folder: {
+                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+
+                return { captionText: before, browseLinkFolder: config.browseLinkFolder };
+            }
+            case KbqFileUploadAllowedType.File:
+            default: {
+                const caption = this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
+                const [before] = caption.split('{{ browseLink }}');
+
+                return { captionText: before, browseLink: config.browseLink };
+            }
+        }
+    });
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -214,30 +260,23 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** @docs-private */
-    readonly configuration = inject<KbqInputFileMultipleLabel>(KBQ_FILE_UPLOAD_CONFIGURATION, {
+    readonly configuration = inject<KbqMultipleFileUploadLocaleConfig>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
+
+    private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
     constructor() {
         super();
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
-
-        toObservable(this.localeConfig)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(() => (this.localeService ? this.updateLocaleParams() : this.initDefaultParams()));
     }
 
     ngDoCheck() {
@@ -337,20 +376,6 @@ export class KbqMultipleFileUploadComponent
         }
     }
 
-    private updateLocaleParams = () => {
-        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').multiple);
-
-        this.columnDefs = [
-            { header: this.config.gridHeaders.file, cssClass: 'file' },
-            { header: this.config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' }
-        ];
-
-        this.getCaptionText();
-
-        this.cdr.markForCheck();
-    };
-
     private mapToFileItem(files: FileList | KbqFile[] | null): KbqFileItem[] {
         if (!files) {
             return [];
@@ -383,24 +408,6 @@ export class KbqMultipleFileUploadComponent
         ];
 
         return !!errorsPerFile.length;
-    }
-
-    private initDefaultParams() {
-        this.config = this.buildConfig(KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
-
-        this.columnDefs = [
-            { header: this.config.gridHeaders.file, cssClass: 'file' },
-            { header: this.config.gridHeaders.size, cssClass: 'size' },
-            { header: '', cssClass: 'action' }
-        ];
-
-        this.getCaptionText();
-    }
-
-    private getCaptionText() {
-        this.separatedCaptionText = this.config.captionText.split('{{ browseLink }}');
-        this.separatedCaptionTextWhenSelected = this.config.captionTextWhenSelected.split('{{ browseLink }}');
-        this.separatedCaptionTextForCompactSize = this.config.captionTextForCompactSize.split('{{ browseLink }}');
     }
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {

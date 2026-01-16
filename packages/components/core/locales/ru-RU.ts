@@ -2,6 +2,7 @@ import {
     KbqActionsPanelLocaleConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
+    KbqFileUploadLocaleConfig,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -19,21 +20,29 @@ export const ruRULocaleData = {
     },
     fileUpload: {
         single: {
-            captionText: 'Перетащите файл или {{ browseLink }}',
-            browseLink: 'выберите'
+            captionText: 'Перетащите сюда или {{ browseLink }}',
+            captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
+            browseLink: 'выберите файл',
+            browseLinkFolder: 'выберите папку',
+            browseLinkFolderMixed: 'папку'
         },
         multiple: {
             captionText: 'Перетащите сюда или {{ browseLink }}',
+            captionTextOnlyFolder: 'Перетащите сюда или {{ browseLinkFolder }}',
+            captionTextWithFolder: 'Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}',
             captionTextWhenSelected: 'Перетащите еще или {{ browseLink }}',
-            captionTextForCompactSize: 'Перетащите файлы или {{ browseLink }}',
-            browseLink: 'выберите',
+            captionTextForCompactSize: 'Перетащите сюда или {{ browseLink }}',
+            browseLink: 'выберите файлы',
+            browseLinkFolder: 'выберите папку',
+            browseLinkFolderMixed: 'папку',
             title: 'Загрузите файлы',
             gridHeaders: {
                 file: 'Файл',
                 size: 'Размер'
             }
         }
-    },
+    } satisfies KbqFileUploadLocaleConfig,
     codeBlock: {
         softWrapOnTooltip: 'Включить перенос по словам',
         softWrapOffTooltip: 'Выключить перенос по словам',

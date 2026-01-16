@@ -8,7 +8,14 @@ import {
     Renderer2
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
+    KBQ_LOCALE_SERVICE,
+    KbqBaseFileUploadLocaleConfig,
+    KbqEnumValues,
+    KbqMultipleFileUploadLocaleConfig
+} from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
 
@@ -35,6 +42,10 @@ export interface KbqInputFile {
     onFileDropped(files: FileList | KbqFile[]): void;
 }
 
+/**
+ * @docs-private
+ * @deprecated Will be removed in next major release
+ */
 export interface KbqInputFileLabel {
     /* Text for description, used with `browseLink` */
     captionText: string;
@@ -44,13 +55,33 @@ export interface KbqInputFileLabel {
     title?: string | undefined;
 }
 
+/** Upload modes enum. */
+export enum KbqFileUploadAllowedType {
+    File = 'file',
+    Folder = 'folder',
+    Mixed = 'mixed'
+}
+
+/** Allowed upload modes for the upload component. */
+export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedType>;
+
+/** @docs-private */
+export type KbqFileUploadCaptionContext = {
+    captionText: string;
+    browseLink?: string;
+    captionTextSeparator?: string;
+    browseLinkFolder?: string;
+};
+
 /**
  * @deprecated use FormControl for validation
  */
 export type KbqFileValidatorFn = (file: File) => string | null;
 
 /* Object for labels customization inside file upload component */
-export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<KbqInputFileLabel>('KbqFileUploadConfiguration');
+export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
+    KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig
+>('KbqFileUploadConfiguration');
 
 /** @deprecated use `FileValidators.isCorrectExtension` instead. Will be removed in next major release. */
 export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
@@ -71,7 +102,7 @@ export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
 };
 
 /** @docs-private */
-export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpdateErrorState {
+export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {
     protected abstract localeConfig: InputSignal<Partial<T> | undefined>;
     /** Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed. */

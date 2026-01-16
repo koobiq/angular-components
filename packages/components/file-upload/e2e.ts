@@ -1,7 +1,13 @@
 import { DOCUMENT } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KbqFileItem, KbqFileUploadModule, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
+import {
+    KbqFileItem,
+    KbqFileUploadAllowedType,
+    KbqFileUploadAllowedTypeValues,
+    KbqFileUploadModule,
+    KbqMultipleFileUploadComponent
+} from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 type SingleUploadState = {
@@ -12,6 +18,7 @@ type SingleUploadState = {
     icon?: string;
     showFileSize?: boolean;
     className?: string;
+    allowed?: KbqFileUploadAllowedTypeValues;
 };
 
 type MultipleUploadState = {
@@ -23,6 +30,7 @@ type MultipleUploadState = {
     className?: string;
     size?: KbqMultipleFileUploadComponent['size'];
     type?: 'error';
+    allowed?: KbqFileUploadAllowedTypeValues;
 };
 
 @Component({
@@ -36,6 +44,7 @@ type MultipleUploadState = {
                         @for (cell of row; track $index) {
                             <td>
                                 <kbq-file-upload
+                                    [allowed]="cell.allowed ?? kbqFileUploadAllowedTypes.File"
                                     [file]="cell.file"
                                     [showFileSize]="cell.showFileSize ?? true"
                                     [disabled]="!!cell.disabled"
@@ -58,6 +67,7 @@ type MultipleUploadState = {
                         @for (cell of row; track $index) {
                             <td>
                                 <kbq-multiple-file-upload
+                                    [allowed]="cell.allowed ?? kbqFileUploadAllowedTypes.File"
                                     [class]="cell.className"
                                     [class.dev-error]="!!cell.error"
                                     [class.dev-dragover]="!!cell.dragover"
@@ -86,21 +96,27 @@ export class E2eFileUploadStateAndStyle {
     protected readonly iconClass = { error: 'kbq-circle-info_16', default: 'kbq-file-o_16' };
 
     protected readonly singleFileUploadRows: SingleUploadState[][] = [
-        // Row 1: Simple (no file selected)
+        // Simple (no file selected)
         [
             { file: null },
             { file: null, disabled: true },
             { file: null, icon: this.iconClass.error, error: true },
             { file: null, dragover: true }],
 
-        // Row 2: File selected, fileSize shown
+        // File picker allowed types
+        [
+            { file: null, allowed: KbqFileUploadAllowedType.Folder },
+            { file: null, allowed: KbqFileUploadAllowedType.Mixed },
+            { file: null, allowed: KbqFileUploadAllowedType.File }
+        ],
+        // File selected, fileSize shown
         [
             { file: this.testKbqFileItem },
             { file: this.testKbqFileItem, disabled: true },
             { file: this.testKbqFileItem, icon: this.iconClass.error, error: true },
             { file: this.testKbqFileItem, dragover: true }],
 
-        // Row 3: File selected, fileSize hidden
+        // File selected, fileSize hidden
         [
             { file: this.testKbqFileItem, showFileSize: false },
             { file: this.testKbqFileItem, showFileSize: false, disabled: true },
@@ -126,6 +142,11 @@ export class E2eFileUploadStateAndStyle {
             { files: [], disabled: true },
             { files: [], icon: this.iconClass.error, error: true },
             { files: [], dragover: true }],
+        [
+            { files: [], allowed: KbqFileUploadAllowedType.Folder },
+            { files: [], allowed: KbqFileUploadAllowedType.Mixed },
+            { files: [], allowed: KbqFileUploadAllowedType.File }
+        ],
         // Row 2: File selected
         [
             { files: [this.testKbqFileItem] },
@@ -174,4 +195,6 @@ export class E2eFileUploadStateAndStyle {
             })
         );
     }
+
+    protected readonly kbqFileUploadAllowedTypes = KbqFileUploadAllowedType;
 }
