@@ -44,18 +44,18 @@ export class AppSwitcherOverviewExample {
                     name: 'Byte Sentinel',
                     caption: 'Byte 001',
                     id: 'SZFO_01',
-                    icon: this.SVGIcon
+                    iconSrc: 'assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'CryptoWall',
                     id: 'SZFO_02',
-                    icon: this.SVGIcon
+                    iconSrc: 'assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'App Instance 1',
                     caption: 'Instance Alias One',
                     id: 'SZFO_03',
-                    icon: this.SVGIcon
+                    iconSrc: 'assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'App Instance 2',

@@ -70,8 +70,8 @@ export interface KbqAppSwitcherApp {
     aliases?: KbqAppSwitcherApp[];
     // (undocumented)
     caption?: string;
-    // (undocumented)
-    icon: string;
+    icon?: string;
+    iconSrc?: string;
     // (undocumented)
     id: string | number;
     // (undocumented)
@@ -178,8 +178,8 @@ export function kbqAppSwitcherScrollStrategyFactory(overlay: Overlay): () => Scr
 export interface KbqAppSwitcherSite {
     // (undocumented)
     apps: KbqAppSwitcherApp[];
-    // (undocumented)
     icon?: string;
+    iconSrc?: string;
     // (undocumented)
     id: string | number;
     // (undocumented)

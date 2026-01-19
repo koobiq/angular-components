@@ -1,18 +1,26 @@
+import { NgOptimizedImage } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqAppSwitcherApp } from './app-switcher';
 
 /** @docs-private */
 @Component({
     selector: '[kbq-app-switcher-list-item]',
     imports: [
-        KbqIcon
+        KbqIconModule,
+        NgOptimizedImage
     ],
     template: `
-        <span class="kbq-app-switcher-list-item__icon" [innerHtml]="getIcon(app.icon)"></span>
+        @if (app.icon) {
+            <span class="kbq-app-switcher-list-item__icon" [innerHtml]="getIcon(app.icon)"></span>
+        } @else if (app.iconSrc) {
+            <span class="kbq-app-switcher-list-item__icon">
+                <img alt="{{ app.type }}" width="24" height="24" [ngSrc]="app.iconSrc" />
+            </span>
+        }
 
         <div class="kbq-app-switcher-list-item__container">
             <div class="kbq-app-switcher-list-item__name">{{ app.name }}</div>
