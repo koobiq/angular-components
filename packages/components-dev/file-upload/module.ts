@@ -31,10 +31,15 @@ import {
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
+    KbqFileDropDirective,
     KbqFileItem,
+    KbqFileList,
     KbqFileUploadModule,
     KbqFileValidatorFn,
-    KbqLocalDropzone
+    KbqFullscreenDropzone,
+    KbqLocalDropzone,
+    KbqLocalDropzoneDirective,
+    KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -195,12 +200,19 @@ export class DevMultipleFileUploadCompact {
 @Component({
     selector: 'dev-fullscreen-dropzone',
     imports: [
-        KbqLocalDropzone
+        KbqLocalDropzone,
+        KbqFileDropDirective,
+        KbqFullscreenDropzone,
+        KbqFileList,
+        KbqSingleFileUploadComponent,
+        KbqLocalDropzoneDirective
     ],
     template: `
-        <div style="width: 200px; height: 200px; background: grey">
-            <kbq-local-dropzone />
+        <div style="width: 500px; height: 500px; background: grey" kbqLocalDropzone>
+            <!--            <kbq-local-dropzone [kbqConnectedTo]="fileUploadComponent" />-->
         </div>
+
+        <!--        <kbq-fullscreen-dropzone />-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

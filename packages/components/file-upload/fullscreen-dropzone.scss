@@ -1,12 +1,26 @@
-.kbq-local-dropzone {
+.kbq-loader-overlay_parent.kbq-file-drop_dragover {
+    .kbq-local-dropzone {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+        z-index: 10;
+    }
+}
+
+.kbq-fullscreen-dropzone.kbq-entering,
+.kbq-dropzone.kbq-entering {
+    opacity: 1;
+}
+
+.kbq-dropzone {
     --kbq-dropzone-margin: var(--kbq-size-s);
-    --kbq-dropzone-background: var(--kbq-background-theme-less);
+    --kbq-dropzone-background: var(--kbq-background-overlay-theme);
     --kbq-dropzone-border: var(--kbq-line-theme-fade);
 
-    --kbq-loader-overlay-transparent-overlay-background: transparent;
-    --kbq-loader-overlay-size-normal-overlay-padding-horizontal: var(--kbq-dropzone-margin);
-
     padding: var(--kbq-dropzone-margin);
+
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
 
     .kbq-dropzone__wrapper {
         width: 100%;
@@ -22,8 +36,41 @@
     }
 }
 
-.kbq-fullscreen-dropzone {
-    --kbq-dropzone-background: var(--kbq-background-theme-less);
+.kbq-dropzone-text {
+    display: flex;
+    width: 100%;
 
+    .kbq-empty-state {
+        --kbq-empty-state-size-compact-padding-top: 0;
+        --kbq-empty-state-size-compact-padding-horizontal: 0;
+        --kbq-empty-state-size-compact-padding-bottom: 0;
+
+        --kbq-empty-state-size-normal-padding-top: 0;
+        --kbq-empty-state-size-normal-padding-horizontal: 0;
+        --kbq-empty-state-size-normal-padding-bottom: 0;
+
+        --kbq-empty-state-size-big-padding-top: 0;
+        --kbq-empty-state-size-big-padding-horizontal: 0;
+        --kbq-empty-state-size-big-padding-bottom: 0;
+    }
+}
+
+.kbq-local-dropzone {
+    --kbq-loader-overlay-transparent-overlay-background: transparent;
+    --kbq-loader-overlay-size-normal-overlay-padding-horizontal: var(--kbq-dropzone-margin);
+
+    z-index: unset;
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
+    pointer-events: none;
+}
+
+.kbq-fullscreen-dropzone {
     background-color: var(--kbq-dropzone-background);
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
+
+    .kbq-dropzone__wrapper {
+        --kbq-dropzone-background: transparent;
+    }
 }
