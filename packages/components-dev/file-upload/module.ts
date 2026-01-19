@@ -31,8 +31,14 @@ import {
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
+    KbqFileDropDirective,
     KbqFileItem,
+    KbqFileList,
     KbqFileUploadModule,
+    KbqFullscreenDropzone,
+    KbqLocalDropzone,
+    KbqLocalDropzoneDirective,
+    KbqSingleFileUploadComponent,
     KbqFileValidatorFn
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
