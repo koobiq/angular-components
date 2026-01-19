@@ -51,7 +51,6 @@ const getMockedChangeEventForSingle = (fileNameOrFakeFile: string | Partial<File
 
 const fileItemActionCssClass = 'kbq-file-upload__action';
 
-const fileItemCssClass = 'kbq-file-item';
 const fileItemTextCssClass = 'kbq-file-item__text';
 
 const maxFileExceeded = (file: File): string | null => {
@@ -129,7 +128,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
-            fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
+            fixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
             fixture.detectChanges();
         };
 
@@ -346,7 +345,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
-            component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
+            component.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
             fixture.detectChanges();
         };
 

@@ -7,14 +7,10 @@ exports[`KbqMultipleFileUploadComponent with localeConfig input property should 
   "browseLinkFolderMixed": "папку",
   "captionText": "TEST {{ browseLink }}",
   "captionTextForCompactSize": "Перетащите сюда или {{ browseLink }}",
-  "captionTextOnlyFolder": "Перетащите сюда или {{ browseLinkFolder }}",
+  "captionTextOnlyFolder": "или {{ browseLinkFolder }}",
   "captionTextWhenSelected": "Перетащите еще или {{ browseLink }}",
-  "captionTextWithFolder": "Перетащите сюда или {{ browseLink }} или {{ browseLinkFolderMixed }}",
-  "gridHeaders": {
-    "file": "Файл",
-    "size": "Размер",
-  },
-  "title": "Загрузите файлы",
+  "captionTextWithFolder": "или {{ browseLink }} или {{ browseLinkFolderMixed }}",
+  "title": "Перетащите сюда",
 }
 `;
 

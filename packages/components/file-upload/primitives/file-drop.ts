@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Output } from '@angular/core';
+import { Directive, output } from '@angular/core';
 import { KbqFile } from '../file-upload';
 
 const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferItem.prototype;
@@ -21,7 +21,7 @@ export class KbqFileDropDirective {
     dragover: boolean;
 
     /** Emits an event when file items were dropped. */
-    @Output() readonly filesDropped: EventEmitter<KbqFile[]> = new EventEmitter<KbqFile[]>();
+    readonly filesDropped = output<KbqFile[]>();
 
     /** @docs-private */
     onDragOver(event: DragEvent) {

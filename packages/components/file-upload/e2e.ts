@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import {
     KbqFileItem,
     KbqFileUploadAllowedType,
@@ -33,9 +34,15 @@ type MultipleUploadState = {
     allowed?: KbqFileUploadAllowedTypeValues;
 };
 
+class CustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(_control: AbstractControl | null, _form: FormGroupDirective | NgForm | null): boolean {
+        return true;
+    }
+}
+
 @Component({
     selector: 'e2e-file-upload-state-and-style',
-    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
+    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule, FormsModule],
     template: `
         <div>
             <table data-testid="e2eSingleFileUploadTable">
@@ -46,10 +53,13 @@ type MultipleUploadState = {
                                 <kbq-file-upload
                                     [allowed]="cell.allowed ?? kbqFileUploadAllowedTypes.File"
                                     [file]="cell.file"
+                                    [class]="cell.className"
                                     [showFileSize]="cell.showFileSize ?? true"
                                     [disabled]="!!cell.disabled"
                                     [class.dev-error]="!!cell.error"
                                     [class.dev-dragover]="!!cell.dragover"
+                                    [errorStateMatcher]="getErrorStateMatcher(!!cell.error)"
+                                    [(ngModel)]="cell.file"
                                 >
                                     <i kbq-icon="" [class]="cell.icon || iconClass.default"></i>
                                 </kbq-file-upload>
@@ -74,6 +84,7 @@ type MultipleUploadState = {
                                     [files]="cell.files"
                                     [disabled]="cell.disabled || false"
                                     [size]="cell.size || 'default'"
+                                    [errorStateMatcher]="getErrorStateMatcher(!!cell.error)"
                                 >
                                     <ng-template #kbqFileIcon>
                                         <i kbq-icon="" [class]="cell.icon || iconClass.default"></i>
@@ -132,6 +143,12 @@ export class E2eFileUploadStateAndStyle {
                 showFileSize: false,
                 dragover: true
             }
+        ],
+        [
+            { file: this.testKbqFileItem, showFileSize: false, className: 'dev-focused' },
+            { file: this.testKbqFileItem, showFileSize: true, className: 'dev-focused' },
+            { file: this.testKbqFileItem, showFileSize: true, className: 'dev-focused', error: true },
+            { file: this.testKbqFileItem, showFileSize: true, className: 'dev-focused', dragover: true }
         ]
     ];
 
@@ -163,7 +180,19 @@ export class E2eFileUploadStateAndStyle {
         // Row 4: Misc
         [
             { files: [this.testKbqFileItem], icon: this.iconClass.error, type: 'error', dragover: true },
-            { files: [this.testKbqFileItem], className: 'dev-focused' }
+            { files: [this.testKbqFileItem], className: 'dev-focused' },
+            { files: [this.testKbqFileItem], className: 'dev-focused', type: 'error' },
+            { files: [this.testKbqFileItem], className: 'dev-focused', type: 'error', dragover: true }
+        ],
+        [
+            { files: [this.testKbqFileItem], className: 'dev-hover' },
+            { files: [this.testKbqFileItem], className: 'dev-hover', error: true },
+            { files: [this.testKbqFileItem], className: 'dev-hover', type: 'error' },
+            { files: [this.testKbqFileItem], className: 'dev-hover', type: 'error', dragover: true }
+        ],
+        [
+            { files: [this.testKbqFileItem], className: 'dev-hover', error: true, type: 'error' },
+            { files: [this.testKbqFileItem], className: 'dev-hover', dragover: true }
         ]
     ];
 
@@ -172,6 +201,10 @@ export class E2eFileUploadStateAndStyle {
 
     protected get testKbqFileItem(): KbqFileItem {
         return { file: new File(['test'] satisfies BlobPart[], 'test.file') } satisfies KbqFileItem;
+    }
+
+    getErrorStateMatcher(isError: boolean): any {
+        return isError ? new CustomErrorStateMatcher() : null;
     }
 
     constructor() {
@@ -184,7 +217,23 @@ export class E2eFileUploadStateAndStyle {
                 .querySelectorAll('.dev-error .kbq-file-upload')
                 .forEach((el) => this.renderer.addClass(el, 'kbq-error'));
 
-            (this.document.querySelector('.dev-focused .kbq-list-selection') satisfies HTMLElement | null)?.focus();
+            this.document.querySelectorAll<HTMLElement>('.dev-focused .kbq-file-upload__action').forEach((button) => {
+                button.classList.add('cdk-focused');
+                button.classList.add('cdk-keyboard-focused');
+            });
+
+            this.document.querySelectorAll<HTMLElement>('.dev-hover .kbq-file-upload__item').forEach((item) => {
+                item.classList.add('kbq-hovered');
+            });
+
+            setTimeout(() => {
+                this.document
+                    .querySelectorAll<HTMLElement>('.kbq-single-file-upload.dev-focused .kbq-file-upload__action')
+                    .forEach((button) => {
+                        button.classList.add('cdk-focused');
+                        button.classList.add('cdk-keyboard-focused');
+                    });
+            });
         });
 
         this.multipleFileUploadRows.forEach((row) =>
