@@ -6,20 +6,13 @@ test.describe('KbqSearchExpandableModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSearchExpandableStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('search-expandable default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eSearchExpandableStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('search-expandable (dark theme)', async ({ page }) => {
-            await page.goto('/E2eSearchExpandableStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
 });

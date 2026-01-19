@@ -8,7 +8,7 @@ test.describe('KbqDropdownModule', () => {
         const getSubmenuTrigger = (page: Page) => page.getByTestId('e2eSubmenuTrigger');
         const getSubmenu2ItemWithIcon = (page: Page) => page.getByTestId('e2eSubmenu2ItemWithIcon');
 
-        test('light theme', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eDropdownStates');
             const component = getComponent(page);
 
@@ -19,22 +19,9 @@ test.describe('KbqDropdownModule', () => {
             await page.keyboard.press('ArrowDown');
             await page.keyboard.press('ArrowRight');
             await getSubmenu2ItemWithIcon(page).hover();
-            await expect(component).toHaveScreenshot();
-        });
-
-        test('dark theme', async ({ page }) => {
-            await page.goto('/E2eDropdownStates');
+            await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            const component = getComponent(page);
-
-            await component.scrollIntoViewIfNeeded();
-            await getDropdownTrigger(page).click();
-            await getSubmenuTrigger(page).hover();
-            await page.keyboard.press('ArrowDown');
-            await page.keyboard.press('ArrowDown');
-            await page.keyboard.press('ArrowRight');
-            await getSubmenu2ItemWithIcon(page).hover();
-            await expect(component).toHaveScreenshot();
+            await expect(component).toHaveScreenshot('01-dark.png');
         });
     });
 });

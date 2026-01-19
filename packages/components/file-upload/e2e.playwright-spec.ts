@@ -15,20 +15,9 @@ test.describe('KbqFileUploadModule', () => {
 
             const screenshotTarget = getSingleFileUploadTable(locator);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`KbqSingleFileUploadComponent states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eFileUploadStateAndStyle');
-            await page.setViewportSize({ width: 1400, height: 320 });
+            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            await page.setViewportSize({ width: 1400, height: 320 });
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getSingleFileUploadTable(locator);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
 
         test('KbqMultipleFileUploadComponent states', async ({ page }) => {
@@ -39,19 +28,9 @@ test.describe('KbqFileUploadModule', () => {
 
             const screenshotTarget = getMultipleFileUploadTable(locator);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`KbqMultipleFileUploadComponent states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eFileUploadStateAndStyle');
+            await expect(screenshotTarget).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
-            await page.setViewportSize({ width: 1400, height: 900 });
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getMultipleFileUploadTable(locator);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
         });
     });
 });

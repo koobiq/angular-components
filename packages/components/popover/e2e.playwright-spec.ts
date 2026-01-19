@@ -6,20 +6,13 @@ test.describe('KbqPopoverModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2ePopoverStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('popover default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2ePopoverStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
-        });
-
-        test('popover (dark theme)', async ({ page }) => {
-            await page.goto('/E2ePopoverStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png', { threshold: 0.05 });
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png', { threshold: 0.05 });
         });
     });
 });

@@ -11,21 +11,11 @@ test.describe('KbqInputModule', () => {
             test('states', async ({ page }) => {
                 await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
-
                 const screenshotTarget = getTestTable(locator);
 
-                await expect(screenshotTarget).toHaveScreenshot();
-            });
-
-            test(`states (dark theme)`, async ({ page }) => {
-                await page.goto('/E2eInputStateAndStyle');
+                await expect(screenshotTarget).toHaveScreenshot('01-light.png');
                 await e2eEnableDarkTheme(page);
-
-                const locator = getComponent(page);
-
-                const screenshotTarget = getTestTable(locator);
-
-                await expect(screenshotTarget).toHaveScreenshot();
+                await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
             });
         });
 
@@ -36,84 +26,46 @@ test.describe('KbqInputModule', () => {
             test('states', async ({ page }) => {
                 await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
-
                 const screenshotTarget = getTestTable(locator);
 
-                await expect(screenshotTarget).toHaveScreenshot();
-            });
-
-            test(`states (dark theme)`, async ({ page }) => {
-                await page.goto('/E2eInputStateAndStyle');
+                await expect(screenshotTarget).toHaveScreenshot('02-light.png');
                 await e2eEnableDarkTheme(page);
-
-                const locator = getComponent(page);
-
-                const screenshotTarget = getTestTable(locator);
-
-                await expect(screenshotTarget).toHaveScreenshot();
+                await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
             });
 
-            test('default hints', async ({ page }) => {
+            test('hints', async ({ page }) => {
                 await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
-
                 const screenshotTarget = getInputPasswordTestRow(locator);
 
-                await expect(screenshotTarget).toHaveScreenshot();
+                await expect(screenshotTarget).toHaveScreenshot('03-light.png');
+                await e2eEnableDarkTheme(page);
+                await expect(screenshotTarget).toHaveScreenshot('03-dark.png');
             });
 
-            test('text visibile', async ({ page }) => {
+            test('text visible', async ({ page }) => {
                 await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
-
                 const screenshotTarget = getInputPasswordTestRow(locator);
-
                 const toggle = screenshotTarget.locator('kbq-password-toggle');
 
                 await toggle.click();
 
-                await expect(screenshotTarget).toHaveScreenshot();
-            });
-
-            test('default hints (dark theme)', async ({ page }) => {
-                await page.goto('/E2eInputStateAndStyle');
-                await e2eEnableDarkTheme(page);
-
-                const locator = getComponent(page);
-
-                const screenshotTarget = getInputPasswordTestRow(locator);
-
-                await expect(screenshotTarget).toHaveScreenshot();
+                await expect(screenshotTarget).toHaveScreenshot('04-light.png');
             });
 
             test('hints on blur', async ({ page }) => {
                 await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
-
                 const screenshotTarget = getInputPasswordTestRow(locator);
-
                 const inputPassword = screenshotTarget.locator('input');
 
                 await inputPassword.focus();
                 await inputPassword.blur();
 
-                await expect(screenshotTarget).toHaveScreenshot();
-            });
-
-            test('hints on blur (dark theme)', async ({ page }) => {
-                await page.goto('/E2eInputStateAndStyle');
+                await expect(screenshotTarget).toHaveScreenshot('05-light.png');
                 await e2eEnableDarkTheme(page);
-
-                const locator = getComponent(page);
-
-                const screenshotTarget = getInputPasswordTestRow(locator);
-
-                const inputPassword = screenshotTarget.locator('input');
-
-                await inputPassword.focus();
-                await inputPassword.blur();
-
-                await expect(screenshotTarget).toHaveScreenshot();
+                await expect(screenshotTarget).toHaveScreenshot('05-dark.png');
             });
         });
     });

@@ -7,38 +7,26 @@ test.describe('KbqModalModule', () => {
         const getOpenButton = (page: Page) => page.getByTestId('e2eOpenModal');
         const getMultipleModalsButton = (page: Page) => page.getByTestId('e2eMultipleModals');
 
-        test('light theme', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.setViewportSize({ width: 400, height: 350 });
             await page.goto('/E2eModalStates');
-
             const component = getComponent(page);
 
             await component.scrollIntoViewIfNeeded();
             await getOpenButton(page).click();
-            await expect(component).toHaveScreenshot();
-        });
-
-        test('dark theme', async ({ page }) => {
-            await page.setViewportSize({ width: 400, height: 350 });
-            await page.goto('/E2eModalStates');
+            await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const component = getComponent(page);
-
-            await component.scrollIntoViewIfNeeded();
-            await getOpenButton(page).click();
-            await expect(component).toHaveScreenshot();
+            await expect(component).toHaveScreenshot('01-dark.png');
         });
 
-        test('open multiple modals', async ({ page }) => {
+        test('multiple modals', async ({ page }) => {
             await page.setViewportSize({ width: 400, height: 350 });
             await page.goto('/E2eModalStates');
-
             const component = getComponent(page);
 
             await component.scrollIntoViewIfNeeded();
             await getMultipleModalsButton(page).click();
-            await expect(component).toHaveScreenshot();
+            await expect(component).toHaveScreenshot('02-light.png');
         });
     });
 });

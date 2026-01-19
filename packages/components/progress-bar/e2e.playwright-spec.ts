@@ -6,28 +6,16 @@ test.describe('KbqProgressBar', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eProgressBarStateAndStyle');
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eProgressBarTable');
 
-        test('KbqProgressBar states', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eProgressBarStateAndStyle');
             const locator = getComponent(page);
-
             const screenshotTarget = getTestTable(locator);
 
             await page.waitForTimeout(50);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`KbqProgressBar states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eProgressBarStateAndStyle');
+            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getTestTable(locator);
-
-            await page.waitForTimeout(50);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
 });

@@ -6,20 +6,13 @@ test.describe('KbqUsername', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eUsernameStateAndStyle');
         const screenshotTarget = (locator: Locator) => locator.getByTestId('e2eUsernameTable');
 
-        test('KbqUsername states', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eUsernameStateAndStyle');
             const locator = getComponent(page);
 
-            await expect(screenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test(`KbqUsername states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eUsernameStateAndStyle');
+            await expect(screenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(screenshotTarget(locator)).toHaveScreenshot();
+            await expect(screenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
 });

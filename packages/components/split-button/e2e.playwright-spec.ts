@@ -8,41 +8,32 @@ test.describe('KbqSplitButtonModule', () => {
         const toggleTitle = (locator: Locator) => locator.getByTestId('e2eShowTitle').click();
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('split-button with title', async ({ page }) => {
+        test('with title', async ({ page }) => {
             await page.goto('/E2eSplitButtonStateAndStyle');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
         });
 
-        test('split-button with icon', async ({ page }) => {
+        test('with icon', async ({ page }) => {
             await page.goto('/E2eSplitButtonStateAndStyle');
             const locator = getComponent(page);
 
             await togglePrefix(locator);
             await toggleTitle(locator);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-light.png');
         });
 
-        test('split-button with title, prefix', async ({ page }) => {
+        test('with title, prefix and suffix', async ({ page }) => {
             await page.goto('/E2eSplitButtonStateAndStyle');
             const locator = getComponent(page);
 
             await togglePrefix(locator);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('split-button with title, prefix (dark theme)', async ({ page }) => {
-            await page.goto('/E2eSplitButtonStateAndStyle');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await togglePrefix(locator);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
         });
     });
 });

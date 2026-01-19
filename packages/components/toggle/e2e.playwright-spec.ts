@@ -10,15 +10,12 @@ test.describe('KbqToggleModule', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eToggleStateAndStyle');
         const getFirstToggle = (locator: Locator): Locator => locator.locator('kbq-toggle').first();
 
-        test('default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eToggleStateAndStyle');
-            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot();
-        });
 
-        test('default (dark theme)', async ({ page }) => {
-            await page.goto('/E2eToggleStateAndStyle');
+            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot();
+            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot('01-dark.png');
         });
 
         test('should have correct size', async ({ page }) => {
@@ -42,22 +39,19 @@ test.describe('KbqToggleModule', () => {
             const component = getComponent(page);
 
             await getIndeterminateToggle(component).click();
-            await expect(getScreenshotTarget(component)).toHaveScreenshot();
+            await expect(getScreenshotTarget(component)).toHaveScreenshot('02-light.png');
         });
     });
 
     test.describe('E2eToggleWithTextAndCaption', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eToggleWithTextAndCaption');
 
-        test('default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eToggleWithTextAndCaption');
-            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot();
-        });
 
-        test('default (dark theme)', async ({ page }) => {
-            await page.goto('/E2eToggleWithTextAndCaption');
+            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot();
+            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot('03-dark.png');
         });
 
         test('big', async ({ page }) => {
@@ -66,7 +60,7 @@ test.describe('KbqToggleModule', () => {
             const component = getComponent(page);
 
             await getBigToggle(component).click();
-            await expect(getScreenshotTarget(component)).toHaveScreenshot();
+            await expect(getScreenshotTarget(component)).toHaveScreenshot('04-light.png');
         });
     });
 });

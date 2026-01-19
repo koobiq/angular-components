@@ -6,20 +6,13 @@ test.describe('KbqMarkdownModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eMarkdownStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('Markdown default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eMarkdownStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('Markdown (dark theme)', async ({ page }) => {
-            await page.goto('/E2eMarkdownStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
 });

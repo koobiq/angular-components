@@ -6,25 +6,16 @@ test.describe('KbqSelectModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectStates');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');
 
-        test('select default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getSelect(screenshotTarget);
 
             await select.click();
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('select (dark theme)', async ({ page }) => {
-            await page.goto('/E2eSelectStates');
+            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const select = getSelect(screenshotTarget);
-
-            await select.click();
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
 
@@ -32,25 +23,16 @@ test.describe('KbqSelectModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eMultiselectStates');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eMultiSelect');
 
-        test('MultiSelect default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eMultiSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getSelect(screenshotTarget);
 
             await select.click();
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('MultiSelect (dark theme)', async ({ page }) => {
-            await page.goto('/E2eMultiSelectStates');
+            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const select = getSelect(screenshotTarget);
-
-            await select.click();
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
         });
     });
 
@@ -58,25 +40,16 @@ test.describe('KbqSelectModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eMultilineSelectStates');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eMultilineSelect');
 
-        test('Multiline default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eMultilineSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getSelect(screenshotTarget);
 
             await select.click();
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('Multiline (dark theme)', async ({ page }) => {
-            await page.goto('/E2eMultilineSelectStates');
+            await expect(getComponent(page)).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const select = getSelect(screenshotTarget);
-
-            await select.click();
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('03-dark.png');
         });
     });
 
@@ -84,25 +57,16 @@ test.describe('KbqSelectModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectWithSearchAndFooter');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');
 
-        test('SelectWithSearchAndFooter default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eSelectWithSearchAndFooter');
             const screenshotTarget = getComponent(page);
             const select = getSelect(screenshotTarget);
 
             await select.click();
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('SelectWithSearchAndFooter (dark theme)', async ({ page }) => {
-            await page.goto('/E2eSelectWithSearchAndFooter');
+            await expect(getComponent(page)).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const select = getSelect(screenshotTarget);
-
-            await select.click();
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('04-dark.png');
         });
     });
 });

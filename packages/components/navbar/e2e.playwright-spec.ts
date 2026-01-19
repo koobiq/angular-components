@@ -6,20 +6,13 @@ test.describe('KbqNavbarModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eNavbarStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('navbar default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eHorizontalNavbarStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('navbar (dark theme)', async ({ page }) => {
-            await page.goto('/E2eHorizontalNavbarStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
 
@@ -27,20 +20,13 @@ test.describe('KbqNavbarModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eVerticalNavbarStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('vertical navbar default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eVerticalNavbarStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('vertical navbar (dark theme)', async ({ page }) => {
-            await page.goto('/E2eVerticalNavbarStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-dark.png');
         });
     });
 });

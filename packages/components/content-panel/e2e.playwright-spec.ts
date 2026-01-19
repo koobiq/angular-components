@@ -5,15 +5,11 @@ test.describe('KbqContentPanelModule', () => {
     test.describe('E2eContentPanelState', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eContentPanelState');
 
-        test('light theme', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eContentPanelState');
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('dark theme', async ({ page }) => {
-            await page.goto('/E2eContentPanelState');
+            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
 });

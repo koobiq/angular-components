@@ -9,21 +9,11 @@ test.describe('KbqRadioModule', () => {
         test('states', async ({ page }) => {
             await page.goto('/E2eRadioStateAndStyle');
             const locator = getComponent(page);
-
             const screenshotTarget = getTestTable(locator);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eRadioStateAndStyle');
+            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getTestTable(locator);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
 });

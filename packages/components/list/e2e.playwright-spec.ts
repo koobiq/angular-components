@@ -6,20 +6,13 @@ test.describe('KbqListModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eListStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('list default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eListStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('list (dark theme)', async ({ page }) => {
-            await page.goto('/E2eListStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
 });

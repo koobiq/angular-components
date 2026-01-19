@@ -6,20 +6,13 @@ test.describe('KbqToastModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eToastStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('toast default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eToastStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('toast (dark theme)', async ({ page }) => {
-            await page.goto('/E2eToastStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
 });

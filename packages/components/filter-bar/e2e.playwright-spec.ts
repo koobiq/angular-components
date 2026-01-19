@@ -6,21 +6,13 @@ test.describe('KbqFilterBarModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFilterBarStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('FilterBar default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eFilterBarStates');
-
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('FilterBar (dark theme)', async ({ page }) => {
-            await page.goto('/E2eFilterBarStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
 });

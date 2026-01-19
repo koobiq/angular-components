@@ -6,24 +6,14 @@ test.describe('KbqDivider', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eDividerStateAndStyle');
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eDividerTable');
 
-        test('KbqDivider states', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eDividerStateAndStyle');
             const locator = getComponent(page);
-
             const screenshotTarget = getTestTable(locator);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`KbqDivider states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eDividerStateAndStyle');
+            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getTestTable(locator);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
 });
