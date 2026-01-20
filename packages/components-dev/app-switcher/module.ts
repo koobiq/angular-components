@@ -10,6 +10,7 @@ import { DevThemeToggle } from '../theme-toggle';
     template: `
         <app-switcher-overview-example />
         <br />
+        <br />
         <app-switcher-sites-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
