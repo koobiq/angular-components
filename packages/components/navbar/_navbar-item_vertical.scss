@@ -31,6 +31,14 @@
             top: var(--kbq-size-s);
             bottom: 0;
         }
+
+        & + .kbq-navbar-brand.kbq-vertical {
+            padding: var(--kbq-size-xxs) var(--kbq-size-m) var(--kbq-size-m);
+
+            &:after {
+                top: 0;
+            }
+        }
     }
 
     &.kbq-expanded {

@@ -54,10 +54,10 @@ a.kbq-navbar-brand {
     flex-direction: row;
     align-items: center;
 
-    padding: var(--kbq-size-xxs) var(--kbq-size-m) var(--kbq-size-m);
+    padding: var(--kbq-size-m);
 
     &:after {
-        top: 0;
+        top: var(--kbq-size-s);
         right: var(--kbq-size-s);
         bottom: var(--kbq-size-s);
         left: var(--kbq-size-s);
