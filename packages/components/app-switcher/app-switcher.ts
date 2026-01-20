@@ -60,7 +60,10 @@ export interface KbqAppSwitcherApp {
     name: string;
     id: string | number;
     type?: string | number;
-    icon: string;
+    /** Inline SVG markup for the application icon. Use this for SVG icons that should be rendered directly in the DOM. */
+    icon?: string;
+    /** Path to the icon file (URL or relative path). */
+    iconSrc?: string;
     caption?: string;
     aliases?: KbqAppSwitcherApp[];
     link?: string;
@@ -70,7 +73,10 @@ export interface KbqAppSwitcherSite {
     name: string;
     id: string | number;
     status?: string;
+    /** Inline SVG markup for the site icon. Use this for SVG icons that should be rendered directly in the DOM. */
     icon?: string;
+    /** Path to the icon file (URL or relative path). */
+    iconSrc?: string;
     apps: KbqAppSwitcherApp[];
 }
 
@@ -92,6 +98,7 @@ export function defaultGroupBy(
                 name: appType,
                 aliases: [app],
                 icon: app.icon,
+                iconSrc: app.iconSrc,
                 id: ''
             };
         }
