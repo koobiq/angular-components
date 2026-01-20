@@ -27,7 +27,7 @@ import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component
 import { KbqDrop } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
-export type KbqDropzoneData = { caption: string; size: KbqDefaultSizes; title: string };
+export type KbqDropzoneData = { caption: string; size: KbqDefaultSizes; title: string; type?: 'dragover' | 'error' };
 
 /** Injection token that can be used to access the data that was passed in to a modal. */
 export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzoneData');

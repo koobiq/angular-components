@@ -33,10 +33,7 @@ import {
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
     KbqFileUploadModule,
-    KbqFileValidatorFn,
-    KbqFullScreenDropzoneService,
-    KbqLocalDropzone,
-    KbqSingleFileUploadComponent
+    KbqFileValidatorFn
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -107,6 +104,8 @@ export class DevCustomTextDirective {}
     selector: 'dev-examples',
     imports: [FileUploadExamplesModule],
     template: `
+        <file-upload-dropzone-example />
+        <hr />
         <file-upload-allowed-example />
         <hr />
         <file-upload-cva-overview-example />
@@ -195,39 +194,6 @@ export class DevMultipleFileUploadCompact {
 }
 
 @Component({
-    selector: 'dev-fullscreen-dropzone',
-    imports: [
-        KbqSingleFileUploadComponent,
-        KbqLocalDropzone
-    ],
-    template: `
-        <div
-            style="width: 500px; height: 500px; background: grey"
-            kbqLocalDropzone
-            [kbqConnectedTo]="fileUpload"
-            (filesDropped)="onDrop($event)"
-        ></div>
-
-        <kbq-file-upload #fileUpload />
-
-        <!--        <kbq-fullscreen-dropzone />-->
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class DevFullscreenDropzoneComponent {
-    dropzoneService = inject(KbqFullScreenDropzoneService);
-
-    onDrop(event: any): void {
-        console.log(event);
-    }
-
-    constructor() {
-        // this.dropzoneService.filesDropped.subscribe(() => console.log('file dropped'));
-        // this.dropzoneService.init();
-    }
-}
-
-@Component({
     selector: 'dev-app',
     imports: [
         DevDocsExamples,
@@ -245,8 +211,7 @@ export class DevFullscreenDropzoneComponent {
         KbqRadioModule,
         DevMultipleFileUploadCompact,
         DevCustomTextDirective,
-        E2eFileUploadStateAndStyle,
-        DevFullscreenDropzoneComponent
+        E2eFileUploadStateAndStyle
     ],
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],

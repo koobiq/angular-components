@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FileUploadAllowedExample } from './file-upload-allowed/file-upload-allowed-example';
 import { FileUploadCustomTextViaInputExample } from './file-upload-custom-text-via-input/file-upload-custom-text-via-input-example';
 import { FileUploadCvaOverviewExample } from './file-upload-cva-overview/file-upload-cva-overview-example';
+import { FileUploadDropzoneExample } from './file-upload-dropzone/file-upload-dropzone-example';
 import { FileUploadIndeterminateLoadingOverviewExample } from './file-upload-indeterminate-loading-overview/file-upload-indeterminate-loading-overview-example';
 import { FileUploadMultipleAcceptValidationExample } from './file-upload-multiple-accept-validation/file-upload-multiple-accept-validation-example';
 import { FileUploadMultipleCompactOverviewExample } from './file-upload-multiple-compact-overview/file-upload-multiple-compact-overview-example';
@@ -24,6 +25,7 @@ export {
     FileUploadAllowedExample,
     FileUploadCustomTextViaInputExample,
     FileUploadCvaOverviewExample,
+    FileUploadDropzoneExample,
     FileUploadIndeterminateLoadingOverviewExample,
     FileUploadMultipleAcceptValidationExample,
     FileUploadMultipleCompactOverviewExample,
@@ -63,7 +65,8 @@ const EXAMPLES = [
     FileUploadMultipleAcceptValidationExample,
     FileUploadSingleMixedValidationExample,
     FileUploadMultipleMixedValidationExample,
-    FileUploadPrimitiveExample
+    FileUploadPrimitiveExample,
+    FileUploadDropzoneExample
 ];
 
 @NgModule({
