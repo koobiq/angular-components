@@ -44,18 +44,18 @@ export class AppSwitcherOverviewExample {
                     name: 'Byte Sentinel',
                     caption: 'Byte 001',
                     id: 'SZFO_01',
-                    iconSrc: 'assets/images/favicons/icon.svg'
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'CryptoWall',
                     id: 'SZFO_02',
-                    iconSrc: 'assets/images/favicons/icon.svg'
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'App Instance 1',
                     caption: 'Instance Alias One',
                     id: 'SZFO_03',
-                    iconSrc: 'assets/images/favicons/icon.svg'
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'App Instance 2',

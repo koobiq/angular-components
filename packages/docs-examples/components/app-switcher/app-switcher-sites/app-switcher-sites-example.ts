@@ -45,7 +45,7 @@ export class AppSwitcherSitesExample {
                     caption: 'Byte 001',
                     id: 'SZFO_01',
                     type: 'NAD',
-                    iconSrc: 'assets/images/favicons/icon.svg'
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'CryptoWall',
@@ -110,7 +110,7 @@ export class AppSwitcherSitesExample {
                     caption: 'Byte 001',
                     id: 'UFO_01',
                     type: 'SIEM',
-                    iconSrc: 'assets/images/favicons/icon.svg'
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
                 },
                 {
                     name: 'CryptoWall',
