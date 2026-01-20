@@ -5,37 +5,10 @@ const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferIt
 const entryIsDirectory = (entry?: FileSystemEntry): entry is FileSystemDirectoryEntry => !!entry && entry.isDirectory;
 const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !!entry && entry.isFile;
 
-@Directive({
-    selector: '[kbqFileDrop]',
-    exportAs: 'kbqFileDrop',
-    host: {
-        class: 'kbq-file-drop',
-        '[class.kbq-file-drop_dragover]': 'dragover',
-        '(dragover)': 'onDragOver($event)',
-        '(dragleave)': 'onDragLeave($event)',
-        '(drop)': 'onDrop($event)'
-    }
-})
-export class KbqFileDropDirective {
-    /** Flag that controls css-class modifications on drag events. */
-    dragover: boolean;
-
+@Directive()
+export abstract class KbqDrop {
     /** Emits an event when file items were dropped. */
     readonly filesDropped = output<KbqFile[]>();
-
-    /** @docs-private */
-    onDragOver(event: DragEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.dragover = true;
-    }
-
-    /** @docs-private */
-    onDragLeave(event: DragEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.dragover = false;
-    }
 
     /** @docs-private */
     onDrop(event: DragEvent) {
@@ -46,7 +19,6 @@ export class KbqFileDropDirective {
 
         event.preventDefault();
         event.stopPropagation();
-        this.dragover = false;
 
         if (event.dataTransfer && event.dataTransfer.items.length > 0) {
             // event.dataTransfer.items requires dom.iterable lib
@@ -60,6 +32,53 @@ export class KbqFileDropDirective {
                 .then((fileList) => fileList.reduce((res, next) => res.concat(next), []))
                 .then((entries: KbqFile[]) => this.filesDropped.emit(entries));
         }
+    }
+}
+
+@Directive({
+    selector: '[kbqFileDrop]',
+    exportAs: 'kbqFileDrop',
+    host: {
+        class: 'kbq-file-drop',
+        '[class.kbq-file-drop_dragover]': 'dragover',
+        '(dragenter)': 'onDragEnter($event)',
+        '(dragover)': 'onDragOver($event)',
+        '(dragleave)': 'onDragLeave($event)',
+        '(drop)': 'onDrop($event)'
+    }
+})
+export class KbqFileDropDirective extends KbqDrop {
+    /** Flag that controls css-class modifications on drag events. */
+    dragover: boolean;
+
+    onDragEnter(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.dragover = true;
+    }
+
+    /** @docs-private */
+    onDragOver(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    /** @docs-private */
+    onDragLeave(event: DragEvent) {
+        if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.dragover = false;
+    }
+
+    /** @docs-private */
+    onDrop(event: DragEvent) {
+        super.onDrop(event);
+        this.dragover = false;
     }
 }
 

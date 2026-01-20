@@ -37,7 +37,6 @@ import {
     KbqFileUploadModule,
     KbqFileValidatorFn,
     KbqFullscreenDropzone,
-    KbqLocalDropzone,
     KbqLocalDropzoneDirective,
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
@@ -200,7 +199,6 @@ export class DevMultipleFileUploadCompact {
 @Component({
     selector: 'dev-fullscreen-dropzone',
     imports: [
-        KbqLocalDropzone,
         KbqFileDropDirective,
         KbqFullscreenDropzone,
         KbqFileList,
@@ -208,7 +206,7 @@ export class DevMultipleFileUploadCompact {
         KbqLocalDropzoneDirective
     ],
     template: `
-        <div style="width: 500px; height: 500px; background: grey" kbqLocalDropzone>
+        <div style="width: 500px; height: 500px; background: grey" kbqLocalDropzone (filesDropped)="onDrop($event)">
             <!--            <kbq-local-dropzone [kbqConnectedTo]="fileUploadComponent" />-->
         </div>
 
@@ -216,7 +214,11 @@ export class DevMultipleFileUploadCompact {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevFullscreenDropzoneComponent {}
+export class DevFullscreenDropzoneComponent {
+    onDrop(event: any): void {
+        console.log(event);
+    }
+}
 
 @Component({
     selector: 'dev-app',
