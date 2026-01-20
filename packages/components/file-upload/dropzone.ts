@@ -200,27 +200,26 @@ export class KbqLocalDropzoneDirective extends KbqDrop {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqFullscreenDropzone {
+export class KbqFullscreenDropzone extends KbqDrop {
     @ViewChild('overlayTpl') overlayTpl!: TemplateRef<unknown>;
-    private overlayRef!: OverlayRef;
-    protected readonly document = inject<Document>(DOCUMENT);
+    private readonly overlay: Overlay = inject(Overlay);
+    private readonly document = inject<Document>(DOCUMENT);
+    private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+    private overlayRef?: OverlayRef;
 
-    constructor(
-        private overlay: Overlay,
-        private vcr: ViewContainerRef
-    ) {
-        fromEvent(this.document, 'dragenter').subscribe((event) => {
+    init() {
+        fromEvent(this.document.body, 'dragenter').subscribe((event) => {
             event.preventDefault();
             event.stopPropagation();
             this.open();
         });
 
-        fromEvent(this.document, 'dragover').subscribe((event) => {
+        fromEvent(this.document.body, 'dragover').subscribe((event) => {
             event.preventDefault();
             event.stopPropagation();
         });
 
-        fromEvent<DragEvent>(this.document, 'dragleave').subscribe((event) => {
+        fromEvent<DragEvent>(this.document.body, 'dragleave').subscribe((event) => {
             if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
                 return;
             }
@@ -230,14 +229,13 @@ export class KbqFullscreenDropzone {
             this.close();
         });
 
-        fromEvent(this.document, 'drop').subscribe((event) => {
-            event.preventDefault();
-            event.stopPropagation();
+        fromEvent<DragEvent>(this.document.body, 'drop').subscribe((event) => {
+            this.onDrop(event);
             this.close();
         });
     }
 
-    open() {
+    private open() {
         if (this.overlayRef?.hasAttached()) return;
 
         this.overlayRef = this.overlay.create({
@@ -248,10 +246,10 @@ export class KbqFullscreenDropzone {
             positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
         });
 
-        this.overlayRef.attach(new TemplatePortal(this.overlayTpl, this.vcr));
+        this.overlayRef.attach(new TemplatePortal(this.overlayTpl, this.viewContainerRef));
 
         setTimeout(() => {
-            this.overlayRef.addPanelClass('kbq-entering');
+            this.overlayRef?.addPanelClass('kbq-entering');
         });
     }
 
