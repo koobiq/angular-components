@@ -9,43 +9,33 @@ test.describe('KbqButtonModule', () => {
         const toggleSuffix = (locator: Locator) => locator.getByTestId('e2eShowSuffixIcon').click();
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('button with title', async ({ page }) => {
+        test('with title', async ({ page }) => {
             await page.goto('/E2eButtonStateAndStyle');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
         });
 
-        test('button with icon', async ({ page }) => {
+        test('with icon', async ({ page }) => {
             await page.goto('/E2eButtonStateAndStyle');
             const locator = getComponent(page);
 
             await togglePrefix(locator);
             await toggleTitle(locator);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-light.png');
         });
 
-        test('button with title, prefix and suffix', async ({ page }) => {
+        test('with title, prefix and suffix', async ({ page }) => {
             await page.goto('/E2eButtonStateAndStyle');
             const locator = getComponent(page);
 
             await togglePrefix(locator);
             await toggleSuffix(locator);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
-        });
-
-        test('button with title, prefix and suffix (dark theme)', async ({ page }) => {
-            await page.goto('/E2eButtonStateAndStyle');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await togglePrefix(locator);
-            await toggleSuffix(locator);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot();
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
         });
     });
 });

@@ -7,28 +7,19 @@ test.describe('KbqTimezoneModule', () => {
         const getTimezoneSelect = (locator: Locator) => locator.getByTestId('e2eTimezoneSelect');
         const getTimezoneSelectWithSearch = (locator: Locator) => locator.getByTestId('e2eTimezoneSelectWithSearch');
 
-        test('light theme', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eTimezoneStates');
             const screenshotTarget = getComponent(page);
             const timezone = getTimezoneSelect(screenshotTarget);
 
             await timezone.click();
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('dark theme', async ({ page }) => {
-            await page.goto('/E2eTimezoneStates');
+            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const timezone = getTimezoneSelect(screenshotTarget);
-
-            await timezone.click();
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
 
-        test('opened by Enter', async ({ page }) => {
+        test('with search', async ({ page }) => {
             await page.goto('/E2eTimezoneStates');
             const screenshotTarget = getComponent(page);
             const timezone = getTimezoneSelectWithSearch(screenshotTarget);
@@ -36,7 +27,7 @@ test.describe('KbqTimezoneModule', () => {
             await timezone.focus();
             await page.keyboard.press('Enter');
 
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
         });
     });
 });

@@ -6,24 +6,14 @@ test.describe('KbqEmptyStateModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eEmptyStateStateAndStyle');
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eEmptyStateTable');
 
-        test('KbqEmptyState states', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eEmptyStateStateAndStyle');
             const locator = getComponent(page);
-
             const screenshotTarget = getTestTable(locator);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`KbqEmptyState states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eEmptyStateStateAndStyle');
+            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getTestTable(locator);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
 });

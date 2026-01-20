@@ -26,96 +26,77 @@ type BreadcrumbState = {
         KbqDropdownModule
     ],
     template: `
-        <div>
-            <table data-testid="e2eBreadcrumbsTable">
-                @for (row of states; track $index) {
-                    <tr>
-                        @for (cell of row; track $index) {
-                            <td>
-                                <nav
-                                    kbq-breadcrumbs
-                                    [size]="cell.size"
-                                    [max]="cell.max"
-                                    [firstItemNegativeMargin]="cell.firstItemNegativeMargin"
-                                    [wrapMode]="cell.wrapMode"
-                                    [style.max-width.px]="cell.maxWidth"
-                                >
-                                    @for (breadcrumb of items; track breadcrumb) {
-                                        <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
-                                    }
-                                </nav>
-                            </td>
-                        }
-                    </tr>
-                }
-                <tr>
-                    <td>
-                        <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">
-                            @for (breadcrumb of items; track breadcrumb) {
-                                <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb">
-                                    <a
-                                        *kbqBreadcrumbView
-                                        tabindex="-1"
-                                        kbq-button
-                                        kbqBreadcrumb
-                                        [focusable]="!$last"
-                                        [routerLink]="breadcrumb"
-                                        [disabled]="$last"
-                                        [attr.aria-current]="$last ? 'page' : null"
-                                    >
-                                        {{ breadcrumb }}
-                                        <i kbq-icon="kbq-file-code-o_16"></i>
-                                    </a>
-                                </kbq-breadcrumb-item>
-                            }
-                        </nav>
-                    </td>
-                </tr>
+        @for (row of states; track $index) {
+            @for (cell of row; track $index) {
+                <nav
+                    kbq-breadcrumbs
+                    [size]="cell.size"
+                    [max]="cell.max"
+                    [firstItemNegativeMargin]="cell.firstItemNegativeMargin"
+                    [wrapMode]="cell.wrapMode"
+                    [style.max-width.px]="cell.maxWidth"
+                >
+                    @for (breadcrumb of items; track breadcrumb) {
+                        <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
+                    }
+                </nav>
+            }
+        }
 
-                <tr data-testid="e2eBreadcrumbsDropdownRow">
-                    <td>
-                        <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">
-                            @for (breadcrumb of items; track breadcrumb) {
-                                <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb">
-                                    <a
-                                        *kbqBreadcrumbView
-                                        tabindex="-1"
-                                        kbq-button
-                                        kbqBreadcrumb
-                                        [routerLink]="breadcrumb"
-                                    >
-                                        {{ breadcrumb }}
-                                        <i kbq-icon="kbq-file-code-o_16"></i>
-                                    </a>
-                                </kbq-breadcrumb-item>
-                            }
-                            <kbq-breadcrumb-item>
-                                <div *kbqBreadcrumbView>
-                                    <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
-                                        Access Control
-                                        <i kbq-icon="kbq-chevron-down-s_16"></i>
-                                    </button>
-                                </div>
-                            </kbq-breadcrumb-item>
+        <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">
+            @for (breadcrumb of items; track breadcrumb) {
+                <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb">
+                    <a
+                        *kbqBreadcrumbView
+                        tabindex="-1"
+                        kbq-button
+                        kbqBreadcrumb
+                        [focusable]="!$last"
+                        [routerLink]="breadcrumb"
+                        [disabled]="$last"
+                        [attr.aria-current]="$last ? 'page' : null"
+                    >
+                        {{ breadcrumb }}
+                        <i kbq-icon="kbq-file-code-o_16"></i>
+                    </a>
+                </kbq-breadcrumb-item>
+            }
+        </nav>
 
-                            <kbq-dropdown #siblingsListDropdown="kbqDropdown">
-                                <a kbq-dropdown-item routerLink="./RBAC">RBAC</a>
-                                <a kbq-dropdown-item routerLink="./ABAC">ABAC</a>
-                            </kbq-dropdown>
-                        </nav>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <nav kbq-breadcrumbs data-testid="e2eBreadcrumbsWithDropdown" [firstItemNegativeMargin]="false">
+            @for (breadcrumb of items; track breadcrumb) {
+                <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb">
+                    <a *kbqBreadcrumbView tabindex="-1" kbq-button kbqBreadcrumb [routerLink]="breadcrumb">
+                        {{ breadcrumb }}
+                        <i kbq-icon="kbq-file-code-o_16"></i>
+                    </a>
+                </kbq-breadcrumb-item>
+            }
+            <kbq-breadcrumb-item>
+                <div *kbqBreadcrumbView>
+                    <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
+                        Access Control
+                        <i kbq-icon="kbq-chevron-down-s_16"></i>
+                    </button>
+                </div>
+            </kbq-breadcrumb-item>
+
+            <kbq-dropdown #siblingsListDropdown="kbqDropdown">
+                <a kbq-dropdown-item routerLink="./RBAC">RBAC</a>
+                <a kbq-dropdown-item routerLink="./ABAC">ABAC</a>
+            </kbq-dropdown>
+        </nav>
     `,
     styles: `
-        td {
-            border-spacing: 0;
+        :host {
+            display: inline-flex;
+            flex-direction: column;
+            gap: var(--kbq-size-xs);
+            padding: var(--kbq-size-s);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
         'data-testid': 'e2eBreadcrumbsStateAndStyle'
     }
 })

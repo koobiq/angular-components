@@ -6,19 +6,13 @@ test.describe('KbqAutocompleteModule', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eAutocompleteStates');
         const getAutocompleteInput = (page: Page): Locator => page.getByTestId('e2eAutocompleteInput');
 
-        test('light theme', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eAutocompleteStates');
             await getAutocompleteInput(page).focus();
             await page.keyboard.press('ArrowDown');
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('dark theme', async ({ page }) => {
-            await page.goto('/E2eAutocompleteStates');
+            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            await getAutocompleteInput(page).focus();
-            await page.keyboard.press('ArrowDown');
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
 });

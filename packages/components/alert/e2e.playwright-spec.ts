@@ -6,24 +6,14 @@ test.describe('KbqAlertModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eAlertStateAndStyle');
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eAlertTable');
 
-        test('KbqAlert states', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eAlertStateAndStyle');
             const locator = getComponent(page);
-
             const screenshotTarget = getTestTable(locator);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`KbqAlert states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eAlertStateAndStyle');
+            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getTestTable(locator);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
 });

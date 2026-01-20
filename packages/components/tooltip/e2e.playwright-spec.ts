@@ -6,20 +6,13 @@ test.describe('KbqTooltipModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTooltipStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
 
-        test('tooltip default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eTooltipStates');
             const locator = getComponent(page);
 
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
-        });
-
-        test('tooltip (dark theme)', async ({ page }) => {
-            await page.goto('/E2eTooltipStates');
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png', { threshold: 0.05 });
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot({ threshold: 0.05 });
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png', { threshold: 0.05 });
         });
     });
 });

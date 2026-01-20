@@ -5,15 +5,11 @@ test.describe('KbqDlModule', () => {
     test.describe('E2eDlStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eDlStates');
 
-        test('light theme', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eDlStates');
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('dark theme', async ({ page }) => {
-            await page.goto('/E2eDlStates');
+            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
 });

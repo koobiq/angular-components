@@ -6,25 +6,16 @@ test.describe('KbqTreeSelectModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTreeSelectStates');
         const getTreeSelect = (locator: Locator) => locator.getByTestId('e2eTreeSelect');
 
-        test('select default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eTreeSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
 
             await select.click();
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('select (dark theme)', async ({ page }) => {
-            await page.goto('/E2eTreeSelectStates');
+            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const select = getTreeSelect(screenshotTarget);
-
-            await select.click();
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
 
@@ -32,7 +23,7 @@ test.describe('KbqTreeSelectModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eMultiTreeSelectStates');
         const getTreeSelect = (locator: Locator) => locator.getByTestId('e2eMultiTreeSelect');
 
-        test('MultiTreeSelect default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eMultiTreeSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
@@ -40,19 +31,9 @@ test.describe('KbqTreeSelectModule', () => {
             await select.focus();
             await page.keyboard.press('Enter');
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('MultiTreeSelect (dark theme)', async ({ page }) => {
-            await page.goto('/E2eMultiTreeSelectStates');
+            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const select = getTreeSelect(screenshotTarget);
-
-            await select.focus();
-            await page.keyboard.press('Enter');
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
         });
     });
 
@@ -60,7 +41,7 @@ test.describe('KbqTreeSelectModule', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eMultilineTreeSelectStates');
         const getTreeSelect = (locator: Locator) => locator.getByTestId('e2eMultilineTreeSelect');
 
-        test('MultilineTreeSelect default', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eMultilineTreeSelectStates');
             const screenshotTarget = getComponent(page);
             const select = getTreeSelect(screenshotTarget);
@@ -68,19 +49,9 @@ test.describe('KbqTreeSelectModule', () => {
             await select.focus();
             await page.keyboard.press('Enter');
 
-            await expect(getComponent(page)).toHaveScreenshot();
-        });
-
-        test('MultilineTreeSelect (dark theme)', async ({ page }) => {
-            await page.goto('/E2eMultilineTreeSelectStates');
+            await expect(getComponent(page)).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
-            const screenshotTarget = getComponent(page);
-            const select = getTreeSelect(screenshotTarget);
-
-            await select.focus();
-            await page.keyboard.press('Enter');
-
-            await expect(getComponent(page)).toHaveScreenshot();
+            await expect(getComponent(page)).toHaveScreenshot('03-dark.png');
         });
     });
 });

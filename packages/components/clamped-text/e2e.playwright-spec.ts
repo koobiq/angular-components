@@ -6,24 +6,14 @@ test.describe('KbqClampedText', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eClampedTextStateAndStyle');
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eClampedTextTable');
 
-        test('KbqClampedText states', async ({ page }) => {
+        test('states', async ({ page }) => {
             await page.goto('/E2eClampedTextStateAndStyle');
             const locator = getComponent(page);
-
             const screenshotTarget = getTestTable(locator);
 
-            await expect(screenshotTarget).toHaveScreenshot();
-        });
-
-        test(`KbqClampedText states (dark theme)`, async ({ page }) => {
-            await page.goto('/E2eClampedTextStateAndStyle');
+            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-
-            const locator = getComponent(page);
-
-            const screenshotTarget = getTestTable(locator);
-
-            await expect(screenshotTarget).toHaveScreenshot();
+            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
 });
