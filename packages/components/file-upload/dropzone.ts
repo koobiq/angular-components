@@ -8,6 +8,8 @@ import {
     effect,
     inject,
     Injectable,
+    InjectionToken,
+    Injector,
     input,
     ViewContainerRef,
     ViewEncapsulation
@@ -25,19 +27,25 @@ import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component
 import { KbqDrop } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
+export type KbqDropzoneData = { caption: string; size: KbqDefaultSizes; title: string };
+
+/** Injection token that can be used to access the data that was passed in to a modal. */
+export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzoneData');
+
 @Injectable({
     providedIn: 'root'
 })
 export class KbqFullScreenDropzoneService extends KbqDrop {
     private readonly overlay: Overlay = inject(Overlay);
     private readonly document = inject<Document>(DOCUMENT);
+    private injector = inject(Injector);
     private overlayRef?: OverlayRef;
 
-    init() {
+    init(config: { caption: string; size: string; title: string }) {
         fromEvent(this.document.body, 'dragenter').subscribe((event) => {
             event.preventDefault();
             event.stopPropagation();
-            this.open();
+            this.open(config);
         });
 
         fromEvent(this.document.body, 'dragover').subscribe((event) => {
@@ -61,7 +69,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
         });
     }
 
-    private open() {
+    private open(config: { caption: string; size: string; title: string }) {
         if (this.overlayRef?.hasAttached()) return;
 
         this.overlayRef = this.overlay.create({
@@ -72,7 +80,12 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
             positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
         });
 
-        this.overlayRef.attach(new ComponentPortal(KbqDropzoneText));
+        const injector = Injector.create({
+            parent: this.injector,
+            providers: [{ provide: KBQ_DROPZONE_DATA, useValue: config }]
+        });
+
+        this.overlayRef.attach(new ComponentPortal(KbqDropzoneText, undefined, injector));
 
         setTimeout(() => {
             this.overlayRef?.addPanelClass('kbq-entering');
@@ -108,6 +121,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
             </div>
         </kbq-empty-state>
     `,
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqFileUploadEmptyState {
@@ -121,9 +135,9 @@ export class KbqFileUploadEmptyState {
     ],
     template: `
         <div class="kbq-dropzone__wrapper">
-            <kbq-file-upload-empty-state [size]="'compact'">
-                <div kbq-file-upload-title>Перетащите файлы</div>
-                <div kbq-file-upload-caption>SVG, PNG, JPG или GIF. Не более 2 MБ</div>
+            <kbq-file-upload-empty-state [size]="config.size">
+                <div kbq-file-upload-title>{{ config.title }}</div>
+                <div kbq-file-upload-caption>{{ config.caption }}</div>
             </kbq-file-upload-empty-state>
         </div>
     `,
@@ -136,6 +150,8 @@ export class KbqFileUploadEmptyState {
 })
 export class KbqDropzoneText {
     elementRef = kbqInjectNativeElement();
+
+    config = inject<{ caption: string; size: KbqDefaultSizes; title: string }>(KBQ_DROPZONE_DATA);
 }
 
 @Directive({
@@ -144,6 +160,12 @@ export class KbqDropzoneText {
     host: { class: 'kbq-directive-local-dropzone' }
 })
 export class KbqLocalDropzone extends KbqDrop {
+    localeConfig: KbqDropzoneData = {
+        title: 'Перетащите файлы',
+        caption: 'SVG, PNG, JPG или GIF. Не более 2 MБ',
+        size: 'compact'
+    };
+
     connectedTo = input<KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent>(undefined, {
         alias: 'kbqConnectedTo'
     });
@@ -151,6 +173,7 @@ export class KbqLocalDropzone extends KbqDrop {
     private elementRef = kbqInjectNativeElement();
     private overlay: Overlay = inject(Overlay);
     private viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+    private injector = inject(Injector);
     private overlayRef?: OverlayRef;
 
     constructor() {
@@ -186,8 +209,12 @@ export class KbqLocalDropzone extends KbqDrop {
                     { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top' }])
         });
 
-        // @TODO: provide injector with locale data
-        this.overlayRef.attach(new ComponentPortal(KbqDropzoneText, this.viewContainerRef));
+        const injector = Injector.create({
+            parent: this.injector,
+            providers: [{ provide: KBQ_DROPZONE_DATA, useValue: this.localeConfig }]
+        });
+
+        this.overlayRef.attach(new ComponentPortal(KbqDropzoneText, this.viewContainerRef, injector));
 
         fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragover').subscribe((event) => {
             event.preventDefault();
