@@ -7,7 +7,14 @@
     }
 }
 
-.kbq-fullscreen-dropzone.kbq-entering,
+.kbq-fullscreen-dropzone.kbq-entering {
+    opacity: 1;
+
+    .kbq-dropzone {
+        opacity: 1;
+    }
+}
+
 .kbq-dropzone.kbq-entering {
     opacity: 1;
 }

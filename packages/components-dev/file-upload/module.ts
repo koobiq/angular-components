@@ -31,13 +31,11 @@ import {
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
-    KbqFileDropDirective,
     KbqFileItem,
-    KbqFileList,
     KbqFileUploadModule,
     KbqFileValidatorFn,
-    KbqFullscreenDropzone,
-    KbqLocalDropzoneDirective,
+    KbqFullScreenDropzoneService,
+    KbqLocalDropzone,
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -199,24 +197,33 @@ export class DevMultipleFileUploadCompact {
 @Component({
     selector: 'dev-fullscreen-dropzone',
     imports: [
-        KbqFileDropDirective,
-        KbqFullscreenDropzone,
-        KbqFileList,
         KbqSingleFileUploadComponent,
-        KbqLocalDropzoneDirective
+        KbqLocalDropzone
     ],
     template: `
-        <div style="width: 500px; height: 500px; background: grey" kbqLocalDropzone (filesDropped)="onDrop($event)">
-            <!--            <kbq-local-dropzone [kbqConnectedTo]="fileUploadComponent" />-->
-        </div>
+        <div
+            style="width: 500px; height: 500px; background: grey"
+            kbqLocalDropzone
+            [kbqConnectedTo]="fileUpload"
+            (filesDropped)="onDrop($event)"
+        ></div>
+
+        <kbq-file-upload #fileUpload />
 
         <!--        <kbq-fullscreen-dropzone />-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevFullscreenDropzoneComponent {
+    dropzoneService = inject(KbqFullScreenDropzoneService);
+
     onDrop(event: any): void {
         console.log(event);
+    }
+
+    constructor() {
+        // this.dropzoneService.filesDropped.subscribe(() => console.log('file dropped'));
+        // this.dropzoneService.init();
     }
 }
 

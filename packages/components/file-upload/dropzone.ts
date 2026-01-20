@@ -1,16 +1,14 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    ElementRef,
+    effect,
     inject,
+    Injectable,
     input,
-    Renderer2,
-    TemplateRef,
-    ViewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -22,9 +20,69 @@ import {
     KbqEmptyStateTitle
 } from '@koobiq/components/empty-state';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLoaderOverlay } from '@koobiq/components/loader-overlay';
 import { fromEvent } from 'rxjs';
+import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqDrop } from './primitives';
+import { KbqSingleFileUploadComponent } from './single-file-upload.component';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class KbqFullScreenDropzoneService extends KbqDrop {
+    private readonly overlay: Overlay = inject(Overlay);
+    private readonly document = inject<Document>(DOCUMENT);
+    private overlayRef?: OverlayRef;
+
+    init() {
+        fromEvent(this.document.body, 'dragenter').subscribe((event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.open();
+        });
+
+        fromEvent(this.document.body, 'dragover').subscribe((event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+
+        fromEvent<DragEvent>(this.document.body, 'dragleave').subscribe((event) => {
+            if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+            this.close();
+        });
+
+        fromEvent<DragEvent>(this.document.body, 'drop').subscribe((event) => {
+            this.onDrop(event);
+            this.close();
+        });
+    }
+
+    private open() {
+        if (this.overlayRef?.hasAttached()) return;
+
+        this.overlayRef = this.overlay.create({
+            hasBackdrop: false,
+            panelClass: ['kbq-dropzone', 'kbq-fullscreen-dropzone'],
+            width: '100%',
+            height: '100%',
+            positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
+        });
+
+        this.overlayRef.attach(new ComponentPortal(KbqDropzoneText));
+
+        setTimeout(() => {
+            this.overlayRef?.addPanelClass('kbq-entering');
+        });
+    }
+
+    private close() {
+        this.overlayRef?.dispose();
+    }
+}
 
 @Component({
     selector: 'kbq-file-upload-empty-state',
@@ -57,40 +115,6 @@ export class KbqFileUploadEmptyState {
 }
 
 @Component({
-    selector: 'kbq-local-dropzone',
-    imports: [
-        KbqFileUploadEmptyState
-    ],
-    template: `
-        <div class="kbq-dropzone__wrapper">
-            <div class="kbq-loader-overlay__container">
-                <kbq-file-upload-empty-state [size]="'compact'">
-                    <div kbq-file-upload-title>Перетащите файлы</div>
-                    <div kbq-file-upload-caption>SVG, PNG, JPG или GIF. Не более 2 MБ</div>
-                </kbq-file-upload-empty-state>
-            </div>
-        </div>
-    `,
-    styleUrls: [
-        '../loader-overlay/loader-overlay.scss',
-        '../loader-overlay/loader-overlay-tokens.scss',
-        'fullscreen-dropzone.scss'
-    ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'kbq-local-dropzone kbq-dropzone'
-    }
-})
-export class KbqLocalDropzone extends KbqLoaderOverlay {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2) {
-        super(elementRef, renderer);
-
-        this.size = 'normal';
-    }
-}
-
-@Component({
     selector: 'kbq-dropzone-text',
     imports: [
         KbqFileUploadEmptyState
@@ -103,21 +127,27 @@ export class KbqLocalDropzone extends KbqLoaderOverlay {
             </kbq-file-upload-empty-state>
         </div>
     `,
-    styleUrls: ['./fullscreen-dropzone.scss'],
+    styleUrls: ['./dropzone.scss'],
     host: {
         class: 'kbq-dropzone-text kbq-dropzone'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqDropzoneText {}
+export class KbqDropzoneText {
+    elementRef = kbqInjectNativeElement();
+}
 
 @Directive({
     selector: '[kbqLocalDropzone]',
     exportAs: 'kbqLocalDropzone',
     host: { class: 'kbq-directive-local-dropzone' }
 })
-export class KbqLocalDropzoneDirective extends KbqDrop {
+export class KbqLocalDropzone extends KbqDrop {
+    connectedTo = input<KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent>(undefined, {
+        alias: 'kbqConnectedTo'
+    });
+
     private elementRef = kbqInjectNativeElement();
     private overlay: Overlay = inject(Overlay);
     private viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
@@ -130,6 +160,14 @@ export class KbqLocalDropzoneDirective extends KbqDrop {
             event.preventDefault();
             event.stopPropagation();
             this.open();
+        });
+
+        effect(() => {
+            const connectedTo = this.connectedTo();
+
+            if (connectedTo) {
+                this.filesDropped.subscribe((files) => connectedTo.onFileDropped(files));
+            }
         });
     }
 
@@ -173,83 +211,6 @@ export class KbqLocalDropzoneDirective extends KbqDrop {
 
         setTimeout(() => {
             this.overlayRef?.overlayElement.querySelector('.kbq-dropzone')?.classList?.add('kbq-entering');
-        });
-    }
-
-    close() {
-        this.overlayRef?.dispose();
-    }
-}
-
-@Component({
-    selector: 'kbq-fullscreen-dropzone',
-    imports: [
-        KbqFileUploadEmptyState
-    ],
-    template: `
-        <ng-template #overlayTpl>
-            <div class="kbq-dropzone__wrapper">
-                <kbq-file-upload-empty-state>
-                    <div kbq-file-upload-title>Перетащите файлы</div>
-                    <div kbq-file-upload-caption>SVG, PNG, JPG или GIF. Не более 2 MБ</div>
-                </kbq-file-upload-empty-state>
-            </div>
-        </ng-template>
-    `,
-    styleUrls: ['./fullscreen-dropzone.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class KbqFullscreenDropzone extends KbqDrop {
-    @ViewChild('overlayTpl') overlayTpl!: TemplateRef<unknown>;
-    private readonly overlay: Overlay = inject(Overlay);
-    private readonly document = inject<Document>(DOCUMENT);
-    private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
-    private overlayRef?: OverlayRef;
-
-    init() {
-        fromEvent(this.document.body, 'dragenter').subscribe((event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            this.open();
-        });
-
-        fromEvent(this.document.body, 'dragover').subscribe((event) => {
-            event.preventDefault();
-            event.stopPropagation();
-        });
-
-        fromEvent<DragEvent>(this.document.body, 'dragleave').subscribe((event) => {
-            if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
-                return;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-            this.close();
-        });
-
-        fromEvent<DragEvent>(this.document.body, 'drop').subscribe((event) => {
-            this.onDrop(event);
-            this.close();
-        });
-    }
-
-    private open() {
-        if (this.overlayRef?.hasAttached()) return;
-
-        this.overlayRef = this.overlay.create({
-            hasBackdrop: false,
-            panelClass: ['kbq-dropzone', 'kbq-fullscreen-dropzone'],
-            width: '100%',
-            height: '100%',
-            positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
-        });
-
-        this.overlayRef.attach(new TemplatePortal(this.overlayTpl, this.viewContainerRef));
-
-        setTimeout(() => {
-            this.overlayRef?.addPanelClass('kbq-entering');
         });
     }
 

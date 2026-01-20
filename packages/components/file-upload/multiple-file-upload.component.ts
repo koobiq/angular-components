@@ -8,6 +8,7 @@ import {
     ContentChild,
     ContentChildren,
     DoCheck,
+    effect,
     ElementRef,
     EventEmitter,
     inject,
@@ -38,6 +39,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, of } from 'rxjs';
+import { KbqFullScreenDropzoneService } from './dropzone';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -87,7 +89,8 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
             inputs: ['id', 'disabled']
         },
         { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
-    ]
+    ],
+    providers: [KbqFullScreenDropzoneService]
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
@@ -131,6 +134,8 @@ export class KbqMultipleFileUploadComponent
      * @default mixed
      */
     allowed = input<KbqEnumValues<KbqFileUploadAllowedType>>(KbqFileUploadAllowedType.File);
+
+    fullScreenDropZone = input<boolean>(false);
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
@@ -271,6 +276,16 @@ export class KbqMultipleFileUploadComponent
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
+        effect(() => {
+            if (this.fullScreenDropZone()) {
+                this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
+
+                this.dropzoneService.init();
+            } else {
+                // disable
+            }
+        });
     }
 
     ngDoCheck() {
