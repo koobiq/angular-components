@@ -1,4 +1,5 @@
 <button
+    #mainButton
     kbq-button
     kbq-title
     kbqFilterBarButton
@@ -13,8 +14,8 @@
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
     [kbqPopoverSize]="popoverSize"
     [kbqTrigger]="'manual'"
-    [class.kbq-active]="opened"
     [disabled]="isSaving"
+    [class.kbq-active]="focusedElementBeforeIs(mainButton) && opened"
     (dropdownClosed)="searchControl.setValue('')"
     (dropdownOpened)="onDropdownOpen()"
 >
@@ -32,10 +33,12 @@
 
 @if (filterBar.isChanged && !filterBar.isSaved) {
     <button
+        #saveNewFilterButton
         kbqTooltip="{{ localeData.saveNewFilterTooltip }}"
         kbq-button
         kbqFilterBarButton
         class="kbq-button_action"
+        [class.kbq-active]="focusedElementBeforeIs(saveNewFilterButton) && opened"
         [color]="colors.Empty"
         [disabled]="isSaving"
         (click)="openSaveAsNewFilterPopover()"
@@ -46,12 +49,14 @@
 
 @if (filterBar.isSaved) {
     <button
+        #filterActionsButton
         kbq-button
         kbqFilterBarButton
         class="kbq-button_action"
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
         [disabled]="isSaving"
+        [class.kbq-active]="focusedElementBeforeIs(filterActionsButton) && filterActionsOpened"
         [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
     >
         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -142,7 +147,7 @@
         </button>
     }
     @if (!filterBar.isReadOnly) {
-        <button kbq-dropdown-item (click)="this.onRemoveFilter.next(this.filter!)">
+        <button kbq-dropdown-item (click)="removeFilter()">
             <i kbq-icon="kbq-trash_16"></i>
             {{ localeData.remove }}
         </button>
@@ -191,7 +196,7 @@
     >
         {{ localeData.saveButton }}
     </button>
-    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" [disabled]="isSaving" (click)="closePopover()">
+    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" [disabled]="isSaving" (click)="popover.hide()">
         {{ localeData.cancelButton }}
     </button>
 </ng-template>

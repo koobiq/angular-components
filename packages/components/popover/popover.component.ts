@@ -14,6 +14,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -372,6 +373,11 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     get hasClickTrigger(): boolean {
         return this.trigger.includes(PopUpTriggers.Click);
+    }
+
+    /** @docs-private */
+    get instanceDestroyRef(): DestroyRef {
+        return this.instance.destroyRef;
     }
 
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
