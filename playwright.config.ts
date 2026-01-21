@@ -34,7 +34,7 @@ export default defineConfig({
     expect: {
         toHaveScreenshot: {
             pathTemplate: '{testFileDir}/__screenshots__/{arg}{ext}',
-            threshold: 0.05,
+            threshold: 0,
             scale: 'device',
             animations: 'disabled'
         }
