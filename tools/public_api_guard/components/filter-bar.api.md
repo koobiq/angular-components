@@ -338,6 +338,7 @@ export class KbqFilters implements OnInit {
     protected readonly placements: typeof PopUpPlacements;
     protected popover: KbqPopoverTrigger;
     get popoverHeader(): string;
+    popoverOffset: number;
     popoverSize: PopUpSizes;
     // (undocumented)
     preparePopover(): void;

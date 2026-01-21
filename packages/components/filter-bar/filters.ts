@@ -107,6 +107,8 @@ export class KbqFilters implements OnInit {
 
     /** @docs-private */
     popoverSize = PopUpSizes.Medium;
+    /** @docs-private */
+    popoverOffset: number = 4;
 
     /** new filter name for saving */
     filterName: FormControl<string | null>;
@@ -118,8 +120,6 @@ export class KbqFilters implements OnInit {
     filterSavingErrorText: string;
 
     isSaving: boolean = false;
-
-    popoverOffset: number = 4;
 
     @Input() filters: KbqFilter[];
 
