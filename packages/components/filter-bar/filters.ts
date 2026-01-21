@@ -119,6 +119,8 @@ export class KbqFilters implements OnInit {
 
     isSaving: boolean = false;
 
+    popoverOffset: number = 4;
+
     @Input() filters: KbqFilter[];
 
     /** Event that is generated whenever the user selects a filter. */
@@ -357,7 +359,7 @@ export class KbqFilters implements OnInit {
         this.popover.preventClose = false;
 
         this.popover.hide();
-        this.restoreFocus();
+        setTimeout(() => this.restoreFocus(), 0);
 
         this.changeDetectorRef.markForCheck();
     }

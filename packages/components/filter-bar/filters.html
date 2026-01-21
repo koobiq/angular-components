@@ -6,6 +6,7 @@
     kbqPopover
     [kbqDropdownTriggerFor]="savedFilters"
     [kbqPopoverArrow]="false"
+    [kbqPopoverOffset]="popoverOffset"
     [kbqPopoverClass]="'kbq-filters__save-as-new-filter-popover'"
     [kbqPopoverContent]="saveAsNewPopoverContent"
     [kbqPopoverFooter]="saveAsNewPopoverFooter"
@@ -196,7 +197,13 @@
     >
         {{ localeData.saveButton }}
     </button>
-    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" [disabled]="isSaving" (click)="popover.hide()">
+    <button
+        kbq-button
+        [color]="'contrast-fade'"
+        [kbqStyle]="'filled'"
+        [disabled]="isSaving"
+        (click)="closePopover(true)"
+    >
         {{ localeData.cancelButton }}
     </button>
 </ng-template>
