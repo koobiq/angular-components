@@ -37,11 +37,13 @@
 
         &:not(.kbq-disabled) {
             &:hover,
+            &.kbq-hovered,
             &.kbq-action-button-focused {
                 @include kbq-tree-option(states-hover);
             }
 
-            &:active {
+            &:active,
+            &.kbq-active {
                 --kbq-option-background: var(--kbq-tree-states-active-container-background);
 
                 background: var(--kbq-tree-states-active-container-background);
@@ -50,11 +52,13 @@
             &.kbq-selected {
                 @include kbq-tree-option(states-selected);
 
-                &:hover {
+                &:hover,
+                &.kbq-hovered {
                     @include kbq-tree-option(states-selected-hover);
                 }
 
-                &:active {
+                &:active,
+                &.kbq-active {
                     --kbq-option-background: var(--kbq-tree-states-selected-active-container-background);
 
                     background: var(--kbq-tree-states-selected-active-container-background);
@@ -65,11 +69,13 @@
             &.kbq-tree-option_multiple.kbq-selected {
                 background: var(--kbq-tree-multiple-states-selected-container-background);
 
-                &:hover {
+                &:hover,
+                &.kbq-hovered {
                     background: var(--kbq-tree-multiple-states-selected-hover-container-background);
                 }
 
-                &:active {
+                &:active,
+                &.kbq-active {
                     background: var(--kbq-tree-multiple-states-selected-active-container-background);
                 }
             }

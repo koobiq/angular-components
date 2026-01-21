@@ -63,6 +63,7 @@ import {
     E2eMultiTreeSelectStates,
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
+import { E2eTreeStates } from '../components/tree/e2e';
 import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 const components = [
@@ -125,6 +126,7 @@ const components = [
     E2eSelectStates,
     E2eMultiSelectStates,
     E2eMultilineSelectStates,
+    E2eTreeStates,
     E2eTreeSelectStates,
     E2eMultiTreeSelectStates,
     E2eMultilineTreeSelectStates,
