@@ -27,7 +27,7 @@ import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component
 import { KbqDrop } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
-export type KbqDropzoneData = { caption: string; size: KbqDefaultSizes; title: string; type?: 'dragover' | 'error' };
+export type KbqDropzoneData = { caption?: string; size: KbqDefaultSizes; title: string; type?: 'dragover' | 'error' };
 
 /** Injection token that can be used to access the data that was passed in to a modal. */
 export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzoneData');
@@ -82,7 +82,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
         this.stopDrop.next();
     }
 
-    private open(config: { caption: string; size: string; title: string }) {
+    private open(config: KbqDropzoneData) {
         if (this.overlayRef?.hasAttached()) return;
 
         this.overlayRef = this.overlay.create({
@@ -150,7 +150,9 @@ export class KbqFileUploadEmptyState {
         <div class="kbq-dropzone__wrapper">
             <kbq-file-upload-empty-state [size]="config.size">
                 <div kbq-file-upload-title>{{ config.title }}</div>
-                <div kbq-file-upload-caption>{{ config.caption }}</div>
+                @if (config.caption) {
+                    <div kbq-file-upload-caption>{{ config.caption }}</div>
+                }
             </kbq-file-upload-empty-state>
         </div>
     `,

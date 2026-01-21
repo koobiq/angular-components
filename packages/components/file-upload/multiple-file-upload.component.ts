@@ -281,7 +281,7 @@ export class KbqMultipleFileUploadComponent
 
         effect(() => {
             if (this.fullScreenDropZone()) {
-                this.dropzoneService.init({ title: 'Перетащите файл', caption: 'test', size: 'normal' });
+                this.dropzoneService.init({ title: this.resolvedLocaleConfig().title, size: 'normal' });
             } else {
                 this.dropzoneService.stop();
             }
