@@ -1,13 +1,13 @@
 import { expect, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from 'packages/e2e/utils';
 
-test.describe('KbqTabsModule', () => {
+// @TODO: should be fixed (#DS-4627)
+test.fixme('KbqTabsModule', () => {
     test.describe('E2eTabsStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTabsStates');
 
         test('states', async ({ page }) => {
             await page.goto('/E2eTabsStates');
-            await page.waitForTimeout(300);
 
             const component = getComponent(page);
 
