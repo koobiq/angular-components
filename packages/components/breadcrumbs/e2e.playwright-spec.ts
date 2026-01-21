@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eWhenStable } from 'packages/e2e/utils';
+import { e2eEnableDarkTheme } from 'packages/e2e/utils';
 
 // @TODO: should be fixed (#DS-4622)
 test.fixme('KbqBreadcrumbsModule', () => {
@@ -13,8 +13,6 @@ test.fixme('KbqBreadcrumbsModule', () => {
 
             const component = getComponent(page);
 
-            await e2eWhenStable(component);
-
             await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(component).toHaveScreenshot('01-dark.png');
@@ -24,8 +22,6 @@ test.fixme('KbqBreadcrumbsModule', () => {
             await page.goto('/E2eBreadcrumbsStateAndStyle');
 
             const component = getComponent(page);
-
-            await e2eWhenStable(component);
 
             const screenshotTarget = getBreadcrumbsWithDropdown(component);
 
