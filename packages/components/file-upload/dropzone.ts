@@ -22,7 +22,7 @@ import {
     KbqEmptyStateTitle
 } from '@koobiq/components/empty-state';
 import { KbqIcon } from '@koobiq/components/icon';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subject, takeUntil } from 'rxjs';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqDrop } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
@@ -38,35 +38,48 @@ export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzon
 export class KbqFullScreenDropzoneService extends KbqDrop {
     private readonly overlay: Overlay = inject(Overlay);
     private readonly document = inject<Document>(DOCUMENT);
-    private injector = inject(Injector);
+    private readonly injector = inject(Injector);
+    private readonly stopDrop = new Subject<void>();
     private overlayRef?: OverlayRef;
 
-    init(config: { caption: string; size: string; title: string }) {
-        fromEvent(this.document.body, 'dragenter').subscribe((event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            this.open(config);
-        });
+    init(config: KbqDropzoneData) {
+        fromEvent(this.document.body, 'dragenter')
+            .pipe(takeUntil(this.stopDrop))
+            .subscribe((event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.open(config);
+            });
 
-        fromEvent(this.document.body, 'dragover').subscribe((event) => {
-            event.preventDefault();
-            event.stopPropagation();
-        });
+        fromEvent(this.document.body, 'dragover')
+            .pipe(takeUntil(this.stopDrop))
+            .subscribe((event) => {
+                event.preventDefault();
+                event.stopPropagation();
+            });
 
-        fromEvent<DragEvent>(this.document.body, 'dragleave').subscribe((event) => {
-            if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
-                return;
-            }
+        fromEvent<DragEvent>(this.document.body, 'dragleave')
+            .pipe(takeUntil(this.stopDrop))
+            .subscribe((event) => {
+                if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
+                    return;
+                }
 
-            event.preventDefault();
-            event.stopPropagation();
-            this.close();
-        });
+                event.preventDefault();
+                event.stopPropagation();
+                this.close();
+            });
 
-        fromEvent<DragEvent>(this.document.body, 'drop').subscribe((event) => {
-            this.onDrop(event);
-            this.close();
-        });
+        fromEvent<DragEvent>(this.document.body, 'drop')
+            .pipe(takeUntil(this.stopDrop))
+            .subscribe((event) => {
+                this.onDrop(event);
+                this.close();
+            });
+    }
+
+    stop() {
+        this.stopDrop.next();
     }
 
     private open(config: { caption: string; size: string; title: string }) {
@@ -237,7 +250,7 @@ export class KbqLocalDropzone extends KbqDrop {
         });
 
         setTimeout(() => {
-            this.overlayRef?.overlayElement.querySelector('.kbq-dropzone')?.classList?.add('kbq-entering');
+            this.overlayRef?.overlayElement?.querySelector('.kbq-dropzone')?.classList?.add('kbq-entering');
         });
     }
 

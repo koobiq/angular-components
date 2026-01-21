@@ -24,25 +24,20 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
         KbqContentPanelModule
     ],
     template: `
-        <kbq-toggle [checked]="value()" (change)="value.set($event.checked)">full screen</kbq-toggle>
+        <div>
+            <kbq-toggle [checked]="value()" (change)="value.set($event.checked)">full screen</kbq-toggle>
 
-        <kbq-file-upload [fullScreenDropZone]="value()" />
+            <kbq-file-upload [fullScreenDropZone]="value()" />
+        </div>
 
-        <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
-            <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">Toggle</button>
-                <button kbq-button [disabled]="panel.isOpened()" (click)="panel.open()">Open</button>
-                <button kbq-button [disabled]="!panel.isOpened()" (click)="panel.close()">Close</button>
-            </div>
-
+        <kbq-content-panel-container maxWidth="600" minWidth="250" width="600" [opened]="true">
             <kbq-content-panel>
                 <kbq-content-panel-header>
                     <div kbqContentPanelHeaderTitle>Title</div>
-                    <div kbqContentPanelHeaderActions>
-                        <button kbq-button><i kbq-icon="kbq-arrows-expand-diagonal_16"></i></button>
-                    </div>
                 </kbq-content-panel-header>
                 <kbq-content-panel-body kbqLocalDropzone [kbqConnectedTo]="fileUploadLocal">
+                    <span class="kbq-subheading">Drop file here</span>
+
                     @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
                         <p>
                             In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
@@ -66,8 +61,9 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
     `,
     styles: `
         :host {
-            display: block;
-            height: 400px;
+            display: flex;
+            flex-direction: column;
+            height: 500px;
         }
 
         .example-content-panel-container__content {

@@ -1,12 +1,3 @@
-.kbq-loader-overlay_parent.kbq-file-drop_dragover {
-    .kbq-local-dropzone {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-        z-index: 10;
-    }
-}
-
 .kbq-fullscreen-dropzone.kbq-entering {
     opacity: 1;
 
@@ -60,16 +51,6 @@
         --kbq-empty-state-size-big-padding-horizontal: 0;
         --kbq-empty-state-size-big-padding-bottom: 0;
     }
-}
-
-.kbq-local-dropzone {
-    --kbq-loader-overlay-transparent-overlay-background: transparent;
-    --kbq-loader-overlay-size-normal-overlay-padding-horizontal: var(--kbq-dropzone-margin);
-
-    z-index: unset;
-    opacity: 0;
-    transition: opacity 100ms ease-in-out;
-    pointer-events: none;
 }
 
 .kbq-fullscreen-dropzone {

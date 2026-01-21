@@ -253,10 +253,12 @@ export class KbqSingleFileUploadComponent
         }
 
         effect(() => {
-            if (this.fullScreenDropZone()) {
-                this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
+            this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
 
+            if (this.fullScreenDropZone()) {
                 this.dropzoneService.init({ title: 'Перетащите файл', caption: 'test', size: 'normal' });
+            } else {
+                this.dropzoneService.stop();
             }
         });
     }

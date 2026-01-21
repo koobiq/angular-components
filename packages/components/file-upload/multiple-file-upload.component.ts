@@ -277,13 +277,13 @@ export class KbqMultipleFileUploadComponent
             this.ngControl.valueAccessor = this;
         }
 
+        this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
+
         effect(() => {
             if (this.fullScreenDropZone()) {
-                this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
-
                 this.dropzoneService.init({ title: 'Перетащите файл', caption: 'test', size: 'normal' });
             } else {
-                // disable
+                this.dropzoneService.stop();
             }
         });
     }

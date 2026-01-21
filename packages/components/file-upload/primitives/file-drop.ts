@@ -1,4 +1,7 @@
-import { Directive, output } from '@angular/core';
+import { Directive, effect, model, output, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { filter, fromEvent, takeUntil } from 'rxjs';
 import { KbqFile } from '../file-upload';
 
 const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferItem.prototype;
@@ -7,6 +10,9 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
 
 @Directive()
 export abstract class KbqDrop {
+    readonly disabled = model(false);
+    protected disabledAsObservable = toObservable(this.disabled).pipe(filter(Boolean));
+
     /** Emits an event when file items were dropped. */
     readonly filesDropped = output<KbqFile[]>();
 
@@ -40,22 +46,30 @@ export abstract class KbqDrop {
     exportAs: 'kbqFileDrop',
     host: {
         class: 'kbq-file-drop',
-        '[class.kbq-file-drop_dragover]': 'dragover',
-        '(dragenter)': 'onDragEnter($event)',
-        '(dragover)': 'onDragOver($event)',
-        '(dragleave)': 'onDragLeave($event)',
-        '(drop)': 'onDrop($event)'
+        '[class.kbq-file-drop_dragover]': 'dragover()'
     }
 })
 export class KbqFileDropDirective extends KbqDrop {
     /** Flag that controls css-class modifications on drag events. */
-    dragover: boolean;
+    protected readonly dragover = signal(false);
+
+    private elementRef = kbqInjectNativeElement();
+
+    constructor() {
+        super();
+
+        effect(() => {
+            if (!this.disabled()) {
+                this.init();
+            }
+        });
+    }
 
     onDragEnter(event: DragEvent) {
         event.preventDefault();
         event.stopPropagation();
 
-        this.dragover = true;
+        this.dragover.set(true);
     }
 
     /** @docs-private */
@@ -72,13 +86,33 @@ export class KbqFileDropDirective extends KbqDrop {
 
         event.preventDefault();
         event.stopPropagation();
-        this.dragover = false;
+        this.dragover.set(false);
     }
 
     /** @docs-private */
     onDrop(event: DragEvent) {
         super.onDrop(event);
-        this.dragover = false;
+        this.dragover.set(false);
+    }
+
+    private init() {
+        fromEvent<DragEvent>(this.elementRef, 'dragenter')
+            .pipe(takeUntil(this.disabledAsObservable))
+            .subscribe((event) => {
+                this.onDragEnter(event);
+            });
+
+        fromEvent<DragEvent>(this.elementRef, 'dragover')
+            .pipe(takeUntil(this.disabledAsObservable))
+            .subscribe((event) => this.onDragOver(event));
+
+        fromEvent<DragEvent>(this.elementRef, 'dragleave')
+            .pipe(takeUntil(this.disabledAsObservable))
+            .subscribe((event) => this.onDragLeave(event));
+
+        fromEvent<DragEvent>(this.elementRef, 'drop')
+            .pipe(takeUntil(this.disabledAsObservable))
+            .subscribe((event) => this.onDrop(event));
     }
 }
 
