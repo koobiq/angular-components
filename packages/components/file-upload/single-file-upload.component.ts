@@ -37,7 +37,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, of } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { KbqFullScreenDropzoneService } from './dropzone';
+import { KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -135,9 +135,9 @@ export class KbqSingleFileUploadComponent
     allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
     /**
      * Controls whether to display fullscreen dropzone.
-     * @default mixed
+     * Provide configuration object to enable, or undefined to disable.
      */
-    fullScreenDropZone = input(false, { transform: booleanAttribute });
+    fullScreenDropZone = input<KbqDropzoneData | boolean>();
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqBaseFileUploadLocaleConfig>>();
@@ -255,8 +255,12 @@ export class KbqSingleFileUploadComponent
         effect(() => {
             this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
 
-            if (this.fullScreenDropZone()) {
-                this.dropzoneService.init();
+            const fullScreenDropZone = this.fullScreenDropZone();
+
+            if (fullScreenDropZone) {
+                const config = fullScreenDropZone === true ? ({} satisfies KbqDropzoneData) : fullScreenDropZone;
+
+                this.dropzoneService.init(config);
             } else {
                 this.dropzoneService.stop();
             }

@@ -6,7 +6,6 @@ import {
     KbqMultipleFileUploadComponent,
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToggleComponent } from '@koobiq/components/toggle';
 
 /**
@@ -17,7 +16,6 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
     imports: [
         KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent,
-        KbqIcon,
         KbqToggleComponent,
         KbqLocalDropzone,
         KbqButtonModule,

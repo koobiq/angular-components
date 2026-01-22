@@ -206,6 +206,23 @@ export class KbqLocalDropzone extends KbqDrop {
 
         this.overlayRef.attach(new ComponentPortal(KbqDropzoneContent, this.viewContainerRef, injector));
 
+        this.init();
+
+        setTimeout(() => this.overlayRef?.addPanelClass('kbq-dropzone-overlay__attached'));
+    }
+
+    /** Closes and disposes the overlay. */
+    close(): void {
+        this.overlayRef?.dispose();
+    }
+
+    /**
+     * Initializes drag-and-drop event listeners on the overlay element.
+     * Handles dragover, dragleave, and drop events to manage overlay state and file drops.
+     */
+    protected init(): void {
+        if (!this.overlayRef) return;
+
         fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragover').subscribe((event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -225,13 +242,6 @@ export class KbqLocalDropzone extends KbqDrop {
             this.onDrop(event);
             this.close();
         });
-
-        setTimeout(() => this.overlayRef?.addPanelClass('kbq-dropzone-overlay__attached'));
-    }
-
-    /** Closes and disposes the overlay. */
-    close(): void {
-        this.overlayRef?.dispose();
     }
 
     /** Creates an overlay positioned and sized to match the host element. */
