@@ -1,14 +1,39 @@
-.kbq-fullscreen-dropzone {
-    background-color: var(--kbq-dropzone-background);
+.kbq-dropzone-overlay {
+    --kbq-dropzone-padding: var(--kbq-size-s);
+    --kbq-dropzone-overlay-background: var(--kbq-background-overlay-theme);
+    --kbq-dropzone-component-background: var(--kbq-background-overlay-theme);
+    --kbq-dropzone-border-color: var(--kbq-line-theme-fade);
+
+    padding: var(--kbq-dropzone-padding);
+    background-color: var(--kbq-dropzone-overlay-background);
+
     opacity: 0;
     transition: opacity 100ms ease-in-out;
 
-    .kbq-dropzone__wrapper {
-        --kbq-dropzone-background: transparent;
+    &.kbq-entering {
+        opacity: 1;
+    }
+
+    .kbq-dropzone-component {
+        display: flex;
+        width: 100%;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: var(--kbq-size-border-radius);
+        border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border-color);
+        background-color: var(--kbq-dropzone-component-background);
     }
 }
 
+.kbq-fullscreen-dropzone {
+    --kbq-dropzone-component-background: transparent;
+}
+
 .kbq-local-dropzone {
+    --kbq-dropzone-overlay-background: transparent;
+
     .kbq-empty-state.kbq-multiple-file-upload__empty-state {
         --kbq-empty-state-size-compact-padding-top: 0;
         --kbq-empty-state-size-compact-padding-horizontal: 0;
@@ -22,44 +47,4 @@
         --kbq-empty-state-size-big-padding-horizontal: 0;
         --kbq-empty-state-size-big-padding-bottom: 0;
     }
-}
-
-.kbq-dropzone {
-    --kbq-dropzone-margin: var(--kbq-size-s);
-    --kbq-dropzone-background: var(--kbq-background-overlay-theme);
-    --kbq-dropzone-border: var(--kbq-line-theme-fade);
-
-    padding: var(--kbq-dropzone-margin);
-
-    opacity: 0;
-    transition: opacity 100ms ease-in-out;
-
-    &.kbq-entering {
-        opacity: 1;
-    }
-
-    .kbq-dropzone__wrapper {
-        width: 100%;
-        height: 100%;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-color: var(--kbq-dropzone-background);
-        border-radius: var(--kbq-size-s);
-        border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border);
-    }
-}
-
-.kbq-dropzone-component {
-    display: flex;
-    width: 100%;
-
-    align-items: center;
-    justify-content: center;
-
-    background-color: var(--kbq-dropzone-background);
-    border-radius: var(--kbq-size-s);
-    border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border);
 }

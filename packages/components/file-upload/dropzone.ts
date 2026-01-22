@@ -2,7 +2,6 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
-    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     Directive,
@@ -17,6 +16,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqDefaultSizes, kbqInjectNativeElement } from '@koobiq/components/core';
 import {
     KbqEmptyState,
@@ -94,7 +94,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
 
         this.overlayRef = this.overlay.create({
             hasBackdrop: false,
-            panelClass: ['kbq-dropzone', 'kbq-fullscreen-dropzone'],
+            panelClass: ['kbq-dropzone-overlay', 'kbq-fullscreen-dropzone'],
             width: '100%',
             height: '100%',
             positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
@@ -173,9 +173,7 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
 
 @Component({
     selector: 'kbq-dropzone-component',
-    imports: [
-        KbqFileUploadEmptyState
-    ],
+    imports: [KbqFileUploadEmptyState],
     template: `
         <kbq-file-upload-empty-state [size]="config.size" [title]="config.title" [caption]="config.caption" />
     `,
@@ -217,15 +215,13 @@ export class KbqLocalDropzone extends KbqDrop {
     constructor() {
         super();
 
-        afterNextRender(() => {
-            this.open();
-        });
-
-        fromEvent<DragEvent>(this.elementRef, 'dragenter').subscribe((event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            this.open();
-        });
+        fromEvent<DragEvent>(this.elementRef, 'dragenter')
+            .pipe(takeUntilDestroyed())
+            .subscribe((event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.open();
+            });
 
         effect(() => {
             const connectedTo = this.connectedTo();
@@ -239,18 +235,7 @@ export class KbqLocalDropzone extends KbqDrop {
     protected open() {
         if (this.overlayRef?.hasAttached()) return;
 
-        this.overlayRef = this.overlay.create({
-            hasBackdrop: false,
-            panelClass: ['kbq-dropzone', 'kbq-local-dropzone'],
-            width: this.elementRef.offsetWidth,
-            height: this.elementRef.offsetHeight,
-            positionStrategy: this.overlay
-                .position()
-                .flexibleConnectedTo(this.elementRef)
-                .withFlexibleDimensions(false)
-                .withPositions([
-                    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top' }])
-        });
+        this.overlayRef = this.createOverlay();
 
         const injector = Injector.create({
             parent: this.injector,
@@ -284,5 +269,20 @@ export class KbqLocalDropzone extends KbqDrop {
 
     close() {
         this.overlayRef?.dispose();
+    }
+
+    protected createOverlay(): OverlayRef {
+        return this.overlay.create({
+            hasBackdrop: false,
+            panelClass: ['kbq-dropzone-overlay', 'kbq-local-dropzone'],
+            width: this.elementRef.offsetWidth,
+            height: this.elementRef.offsetHeight,
+            positionStrategy: this.overlay
+                .position()
+                .flexibleConnectedTo(this.elementRef)
+                .withFlexibleDimensions(false)
+                .withPositions([
+                    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top' }])
+        });
     }
 }
