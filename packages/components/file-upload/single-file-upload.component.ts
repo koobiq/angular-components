@@ -256,7 +256,7 @@ export class KbqSingleFileUploadComponent
             this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
 
             if (this.fullScreenDropZone()) {
-                this.dropzoneService.init({ title: this.captionContext().captionText, size: 'normal' });
+                this.dropzoneService.init();
             } else {
                 this.dropzoneService.stop();
             }

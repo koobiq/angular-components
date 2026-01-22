@@ -10,11 +10,11 @@
     opacity: 0;
     transition: opacity 100ms ease-in-out;
 
-    &.kbq-entering {
+    &.kbq-dropzone-overlay__attached {
         opacity: 1;
     }
 
-    .kbq-dropzone-component {
+    .kbq-dropzone-content {
         display: flex;
         width: 100%;
 

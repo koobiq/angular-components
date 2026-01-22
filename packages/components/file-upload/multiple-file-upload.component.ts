@@ -280,7 +280,7 @@ export class KbqMultipleFileUploadComponent
 
         effect(() => {
             if (this.fullScreenDropZone()) {
-                this.dropzoneService.init({ title: this.resolvedLocaleConfig().title, size: 'normal' });
+                this.dropzoneService.init();
             } else {
                 this.dropzoneService.stop();
             }
