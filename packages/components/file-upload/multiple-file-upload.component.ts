@@ -32,14 +32,13 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
-import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, of } from 'rxjs';
-import { KbqFullScreenDropzoneService } from './dropzone';
+import { KbqFileUploadEmptyState, KbqFullScreenDropzoneService } from './dropzone';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -74,7 +73,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
         KbqProgressSpinnerModule,
         KbqEllipsisCenterDirective,
         KbqFileLoader,
-        KbqEmptyStateModule
+        KbqFileUploadEmptyState
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],

@@ -1,13 +1,27 @@
-.kbq-fullscreen-dropzone.kbq-entering {
-    opacity: 1;
+.kbq-fullscreen-dropzone {
+    background-color: var(--kbq-dropzone-background);
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
 
-    .kbq-dropzone {
-        opacity: 1;
+    .kbq-dropzone__wrapper {
+        --kbq-dropzone-background: transparent;
     }
 }
 
-.kbq-dropzone.kbq-entering {
-    opacity: 1;
+.kbq-local-dropzone {
+    .kbq-empty-state.kbq-multiple-file-upload__empty-state {
+        --kbq-empty-state-size-compact-padding-top: 0;
+        --kbq-empty-state-size-compact-padding-horizontal: 0;
+        --kbq-empty-state-size-compact-padding-bottom: 0;
+
+        --kbq-empty-state-size-normal-padding-top: 0;
+        --kbq-empty-state-size-normal-padding-horizontal: 0;
+        --kbq-empty-state-size-normal-padding-bottom: 0;
+
+        --kbq-empty-state-size-big-padding-top: 0;
+        --kbq-empty-state-size-big-padding-horizontal: 0;
+        --kbq-empty-state-size-big-padding-bottom: 0;
+    }
 }
 
 .kbq-dropzone {
@@ -19,6 +33,10 @@
 
     opacity: 0;
     transition: opacity 100ms ease-in-out;
+
+    &.kbq-entering {
+        opacity: 1;
+    }
 
     .kbq-dropzone__wrapper {
         width: 100%;
@@ -34,31 +52,14 @@
     }
 }
 
-.kbq-dropzone-text {
+.kbq-dropzone-component {
     display: flex;
     width: 100%;
 
-    .kbq-empty-state {
-        --kbq-empty-state-size-compact-padding-top: 0;
-        --kbq-empty-state-size-compact-padding-horizontal: 0;
-        --kbq-empty-state-size-compact-padding-bottom: 0;
+    align-items: center;
+    justify-content: center;
 
-        --kbq-empty-state-size-normal-padding-top: 0;
-        --kbq-empty-state-size-normal-padding-horizontal: 0;
-        --kbq-empty-state-size-normal-padding-bottom: 0;
-
-        --kbq-empty-state-size-big-padding-top: 0;
-        --kbq-empty-state-size-big-padding-horizontal: 0;
-        --kbq-empty-state-size-big-padding-bottom: 0;
-    }
-}
-
-.kbq-fullscreen-dropzone {
     background-color: var(--kbq-dropzone-background);
-    opacity: 0;
-    transition: opacity 100ms ease-in-out;
-
-    .kbq-dropzone__wrapper {
-        --kbq-dropzone-background: transparent;
-    }
+    border-radius: var(--kbq-size-s);
+    border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border);
 }

@@ -1,7 +1,8 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     Directive,
@@ -10,7 +11,9 @@ import {
     Injectable,
     InjectionToken,
     Injector,
+    Input,
     input,
+    TemplateRef,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -42,8 +45,12 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
     private readonly stopDrop = new Subject<void>();
     private overlayRef?: OverlayRef;
 
+    constructor() {
+        super();
+    }
+
     init(config: KbqDropzoneData) {
-        fromEvent(this.document.body, 'dragenter')
+        fromEvent<DragEvent>(this.document.body, 'dragenter')
             .pipe(takeUntil(this.stopDrop))
             .subscribe((event) => {
                 event.preventDefault();
@@ -51,7 +58,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
                 this.open(config);
             });
 
-        fromEvent(this.document.body, 'dragover')
+        fromEvent<DragEvent>(this.document.body, 'dragover')
             .pipe(takeUntil(this.stopDrop))
             .subscribe((event) => {
                 event.preventDefault();
@@ -98,7 +105,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
             providers: [{ provide: KBQ_DROPZONE_DATA, useValue: config }]
         });
 
-        this.overlayRef.attach(new ComponentPortal(KbqDropzoneText, undefined, injector));
+        this.overlayRef.attach(new ComponentPortal(KbqDropzoneComponent, undefined, injector));
 
         setTimeout(() => {
             this.overlayRef?.addPanelClass('kbq-entering');
@@ -113,57 +120,73 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
 @Component({
     selector: 'kbq-file-upload-empty-state',
     imports: [
-        KbqEmptyState,
         KbqEmptyStateIcon,
-        KbqEmptyStateText,
         KbqEmptyStateTitle,
-        KbqIcon
+        KbqEmptyStateText,
+        KbqIcon,
+        NgTemplateOutlet
     ],
     template: `
-        <kbq-empty-state class="kbq-multiple-file-upload__empty-state" [size]="size()">
-            <i
-                class="kbq-multiple-file-upload__empty-state-upload-icon"
-                kbq-empty-state-icon
-                kbq-icon="kbq-cloud-arrow-up-o_24"
-            ></i>
-            <div kbq-empty-state-title class="kbq-multiple-file-upload__empty-state-title">
-                <ng-content select="[kbq-file-upload-title]" />
-            </div>
+        <i
+            class="kbq-multiple-file-upload__empty-state-upload-icon"
+            kbq-empty-state-icon
+            kbq-icon="kbq-cloud-arrow-up-o_24"
+        ></i>
+        @if (title) {
+            <div kbq-empty-state-title>{{ title }}</div>
+        }
+        @if (caption) {
             <div kbq-empty-state-text>
-                <ng-content select="[kbq-file-upload-caption]" />
-            </div>
-        </kbq-empty-state>
-    `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class KbqFileUploadEmptyState {
-    size = input<KbqDefaultSizes>('big');
-}
-
-@Component({
-    selector: 'kbq-dropzone-text',
-    imports: [
-        KbqFileUploadEmptyState
-    ],
-    template: `
-        <div class="kbq-dropzone__wrapper">
-            <kbq-file-upload-empty-state [size]="config.size">
-                <div kbq-file-upload-title>{{ config.title }}</div>
-                @if (config.caption) {
-                    <div kbq-file-upload-caption>{{ config.caption }}</div>
+                @if (isTemplateRef(caption)) {
+                    <ng-container [ngTemplateOutlet]="$any(caption)" />
+                } @else if (caption) {
+                    {{ caption }}
                 }
-            </kbq-file-upload-empty-state>
-        </div>
+            </div>
+        }
     `,
-    styleUrls: ['./dropzone.scss'],
+    styles: `
+        .kbq-empty-state.kbq-multiple-file-upload__empty-state {
+            --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-m);
+            --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xs);
+        }
+    `,
     host: {
-        class: 'kbq-dropzone-text kbq-dropzone'
+        class: 'kbq-multiple-file-upload__empty-state'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqDropzoneText {
+export class KbqFileUploadEmptyState extends KbqEmptyState {
+    @Input() title: string;
+    @Input() caption: string | TemplateRef<any>;
+    @Input() size: KbqDefaultSizes = 'big';
+
+    constructor() {
+        super();
+    }
+
+    protected isTemplateRef(value: string | TemplateRef<any>): boolean {
+        return value instanceof TemplateRef;
+    }
+}
+
+@Component({
+    selector: 'kbq-dropzone-component',
+    imports: [
+        KbqFileUploadEmptyState
+    ],
+    template: `
+        <kbq-file-upload-empty-state [size]="config.size" [title]="config.title" [caption]="config.caption" />
+    `,
+    styleUrls: ['./dropzone.scss'],
+    host: {
+        class: 'kbq-dropzone-component'
+    },
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class KbqDropzoneComponent {
     elementRef = kbqInjectNativeElement();
 
     config = inject<{ caption: string; size: KbqDefaultSizes; title: string }>(KBQ_DROPZONE_DATA);
@@ -172,7 +195,7 @@ export class KbqDropzoneText {
 @Directive({
     selector: '[kbqLocalDropzone]',
     exportAs: 'kbqLocalDropzone',
-    host: { class: 'kbq-directive-local-dropzone' }
+    host: { class: 'kbq-local-dropzone__trigger' }
 })
 export class KbqLocalDropzone extends KbqDrop {
     localeConfig: KbqDropzoneData = {
@@ -194,6 +217,10 @@ export class KbqLocalDropzone extends KbqDrop {
     constructor() {
         super();
 
+        afterNextRender(() => {
+            this.open();
+        });
+
         fromEvent<DragEvent>(this.elementRef, 'dragenter').subscribe((event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -214,6 +241,7 @@ export class KbqLocalDropzone extends KbqDrop {
 
         this.overlayRef = this.overlay.create({
             hasBackdrop: false,
+            panelClass: ['kbq-dropzone', 'kbq-local-dropzone'],
             width: this.elementRef.offsetWidth,
             height: this.elementRef.offsetHeight,
             positionStrategy: this.overlay
@@ -229,7 +257,7 @@ export class KbqLocalDropzone extends KbqDrop {
             providers: [{ provide: KBQ_DROPZONE_DATA, useValue: this.localeConfig }]
         });
 
-        this.overlayRef.attach(new ComponentPortal(KbqDropzoneText, this.viewContainerRef, injector));
+        this.overlayRef.attach(new ComponentPortal(KbqDropzoneComponent, this.viewContainerRef, injector));
 
         fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragover').subscribe((event) => {
             event.preventDefault();
@@ -251,9 +279,7 @@ export class KbqLocalDropzone extends KbqDrop {
             this.close();
         });
 
-        setTimeout(() => {
-            this.overlayRef?.overlayElement?.querySelector('.kbq-dropzone')?.classList?.add('kbq-entering');
-        });
+        setTimeout(() => this.overlayRef?.addPanelClass('kbq-entering'));
     }
 
     close() {

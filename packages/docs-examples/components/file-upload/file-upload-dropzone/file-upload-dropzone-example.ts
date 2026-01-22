@@ -33,7 +33,7 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
         <kbq-content-panel-container maxWidth="600" minWidth="250" width="600" [opened]="true">
             <kbq-content-panel>
                 <kbq-content-panel-header>
-                    <div kbqContentPanelHeaderTitle>Title</div>
+                    <div kbqContentPanelHeaderTitle>Local dropzone</div>
                 </kbq-content-panel-header>
                 <kbq-content-panel-body kbqLocalDropzone [kbqConnectedTo]="fileUploadLocal">
                     <span class="kbq-subheading">Drop file here</span>
@@ -78,5 +78,5 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadDropzoneExample {
-    protected readonly value = signal(false);
+    protected readonly value = signal(true);
 }
