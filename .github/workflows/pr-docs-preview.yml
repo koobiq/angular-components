@@ -37,7 +37,7 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
-          firebaseToolsVersion: '13.35.1'
+          firebaseToolsVersion: '15.3.1'
           expires: 5d
           channelId: prs-${{ github.event.number }}
           projectId: koobiq

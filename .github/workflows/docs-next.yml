@@ -27,4 +27,10 @@ jobs:
       - uses: ./.github/workflows/actions/build-docs
 
       - name: Deploy
-        run: npx firebase deploy --only hosting:next --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
+          firebaseToolsVersion: '15.3.1'
+          projectId: koobiq
+          target: next
