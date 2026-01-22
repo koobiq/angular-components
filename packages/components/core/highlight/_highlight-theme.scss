@@ -2,7 +2,10 @@
     .kbq-highlight {
         color: inherit;
 
-        font-weight: bold;
-        background-color: transparent;
+        background-color: #ff9f1226;
+
+        padding: 0 var(--kbq-size-xxs);
+        margin: 0 calc(-1 * var(--kbq-size-xxs));
+        border-radius: var(--kbq-size-s);
     }
 }
