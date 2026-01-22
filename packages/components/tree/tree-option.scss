@@ -58,6 +58,7 @@
         cursor: pointer;
 
         &:hover,
+        &.kbq-hovered,
         &.kbq-action-button-focused {
             & .kbq-action-container {
                 display: flex;
