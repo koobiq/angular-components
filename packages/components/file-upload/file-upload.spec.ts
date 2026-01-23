@@ -1,3 +1,5 @@
+import { Overlay } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, ViewChild, signal } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -13,14 +15,29 @@ import {
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
 import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
 import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
+export const dispatchDragEvent = (type: string, { target }: { target: HTMLElement }) => {
+    const file = createMockFile('test1.txt', { type: 'text/plain' });
+    const dropEvent = new DragEvent(type, {
+        dataTransfer: new DataTransfer()
+    });
+
+    dropEvent.dataTransfer?.items.add(file);
+
+    target.dispatchEvent(dropEvent);
+
+    return dropEvent;
+};
+
 const FILE_NAME = 'test.file';
 
-const createMockFile = (fileName: string = FILE_NAME) => new File(['test'] satisfies BlobPart[], fileName);
+const createMockFile = (fileName: string = FILE_NAME, options?: FilePropertyBag) =>
+    new File(['test'] satisfies BlobPart[], fileName, options);
 
 const getMockedChangeEventForMultiple = (fileNameOrFakeFile: string | Partial<File>) => {
     const event = createFakeEvent('change');
@@ -493,6 +510,161 @@ describe(KbqSingleFileUploadComponent.name, () => {
             fixture.detectChanges();
 
             expect(component.fileUpload.resolvedLocaleConfig()).toMatchSnapshot();
+        });
+    });
+});
+
+describe('KbqFullScreenDropzoneService', () => {
+    let service: KbqFullScreenDropzoneService;
+    let overlay: Overlay;
+    let document: Document;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [KbqFullScreenDropzoneService]
+        });
+
+        service = TestBed.inject(KbqFullScreenDropzoneService);
+        overlay = TestBed.inject(Overlay);
+        document = TestBed.inject(DOCUMENT);
+    });
+
+    afterEach(() => {
+        service.stop();
+    });
+
+    it('should create overlay if not already attached', () => {
+        const create = jest.spyOn(overlay, 'create');
+
+        service.open();
+
+        expect(create).toHaveBeenCalledWith({
+            hasBackdrop: false,
+            panelClass: ['kbq-dropzone-overlay', 'kbq-fullscreen-dropzone'],
+            width: '100%',
+            height: '100%',
+            positionStrategy: expect.any(Object)
+        });
+    });
+
+    it('should handle close when overlay is not open', () => {
+        expect(() => service.close()).not.toThrow();
+    });
+
+    it('should create overlay with correct configuration', () => {
+        jest.spyOn(overlay, 'create');
+
+        service.open();
+
+        expect(overlay.create).toHaveBeenCalledWith({
+            hasBackdrop: false,
+            panelClass: ['kbq-dropzone-overlay', 'kbq-fullscreen-dropzone'],
+            width: '100%',
+            height: '100%',
+            positionStrategy: expect.any(Object)
+        });
+    });
+
+    describe('init', () => {
+        it('should set up dragenter event listener', () => {
+            const config: KbqDropzoneData = { title: 'Drop files' };
+
+            jest.spyOn(service, 'open');
+
+            service.init(config);
+
+            dispatchDragEvent('dragenter', { target: document.body });
+
+            expect(service.open).toHaveBeenCalledWith(config);
+        });
+
+        it('should set up dragleave event listener and close overlay', () => {
+            jest.spyOn(service, 'close');
+
+            service.init();
+
+            const dragleaveEvent = new DragEvent('dragleave', {
+                relatedTarget: null
+            });
+
+            document.body.dispatchEvent(dragleaveEvent);
+
+            expect(service.close).toHaveBeenCalled();
+        });
+
+        it('should not close overlay on dragleave if related target is inside current target', () => {
+            jest.spyOn(service, 'close');
+
+            service.init();
+
+            const childElement = document.createElement('div');
+
+            document.body.appendChild(childElement);
+
+            const dragleaveEvent = new DragEvent('dragleave', {
+                relatedTarget: childElement
+            });
+
+            Object.defineProperty(dragleaveEvent, 'currentTarget', {
+                value: document.body,
+                writable: true
+            });
+
+            document.body.dispatchEvent(dragleaveEvent);
+
+            expect(service.close).not.toHaveBeenCalled();
+        });
+
+        it('should set up drop event listener', () => {
+            jest.spyOn(service, 'onDrop');
+            jest.spyOn(service, 'close');
+
+            service.init();
+
+            const dropEvent = dispatchDragEvent('drop', { target: document.body });
+
+            expect(service.onDrop).toHaveBeenCalledWith(dropEvent);
+            expect(service.close).toHaveBeenCalled();
+        });
+
+        it('should pass config to open method', () => {
+            const config: KbqDropzoneData = {
+                title: 'TEST',
+                caption: 'CAPTION',
+                size: 'normal'
+            };
+
+            jest.spyOn(service, 'open');
+
+            service.init(config);
+
+            dispatchDragEvent('dragenter', { target: document.body });
+
+            expect(service.open).toHaveBeenCalledWith(config);
+        });
+    });
+
+    describe('stop', () => {
+        it('should unsubscribe from all event listeners', () => {
+            jest.spyOn(service, 'open');
+
+            service.init();
+            service.stop();
+
+            dispatchDragEvent('dragenter', { target: document.body });
+
+            expect(service.open).not.toHaveBeenCalled();
+        });
+
+        it('should prevent future events after stop is called', () => {
+            jest.spyOn(service, 'close');
+
+            service.init();
+            service.stop();
+
+            dispatchDragEvent('dragleave', { target: document.body });
+
+            expect(service.close).not.toHaveBeenCalled();
         });
     });
 });

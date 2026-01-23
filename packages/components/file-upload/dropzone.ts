@@ -125,10 +125,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
 
         setTimeout(() => this.overlayRef?.addPanelClass('kbq-dropzone-overlay__attached'));
     }
-    /**
-     * Closes and disposes the overlay.
-     * @private
-     */
+    /** Closes and disposes the overlay. */
     close(): void {
         this.overlayRef?.dispose();
     }
@@ -155,13 +152,6 @@ export class KbqLocalDropzone extends KbqDrop {
     readonly connectedTo = input<KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent>(undefined, {
         alias: 'kbqConnectedTo'
     });
-
-    /** Default locale configuration for the dropzone */
-    protected readonly localeConfig: KbqDropzoneData = {
-        title: 'Перетащите файлы',
-        caption: 'SVG, PNG, JPG или GIF. Не более 2 MБ',
-        size: 'compact'
-    };
 
     private elementRef = kbqInjectNativeElement();
     private overlay: Overlay = inject(Overlay);
