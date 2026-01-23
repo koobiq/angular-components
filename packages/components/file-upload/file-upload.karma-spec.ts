@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DELETE } from '@koobiq/cdk/keycodes';
 import { createFakeEvent, dispatchEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { KbqFileDropDirective, KbqFileValidatorFn } from '@koobiq/components/file-upload';
+import {
+    KbqDropzoneData,
+    KbqFileDropDirective,
+    KbqFileValidatorFn,
+    KbqFullScreenDropzoneService
+} from '@koobiq/components/file-upload';
 import { KbqFileItem } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
@@ -49,7 +54,8 @@ function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME
     tick();
 }
 
-const createMockFile = (fileName: string = FILE_NAME) => new File(['test'] satisfies BlobPart[], fileName);
+const createMockFile = (fileName: string = FILE_NAME, options?: FilePropertyBag) =>
+    new File(['test'] satisfies BlobPart[], fileName, options);
 
 const getMockedChangeEventForMultiple = (fileNameOrFakeFile: string | Partial<File>) => {
     const event = createFakeEvent('change');
@@ -81,6 +87,7 @@ const getMockedChangeEventForSingle = (fileNameOrFakeFile: string | Partial<File
 describe('KbqMultipleFileUploadComponent', () => {
     let component: BasicMultipleFileUpload;
     let fixture: ComponentFixture<BasicMultipleFileUpload>;
+    let dropzoneService: KbqFullScreenDropzoneService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -96,6 +103,9 @@ describe('KbqMultipleFileUploadComponent', () => {
 
         fixture = TestBed.createComponent(BasicMultipleFileUpload);
         component = fixture.componentInstance;
+        dropzoneService = fixture.debugElement
+            .query(By.directive(KbqMultipleFileUploadComponent))
+            .injector.get(KbqFullScreenDropzoneService);
         fixture.detectChanges();
     });
 
@@ -169,11 +179,78 @@ describe('KbqMultipleFileUploadComponent', () => {
             subscription.unsubscribe();
         });
     });
+
+    describe('with fullscreen dropzone', () => {
+        it('should disable fileDrop directive', fakeAsync(() => {
+            spyOn(component, 'onChange').and.callThrough();
+
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            dispatchDropEvent(fixture);
+
+            expect(component.onChange).not.toHaveBeenCalled();
+        }));
+
+        it('should init dropzone service with provided config', fakeAsync(() => {
+            spyOn(dropzoneService, 'init').and.callThrough();
+
+            const config: KbqDropzoneData = {
+                title: 'TITLE',
+                caption: 'CAPTION',
+                size: 'compact'
+            };
+
+            component.fullScreenDropZone.set(config);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith(config);
+        }));
+
+        it('should init dropzone service with empty config when boolean true is provided', fakeAsync(() => {
+            spyOn(dropzoneService, 'init').and.callThrough();
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith({});
+        }));
+
+        it('should stop dropzone service if fullScreen dropzone input changed to false', fakeAsync(() => {
+            spyOn(dropzoneService, 'init').and.callThrough();
+            const stop = spyOn(dropzoneService, 'stop').and.callThrough();
+
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            stop.calls.reset();
+
+            component.fullScreenDropZone.set(false);
+            fixture.detectChanges();
+
+            expect(dropzoneService.stop).toHaveBeenCalled();
+        }));
+
+        it('should listen to filesDropped via dropzoneService', () => {
+            const mockFiles = [
+                { ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' },
+                { ...createMockFile('test2.txt', { type: 'text/plain' }), fullPath: 'test2.txt' }
+            ];
+
+            dropzoneService.filesDropped.emit(mockFiles);
+
+            expect(component.files.length).toEqual(mockFiles.length);
+        });
+    });
 });
 
 describe('KbqSingleFileUploadComponent', () => {
     let component: BasicSingleFileUpload;
     let fixture: ComponentFixture<BasicSingleFileUpload>;
+    let dropzoneService: KbqFullScreenDropzoneService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -189,6 +266,9 @@ describe('KbqSingleFileUploadComponent', () => {
 
         fixture = TestBed.createComponent(BasicSingleFileUpload);
         component = fixture.componentInstance;
+        dropzoneService = fixture.debugElement
+            .query(By.directive(KbqSingleFileUploadComponent))
+            .injector.get(KbqFullScreenDropzoneService);
         fixture.detectChanges();
     });
 
@@ -295,6 +375,74 @@ describe('KbqSingleFileUploadComponent', () => {
             subscription.unsubscribe();
         });
     });
+
+    describe('with fullscreen dropzone', () => {
+        it('should disable fileDrop directive', fakeAsync(() => {
+            spyOn(component, 'onChange').and.callThrough();
+
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            dispatchDropEvent(fixture);
+
+            expect(component.onChange).not.toHaveBeenCalled();
+        }));
+
+        it('should init dropzone service with provided config', fakeAsync(() => {
+            spyOn(dropzoneService, 'init').and.callThrough();
+
+            const config: KbqDropzoneData = {
+                title: 'TITLE',
+                caption: 'CAPTION',
+                size: 'compact'
+            };
+
+            component.fullScreenDropZone.set(config);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith(config);
+        }));
+
+        it('should init dropzone service with empty config when boolean true is provided', fakeAsync(() => {
+            spyOn(dropzoneService, 'init').and.callThrough();
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith({});
+        }));
+
+        it('should stop dropzone service if fullScreen dropzone input changed to false', fakeAsync(() => {
+            spyOn(dropzoneService, 'init').and.callThrough();
+            const stop = spyOn(dropzoneService, 'stop').and.callThrough();
+
+            // First enable
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            stop.calls.reset();
+
+            // Now disable
+            component.fullScreenDropZone.set(false);
+            fixture.detectChanges();
+
+            expect(dropzoneService.stop).toHaveBeenCalled();
+        }));
+
+        it('should listen to filesDropped via dropzoneService', () => {
+            const mockFiles = [
+                { ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' }];
+
+            // Trigger filesDropped event
+            dropzoneService.filesDropped.emit(mockFiles);
+
+            // Verify that the component received the files
+            expect(component.file?.file).toEqual(mockFiles[0]);
+        });
+    });
 });
 
 @Component({
@@ -307,6 +455,7 @@ describe('KbqSingleFileUploadComponent', () => {
                 [accept]="accept"
                 [customValidation]="validation"
                 [disabled]="disabled"
+                [fullScreenDropZone]="fullScreenDropZone()"
                 (fileQueueChange)="onChange($event)"
             />
         </div>
@@ -316,6 +465,7 @@ describe('KbqSingleFileUploadComponent', () => {
 class BasicSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
     disabled: boolean;
+    fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     file: KbqFileItem | null;
     accept: string[] = [];
     validation: KbqFileValidatorFn[] = [];
@@ -335,6 +485,7 @@ class BasicSingleFileUpload {
             <kbq-multiple-file-upload
                 #fileUpload
                 [disabled]="disabled"
+                [fullScreenDropZone]="fullScreenDropZone()"
                 [customValidation]="validation"
                 (fileQueueChanged)="onChange($event)"
             />
@@ -345,6 +496,7 @@ class BasicSingleFileUpload {
 class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
     disabled: boolean;
+    fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     files: KbqFileItem[];
     validation: KbqFileValidatorFn[] = [];
 
