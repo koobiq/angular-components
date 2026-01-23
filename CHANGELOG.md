@@ -1,3 +1,11 @@
+## 18.39.2 (2026-01-23)
+
+### Koobiq
+
+ * bug fix  **dropdown:** removed horizontal scroll ([#1297](https://github.com/koobiq/angular-components/issues/1297)) ([903b426](https://github.com/koobiq/angular-components/commit/903b42683f926bc33bdb77eb5063f662198c3559))
+ * bug fix  **navbar:** navbar-brand missing top padding ([#DS-4607](https://github.com/koobiq/angular-components/issues/issue/DS-4607)) ([#1293](https://github.com/koobiq/angular-components/issues/1293)) ([c5b6cc6](https://github.com/koobiq/angular-components/commit/c5b6cc63ea732c2eb014bdafb4f631f023c2bdea))
+ * bug fix  **app-switcher:** added iconSrc ([#DS-4580](https://github.com/koobiq/angular-components/issues/issue/DS-4580)) ([#1292](https://github.com/koobiq/angular-components/issues/1292)) ([dc37b95](https://github.com/koobiq/angular-components/commit/dc37b957edc2d43b6a96cd9ef30199e31dd26ef8))
+
 ## 18.39.1 (2026-01-16)
 
 ### Koobiq
