@@ -51,7 +51,7 @@ export class KbqPasswordToggle {
 
     /** Whether to display the password toggle. */
     get visible(): boolean {
-        return !this.formField?.disabled && !!this.control?.ngControl?.value;
+        return !this.formField?.disabled;
     }
 
     /** Toggles the password visibility. */

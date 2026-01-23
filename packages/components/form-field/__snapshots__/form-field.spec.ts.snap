@@ -158,9 +158,9 @@ DebugElement {
 exports[`KbqFormField should hide KbqPasswordToggle initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
-    aria-hidden="true"
-    class="kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade kbq-eye_16 cdk-visually-hidden"
-    style="visibility: hidden;"
+    aria-hidden="false"
+    class="kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade kbq-eye_16"
+    style="visibility: visible;"
     tabindex="0"
   />,
 }

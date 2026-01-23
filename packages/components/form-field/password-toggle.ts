@@ -120,7 +120,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private
      */
     get visibility(): 'hidden' | 'visible' {
-        return this.control.disabled || this.control.empty ? 'hidden' : 'visible';
+        return this.control.disabled ? 'hidden' : 'visible';
     }
 
     constructor() {
