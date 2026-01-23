@@ -1,6 +1,6 @@
-import { Overlay } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, ViewChild, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -15,7 +15,7 @@ import {
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
 import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
-import { KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
+import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
 import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
@@ -669,6 +669,209 @@ describe('KbqFullScreenDropzoneService', () => {
     });
 });
 
+describe('KbqLocalDropzone', () => {
+    let component: TestLocalDropzone;
+    let fixture: ComponentFixture<TestLocalDropzone>;
+    let directive: KbqLocalDropzone;
+    let directiveElement: HTMLElement;
+    let overlay: Overlay;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [TestLocalDropzone]
+        });
+
+        fixture = TestBed.createComponent(TestLocalDropzone);
+        component = fixture.componentInstance;
+        overlay = TestBed.inject(Overlay);
+
+        fixture.detectChanges();
+
+        const directiveDebugElement = fixture.debugElement.query(
+            (de) => de.injector.get(KbqLocalDropzone, null) !== null
+        );
+
+        directive = directiveDebugElement.injector.get(KbqLocalDropzone);
+        directiveElement = directiveDebugElement.nativeElement;
+    });
+
+    afterEach(() => {
+        directive.close();
+    });
+
+    it('should set up dragenter listener on host element', () => {
+        jest.spyOn(directive, 'open');
+
+        dispatchDragEvent('dragenter', { target: directiveElement });
+
+        expect(directive.open).toHaveBeenCalled();
+    });
+
+    describe('connectedTo', () => {
+        it('should connect filesDropped to single file upload component', () => {
+            const connectedComponent = component.singleFileUpload();
+
+            jest.spyOn(connectedComponent, 'onFileDropped');
+            component.connectedComponent = connectedComponent;
+            fixture.detectChanges();
+
+            const files = [{ ...createMockFile('test.txt'), fullPath: 'test.txt' }];
+
+            directive.filesDropped.emit(files);
+
+            expect(connectedComponent.onFileDropped).toHaveBeenCalledWith(files);
+        });
+
+        it('should connect filesDropped to multiple file upload component', () => {
+            const connectedComponent = component.multipleFileUpload();
+
+            jest.spyOn(connectedComponent, 'onFileDropped');
+            component.connectedComponent = connectedComponent;
+            fixture.detectChanges();
+
+            const mockFiles = [
+                { ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' },
+                { ...createMockFile('test2.txt', { type: 'text/plain' }), fullPath: 'test2.txt' }
+            ];
+
+            directive.filesDropped.emit(mockFiles);
+
+            expect(connectedComponent.onFileDropped).toHaveBeenCalledWith(mockFiles);
+        });
+
+        it('should handle connectedTo being undefined', () => {
+            component.connectedComponent = undefined;
+            fixture.detectChanges();
+
+            const mockFiles = [
+                { ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' }];
+
+            expect(() => directive.filesDropped.emit(mockFiles)).not.toThrow();
+        });
+    });
+
+    describe('open', () => {
+        it('should create overlay with correct configuration', () => {
+            jest.spyOn(overlay, 'create');
+            directive.open();
+
+            expect(overlay.create).toHaveBeenCalledWith({
+                hasBackdrop: false,
+                panelClass: ['kbq-dropzone-overlay', 'kbq-local-dropzone'],
+                width: directiveElement.offsetWidth,
+                height: directiveElement.offsetHeight,
+                positionStrategy: expect.any(Object)
+            });
+        });
+
+        it('should call init after attaching overlay', () => {
+            jest.spyOn<any, any>(directive, 'init');
+
+            directive.open();
+
+            expect((directive as any).init).toHaveBeenCalled();
+        });
+    });
+
+    describe('close', () => {
+        it('should handle close when overlay is not open', () => {
+            expect(() => directive.close()).not.toThrow();
+        });
+    });
+
+    describe('init', () => {
+        beforeEach(() => {
+            directive.open();
+        });
+
+        it('should close overlay on dragleave when leaving overlay bounds', () => {
+            const overlayRef: OverlayRef = (directive as any).overlayRef;
+
+            jest.spyOn(directive, 'close');
+
+            const dragleaveEvent = new DragEvent('dragleave', {
+                relatedTarget: null
+            });
+
+            overlayRef.overlayElement.dispatchEvent(dragleaveEvent);
+
+            expect(directive.close).toHaveBeenCalled();
+        });
+
+        it('should not close overlay on dragleave if related target is inside overlay', () => {
+            const overlayRef: OverlayRef = (directive as any).overlayRef;
+
+            jest.spyOn(directive, 'close');
+
+            const childElement = document.createElement('div');
+
+            overlayRef.overlayElement.appendChild(childElement);
+
+            const dragleaveEvent = new DragEvent('dragleave', {
+                relatedTarget: childElement
+            });
+
+            Object.defineProperty(dragleaveEvent, 'currentTarget', {
+                value: overlayRef.overlayElement,
+                writable: true
+            });
+
+            overlayRef.overlayElement.dispatchEvent(dragleaveEvent);
+
+            expect(directive.close).not.toHaveBeenCalled();
+        });
+
+        it('should handle drop event and close overlay', () => {
+            const overlayRef: OverlayRef = (directive as any).overlayRef;
+
+            jest.spyOn(directive, 'onDrop');
+            jest.spyOn(directive, 'close');
+
+            const dropEvent = dispatchDragEvent('drop', { target: overlayRef.overlayElement });
+
+            expect(directive.onDrop).toHaveBeenCalledWith(dropEvent);
+            expect(directive.close).toHaveBeenCalled();
+        });
+
+        it('should not initialize if overlayRef is undefined', () => {
+            directive.close();
+            (directive as any).overlayRef = undefined;
+
+            expect(() => (directive as any).init()).not.toThrow();
+        });
+    });
+
+    describe('createOverlay', () => {
+        it('should create overlay positioned relative to host element', () => {
+            const positionStrategy = overlay.position();
+
+            jest.spyOn(overlay, 'position').mockImplementation(() => positionStrategy);
+            const flexibleConnectedToSpy = jest.spyOn(positionStrategy, 'flexibleConnectedTo');
+
+            directive.open();
+
+            expect(flexibleConnectedToSpy).toHaveBeenCalledWith(directiveElement);
+        });
+
+        it('should use element dimensions for overlay size', () => {
+            jest.spyOn(overlay, 'create');
+
+            // Set specific dimensions
+            directiveElement.style.width = '300px';
+            directiveElement.style.height = '250px';
+
+            directive.open();
+
+            expect(overlay.create).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    width: directiveElement.offsetWidth,
+                    height: directiveElement.offsetHeight
+                })
+            );
+        });
+    });
+});
+
 @Component({
     selector: '',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
@@ -790,4 +993,22 @@ class ControlValueAccessorMultipleFileUpload {
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
+}
+
+// Test host component
+@Component({
+    selector: 'test-local-dropzone',
+    imports: [KbqLocalDropzone, KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent],
+    standalone: true,
+    template: `
+        <div kbqLocalDropzone style="width: 200px; height: 150px;" [kbqConnectedTo]="connectedComponent">Drop zone</div>
+
+        <kbq-multiple-file-upload />
+        <kbq-single-file-upload />
+    `
+})
+class TestLocalDropzone {
+    multipleFileUpload = viewChild.required(KbqMultipleFileUploadComponent);
+    singleFileUpload = viewChild.required(KbqSingleFileUploadComponent);
+    connectedComponent?: KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent;
 }
