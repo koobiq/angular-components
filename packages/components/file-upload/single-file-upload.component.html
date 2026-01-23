@@ -3,7 +3,7 @@
     class="kbq-file-upload"
     [class.kbq-disabled]="disabled"
     [class.kbq-error]="invalid"
-    [disabled]="fullScreenDropZone()"
+    [disabled]="!!fullScreenDropZone()"
     (filesDropped)="onFileDropped($event)"
 >
     @if (!file) {

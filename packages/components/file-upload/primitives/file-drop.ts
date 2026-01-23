@@ -9,7 +9,7 @@ const entryIsDirectory = (entry?: FileSystemEntry): entry is FileSystemDirectory
 const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !!entry && entry.isFile;
 
 @Directive()
-export abstract class KbqDrop {
+export class KbqDrop {
     readonly disabled = model(false);
     protected disabledAsObservable = toObservable(this.disabled).pipe(filter(Boolean));
 
@@ -53,7 +53,7 @@ export class KbqFileDropDirective extends KbqDrop {
     /** Flag that controls css-class modifications on drag events. */
     protected readonly dragover = signal(false);
 
-    private elementRef = kbqInjectNativeElement();
+    private nativeElement = kbqInjectNativeElement();
 
     constructor() {
         super();
@@ -96,21 +96,19 @@ export class KbqFileDropDirective extends KbqDrop {
     }
 
     private init() {
-        fromEvent<DragEvent>(this.elementRef, 'dragenter')
+        fromEvent<DragEvent>(this.nativeElement, 'dragenter')
             .pipe(takeUntil(this.disabledAsObservable))
-            .subscribe((event) => {
-                this.onDragEnter(event);
-            });
+            .subscribe((event) => this.onDragEnter(event));
 
-        fromEvent<DragEvent>(this.elementRef, 'dragover')
+        fromEvent<DragEvent>(this.nativeElement, 'dragover')
             .pipe(takeUntil(this.disabledAsObservable))
             .subscribe((event) => this.onDragOver(event));
 
-        fromEvent<DragEvent>(this.elementRef, 'dragleave')
+        fromEvent<DragEvent>(this.nativeElement, 'dragleave')
             .pipe(takeUntil(this.disabledAsObservable))
             .subscribe((event) => this.onDragLeave(event));
 
-        fromEvent<DragEvent>(this.elementRef, 'drop')
+        fromEvent<DragEvent>(this.nativeElement, 'drop')
             .pipe(takeUntil(this.disabledAsObservable))
             .subscribe((event) => this.onDrop(event));
     }

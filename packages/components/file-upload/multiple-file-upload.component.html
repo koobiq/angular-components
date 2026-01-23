@@ -6,7 +6,7 @@
     [class.kbq-selected]="files.length"
     [class.kbq-file-upload_default]="size === 'default'"
     [class.kbq-file-upload_compact]="size === 'compact'"
-    [disabled]="fullScreenDropZone()"
+    [disabled]="!!fullScreenDropZone()"
     (filesDropped)="onFileDropped($event)"
 >
     @let localeData = resolvedLocaleConfig();
