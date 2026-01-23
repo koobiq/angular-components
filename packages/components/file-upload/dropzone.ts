@@ -281,12 +281,7 @@ export class KbqLocalDropzone extends KbqDrop {
             </div>
         }
     `,
-    styles: `
-        .kbq-empty-state.kbq-multiple-file-upload__empty-state {
-            --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-m);
-            --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xs);
-        }
-    `,
+    styleUrls: ['./dropzone.scss', '../empty-state/empty-state.scss'],
     host: {
         class: 'kbq-multiple-file-upload__empty-state'
     },
@@ -311,7 +306,7 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
 }
 
 @Component({
-    selector: 'kbq-dropzone-component',
+    selector: 'kbq-dropzone-content',
     imports: [KbqFileUploadEmptyState],
     template: `
         <kbq-file-upload-empty-state

@@ -48,3 +48,8 @@
         --kbq-empty-state-size-big-padding-bottom: 0;
     }
 }
+
+.kbq-empty-state.kbq-multiple-file-upload__empty-state {
+    --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-m);
+    --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xs);
+}
