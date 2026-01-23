@@ -119,6 +119,7 @@ describe('KbqMultipleFileUploadComponent', () => {
             spyOn(component, 'onChange').and.callThrough();
 
             component.disabled = true;
+            component.fileUpload.setDisabledState(true);
             fixture.detectChanges();
 
             dispatchDropEvent(fixture);
@@ -210,6 +211,7 @@ describe('KbqSingleFileUploadComponent', () => {
             expect(component.file).toBeUndefined();
 
             component.disabled = true;
+            component.fileUpload.setDisabledState(true);
             fixture.detectChanges();
 
             dispatchDropEvent(fixture);
