@@ -33,4 +33,40 @@ test.describe('KbqFileUploadModule', () => {
             await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
         });
     });
+
+    test.describe('KbqDropzoneStyle', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eDropzoneStyle');
+        const getLocalDropzoneArea = (locator: Locator) => locator.getByTestId('e2eLocalDropzoneArea');
+        const clickLocalDropzoneTrigger = (locator: Locator) => locator.getByTestId('e2eLocalDropzoneTrigger').click();
+        const clickFullScreenDropzoneTrigger = (locator: Locator) =>
+            locator.getByTestId('e2eFullScreenDropzoneTrigger').click();
+
+        test('KbqLocalDropzone states', async ({ page }) => {
+            await page.goto('/E2eDropzoneStyle');
+            const locator = getComponent(page);
+
+            await clickLocalDropzoneTrigger(locator);
+
+            const screenshotTarget = getLocalDropzoneArea(locator);
+
+            await expect(screenshotTarget).toHaveScreenshot('03-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('03-dark.png');
+        });
+
+        test('KbqFullScreenDropzone states', async ({ page }) => {
+            await page.setViewportSize({ width: 300, height: 300 });
+
+            await page.goto('/E2eDropzoneStyle');
+            const locator = getComponent(page);
+
+            await clickFullScreenDropzoneTrigger(locator);
+
+            const screenshotTarget = page;
+
+            await expect(screenshotTarget).toHaveScreenshot('04-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('04-dark.png');
+        });
+    });
 });

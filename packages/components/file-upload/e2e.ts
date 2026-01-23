@@ -1,12 +1,15 @@
 import { DOCUMENT } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, Renderer2, viewChild } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import {
     KbqFileItem,
     KbqFileUploadAllowedType,
     KbqFileUploadAllowedTypeValues,
     KbqFileUploadModule,
+    KbqFullScreenDropzoneService,
+    KbqLocalDropzone,
     KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -42,7 +45,12 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
     selector: 'e2e-file-upload-state-and-style',
-    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule, FormsModule],
+    imports: [
+        KbqFileUploadModule,
+        ReactiveFormsModule,
+        KbqIconModule,
+        FormsModule
+    ],
     template: `
         <div>
             <table data-testid="e2eSingleFileUploadTable">
@@ -246,4 +254,48 @@ export class E2eFileUploadStateAndStyle {
     }
 
     protected readonly kbqFileUploadAllowedTypes = KbqFileUploadAllowedType;
+}
+
+@Component({
+    selector: 'e2e-dropzone-style',
+    imports: [
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqLocalDropzone
+    ],
+    template: `
+        <div class="layout-row">
+            <button
+                kbq-button
+                data-testid="e2eLocalDropzoneTrigger"
+                (click)="localDropzone().open({ title: 'Local Dropzone', caption: 'caption' })"
+            >
+                Show Local Dropzone
+            </button>
+            <button
+                kbq-button
+                data-testid="e2eFullScreenDropzoneTrigger"
+                (click)="
+                    fullScreenDropzoneService.open({
+                        title: 'Full-screen dropzone',
+                        caption: 'caption',
+                        size: 'normal'
+                    })
+                "
+            >
+                Show FullScreen Dropzone
+            </button>
+        </div>
+
+        <div style="height: 300px; width: 300px" data-testid="e2eLocalDropzoneArea" kbqLocalDropzone></div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
+        'data-testid': 'e2eDropzoneStyle'
+    }
+})
+export class E2eDropzoneStyle {
+    protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
+    protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
 }
