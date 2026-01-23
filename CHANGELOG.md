@@ -1,3 +1,15 @@
+# 19.2.0 (2026-01-23)
+
+### Koobiq
+
+ * bug fix  **dropdown:** removed horizontal scroll ([#1298](https://github.com/koobiq/angular-components/issues/1298)) ([645e114](https://github.com/koobiq/angular-components/commit/645e1143e7ff37d6efaff36539c814513df38325))
+ * bug fix  **filter-bar:** restore focus after closing ([#DS-4187](https://github.com/koobiq/angular-components/issues/issue/DS-4187)) ([#1300](https://github.com/koobiq/angular-components/issues/1300)) ([a5722ee](https://github.com/koobiq/angular-components/commit/a5722ee5eb45ca894942e07b475fc9b37d10184d))
+ * bug fix  **navbar:** navbar-brand missing top padding ([#DS-4607](https://github.com/koobiq/angular-components/issues/issue/DS-4607)) ([#1293](https://github.com/koobiq/angular-components/issues/1293)) ([c5c1a45](https://github.com/koobiq/angular-components/commit/c5c1a45fbbafcb50e8e9da4aadd9f4b59e6f01b2))
+ * bug fix  **styles:** use .kbq-progress only for buttons ([#DS-4355](https://github.com/koobiq/angular-components/issues/issue/DS-4355)) ([#1295](https://github.com/koobiq/angular-components/issues/1295)) ([cbe7bf9](https://github.com/koobiq/angular-components/commit/cbe7bf9a92365c888c052b1c2bddca8438b894ed))
+ * feature  **app-switcher:** added iconSrc ([#DS-4580](https://github.com/koobiq/angular-components/issues/issue/DS-4580)) ([#1292](https://github.com/koobiq/angular-components/issues/1292)) ([85ca4f8](https://github.com/koobiq/angular-components/commit/85ca4f8bee1dfb7e944c2feb04322172071980a9))
+ * feature  **file-upload:** redesign ([#DS-3858](https://github.com/koobiq/angular-components/issues/issue/DS-3858)) ([#1210](https://github.com/koobiq/angular-components/issues/1210)) ([c45aace](https://github.com/koobiq/angular-components/commit/c45aaceb1947ad92fb4fb9c84fff2da9c9f6437d))
+ * feature  **input:** always-on password-toggle ([#DS-4288](https://github.com/koobiq/angular-components/issues/issue/DS-4288)) ([#1301](https://github.com/koobiq/angular-components/issues/1301)) ([e29ba2d](https://github.com/koobiq/angular-components/commit/e29ba2dcf1e4a6f1b525688bf7e8008561a583dc))
+
 # 19.1.0 (2026-01-16)
 
 ### Koobiq
