@@ -33,6 +33,7 @@ import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqEmptyState } from '@koobiq/components/empty-state';
 import { KbqEnumValues } from '@koobiq/components/core';
 import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
 import { KbqLocaleService } from '@koobiq/components/core';
@@ -40,13 +41,16 @@ import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { OutputEmitterRef } from '@angular/core';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public @deprecated (undocumented)
 export const isCorrectExtension: (file: File, accept?: string[]) => boolean;
@@ -64,38 +68,36 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
 export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleConfig['single'];
 
 // @public (undocumented)
-export abstract class KbqDrop {
+export class KbqDrop {
+    // (undocumented)
+    readonly disabled: ModelSignal<boolean>;
+    // (undocumented)
+    protected disabledAsObservable: Observable<true>;
     readonly filesDropped: OutputEmitterRef<KbqFile[]>;
     onDrop(event: DragEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDrop, never, never, {}, { "filesDropped": "filesDropped"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDrop, never, never, { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "disabled": "disabledChange"; "filesDropped": "filesDropped"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDrop, never>;
 }
 
 // @public (undocumented)
-export type KbqDropzoneData = {
-    caption: string;
-    size: KbqDefaultSizes;
-    title: string;
-    type?: 'dragover' | 'error';
-};
+export class KbqDropzoneContent {
+    protected readonly config: KbqDropzoneData | null;
+    protected readonly localeService: KbqLocaleService | null;
+    protected readonly title: Signal<any>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropzoneContent, never>;
+}
 
 // @public (undocumented)
-export class KbqDropzoneText {
-    // (undocumented)
-    config: {
-        caption: string;
-        size: KbqDefaultSizes;
-        title: string;
-    };
-    // (undocumented)
-    elementRef: HTMLElement;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropzoneText, "kbq-dropzone-text", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropzoneText, never>;
-}
+export type KbqDropzoneData = {
+    caption?: string;
+    size?: KbqDefaultSizes;
+    title?: string;
+};
 
 // @public (undocumented)
 export interface KbqFile extends File {
@@ -105,7 +107,8 @@ export interface KbqFile extends File {
 
 // @public (undocumented)
 export class KbqFileDropDirective extends KbqDrop {
-    dragover: boolean;
+    constructor();
+    protected readonly dragover: WritableSignal<boolean>;
     // (undocumented)
     onDragEnter(event: DragEvent): void;
     onDragLeave(event: DragEvent): void;
@@ -222,12 +225,14 @@ export class KbqFileUploadContext {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFileUploadContext, never>;
 }
 
-// @public (undocumented)
-export class KbqFileUploadEmptyState {
+// @public
+export class KbqFileUploadEmptyState extends KbqEmptyState {
+    constructor();
+    caption: InputSignal<string | TemplateRef<any> | undefined>;
+    protected isTemplateRef(value: string | TemplateRef<any>): boolean;
+    title: InputSignal<string | undefined>;
     // (undocumented)
-    size: InputSignal<KbqDefaultSizes>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFileUploadEmptyState, "kbq-file-upload-empty-state", never, { "size": { "alias": "size"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-file-upload-title]", "[kbq-file-upload-caption]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFileUploadEmptyState, "kbq-file-upload-empty-state", never, { "title": { "alias": "title"; "required": false; "isSignal": true; }; "caption": { "alias": "caption"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFileUploadEmptyState, never>;
 }
@@ -249,14 +254,14 @@ export class KbqFileUploadModule {
 // @public @deprecated (undocumented)
 export type KbqFileValidatorFn = (file: File) => string | null;
 
-// @public (undocumented)
+// @public
 export class KbqFullScreenDropzoneService extends KbqDrop {
-    // (undocumented)
-    init(config: {
-        caption: string;
-        size: string;
-        title: string;
-    }): void;
+    constructor();
+    close(): void;
+    protected createOverlay(): OverlayRef;
+    init(config?: KbqDropzoneData): void;
+    open(config?: KbqDropzoneData): void;
+    stop(): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFullScreenDropzoneService, never>;
     // (undocumented)
@@ -294,14 +299,11 @@ export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleCo
 // @public (undocumented)
 export class KbqLocalDropzone extends KbqDrop {
     constructor();
-    // (undocumented)
     close(): void;
-    // (undocumented)
-    connectedTo: InputSignal<KbqMultipleFileUploadComponent | KbqSingleFileUploadComponent | undefined>;
-    // (undocumented)
-    localeConfig: KbqDropzoneData;
-    // (undocumented)
-    protected open(): void;
+    readonly connectedTo: InputSignal<KbqMultipleFileUploadComponent | KbqSingleFileUploadComponent | undefined>;
+    protected createOverlay(): OverlayRef;
+    protected init(): void;
+    open(config?: KbqDropzoneData): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLocalDropzone, "[kbqLocalDropzone]", ["kbqLocalDropzone"], { "connectedTo": { "alias": "kbqConnectedTo"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -333,8 +335,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     set files(currentFileList: KbqFileItem[]);
     readonly filesAdded: EventEmitter<KbqFileItem[]>;
     readonly filesChange: EventEmitter<KbqFileItem[]>;
-    // (undocumented)
-    fullScreenDropZone: InputSignal<boolean>;
+    fullScreenDropZone: InputSignal<boolean | KbqDropzoneData | undefined>;
     // @deprecated (undocumented)
     get hasErrors(): boolean;
     hasFocus: boolean;
@@ -385,7 +386,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     set file(currentFile: KbqFileItem | null);
     readonly fileChange: EventEmitter<KbqFileItem | null>;
     protected readonly fileLoader: KbqFileLoader | undefined;
-    fullScreenDropZone: InputSignalWithTransform<boolean, unknown>;
+    fullScreenDropZone: InputSignal<boolean | KbqDropzoneData | undefined>;
     get hasHint(): boolean;
     get input(): ElementRef<HTMLInputElement> | undefined;
     // (undocumented)
@@ -416,7 +417,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
 
 // Warnings were encountered during analysis:
 //
-// dist/components/file-upload/multiple-file-upload.component.d.ts:128:1016 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+// dist/components/file-upload/multiple-file-upload.component.d.ts:133:1016 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
