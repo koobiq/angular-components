@@ -12,6 +12,8 @@ import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FlatTreeControl } from '@koobiq/components/tree';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -21,6 +23,7 @@ import { InputSignalWithTransform } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
@@ -210,6 +213,8 @@ export class KbqFilterBar {
 // @public (undocumented)
 export class KbqFilterBarButton {
     constructor();
+    protected readonly filters: KbqFilters;
+    saveFocusedElement(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbqFilterBarButton]", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -289,9 +294,15 @@ export class KbqFilterReset {
 export class KbqFilters implements OnInit {
     constructor();
     // (undocumented)
-    closePopover: () => void;
+    closePopover: (restoreFocus?: boolean) => void;
     protected readonly colors: typeof KbqComponentColors;
+    protected readonly destroyRef: DestroyRef;
+    protected dropdown: KbqDropdownTrigger;
+    protected readonly elementRef: ElementRef<any>;
     get filter(): KbqFilter | null;
+    protected filterActionsButton: KbqButton;
+    protected filterActionsDropdown: KbqDropdownTrigger;
+    get filterActionsOpened(): boolean;
     protected readonly filterBar: KbqFilterBar;
     filteredOptions: Observable<KbqFilter[]>;
     filterName: FormControl<string | null>;
@@ -301,10 +312,14 @@ export class KbqFilters implements OnInit {
     filterSavedUnsuccessfully(error?: KbqSaveFilterError): void;
     // (undocumented)
     filterSavingErrorText: string;
+    focusedElementBeforeIs(button: KbqButton): boolean;
+    protected readonly focusMonitor: FocusMonitor;
+    get focusOrigin(): FocusOrigin;
     get isEmpty(): boolean;
     // (undocumented)
     isSaving: boolean;
     get localeData(): any;
+    protected mainButton: KbqButton;
     // (undocumented)
     ngOnInit(): void;
     readonly onChangeFilter: EventEmitter<KbqSaveFilterEvent>;
@@ -321,10 +336,14 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     openSaveAsNewFilterPopover(): void;
     protected readonly placements: typeof PopUpPlacements;
+    protected popover: KbqPopoverTrigger;
     get popoverHeader(): string;
+    popoverOffset: number;
     popoverSize: PopUpSizes;
     // (undocumented)
     preparePopover(): void;
+    // (undocumented)
+    removeFilter(): void;
     // (undocumented)
     resetFilterChanges(): void;
     // (undocumented)
@@ -333,7 +352,9 @@ export class KbqFilters implements OnInit {
     saveAsNew(event?: Event): void;
     // (undocumented)
     saveChanges(): void;
+    saveFocusedElement(button?: KbqButton): void;
     saveNewFilter: boolean;
+    protected saveNewFilterButton: KbqButton;
     searchControl: UntypedFormControl;
     searchKeydownHandler(event: KeyboardEvent): void;
     // (undocumented)

@@ -1,8 +1,10 @@
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { AsyncPipe, NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     inject,
@@ -12,6 +14,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -61,6 +64,12 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
 })
 export class KbqFilters implements OnInit {
     /** @docs-private */
+    protected readonly elementRef = inject(ElementRef);
+    /** @docs-private */
+    protected readonly destroyRef = inject(DestroyRef);
+    /** @docs-private */
+    protected readonly focusMonitor = inject(FocusMonitor);
+    /** @docs-private */
     protected readonly placements = PopUpPlacements;
     /** @docs-private */
     protected readonly styles = KbqButtonStyles;
@@ -73,9 +82,20 @@ export class KbqFilters implements OnInit {
     /** @docs-private */
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    @ViewChild(KbqButton) private button: KbqButton;
-    @ViewChild(KbqPopoverTrigger) private popover: KbqPopoverTrigger;
-    @ViewChild(KbqDropdownTrigger) private dropdown: KbqDropdownTrigger;
+    /** @docs-private */
+    @ViewChild('mainButton') protected mainButton: KbqButton;
+    /** @docs-private */
+    @ViewChild('saveNewFilterButton') protected saveNewFilterButton: KbqButton;
+    /** @docs-private */
+    @ViewChild('filterActionsButton') protected filterActionsButton: KbqButton;
+
+    /** @docs-private */
+    @ViewChild(KbqPopoverTrigger) protected popover: KbqPopoverTrigger;
+    /** @docs-private */
+    @ViewChild(KbqDropdownTrigger) protected dropdown: KbqDropdownTrigger;
+    /** @docs-private */
+    @ViewChild('filterActionsButton') protected filterActionsDropdown: KbqDropdownTrigger;
+
     @ViewChild('search') private search: ElementRef;
     @ViewChild('newFilterName') private newFilterName: ElementRef;
     @ViewChild('saveFilterButton') private saveFilterButton: KbqButton;
@@ -87,6 +107,8 @@ export class KbqFilters implements OnInit {
 
     /** @docs-private */
     popoverSize = PopUpSizes.Medium;
+    /** @docs-private */
+    popoverOffset: number = 4;
 
     /** new filter name for saving */
     filterName: FormControl<string | null>;
@@ -125,6 +147,11 @@ export class KbqFilters implements OnInit {
         return this.popover?.isOpen || this.dropdown?.opened;
     }
 
+    /** Component state. true if opened dropdown or popup of filterActions */
+    get filterActionsOpened(): boolean {
+        return this.popover?.isOpen || this.filterActionsDropdown?.opened;
+    }
+
     /** Selected filter */
     get filter(): KbqFilter | null {
         return this.filterBar.filter;
@@ -141,6 +168,16 @@ export class KbqFilters implements OnInit {
         return this.filterBar.configuration.filters;
     }
 
+    /** Current focus origin state.
+     * @docs-private */
+    get focusOrigin(): FocusOrigin {
+        return this._focusOrigin;
+    }
+
+    private _focusOrigin: FocusOrigin = null;
+
+    private focusedElementBeforeOpen: KbqButton | null;
+
     constructor() {
         this.filterBar.changes.subscribe(() => this.changeDetectorRef.markForCheck());
     }
@@ -150,6 +187,19 @@ export class KbqFilters implements OnInit {
             of(this.filters),
             this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
+
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(
+                filter((origin) => !!origin),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((origin) => (this._focusOrigin = origin));
+    }
+
+    /** @docs-private */
+    focusedElementBeforeIs(button: KbqButton): boolean {
+        return this.focusedElementBeforeOpen === button;
     }
 
     selectFilter(filter: KbqFilter) {
@@ -210,7 +260,10 @@ export class KbqFilters implements OnInit {
     }
 
     restoreFocus() {
-        this.button.focus();
+        if (this.focusedElementBeforeOpen && !this.focusedElementBeforeOpen.disabled) {
+            this.focusMonitor.focusVia(this.focusedElementBeforeOpen.elementRef, this.focusOrigin);
+            this.focusedElementBeforeOpen = null;
+        }
     }
 
     preparePopover() {
@@ -221,10 +274,18 @@ export class KbqFilters implements OnInit {
         this.popover.show();
 
         merge(...this.popover.defaultClosingActions())
-            .pipe(filter(() => !this.isSaving))
-            .subscribe(this.closePopover);
+            .pipe(
+                filter(() => !this.isSaving),
+                takeUntilDestroyed(this.popover.instanceDestroyRef)
+            )
+            .subscribe(() => this.closePopover(false));
 
-        this.popover.visibleChange.pipe(filter((state) => !state)).subscribe(this.closePopover);
+        this.popover.visibleChange
+            .pipe(
+                filter((state) => !state),
+                takeUntilDestroyed(this.popover.instanceDestroyRef)
+            )
+            .subscribe(this.closePopover);
 
         setTimeout(() => {
             this.newFilterName.nativeElement.focus();
@@ -244,10 +305,15 @@ export class KbqFilters implements OnInit {
         this.preparePopover();
     }
 
-    closePopover = () => {
+    /** @docs-private */
+    saveFocusedElement(button?: KbqButton) {
+        this.focusedElementBeforeOpen = button || null;
+    }
+
+    closePopover = (restoreFocus: boolean = true) => {
         this.popover.hide();
 
-        this.restoreFocus();
+        if (restoreFocus) this.restoreFocus();
 
         setTimeout(() => this.changeDetectorRef.detectChanges());
 
@@ -280,6 +346,12 @@ export class KbqFilters implements OnInit {
         this.onResetFilterChanges.emit(this.filter!);
     }
 
+    removeFilter() {
+        this.onRemoveFilter.next(this.filter!);
+
+        setTimeout(() => this.focusMonitor.focusVia(this.mainButton.elementRef, this.focusOrigin), 0);
+    }
+
     /** Hide the popup and restore focus.
      * Use this method in the onSave, onSaveAsNew, or onChangeFilter events after the data has been successfully saved. */
     filterSavedSuccessfully() {
@@ -287,7 +359,7 @@ export class KbqFilters implements OnInit {
         this.popover.preventClose = false;
 
         this.popover.hide();
-        this.restoreFocus();
+        setTimeout(() => this.restoreFocus(), 0);
 
         this.changeDetectorRef.markForCheck();
     }
