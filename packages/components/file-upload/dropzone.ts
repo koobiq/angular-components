@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,8 +18,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
+    isMac,
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
+    KBQ_WINDOW,
     KbqDefaultSizes,
     kbqInjectNativeElement,
     ruRULocaleData
@@ -42,6 +44,31 @@ export type KbqDropzoneData = { caption?: string; size?: KbqDefaultSizes; title?
 export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzoneData');
 
 /**
+ * Determines if a mouse event occurred outside the viewport boundaries.
+ * @docs-private
+ */
+export const isOutsideViewport = ({
+    event,
+    innerWidth,
+    innerHeight,
+    xAxisMinThreshold,
+    yAxisMinThreshold
+}: {
+    event: MouseEvent;
+    innerWidth: number;
+    innerHeight: number;
+    xAxisMinThreshold?: number;
+    yAxisMinThreshold?: number;
+}): boolean => {
+    return (
+        event.clientX <= (xAxisMinThreshold ?? 0) ||
+        event.clientY <= (yAxisMinThreshold ?? 0) ||
+        event.clientX >= innerWidth ||
+        event.clientY >= innerHeight
+    );
+};
+
+/**
  * Service that provides full-screen drag-and-drop overlay functionality.
  */
 @Injectable({
@@ -49,7 +76,7 @@ export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzon
 })
 export class KbqFullScreenDropzoneService extends KbqDrop {
     private readonly overlay: Overlay = inject(Overlay);
-    private readonly document = inject<Document>(DOCUMENT);
+    private readonly window = inject(KBQ_WINDOW);
     private readonly injector = inject(Injector);
     private readonly stopDrop = new Subject<void>();
     private overlayRef?: OverlayRef;
@@ -63,7 +90,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
      * @param config - Dropzone configuration
      */
     init(config?: KbqDropzoneData): void {
-        fromEvent<DragEvent>(this.document.body, 'dragenter')
+        fromEvent<DragEvent>(this.window.document.body, 'dragenter')
             .pipe(takeUntil(this.stopDrop))
             .subscribe((event) => {
                 event.preventDefault();
@@ -71,26 +98,18 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
                 this.open(config);
             });
 
-        fromEvent<DragEvent>(this.document.body, 'dragover')
+        fromEvent<DragEvent>(this.window.document.body, 'dragover')
             .pipe(takeUntil(this.stopDrop))
             .subscribe((event) => {
                 event.preventDefault();
                 event.stopPropagation();
             });
 
-        fromEvent<DragEvent>(this.document.body, 'dragleave')
+        fromEvent<DragEvent>(this.window.document.body, 'dragleave')
             .pipe(takeUntil(this.stopDrop))
-            .subscribe((event) => {
-                if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
-                    return;
-                }
+            .subscribe((event) => this.onDragLeave(event));
 
-                event.preventDefault();
-                event.stopPropagation();
-                this.close();
-            });
-
-        fromEvent<DragEvent>(this.document.body, 'drop')
+        fromEvent<DragEvent>(this.window.document.body, 'drop')
             .pipe(takeUntil(this.stopDrop))
             .subscribe((event) => {
                 this.onDrop(event);
@@ -125,6 +144,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
 
         setTimeout(() => this.overlayRef?.addPanelClass('kbq-dropzone-overlay__attached'));
     }
+
     /** Closes and disposes the overlay. */
     close(): void {
         this.overlayRef?.dispose();
@@ -140,6 +160,23 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
             positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
         });
     }
+
+    /** @see https://bugs.webkit.org/show_bug.cgi?id=66547 */
+    private onDragLeave(event: DragEvent): void {
+        const isWithinViewport = isMac()
+            ? !isOutsideViewport({
+                  event,
+                  innerWidth: this.window.innerWidth,
+                  innerHeight: this.window.innerHeight
+              })
+            : (event.currentTarget as HTMLElement).contains(event.target as HTMLElement);
+
+        if (isWithinViewport) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.close();
+    }
 }
 
 @Directive({
@@ -154,6 +191,7 @@ export class KbqLocalDropzone extends KbqDrop {
     });
 
     private elementRef = kbqInjectNativeElement();
+    private rects = this.elementRef.getBoundingClientRect();
     private overlay: Overlay = inject(Overlay);
     private viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
     private injector = inject(Injector);
@@ -218,15 +256,7 @@ export class KbqLocalDropzone extends KbqDrop {
             event.stopPropagation();
         });
 
-        fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragleave').subscribe((event) => {
-            if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
-                return;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-            this.close();
-        });
+        fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragleave').subscribe((event) => this.onDragLeave(event));
 
         fromEvent<DragEvent>(this.overlayRef.overlayElement, 'drop').subscribe((event) => {
             this.onDrop(event);
@@ -248,6 +278,24 @@ export class KbqLocalDropzone extends KbqDrop {
                 .withPositions([
                     { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top' }])
         });
+    }
+
+    private onDragLeave(event: DragEvent): void {
+        const isWithinViewport = isMac()
+            ? !isOutsideViewport({
+                  event,
+                  innerWidth: this.rects.x + this.elementRef.offsetWidth,
+                  innerHeight: this.rects.y + this.elementRef.offsetHeight,
+                  xAxisMinThreshold: this.rects.x,
+                  yAxisMinThreshold: this.rects.y
+              })
+            : (event.currentTarget as HTMLElement).contains(event.target as HTMLElement);
+
+        if (isWithinViewport) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.close();
     }
 }
 
