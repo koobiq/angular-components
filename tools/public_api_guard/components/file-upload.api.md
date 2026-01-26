@@ -56,6 +56,15 @@ import { WritableSignal } from '@angular/core';
 export const isCorrectExtension: (file: File, accept?: string[]) => boolean;
 
 // @public
+export const isOutsideViewport: ({ event, innerWidth, innerHeight, xAxisMinThreshold, yAxisMinThreshold }: {
+    event: MouseEvent;
+    innerWidth: number;
+    innerHeight: number;
+    xAxisMinThreshold?: number;
+    yAxisMinThreshold?: number;
+}) => boolean;
+
+// @public
 export const KBQ_DROPZONE_DATA: InjectionToken<KbqDropzoneData>;
 
 // @public (undocumented)
