@@ -22,7 +22,7 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
         KbqContentPanelModule
     ],
     template: `
-        <div>
+        <div class="layout-margin-bottom-l">
             <kbq-toggle [checked]="value()" (change)="value.set($event.checked)">full screen</kbq-toggle>
 
             <kbq-file-upload [fullScreenDropZone]="value()" />
