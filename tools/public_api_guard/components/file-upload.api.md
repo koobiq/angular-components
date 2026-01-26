@@ -60,8 +60,8 @@ export const isOutsideViewport: ({ event, innerWidth, innerHeight, xAxisMinThres
     event: MouseEvent;
     innerWidth: number;
     innerHeight: number;
-    xAxisMinThreshold?: number;
-    yAxisMinThreshold?: number;
+    xAxisMinThreshold: number;
+    yAxisMinThreshold: number;
 }) => boolean;
 
 // @public

@@ -57,12 +57,12 @@ export const isOutsideViewport = ({
     event: MouseEvent;
     innerWidth: number;
     innerHeight: number;
-    xAxisMinThreshold?: number;
-    yAxisMinThreshold?: number;
+    xAxisMinThreshold: number;
+    yAxisMinThreshold: number;
 }): boolean => {
     return (
-        event.clientX <= (xAxisMinThreshold ?? 0) ||
-        event.clientY <= (yAxisMinThreshold ?? 0) ||
+        event.clientX <= xAxisMinThreshold ||
+        event.clientY <= yAxisMinThreshold ||
         event.clientX >= innerWidth ||
         event.clientY >= innerHeight
     );
@@ -167,9 +167,11 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
             ? !isOutsideViewport({
                   event,
                   innerWidth: this.window.innerWidth,
-                  innerHeight: this.window.innerHeight
+                  innerHeight: this.window.innerHeight,
+                  xAxisMinThreshold: 0,
+                  yAxisMinThreshold: 0
               })
-            : (event.currentTarget as HTMLElement).contains(event.target as HTMLElement);
+            : (event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement);
 
         if (isWithinViewport) return;
 
@@ -289,7 +291,7 @@ export class KbqLocalDropzone extends KbqDrop {
                   xAxisMinThreshold: this.rects.x,
                   yAxisMinThreshold: this.rects.y
               })
-            : (event.currentTarget as HTMLElement).contains(event.target as HTMLElement);
+            : (event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement);
 
         if (isWithinViewport) return;
 
