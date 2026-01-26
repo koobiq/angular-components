@@ -10,10 +10,10 @@ const maxFileExceeded = (file: File): string | null => {
 };
 
 /**
- * @title File-upload multiple error
+ * @title File-upload multiple error filled
  */
 @Component({
-    selector: 'file-upload-multiple-error-overview-example',
+    selector: 'file-upload-multiple-error-filled-example',
     imports: [
         KbqFileUploadModule,
         KbqFormFieldModule,
@@ -29,11 +29,15 @@ const maxFileExceeded = (file: File): string | null => {
                     <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
             </ng-template>
+            <kbq-hint>Maximum file size 5 MB</kbq-hint>
+            @for (error of errors; track error) {
+                <kbq-hint color="error">{{ error }}</kbq-hint>
+            }
         </kbq-multiple-file-upload>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleErrorOverviewExample {
+export class FileUploadMultipleErrorFilledExample {
     errors: string[] = [];
     files: KbqFileItem[] = [];
 

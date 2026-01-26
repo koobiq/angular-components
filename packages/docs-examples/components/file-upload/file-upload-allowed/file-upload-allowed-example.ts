@@ -23,8 +23,6 @@ import { KbqIcon } from '@koobiq/components/icon';
                 }
             </ng-template>
         </kbq-multiple-file-upload>
-
-        <kbq-file-upload />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
