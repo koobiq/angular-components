@@ -1,0 +1,9 @@
+/ru
+/ru/main/installation/overview
+/ru/main/versioning/overview
+/ru/main/directory-structure/overview
+/ru/main/theming/overview
+/ru/main/typography/overview
+/ru/main/design-tokens/colors
+/ru/main/schematics/overview
+/ru/main/migration/overview
