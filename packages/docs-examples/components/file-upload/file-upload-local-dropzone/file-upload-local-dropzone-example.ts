@@ -1,12 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
-import {
-    KbqLocalDropzone,
-    KbqMultipleFileUploadComponent,
-    KbqSingleFileUploadComponent
-} from '@koobiq/components/file-upload';
-import { KbqToggleComponent } from '@koobiq/components/toggle';
+import { KbqLocalDropzone, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 
 /**
  * @title File-upload local dropzone
@@ -14,9 +9,7 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
 @Component({
     selector: 'file-upload-local-dropzone-example',
     imports: [
-        KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent,
-        KbqToggleComponent,
         KbqLocalDropzone,
         KbqButtonModule,
         KbqContentPanelModule
@@ -45,9 +38,6 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
                     }
                     <kbq-file-upload #fileUploadLocal multiple />
                 </kbq-content-panel-body>
-                <kbq-content-panel-footer>
-                    <button kbq-button>Button 1</button>
-                </kbq-content-panel-footer>
             </kbq-content-panel>
         </kbq-content-panel-container>
     `,

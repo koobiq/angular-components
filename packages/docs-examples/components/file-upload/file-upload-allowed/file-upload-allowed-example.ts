@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
+import { KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
 
 /**
@@ -8,7 +8,6 @@ import { KbqIcon } from '@koobiq/components/icon';
 @Component({
     selector: 'file-upload-allowed-example',
     imports: [
-        KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent,
         KbqIcon
     ],

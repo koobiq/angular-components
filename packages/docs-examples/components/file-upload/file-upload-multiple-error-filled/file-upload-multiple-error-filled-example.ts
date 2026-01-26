@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -15,9 +15,9 @@ const maxFileExceeded = (file: File): string | null => {
 @Component({
     selector: 'file-upload-multiple-error-filled-example',
     imports: [
-        KbqFileUploadModule,
         KbqFormFieldModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqMultipleFileUploadComponent
     ],
     template: `
         <kbq-multiple-file-upload inputId="file-upload-multiple-error-overview" (fileQueueChanged)="onChange($event)">

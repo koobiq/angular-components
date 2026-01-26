@@ -5,7 +5,7 @@ import {
     KbqBaseFileUploadLocaleConfig,
     KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
-import { KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { of, skip } from 'rxjs';
 
@@ -92,8 +92,9 @@ const localeData = {
 @Component({
     selector: 'file-upload-custom-text-via-input-example',
     imports: [
-        KbqFileUploadModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqSingleFileUploadComponent,
+        KbqMultipleFileUploadComponent
     ],
     template: `
         <kbq-file-upload multiple [localeConfig]="multipleLocaleConfig()">

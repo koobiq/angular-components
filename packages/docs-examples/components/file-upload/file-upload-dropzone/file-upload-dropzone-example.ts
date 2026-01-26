@@ -1,12 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
-import {
-    KbqLocalDropzone,
-    KbqMultipleFileUploadComponent,
-    KbqSingleFileUploadComponent
-} from '@koobiq/components/file-upload';
-import { KbqToggleComponent } from '@koobiq/components/toggle';
+import { KbqLocalDropzone, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 
 /**
  * @title File-upload Dropzone
@@ -14,20 +8,11 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
 @Component({
     selector: 'file-upload-dropzone-example',
     imports: [
-        KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent,
-        KbqToggleComponent,
         KbqLocalDropzone,
-        KbqButtonModule,
         KbqContentPanelModule
     ],
     template: `
-        <div class="layout-margin-bottom-l">
-            <kbq-toggle [checked]="value()" (change)="value.set($event.checked)">full screen</kbq-toggle>
-
-            <kbq-file-upload [fullScreenDropZone]="value()" />
-        </div>
-
         <kbq-content-panel-container maxWidth="600" minWidth="250" width="600" [opened]="true">
             <kbq-content-panel>
                 <kbq-content-panel-header>
@@ -75,6 +60,4 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadDropzoneExample {
-    protected readonly value = signal(false);
-}
+export class FileUploadDropzoneExample {}

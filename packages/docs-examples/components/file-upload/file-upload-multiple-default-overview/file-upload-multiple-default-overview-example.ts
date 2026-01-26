@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
@@ -8,8 +8,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 @Component({
     selector: 'file-upload-multiple-default-overview-example',
     imports: [
-        KbqFileUploadModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqMultipleFileUploadComponent
     ],
     template: `
         <kbq-multiple-file-upload>

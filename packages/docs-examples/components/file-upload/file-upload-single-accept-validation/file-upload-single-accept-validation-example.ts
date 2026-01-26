@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
-import { KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -12,9 +12,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'file-upload-single-accept-validation-example',
     imports: [
         ReactiveFormsModule,
-        KbqFileUploadModule,
         KbqFormFieldModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqSingleFileUploadComponent
     ],
     template: `
         <form [formGroup]="formGroup">
