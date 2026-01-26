@@ -1552,6 +1552,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-indeterminate-loading-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-local-dropzone": {
+    "packagePath": "components/file-upload/file-upload-local-dropzone",
+    "title": "File-upload local dropzone",
+    "componentName": "FileUploadLocalDropzoneExample",
+    "files": [
+      "file-upload-local-dropzone-example.ts"
+    ],
+    "selector": "file-upload-local-dropzone-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-local-dropzone-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-multiple-accept-validation": {
     "packagePath": "components/file-upload/file-upload-multiple-accept-validation",
     "title": "File upload multiple accept validation",
@@ -1612,6 +1624,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-multiple-default-validation-reactive-forms-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-multiple-disabled": {
+    "packagePath": "components/file-upload/file-upload-multiple-disabled",
+    "title": "File-upload multiple disabled",
+    "componentName": "FileUploadMultipleDisabledExample",
+    "files": [
+      "file-upload-multiple-disabled-example.ts"
+    ],
+    "selector": "file-upload-multiple-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-disabled-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-multiple-error-filled": {
+    "packagePath": "components/file-upload/file-upload-multiple-error-filled",
+    "title": "File-upload multiple error filled",
+    "componentName": "FileUploadMultipleErrorFilledExample",
+    "files": [
+      "file-upload-multiple-error-filled-example.ts"
+    ],
+    "selector": "file-upload-multiple-error-filled-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-error-filled-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-multiple-error-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-error-overview",
     "title": "File-upload multiple error",
@@ -1646,6 +1682,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-required-reactive-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-required-reactive-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-multiple-with-custom-icon": {
+    "packagePath": "components/file-upload/file-upload-multiple-with-custom-icon",
+    "title": "File-upload multiple with custom icon",
+    "componentName": "FileUploadMultipleWithCustomIconExample",
+    "files": [
+      "file-upload-multiple-with-custom-icon-example.ts"
+    ],
+    "selector": "file-upload-multiple-with-custom-icon-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-with-custom-icon-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-multiple-with-fixed-height": {
+    "packagePath": "components/file-upload/file-upload-multiple-with-fixed-height",
+    "title": "File-upload multiple with fixed height",
+    "componentName": "FileUploadMultipleWithFixedHeightExample",
+    "files": [
+      "file-upload-multiple-with-fixed-height-example.ts"
+    ],
+    "selector": "file-upload-multiple-with-fixed-height-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-with-fixed-height-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-multiple-with-max-height": {
+    "packagePath": "components/file-upload/file-upload-multiple-with-max-height",
+    "title": "File-upload multiple with max height",
+    "componentName": "FileUploadMultipleWithMaxHeightExample",
+    "files": [
+      "file-upload-multiple-with-max-height-example.ts"
+    ],
+    "selector": "file-upload-multiple-with-max-height-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-with-max-height-example.ts",
     "importPath": "components/file-upload"
   },
   "file-upload-primitive": {
@@ -1742,6 +1814,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-single-with-signal-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-with-signal-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-single-with-size": {
+    "packagePath": "components/file-upload/file-upload-single-with-size",
+    "title": "File-upload single with size",
+    "componentName": "FileUploadSingleWithSizeExample",
+    "files": [
+      "file-upload-single-with-size-example.ts"
+    ],
+    "selector": "file-upload-single-with-size-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-with-size-example.ts",
     "importPath": "components/file-upload"
   },
   "filesize-formatter-overview": {
@@ -5959,6 +6043,8 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-indeterminate-loading-overview':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-local-dropzone':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-compact-overview':
@@ -5969,11 +6055,21 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-default-validation-reactive-forms-overview':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-disabled':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-error-filled':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-mixed-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-required-reactive-validation':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-with-custom-icon':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-with-fixed-height':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-with-max-height':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-primitive':
 return import('@koobiq/docs-examples/components/file-upload');
@@ -5990,6 +6086,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-validation-reactive-forms-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-with-signal':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-with-size':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'filesize-formatter-overview':
 return import('@koobiq/docs-examples/components/filesize-formatter');
