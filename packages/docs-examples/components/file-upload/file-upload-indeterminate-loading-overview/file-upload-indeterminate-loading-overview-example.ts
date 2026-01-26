@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import {
+    KbqFileItem,
+    KbqMultipleFileUploadComponent,
+    KbqSingleFileUploadComponent
+} from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -10,8 +14,9 @@ import { take } from 'rxjs/operators';
 @Component({
     selector: 'file-upload-indeterminate-loading-overview-example',
     imports: [
-        KbqFileUploadModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqSingleFileUploadComponent,
+        KbqMultipleFileUploadComponent
     ],
     template: `
         <kbq-file-upload progressMode="indeterminate" (fileQueueChange)="onFileChange($event)">

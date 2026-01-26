@@ -13,7 +13,7 @@ const maxFileExceeded = (file: File): string | null => {
  * @title File-upload multiple error
  */
 @Component({
-    selector: 'file-upload-multiple-error-overview-example',
+    selector: 'file-upload-multiple-error-example',
     imports: [
         KbqFileUploadModule,
         KbqFormFieldModule,
@@ -33,7 +33,7 @@ const maxFileExceeded = (file: File): string | null => {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleErrorOverviewExample {
+export class FileUploadMultipleErrorExample {
     errors: string[] = [];
     files: KbqFileItem[] = [];
 

@@ -10,7 +10,9 @@ import { FileUploadMultipleCompactOverviewExample } from './file-upload-multiple
 import { FileUploadMultipleCustomTextOverviewExample } from './file-upload-multiple-custom-text-overview/file-upload-multiple-custom-text-overview-example';
 import { FileUploadMultipleDefaultOverviewExample } from './file-upload-multiple-default-overview/file-upload-multiple-default-overview-example';
 import { FileUploadMultipleDefaultValidationReactiveFormsOverviewExample } from './file-upload-multiple-default-validation-reactive-forms-overview/file-upload-multiple-default-validation-reactive-forms-overview-example';
-import { FileUploadMultipleErrorOverviewExample } from './file-upload-multiple-error-overview/file-upload-multiple-error-overview-example';
+import { FileUploadMultipleDisabledExample } from './file-upload-multiple-disabled/file-upload-multiple-disabled-example';
+import { FileUploadMultipleErrorFilledExample } from './file-upload-multiple-error-filled/file-upload-multiple-error-filled-example';
+import { FileUploadMultipleErrorExample } from './file-upload-multiple-error/file-upload-multiple-error-example';
 import { FileUploadMultipleMixedValidationExample } from './file-upload-multiple-mixed-validation/file-upload-multiple-mixed-validation-example';
 import { FileUploadMultipleRequiredReactiveValidationExample } from './file-upload-multiple-required-reactive-validation/file-upload-multiple-required-reactive-validation-example';
 import { FileUploadMultipleWithCustomIconExample } from './file-upload-multiple-with-custom-icon/file-upload-multiple-with-custom-icon-example';
@@ -18,7 +20,6 @@ import { FileUploadMultipleWithFixedHeightExample } from './file-upload-multiple
 import { FileUploadMultipleWithMaxHeightExample } from './file-upload-multiple-with-max-height/file-upload-multiple-with-max-height-example';
 import { FileUploadPrimitiveExample } from './file-upload-primitive/file-upload-primitive-example';
 import { FileUploadSingleAcceptValidationExample } from './file-upload-single-accept-validation/file-upload-single-accept-validation-example';
-import { FileUploadSingleErrorOverviewExample } from './file-upload-single-error-overview/file-upload-single-error-overview-example';
 import { FileUploadSingleMixedValidationExample } from './file-upload-single-mixed-validation/file-upload-single-mixed-validation-example';
 import { FileUploadSingleOverviewExample } from './file-upload-single-overview/file-upload-single-overview-example';
 import { FileUploadSingleRequiredReactiveValidationExample } from './file-upload-single-required-reactive-validation/file-upload-single-required-reactive-validation-example';
@@ -38,7 +39,9 @@ export {
     FileUploadMultipleCustomTextOverviewExample,
     FileUploadMultipleDefaultOverviewExample,
     FileUploadMultipleDefaultValidationReactiveFormsOverviewExample,
-    FileUploadMultipleErrorOverviewExample,
+    FileUploadMultipleDisabledExample,
+    FileUploadMultipleErrorExample,
+    FileUploadMultipleErrorFilledExample,
     FileUploadMultipleMixedValidationExample,
     FileUploadMultipleRequiredReactiveValidationExample,
     FileUploadMultipleWithCustomIconExample,
@@ -46,7 +49,6 @@ export {
     FileUploadMultipleWithMaxHeightExample,
     FileUploadPrimitiveExample,
     FileUploadSingleAcceptValidationExample,
-    FileUploadSingleErrorOverviewExample,
     FileUploadSingleMixedValidationExample,
     FileUploadSingleOverviewExample,
     FileUploadSingleRequiredReactiveValidationExample,
@@ -56,10 +58,10 @@ export {
 };
 
 const EXAMPLES = [
+    FileUploadMultipleDisabledExample,
     FileUploadAllowedExample,
     FileUploadCustomTextViaInputExample,
-    FileUploadSingleErrorOverviewExample,
-    FileUploadMultipleErrorOverviewExample,
+    FileUploadMultipleErrorExample,
     FileUploadSingleOverviewExample,
     FileUploadSingleWithSizeExample,
     FileUploadMultipleWithCustomIconExample,
@@ -69,7 +71,6 @@ const EXAMPLES = [
     FileUploadSingleValidationReactiveFormsOverviewExample,
     FileUploadMultipleDefaultValidationReactiveFormsOverviewExample,
     FileUploadMultipleDefaultOverviewExample,
-    FileUploadMultipleWithMaxHeightExample,
     FileUploadMultipleCustomTextOverviewExample,
     FileUploadIndeterminateLoadingOverviewExample,
     FileUploadMultipleCompactOverviewExample,
@@ -82,7 +83,8 @@ const EXAMPLES = [
     FileUploadMultipleMixedValidationExample,
     FileUploadPrimitiveExample,
     FileUploadDropzoneExample,
-    FileUploadLocalDropzoneExample
+    FileUploadLocalDropzoneExample,
+    FileUploadMultipleErrorFilledExample
 ];
 
 @NgModule({

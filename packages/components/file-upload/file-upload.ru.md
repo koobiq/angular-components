@@ -1,7 +1,3 @@
-[//]: # '@TODO remove or update'
-[//]: # '<!-- example(file-upload-single-error-overview) -->'
-[//]: # '<!-- example(file-upload-multiple-error-overview) -->'
-
 Позволяет пользователю загрузить файлы в продукт.
 
 <!-- example(file-upload-single-overview) -->
@@ -46,7 +42,7 @@
 
 ### Ошибка
 
-<!-- example(file-upload-multiple-error-overview) -->
+<!-- example(file-upload-multiple-error) -->
 
 При выборе невалидного файла состояние ошибки получает только соответствующий элемент в списке, а не весь компонент. Сообщения об ошибке выводятся под загрузчиком
 

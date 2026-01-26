@@ -1648,16 +1648,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-multiple-error-filled-example.ts",
     "importPath": "components/file-upload"
   },
-  "file-upload-multiple-error-overview": {
-    "packagePath": "components/file-upload/file-upload-multiple-error-overview",
+  "file-upload-multiple-error": {
+    "packagePath": "components/file-upload/file-upload-multiple-error",
     "title": "File-upload multiple error",
-    "componentName": "FileUploadMultipleErrorOverviewExample",
+    "componentName": "FileUploadMultipleErrorExample",
     "files": [
-      "file-upload-multiple-error-overview-example.ts"
+      "file-upload-multiple-error-example.ts"
     ],
-    "selector": "file-upload-multiple-error-overview-example",
+    "selector": "file-upload-multiple-error-example",
     "additionalComponents": [],
-    "primaryFile": "file-upload-multiple-error-overview-example.ts",
+    "primaryFile": "file-upload-multiple-error-example.ts",
     "importPath": "components/file-upload"
   },
   "file-upload-multiple-mixed-validation": {
@@ -6059,7 +6059,7 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-error-filled':
 return import('@koobiq/docs-examples/components/file-upload');
-  case 'file-upload-multiple-error-overview':
+  case 'file-upload-multiple-error':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-mixed-validation':
 return import('@koobiq/docs-examples/components/file-upload');

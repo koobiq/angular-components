@@ -126,11 +126,9 @@ export class DevCustomTextDirective {}
         <hr />
         <file-upload-multiple-default-validation-reactive-forms-overview-example />
         <hr />
-        <file-upload-multiple-error-overview-example />
+        <file-upload-multiple-error-example />
         <hr />
         <file-upload-multiple-required-reactive-validation-example />
-        <hr />
-        <file-upload-single-error-overview-example />
         <hr />
         <file-upload-single-overview-example />
         <hr />

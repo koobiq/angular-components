@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import {
+    KbqFileItem,
+    KbqMultipleFileUploadComponent,
+    KbqSingleFileUploadComponent
+} from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
@@ -7,7 +11,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     selector: 'file-upload-single-with-signal-example',
-    imports: [KbqFileUploadModule, KbqIconModule],
+    imports: [KbqIconModule, KbqSingleFileUploadComponent, KbqMultipleFileUploadComponent],
     template: `
         <div class="layout-margin-bottom-l">
             <kbq-file-upload [file]="file()" (fileQueueChange)="onSingleChange($event)">

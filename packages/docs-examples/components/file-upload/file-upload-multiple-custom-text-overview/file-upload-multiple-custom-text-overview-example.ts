@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
-import { KBQ_FILE_UPLOAD_CONFIGURATION, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KBQ_FILE_UPLOAD_CONFIGURATION, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { enUSLocaleData } from '../en-US';
 import { esLALocaleData } from '../es-LA';
@@ -49,8 +49,8 @@ class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
 @Component({
     selector: 'file-upload-multiple-custom-text-overview-example',
     imports: [
-        KbqFileUploadModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqMultipleFileUploadComponent
     ],
     template: `
         <kbq-multiple-file-upload>
