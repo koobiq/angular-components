@@ -1216,6 +1216,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-recursive-template-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-with-filter": {
+    "packagePath": "components/dropdown/dropdown-with-filter",
+    "title": "Dropdown with filter",
+    "componentName": "DropdownWithFilterExample",
+    "files": [
+      "dropdown-with-filter-example.ts"
+    ],
+    "selector": "dropdown-with-filter-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-with-filter-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dynamic-translation-overview": {
     "packagePath": "components/dynamic-translation/dynamic-translation-overview",
     "title": "Dynamic translation overview example",
@@ -1480,6 +1492,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "experimental-form-field-without-borders-example.ts",
     "importPath": "components/experimental-form-field"
   },
+  "file-upload-allowed": {
+    "packagePath": "components/file-upload/file-upload-allowed",
+    "title": "File-upload allowed",
+    "componentName": "FileUploadAllowedExample",
+    "files": [
+      "file-upload-allowed-example.ts"
+    ],
+    "selector": "file-upload-allowed-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-allowed-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-custom-text-via-input": {
     "packagePath": "components/file-upload/file-upload-custom-text-via-input",
     "title": "File-upload custom text via input example",
@@ -1610,6 +1634,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-required-reactive-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-required-reactive-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-primitive": {
+    "packagePath": "components/file-upload/file-upload-primitive",
+    "title": "File upload primitive",
+    "componentName": "FileUploadPrimitiveExample",
+    "files": [
+      "file-upload-primitive-example.ts"
+    ],
+    "selector": "file-upload-primitive-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-primitive-example.ts",
     "importPath": "components/file-upload"
   },
   "file-upload-single-accept-validation": {
@@ -4675,6 +4711,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "time-range-overview-example.ts",
     "importPath": "components/time-range"
   },
+  "timepicker-field-validation": {
+    "packagePath": "components/timepicker/timepicker-field-validation",
+    "title": "Timepicker field validation",
+    "componentName": "TimepickerFieldValidationExample",
+    "files": [
+      "timepicker-field-validation-example.ts"
+    ],
+    "selector": "timepicker-field-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "timepicker-field-validation-example.ts",
+    "importPath": "components/timepicker"
+  },
   "timepicker-validation-symbols": {
     "packagePath": "components/timepicker/timepicker-validation-symbols",
     "title": "Timepicker validation symbols",
@@ -5831,6 +5879,8 @@ return import('@koobiq/docs-examples/components/dropdown');
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-recursive-template':
 return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-with-filter':
+return import('@koobiq/docs-examples/components/dropdown');
   case 'dynamic-translation-overview':
 return import('@koobiq/docs-examples/components/dynamic-translation');
   case 'dynamic-translation-with-dynamic-component-creation':
@@ -5875,6 +5925,8 @@ return import('@koobiq/docs-examples/components/experimental-form-field');
 return import('@koobiq/docs-examples/components/experimental-form-field');
   case 'experimental-form-field-without-borders':
 return import('@koobiq/docs-examples/components/experimental-form-field');
+  case 'file-upload-allowed':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-custom-text-via-input':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-cva-overview':
@@ -5896,6 +5948,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-mixed-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-required-reactive-validation':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-primitive':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
@@ -6395,6 +6449,8 @@ return import('@koobiq/docs-examples/components/time-range');
 return import('@koobiq/docs-examples/components/time-range');
   case 'time-range-overview':
 return import('@koobiq/docs-examples/components/time-range');
+  case 'timepicker-field-validation':
+return import('@koobiq/docs-examples/components/timepicker');
   case 'timepicker-validation-symbols':
 return import('@koobiq/docs-examples/components/timepicker');
   case 'timepicker-variations':
