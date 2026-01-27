@@ -7,7 +7,6 @@ import {
     computed,
     DestroyRef,
     Directive,
-    effect,
     inject,
     Injectable,
     InjectionToken,
@@ -227,6 +226,8 @@ export class KbqLocalDropzone extends KbqDrop {
     constructor() {
         super();
 
+        this.filesDropped.subscribe((files) => this.connectedTo()?.onFileDropped(files));
+
         fromEvent<DragEvent>(this.elementRef, 'dragenter')
             .pipe(takeUntilDestroyed())
             .subscribe((event) => {
@@ -234,14 +235,6 @@ export class KbqLocalDropzone extends KbqDrop {
                 event.stopPropagation();
                 this.open();
             });
-
-        effect(() => {
-            const connectedTo = this.connectedTo();
-
-            if (connectedTo) {
-                this.filesDropped.subscribe((files) => connectedTo.onFileDropped(files));
-            }
-        });
     }
 
     /** Opens the dropzone overlay positioned over the host element. */
