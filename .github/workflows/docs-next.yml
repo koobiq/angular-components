@@ -16,7 +16,7 @@ jobs:
     if: ${{ github.repository_owner == 'koobiq' }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node
         uses: ./.github/workflows/actions/setup-node

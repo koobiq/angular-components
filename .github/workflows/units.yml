@@ -10,7 +10,7 @@ jobs:
   unit_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/setup-node
       # Build styles which are required for karma/jasmine tests
       - run: yarn run styles:build-all
