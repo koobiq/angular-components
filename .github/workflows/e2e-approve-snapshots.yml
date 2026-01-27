@@ -27,7 +27,7 @@ jobs:
       - id: update-snapshots
         run: |
           yarn run e2e:components --update-snapshots
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v7
         id: commit-and-push
         with:
           commit_message: 'test: updated e2e snapshots'
