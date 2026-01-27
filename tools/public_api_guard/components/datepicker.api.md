@@ -28,6 +28,7 @@ import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqDateFormats } from '@koobiq/components/core';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
 import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
@@ -308,7 +309,6 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set errorState(value: boolean);
     get errorStateMatcher(): ErrorStateMatcher;
     set errorStateMatcher(value: ErrorStateMatcher);
-    // (undocumented)
     protected readonly externalConfiguration: unknown;
     // (undocumented)
     focus(): void;
@@ -316,6 +316,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     focusChanged(isFocused: boolean): void;
     // (undocumented)
     focused: boolean;
+    protected readonly formField: KbqFormField | null;
+    getOrigin(): ElementRef;
     // (undocumented)
     get id(): string;
     set id(value: string);

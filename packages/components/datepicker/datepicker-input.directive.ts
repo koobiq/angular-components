@@ -61,7 +61,7 @@ import {
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendar } from './calendar.component';
@@ -274,8 +274,11 @@ export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
 {
     /** @docs-private */
+    protected readonly formField = inject(KbqFormField, { optional: true, host: true });
+    /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
+    /** @docs-private */
     protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
 
     protected configuration;
@@ -863,6 +866,11 @@ export class KbqDatepickerInput<D>
     /** Refreshes the error state of the input. */
     updateErrorState() {
         this.errorStateTracker.updateErrorState();
+    }
+
+    /** Returns the ElementRef of the formField if it exists; otherwise, returns the ElementRef of the input. */
+    getOrigin(): ElementRef {
+        return this.formField ? this.formField.getConnectedOverlayOrigin() : this.elementRef;
     }
 
     private saveTimePart(selected: D) {
