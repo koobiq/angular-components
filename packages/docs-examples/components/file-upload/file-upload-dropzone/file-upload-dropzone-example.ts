@@ -76,5 +76,5 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadDropzoneExample {
-    protected readonly value = signal(true);
+    protected readonly value = signal(false);
 }

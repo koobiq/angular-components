@@ -40,7 +40,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
-import { E2eDropzoneStyle, E2eFileUploadStateAndStyle } from '../../components/file-upload/e2e';
+import { E2eDropzone, E2eFileUploadStateAndStyle } from '../../components/file-upload/e2e';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { DevLocaleSelector } from '../locale-selector';
 
@@ -212,7 +212,7 @@ export class DevMultipleFileUploadCompact {
         DevMultipleFileUploadCompact,
         DevCustomTextDirective,
         E2eFileUploadStateAndStyle,
-        E2eDropzoneStyle
+        E2eDropzone
     ],
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],

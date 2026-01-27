@@ -257,7 +257,7 @@ export class E2eFileUploadStateAndStyle {
 }
 
 @Component({
-    selector: 'e2e-dropzone-style',
+    selector: 'e2e-dropzone',
     imports: [
         KbqButton,
         KbqButtonCssStyler,
@@ -292,10 +292,10 @@ export class E2eFileUploadStateAndStyle {
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
-        'data-testid': 'e2eDropzoneStyle'
+        'data-testid': 'e2eDropzone'
     }
 })
-export class E2eDropzoneStyle {
+export class E2eDropzone {
     protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
     protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
 }

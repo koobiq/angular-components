@@ -5,6 +5,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     Directive,
     effect,
     inject,
@@ -12,13 +13,14 @@ import {
     InjectionToken,
     Injector,
     input,
+    NgZone,
     TemplateRef,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
-    isMac,
+    isSafari,
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KBQ_WINDOW,
@@ -33,7 +35,7 @@ import {
     KbqEmptyStateTitle
 } from '@koobiq/components/empty-state';
 import { KbqIcon } from '@koobiq/components/icon';
-import { fromEvent, of, Subject, takeUntil } from 'rxjs';
+import { filter, fromEvent, of, Subject, takeUntil } from 'rxjs';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqDrop } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
@@ -78,7 +80,8 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
     private readonly overlay: Overlay = inject(Overlay);
     private readonly window = inject(KBQ_WINDOW);
     private readonly injector = inject(Injector);
-    private readonly stopDrop = new Subject<void>();
+    private readonly dropAbort = new Subject<void>();
+    private readonly ngZone = inject(NgZone);
     private overlayRef?: OverlayRef;
 
     constructor() {
@@ -90,36 +93,49 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
      * @param config - Dropzone configuration
      */
     init(config?: KbqDropzoneData): void {
-        fromEvent<DragEvent>(this.window.document.body, 'dragenter')
-            .pipe(takeUntil(this.stopDrop))
-            .subscribe((event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                this.open(config);
-            });
+        this.ngZone.runOutsideAngular(() => {
+            fromEvent<DragEvent>(this.window.document.body, 'dragenter')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntil(this.dropAbort)
+                )
+                .subscribe((event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.open(config);
+                });
 
-        fromEvent<DragEvent>(this.window.document.body, 'dragover')
-            .pipe(takeUntil(this.stopDrop))
-            .subscribe((event) => {
-                event.preventDefault();
-                event.stopPropagation();
-            });
+            fromEvent<DragEvent>(this.window.document.body, 'dragover')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntil(this.dropAbort)
+                )
+                .subscribe((event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
 
-        fromEvent<DragEvent>(this.window.document.body, 'dragleave')
-            .pipe(takeUntil(this.stopDrop))
-            .subscribe((event) => this.onDragLeave(event));
+            fromEvent<DragEvent>(this.window.document.body, 'dragleave')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntil(this.dropAbort)
+                )
+                .subscribe((event) => this.onDragLeave(event));
 
-        fromEvent<DragEvent>(this.window.document.body, 'drop')
-            .pipe(takeUntil(this.stopDrop))
-            .subscribe((event) => {
-                this.onDrop(event);
-                this.close();
-            });
+            fromEvent<DragEvent>(this.window.document.body, 'drop')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntil(this.dropAbort)
+                )
+                .subscribe((event) => {
+                    this.ngZone.run(() => this.onDrop(event));
+                });
+        });
     }
 
     /** Stops all drag-and-drop event listeners and cleans up subscriptions. */
     stop(): void {
-        this.stopDrop.next();
+        this.dropAbort.next();
     }
 
     /**
@@ -151,6 +167,12 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
     }
 
     /** @docs-private */
+    onDrop(event: DragEvent): void {
+        super.onDrop(event);
+        this.close();
+    }
+
+    /** @docs-private */
     protected createOverlay(): OverlayRef {
         return this.overlay.create({
             hasBackdrop: false,
@@ -163,7 +185,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
 
     /** @see https://bugs.webkit.org/show_bug.cgi?id=66547 */
     private onDragLeave(event: DragEvent): void {
-        const isWithinViewport = isMac()
+        const isWithinViewport = isSafari(this.window.navigator.userAgent)
             ? !isOutsideViewport({
                   event,
                   innerWidth: this.window.innerWidth,
@@ -192,11 +214,14 @@ export class KbqLocalDropzone extends KbqDrop {
         alias: 'kbqConnectedTo'
     });
 
-    private elementRef = kbqInjectNativeElement();
-    private rects = this.elementRef.getBoundingClientRect();
-    private overlay: Overlay = inject(Overlay);
-    private viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
-    private injector = inject(Injector);
+    private readonly elementRef = kbqInjectNativeElement();
+    private readonly rects = this.elementRef.getBoundingClientRect();
+    private readonly overlay: Overlay = inject(Overlay);
+    private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+    private readonly injector = inject(Injector);
+    private readonly window = inject(KBQ_WINDOW);
+    private readonly ngZone = inject(NgZone);
+    private readonly destroyRef = inject(DestroyRef);
     private overlayRef?: OverlayRef;
 
     constructor() {
@@ -251,18 +276,31 @@ export class KbqLocalDropzone extends KbqDrop {
      * Handles dragover, dragleave, and drop events to manage overlay state and file drops.
      */
     protected init(): void {
-        if (!this.overlayRef) return;
+        this.ngZone.runOutsideAngular(() => {
+            if (!this.overlayRef) return;
+            fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragover')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
 
-        fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragover').subscribe((event) => {
-            event.preventDefault();
-            event.stopPropagation();
-        });
+            fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragleave')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((event) => this.onDragLeave(event));
 
-        fromEvent<DragEvent>(this.overlayRef.overlayElement, 'dragleave').subscribe((event) => this.onDragLeave(event));
-
-        fromEvent<DragEvent>(this.overlayRef.overlayElement, 'drop').subscribe((event) => {
-            this.onDrop(event);
-            this.close();
+            fromEvent<DragEvent>(this.overlayRef.overlayElement, 'drop')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((event) => this.onDrop(event));
         });
     }
 
@@ -282,8 +320,14 @@ export class KbqLocalDropzone extends KbqDrop {
         });
     }
 
+    /** @docs-private */
+    protected onDrop(event: DragEvent) {
+        super.onDrop(event);
+        this.close();
+    }
+
     private onDragLeave(event: DragEvent): void {
-        const isWithinViewport = isMac()
+        const isWithinViewport = isSafari(this.window.navigator.userAgent)
             ? !isOutsideViewport({
                   event,
                   innerWidth: this.rects.x + this.elementRef.offsetWidth,

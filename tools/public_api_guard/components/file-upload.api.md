@@ -41,7 +41,6 @@ import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { OutputEmitterRef } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
@@ -78,12 +77,9 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
 
 // @public (undocumented)
 export class KbqDrop {
-    // (undocumented)
     readonly disabled: ModelSignal<boolean>;
-    // (undocumented)
-    protected disabledAsObservable: Observable<true>;
     readonly filesDropped: OutputEmitterRef<KbqFile[]>;
-    onDrop(event: DragEvent): void;
+    protected onDrop(event: DragEvent): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDrop, never, never, { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "disabled": "disabledChange"; "filesDropped": "filesDropped"; }, never, never, true, never>;
     // (undocumented)
@@ -269,6 +265,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
     close(): void;
     protected createOverlay(): OverlayRef;
     init(config?: KbqDropzoneData): void;
+    onDrop(event: DragEvent): void;
     open(config?: KbqDropzoneData): void;
     stop(): void;
     // (undocumented)
@@ -312,6 +309,7 @@ export class KbqLocalDropzone extends KbqDrop {
     readonly connectedTo: InputSignal<KbqMultipleFileUploadComponent | KbqSingleFileUploadComponent | undefined>;
     protected createOverlay(): OverlayRef;
     protected init(): void;
+    protected onDrop(event: DragEvent): void;
     open(config?: KbqDropzoneData): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLocalDropzone, "[kbqLocalDropzone]", ["kbqLocalDropzone"], { "connectedTo": { "alias": "kbqConnectedTo"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;

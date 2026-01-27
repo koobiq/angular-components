@@ -1,7 +1,7 @@
-import { Directive, effect, model, output, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { DestroyRef, Directive, inject, model, NgZone, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
-import { filter, fromEvent, takeUntil } from 'rxjs';
+import { filter, fromEvent } from 'rxjs';
 import { KbqFile } from '../file-upload';
 
 const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferItem.prototype;
@@ -10,14 +10,14 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
 
 @Directive()
 export class KbqDrop {
+    /** @docs-private */
     readonly disabled = model(false);
-    protected disabledAsObservable = toObservable(this.disabled).pipe(filter(Boolean));
 
     /** Emits an event when file items were dropped. */
     readonly filesDropped = output<KbqFile[]>();
 
     /** @docs-private */
-    onDrop(event: DragEvent) {
+    protected onDrop(event: DragEvent) {
         if (!isFolderCanBeDragged()) {
             // eslint-disable-next-line no-console
             console.warn('Drag-and-drop functionality for folders is not supported by this browser.');
@@ -27,10 +27,7 @@ export class KbqDrop {
         event.stopPropagation();
 
         if (event.dataTransfer && event.dataTransfer.items.length > 0) {
-            // event.dataTransfer.items requires dom.iterable lib
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const fileEntries: FileSystemEntry[] = [...event.dataTransfer.items]
+            const fileEntries: FileSystemEntry[] = Array.from(event.dataTransfer.items)
                 .filter((item: DataTransferItem) => item.kind === 'file')
                 .map((item: DataTransferItem) => item.webkitGetAsEntry()!);
 
@@ -53,19 +50,17 @@ export class KbqFileDropDirective extends KbqDrop {
     /** Flag that controls css-class modifications on drag events. */
     protected readonly dragover = signal(false);
 
-    private nativeElement = kbqInjectNativeElement();
+    private readonly ngZone = inject(NgZone);
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor() {
         super();
 
-        effect(() => {
-            if (!this.disabled()) {
-                this.init();
-            }
-        });
+        this.init();
     }
 
-    onDragEnter(event: DragEvent) {
+    onDragEnter(event: DragEvent): void {
         event.preventDefault();
         event.stopPropagation();
 
@@ -73,13 +68,13 @@ export class KbqFileDropDirective extends KbqDrop {
     }
 
     /** @docs-private */
-    onDragOver(event: DragEvent) {
+    onDragOver(event: DragEvent): void {
         event.preventDefault();
         event.stopPropagation();
     }
 
     /** @docs-private */
-    onDragLeave(event: DragEvent) {
+    onDragLeave(event: DragEvent): void {
         if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
             return;
         }
@@ -90,27 +85,43 @@ export class KbqFileDropDirective extends KbqDrop {
     }
 
     /** @docs-private */
-    onDrop(event: DragEvent) {
+    onDrop(event: DragEvent): void {
         super.onDrop(event);
         this.dragover.set(false);
     }
 
-    private init() {
-        fromEvent<DragEvent>(this.nativeElement, 'dragenter')
-            .pipe(takeUntil(this.disabledAsObservable))
-            .subscribe((event) => this.onDragEnter(event));
+    private init(): void {
+        this.ngZone.runOutsideAngular(() => {
+            fromEvent<DragEvent>(this.nativeElement, 'dragenter')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => this.onDragEnter(e));
 
-        fromEvent<DragEvent>(this.nativeElement, 'dragover')
-            .pipe(takeUntil(this.disabledAsObservable))
-            .subscribe((event) => this.onDragOver(event));
+            fromEvent<DragEvent>(this.nativeElement, 'dragover')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => this.onDragOver(e));
 
-        fromEvent<DragEvent>(this.nativeElement, 'dragleave')
-            .pipe(takeUntil(this.disabledAsObservable))
-            .subscribe((event) => this.onDragLeave(event));
+            fromEvent<DragEvent>(this.nativeElement, 'dragleave')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => this.onDragLeave(e));
 
-        fromEvent<DragEvent>(this.nativeElement, 'drop')
-            .pipe(takeUntil(this.disabledAsObservable))
-            .subscribe((event) => this.onDrop(event));
+            fromEvent<DragEvent>(this.nativeElement, 'drop')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => {
+                    this.ngZone.run(() => this.onDrop(e));
+                });
+        });
     }
 }
 
