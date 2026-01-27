@@ -76,10 +76,11 @@ export const isOutsideViewport = ({
     providedIn: 'root'
 })
 export class KbqFullScreenDropzoneService extends KbqDrop {
+    /** Completely terminates all subscriptions when emitted */
+    private readonly dropAbort = new Subject<void>();
     private readonly overlay: Overlay = inject(Overlay);
     private readonly window = inject(KBQ_WINDOW);
     private readonly injector = inject(Injector);
-    private readonly dropAbort = new Subject<void>();
     private readonly ngZone = inject(NgZone);
     private overlayRef?: OverlayRef;
 

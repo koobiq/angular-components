@@ -10,7 +10,10 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
 
 @Directive()
 export class KbqDrop {
-    /** @docs-private */
+    /**
+     * Controls whether drag-and-drop functionality is enabled.
+     * When true, all drag events are filtered out and ignored.
+     */
     readonly disabled = model(false);
 
     /** Emits an event when file items were dropped. */
