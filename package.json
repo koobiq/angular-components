@@ -107,7 +107,7 @@
         "conventional-changelog-angular": "5.0.13",
         "conventional-changelog-writer": "5.0.1",
         "cspell": "^8.19.4",
-        "dotenv": "^16.5.0",
+        "dotenv": "^16.6.1",
         "eslint": "^8.57.1",
         "eslint-config-prettier": "^9.1.2",
         "eslint-plugin-file-progress": "^1.5.0",
