@@ -314,7 +314,7 @@ export class KbqLocalDropzone extends KbqDrop {
     }
 
     /** @docs-private */
-    protected onDrop(event: DragEvent) {
+    onDrop(event: DragEvent) {
         super.onDrop(event);
         this.close();
     }

@@ -309,7 +309,7 @@ export class KbqLocalDropzone extends KbqDrop {
     readonly connectedTo: InputSignal<KbqMultipleFileUploadComponent | KbqSingleFileUploadComponent | undefined>;
     protected createOverlay(): OverlayRef;
     protected init(): void;
-    protected onDrop(event: DragEvent): void;
+    onDrop(event: DragEvent): void;
     open(config?: KbqDropzoneData): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLocalDropzone, "[kbqLocalDropzone]", ["kbqLocalDropzone"], { "connectedTo": { "alias": "kbqConnectedTo"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
