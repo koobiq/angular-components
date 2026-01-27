@@ -40,6 +40,17 @@ export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
 export const leftIconClassName = 'kbq-icon_left';
 export const rightIconClassName = 'kbq-icon_right';
 
+/** Whether the current browser is Safari. */
+export function isSafari(userAgent: string): boolean {
+    return (
+        userAgent.includes('Safari') &&
+        !userAgent.includes('Chrome') &&
+        !userAgent.includes('Chromium') &&
+        !userAgent.includes('Edg') &&
+        !userAgent.includes('OPR')
+    );
+}
+
 /** Whether the current platform is a Mac. */
 export function isMac(): boolean {
     // eslint-disable-next-line no-restricted-globals
