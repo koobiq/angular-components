@@ -32,7 +32,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
         <kbq-multiple-file-upload inputId="file-upload-multiple-error-overview" [formControl]="fileUpload">
             <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i kbq-icon="kbq-file-text-o_16"></i>
                 }
                 @if (file.hasError) {
                     <i kbq-icon="kbq-triangle-exclamation_16"></i>
