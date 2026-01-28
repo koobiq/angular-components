@@ -34,12 +34,18 @@ test.describe('KbqFileUploadModule', () => {
         });
     });
 
-    test.describe('KbqDropzoneStyle', () => {
+    test.describe('KbqDropzone', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFileUploadDropzone');
         const getLocalDropzoneArea = (locator: Locator) => locator.getByTestId('e2eLocalDropzoneArea');
         const clickLocalDropzoneTrigger = (locator: Locator) => locator.getByTestId('e2eLocalDropzoneTrigger').click();
         const clickFullScreenDropzoneTrigger = (locator: Locator) =>
             locator.getByTestId('e2eFullScreenDropzoneTrigger').click();
+        const hideTrigger = (page: Page) =>
+            page.addStyleTag({
+                content: `
+                  .e2e-dropzone-trigger { display: none; }
+                `
+            });
 
         test('KbqLocalDropzone states', async ({ page }) => {
             await page.goto('/E2eFileUploadDropzone');
@@ -63,6 +69,8 @@ test.describe('KbqFileUploadModule', () => {
             await clickFullScreenDropzoneTrigger(locator);
 
             const screenshotTarget = page;
+
+            await hideTrigger(page);
 
             await expect(screenshotTarget).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);

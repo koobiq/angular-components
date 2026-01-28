@@ -265,11 +265,17 @@ export class E2eFileUploadStateAndStyle {
     ],
     template: `
         <div class="layout-row">
-            <button kbq-button data-testid="e2eLocalDropzoneTrigger" (click)="openLocalDropzone(dropzoneElement)">
+            <button
+                kbq-button
+                class="e2e-dropzone-trigger"
+                data-testid="e2eLocalDropzoneTrigger"
+                (click)="localDropzone().open({ title: 'Local Dropzone', caption: 'caption' })"
+            >
                 Show Local Dropzone
             </button>
             <button
                 kbq-button
+                class="e2e-dropzone-trigger"
                 data-testid="e2eFullScreenDropzoneTrigger"
                 (click)="
                     fullScreenDropzoneService.open({
@@ -295,7 +301,7 @@ export class E2eFileUploadStateAndStyle {
 
         <div
             #dropzoneElement
-            style="height: 300px; width: 300px; display: none"
+            style="height: 300px; width: 300px"
             data-testid="e2eLocalDropzoneArea"
             kbqLocalDropzone
         ></div>
@@ -309,9 +315,4 @@ export class E2eFileUploadStateAndStyle {
 export class E2eFileUploadDropzone {
     protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
     protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
-
-    openLocalDropzone(dropzoneElement: HTMLElement) {
-        dropzoneElement.style.display = 'block';
-        this.localDropzone().open({ title: 'Local Dropzone', caption: 'caption' });
-    }
 }
