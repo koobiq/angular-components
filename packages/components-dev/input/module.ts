@@ -26,13 +26,29 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import {
+    InputChangePasswordExample,
+    InputNumberOverviewExample,
+    InputOverviewExample,
+    InputPasswordOverviewExample,
+    InputWithMaskExample
+} from 'packages/docs-examples/components/input';
 import { startWith } from 'rxjs';
-import { InputExamplesModule } from '../../docs-examples/components/input';
 
 @Component({
     selector: 'dev-examples',
-    imports: [InputExamplesModule],
+    imports: [
+        InputOverviewExample,
+        InputNumberOverviewExample,
+        InputPasswordOverviewExample,
+        InputChangePasswordExample,
+        InputWithMaskExample
+    ],
     template: `
+        <input-with-mask-example />
+        <hr />
+        <input-overview-example />
+        <hr />
         <input-number-overview-example />
         <hr />
         <input-password-overview-example />

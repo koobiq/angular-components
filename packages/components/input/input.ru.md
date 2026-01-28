@@ -15,3 +15,15 @@
 ### Password input
 
 <!-- example(input-password-overview) -->
+
+### Использование масок ввода
+
+Маски ввода контролируют формат и валидируют данные в реальном времени.
+
+В примере используется библиотека [Maskito](https://maskito.dev/):
+
+```bash
+npm install @maskito/core @maskito/angular @maskito/kit
+```
+
+<!-- example(input-with-mask) -->
