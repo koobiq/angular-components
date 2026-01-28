@@ -78,9 +78,12 @@ export class KbqFileDropDirective extends KbqDrop {
 
     /** @docs-private */
     onDragLeave(event: DragEvent): void {
-        if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
-
-        if (event.currentTarget?.contains(event.relatedTarget)) return;
+        if (
+            isHtmlElementOrNull(event.currentTarget) &&
+            isHtmlElementOrNull(event.relatedTarget) &&
+            event.currentTarget?.contains(event.relatedTarget)
+        )
+            return;
 
         event.preventDefault();
         event.stopPropagation();

@@ -13,6 +13,7 @@ import {
     Injector,
     input,
     NgZone,
+    OnDestroy,
     TemplateRef,
     ViewContainerRef,
     ViewEncapsulation
@@ -76,7 +77,7 @@ export const isOutsideViewport = ({
 @Injectable({
     providedIn: 'root'
 })
-export class KbqFullScreenDropzoneService extends KbqDrop {
+export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     /** Completely terminates all subscriptions when emitted */
     private readonly dropAbort = new Subject<void>();
     private readonly overlay: Overlay = inject(Overlay);
@@ -87,6 +88,10 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
 
     constructor() {
         super();
+    }
+
+    ngOnDestroy() {
+        this.close();
     }
 
     /**
@@ -369,11 +374,10 @@ export class KbqLocalDropzone extends KbqDrop {
         @if (title()) {
             <div kbq-empty-state-title>{{ title() }}</div>
         }
-        @let captionText = caption();
-        @if (captionText) {
+        @if (caption(); as captionText) {
             <div kbq-empty-state-text>
                 @if (isTemplateRef(captionText)) {
-                    <ng-container [ngTemplateOutlet]="$any(captionText)" />
+                    <ng-container [ngTemplateOutlet]="captionText" />
                 } @else if (captionText) {
                     {{ captionText }}
                 }
@@ -399,7 +403,7 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
     }
 
     /** @docs-private */
-    protected isTemplateRef(value: string | TemplateRef<any>): boolean {
+    protected isTemplateRef(value: string | TemplateRef<any>): value is TemplateRef<any> {
         return value instanceof TemplateRef;
     }
 }

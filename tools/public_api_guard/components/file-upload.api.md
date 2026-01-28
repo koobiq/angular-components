@@ -41,6 +41,7 @@ import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
@@ -234,7 +235,7 @@ export class KbqFileUploadContext {
 export class KbqFileUploadEmptyState extends KbqEmptyState {
     constructor();
     caption: InputSignal<string | TemplateRef<any> | undefined>;
-    protected isTemplateRef(value: string | TemplateRef<any>): boolean;
+    protected isTemplateRef(value: string | TemplateRef<any>): value is TemplateRef<any>;
     title: InputSignal<string | undefined>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFileUploadEmptyState, "kbq-file-upload-empty-state", never, { "title": { "alias": "title"; "required": false; "isSignal": true; }; "caption": { "alias": "caption"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
@@ -260,11 +261,13 @@ export class KbqFileUploadModule {
 export type KbqFileValidatorFn = (file: File) => string | null;
 
 // @public
-export class KbqFullScreenDropzoneService extends KbqDrop {
+export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     constructor();
     close(): void;
     protected createOverlay(): OverlayRef;
     init(config?: KbqDropzoneData): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     onDrop(event: DragEvent): void;
     open(config?: KbqDropzoneData): void;
     stop(): void;
