@@ -34,11 +34,9 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
         <form [formGroup]="formMultiple">
             <kbq-file-upload
                 #kbqFileUpload
-                class="layout-margin-bottom-s"
                 multiple
                 formControlName="fileUpload"
                 [accept]="accept"
-                [progressMode]="'indeterminate'"
                 (itemRemoved)="onFileRemoved($event)"
                 (itemsAdded)="onFilesAdded($event)"
             >
@@ -96,7 +94,6 @@ export class FileUploadMultipleErrorFilledExample {
 
     constructor() {
         this.fileList.statusChanges.pipe(takeUntilDestroyed()).subscribe(() => {
-            console.log('statusChanges');
             this.fileList.controls.forEach((control) => {
                 if (control?.value && 'hasError' in control.value) {
                     control.value.hasError = control.invalid;

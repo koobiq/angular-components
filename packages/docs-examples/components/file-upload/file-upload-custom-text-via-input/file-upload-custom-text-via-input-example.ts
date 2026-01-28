@@ -99,13 +99,13 @@ const localeData = {
     template: `
         <kbq-file-upload multiple [localeConfig]="multipleLocaleConfig()">
             <ng-template #kbqFileIcon>
-                <i kbq-icon="kbq-file-o_16"></i>
+                <i kbq-icon="kbq-file-text-o_16"></i>
             </ng-template>
         </kbq-file-upload>
 
         <kbq-file-upload [localeConfig]="singleLocaleConfig()">
             <ng-template #kbqFileIcon>
-                <i kbq-icon="kbq-file-o_16"></i>
+                <i kbq-icon="kbq-file-text-o_16"></i>
             </ng-template>
         </kbq-file-upload>
     `,
