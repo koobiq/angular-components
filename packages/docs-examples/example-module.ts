@@ -1216,6 +1216,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-recursive-template-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-with-filter": {
+    "packagePath": "components/dropdown/dropdown-with-filter",
+    "title": "Dropdown with filter",
+    "componentName": "DropdownWithFilterExample",
+    "files": [
+      "dropdown-with-filter-example.ts"
+    ],
+    "selector": "dropdown-with-filter-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-with-filter-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dynamic-translation-overview": {
     "packagePath": "components/dynamic-translation/dynamic-translation-overview",
     "title": "Dynamic translation overview example",
@@ -5878,6 +5890,8 @@ return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-overview':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-recursive-template':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-with-filter':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dynamic-translation-overview':
 return import('@koobiq/docs-examples/components/dynamic-translation');

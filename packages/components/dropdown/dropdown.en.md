@@ -27,3 +27,7 @@ A "cyclic navigation" mode where reaching one end of the list loops back to the 
 Recursive rendering of an array or object, allowing the creation of nested dropdown menus.
 
 <!-- example(dropdown-recursive-template) -->
+
+### Menu Search
+
+<!-- example(dropdown-with-filter) -->

@@ -7,13 +7,34 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { DropdownExamplesModule } from 'packages/docs-examples/components/dropdown';
+import {
+    DropdownDisabledExample,
+    DropdownLazyloadDataExample,
+    DropdownNavigationWrapExample,
+    DropdownNestedExample,
+    DropdownOpenByArrowDownExample,
+    DropdownOverviewExample,
+    DropdownRecursiveTemplateExample,
+    DropdownWithFilterExample
+} from 'packages/docs-examples/components/dropdown';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [DropdownExamplesModule],
+    imports: [
+        DropdownNestedExample,
+        DropdownOverviewExample,
+        DropdownNavigationWrapExample,
+        DropdownDisabledExample,
+        DropdownLazyloadDataExample,
+        DropdownOpenByArrowDownExample,
+        DropdownRecursiveTemplateExample,
+        DropdownWithFilterExample
+    ],
     template: `
+        <dropdown-with-filter-example />
+        <hr />
+
         <dropdown-nested-example />
         <hr />
 
