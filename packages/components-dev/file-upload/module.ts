@@ -126,8 +126,9 @@ export class DevCustomTextDirective {}
         <hr />
         <file-upload-multiple-with-fixed-height-example />
         <hr />
-
         <file-upload-dropzone-example />
+        <hr />
+        <file-upload-local-dropzone-example />
         <hr />
         <file-upload-cva-overview-example />
         <hr />

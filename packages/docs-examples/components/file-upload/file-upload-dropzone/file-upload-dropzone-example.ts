@@ -39,6 +39,11 @@ import { KbqIcon } from '@koobiq/components/icon';
             .kbq-empty-state {
                 height: 128px;
             }
+
+            .kbq-multiple-file-upload {
+                --kbq-file-upload-size-multiple-min-height: 120px;
+                --kbq-file-upload-size-multiple-max-height: 120px;
+            }
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
