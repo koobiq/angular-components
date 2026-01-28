@@ -328,9 +328,9 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     onFileSelectedViaClick({ target }: Event): void {
-        if (this.disabled || !(target instanceof HTMLInputElement)) return;
+        if (this.disabled) return;
 
-        const fileToAdd = target.files?.item(0);
+        const fileToAdd = target instanceof HTMLInputElement ? target.files?.item(0) : null;
 
         if (fileToAdd) {
             this.file = this.mapToFileItem(fileToAdd);

@@ -57,28 +57,23 @@ function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME
 const createMockFile = (fileName: string = FILE_NAME, options?: FilePropertyBag) =>
     new File(['test'] satisfies BlobPart[], fileName, options);
 
-const getMockedChangeEventForMultiple = (fileNameOrFakeFile: string | Partial<File>) => {
+const getMockedChangeEvent = (fileNameOrFakeFile: string | Partial<File>) => {
     const event = createFakeEvent('change');
 
-    Object.defineProperty(event, 'target', {
+    const file = typeof fileNameOrFakeFile === 'string' ? createMockFile(fileNameOrFakeFile) : fileNameOrFakeFile;
+
+    const target = document.createElement('input');
+
+    Object.defineProperty(target, 'files', {
         get: () => ({
-            files: [typeof fileNameOrFakeFile === 'string' ? createMockFile(fileNameOrFakeFile) : fileNameOrFakeFile]
+            item: (_index: number) => file as File,
+            length: 1,
+            0: file as File
         })
     });
 
-    return event;
-};
-
-const getMockedChangeEventForSingle = (fileNameOrFakeFile: string | Partial<File>) => {
-    const event = createFakeEvent('change');
-
     Object.defineProperty(event, 'target', {
-        get: () => ({
-            files: {
-                item: (_: number) =>
-                    typeof fileNameOrFakeFile === 'string' ? createMockFile(fileNameOrFakeFile) : fileNameOrFakeFile
-            }
-        })
+        get: () => target
     });
 
     return event;
@@ -164,7 +159,7 @@ describe('KbqMultipleFileUploadComponent', () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             const subscription = component.fileUpload.filesChange.subscribe((value) => {
@@ -360,7 +355,7 @@ describe('KbqSingleFileUploadComponent', () => {
         it('should remove file via button keydown.delete', () => {
             component.disabled = false;
             fixture.detectChanges();
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             const subscription = component.fileUpload.fileChange.subscribe((value) => {
