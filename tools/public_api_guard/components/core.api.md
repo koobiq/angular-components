@@ -766,9 +766,6 @@ export function isMac(): boolean;
 export const isNull: (value: unknown) => value is null;
 
 // @public
-export function isSafari(userAgent: string): boolean;
-
-// @public
 export const isUndefined: (value: unknown) => value is undefined;
 
 // @public (undocumented)

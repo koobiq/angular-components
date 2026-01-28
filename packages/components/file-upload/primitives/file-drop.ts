@@ -1,3 +1,4 @@
+import { Platform } from '@angular/cdk/platform';
 import { DestroyRef, Directive, inject, model, NgZone, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
@@ -10,6 +11,8 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
 
 @Directive()
 export class KbqDrop {
+    /** @docs-private */
+    isSafari = inject(Platform).SAFARI;
     /**
      * Controls whether drag-and-drop functionality is enabled.
      * When true, all drag events are filtered out and ignored.

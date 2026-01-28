@@ -80,6 +80,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
 export class KbqDrop {
     readonly disabled: ModelSignal<boolean>;
     readonly filesDropped: OutputEmitterRef<KbqFile[]>;
+    isSafari: boolean;
     protected onDrop(event: DragEvent): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDrop, never, never, { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "disabled": "disabledChange"; "filesDropped": "filesDropped"; }, never, never, true, never>;

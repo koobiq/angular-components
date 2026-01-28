@@ -21,7 +21,6 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
     isHtmlElementOrNull,
-    isSafari,
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KBQ_WINDOW,
@@ -193,7 +192,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     private onDragLeave(event: DragEvent): void {
         if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
 
-        const isWithinViewport = isSafari(this.window.navigator.userAgent)
+        const isWithinViewport = this.isSafari
             ? !isOutsideViewport({
                   event,
                   innerWidth: this.window.innerWidth,
@@ -233,7 +232,6 @@ export class KbqLocalDropzone extends KbqDrop {
     private readonly overlay: Overlay = inject(Overlay);
     private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
     private readonly injector = inject(Injector);
-    private readonly window = inject(KBQ_WINDOW);
     private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
     private overlayRef?: OverlayRef;
@@ -337,7 +335,7 @@ export class KbqLocalDropzone extends KbqDrop {
     private onDragLeave(event: DragEvent): void {
         if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
 
-        const isWithinViewport = isSafari(this.window.navigator.userAgent)
+        const isWithinViewport = this.isSafari
             ? !isOutsideViewport({
                   event,
                   innerWidth: this.rects.x + this.elementRef.offsetWidth,
