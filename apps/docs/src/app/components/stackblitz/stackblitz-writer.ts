@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, VERSION } from '@angular/core';
 import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
 import { default as StackBlitzSDK } from '@stackblitz/sdk';
 import { Observable, firstValueFrom } from 'rxjs';
@@ -74,6 +74,10 @@ export class DocsStackblitzWriter {
     private replaceExamplePlaceholders(data: ExampleData, fileName: string, fileContent: string): string {
         if (fileName === 'src/index.html' || fileName === 'package.json') {
             fileContent = fileContent.replace(/\${version}/g, `^${docsKoobiqVersion}`);
+        }
+
+        if (fileName === 'package.json') {
+            fileContent = fileContent.replace(/\${ngVersion}/g, `^${VERSION.full}`);
         }
 
         if (fileName === 'src/index.html') {
