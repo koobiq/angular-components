@@ -346,9 +346,9 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     onFileSelectedViaClick({ target }: Event) {
-        if (this.disabled) return;
+        if (this.disabled || !(target instanceof HTMLInputElement)) return;
 
-        const filesToAdd = this.mapToFileItem((target as HTMLInputElement).files);
+        const filesToAdd = this.mapToFileItem(target.files);
 
         this.onFileAdded(filesToAdd);
         // allows the same file selection every time user clicks on the control.

@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
+    isHtmlElementOrNull,
     isSafari,
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
@@ -185,6 +186,8 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
 
     /** @see https://bugs.webkit.org/show_bug.cgi?id=66547 */
     private onDragLeave(event: DragEvent): void {
+        if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
+
         const isWithinViewport = isSafari(this.window.navigator.userAgent)
             ? !isOutsideViewport({
                   event,
@@ -193,7 +196,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
                   xAxisMinThreshold: 0,
                   yAxisMinThreshold: 0
               })
-            : (event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement);
+            : event.currentTarget?.contains(event.relatedTarget);
 
         if (isWithinViewport) return;
 
@@ -203,6 +206,12 @@ export class KbqFullScreenDropzoneService extends KbqDrop {
     }
 }
 
+/**
+ * Directive that turns an element into a local drag-and-drop zone.
+ *
+ * Displays an overlay over the host element on drag enter, handles drag events,
+ * and emits dropped files to a connected file upload component.
+ */
 @Directive({
     selector: '[kbqLocalDropzone]',
     exportAs: 'kbqLocalDropzone',
@@ -265,6 +274,12 @@ export class KbqLocalDropzone extends KbqDrop {
         this.overlayRef?.dispose();
     }
 
+    /** @docs-private */
+    onDrop(event: DragEvent) {
+        super.onDrop(event);
+        this.close();
+    }
+
     /**
      * Initializes drag-and-drop event listeners on the overlay element.
      * Handles dragover, dragleave, and drop events to manage overlay state and file drops.
@@ -314,13 +329,9 @@ export class KbqLocalDropzone extends KbqDrop {
         });
     }
 
-    /** @docs-private */
-    onDrop(event: DragEvent) {
-        super.onDrop(event);
-        this.close();
-    }
-
     private onDragLeave(event: DragEvent): void {
+        if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
+
         const isWithinViewport = isSafari(this.window.navigator.userAgent)
             ? !isOutsideViewport({
                   event,
@@ -329,7 +340,7 @@ export class KbqLocalDropzone extends KbqDrop {
                   xAxisMinThreshold: this.rects.x,
                   yAxisMinThreshold: this.rects.y
               })
-            : (event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement);
+            : event.currentTarget?.contains(event.relatedTarget);
 
         if (isWithinViewport) return;
 

@@ -12,6 +12,16 @@ export const isNull = (value: unknown): value is null => {
     return value === null;
 };
 
+/** Whether the value is HTMLElement. */
+export const isHtmlElement = (value: unknown): value is HTMLElement => {
+    return value instanceof HTMLElement;
+};
+
+/** Whether the value is HTMLElement or null. */
+export const isHtmlElementOrNull = (value: unknown): value is HTMLElement | null => {
+    return isHtmlElement(value) || isNull(value);
+};
+
 /**
  * Will be removed in the next major release
  *

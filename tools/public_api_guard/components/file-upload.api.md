@@ -302,7 +302,7 @@ export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleCo
     [k: string | number | symbol]: unknown;
 }
 
-// @public (undocumented)
+// @public
 export class KbqLocalDropzone extends KbqDrop {
     constructor();
     close(): void;

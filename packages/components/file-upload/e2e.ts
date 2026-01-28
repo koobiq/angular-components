@@ -257,7 +257,7 @@ export class E2eFileUploadStateAndStyle {
 }
 
 @Component({
-    selector: 'e2e-dropzone',
+    selector: 'e2e-file-upload-dropzone',
     imports: [
         KbqButton,
         KbqButtonCssStyler,
@@ -265,11 +265,7 @@ export class E2eFileUploadStateAndStyle {
     ],
     template: `
         <div class="layout-row">
-            <button
-                kbq-button
-                data-testid="e2eLocalDropzoneTrigger"
-                (click)="localDropzone().open({ title: 'Local Dropzone', caption: 'caption' })"
-            >
+            <button kbq-button data-testid="e2eLocalDropzoneTrigger" (click)="openLocalDropzone(dropzoneElement)">
                 Show Local Dropzone
             </button>
             <button
@@ -287,15 +283,35 @@ export class E2eFileUploadStateAndStyle {
             </button>
         </div>
 
-        <div style="height: 300px; width: 300px" data-testid="e2eLocalDropzoneArea" kbqLocalDropzone></div>
+        <span>
+            In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to
+            make a machine or network resource unavailable to its intended users by temporarily or indefinitely
+            disrupting services of a host connected to a network. Denial of service is typically accomplished by
+            flooding the targeted machine or resource with superfluous requests in an attempt to overload systems and
+            prevent some or all legitimate requests from being fulfilled. The range of attacks varies widely, spanning
+            from inundating a server with millions of requests to slow its performance, overwhelming a server with a
+            substantial amount of invalid data, to submitting requests with an illegitimate IP address.
+        </span>
+
+        <div
+            #dropzoneElement
+            style="height: 300px; width: 300px; display: none"
+            data-testid="e2eLocalDropzoneArea"
+            kbqLocalDropzone
+        ></div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
-        'data-testid': 'e2eDropzone'
+        'data-testid': 'e2eFileUploadDropzone'
     }
 })
-export class E2eDropzone {
+export class E2eFileUploadDropzone {
     protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
     protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
+
+    openLocalDropzone(dropzoneElement: HTMLElement) {
+        dropzoneElement.style.display = 'block';
+        this.localDropzone().open({ title: 'Local Dropzone', caption: 'caption' });
+    }
 }

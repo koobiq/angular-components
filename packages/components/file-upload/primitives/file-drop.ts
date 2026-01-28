@@ -1,6 +1,6 @@
 import { DestroyRef, Directive, inject, model, NgZone, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
 import { filter, fromEvent } from 'rxjs';
 import { KbqFile } from '../file-upload';
 
@@ -78,9 +78,9 @@ export class KbqFileDropDirective extends KbqDrop {
 
     /** @docs-private */
     onDragLeave(event: DragEvent): void {
-        if ((event.currentTarget as HTMLElement).contains(event.relatedTarget as HTMLElement)) {
-            return;
-        }
+        if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
+
+        if (event.currentTarget?.contains(event.relatedTarget)) return;
 
         event.preventDefault();
         event.stopPropagation();

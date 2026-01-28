@@ -35,14 +35,14 @@ test.describe('KbqFileUploadModule', () => {
     });
 
     test.describe('KbqDropzoneStyle', () => {
-        const getComponent = (page: Page) => page.getByTestId('e2eDropzone');
+        const getComponent = (page: Page) => page.getByTestId('e2eFileUploadDropzone');
         const getLocalDropzoneArea = (locator: Locator) => locator.getByTestId('e2eLocalDropzoneArea');
         const clickLocalDropzoneTrigger = (locator: Locator) => locator.getByTestId('e2eLocalDropzoneTrigger').click();
         const clickFullScreenDropzoneTrigger = (locator: Locator) =>
             locator.getByTestId('e2eFullScreenDropzoneTrigger').click();
 
         test('KbqLocalDropzone states', async ({ page }) => {
-            await page.goto('/E2eDropzone');
+            await page.goto('/E2eFileUploadDropzone');
             const locator = getComponent(page);
 
             await clickLocalDropzoneTrigger(locator);
@@ -57,7 +57,7 @@ test.describe('KbqFileUploadModule', () => {
         test('KbqFullScreenDropzone states', async ({ page }) => {
             await page.setViewportSize({ width: 300, height: 300 });
 
-            await page.goto('/E2eDropzone');
+            await page.goto('/E2eFileUploadDropzone');
             const locator = getComponent(page);
 
             await clickFullScreenDropzoneTrigger(locator);
