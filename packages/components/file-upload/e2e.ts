@@ -1,12 +1,15 @@
 import { DOCUMENT } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, inject, Renderer2 } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, Renderer2, viewChild } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import {
     KbqFileItem,
     KbqFileUploadAllowedType,
     KbqFileUploadAllowedTypeValues,
     KbqFileUploadModule,
+    KbqFullScreenDropzoneService,
+    KbqLocalDropzone,
     KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -42,7 +45,12 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
     selector: 'e2e-file-upload-state-and-style',
-    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule, FormsModule],
+    imports: [
+        KbqFileUploadModule,
+        ReactiveFormsModule,
+        KbqIconModule,
+        FormsModule
+    ],
     template: `
         <div>
             <table data-testid="e2eSingleFileUploadTable">
@@ -246,4 +254,65 @@ export class E2eFileUploadStateAndStyle {
     }
 
     protected readonly kbqFileUploadAllowedTypes = KbqFileUploadAllowedType;
+}
+
+@Component({
+    selector: 'e2e-file-upload-dropzone',
+    imports: [
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqLocalDropzone
+    ],
+    template: `
+        <div class="layout-row">
+            <button
+                kbq-button
+                class="e2e-dropzone-trigger"
+                data-testid="e2eLocalDropzoneTrigger"
+                (click)="localDropzone().open({ title: 'Local Dropzone', caption: 'caption' })"
+            >
+                Show Local Dropzone
+            </button>
+            <button
+                kbq-button
+                class="e2e-dropzone-trigger"
+                data-testid="e2eFullScreenDropzoneTrigger"
+                (click)="
+                    fullScreenDropzoneService.open({
+                        title: 'Full-screen dropzone',
+                        caption: 'caption',
+                        size: 'normal'
+                    })
+                "
+            >
+                Show FullScreen Dropzone
+            </button>
+        </div>
+
+        <span>
+            In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to
+            make a machine or network resource unavailable to its intended users by temporarily or indefinitely
+            disrupting services of a host connected to a network. Denial of service is typically accomplished by
+            flooding the targeted machine or resource with superfluous requests in an attempt to overload systems and
+            prevent some or all legitimate requests from being fulfilled. The range of attacks varies widely, spanning
+            from inundating a server with millions of requests to slow its performance, overwhelming a server with a
+            substantial amount of invalid data, to submitting requests with an illegitimate IP address.
+        </span>
+
+        <div
+            #dropzoneElement
+            style="height: 300px; width: 300px"
+            data-testid="e2eLocalDropzoneArea"
+            kbqLocalDropzone
+        ></div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
+        'data-testid': 'e2eFileUploadDropzone'
+    }
+})
+export class E2eFileUploadDropzone {
+    protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
+    protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
 }

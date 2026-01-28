@@ -17,6 +17,7 @@ import {
     KbqMultipleFileUploadLocaleConfig
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { KbqFullScreenDropzoneService } from './dropzone';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
 
 export interface KbqFile extends File {
@@ -146,6 +147,8 @@ export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> imple
     protected readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
     /** @docs-private */
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    /** @docs-private */
+    protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
 
     /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate
      * @docs-private */

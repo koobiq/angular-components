@@ -1,44 +1,29 @@
-import { Directive, output } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
+import { DestroyRef, Directive, inject, model, NgZone, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
+import { filter, fromEvent } from 'rxjs';
 import { KbqFile } from '../file-upload';
 
 const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferItem.prototype;
 const entryIsDirectory = (entry?: FileSystemEntry): entry is FileSystemDirectoryEntry => !!entry && entry.isDirectory;
 const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !!entry && entry.isFile;
 
-@Directive({
-    selector: '[kbqFileDrop]',
-    exportAs: 'kbqFileDrop',
-    host: {
-        class: 'kbq-file-drop',
-        '[class.kbq-file-drop_dragover]': 'dragover',
-        '(dragover)': 'onDragOver($event)',
-        '(dragleave)': 'onDragLeave($event)',
-        '(drop)': 'onDrop($event)'
-    }
-})
-export class KbqFileDropDirective {
-    /** Flag that controls css-class modifications on drag events. */
-    dragover: boolean;
+@Directive()
+export class KbqDrop {
+    /** @docs-private */
+    isSafari = inject(Platform).SAFARI;
+    /**
+     * Controls whether drag-and-drop functionality is enabled.
+     * When true, all drag events are filtered out and ignored.
+     */
+    readonly disabled = model(false);
 
     /** Emits an event when file items were dropped. */
     readonly filesDropped = output<KbqFile[]>();
 
     /** @docs-private */
-    onDragOver(event: DragEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.dragover = true;
-    }
-
-    /** @docs-private */
-    onDragLeave(event: DragEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.dragover = false;
-    }
-
-    /** @docs-private */
-    onDrop(event: DragEvent) {
+    protected onDrop(event: DragEvent) {
         if (!isFolderCanBeDragged()) {
             // eslint-disable-next-line no-console
             console.warn('Drag-and-drop functionality for folders is not supported by this browser.');
@@ -46,13 +31,9 @@ export class KbqFileDropDirective {
 
         event.preventDefault();
         event.stopPropagation();
-        this.dragover = false;
 
         if (event.dataTransfer && event.dataTransfer.items.length > 0) {
-            // event.dataTransfer.items requires dom.iterable lib
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const fileEntries: FileSystemEntry[] = [...event.dataTransfer.items]
+            const fileEntries: FileSystemEntry[] = Array.from(event.dataTransfer.items)
                 .filter((item: DataTransferItem) => item.kind === 'file')
                 .map((item: DataTransferItem) => item.webkitGetAsEntry()!);
 
@@ -60,6 +41,96 @@ export class KbqFileDropDirective {
                 .then((fileList) => fileList.reduce((res, next) => res.concat(next), []))
                 .then((entries: KbqFile[]) => this.filesDropped.emit(entries));
         }
+    }
+}
+
+@Directive({
+    selector: '[kbqFileDrop]',
+    exportAs: 'kbqFileDrop',
+    host: {
+        class: 'kbq-file-drop',
+        '[class.kbq-file-drop_dragover]': 'dragover()'
+    }
+})
+export class KbqFileDropDirective extends KbqDrop {
+    /** Flag that controls css-class modifications on drag events. */
+    protected readonly dragover = signal(false);
+
+    private readonly ngZone = inject(NgZone);
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly destroyRef = inject(DestroyRef);
+
+    constructor() {
+        super();
+
+        this.init();
+    }
+
+    onDragEnter(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.dragover.set(true);
+    }
+
+    /** @docs-private */
+    onDragOver(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    /** @docs-private */
+    onDragLeave(event: DragEvent): void {
+        if (
+            isHtmlElementOrNull(event.currentTarget) &&
+            isHtmlElementOrNull(event.relatedTarget) &&
+            event.currentTarget?.contains(event.relatedTarget)
+        )
+            return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.dragover.set(false);
+    }
+
+    /** @docs-private */
+    onDrop(event: DragEvent): void {
+        super.onDrop(event);
+        this.dragover.set(false);
+    }
+
+    private init(): void {
+        this.ngZone.runOutsideAngular(() => {
+            fromEvent<DragEvent>(this.nativeElement, 'dragenter')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => this.onDragEnter(e));
+
+            fromEvent<DragEvent>(this.nativeElement, 'dragover')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => this.onDragOver(e));
+
+            fromEvent<DragEvent>(this.nativeElement, 'dragleave')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => this.onDragLeave(e));
+
+            fromEvent<DragEvent>(this.nativeElement, 'drop')
+                .pipe(
+                    filter(() => !this.disabled()),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((e) => {
+                    this.ngZone.run(() => this.onDrop(e));
+                });
+        });
     }
 }
 

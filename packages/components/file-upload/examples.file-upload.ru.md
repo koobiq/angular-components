@@ -76,3 +76,7 @@
 Пример демонстрирует применение примитивов компонента загрузки файлов.
 
 <!-- example(file-upload-primitive) -->
+
+### Дроп-зона
+
+<!-- example(file-upload-dropzone) -->

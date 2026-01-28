@@ -754,6 +754,12 @@ export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<Has
 export function isBoolean(value: unknown): value is boolean;
 
 // @public
+export const isHtmlElement: (value: unknown) => value is HTMLElement;
+
+// @public
+export const isHtmlElementOrNull: (value: unknown) => value is HTMLElement | null;
+
+// @public
 export function isMac(): boolean;
 
 // @public

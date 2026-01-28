@@ -74,3 +74,7 @@ The examples use [FileValidators](https://github.com/koobiq/angular-components/b
 This example demonstrates the use of file upload component primitives.
 
 <!-- example(file-upload-primitive) -->
+
+### Dropzone
+
+<!-- example(file-upload-dropzone) -->

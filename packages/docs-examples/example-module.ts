@@ -1528,6 +1528,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-cva-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-dropzone": {
+    "packagePath": "components/file-upload/file-upload-dropzone",
+    "title": "File-upload Dropzone",
+    "componentName": "FileUploadDropzoneExample",
+    "files": [
+      "file-upload-dropzone-example.ts"
+    ],
+    "selector": "file-upload-dropzone-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-dropzone-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-indeterminate-loading-overview": {
     "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
     "title": "File-upload indeterminate loading",
@@ -5942,6 +5954,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-custom-text-via-input':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-cva-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-dropzone':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-indeterminate-loading-overview':
 return import('@koobiq/docs-examples/components/file-upload');
