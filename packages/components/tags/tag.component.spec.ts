@@ -595,6 +595,19 @@ describe(KbqTag.name, () => {
         expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
+    it('should add "cdk-keyboard-focused" class when editing', async () => {
+        const fixture = createComponent(TestTag);
+        const tag = getTagElement(fixture.debugElement);
+
+        expect(tag.classList.contains('cdk-keyboard-focused')).toBeFalsy();
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        await fixture.whenStable();
+
+        expect(tag.classList.contains('cdk-keyboard-focused')).toBeTruthy();
+    });
+
     it('should select tag in tag-list on Ctrl + click', () => {
         const { debugElement } = createComponent(TestTagInsideTagList);
         const tag = getTagElement(debugElement);

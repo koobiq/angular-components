@@ -591,6 +591,7 @@ export class KbqTag
 
             if (!input) throw getTagEditInputMissingError();
 
+            this.focusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
             input.select();
         });
     }
