@@ -453,7 +453,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     private createPopupPositionStrategy(): PositionStrategy {
         return this.overlay
             .position()
-            .flexibleConnectedTo(this.datepickerInput.elementRef)
+            .flexibleConnectedTo(this.datepickerInput.getOrigin())
             .withTransformOriginOn('.kbq-datepicker__content')
             .withFlexibleDimensions(false)
             .withViewportMargin(8)
