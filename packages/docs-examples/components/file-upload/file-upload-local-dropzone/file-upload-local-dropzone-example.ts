@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
-import { KbqLocalDropzone, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
+import { KbqLocalDropzone, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 
 /**
  * @title File-upload local dropzone
@@ -9,34 +9,21 @@ import { KbqLocalDropzone, KbqMultipleFileUploadComponent } from '@koobiq/compon
 @Component({
     selector: 'file-upload-local-dropzone-example',
     imports: [
-        KbqMultipleFileUploadComponent,
         KbqLocalDropzone,
         KbqButtonModule,
-        KbqContentPanelModule
+        KbqContentPanelModule,
+        KbqSingleFileUploadComponent
     ],
     template: `
-        <kbq-content-panel-container maxWidth="600" minWidth="250" width="600" [opened]="true">
-            <kbq-content-panel>
-                <kbq-content-panel-header>
-                    <div kbqContentPanelHeaderTitle>Local dropzone</div>
-                </kbq-content-panel-header>
-                <kbq-content-panel-body kbqLocalDropzone [kbqConnectedTo]="fileUploadLocal">
-                    <span class="kbq-subheading">Drop file here</span>
+        <kbq-content-panel-container maxWidth="400" minWidth="400" x [opened]="true" [disableClose]="true">
+            Manchester United, one of the most iconic football clubs in the world, is renowned for its rich history,
+            legendary players, and unparalleled success.
 
-                    @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                        <p>
-                            In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
-                            which the perpetrator seeks to make a machine or network resource unavailable to its
-                            intended users by temporarily or indefinitely disrupting services of a host connected to a
-                            network. Denial of service is typically accomplished by flooding the targeted machine or
-                            resource with superfluous requests in an attempt to overload systems and prevent some or all
-                            legitimate requests from being fulfilled. The range of attacks varies widely, spanning from
-                            inundating a server with millions of requests to slow its performance, overwhelming a server
-                            with a substantial amount of invalid data, to submitting requests with an illegitimate IP
-                            address.
-                        </p>
-                    }
-                    <kbq-file-upload #fileUploadLocal multiple />
+            <kbq-content-panel>
+                <kbq-content-panel-body kbqLocalDropzone [kbqConnectedTo]="fileUploadLocal">
+                    <div class="layout-margin-bottom-m layout-margin-top-xxl">Drag your files on sidepanel</div>
+
+                    <kbq-file-upload #fileUploadLocal />
                 </kbq-content-panel-body>
             </kbq-content-panel>
         </kbq-content-panel-container>

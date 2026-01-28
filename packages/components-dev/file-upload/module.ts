@@ -31,14 +31,8 @@ import {
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
-    KbqFileDropDirective,
     KbqFileItem,
-    KbqFileList,
     KbqFileUploadModule,
-    KbqFullscreenDropzone,
-    KbqLocalDropzone,
-    KbqLocalDropzoneDirective,
-    KbqSingleFileUploadComponent,
     KbqFileValidatorFn
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -110,27 +104,43 @@ export class DevCustomTextDirective {}
     selector: 'dev-examples',
     imports: [FileUploadExamplesModule],
     template: `
+        <file-upload-single-overview-example />
+        <hr />
+        <file-upload-multiple-default-overview-example />
+        <hr />
+        <file-upload-multiple-compact-overview-example />
+        <hr />
+        <file-upload-single-with-size-example />
+        <hr />
+        <file-upload-multiple-with-custom-icon-example />
+        <hr />
+        <file-upload-multiple-disabled-example />
+        <hr />
         <file-upload-allowed-example />
+        <hr />
+        <file-upload-multiple-error-example />
+        <hr />
+        <file-upload-multiple-error-filled-example />
+        <hr />
+        <file-upload-multiple-with-max-height-example />
+        <hr />
+        <file-upload-multiple-with-fixed-height-example />
+        <hr />
+        <file-upload-dropzone-example />
+        <hr />
+        <file-upload-local-dropzone-example />
         <hr />
         <file-upload-cva-overview-example />
         <hr />
         <file-upload-indeterminate-loading-overview-example />
         <hr />
-        <file-upload-multiple-compact-overview-example />
-        <hr />
         <file-upload-multiple-custom-text-overview-example />
         <hr />
         <file-upload-custom-text-via-input-example />
         <hr />
-        <file-upload-multiple-default-overview-example />
-        <hr />
         <file-upload-multiple-default-validation-reactive-forms-overview-example />
         <hr />
-        <file-upload-multiple-error-example />
-        <hr />
         <file-upload-multiple-required-reactive-validation-example />
-        <hr />
-        <file-upload-single-overview-example />
         <hr />
         <file-upload-single-required-reactive-validation-example />
         <hr />
