@@ -1,7 +1,7 @@
-import { mergeApplicationConfig, Provider } from '@angular/core';
+import { ApplicationConfig, mergeApplicationConfig, Provider } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import config from './config';
+import { appConfig } from './app/config';
 
 const provideServerWindow = (): Provider => {
     return {
@@ -46,9 +46,12 @@ const provideServerWindow = (): Provider => {
     };
 };
 
-export default mergeApplicationConfig(config, {
+const serverConfig: ApplicationConfig = {
     providers: [
         provideServerRendering(),
         provideServerWindow()
     ]
-});
+};
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const config = mergeApplicationConfig(appConfig, serverConfig);

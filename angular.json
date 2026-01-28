@@ -91,7 +91,9 @@
                         "namedChunks": true,
                         "browser": "apps/docs/src/main.ts",
                         "server": "apps/docs/src/main.server.ts",
-                        "prerender": true,
+                        "prerender": {
+                            "routesFile": "apps/docs/src/prerenderedRoutes.txt"
+                        },
                         "ssr": {
                             "entry": "apps/docs/src/server.ts"
                         }
