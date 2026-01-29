@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
@@ -9,9 +9,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 @Component({
     selector: 'file-upload-cva-overview-example',
     imports: [
-        KbqFileUploadModule,
         ReactiveFormsModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqSingleFileUploadComponent
     ],
     template: `
         <div class="kbq-form-horizontal">

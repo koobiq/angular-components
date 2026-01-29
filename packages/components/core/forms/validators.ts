@@ -192,15 +192,13 @@ export class FileValidators {
             if (!accept?.length || !control.value) return null;
             const { name, type } = control.value.file;
 
-            for (const acceptedExtensionOrMimeType of accept) {
+            const isValid = accept.some((acceptedExtensionOrMimeType) => {
                 const typeAsRegExp = new RegExp(`${acceptedExtensionOrMimeType}$`);
 
-                if (!typeAsRegExp.test(name) && !typeAsRegExp.test(type)) {
-                    return { fileExtensionMismatch: { expected: accept, actual: name } };
-                }
-            }
+                return typeAsRegExp.test(name) || typeAsRegExp.test(type);
+            });
 
-            return null;
+            return isValid ? null : { fileExtensionMismatch: { expected: accept, actual: name } };
         };
     }
 }

@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { FileValidators, KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
-import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -14,10 +14,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'file-upload-multiple-mixed-validation-example',
     imports: [
         ReactiveFormsModule,
-        KbqFileUploadModule,
         KbqFormFieldModule,
         KbqButtonModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqMultipleFileUploadComponent
     ],
     template: `
         <form [formGroup]="formMultiple">
