@@ -179,14 +179,14 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     onSelect({ value: option }) {
         if (!option) return;
 
-        if (option.isExpandable) {
+        if (this.tree.treeControl.isExpandable(option.data)) {
             this.tree.setStateChildren(option, !option.selected);
         }
 
         this.toggleParents(option.data.parent);
 
         setTimeout(() => {
-            if (this.selectedAllEqualsSelectedNothing && this.allVisibleOptionsSelected) {
+            if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
             } else {
                 this.data.value = this.select.selectedValues;
