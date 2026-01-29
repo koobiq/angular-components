@@ -1,6 +1,3 @@
-@use 'components/core/styles/core' as common;
-@use '../../../styles/koobiq/default-theme/variables' as *;
-
 .docs-icons-viewer {
     overflow-y: auto;
 
@@ -47,7 +44,7 @@
 }
 
 .docs-icons-viewer__table-empty-results {
-    margin: $size-3xl auto;
+    margin: var(--kbq-size-3xl) auto;
 }
 
 .docs-icons-viewer__table-row-header {
@@ -61,10 +58,10 @@
 
 .docs-icons-viewer__table-row {
     display: grid;
-    column-gap: $size-l;
-    row-gap: $size-l;
+    column-gap: var(--kbq-size-l);
+    row-gap: var(--kbq-size-l);
 
-    margin-top: $size-s;
+    margin-top: var(--kbq-size-s);
 }
 
 .docs-icons-viewer__table-row_16 {

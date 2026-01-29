@@ -1,3 +1,15 @@
-@forward 'default-theme/css-tokens.css';
-@forward 'default-theme/css-tokens-dark.css';
-@forward 'default-theme/css-tokens-light.css';
+@forward '@koobiq/design-tokens/web/css/size.css';
+@forward '@koobiq/design-tokens/web/css/font.css';
+@forward '@koobiq/design-tokens/web/css/md-typography.css';
+@forward '@koobiq/design-tokens/web/css/typography.css';
+
+@forward '@koobiq/design-tokens/web/css/palette/grey.css';
+@forward '@koobiq/design-tokens/web/css/palette/green.css';
+@forward '@koobiq/design-tokens/web/css/palette/blue.css';
+@forward '@koobiq/design-tokens/web/css/palette/red.css';
+
+@forward '@koobiq/design-tokens/web/css/light/semantic-colors.css';
+@forward '@koobiq/design-tokens/web/css/light/shadows.css';
+
+@forward '@koobiq/design-tokens/web/css/dark/semantic-colors.css';
+@forward '@koobiq/design-tokens/web/css/dark/shadows.css';

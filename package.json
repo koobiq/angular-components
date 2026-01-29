@@ -174,7 +174,6 @@
         "build:docs-examples-module": "ts-node --project ./tools/example-module/tsconfig.json ./tools/example-module/index.ts",
         "build:docs-examples": "ng build docs-examples",
         "build:cli": "rimraf dist/cli && rollup -c ./packages/cli/rollup.config.js && node ./packages/cli/scripts/copy-meta-to-dist.js",
-        "build:tokens:docs": "node ./apps/docs/scripts/build-tokens.js",
         "build:tokens:data": "node ./tools/tokens/docs/index.js",
         "build:docs-content": "ts-node --project ./tools/markdown-to-html/tsconfig.json ./tools/markdown-to-html/transform-markdown.ts && yarn run docs:api-gen",
         "build:package-docs-content": "ts-node --project ./tools/package-docs-content/tsconfig.json ./tools/package-docs-content/package-docs-content.ts",
