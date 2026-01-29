@@ -1,0 +1,42 @@
+@keyframes wave {
+    0% {
+        background-position: calc(-1 * var(--kbq-skeleton-wave-width)) 0%;
+    }
+
+    100% {
+        background-position: 100vw 0;
+    }
+}
+
+.kbq-skeleton {
+    --kbq-skeleton-min-height: var(--kbq-size-l);
+    --kbq-skeleton-animation-duration: 1.5s;
+    --kbq-skeleton-border-radius: var(--kbq-size-xxs);
+    --kbq-skeleton-wave-width: 100px;
+
+    --kbq-skeleton-background: hsla(229, 15%, 0%, 8%);
+    --kbq-skeleton-animation-wave-start: hsla(229, 15%, 0%, 0%);
+    --kbq-skeleton-animation-wave-center: hsla(229, 15%, 0%, 8%);
+    --kbq-skeleton-animation-wave-end: hsla(229, 15%, 0%, 0%);
+
+    .kbq-dark & {
+        --kbq-skeleton-background: hsla(229, 15%, 100%, 8%);
+        --kbq-skeleton-animation-wave-start: hsla(229, 15%, 100%, 0%);
+        --kbq-skeleton-animation-wave-center: hsla(229, 15%, 100%, 8%);
+        --kbq-skeleton-animation-wave-end: hsla(229, 15%, 100%, 0%);
+    }
+
+    display: flex;
+    min-height: var(--kbq-skeleton-min-height);
+    border-radius: var(--kbq-skeleton-border-radius);
+    background-color: var(--kbq-skeleton-background);
+    background-image: linear-gradient(
+        to right,
+        var(--kbq-skeleton-animation-wave-start) 0%,
+        var(--kbq-skeleton-animation-wave-center) calc(var(--kbq-skeleton-wave-width) / 2),
+        var(--kbq-skeleton-animation-wave-end) var(--kbq-skeleton-wave-width)
+    );
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    animation: wave var(--kbq-skeleton-animation-duration) linear infinite;
+}

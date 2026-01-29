@@ -1,0 +1,50 @@
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqSkeleton } from '@koobiq/components/skeleton';
+import { KbqToggleModule } from '@koobiq/components/toggle';
+
+/**
+ * @title Skeleton overview
+ */
+@Component({
+    selector: 'skeleton-overview-example',
+    imports: [KbqSkeleton, KbqToggleModule, FormsModule],
+    template: `
+        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+
+        @if (loading()) {
+            <p>
+                <kbq-skeleton />
+                <kbq-skeleton />
+                <kbq-skeleton />
+                <kbq-skeleton [style.width.%]="30" />
+            </p>
+        } @else {
+            <p>
+                In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks
+                to make a machine or network resource unavailable to its intended users by temporarily or indefinitely
+                disrupting services of a host connected to a network.
+            </p>
+        }
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-xl);
+        }
+
+        p {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-xs);
+            width: 100%;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SkeletonOverviewExample {
+    readonly loading = model(true);
+}

@@ -74,6 +74,7 @@
             "@koobiq/components/select": ["packages/components/select/index.ts"],
             "@koobiq/components/sidebar": ["packages/components/sidebar/index.ts"],
             "@koobiq/components/sidepanel": ["packages/components/sidepanel/index.ts"],
+            "@koobiq/components/skeleton": ["packages/components/skeleton/index.ts"],
             "@koobiq/components/scrollbar": ["packages/components/scrollbar/index.ts"],
             "@koobiq/components/splitter": ["packages/components/splitter/index.ts"],
             "@koobiq/components/split-button": ["packages/components/split-button/index.ts"],

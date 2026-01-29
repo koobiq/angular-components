@@ -3946,6 +3946,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
     "importPath": "components/sidepanel"
   },
+  "skeleton-in-sidepanel": {
+    "packagePath": "components/skeleton/skeleton-in-sidepanel",
+    "title": "Skeleton in sidepanel",
+    "componentName": "SkeletonInSidepanelExample",
+    "files": [
+      "skeleton-in-sidepanel-example.ts"
+    ],
+    "selector": "skeleton-in-sidepanel-example",
+    "additionalComponents": [],
+    "primaryFile": "skeleton-in-sidepanel-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-overview": {
+    "packagePath": "components/skeleton/skeleton-overview",
+    "title": "Skeleton overview",
+    "componentName": "SkeletonOverviewExample",
+    "files": [
+      "skeleton-overview-example.ts"
+    ],
+    "selector": "skeleton-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "skeleton-overview-example.ts",
+    "importPath": "components/skeleton"
+  },
   "split-button-content": {
     "packagePath": "components/split-button/split-button-content",
     "title": "split-button-content",
@@ -6347,6 +6371,10 @@ return import('@koobiq/docs-examples/components/sidepanel');
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-with-dynamic-config-update':
 return import('@koobiq/docs-examples/components/sidepanel');
+  case 'skeleton-in-sidepanel':
+return import('@koobiq/docs-examples/components/skeleton');
+  case 'skeleton-overview':
+return import('@koobiq/docs-examples/components/skeleton');
   case 'split-button-content':
 return import('@koobiq/docs-examples/components/split-button');
   case 'split-button-disabled-state':
