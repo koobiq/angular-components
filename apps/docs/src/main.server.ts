@@ -1,5 +1,8 @@
 import { bootstrapApplication, BootstrapContext } from '@angular/platform-browser';
 import { DocsAppComponent } from './app/app.component';
-import config from './config.server';
+import { config } from './config.server';
 
-export default (context: BootstrapContext) => bootstrapApplication(DocsAppComponent, config, context);
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const bootstrap = (context: BootstrapContext) => bootstrapApplication(DocsAppComponent, config, context);
+
+export default bootstrap;
