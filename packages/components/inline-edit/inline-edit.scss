@@ -100,7 +100,7 @@
     @include _inline-edit-typography();
 
     &:not(.kbq-inline-edit_with-label) {
-        --kbq-inline-edit-padding-horizontal: calc(var(--kbq-size-m) - var(--kbq-size-border-width));
+        --kbq-inline-edit-padding-horizontal: var(--kbq-size-m);
     }
 
     &.kbq-inline-edit_with-label {
