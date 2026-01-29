@@ -1744,18 +1744,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-single-accept-validation-example.ts",
     "importPath": "components/file-upload"
   },
-  "file-upload-single-error-overview": {
-    "packagePath": "components/file-upload/file-upload-single-error-overview",
-    "title": "File-upload single error",
-    "componentName": "FileUploadSingleErrorOverviewExample",
-    "files": [
-      "file-upload-single-error-overview-example.ts"
-    ],
-    "selector": "file-upload-single-error-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "file-upload-single-error-overview-example.ts",
-    "importPath": "components/file-upload"
-  },
   "file-upload-single-mixed-validation": {
     "packagePath": "components/file-upload/file-upload-single-mixed-validation",
     "title": "File upload single mixed validation example",
@@ -6074,8 +6062,6 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-primitive':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-accept-validation':
-return import('@koobiq/docs-examples/components/file-upload');
-  case 'file-upload-single-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-mixed-validation':
 return import('@koobiq/docs-examples/components/file-upload');

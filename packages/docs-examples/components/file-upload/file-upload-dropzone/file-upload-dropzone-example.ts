@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, model, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, model, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -8,6 +8,7 @@ import {
     KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
 
 /**
  * @title File-upload Dropzone
@@ -18,10 +19,15 @@ import { KbqIcon } from '@koobiq/components/icon';
         KbqMultipleFileUploadComponent,
         KbqContentPanelModule,
         KbqEmptyStateModule,
+        KbqToggleComponent,
         FormsModule,
         KbqIcon
     ],
     template: `
+        <kbq-toggle class="layout-margin-bottom-l" [checked]="isActive()" (change)="onChange($event)">
+            activate fullscreen dropzone
+        </kbq-toggle>
+
         @if (files().length) {
             <kbq-file-upload multiple [(ngModel)]="files">
                 <ng-template #kbqFileIcon>
@@ -49,6 +55,7 @@ import { KbqIcon } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadDropzoneExample {
+    protected isActive = signal(false);
     protected readonly files = model<KbqFileItem[]>([]);
 
     protected readonly fileUpload = viewChild(KbqMultipleFileUploadComponent);
@@ -63,6 +70,14 @@ export class FileUploadDropzoneExample {
 
         this.dropzoneService.init({ title: 'Drop files here' });
 
-        this.destroyRef.onDestroy(() => sub.unsubscribe());
+        this.destroyRef.onDestroy(() => {
+            sub.unsubscribe();
+            this.dropzoneService.stop();
+        });
+    }
+
+    onChange({ checked }: KbqToggleChange) {
+        this.isActive.set(checked);
+        this.dropzoneService.disabled.set(!checked);
     }
 }
