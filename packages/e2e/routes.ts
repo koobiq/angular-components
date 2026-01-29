@@ -20,6 +20,7 @@ import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eFilterBarStates } from '../components/filter-bar/e2e';
 import { E2eIconStateAndStyle } from '../components/icon/e2e';
+import { E2eInlineEditStates } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates } from '../components/link/e2e';
 import { E2eListStates } from '../components/list/e2e';
@@ -130,7 +131,8 @@ const components = [
     E2eTreeSelectStates,
     E2eMultiTreeSelectStates,
     E2eMultilineTreeSelectStates,
-    E2eSelectWithSearchAndFooter
+    E2eSelectWithSearchAndFooter,
+    E2eInlineEditStates
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {
