@@ -234,8 +234,8 @@ export class KbqInlineEdit {
             .subscribe((currentMode) => this.modeChange.emit(currentMode));
     }
 
-    /** @docs-private */
-    protected toggleMode(): void {
+    /** Manually switch mode */
+    toggleMode(): void {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
     }
 

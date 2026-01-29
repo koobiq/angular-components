@@ -1,8 +1,11 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
 @Component({
@@ -12,11 +15,20 @@ import { KbqInlineEditModule } from './module';
         FormsModule,
         KbqFormFieldModule,
         KbqInputModule,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        KbqButtonModule
     ],
     template: `
-        <div class="layout-column layout-gap-xxl">
-            <kbq-inline-edit class="e2e-inline-edit-empty">
+        <button kbq-button data-testid="e2eInlineEditOpenTrigger" (click)="openInlineEdits()">open inline edits</button>
+        <button kbq-button data-testid="e2eInlineEditFocusTrigger" (click)="focusInlineEdits()">
+            focus inline edits
+        </button>
+
+        <div
+            class="layout-column layout-gap-xxl layout-margin-bottom-6xl flex layout-padding-3xs"
+            data-testid="e2eInlineEditList"
+        >
+            <kbq-inline-edit>
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: '' } }" />
                 </div>
@@ -25,7 +37,7 @@ import { KbqInlineEditModule } from './module';
                 </kbq-form-field>
             </kbq-inline-edit>
 
-            <kbq-inline-edit class="e2e-inline-edit-filled">
+            <kbq-inline-edit>
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
@@ -34,7 +46,7 @@ import { KbqInlineEditModule } from './module';
                 </kbq-form-field>
             </kbq-inline-edit>
 
-            <kbq-inline-edit class="e2e-inline-edit-with-label">
+            <kbq-inline-edit>
                 <kbq-label>Label</kbq-label>
 
                 <div class="example-inline-text" kbqInlineEditViewMode>
@@ -45,7 +57,7 @@ import { KbqInlineEditModule } from './module';
                 </kbq-form-field>
             </kbq-inline-edit>
 
-            <kbq-inline-edit showActions data-testid="e2eInlineEditWithActions">
+            <kbq-inline-edit showActions>
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
@@ -70,8 +82,24 @@ import { KbqInlineEditModule } from './module';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
+        class: 'layout-margin-top-l layout-row',
         'data-testid': 'e2eInlineEditStates'
     }
 })
-export class E2eInlineEditStates {}
+export class E2eInlineEditStates {
+    protected readonly inlineEditList = viewChildren(KbqInlineEdit);
+    private readonly nativeElement = kbqInjectNativeElement();
+
+    openInlineEdits() {
+        this.inlineEditList().forEach((inlineEdit) => inlineEdit.toggleMode());
+    }
+
+    focusInlineEdits() {
+        this.nativeElement
+            .querySelectorAll<HTMLElement>('.kbq-inline-edit__focus_container')
+            .forEach((focusContainer) => {
+                focusContainer.classList.add('cdk-focused');
+                focusContainer.classList.add('cdk-keyboard-focused');
+            });
+    }
+}
