@@ -625,6 +625,8 @@ export class KbqSelect
             'kbq-control_has-validate-directive'
         );
 
+        if (this.disabled) return KbqComponentColors.Empty;
+
         // @TODO fix disabled state color (#DS-4574)
         return (hasLegacyValidateDirective && this.ngControl?.invalid) || this.errorState
             ? KbqComponentColors.Error
