@@ -609,6 +609,8 @@ export class KbqSelect
             'kbq-control_has-validate-directive'
         );
 
+        if (this.disabled) return KbqComponentColors.Empty;
+
         return (hasLegacyValidateDirective && this.ngControl?.invalid) || this.errorState
             ? KbqComponentColors.Error
             : KbqComponentColors.ContrastFade;
