@@ -69,7 +69,7 @@ export class KbqInlineEdit {
     readonly showActions: InputSignalWithTransform<boolean, unknown>;
     readonly showTooltipOnError: InputSignalWithTransform<boolean, unknown>;
     protected readonly tabIndex: Signal<0 | -1>;
-    protected toggleMode(): void;
+    toggleMode(): void;
     readonly tooltipPlacement: InputSignal<PopUpPlacements | undefined>;
     protected readonly tooltipTrigger: Signal<KbqTooltipTrigger | undefined>;
     readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
