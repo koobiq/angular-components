@@ -673,9 +673,11 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
 
 // @public (undocumented)
 export class KbqTreeSelectionChange<T> {
-    constructor(source: KbqTreeSelection, option: T);
+    constructor(source: KbqTreeSelection, option: T, options?: T[] | undefined);
     // (undocumented)
     option: T;
+    // (undocumented)
+    options?: T[] | undefined;
     // (undocumented)
     source: KbqTreeSelection;
 }
