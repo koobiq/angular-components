@@ -45,7 +45,7 @@ describe('FileDropDirective', () => {
     it('FileDropDirective: dragover/dragleave', () => {
         expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
 
-        dispatchFakeEvent(dndZone, 'dragover');
+        dispatchFakeEvent(dndZone, 'dragenter');
         fixture.detectChanges();
 
         expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeTruthy();
@@ -64,7 +64,7 @@ describe('FileDropDirective', () => {
 
         (event as any).dataTransfer = { items: fakeFiles };
 
-        dispatchFakeEvent(dndZone, 'dragover');
+        dispatchFakeEvent(dndZone, 'dragenter');
         fixture.detectChanges();
 
         expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeTruthy();
@@ -110,7 +110,7 @@ describe('FileDropDirective', () => {
 
         (event as any).dataTransfer = { items: [fakeDirectoryItem] };
 
-        dispatchFakeEvent(dndZone, 'dragover');
+        dispatchFakeEvent(dndZone, 'dragenter');
         fixture.detectChanges();
 
         dispatchEvent(dndZone, event);

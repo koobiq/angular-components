@@ -8,6 +8,7 @@ import {
     ContentChild,
     ContentChildren,
     DoCheck,
+    effect,
     ElementRef,
     EventEmitter,
     inject,
@@ -31,13 +32,13 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
-import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, of } from 'rxjs';
+import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService } from './dropzone';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -72,7 +73,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
         KbqProgressSpinnerModule,
         KbqEllipsisCenterDirective,
         KbqFileLoader,
-        KbqEmptyStateModule
+        KbqFileUploadEmptyState
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
@@ -87,7 +88,8 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
             inputs: ['id', 'disabled']
         },
         { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
-    ]
+    ],
+    providers: [KbqFullScreenDropzoneService]
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
@@ -131,6 +133,11 @@ export class KbqMultipleFileUploadComponent
      * @default mixed
      */
     allowed = input<KbqEnumValues<KbqFileUploadAllowedType>>(KbqFileUploadAllowedType.File);
+    /**
+     * Controls whether to display fullscreen dropzone.
+     * Provide configuration object to enable, or undefined to disable.
+     */
+    fullScreenDropZone = input<KbqDropzoneData | boolean>();
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
@@ -271,6 +278,20 @@ export class KbqMultipleFileUploadComponent
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
+        this.dropzoneService.filesDropped.subscribe((files) => this.onFileDropped(files));
+
+        effect(() => {
+            const fullScreenDropZone = this.fullScreenDropZone();
+
+            if (fullScreenDropZone) {
+                const config = fullScreenDropZone === true ? ({} satisfies KbqDropzoneData) : fullScreenDropZone;
+
+                this.dropzoneService.init(config);
+            } else {
+                this.dropzoneService.stop();
+            }
+        });
     }
 
     ngDoCheck() {
@@ -327,7 +348,7 @@ export class KbqMultipleFileUploadComponent
     onFileSelectedViaClick({ target }: Event) {
         if (this.disabled) return;
 
-        const filesToAdd = this.mapToFileItem((target as HTMLInputElement).files);
+        const filesToAdd = target instanceof HTMLInputElement ? this.mapToFileItem(target.files) : [];
 
         this.onFileAdded(filesToAdd);
         // allows the same file selection every time user clicks on the control.
