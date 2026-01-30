@@ -1,3 +1,4 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { NgTemplateOutlet } from '@angular/common';
@@ -40,7 +41,17 @@ import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component
 import { KbqDrop } from './primitives';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
-export type KbqDropzoneData = { caption?: string; size?: KbqDefaultSizes; title?: string };
+/** Dropzone overlay content configuration. */
+export type KbqDropzoneData = Partial<{
+    /** Optional caption text displayed below the title. */
+    caption: string;
+    /** Visual size of the dropzone empty state content. */
+    size: KbqDefaultSizes;
+    /** Title text displayed in the dropzone; falls back to localized default. */
+    title: string;
+    /** Whether focus should be automatically captured when the overlay opens. */
+    autoCapture: boolean;
+}>;
 
 /** Injection token that can be used to access the data that was passed in to a modal. */
 export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzoneData');
@@ -418,8 +429,10 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
     `,
     styleUrls: ['./dropzone.scss'],
     host: {
-        class: 'kbq-dropzone-content'
+        class: 'kbq-dropzone-content',
+        '[attr.tabindex]': '0'
     },
+    hostDirectives: [CdkTrapFocus],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -428,7 +441,13 @@ export class KbqDropzoneContent {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */
     protected readonly config = inject<KbqDropzoneData>(KBQ_DROPZONE_DATA, { optional: true });
+
+    private readonly trapFocus = inject(CdkTrapFocus, { host: true });
     private readonly localeId = toSignal(this.localeService?.changes.asObservable() ?? of(KBQ_DEFAULT_LOCALE_ID));
+
+    constructor() {
+        this.trapFocus.autoCapture = this.config?.autoCapture ?? true;
+    }
 
     /** @docs-private */
     protected readonly title = computed(() => {

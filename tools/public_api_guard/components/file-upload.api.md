@@ -19,7 +19,8 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i10 from '@koobiq/components/link';
 import * as i11 from '@angular/common';
-import * as i1_2 from '@angular/forms';
+import * as i1_2 from '@angular/cdk/a11y';
+import * as i1_3 from '@angular/forms';
 import * as i2 from '@koobiq/components/tooltip';
 import * as i3 from '@koobiq/components/progress-spinner';
 import * as i4 from '@koobiq/components/icon';
@@ -65,7 +66,12 @@ export const isOutsideViewport: ({ event, innerWidth, innerHeight, xAxisMinThres
 }) => boolean;
 
 // @public
-export const KBQ_DROPZONE_DATA: InjectionToken<KbqDropzoneData>;
+export const KBQ_DROPZONE_DATA: InjectionToken<Partial<{
+    caption: string;
+    size: KbqDefaultSizes;
+    title: string;
+    autoCapture: boolean;
+}>>;
 
 // @public (undocumented)
 export const KBQ_FILE_UPLOAD_CONFIGURATION: InjectionToken<KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig>;
@@ -90,21 +96,28 @@ export class KbqDrop {
 
 // @public (undocumented)
 export class KbqDropzoneContent {
-    protected readonly config: KbqDropzoneData | null;
+    constructor();
+    protected readonly config: Partial<{
+        caption: string;
+        size: KbqDefaultSizes;
+        title: string;
+        autoCapture: boolean;
+    }> | null;
     protected readonly localeService: KbqLocaleService | null;
     protected readonly title: Signal<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, [{ directive: typeof i1_2.CdkTrapFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropzoneContent, never>;
 }
 
-// @public (undocumented)
-export type KbqDropzoneData = {
-    caption?: string;
-    size?: KbqDefaultSizes;
-    title?: string;
-};
+// @public
+export type KbqDropzoneData = Partial<{
+    caption: string;
+    size: KbqDefaultSizes;
+    title: string;
+    autoCapture: boolean;
+}>;
 
 // @public (undocumented)
 export interface KbqFile extends File {
@@ -255,7 +268,7 @@ export class KbqFileUploadModule {
     // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, never, [typeof i1_2.FormsModule, typeof i1_2.ReactiveFormsModule, typeof i2.KbqToolTipModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqIconModule, typeof i5.KbqButtonModule, typeof i6.KbqListModule, typeof i7.KbqFormFieldModule, typeof i8.KbqEllipsisCenterModule, typeof i9.KbqDataSizePipe, typeof i10.KbqLinkModule, typeof i11.AsyncPipe, typeof i11.NgClass, typeof i11.NgTemplateOutlet, typeof i12.KbqFileDropDirective, typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent], [typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent, typeof i12.KbqFileDropDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, never, [typeof i1_3.FormsModule, typeof i1_3.ReactiveFormsModule, typeof i2.KbqToolTipModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqIconModule, typeof i5.KbqButtonModule, typeof i6.KbqListModule, typeof i7.KbqFormFieldModule, typeof i8.KbqEllipsisCenterModule, typeof i9.KbqDataSizePipe, typeof i10.KbqLinkModule, typeof i11.AsyncPipe, typeof i11.NgClass, typeof i11.NgTemplateOutlet, typeof i12.KbqFileDropDirective, typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent], [typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent, typeof i12.KbqFileDropDirective]>;
 }
 
 // @public @deprecated (undocumented)
@@ -346,7 +359,12 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     set files(currentFileList: KbqFileItem[]);
     readonly filesAdded: EventEmitter<KbqFileItem[]>;
     readonly filesChange: EventEmitter<KbqFileItem[]>;
-    fullScreenDropZone: InputSignal<boolean | KbqDropzoneData | undefined>;
+    fullScreenDropZone: InputSignal<boolean | Partial<{
+    caption: string;
+    size: KbqDefaultSizes;
+    title: string;
+    autoCapture: boolean;
+    }> | undefined>;
     // @deprecated (undocumented)
     get hasErrors(): boolean;
     hasFocus: boolean;
@@ -397,7 +415,12 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     set file(currentFile: KbqFileItem | null);
     readonly fileChange: EventEmitter<KbqFileItem | null>;
     protected readonly fileLoader: KbqFileLoader | undefined;
-    fullScreenDropZone: InputSignal<boolean | KbqDropzoneData | undefined>;
+    fullScreenDropZone: InputSignal<boolean | Partial<{
+    caption: string;
+    size: KbqDefaultSizes;
+    title: string;
+    autoCapture: boolean;
+    }> | undefined>;
     get hasHint(): boolean;
     get input(): ElementRef<HTMLInputElement> | undefined;
     // (undocumented)
@@ -428,7 +451,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
 
 // Warnings were encountered during analysis:
 //
-// dist/components/file-upload/multiple-file-upload.component.d.ts:133:1016 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+// dist/components/file-upload/multiple-file-upload.component.d.ts:137:1016 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

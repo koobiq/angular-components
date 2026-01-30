@@ -24,6 +24,8 @@
         border-radius: var(--kbq-size-border-radius);
         border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border-color);
         background-color: var(--kbq-dropzone-component-background);
+
+        outline: none;
     }
 }
 
