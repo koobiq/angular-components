@@ -3,7 +3,7 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { C } from '@koobiq/cdk/keycodes';
+import { A, C } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
@@ -17,7 +17,9 @@ import {
     KbqTreeModule,
     KbqTreeNodePadding,
     KbqTreeOption,
-    KbqTreeSelection
+    KbqTreeSelectAllEvent,
+    KbqTreeSelection,
+    KbqTreeSelectionChange
 } from './index';
 
 describe('KbqTreeSelection', () => {
@@ -701,6 +703,62 @@ describe('KbqTreeSelection', () => {
                 expect(getNodes(treeElement).length).not.toEqual(filteredNodesLengthOnlyByText);
             }));
         });
+
+        describe('selection with CTRL + A', () => {
+            let fixture: ComponentFixture<KbqTreeAppMultiple>;
+            let component: KbqTreeAppMultiple;
+            let testScheduler: TestScheduler;
+
+            const selectAllKeyEvent = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
+
+            beforeEach(() => {
+                testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+
+                configureKbqTreeTestingModule([{ provide: AsyncScheduler, useValue: testScheduler }]);
+                fixture = TestBed.createComponent(KbqTreeAppMultiple);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            it('should select all visible options and values', fakeAsync(() => {
+                expect(component.modelValue.length).toBe(0);
+
+                const onSelectionChange = jest.spyOn(component, 'onSelectionChange');
+                const onSelectAll = jest.spyOn(component, 'onSelectAll');
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.savedSelectionChangeEvent!.option.selected).toBe(false);
+                expect(onSelectionChange).toHaveBeenCalled();
+                expect(component.savedSelectionChangeEvent!.options!.length).toBe(5);
+                expect(onSelectAll).toHaveBeenCalled();
+                expect(component.savedSelectAllEvent!.options.length).toBe(5);
+                expect(component.modelValue.length).toBe(17);
+            }));
+
+            it('should deselect all visible options and values', fakeAsync(() => {
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                component.savedSelectionChangeEvent = undefined;
+                component.savedSelectAllEvent = undefined;
+
+                expect(component.modelValue.length).toBe(17);
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.savedSelectionChangeEvent!.options!.length).toBe(5);
+                expect(component.savedSelectAllEvent!.options.length).toBe(5);
+                expect(component.modelValue.length).toBe(0);
+            }));
+        });
     });
 });
 
@@ -945,6 +1003,8 @@ class TreeSelectionFocusStates extends TreeParams {}
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [(ngModel)]="modelValue"
+            (onSelectAll)="onSelectAll($event)"
+            (selectionChange)="onSelectionChange($event)"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                 {{ node.name }}
@@ -959,8 +1019,18 @@ class TreeSelectionFocusStates extends TreeParams {}
     `
 })
 class KbqTreeAppMultiple extends TreeParams {
-    modelValue = [];
+    modelValue: string[] = [];
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+
+    savedSelectionChangeEvent?: KbqTreeSelectionChange<KbqTreeOption>;
+    savedSelectAllEvent?: KbqTreeSelectAllEvent<KbqTreeOption>;
+
+    onSelectionChange(event: KbqTreeSelectionChange<KbqTreeOption>) {
+        this.savedSelectionChangeEvent = event;
+    }
+    onSelectAll(event: KbqTreeSelectAllEvent<KbqTreeOption>) {
+        this.savedSelectAllEvent = event;
+    }
 }
 
 @Component({

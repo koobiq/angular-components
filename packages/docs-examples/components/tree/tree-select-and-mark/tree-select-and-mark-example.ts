@@ -26,8 +26,6 @@ export class FileFlatNode {
 export function buildFileTree(countries: any, level: number): FileNode[] {
     const data: any[] = [];
 
-    console.log('buildFileTree: ');
-
     for (const country of countries) {
         const node = new FileNode();
 

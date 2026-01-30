@@ -133,7 +133,8 @@ export class KbqTreeSelectChange {
     constructor(
         public source: KbqTreeSelect,
         public value: any,
-        public isUserInput = false
+        public isUserInput = false,
+        public values?: unknown[]
     ) {}
 }
 
@@ -495,24 +496,7 @@ export class KbqTreeSelect
     private _selectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
         event.preventDefault();
 
-        const options = select.options.filter(({ disabled }) => !disabled);
-        const hasUnselectedOptions = options.some((option) => !option.selected);
-
-        const toUnselect: unknown[] = [];
-        const toSelect: unknown[] = [];
-
-        options.forEach((option) => {
-            if (hasUnselectedOptions) {
-                option.select(false);
-                toSelect.push(option.data);
-            } else {
-                option.deselect();
-                toUnselect.push(option.data);
-            }
-        });
-
-        this.selectionModel.deselect(...toUnselect);
-        this.selectionModel.select(...toSelect);
+        select.tree.selectAllOptions();
     }
 
     /** Whether the select is focused. */
@@ -731,9 +715,7 @@ export class KbqTreeSelect
         });
 
         this.tree.selectionChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-            this.onChange(this.selectedValues);
-
-            this.selectionChange.emit(new KbqTreeSelectChange(this, event.option));
+            this.selectionChange.emit(new KbqTreeSelectChange(this, event.option, false, event.options));
 
             if (this.search) {
                 this.search.focus();
