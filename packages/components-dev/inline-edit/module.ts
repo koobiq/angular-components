@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { E2eInlineEditStates } from '../../components/inline-edit/e2e';
 import { InlineEditExamplesModule } from '../../docs-examples/components/inline-edit';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -29,7 +30,8 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [
         DevDocsExamples,
-        DevThemeToggle
+        DevThemeToggle,
+        E2eInlineEditStates
     ],
     providers: [],
     templateUrl: './template.html',
