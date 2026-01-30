@@ -1,9 +1,7 @@
-@use '../../../styles/koobiq/default-theme/variables' as *;
-
 .docs-anchors {
     position: sticky;
 
-    top: $size-7xl;
+    top: var(--kbq-size-7xl);
 
     display: flex;
     flex-direction: column;

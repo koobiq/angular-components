@@ -1,5 +1,3 @@
-@use '../../../../styles/koobiq/default-theme/variables' as *;
-
 .docs-icon-preview-modal .kbq-modal-body {
     display: flex;
     flex-direction: column;
@@ -58,8 +56,8 @@
     display: flex;
     flex-wrap: wrap;
 
-    margin-top: $size-xxs;
-    gap: $size-xxs;
+    margin-top: var(--kbq-size-xxs);
+    gap: var(--kbq-size-xxs);
 
     .kbq-badge {
         cursor: pointer;

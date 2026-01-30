@@ -1,5 +1,3 @@
-@use '../../../styles/koobiq/default-theme/variables' as *;
-
 .docs-navbar {
     position: sticky;
 
@@ -7,7 +5,7 @@
     flex-direction: row;
     justify-content: space-between;
 
-    padding: $size-l $size-xxl;
+    padding: var(--kbq-size-l) var(--kbq-size-xxl);
 }
 
 .docs-navbar-show-small {
@@ -32,8 +30,8 @@
         }
 
         & .kbq-icon {
-            width: $size-l;
-            height: $size-l;
+            width: var(--kbq-size-l);
+            height: var(--kbq-size-l);
         }
     }
 
@@ -55,7 +53,7 @@
     }
 
     .docs-navbar {
-        padding: $size-s $size-xxs $size-s $size-l;
+        padding: var(--kbq-size-s) var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-l);
 
         .docs-navbar__links {
             margin-left: var(--kbq-size-xxs);
@@ -64,8 +62,8 @@
 
         .DocSearch-Button,
         .kbq-button-icon {
-            width: $size-5xl;
-            height: $size-5xl;
+            width: var(--kbq-size-5xl);
+            height: var(--kbq-size-5xl);
         }
 
         .docs-navbar__right {

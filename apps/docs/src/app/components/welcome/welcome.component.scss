@@ -1,5 +1,3 @@
-@use '../../../styles/koobiq/default-theme/variables' as *;
-
 .docs-welcome {
     display: flex;
     flex-direction: column;
@@ -22,18 +20,18 @@
 
 .docs-welcome__description {
     max-width: 900px;
-    margin-top: $size-xxl;
+    margin-top: var(--kbq-size-xxl);
 }
 
 .docs-welcome__category {
-    margin-top: $size-5xl;
+    margin-top: var(--kbq-size-5xl);
     max-width: 1300px;
 }
 
 .docs-welcome__category-items {
     flex-wrap: wrap;
 
-    gap: $size-4xl;
+    gap: var(--kbq-size-4xl);
 }
 
 .docs-welcome__category-item {
@@ -47,31 +45,31 @@
 }
 
 .docs-welcome__category-item-title {
-    margin-top: $size-m;
+    margin-top: var(--kbq-size-m);
 }
 
 @media (width < 768px) {
     .docs-welcome {
-        padding: $size-l $size-l 160px;
+        padding: var(--kbq-size-l) var(--kbq-size-l) 160px;
     }
 
     .docs-welcome__category-items {
-        gap: $size-l;
+        gap: var(--kbq-size-l);
     }
 
     .docs-welcome__category-item {
-        width: calc(50% - #{$size-l} / 2);
+        width: calc(50% - var(--kbq-size-l) / 2);
     }
 }
 
 @media (768px <= width < 1200px) {
     .docs-welcome {
-        padding: 0 $size-xxl 160px $size-xxl;
+        padding: 0 var(--kbq-size-xxl) 160px var(--kbq-size-xxl);
     }
 }
 
 @media (1200px <= width < 1920px) {
     .docs-welcome {
-        padding: 0 $size-7xl 160px $size-7xl;
+        padding: 0 var(--kbq-size-7xl) 160px var(--kbq-size-7xl);
     }
 }
