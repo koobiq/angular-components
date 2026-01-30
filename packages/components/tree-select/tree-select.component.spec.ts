@@ -4843,7 +4843,7 @@ describe('KbqTreeSelect', () => {
             expect(testInstance.control.value).toEqual([null, 'pizza-1', null]);
         }));
 
-        it('should select all options when pressing CTRL + A', () => {
+        it('should select all options when pressing CTRL + A', fakeAsync(() => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
             const options = fixture.componentInstance.options.toArray();
 
@@ -4858,16 +4858,37 @@ describe('KbqTreeSelect', () => {
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
+            tick(0);
 
             expect(options.every((option) => option.selected)).toBe(true);
             expect(testInstance.control.value).toEqual([
                 'rootNode_1',
                 'Pictures',
+                'Sun',
+                'Woods',
+                'Photo_Booth_Library',
+                'Contents',
+                'Pictures',
                 'Documents',
+                'angular',
+                'src',
+                'core',
+                'compiler',
+                'material2',
+                'src',
+                'button',
+                'checkbox',
+                'input',
                 'Downloads',
-                'Applications'
+                'Tutorial',
+                'November',
+                'October',
+                'Applications',
+                'Chrome',
+                'Calendar',
+                'Webstorm'
             ]);
-        });
+        }));
 
         it('should skip disabled options when using CTRL + A', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
@@ -4889,20 +4910,42 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
 
             expect(testInstance.control.value).toEqual([
+                'Sun',
+                'Woods',
+                'Photo_Booth_Library',
+                'Contents',
+                'Pictures',
+                'angular',
+                'src',
+                'core',
+                'compiler',
+                'material2',
+                'src',
+                'button',
+                'checkbox',
+                'input',
                 'Downloads',
-                'Applications'
+                'Tutorial',
+                'November',
+                'October',
+                'Applications',
+                'Chrome',
+                'Calendar',
+                'Webstorm'
             ]);
         });
 
-        it('should select all options when pressing CTRL + A when some options are selected', () => {
+        it('should select all options when pressing CTRL + A when some options are selected', fakeAsync(() => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
             const options = fixture.componentInstance.options.toArray();
 
-            options[0].setSelected(true);
-            fixture.detectChanges();
-
-            expect(testInstance.control.value).toEqual(['rootNode_1']);
-            expect(options.some((option) => option.selected)).toBe(true);
+            testInstance.control.setValue([
+                'Contents',
+                'Pictures',
+                'Documents',
+                'angular',
+                'src'
+            ]);
 
             fixture.componentInstance.select.open();
             fixture.detectChanges();
@@ -4913,31 +4956,40 @@ describe('KbqTreeSelect', () => {
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
 
+            expect(options.every((option) => option.selected)).toBe(false);
+            tick(0);
             expect(options.every((option) => option.selected)).toBe(true);
             expect(testInstance.control.value).toEqual([
-                'rootNode_1',
+                'Contents',
                 'Pictures',
                 'Documents',
+                'angular',
+                'src',
+                'rootNode_1',
+                'Sun',
+                'Woods',
+                'Photo_Booth_Library',
+                'Pictures',
+                'core',
+                'compiler',
+                'material2',
+                'src',
+                'button',
+                'checkbox',
+                'input',
                 'Downloads',
-                'Applications'
+                'Tutorial',
+                'November',
+                'October',
+                'Applications',
+                'Chrome',
+                'Calendar',
+                'Webstorm'
             ]);
-        });
+        }));
 
         it('should deselect all options with CTRL + A if all options are selected', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
-            const options = fixture.componentInstance.options.toArray();
-
-            options.forEach((option) => option.setSelected(true));
-            fixture.detectChanges();
-
-            expect(testInstance.control.value).toEqual([
-                'rootNode_1',
-                'Pictures',
-                'Documents',
-                'Downloads',
-                'Applications'
-            ]);
-            expect(options.every((option) => option.selected)).toBe(true);
 
             fixture.componentInstance.select.open();
             fixture.detectChanges();
@@ -4946,10 +4998,13 @@ describe('KbqTreeSelect', () => {
 
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
+
+            expect(testInstance.control.getRawValue().length).toEqual(25);
+
+            dispatchEvent(selectElement, event);
             fixture.detectChanges();
 
-            expect(options.some((option) => option.selected)).toBe(false);
-            expect(testInstance.control.value).toEqual([]);
+            expect(testInstance.control.getRawValue()).toEqual([]);
         });
     });
 

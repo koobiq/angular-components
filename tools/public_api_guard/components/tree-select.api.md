@@ -250,13 +250,15 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
 
 // @public
 export class KbqTreeSelectChange {
-    constructor(source: KbqTreeSelect, value: any, isUserInput?: boolean);
+    constructor(source: KbqTreeSelect, value: any, isUserInput?: boolean, values?: unknown[] | undefined);
     // (undocumented)
     isUserInput: boolean;
     // (undocumented)
     source: KbqTreeSelect;
     // (undocumented)
     value: any;
+    // (undocumented)
+    values?: unknown[] | undefined;
 }
 
 // @public (undocumented)
