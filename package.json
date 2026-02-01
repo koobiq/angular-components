@@ -32,7 +32,7 @@
         "@koobiq/icons": "^11.2.0",
         "@maskito/angular": "^5.0.1",
         "@maskito/core": "^5.0.1",
-        "@maskito/kit": "^5.0.1",
+        "@maskito/kit": "^5.1.0",
         "ag-grid-angular": "^34.3.1",
         "ag-grid-community": "^34.3.1",
         "highlight.js": "^11.11.1",
