@@ -5379,16 +5379,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@maskito/angular@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "@maskito/angular@npm:5.0.1"
+"@maskito/angular@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@maskito/angular@npm:5.1.0"
   dependencies:
     tslib: "npm:2.8.1"
   peerDependencies:
     "@angular/core": ">=19.0.0"
     "@angular/forms": ">=19.0.0"
-    "@maskito/core": ^5.0.1
-  checksum: 10c0/f2b88b0a73860c9e21ff70a79da34f1e2120a5000cb75f577c970ca01c7f45c61cff47e42db5691a094c2af2e2bc81eb8d0406298ce09f44b3824d8ba983b132
+    "@maskito/core": ^5.1.0
+  checksum: 10c0/9d2cb6f4bd9392f51329d07aaeeb5923a2ce4a12976ec17ecf13bc79a19620be49266de1597d12a5c902be1793eabd547d1460486ebae2ea5ea1ea87daf9095c
   languageName: node
   linkType: hard
 
@@ -16572,7 +16572,7 @@ __metadata:
     "@koobiq/luxon-date-adapter": "npm:^3.4.0"
     "@koobiq/moment-date-adapter": "npm:^3.4.0"
     "@koobiq/tokens-builder": "npm:^3.15.0"
-    "@maskito/angular": "npm:^5.0.1"
+    "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.0.1"
     "@maskito/kit": "npm:^5.1.0"
     "@messageformat/core": "npm:^3.4.0"
