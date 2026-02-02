@@ -34,6 +34,7 @@ export enum DocsStructureItemId {
     DynamicTranslation = 'dynamic-translation',
     EmptyState = 'empty-state',
     Icon = 'icon',
+    IconButton = 'icon-button',
     IconItem = 'icon-item',
     InlineEdit = 'inline-edit',
     Input = 'input',
@@ -514,6 +515,17 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'icon',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.IconButton,
+                    name: {
+                        ru: 'Icon Button',
+                        en: 'Icon Button'
+                    },
+                    hasApi: true,
+                    apiId: 'icon',
+                    hasExamples: false,
+                    isNew: expiresAt('2026-02-28')
                 },
                 {
                     id: DocsStructureItemId.IconItem,
