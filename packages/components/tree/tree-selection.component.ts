@@ -93,7 +93,8 @@ export class KbqTreeNavigationChange<T> {
 export class KbqTreeSelectionChange<T> {
     constructor(
         public source: KbqTreeSelection,
-        public option: T
+        public option: T,
+        public options?: T[]
     ) {}
 }
 
@@ -518,17 +519,28 @@ export class KbqTreeSelection
     }
 
     emitChangeEvent(option: KbqTreeOption): void {
-        this.selectionChange.emit(new KbqTreeNavigationChange(this, option));
+        this.selectionChange.emit(new KbqTreeSelectionChange(this, option, [option]));
     }
 
     selectAllOptions(): void {
-        const optionsToSelect = this.renderedOptions.filter((option) => !option.disabled);
+        const disabledDataNodes = this.renderedOptions.filter((option) => option.disabled).map((option) => option.data);
 
-        const hasDeselectedOptions = optionsToSelect.some((option) => !option.selected);
+        const dataNodes = this.treeControl.dataNodes.filter(
+            (node) => !this.treeControl.isDisabled(node) && !disabledDataNodes.includes(node)
+        );
 
-        optionsToSelect.forEach((option) => option.setSelected(hasDeselectedOptions));
+        const selectableOptions = this.renderedOptions.filter((option) => !option.disabled);
+        let changedOptions: KbqTreeOption[] = selectableOptions;
 
-        this.onSelectAll.emit(new KbqTreeSelectAllEvent(this, optionsToSelect));
+        if (dataNodes.length === this.selectionModel.selected.length) {
+            this.selectionModel.clear();
+        } else {
+            this.selectionModel.select(...dataNodes);
+            changedOptions = selectableOptions.filter((option) => !option.selected);
+        }
+
+        this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
+        this.onSelectAll.emit(new KbqTreeSelectAllEvent(this, selectableOptions));
     }
 
     copyActiveOption(event: KeyboardEvent): void {

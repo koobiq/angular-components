@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];
@@ -111,7 +111,12 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select [multiple]="true" [(ngModel)]="selected">
+            <kbq-tree-select
+                [multiple]="true"
+                [(ngModel)]="selected"
+                (ngModelChange)="onModelChange($event)"
+                (selectionChange)="onSelectionChange($event)"
+            >
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -190,4 +195,12 @@ export class TreeSelectMultipleOverviewExample {
     private getViewValue = (node: FileFlatNode): string => {
         return `${node.name} view`;
     };
+
+    protected onSelectionChange($event: KbqTreeSelectChange) {
+        console.log('selectionChange: ', $event);
+    }
+
+    protected onModelChange($event) {
+        console.log('onModelChange: ', $event);
+    }
 }
