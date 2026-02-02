@@ -30,8 +30,6 @@ Selected files can be configured with a custom icon, for example, for images.
 
 The component can be configured to allow selecting only files, only folders, or both files and folders.
 
-By default, a selected folder is displayed in the list as a single item. For the multiple uploader, it can be configured so that after selecting a directory, all nested files appear in the list as separate items.
-
 <!-- example(file-upload-allowed) -->
 
 ### Disabled state

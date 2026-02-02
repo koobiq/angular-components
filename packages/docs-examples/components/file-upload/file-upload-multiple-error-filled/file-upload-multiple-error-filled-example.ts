@@ -45,20 +45,24 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
                 </ng-template>
 
                 @for (control of fileList.controls; track $index) {
-                    <kbq-hint color="error">
+                    <ng-container ngProjectAs="kbq-hint">
                         @if (control.errors) {
-                            <span>{{ control.value?.file?.name }} —&nbsp;</span>
+                            <kbq-hint color="error">
+                                @if (control.errors) {
+                                    <span>{{ control.value?.file?.name }} —&nbsp;</span>
+                                }
+                                @if (control.hasError('fileExtensionMismatch')) {
+                                    <span>{{ errorMessages.fileExtensionMismatch }}</span>
+                                    @if (control.hasError('fileExtensionMismatch') && control.hasError('maxFileSize')) {
+                                        <span>.</span>
+                                    }
+                                }
+                                @if (control.hasError('maxFileSize')) {
+                                    {{ errorMessages.maxFileSize }}
+                                }
+                            </kbq-hint>
                         }
-                        @if (control.hasError('fileExtensionMismatch')) {
-                            <span>{{ errorMessages.fileExtensionMismatch }}</span>
-                            @if (control.hasError('fileExtensionMismatch') && control.hasError('maxFileSize')) {
-                                <span>.</span>
-                            }
-                        }
-                        @if (control.hasError('maxFileSize')) {
-                            {{ errorMessages.maxFileSize }}
-                        }
-                    </kbq-hint>
+                    </ng-container>
                 }
 
                 <kbq-hint>{{ acceptedOutput }}. No more than 1 MB</kbq-hint>
