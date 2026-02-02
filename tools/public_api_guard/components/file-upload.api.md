@@ -57,7 +57,7 @@ import { WritableSignal } from '@angular/core';
 export const isCorrectExtension: (file: File, accept?: string[]) => boolean;
 
 // @public
-export const isOutsideViewport: ({ event, innerWidth, innerHeight, xAxisMinThreshold, yAxisMinThreshold }: {
+export const isOutsideViewport: (input: {
     event: MouseEvent;
     innerWidth: number;
     innerHeight: number;
@@ -379,7 +379,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     // (undocumented)
     ngDoCheck(): void;
     onFileDropped(files: KbqFile[]): void;
-    onFileSelectedViaClick({ target }: Event): void;
+    onFileSelectedViaClick(input: Event): void;
     onTouched: () => void;
     progressMode: ProgressSpinnerMode;
     registerOnChange(fn: any): void;
@@ -434,7 +434,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     // (undocumented)
     ngDoCheck(): void;
     onFileDropped(files: KbqFile[]): void;
-    onFileSelectedViaClick({ target }: Event): void;
+    onFileSelectedViaClick(input: Event): void;
     onTouched: () => void;
     progressMode: ProgressSpinnerMode;
     registerOnChange(fn: any): void;
