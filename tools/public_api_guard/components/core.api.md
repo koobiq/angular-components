@@ -2557,7 +2557,7 @@ export abstract class KbqPopUp implements OnDestroy {
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
     // (undocumented)
-    animationDone({ toState }: AnimationEvent_2): void;
+    animationDone(input: AnimationEvent_2): void;
     // (undocumented)
     animationStart(): void;
     // (undocumented)
@@ -3411,7 +3411,7 @@ export const ptBRLocaleData: {
 // @public (undocumented)
 export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
     // (undocumented)
-    transform([value1, value2]: D[] | string[]): string;
+    transform(input: D[] | string[]): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateFormatterImpurePipe<any>, never>;
     // (undocumented)
@@ -3421,7 +3421,7 @@ export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
 // @public (undocumented)
 export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
-    transform([value1, value2]: D[] | string[]): string;
+    transform(input: D[] | string[]): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateFormatterPipe<any>, never>;
     // (undocumented)
@@ -3431,7 +3431,7 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
 // @public (undocumented)
 export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {
     // (undocumented)
-    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
+    transform(input: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateTimeFormatterImpurePipe<any>, never>;
     // (undocumented)
@@ -3441,7 +3441,7 @@ export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterP
 // @public (undocumented)
 export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
-    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
+    transform(input: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateTimeFormatterPipe<any>, never>;
     // (undocumented)
@@ -3451,7 +3451,7 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 // @public (undocumented)
 export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {
     // (undocumented)
-    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
+    transform(input: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeMiddleDateTimeFormatterImpurePipe<any>, never>;
     // (undocumented)
@@ -3461,7 +3461,7 @@ export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTi
 // @public (undocumented)
 export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
-    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
+    transform(input: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeMiddleDateTimeFormatterPipe<any>, never>;
     // (undocumented)
@@ -3471,7 +3471,7 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
 // @public (undocumented)
 export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {
     // (undocumented)
-    transform([value1, value2]: D[] | string[]): string;
+    transform(input: D[] | string[]): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateFormatterImpurePipe<any>, never>;
     // (undocumented)
@@ -3481,7 +3481,7 @@ export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatte
 // @public (undocumented)
 export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
-    transform([value1, value2]: D[] | string[]): string;
+    transform(input: D[] | string[]): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateFormatterPipe<any>, never>;
     // (undocumented)
@@ -3491,7 +3491,7 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
 // @public (undocumented)
 export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {
     // (undocumented)
-    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
+    transform(input: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateTimeFormatterImpurePipe<any>, never>;
     // (undocumented)
@@ -3501,7 +3501,7 @@ export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTime
 // @public (undocumented)
 export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
-    transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
+    transform(input: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateTimeFormatterPipe<any>, never>;
     // (undocumented)
@@ -3901,7 +3901,7 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     // (undocumented)
     themes: T[];
     // (undocumented)
-    protected update: ([prev, current]: T[]) => void;
+    protected update: (input: T[]) => void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
     // (undocumented)

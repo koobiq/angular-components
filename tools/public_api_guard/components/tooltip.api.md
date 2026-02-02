@@ -72,7 +72,7 @@ export class KbqTooltipComponent extends KbqPopUp {
     // (undocumented)
     show(delay: number): void;
     // (undocumented)
-    updateClassMap(placement: string, customClass: string, { modifier }: {
+    updateClassMap(placement: string, customClass: string, input: {
         modifier: any;
     }): void;
     // (undocumented)

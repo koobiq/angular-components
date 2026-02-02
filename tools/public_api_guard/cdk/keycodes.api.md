@@ -166,13 +166,13 @@ export function isControl(event: KeyboardEvent): boolean;
 export function isCopy(event: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isDigit({ keyCode }: KeyboardEvent): boolean;
+export function isDigit(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isFunctionKey({ keyCode }: KeyboardEvent): boolean;
+export function isFunctionKey(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isHorizontalMovement({ keyCode }: KeyboardEvent): boolean;
+export function isHorizontalMovement(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
 export function isInput(event: Event): boolean;
@@ -181,13 +181,13 @@ export function isInput(event: Event): boolean;
 export function isLeftBracket(event: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isLetterKey({ keyCode }: KeyboardEvent): boolean;
+export function isLetterKey(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isNumberKey({ keyCode }: KeyboardEvent): boolean;
+export function isNumberKey(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isNumpadKey({ keyCode }: KeyboardEvent): boolean;
+export function isNumpadKey(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
 export function isRightBracket(event: KeyboardEvent): boolean;
@@ -196,7 +196,7 @@ export function isRightBracket(event: KeyboardEvent): boolean;
 export function isSelectAll(event: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isVerticalMovement({ keyCode }: KeyboardEvent): boolean;
+export function isVerticalMovement(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
 export const J = 74;
