@@ -20,7 +20,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 <kbq-skeleton [style.width.%]="30" />
             </p>
         } @else {
-            <p>
+            <p class="example-fade-in">
                 In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks
                 to make a machine or network resource unavailable to its intended users by temporarily or indefinitely
                 disrupting services of a host connected to a network.
@@ -36,11 +36,25 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             padding: var(--kbq-size-xl);
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .example-fade-in {
+            animation: fadeIn 1000ms ease-out;
+        }
+
         p {
             display: flex;
             flex-direction: column;
             gap: var(--kbq-size-xs);
             width: 100%;
+            min-height: 100px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
