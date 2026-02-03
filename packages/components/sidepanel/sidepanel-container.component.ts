@@ -12,6 +12,7 @@ import {
     Inject,
     InjectionToken,
     OnDestroy,
+    signal,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -42,7 +43,11 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
         class: 'kbq-sidepanel-container',
         '[class]': 'size',
         '[class.kbq-sidepanel_nested]': 'withIndent',
+        '[class.kbq-sidepanel-container_lower]': 'placement() === "lower"',
+        '[class.kbq-sidepanel-container_bottom-panel]': 'placement() === "bottom-panel"',
         '[class.kbq-sidepanel-container_shadowed]': 'withShadow',
+        '[class.kbq-sidepanel-container_opened]': 'animationState === "visible"',
+        '[class.kbq-sidepanel-container_closed]': 'animationState === "hidden"',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
         '[@state]': `{
@@ -67,6 +72,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** Emits whenever the state of the animation changes. */
     animationStateChanged = new EventEmitter<AnimationEvent>();
+
+    placement = signal('');
 
     get size(): string {
         return `kbq-sidepanel_${this.sidepanelConfig.size}`;
@@ -129,9 +136,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** Begin animation of the sidepanel entrance into view. */
     enter(): void {
-        if (this.destroyed) {
-            return;
-        }
+        if (this.destroyed) return;
 
         this.animationState = KbqSidepanelAnimationState.Visible;
         this.changeDetectorRef.detectChanges();
@@ -139,9 +144,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** Begin animation of the sidepanel exiting from view. */
     exit(): void {
-        if (this.destroyed) {
-            return;
-        }
+        if (this.destroyed) return;
 
         this.animationState = KbqSidepanelAnimationState.Hidden;
         this.changeDetectorRef.markForCheck();

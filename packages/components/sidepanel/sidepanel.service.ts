@@ -112,11 +112,22 @@ export class KbqSidepanelService implements OnDestroy {
     private attachContainer(overlayRef: OverlayRef, config: KbqSidepanelConfig): KbqSidepanelContainerComponent {
         const openedSidepanelsWithSamePosition = this.getOpenedSidepanelsWithSamePosition(config);
 
+        const lower = openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 1];
+        const bottom = openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 2];
+
+        if (lower) {
+            lower.containerInstance.placement.set('lower');
+        }
+
+        if (bottom) {
+            bottom.containerInstance.placement.set('bottom-panel');
+        }
+
         const injector = Injector.create({
             parent: this.injector,
             providers: [
                 { provide: KbqSidepanelConfig, useValue: config },
-                { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: openedSidepanelsWithSamePosition.length >= 1 },
+                { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: false },
                 { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: openedSidepanelsWithSamePosition.length < 2 }
             ]
         });
@@ -172,6 +183,26 @@ export class KbqSidepanelService implements OnDestroy {
         return this.overlay.create(overlayConfig);
     }
 
+    // private getPositionStrategy(position?: KbqSidepanelPosition): GlobalPositionStrategy {
+    //     const strategy = this.overlay.position().global();
+    //
+    //     switch (position) {
+    //         case 'left': {
+    //             return strategy.left('0');
+    //         }
+    //         case 'top': {
+    //             return strategy.top('0').width('100%');
+    //         }
+    //         case 'bottom': {
+    //             return strategy.bottom('0').width('100%');
+    //         }
+    //         case 'right':
+    //         default: {
+    //             return strategy.end('0');
+    //         }
+    //     }
+    // }
+
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
         const reversedOpenedSidepanels = [...sidepanels.reverse()];
 
@@ -205,6 +236,17 @@ export class KbqSidepanelService implements OnDestroy {
 
         if (index > -1) {
             this.openedSidepanels.splice(index, 1);
+
+            const lower = this.openedSidepanels[this.openedSidepanels.length - 1];
+            const bottom = this.openedSidepanels[this.openedSidepanels.length - 2];
+
+            if (lower) {
+                lower.containerInstance.placement.set('');
+            }
+
+            if (bottom) {
+                bottom.containerInstance.placement.set('lower');
+            }
         }
     }
 }
