@@ -2135,6 +2135,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "vertical-form-example.ts",
     "importPath": "components/forms"
   },
+  "icon-button-custom-size": {
+    "packagePath": "components/icon-button/icon-button-custom size",
+    "title": "Icon-button custom size",
+    "componentName": "IconButtonCustomSizeExample",
+    "files": [
+      "icon-button-custom-size-example.ts"
+    ],
+    "selector": "icon-button-custom-size-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-button-custom-size-example.ts",
+    "importPath": "components/icon-button"
+  },
   "icon-button-size": {
     "packagePath": "components/icon-button/icon-button-size",
     "title": "Icon-button size",
@@ -6091,6 +6103,8 @@ return import('@koobiq/docs-examples/components/forms');
 return import('@koobiq/docs-examples/components/forms');
   case 'vertical-form':
 return import('@koobiq/docs-examples/components/forms');
+  case 'icon-button-custom-size':
+return import('@koobiq/docs-examples/components/icon-button');
   case 'icon-button-size':
 return import('@koobiq/docs-examples/components/icon-button');
   case 'icon-button-style':

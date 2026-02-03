@@ -12,23 +12,7 @@
 
 Для иконок-кнопок предусмотрена возможность переопределения внутренних отступов с помощью CSS-переменных.
 
-**Иконка-кнопка размера Compact**
-
-```css
-.custom-icon-button_compact {
-    --kbq-icon-button-size-small-vertical-padding: var(--kbq-size-xs);
-    --kbq-icon-button-size-small-horizontal-padding: var(--kbq-size-xs);
-}
-```
-
-**Иконка-кнопка размера Normal**
-
-```css
-.custom-icon-button_normal {
-    --kbq-icon-button-size-normal-vertical-padding: var(--kbq-size-xxs);
-    --kbq-icon-button-size-normal-horizontal-padding: var(--kbq-size-xxs);
-}
-```
+<!-- example(icon-button-custom-size) -->
 
 ### Стиль
 
