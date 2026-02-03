@@ -128,7 +128,7 @@ export class KbqSidepanelService implements OnDestroy {
             providers: [
                 { provide: KbqSidepanelConfig, useValue: config },
                 { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: false },
-                { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: openedSidepanelsWithSamePosition.length < 2 }
+                { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: true }
             ]
         });
 
@@ -209,18 +209,16 @@ export class KbqSidepanelService implements OnDestroy {
         reversedOpenedSidepanels.forEach((sidepanelRef: KbqSidepanelRef) => sidepanelRef.close());
     }
 
-    private getBackdropClass(config: KbqSidepanelConfig): string {
+    private getBackdropClass(config: KbqSidepanelConfig): string | string[] {
         if (config.hasBackdrop && config.backdropClass) {
             return config.backdropClass;
         }
 
-        const hasOpenedSidepanelWithBackdrop = this.openedSidepanels.some(
-            (sidepanelRef) => sidepanelRef.config.hasBackdrop!
-        );
+        // const hasOpenedSidepanelWithBackdrop = this.openedSidepanels.some(
+        //     (sidepanelRef) => sidepanelRef.config.hasBackdrop!
+        // );
 
-        return config.requiredBackdrop || !hasOpenedSidepanelWithBackdrop
-            ? 'cdk-overlay-dark-backdrop'
-            : 'cdk-overlay-transparent-backdrop';
+        return ['kbq-overlay-dark-backdrop', 'kbq-overlay-backdrop'];
     }
 
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {
