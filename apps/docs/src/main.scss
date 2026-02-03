@@ -1,8 +1,7 @@
 @use 'styles/koobiq';
 @use '@koobiq/icons/fonts/kbq-icons';
-@use '@koobiq/design-tokens/web/css-tokens.css';
-@use '@koobiq/design-tokens/web/css-tokens-dark.css';
-@use '@koobiq/design-tokens/web/css-tokens-light.css';
+@use '@koobiq/design-tokens/web/deprecated/css/components/skeleton/skeleton-dark.css';
+@use '@koobiq/design-tokens/web/deprecated/css/components/skeleton/skeleton-light.css';
 @use './styles/fonts';
 @use './styles/theme-kbq';
 @use './styles/markdown';

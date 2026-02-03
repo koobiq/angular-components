@@ -1,3 +1,6 @@
+@use '@koobiq/design-tokens/web/deprecated/css/components/skeleton/skeleton-dark.css';
+@use '@koobiq/design-tokens/web/deprecated/css/components/skeleton/skeleton-light.css';
+
 dev-app {
     max-width: 608px;
     display: block;
