@@ -14,10 +14,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 
         @if (loading()) {
             <p>
+                <kbq-skeleton [style.width.%]="80" />
                 <kbq-skeleton />
-                <kbq-skeleton />
-                <kbq-skeleton />
-                <kbq-skeleton [style.width.%]="30" />
+                <kbq-skeleton [style.width.%]="60" />
             </p>
         } @else {
             <p class="example-fade-in">
@@ -46,7 +45,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         }
 
         .example-fade-in {
-            animation: fadeIn 1000ms ease-out;
+            animation: fadeIn 500ms ease-out;
         }
 
         p {

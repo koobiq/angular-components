@@ -44,6 +44,8 @@ import { KbqTableModule } from '@koobiq/components/table';
                         <kbq-dd>domain-LDAP-7f7d60de-d36d-46df-80b9-8f272c32ae43</kbq-dd>
                         <kbq-dt>Connection type</kbq-dt>
                         <kbq-dd>Synchronization and authentication</kbq-dd>
+                        <kbq-dt>Servers</kbq-dt>
+                        <kbq-dd>productname1.security.com:555, productname2.security.com:556</kbq-dd>
                     </kbq-dl>
                 } @placeholder {
                     <div class="example-list-skeletons">
@@ -131,7 +133,7 @@ import { KbqTableModule } from '@koobiq/components/table';
         }
 
         .example-fade-in {
-            animation: fadeIn 1500ms ease-out;
+            animation: fadeIn 500ms ease-out;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
