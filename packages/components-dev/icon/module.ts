@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
+    IconButtonCustomSizeExample,
     IconButtonExample,
     IconButtonSizeExample,
     IconButtonStyleExample
@@ -12,12 +13,15 @@ import {
     imports: [
         IconButtonExample,
         IconButtonSizeExample,
+        IconButtonCustomSizeExample,
         IconButtonStyleExample
     ],
     template: `
         <icon-button-example />
         <hr />
         <icon-button-size-example />
+        <hr />
+        <icon-button-custom-size-example />
         <hr />
         <icon-button-style-example />
     `,
