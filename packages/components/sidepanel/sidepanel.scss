@@ -1,20 +1,26 @@
+@use 'sass:map';
+
 @use '../core/styles/common';
 
 @use '../core/styles/common/tokens' as *;
 
 @use './sidepanel-theme' as *;
 
-.kbq-sidepanel-container_top,
-.kbq-sidepanel-container_bottom {
-    flex-direction: column;
-    height: 33%;
-    min-height: 400px;
-    width: 100%;
-    left: 0;
+@mixin _sidepanel-container-margin($selected-side) {
+    $sides: top, right, bottom, left;
+    $opposite-sides: (
+        'top': 'bottom',
+        'right': 'left',
+        'left': 'right',
+        'bottom': 'top'
+    );
 
-    .kbq-sidepanel-indent {
-        height: 16px;
-        width: 100%;
+    .kbq-sidepanel-content {
+        @each $side in $sides {
+            @if (not (map.get($opposite-sides, $selected-side) == $side)) {
+                margin-#{$side}: var(--kbq-sidepanel-size-panel-viewport-margin);
+            }
+        }
     }
 }
 
@@ -55,6 +61,20 @@
             height: 100%;
         }
     }
+
+    &.kbq-sidepanel-container_top,
+    &.kbq-sidepanel-container_bottom {
+        flex-direction: column;
+        height: 33%;
+        min-height: 400px;
+        width: calc(100% - 2 * var(--kbq-sidepanel-size-panel-viewport-margin));
+        left: 0;
+
+        .kbq-sidepanel-indent {
+            height: 16px;
+            width: 100%;
+        }
+    }
 }
 
 .kbq-sidepanel-container_right {
@@ -64,6 +84,8 @@
     .kbq-sidepanel-wrapper {
         flex-direction: row;
     }
+
+    @include _sidepanel-container-margin(right);
 }
 
 .kbq-sidepanel-container_left {
@@ -73,6 +95,8 @@
     .kbq-sidepanel-wrapper {
         flex-direction: row-reverse;
     }
+
+    @include _sidepanel-container-margin(left);
 }
 
 .kbq-sidepanel-container_top {
@@ -82,6 +106,8 @@
     .kbq-sidepanel-wrapper {
         flex-direction: column-reverse;
     }
+
+    @include _sidepanel-container-margin(top);
 }
 
 .kbq-sidepanel-container_bottom {
@@ -91,6 +117,8 @@
     .kbq-sidepanel-wrapper {
         flex-direction: column;
     }
+
+    @include _sidepanel-container-margin(bottom);
 }
 
 .kbq-sidepanel-wrapper {
@@ -112,6 +140,7 @@
     min-height: 0;
     min-width: 0;
     width: 100%;
+    border-radius: var(--kbq-size-border-radius);
 }
 
 .kbq-sidepanel-header {
