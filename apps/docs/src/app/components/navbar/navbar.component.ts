@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, Component, inject, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_WINDOW, KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/components/core';
@@ -37,6 +37,8 @@ import { DocsNavbarProperty } from './navbar-property';
 })
 export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     private readonly window = inject(KBQ_WINDOW);
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly themeService = inject(ThemeService);
 
     readonly docStates = inject(DocsDocStates);
 
@@ -79,7 +81,7 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
         map((state) => state === DocsNavbarState.Opened)
     );
 
-    constructor(private readonly themeService: ThemeService) {
+    constructor() {
         super();
 
         // set custom theme configs for light/dark themes
@@ -92,7 +94,11 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
         });
 
         // set theme when retrieval from storage completed
-        this.themeService.setTheme(this.themeSwitch.currentValue);
+        afterNextRender(() => {
+            this.themeService.setTheme(this.themeSwitch.currentValue);
+            // prevent NG0100 error
+            this.cdr.markForCheck();
+        });
 
         try {
             // Chrome & Firefox
@@ -129,6 +135,8 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     }
 
     private setAutoTheme = (e) => {
+        if (!this.themeService.themes[0]) return;
+
         this.themeService.themes[0] = {
             ...this.themeService.themes[0],
             className: e.matches ? KbqThemeSelector.Default : KbqThemeSelector.Dark
