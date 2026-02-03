@@ -183,26 +183,6 @@ export class KbqSidepanelService implements OnDestroy {
         return this.overlay.create(overlayConfig);
     }
 
-    // private getPositionStrategy(position?: KbqSidepanelPosition): GlobalPositionStrategy {
-    //     const strategy = this.overlay.position().global();
-    //
-    //     switch (position) {
-    //         case 'left': {
-    //             return strategy.left('0');
-    //         }
-    //         case 'top': {
-    //             return strategy.top('0').width('100%');
-    //         }
-    //         case 'bottom': {
-    //             return strategy.bottom('0').width('100%');
-    //         }
-    //         case 'right':
-    //         default: {
-    //             return strategy.end('0');
-    //         }
-    //     }
-    // }
-
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
         const reversedOpenedSidepanels = [...sidepanels.reverse()];
 
@@ -213,10 +193,6 @@ export class KbqSidepanelService implements OnDestroy {
         if (config.hasBackdrop && config.backdropClass) {
             return config.backdropClass;
         }
-
-        // const hasOpenedSidepanelWithBackdrop = this.openedSidepanels.some(
-        //     (sidepanelRef) => sidepanelRef.config.hasBackdrop!
-        // );
 
         return ['kbq-overlay-dark-backdrop', 'kbq-overlay-backdrop'];
     }
