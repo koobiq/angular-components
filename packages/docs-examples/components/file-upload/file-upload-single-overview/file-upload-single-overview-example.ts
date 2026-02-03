@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
@@ -8,11 +8,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
 @Component({
     selector: 'file-upload-single-overview-example',
     imports: [
-        KbqFileUploadModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqSingleFileUploadComponent
     ],
     template: `
-        <kbq-single-file-upload>
+        <kbq-single-file-upload [showFileSize]="false">
             <i kbq-icon="kbq-file-o_16"></i>
         </kbq-single-file-upload>
     `,

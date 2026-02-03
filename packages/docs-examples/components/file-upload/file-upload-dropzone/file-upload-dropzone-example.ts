@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, model, signal, viewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
+import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import {
-    KbqLocalDropzone,
-    KbqMultipleFileUploadComponent,
-    KbqSingleFileUploadComponent
+    KbqFileItem,
+    KbqFullScreenDropzoneService,
+    KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
-import { KbqToggleComponent } from '@koobiq/components/toggle';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
 
 /**
  * @title File-upload Dropzone
@@ -14,67 +16,68 @@ import { KbqToggleComponent } from '@koobiq/components/toggle';
 @Component({
     selector: 'file-upload-dropzone-example',
     imports: [
-        KbqSingleFileUploadComponent,
         KbqMultipleFileUploadComponent,
+        KbqContentPanelModule,
+        KbqEmptyStateModule,
         KbqToggleComponent,
-        KbqLocalDropzone,
-        KbqButtonModule,
-        KbqContentPanelModule
+        FormsModule,
+        KbqIcon
     ],
     template: `
-        <div class="layout-margin-bottom-l">
-            <kbq-toggle [checked]="value()" (change)="value.set($event.checked)">full screen</kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-l" [checked]="isActive()" (change)="onChange($event)">
+            activate fullscreen dropzone
+        </kbq-toggle>
 
-            <kbq-file-upload [fullScreenDropZone]="value()" />
-        </div>
-
-        <kbq-content-panel-container maxWidth="600" minWidth="250" width="600" [opened]="true">
-            <kbq-content-panel>
-                <kbq-content-panel-header>
-                    <div kbqContentPanelHeaderTitle>Local dropzone</div>
-                </kbq-content-panel-header>
-                <kbq-content-panel-body kbqLocalDropzone [kbqConnectedTo]="fileUploadLocal">
-                    <span class="kbq-subheading">Drop file here</span>
-
-                    @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                        <p>
-                            In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
-                            which the perpetrator seeks to make a machine or network resource unavailable to its
-                            intended users by temporarily or indefinitely disrupting services of a host connected to a
-                            network. Denial of service is typically accomplished by flooding the targeted machine or
-                            resource with superfluous requests in an attempt to overload systems and prevent some or all
-                            legitimate requests from being fulfilled. The range of attacks varies widely, spanning from
-                            inundating a server with millions of requests to slow its performance, overwhelming a server
-                            with a substantial amount of invalid data, to submitting requests with an illegitimate IP
-                            address.
-                        </p>
-                    }
-                    <kbq-file-upload #fileUploadLocal multiple />
-                </kbq-content-panel-body>
-                <kbq-content-panel-footer>
-                    <button kbq-button>Button 1</button>
-                </kbq-content-panel-footer>
-            </kbq-content-panel>
-        </kbq-content-panel-container>
+        @if (files().length) {
+            <kbq-file-upload multiple [(ngModel)]="files">
+                <ng-template #kbqFileIcon>
+                    <i kbq-icon="kbq-file-text-o_16"></i>
+                </ng-template>
+            </kbq-file-upload>
+        } @else {
+            <kbq-empty-state>
+                <div kbq-empty-state-text>Drop files here</div>
+            </kbq-empty-state>
+        }
     `,
     styles: `
         :host {
-            display: flex;
-            flex-direction: column;
-            height: 500px;
-        }
+            .kbq-empty-state {
+                height: 128px;
+            }
 
-        .example-content-panel-container__content {
-            display: flex;
-            flex-direction: column;
-            gap: var(--kbq-size-s);
-            align-items: center;
-            justify-content: center;
-            height: 100%;
+            .kbq-multiple-file-upload {
+                --kbq-file-upload-size-multiple-min-height: 120px;
+                --kbq-file-upload-size-multiple-max-height: 120px;
+            }
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadDropzoneExample {
-    protected readonly value = signal(false);
+    protected isActive = signal(false);
+    protected readonly files = model<KbqFileItem[]>([]);
+
+    protected readonly fileUpload = viewChild(KbqMultipleFileUploadComponent);
+
+    protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
+    protected readonly destroyRef = inject(DestroyRef);
+
+    constructor() {
+        const sub = this.dropzoneService.filesDropped.subscribe((files) => {
+            this.files.set(files.map((file) => ({ file })));
+        });
+
+        this.dropzoneService.init({ title: 'Drop files here' });
+
+        this.destroyRef.onDestroy(() => {
+            sub.unsubscribe();
+            this.dropzoneService.stop();
+        });
+    }
+
+    onChange({ checked }: KbqToggleChange) {
+        this.isActive.set(checked);
+        this.dropzoneService.disabled.set(!checked);
+    }
 }
