@@ -6,8 +6,6 @@
 
 @use './sidepanel-theme' as *;
 
-$lower-panel-ratio: 0.95;
-$bottom-panel-ratio: 0.9;
 $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 
 @mixin _sidepanel-container-margin($selected-side) {
@@ -83,34 +81,19 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
     --animation-duration: 300ms;
     --animation-function: var(--ease-in-out-quad);
-    opacity: 0;
 
     transition:
         opacity var(--animation-duration) linear,
         scale var(--animation-duration) var(--animation-function);
     will-change: transform, opacity, scale;
 
-    &.kbq-sidepanel-container_opened {
-        opacity: 1;
-    }
-
-    &.kbq-sidepanel-container_closed {
-        opacity: 0;
-    }
-
     &.kbq-sidepanel-container_lower {
         opacity: 1;
-        scale: $lower-panel-ratio;
     }
 
     &.kbq-sidepanel-container_bottom-panel {
         opacity: 0;
         pointer-events: none;
-        scale: $bottom-panel-ratio;
-    }
-
-    &.kbq-sidepanel-container_becoming-normal {
-        scale: 1;
     }
 }
 
@@ -125,12 +108,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     @include _sidepanel-container-margin(right);
 
     &.kbq-sidepanel-container_lower {
-        transform: translateX(calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center left;
     }
 
     &.kbq-sidepanel-container_bottom-panel {
-        transform: translateX(calc(-2 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center left;
     }
 }
@@ -146,12 +127,12 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     @include _sidepanel-container-margin(left);
 
     &.kbq-sidepanel-container_lower {
-        transform: translateX(var(--kbq-sidepanel-size-panel-lower-offset)) !important;
+        //transform: translateX(var(--kbq-sidepanel-size-panel-lower-offset)) !important;
         transform-origin: center right;
     }
 
     &.kbq-sidepanel-container_bottom-panel {
-        transform: translateX(calc(2 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
+        //transform: translateX(calc(2 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center right;
     }
 }
@@ -167,12 +148,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     @include _sidepanel-container-margin(top);
 
     &.kbq-sidepanel-container_lower {
-        transform: translateY(var(--kbq-sidepanel-size-panel-lower-offset)) !important;
         transform-origin: center bottom;
     }
 
     &.kbq-sidepanel-container_bottom-panel {
-        transform: translateY(calc(2 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center bottom;
     }
 }
@@ -188,7 +167,6 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     @include _sidepanel-container-margin(bottom);
 
     &.kbq-sidepanel-container_lower {
-        transform: translateY(calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center bottom;
 
         left: var(--kbq-sidepanel-size-panel-viewport-margin);
@@ -196,7 +174,6 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     }
 
     &.kbq-sidepanel-container_bottom-panel {
-        transform: translateY(calc(-2 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center bottom;
 
         left: calc(2 * var(--kbq-sidepanel-size-panel-viewport-margin));

@@ -26,6 +26,7 @@ import { KbqSidepanelConfig, KbqSidepanelPosition } from './sidepanel-config';
 
 export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepanel-with-indent');
 
+/** @deprecated */
 export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepanel-with-shadow');
 
 @Component({
@@ -40,15 +41,11 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqSidepanelAnimations.sidepanelState],
     host: {
-        class: 'kbq-sidepanel-container',
+        class: 'kbq-sidepanel-container kbq-sidepanel-container_shadowed',
         '[class]': 'size',
         '[class.kbq-sidepanel_nested]': 'withIndent',
-        '[class.kbq-sidepanel-container_lower]': 'placement() === "lower"',
-        '[class.kbq-sidepanel-container_bottom-panel]': 'placement() === "bottom-panel"',
-        '[class.kbq-sidepanel-container_becoming-normal]': 'placement() === "becoming-normal"',
-        '[class.kbq-sidepanel-container_shadowed]': 'withShadow',
-        '[class.kbq-sidepanel-container_opened]': 'animationState === "visible"',
-        '[class.kbq-sidepanel-container_closed]': 'animationState === "hidden"',
+        '[class.kbq-sidepanel-container_lower]': 'animationState === "lower"',
+        '[class.kbq-sidepanel-container_bottom-panel]': 'animationState === "bottom-panel"',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
         '[@state]': `{
@@ -69,7 +66,13 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     /** The state of the sidepanel animations. */
     animationState: KbqSidepanelAnimationState = KbqSidepanelAnimationState.Void;
 
-    animationTransform: { transformIn: string; transformOut: string };
+    animationTransform: {
+        transformIn: string;
+        transformOut: string;
+        lower: string;
+        bottomPanel: string;
+        becomingNormal: string;
+    };
 
     /** Emits whenever the state of the animation changes. */
     animationStateChanged = new EventEmitter<AnimationEvent>();
@@ -98,8 +101,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         private elementRef: ElementRef<HTMLElement>,
         private changeDetectorRef: ChangeDetectorRef,
         public sidepanelConfig: KbqSidepanelConfig,
-        @Inject(KBQ_SIDEPANEL_WITH_INDENT) public withIndent: boolean,
-        @Inject(KBQ_SIDEPANEL_WITH_SHADOW) public withShadow: boolean
+        @Inject(KBQ_SIDEPANEL_WITH_INDENT) public withIndent: boolean
     ) {
         super();
     }
@@ -151,8 +153,15 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.changeDetectorRef.markForCheck();
     }
 
+    /** @docs-private */
     onAnimation(event: AnimationEvent) {
         this.animationStateChanged.emit(event);
+    }
+
+    /** @docs-private */
+    setAnimationState(state: KbqSidepanelAnimationState): void {
+        this.animationState = state;
+        this.changeDetectorRef.markForCheck();
     }
 
     private setAnimation() {
@@ -160,7 +169,10 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
         this.animationTransform = {
             transformIn: kbqSidepanelTransformAnimation[position].in,
-            transformOut: kbqSidepanelTransformAnimation[position].out
+            transformOut: kbqSidepanelTransformAnimation[position].out,
+            lower: kbqSidepanelTransformAnimation[position].lower,
+            bottomPanel: kbqSidepanelTransformAnimation[position].bottomPanel,
+            becomingNormal: kbqSidepanelTransformAnimation[position].becomingNormal
         };
     }
 
