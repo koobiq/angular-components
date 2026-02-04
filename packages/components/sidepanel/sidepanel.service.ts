@@ -84,6 +84,22 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         this.openedSidepanels.push(ref);
+        ref.beforeClosed().subscribe(() => {
+            const index = this.openedSidepanels.indexOf(ref);
+
+            if (index === -1) return;
+
+            const lower = this.openedSidepanels[this.openedSidepanels.length - 2];
+            const bottom = this.openedSidepanels[this.openedSidepanels.length - 3];
+
+            if (lower) {
+                lower.containerInstance.placement.set('becoming-normal');
+            }
+
+            if (bottom) {
+                bottom.containerInstance.placement.set('lower');
+            }
+        });
         ref.afterClosed().subscribe(() => this.removeOpenSidepanel(ref));
 
         container.enter();
@@ -209,18 +225,13 @@ export class KbqSidepanelService implements OnDestroy {
         const index = this.openedSidepanels.indexOf(sidepanelRef);
 
         if (index > -1) {
-            this.openedSidepanels.splice(index, 1);
-
-            const lower = this.openedSidepanels[this.openedSidepanels.length - 1];
-            const bottom = this.openedSidepanels[this.openedSidepanels.length - 2];
+            const lower = this.openedSidepanels[this.openedSidepanels.length - 2];
 
             if (lower) {
                 lower.containerInstance.placement.set('');
             }
 
-            if (bottom) {
-                bottom.containerInstance.placement.set('lower');
-            }
+            this.openedSidepanels.splice(index, 1);
         }
     }
 }

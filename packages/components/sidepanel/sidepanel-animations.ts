@@ -1,5 +1,5 @@
 import { animate, AnimationTriggerMetadata, state, style, transition, trigger } from '@angular/animations';
-import { AnimationCurves } from '@koobiq/components/core';
+import { KbqAnimationCurves, KbqAnimationDurations } from '@koobiq/components/core';
 import { KbqSidepanelPosition } from './sidepanel-config';
 
 export enum KbqSidepanelAnimationState {
@@ -24,7 +24,10 @@ export const kbqSidepanelAnimations: { readonly sidepanelState: AnimationTrigger
         state('visible', style({ transform: '{{transformOut}}' }), {
             params: { transformOut: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].out }
         }),
-        transition('visible => void, visible => hidden', animate(`200ms ${AnimationCurves.AccelerationCurve}`)),
-        transition('void => visible', animate(`200ms ${AnimationCurves.DecelerationCurve}`))
+        transition(
+            'visible => void, visible => hidden',
+            animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`)
+        ),
+        transition('void => visible', animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`))
     ])
 };

@@ -20,7 +20,8 @@ export enum KbqAnimationCurves {
     DecelerationCurve = 'cubic-bezier(0.0,0.0,0.2,1)',
     AccelerationCurve = 'cubic-bezier(0.4,0.0,1,1)',
     SharpCurve = 'cubic-bezier(0.4,0.0,0.6,1)',
-    EaseInOut = 'ease-in-out'
+    EaseInOut = 'ease-in-out',
+    EaseInOutQuad = 'cubic-bezier(0.455,0.03,0.515,0.955)'
 }
 
 /**
@@ -29,6 +30,7 @@ export enum KbqAnimationCurves {
  * @docs-private
  */
 export enum KbqAnimationDurations {
+    Long = '300ms',
     Complex = '250ms',
     Entering = '150ms',
     Exiting = '125ms',

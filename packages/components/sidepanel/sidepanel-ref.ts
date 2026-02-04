@@ -18,6 +18,9 @@ export class KbqSidepanelRef<T = any, R = any> {
     /** Subject for notifying the user that the sidepanel has been closed and dismissed. */
     private readonly afterClosed$ = new Subject<R | undefined>();
 
+    /** @TODO: write JSDOC */
+    private readonly beforeClosed$ = new Subject<void>();
+
     /** Subject for notifying the user that the sidepanel has opened and appeared. */
     private readonly afterOpened$ = new Subject<void>();
 
@@ -41,6 +44,19 @@ export class KbqSidepanelRef<T = any, R = any> {
             .subscribe(() => {
                 this.afterOpened$.next();
                 this.afterOpened$.complete();
+            });
+
+        // Act on close
+        containerInstance.animationStateChanged
+            .pipe(
+                filter(
+                    ({ phaseName, toState }) => phaseName === 'start' && toState === KbqSidepanelAnimationState.Hidden
+                ),
+                take(1)
+            )
+            .subscribe(() => {
+                this.beforeClosed$.next();
+                this.beforeClosed$.complete();
             });
 
         // Dispose overlay when closing animation is complete
@@ -82,6 +98,10 @@ export class KbqSidepanelRef<T = any, R = any> {
             this.result = result;
             this.containerInstance.exit();
         }
+    }
+
+    beforeClosed(): Observable<void> {
+        return this.beforeClosed$.asObservable();
     }
 
     /** Gets an observable that is notified when the sidepanel is finished closing. */

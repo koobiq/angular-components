@@ -45,6 +45,7 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
         '[class.kbq-sidepanel_nested]': 'withIndent',
         '[class.kbq-sidepanel-container_lower]': 'placement() === "lower"',
         '[class.kbq-sidepanel-container_bottom-panel]': 'placement() === "bottom-panel"',
+        '[class.kbq-sidepanel-container_becoming-normal]': 'placement() === "becoming-normal"',
         '[class.kbq-sidepanel-container_shadowed]': 'withShadow',
         '[class.kbq-sidepanel-container_opened]': 'animationState === "visible"',
         '[class.kbq-sidepanel-container_closed]': 'animationState === "hidden"',
