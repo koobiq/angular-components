@@ -127,7 +127,7 @@ export class KbqSidepanelService implements OnDestroy {
             parent: this.injector,
             providers: [
                 { provide: KbqSidepanelConfig, useValue: config },
-                { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: false },
+                { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: openedSidepanelsWithSamePosition.length >= 1 },
                 { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: true }
             ]
         });
