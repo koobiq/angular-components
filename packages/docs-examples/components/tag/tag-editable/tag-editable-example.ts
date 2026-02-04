@@ -4,6 +4,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTitleModule } from '@koobiq/components/title';
 
 const TAG = 'Editable tag';
 
@@ -12,10 +13,10 @@ const TAG = 'Editable tag';
  */
 @Component({
     selector: 'tag-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule, KbqTitleModule],
     template: `
         @if (!isTagRemoved()) {
-            <kbq-tag editable [value]="tag()" (editChange)="editChange($event)" (removed)="removed($event)">
+            <kbq-tag editable kbq-title [value]="tag()" (editChange)="editChange($event)" (removed)="removed($event)">
                 {{ tag() }}
                 <input kbqInput kbqTagEditInput [(ngModel)]="tag" />
                 @if (tag().length > 0) {

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
@@ -14,11 +15,12 @@ const TAG = 'Editable tag with validation';
  */
 @Component({
     selector: 'tag-editable-with-validation-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqToolTipModule],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqToolTipModule, KbqTitleModule],
     template: `
         @if (tagValue().length > 0) {
             <kbq-tag
                 editable
+                kbq-title
                 [preventEditSubmit]="!isModelValid()"
                 [color]="tagColor()"
                 (editChange)="editChange($event)"

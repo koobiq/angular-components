@@ -7,6 +7,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTitleModule } from '@koobiq/components/title';
 
 const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Editable tag ${i}`);
 
@@ -15,13 +16,26 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
  */
 @Component({
     selector: 'tag-autocomplete-editable-example',
-    imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
+    imports: [
+        FormsModule,
+        KbqFormFieldModule,
+        KbqTagsModule,
+        KbqAutocompleteModule,
+        KbqIconModule,
+        KbqInputModule,
+        KbqTitleModule
+    ],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" editable>
                 @for (tag of tags(); track tag) {
-                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index, input)" (removed)="removed($event)">
+                    <kbq-tag
+                        kbq-title
+                        [value]="tag"
+                        (editChange)="editChange($event, $index, input)"
+                        (removed)="removed($event)"
+                    >
                         {{ tag }}
                         <input kbqInput kbqTagEditInput [(ngModel)]="editInputModel" />
                         @if (editInputModel().length === 0) {

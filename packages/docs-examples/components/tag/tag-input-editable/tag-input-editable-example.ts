@@ -5,6 +5,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTitleModule } from '@koobiq/components/title';
 
 const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable tag ${i}` }));
 
@@ -13,13 +14,18 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
  */
 @Component({
     selector: 'tag-input-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, FormsModule, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, FormsModule, KbqInputModule, KbqTitleModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" editable>
                 @for (tag of tags(); track tag) {
-                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="removed($event)">
+                    <kbq-tag
+                        kbq-title
+                        [value]="tag"
+                        (editChange)="editChange($event, $index)"
+                        (removed)="removed($event)"
+                    >
                         {{ tag.value }}
                         <input kbqInput kbqTagEditInput [(ngModel)]="editInputModel" />
                         @if (editInputModel().length === 0) {
