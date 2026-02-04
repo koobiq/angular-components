@@ -2207,6 +2207,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "vertical-form-example.ts",
     "importPath": "components/forms"
   },
+  "icon-button-custom-size": {
+    "packagePath": "components/icon-button/icon-button-custom size",
+    "title": "Icon-button custom size",
+    "componentName": "IconButtonCustomSizeExample",
+    "files": [
+      "icon-button-custom-size-example.ts"
+    ],
+    "selector": "icon-button-custom-size-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-button-custom-size-example.ts",
+    "importPath": "components/icon-button"
+  },
+  "icon-button-size": {
+    "packagePath": "components/icon-button/icon-button-size",
+    "title": "Icon-button size",
+    "componentName": "IconButtonSizeExample",
+    "files": [
+      "icon-button-size-example.ts"
+    ],
+    "selector": "icon-button-size-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-button-size-example.ts",
+    "importPath": "components/icon-button"
+  },
+  "icon-button-style": {
+    "packagePath": "components/icon-button/icon-button-style",
+    "title": "Icon-button style",
+    "componentName": "IconButtonStyleExample",
+    "files": [
+      "icon-button-style-example.ts"
+    ],
+    "selector": "icon-button-style-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-button-style-example.ts",
+    "importPath": "components/icon-button"
+  },
+  "icon-button": {
+    "packagePath": "components/icon-button/icon-button",
+    "title": "Icon-button",
+    "componentName": "IconButtonExample",
+    "files": [
+      "icon-button-example.ts"
+    ],
+    "selector": "icon-button-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-button-example.ts",
+    "importPath": "components/icon-button"
+  },
   "icon-item-color": {
     "packagePath": "components/icon-item/icon-item-color",
     "title": "Icon-item color",
@@ -6139,6 +6187,14 @@ return import('@koobiq/docs-examples/components/forms');
 return import('@koobiq/docs-examples/components/forms');
   case 'vertical-form':
 return import('@koobiq/docs-examples/components/forms');
+  case 'icon-button-custom-size':
+return import('@koobiq/docs-examples/components/icon-button');
+  case 'icon-button-size':
+return import('@koobiq/docs-examples/components/icon-button');
+  case 'icon-button-style':
+return import('@koobiq/docs-examples/components/icon-button');
+  case 'icon-button':
+return import('@koobiq/docs-examples/components/icon-button');
   case 'icon-item-color':
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-default':
