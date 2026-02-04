@@ -181,11 +181,17 @@ $bottom-panel-ratio: 0.9;
     &.kbq-sidepanel-container_lower {
         transform: scale($lower-panel-ratio) translateY(calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center bottom;
+
+        left: var(--kbq-sidepanel-size-panel-viewport-margin);
+        bottom: var(--kbq-sidepanel-size-panel-lower-offset);
     }
 
     &.kbq-sidepanel-container_bottom-panel {
         transform: scale($bottom-panel-ratio) translateY(calc(-2 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center bottom;
+
+        left: calc(2 * var(--kbq-sidepanel-size-panel-viewport-margin));
+        bottom: calc(2 * var(--kbq-sidepanel-size-panel-lower-offset));
     }
 }
 
