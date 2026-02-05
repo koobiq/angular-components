@@ -8,7 +8,7 @@
 
 $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 
-@mixin _sidepanel-container-margin($selected-side) {
+@mixin _sidepanel-container($selected-side) {
     $sides: top, right, bottom, left;
     $opposite-sides: (
         'top': 'bottom',
@@ -23,6 +23,12 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
                 margin-#{$side}: var(--kbq-sidepanel-size-panel-viewport-margin);
             }
         }
+    }
+
+    &.kbq-sidepanel-container_lower,
+    &.kbq-sidepanel-container_bottom-panel,
+    &.kbq-sidepanel-container_becoming-normal {
+        transform-origin: center #{map.get($opposite-sides, $selected-side)};
     }
 }
 
@@ -96,15 +102,7 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         flex-direction: row;
     }
 
-    @include _sidepanel-container-margin(right);
-
-    &.kbq-sidepanel-container_lower {
-        transform-origin: center left;
-    }
-
-    &.kbq-sidepanel-container_bottom-panel {
-        transform-origin: center left;
-    }
+    @include _sidepanel-container(right);
 }
 
 .kbq-sidepanel-container_left {
@@ -115,15 +113,7 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         flex-direction: row-reverse;
     }
 
-    @include _sidepanel-container-margin(left);
-
-    &.kbq-sidepanel-container_lower {
-        transform-origin: center right;
-    }
-
-    &.kbq-sidepanel-container_bottom-panel {
-        transform-origin: center right;
-    }
+    @include _sidepanel-container(left);
 }
 
 .kbq-sidepanel-container_top {
@@ -134,15 +124,7 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         flex-direction: column-reverse;
     }
 
-    @include _sidepanel-container-margin(top);
-
-    &.kbq-sidepanel-container_lower {
-        transform-origin: center bottom;
-    }
-
-    &.kbq-sidepanel-container_bottom-panel {
-        transform-origin: center bottom;
-    }
+    @include _sidepanel-container(top);
 }
 
 .kbq-sidepanel-container_bottom {
@@ -153,21 +135,7 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         flex-direction: column;
     }
 
-    @include _sidepanel-container-margin(bottom);
-
-    &.kbq-sidepanel-container_lower {
-        transform-origin: center bottom;
-
-        left: var(--kbq-sidepanel-size-panel-viewport-margin);
-        bottom: var(--kbq-sidepanel-size-panel-lower-offset);
-    }
-
-    &.kbq-sidepanel-container_bottom-panel {
-        transform-origin: center bottom;
-
-        left: calc(2 * var(--kbq-sidepanel-size-panel-viewport-margin));
-        bottom: calc(2 * var(--kbq-sidepanel-size-panel-lower-offset));
-    }
+    @include _sidepanel-container(bottom);
 }
 
 .kbq-sidepanel-wrapper {

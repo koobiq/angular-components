@@ -17,8 +17,8 @@ export const kbqSidepanelTransformAnimation: Record<
     { in: string; out: string; lower: string; bottomPanel: string; becomingNormal: string }
 > = {
     right: {
-        in: 'translateX(100%) scale(1)',
-        out: 'translateX(0%)',
+        in: 'translateX(100%)',
+        out: 'translateX(0)',
         lower: 'scale(0.95) translateX(calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset)))',
         bottomPanel: 'scale(0.9) translateX(calc(-2 * var(--kbq-sidepanel-size-panel-lower-offset)))',
         becomingNormal: 'translateX(0) scale(1)'
@@ -65,7 +65,7 @@ export const kbqSidepanelAnimations: { readonly sidepanelState: AnimationTrigger
             params: { becomingNormal: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].becomingNormal }
         }),
         transition(
-            'visible => void, visible <=> hidden, visible <=> lower, lower <=> bottom-panel, lower <=> becoming-normal',
+            'visible => void, visible <=> hidden, visible <=> lower, lower <=> bottom-panel, lower <=> becoming-normal, becoming-normal <=> visible',
             animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`)
         ),
         transition('void => visible', animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`))
