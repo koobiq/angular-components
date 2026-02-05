@@ -27,7 +27,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         </kbq-tab-group>
 
         <!-- underlined -->
-        <kbq-tab-group underlined>
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlined">
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab" [disabled]="$index === 1">
                     <ng-template kbq-tab-label>
