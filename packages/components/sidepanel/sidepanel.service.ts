@@ -186,7 +186,7 @@ export class KbqSidepanelService implements OnDestroy {
             return config.backdropClass;
         }
 
-        return ['kbq-overlay-dark-backdrop', 'kbq-overlay-backdrop'];
+        return config.requiredBackdrop ? 'cdk-overlay-dark-backdrop' : 'kbq-overlay-dark-backdrop';
     }
 
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {
@@ -201,8 +201,7 @@ export class KbqSidepanelService implements OnDestroy {
 
         this.openedSidepanels[index].overlayRef.backdropElement?.classList?.remove('kbq-overlay-dark-backdrop');
 
-        const lower = this.openedSidepanels[this.openedSidepanels.length - 2];
-        const bottom = this.openedSidepanels[this.openedSidepanels.length - 3];
+        const [lower, bottom] = this.getLowerSidepanelsWithSamePosition(index);
 
         lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.BecomingNormal);
         bottom?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Lower);
@@ -216,11 +215,22 @@ export class KbqSidepanelService implements OnDestroy {
         const index = this.openedSidepanels.indexOf(sidepanelRef);
 
         if (index > -1) {
-            const lower = this.openedSidepanels[this.openedSidepanels.length - 2];
+            const [lower] = this.getLowerSidepanelsWithSamePosition(index);
 
             lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Visible);
 
             this.openedSidepanels.splice(index, 1);
         }
+    }
+
+    private getLowerSidepanelsWithSamePosition(index: number): KbqSidepanelRef[] {
+        const openedSidepanelsWithSamePosition = this.getOpenedSidepanelsWithSamePosition(
+            this.openedSidepanels[index].config
+        );
+
+        return [
+            openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 2],
+            openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 3]
+        ];
     }
 }
