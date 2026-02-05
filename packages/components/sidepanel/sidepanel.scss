@@ -25,9 +25,7 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         }
     }
 
-    &.kbq-sidepanel-container_lower,
-    &.kbq-sidepanel-container_bottom-panel,
-    &.kbq-sidepanel-container_becoming-normal {
+    & {
         transform-origin: center #{map.get($opposite-sides, $selected-side)};
     }
 }
@@ -82,15 +80,6 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
             height: var(--kbq-sidepanel-size-panel-lower-offset);
             width: 100%;
         }
-    }
-
-    &.kbq-sidepanel-container_lower {
-        opacity: 1;
-    }
-
-    &.kbq-sidepanel-container_bottom-panel {
-        opacity: 0;
-        pointer-events: none;
     }
 }
 

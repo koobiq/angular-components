@@ -43,9 +43,6 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
         class: 'kbq-sidepanel-container kbq-sidepanel-container_shadowed',
         '[class]': 'size',
         '[class.kbq-sidepanel_nested]': 'withIndent',
-        '[class.kbq-sidepanel-container_lower]': 'animationState === "lower"',
-        '[class.kbq-sidepanel-container_bottom-panel]': 'animationState === "bottom-panel"',
-        '[class.kbq-sidepanel-container_becoming-normal]': 'animationState === "becoming-normal"',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
         '[@state]': `{
