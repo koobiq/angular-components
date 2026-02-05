@@ -18,8 +18,8 @@ import { KbqRadioModule } from '@koobiq/components/radio';
                 <kbq-radio-button [value]="'flex-none'">flex-none</kbq-radio-button>
                 <kbq-radio-button [value]="'flex-auto'">flex-auto</kbq-radio-button>
                 <kbq-radio-button [value]="'flex-grow'">flex-grow</kbq-radio-button>
-                <kbq-radio-button [value]="'flex-nogrow'">flex-nogrow</kbq-radio-button>
-                <kbq-radio-button [value]="'flex-noshrink'">flex-noshrink</kbq-radio-button>
+                <kbq-radio-button [value]="'flex-no-grow'">flex-no-grow</kbq-radio-button>
+                <kbq-radio-button [value]="'flex-no-shrink'">flex-no-shrink</kbq-radio-button>
             </kbq-radio-group>
         </div>
         <div class="layout-row example-block  layout-margin-top-4xl">
