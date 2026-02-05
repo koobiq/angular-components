@@ -26,7 +26,6 @@ We're excited to see the community adopt, raise issues, and provide feedback.
 Whether it's a feature request, bug report, or a project to showcase, please get involved!
 
 - [Join our Telegram](https://t.me/koobiq_io)
-- [Join our Discord](https://discord.gg/43MRHjgWYg)
 - [GitHub Discussions](https://github.com/koobiq/angular-components/discussions)
 
 ## Contributor analytics
