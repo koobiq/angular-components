@@ -199,6 +199,8 @@ export class KbqSidepanelService implements OnDestroy {
         // only allow animations if ref is last element in sidepanels list
         if (index === -1 || index !== this.openedSidepanels.length - 1) return;
 
+        this.openedSidepanels[index].overlayRef.backdropElement?.classList?.remove('kbq-overlay-dark-backdrop');
+
         const lower = this.openedSidepanels[this.openedSidepanels.length - 2];
         const bottom = this.openedSidepanels[this.openedSidepanels.length - 3];
 
