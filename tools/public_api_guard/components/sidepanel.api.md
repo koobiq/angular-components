@@ -105,7 +105,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point index.d.ts
     animationState: KbqSidepanelAnimationState;
     animationStateChanged: EventEmitter<AnimationEvent_2>;
-    // (undocumented)
     animationTransform: {
         transformIn: string;
         transformOut: string;
@@ -127,11 +126,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     setAnimationState(state: KbqSidepanelAnimationState): void;
     // (undocumented)
     sidepanelConfig: KbqSidepanelConfig;
-    // (undocumented)
     get size(): string;
-    // (undocumented)
     get trapFocus(): boolean;
-    // (undocumented)
     get trapFocusAutoCapture(): boolean;
     // (undocumented)
     withIndent: boolean;
@@ -193,7 +189,6 @@ export class KbqSidepanelRef<T = any, R = any> {
     constructor(containerInstance: KbqSidepanelContainerComponent, overlayRef: OverlayRef, config: KbqSidepanelConfig);
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
-    // (undocumented)
     beforeClosed(): Observable<void>;
     // (undocumented)
     close(result?: R): void;

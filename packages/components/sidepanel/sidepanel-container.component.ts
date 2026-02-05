@@ -66,6 +66,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     /** The state of the sidepanel animations. */
     animationState: KbqSidepanelAnimationState = KbqSidepanelAnimationState.Void;
 
+    /** @docs-private */
     animationTransform: {
         transformIn: string;
         transformOut: string;
@@ -82,10 +83,12 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         return `kbq-sidepanel_${this.sidepanelConfig.size}`;
     }
 
+    /** @docs-private */
     get trapFocusAutoCapture(): boolean {
         return this.sidepanelConfig.trapFocusAutoCapture ?? !!this.sidepanelConfig.hasBackdrop;
     }
 
+    /** @docs-private */
     get trapFocus(): boolean {
         return this.sidepanelConfig.trapFocus ?? !!this.sidepanelConfig.hasBackdrop;
     }
