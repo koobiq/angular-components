@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -14,22 +14,30 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverlayedExample {
-    position = KbqSidepanelPosition.Right;
+    protected position = KbqSidepanelPosition.Right;
 
-    overlaysCount = 2;
+    protected readonly overlaysCount = 2;
 
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
-    arrayLength = 40;
-    array = new Array(this.arrayLength);
-    constructor(private sidepanelService: KbqSidepanelService) {}
+    protected readonly arrayLength = 40;
+    protected readonly array = new Array(this.arrayLength);
 
-    openSidepanel() {
+    private sidepanelService = inject(KbqSidepanelService);
+
+    openSidepanel(): void {
         for (let i = 0; i < this.overlaysCount; i++) {
             this.sidepanelService.open(this.template, {
                 position: this.position,
                 hasBackdrop: false
             });
         }
+    }
+
+    openAnotherSidepanel(): void {
+        this.sidepanelService.open(this.template, {
+            position: this.position,
+            hasBackdrop: false
+        });
     }
 }

@@ -77,6 +77,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     /** Emits whenever the state of the animation changes. */
     animationStateChanged = new EventEmitter<AnimationEvent>();
 
+    /** @docs-private */
     get size(): string {
         return `kbq-sidepanel_${this.sidepanelConfig.size}`;
     }

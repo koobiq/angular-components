@@ -14,6 +14,37 @@ import {
     KbqSidepanelSize
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import {
+    SidepanelModalModeExample,
+    SidepanelNormalModeExample,
+    SidepanelOverlayedExample,
+    SidepanelSizesExample,
+    SidepanelWithDynamicConfigUpdateExample
+} from '../../docs-examples/components/sidepanel';
+
+@Component({
+    selector: 'dev-examples',
+    imports: [
+        SidepanelWithDynamicConfigUpdateExample,
+        SidepanelModalModeExample,
+        SidepanelNormalModeExample,
+        SidepanelOverlayedExample,
+        SidepanelSizesExample
+    ],
+    template: `
+        <sidepanel-modal-mode-example />
+        <hr />
+        <sidepanel-normal-mode-example />
+        <hr />
+        <sidepanel-overlayed-example />
+        <hr />
+        <sidepanel-sizes-example />
+        <hr />
+        <sidepanel-with-dynamic-config-update-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-sidepanel-component',
@@ -70,7 +101,8 @@ export class DevSidepanelComponent {
         KbqFormFieldModule,
         KbqSelectModule,
         KbqToggleModule,
-        KbqDropdownModule
+        KbqDropdownModule,
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

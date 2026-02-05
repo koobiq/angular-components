@@ -64,10 +64,6 @@ export const kbqSidepanelAnimations: { readonly sidepanelState: AnimationTrigger
         state(KbqSidepanelAnimationState.BecomingNormal, style({ transform: '{{becomingNormal}}', opacity: 1 }), {
             params: { becomingNormal: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].becomingNormal }
         }),
-        transition(
-            'visible => void, visible <=> hidden, visible <=> lower, lower <=> bottom-panel, lower <=> becoming-normal, becoming-normal <=> visible',
-            animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`)
-        ),
-        transition('void => visible', animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`))
+        transition('* <=> *', animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`))
     ])
 };

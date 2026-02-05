@@ -1,5 +1,6 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
+import { isHtmlElement } from '@koobiq/components/core';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
@@ -18,7 +19,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     /** Subject for notifying the user that the sidepanel has been closed and dismissed. */
     private readonly afterClosed$ = new Subject<R | undefined>();
 
-    /** @TODO: write JSDOC */
+    /** Subject for notifying the user that the sidepanel starting closing. */
     private readonly beforeClosed$ = new Subject<void>();
 
     /** Subject for notifying the user that the sidepanel has opened and appeared. */
@@ -77,7 +78,12 @@ export class KbqSidepanelRef<T = any, R = any> {
                 // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
                 filter((event) => event.keyCode === ESCAPE)
             ),
-            this.containerInstance.indentClick()
+            this.containerInstance.indentClick(),
+            overlayRef
+                .outsidePointerEvents()
+                .pipe(
+                    filter((event) => isHtmlElement(event.target) && !!event.target.closest('.kbq-sidepanel-container'))
+                )
         ).subscribe(() => {
             if (this.config.disableClose) return;
 
@@ -100,6 +106,7 @@ export class KbqSidepanelRef<T = any, R = any> {
         }
     }
 
+    /** Gets an observable that is notified when the sidepanel is started closing. */
     beforeClosed(): Observable<void> {
         return this.beforeClosed$.asObservable();
     }
