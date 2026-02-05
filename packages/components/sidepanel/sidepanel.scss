@@ -73,19 +73,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         left: 0;
 
         .kbq-sidepanel-indent {
-            height: 16px;
+            height: var(--kbq-sidepanel-size-panel-lower-offset);
             width: 100%;
         }
     }
-
-    --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
-    --animation-duration: 300ms;
-    --animation-function: var(--ease-in-out-quad);
-
-    transition:
-        opacity var(--animation-duration) linear,
-        scale var(--animation-duration) var(--animation-function);
-    will-change: transform, opacity, scale;
 
     &.kbq-sidepanel-container_lower {
         opacity: 1;
@@ -127,12 +118,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     @include _sidepanel-container-margin(left);
 
     &.kbq-sidepanel-container_lower {
-        //transform: translateX(var(--kbq-sidepanel-size-panel-lower-offset)) !important;
         transform-origin: center right;
     }
 
     &.kbq-sidepanel-container_bottom-panel {
-        //transform: translateX(calc(2 * var(--kbq-sidepanel-size-panel-lower-offset))) !important;
         transform-origin: center right;
     }
 }

@@ -21,14 +21,14 @@ export const kbqSidepanelTransformAnimation: Record<
         out: 'translateX(0%)',
         lower: 'scale(0.95) translateX(calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset)))',
         bottomPanel: 'scale(0.9) translateX(calc(-2 * var(--kbq-sidepanel-size-panel-lower-offset)))',
-        becomingNormal: 'scale(1) translateX(0%)'
+        becomingNormal: 'translateX(0) scale(1)'
     },
     left: {
         in: 'translateX(-100%) scale(1)',
         out: 'translateX(0%) scale(1)',
         lower: 'scale(0.95) translateX(var(--kbq-sidepanel-size-panel-lower-offset))',
         bottomPanel: 'scale(0.9) translateX(calc(2 * var(--kbq-sidepanel-size-panel-lower-offset)))',
-        becomingNormal: 'scale(1) translateX(0%)'
+        becomingNormal: 'translateX(0%) scale(1)'
     },
     top: {
         in: 'translateY(-100%)',
@@ -48,24 +48,24 @@ export const kbqSidepanelTransformAnimation: Record<
 
 export const kbqSidepanelAnimations: { readonly sidepanelState: AnimationTriggerMetadata } = {
     sidepanelState: trigger('state', [
-        state('void', style({ opacity: 0 })),
-        state('hidden', style({ transform: '{{transformIn}}' }), {
+        state(KbqSidepanelAnimationState.Void, style({ opacity: 0 })),
+        state(KbqSidepanelAnimationState.Hidden, style({ transform: '{{transformIn}}' }), {
             params: { transformIn: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].in }
         }),
-        state('visible', style({ transform: '{{transformOut}}', opacity: 1 }), {
+        state(KbqSidepanelAnimationState.Visible, style({ transform: '{{transformOut}}', opacity: 1 }), {
             params: { transformOut: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].out }
         }),
-        state(KbqSidepanelAnimationState.Lower, style({ transform: '{{lower}}' }), {
+        state(KbqSidepanelAnimationState.Lower, style({ transform: '{{lower}}', opacity: 1 }), {
             params: { lower: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].lower }
         }),
-        state(KbqSidepanelAnimationState.BottomPanel, style({ transform: '{{bottomPanel}}' }), {
+        state(KbqSidepanelAnimationState.BottomPanel, style({ transform: '{{bottomPanel}}', opacity: 0 }), {
             params: { bottomPanel: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].bottomPanel }
         }),
-        state(KbqSidepanelAnimationState.BecomingNormal, style({ transform: '{{becomingNormal}}' }), {
+        state(KbqSidepanelAnimationState.BecomingNormal, style({ transform: '{{becomingNormal}}', opacity: 1 }), {
             params: { becomingNormal: kbqSidepanelTransformAnimation[KbqSidepanelPosition.Right].becomingNormal }
         }),
         transition(
-            'visible => void, visible <=> hidden, visible <=> lower, lower <=> bottom-panel, becoming-normal <=> lower',
+            'visible => void, visible <=> hidden, visible <=> lower, lower <=> bottom-panel, lower <=> becoming-normal',
             animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`)
         ),
         transition('void => visible', animate(`${KbqAnimationDurations.Long} ${KbqAnimationCurves.EaseInOutQuad}`))

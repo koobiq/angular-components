@@ -12,7 +12,6 @@ import {
     Inject,
     InjectionToken,
     OnDestroy,
-    signal,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -76,8 +75,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** Emits whenever the state of the animation changes. */
     animationStateChanged = new EventEmitter<AnimationEvent>();
-
-    placement = signal('');
 
     get size(): string {
         return `kbq-sidepanel_${this.sidepanelConfig.size}`;
@@ -149,8 +146,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     exit(): void {
         if (this.destroyed) return;
 
-        this.animationState = KbqSidepanelAnimationState.Hidden;
-        this.changeDetectorRef.markForCheck();
+        this.setAnimationState(KbqSidepanelAnimationState.Hidden);
     }
 
     /** @docs-private */

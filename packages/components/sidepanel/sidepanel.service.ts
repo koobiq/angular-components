@@ -81,18 +81,7 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         this.openedSidepanels.push(ref);
-        ref.beforeClosed().subscribe(() => {
-            const index = this.openedSidepanels.indexOf(ref);
-
-            // only allow animations if ref is last element in sidepanels list
-            if (index === -1 || index !== this.openedSidepanels.length - 1) return;
-
-            const lower = this.openedSidepanels[this.openedSidepanels.length - 2];
-            const bottom = this.openedSidepanels[this.openedSidepanels.length - 3];
-
-            lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.BecomingNormal);
-            bottom?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Lower);
-        });
+        ref.beforeClosed().subscribe(() => this.updateAnimationState(ref));
         ref.afterClosed().subscribe(() => this.removeOpenSidepanel(ref));
 
         container.enter();
@@ -202,6 +191,19 @@ export class KbqSidepanelService implements OnDestroy {
 
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {
         return this.openedSidepanels.filter((sidepanelRef) => sidepanelRef.config.position === config.position);
+    }
+
+    private updateAnimationState(sidepanelRef: KbqSidepanelRef) {
+        const index = this.openedSidepanels.indexOf(sidepanelRef);
+
+        // only allow animations if ref is last element in sidepanels list
+        if (index === -1 || index !== this.openedSidepanels.length - 1) return;
+
+        const lower = this.openedSidepanels[this.openedSidepanels.length - 2];
+        const bottom = this.openedSidepanels[this.openedSidepanels.length - 3];
+
+        lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.BecomingNormal);
+        bottom?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Lower);
     }
 
     /**
