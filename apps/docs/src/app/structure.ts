@@ -60,6 +60,7 @@ export enum DocsStructureItemId {
     SearchExpandable = 'search-expandable',
     Sidebar = 'sidebar',
     Sidepanel = 'sidepanel',
+    Skeleton = 'skeleton',
     Splitter = 'splitter',
     SplitButton = 'split-button',
     Table = 'table',
@@ -804,6 +805,18 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'sidepanel',
                     hasExamples: true
+                },
+                {
+                    id: DocsStructureItemId.Skeleton,
+                    name: {
+                        ru: 'Skeleton',
+                        en: 'Skeleton'
+                    },
+                    svgPreview: 'skeleton',
+                    hasApi: true,
+                    apiId: 'skeleton',
+                    hasExamples: false,
+                    isNew: expiresAt('2026-03-03')
                 },
                 {
                     id: DocsStructureItemId.Splitter,

@@ -253,6 +253,7 @@
         "dev:select": "ng serve dev-select --port 3003",
         "dev:sidebar": "ng serve dev-sidebar --port 3003",
         "dev:sidepanel": "ng serve dev-sidepanel --port 3003",
+        "dev:skeleton": "ng serve dev-skeleton --port 3003",
         "dev:splitter": "ng serve dev-splitter --port 3003",
         "dev:split-button": "ng serve dev-split-button --port 3003",
         "dev:ssr": "ng serve dev-ssr --port 3003",

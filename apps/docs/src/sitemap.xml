@@ -643,6 +643,18 @@
 		<loc>https://koobiq.io/ru/components/sidepanel/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/skeleton/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/skeleton/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/skeleton/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/skeleton/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/splitter/overview</loc>
 	</url>
 	<url>

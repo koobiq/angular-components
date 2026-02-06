@@ -1,16 +1,12 @@
 @use '@koobiq/icons/fonts/kbq-icons';
 
 @use '../components/core/styles/theming/prebuilt/theme';
-
 @use '../components/core/styles/visual/layout';
-
 @use '../components/core/styles/common/list';
+@use '../components/core/styles/common/tokens';
 
 @use '../../apps/docs/src/styles/koobiq';
-
 @use '../../apps/docs/src/styles/fonts';
-
-@use '../components/core/styles/common/tokens';
 
 @include layout.layouts-for-breakpoint();
 

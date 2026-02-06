@@ -2090,6 +2090,36 @@
                 }
             }
         },
+        "dev-skeleton": {
+            "projectType": "application",
+            "root": "packages/components-dev/skeleton",
+            "sourceRoot": "packages/components-dev/skeleton",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/skeleton"
+                        },
+                        "tsConfig": "packages/components-dev/skeleton/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/skeleton/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-skeleton:build"
+                    }
+                }
+            }
+        },
         "dev-splitter": {
             "projectType": "application",
             "root": "packages/components-dev/splitter",
