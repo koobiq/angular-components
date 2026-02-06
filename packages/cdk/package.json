@@ -16,7 +16,6 @@
     ],
     "license": "MIT",
     "peerDependencies": {
-        "@angular/cdk": "{{NG_VERSION}}",
         "@angular/common": "{{NG_VERSION}}"
     },
     "dependencies": {

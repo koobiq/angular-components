@@ -23,10 +23,8 @@
     "peerDependencies": {
         "@angular/animations": "{{NG_VERSION}}",
         "@angular/cdk": "{{NG_VERSION}}",
-        "@angular/common": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/forms": "{{NG_VERSION}}",
-        "@angular/platform-browser": "{{NG_VERSION}}",
         "@koobiq/cdk": "{{VERSION}}",
         "@koobiq/angular-moment-adapter": "{{VERSION}}",
         "@koobiq/angular-luxon-adapter": "{{VERSION}}",
