@@ -28,31 +28,31 @@
         "@koobiq/components-experimental": "${version}",
         "@koobiq/date-adapter": "^3.4.0",
         "@koobiq/date-formatter": "^3.4.0",
-        "@koobiq/design-tokens": "3.14.0",
+        "@koobiq/design-tokens": "^3.15.0",
         "@koobiq/icons": "^11.2.0",
         "@koobiq/luxon-date-adapter": "^3.4.0",
         "@koobiq/moment-date-adapter": "^3.4.0",
         "@maskito/angular": "^5.0.1",
         "@maskito/core": "^5.0.1",
         "@maskito/kit": "^5.0.1",
-        "@messageformat/core": "^3.0.0",
+        "@messageformat/core": "^3.4.0",
         "ag-grid-angular": "^34.3.1",
         "ag-grid-community": "^34.3.1",
-        "highlight.js": "^11.10.0",
-        "luxon": "^3.4.4",
+        "highlight.js": "^11.11.1",
+        "luxon": "^3.7.2",
         "marked": "^15.0.7",
         "moment": "~2.29.2",
         "overlayscrollbars": "2.7.3",
-        "rxjs": "^7.8.1",
-        "tslib": "^2.6.2",
-        "zone.js": "^0.14.10"
+        "rxjs": "^7.8.2",
+        "tslib": "^2.8.1",
+        "zone.js": "~0.15.0"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "${ngVersion}",
         "@angular/cli": "${ngVersion}",
         "@angular/compiler-cli": "${ngVersion}",
-        "@types/luxon": "^3.4.2",
+        "@types/luxon": "^3.7.1",
         "@types/node": "^18.19.0",
-        "typescript": "5.5.4"
+        "typescript": "5.8.3"
     }
 }
