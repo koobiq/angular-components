@@ -551,9 +551,10 @@ export class KbqSelect
 
     panelOpen = false;
 
-    private _focused = false;
+    /** true if virtual scrolling is used. */
+    withVirtualScroll: boolean;
 
-    private withVirtualScroll: boolean;
+    private _focused = false;
 
     get isEmptySearchResult(): boolean {
         return this.search && this.options.filter((option) => option.selectable).length === 0 && !!this.search.value();
@@ -1257,7 +1258,7 @@ export class KbqSelect
 
             // Shift focus to the active item. Note that we shouldn't do this in multiple
             // mode, because we don't know what option the user interacted with last.
-            if (correspondingOption) {
+            if (correspondingOption && !this.withVirtualScroll) {
                 this.keyManager.setActiveItem(correspondingOption);
             }
         }

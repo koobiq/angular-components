@@ -124,7 +124,8 @@
 
         <div
             #optionsContainer
-            class="kbq-select__content kbq-scrollbar"
+            class="kbq-select__content"
+            [class.kbq-scrollbar]="!withVirtualScroll"
             [@fadeInContent]="'showing'"
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
