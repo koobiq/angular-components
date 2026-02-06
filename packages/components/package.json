@@ -21,6 +21,7 @@
     },
     "homepage": "https://github.com/koobiq/angular-components#readme",
     "peerDependencies": {
+        "@angular/animations": "{{NG_VERSION}}",
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/forms": "{{NG_VERSION}}",

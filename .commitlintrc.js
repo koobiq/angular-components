@@ -26,6 +26,7 @@ const config = {
                 'angular-luxon-adapter',
                 'angular-moment-adapter',
                 'cdk',
+                'components',
                 'cli',
                 'experimental',
                 'schematics',
