@@ -1,3 +1,23 @@
+# 19.3.0 (2026-02-06)
+
+### Koobiq
+
+ * bug fix  missing peerDependencies and installation guide ([#DS-4550](https://github.com/koobiq/angular-components/issues/issue/DS-4550)) ([#1355](https://github.com/koobiq/angular-components/issues/1355)) ([6f55178](https://github.com/koobiq/angular-components/commit/6f55178e1eaf78155d6f3d21587c1a3d024dbc96))
+ * bug fix  **datepicker:** popup position ([#DS-4619](https://github.com/koobiq/angular-components/issues/issue/DS-4619)) ([#1326](https://github.com/koobiq/angular-components/issues/1326)) ([f20c81d](https://github.com/koobiq/angular-components/commit/f20c81dd4391f2bed4b575fbae31583fd240aae4))
+ * bug fix  **docs:** initial theme ([#DS-4666](https://github.com/koobiq/angular-components/issues/issue/DS-4666)) ([#1350](https://github.com/koobiq/angular-components/issues/1350)) ([2a37644](https://github.com/koobiq/angular-components/commit/2a37644e6a54a98dd7d4d877b502fbf6bad4bd64))
+ * bug fix  **docs:** stackblitz angular version ([#DS-4640](https://github.com/koobiq/angular-components/issues/issue/DS-4640)) ([#1325](https://github.com/koobiq/angular-components/issues/1325)) ([4336a10](https://github.com/koobiq/angular-components/commit/4336a10fbb573133106750841a191640b2f51124))
+ * bug fix  **docs:** sync stackblitz package versions ([#DS-4550](https://github.com/koobiq/angular-components/issues/issue/DS-4550)) ([#1353](https://github.com/koobiq/angular-components/issues/1353)) ([2126039](https://github.com/koobiq/angular-components/commit/2126039e7cdc1777bce88a7ad676ac45c61db478))
+ * bug fix  **dropdown:** don't overlay trigger if dropdown isn't fit ([#DS-4505](https://github.com/koobiq/angular-components/issues/issue/DS-4505)) ([#1335](https://github.com/koobiq/angular-components/issues/1335)) ([6745d85](https://github.com/koobiq/angular-components/commit/6745d85b49995ddbb6089972ad43ecc01c99fbf7))
+ * bug fix  **filter-bar:** select children using search ([#DS-4613](https://github.com/koobiq/angular-components/issues/issue/DS-4613)) ([#1328](https://github.com/koobiq/angular-components/issues/1328)) ([b34360c](https://github.com/koobiq/angular-components/commit/b34360c0344c9f7996c994780b695bf4be72c435))
+ * bug fix  **inline-edit:** removed text flick on mode change ([#DS-4360](https://github.com/koobiq/angular-components/issues/issue/DS-4360)) ([#1333](https://github.com/koobiq/angular-components/issues/1333)) ([68e2a0d](https://github.com/koobiq/angular-components/commit/68e2a0d0cc639b551a08d40a806ccf761e0266b0))
+ * bug fix  **popover:** inverted background of close button without header ([#DS-3185](https://github.com/koobiq/angular-components/issues/issue/DS-3185)) ([#1323](https://github.com/koobiq/angular-components/issues/1323)) ([cad48c4](https://github.com/koobiq/angular-components/commit/cad48c432eff28b52a27812ebb40aa53665b55cb))
+ * bug fix  **select:** color for disabled state ([#DS-4574](https://github.com/koobiq/angular-components/issues/issue/DS-4574)) ([#1330](https://github.com/koobiq/angular-components/issues/1330)) ([2360305](https://github.com/koobiq/angular-components/commit/236030575b77a54595bfbbe2f4899668fc336583))
+ * bug fix  **select:** scrollBar jumps in select with virtual scrolling ([#DS-4621](https://github.com/koobiq/angular-components/issues/issue/DS-4621)) ([#1354](https://github.com/koobiq/angular-components/issues/1354)) ([ad63391](https://github.com/koobiq/angular-components/commit/ad633918334562db7b8d76783d717cdf49dee6df))
+ * bug fix  **tags:** double focus when editing ([#DS-4321](https://github.com/koobiq/angular-components/issues/issue/DS-4321)) ([#1324](https://github.com/koobiq/angular-components/issues/1324)) ([c77aad7](https://github.com/koobiq/angular-components/commit/c77aad79c0cb8fe112bb7237e3b1c3ea3bbaacb6))
+ * bug fix  **tree, tree-select:** selection nested on CTRL+A ([#DS-4610](https://github.com/koobiq/angular-components/issues/issue/DS-4610)) ([#1336](https://github.com/koobiq/angular-components/issues/1336)) ([54d63bf](https://github.com/koobiq/angular-components/commit/54d63bfc7ed0a169b8ffadb4f6f03838a26f1e2b))
+ * feature  **file-upload:** added dropzone area ([#DS-2356](https://github.com/koobiq/angular-components/issues/issue/DS-2356)) ([#1299](https://github.com/koobiq/angular-components/issues/1299)) ([9590535](https://github.com/koobiq/angular-components/commit/9590535e32d380ba26a9bcb57bd12362628b3404))
+ * feature  **skeleton:** added KbqSkeletonModule ([#DS-3647](https://github.com/koobiq/angular-components/issues/issue/DS-3647)) ([#1345](https://github.com/koobiq/angular-components/issues/1345)) ([c100ccb](https://github.com/koobiq/angular-components/commit/c100ccbc9bf9e99bdcf24a22fae40b7ae9d27304))
+
 # 19.2.0 (2026-01-23)
 
 ### Koobiq
