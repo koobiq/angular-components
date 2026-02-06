@@ -23,7 +23,7 @@ After installation, you need to include the library styles. Add the following fi
   "node_modules/@koobiq/icons/fonts/kbq-icons.css",
   "node_modules/@koobiq/design-tokens/web/css-tokens.css",
   "node_modules/@koobiq/design-tokens/web/css-tokens-light.css",
-  "node_modules/@koobiq/components/prebuilt-themes/light-theme.css",
+  "node_modules/@koobiq/components/prebuilt-themes/theme.css",
   "src/styles.css"
 ]
 ```
