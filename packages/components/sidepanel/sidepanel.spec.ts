@@ -235,12 +235,17 @@ describe('KbqSidepanelService', () => {
     });
 
     it('should have only one dark backdrop with multiple sidepanels by default', () => {
+        const spy = jest.spyOn(sidepanelService, 'open');
+
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
 
-        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-dark-backdrop').length).toBe(1);
-        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-transparent-backdrop').length).toBe(2);
+        expect(overlayContainerElement.querySelectorAll('.kbq-overlay-dark-backdrop').length).toBe(
+            spy.mock.calls.length
+        );
+        // will resolve transparency using css selectors
+        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-transparent-backdrop').length).toBe(0);
     });
 
     it('should be able to add more than one dark backdrop with multiple sidepanels', () => {
@@ -248,8 +253,9 @@ describe('KbqSidepanelService', () => {
         sidepanelService.open(SimpleSidepanelExample, { requiredBackdrop: true });
         sidepanelService.open(SimpleSidepanelExample);
 
-        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-dark-backdrop').length).toBe(2);
-        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-transparent-backdrop').length).toBe(1);
+        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-dark-backdrop').length).toBe(1);
+        // will resolve transparency using css selectors
+        expect(overlayContainerElement.querySelectorAll('.kbq-overlay-dark-backdrop').length).toBe(2);
     });
 
     it('should be able to set custom overlay class', () => {

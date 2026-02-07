@@ -1958,6 +1958,8 @@ export enum KbqAnimationCurves {
     // (undocumented)
     EaseInOut = "ease-in-out",
     // (undocumented)
+    EaseInOutQuad = "cubic-bezier(0.455,0.03,0.515,0.955)",
+    // (undocumented)
     SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
     // (undocumented)
     StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
@@ -1973,6 +1975,8 @@ export enum KbqAnimationDurations {
     Exiting = "125ms",
     // (undocumented)
     Instant = "50ms",
+    // (undocumented)
+    Long = "300ms",
     // (undocumented)
     Rapid = "100ms"
 }
