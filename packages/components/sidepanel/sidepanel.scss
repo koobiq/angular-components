@@ -204,13 +204,8 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     flex-direction: column;
     min-height: 0;
 
-    padding-top: var(--kbq-sidepanel-size-content-padding-top);
-
-    padding-right: var(--kbq-sidepanel-size-content-padding-horizontal);
-
-    padding-left: var(--kbq-sidepanel-size-content-padding-horizontal);
-
-    padding-bottom: var(--kbq-sidepanel-size-content-padding-bottom);
+    padding: var(--kbq-sidepanel-size-content-padding-top) var(--kbq-sidepanel-size-content-padding-horizontal)
+        var(--kbq-sidepanel-size-content-padding-bottom);
 }
 
 .kbq-sidepanel-footer {
