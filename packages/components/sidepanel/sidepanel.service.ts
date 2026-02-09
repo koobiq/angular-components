@@ -64,10 +64,15 @@ export class KbqSidepanelService implements OnDestroy {
 
         if (componentOrTemplateRef instanceof TemplateRef) {
             container.attachTemplatePortal(
-                new TemplatePortal<T>(componentOrTemplateRef, null!, {
-                    $implicit: fullConfig.data,
-                    sidepanelRef: ref
-                } as any)
+                new TemplatePortal<T>(
+                    componentOrTemplateRef,
+                    null!,
+                    {
+                        $implicit: fullConfig.data,
+                        sidepanelRef: ref
+                    } as any,
+                    this.createInjector(fullConfig, ref, container)
+                )
             );
         } else {
             const portal = new ComponentPortal(
