@@ -14,17 +14,17 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
         KbqButtonModule
     ],
     template: `
-        <button kbq-button (click)="sidepanel.open(template, { overlayPanelClass: 'example__with-code-block' })">
-            Open sidepanel
-        </button>
+        <button kbq-button (click)="sidepanel.open(template)">Open sidepanel</button>
         <ng-template #template>
-            <kbq-code-block canToggleSoftWrap noBorder lineNumbers [files]="files" [softWrap]="true" />
+            <kbq-code-block
+                canToggleSoftWrap
+                noBorder
+                lineNumbers
+                style="height: 100%"
+                [files]="files"
+                [softWrap]="true"
+            />
         </ng-template>
-    `,
-    styles: `
-        ::ng-deep .example__with-code-block .kbq-code-block {
-            overflow: auto;
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
