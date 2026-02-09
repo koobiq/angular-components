@@ -34,6 +34,7 @@ import {
     InputWithMaskExample
 } from 'packages/docs-examples/components/input';
 import { startWith } from 'rxjs';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
@@ -71,7 +72,8 @@ export class DevDocsExamples {}
         KbqToolTipModule,
         KbqIconModule,
         DevDocsExamples,
-        KbqNormalizeWhitespace
+        KbqNormalizeWhitespace,
+        DevThemeToggle
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
