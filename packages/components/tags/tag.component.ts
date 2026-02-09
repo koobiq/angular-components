@@ -134,12 +134,18 @@ export class KbqTagEditSubmit {
     host: {
         class: 'kbq-tag-edit-input',
 
-        '(keydown)': 'handleKeydown($event)'
+        '(keydown)': 'handleKeydown($event)',
+        '(click)': 'handleClick($event)'
     },
     hostDirectives: [KbqFieldSizingContent]
 })
 export class KbqTagEditInput {
     private readonly tag = inject(KbqTag);
+
+    /** @docs-private */
+    protected handleClick(event: MouseEvent): void {
+        event.stopPropagation();
+    }
 
     /** @docs-private */
     protected handleKeydown(event: KeyboardEvent): void {

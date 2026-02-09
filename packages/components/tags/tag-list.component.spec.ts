@@ -13,6 +13,7 @@ import {
     ViewChild,
     ViewChildren,
     model,
+    signal,
     viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
@@ -119,13 +120,14 @@ export class TestTagList {
 
 @Component({
     selector: 'test-form-field-tag-list',
-    imports: [KbqTagsModule, KbqFormFieldModule, CdkMonitorFocus],
+    imports: [KbqTagsModule, KbqFormFieldModule, CdkMonitorFocus, KbqInputModule],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList">
+            <kbq-tag-list #tagList="kbqTagList" [editable]="editable()">
                 @for (tag of tags(); track tag) {
                     <kbq-tag [selected]="tag.selected" [attr.id]="tag.id" [value]="tag">
                         {{ tag.value }}
+                        <input kbqInput kbqTagEditInput />
                     </kbq-tag>
                 }
 
@@ -137,6 +139,7 @@ export class TestTagList {
 })
 export class TestFormFieldTagList {
     readonly tagList = viewChild.required(KbqTagList);
+    readonly editable = signal(false);
     readonly tags = model<Array<{ id: string; value: string; selected: boolean }>>(
         Array.from({ length: 4 }, (_, i) => ({
             id: `tag${i}`,
@@ -1330,6 +1333,27 @@ describe(KbqTagList.name, () => {
         getTagListElement(debugElement).dispatchEvent(new Event('blur'));
 
         expect(getSelectedTags(debugElement).length).toBe(0);
+    });
+
+    it('should prevent focusout on editing tag click', () => {
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.editable.set(true);
+        fixture.detectChanges();
+
+        const tag = getFirstTagElement(debugElement);
+
+        tag.dispatchEvent(new Event('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBe(true);
+
+        const input = tag.querySelector('.kbq-tag-edit-input') as HTMLInputElement;
+
+        input.focus();
+        input.click();
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBe(true);
     });
 
     it('should select tags on SPACE keydown', () => {
