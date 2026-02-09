@@ -149,6 +149,7 @@ export class KbqTagEditChange {
 
 // @public
 export class KbqTagEditInput {
+    protected handleClick(event: MouseEvent): void;
     protected handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagEditInput, "[kbqTagEditInput]", ["kbqTagEditInput"], {}, {}, never, never, true, [{ directive: typeof i1_2.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
