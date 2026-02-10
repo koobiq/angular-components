@@ -15,6 +15,16 @@
             box-shadow: var(--kbq-sidepanel-container-shadow);
         }
     }
+
+    // @TODO do proper animation (#DS-4539)
+    .kbq-overlay-dark-backdrop {
+        background: transparent;
+
+        &:not(:has(~ .kbq-overlay-dark-backdrop)) {
+            transition: unset;
+            background: var(--kbq-background-overlay) !important;
+        }
+    }
 }
 
 @mixin kbq-sidepanel-typography() {

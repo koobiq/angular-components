@@ -11,12 +11,9 @@ import {
     SkipSelf,
     TemplateRef
 } from '@angular/core';
+import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
-import {
-    KBQ_SIDEPANEL_WITH_INDENT,
-    KBQ_SIDEPANEL_WITH_SHADOW,
-    KbqSidepanelContainerComponent
-} from './sidepanel-container.component';
+import { KBQ_SIDEPANEL_WITH_INDENT, KbqSidepanelContainerComponent } from './sidepanel-container.component';
 import { KbqSidepanelRef } from './sidepanel-ref';
 
 /** Injection token that can be used to specify default sidepanel options. */
@@ -67,10 +64,15 @@ export class KbqSidepanelService implements OnDestroy {
 
         if (componentOrTemplateRef instanceof TemplateRef) {
             container.attachTemplatePortal(
-                new TemplatePortal<T>(componentOrTemplateRef, null!, {
-                    $implicit: fullConfig.data,
-                    sidepanelRef: ref
-                } as any)
+                new TemplatePortal<T>(
+                    componentOrTemplateRef,
+                    null!,
+                    {
+                        $implicit: fullConfig.data,
+                        sidepanelRef: ref
+                    } as any,
+                    this.createInjector(fullConfig, ref, container)
+                )
             );
         } else {
             const portal = new ComponentPortal(
@@ -84,6 +86,7 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         this.openedSidepanels.push(ref);
+        ref.beforeClosed().subscribe(() => this.updateAnimationState(ref));
         ref.afterClosed().subscribe(() => this.removeOpenSidepanel(ref));
 
         container.enter();
@@ -112,12 +115,17 @@ export class KbqSidepanelService implements OnDestroy {
     private attachContainer(overlayRef: OverlayRef, config: KbqSidepanelConfig): KbqSidepanelContainerComponent {
         const openedSidepanelsWithSamePosition = this.getOpenedSidepanelsWithSamePosition(config);
 
+        const lower = openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 1];
+        const bottom = openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 2];
+
+        lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Lower);
+        bottom?.containerInstance.setAnimationState(KbqSidepanelAnimationState.BottomPanel);
+
         const injector = Injector.create({
             parent: this.injector,
             providers: [
                 { provide: KbqSidepanelConfig, useValue: config },
-                { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: openedSidepanelsWithSamePosition.length >= 1 },
-                { provide: KBQ_SIDEPANEL_WITH_SHADOW, useValue: openedSidepanelsWithSamePosition.length < 2 }
+                { provide: KBQ_SIDEPANEL_WITH_INDENT, useValue: openedSidepanelsWithSamePosition.length >= 1 }
             ]
         });
 
@@ -178,22 +186,30 @@ export class KbqSidepanelService implements OnDestroy {
         reversedOpenedSidepanels.forEach((sidepanelRef: KbqSidepanelRef) => sidepanelRef.close());
     }
 
-    private getBackdropClass(config: KbqSidepanelConfig): string {
+    private getBackdropClass(config: KbqSidepanelConfig): string | string[] {
         if (config.hasBackdrop && config.backdropClass) {
             return config.backdropClass;
         }
 
-        const hasOpenedSidepanelWithBackdrop = this.openedSidepanels.some(
-            (sidepanelRef) => sidepanelRef.config.hasBackdrop!
-        );
-
-        return config.requiredBackdrop || !hasOpenedSidepanelWithBackdrop
-            ? 'cdk-overlay-dark-backdrop'
-            : 'cdk-overlay-transparent-backdrop';
+        return config.requiredBackdrop ? 'cdk-overlay-dark-backdrop' : 'kbq-overlay-dark-backdrop';
     }
 
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {
         return this.openedSidepanels.filter((sidepanelRef) => sidepanelRef.config.position === config.position);
+    }
+
+    private updateAnimationState(sidepanelRef: KbqSidepanelRef) {
+        const index = this.openedSidepanels.indexOf(sidepanelRef);
+
+        // only allow animations if ref is last element in sidepanels list
+        if (index === -1 || index !== this.openedSidepanels.length - 1) return;
+
+        this.openedSidepanels[index].overlayRef.backdropElement?.classList?.remove('kbq-overlay-dark-backdrop');
+
+        const [lower, bottom] = this.getLowerSidepanelsWithSamePosition(index);
+
+        lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.BecomingNormal);
+        bottom?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Lower);
     }
 
     /**
@@ -204,7 +220,22 @@ export class KbqSidepanelService implements OnDestroy {
         const index = this.openedSidepanels.indexOf(sidepanelRef);
 
         if (index > -1) {
+            const [lower] = this.getLowerSidepanelsWithSamePosition(index);
+
+            lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Visible);
+
             this.openedSidepanels.splice(index, 1);
         }
+    }
+
+    private getLowerSidepanelsWithSamePosition(index: number): KbqSidepanelRef[] {
+        const openedSidepanelsWithSamePosition = this.getOpenedSidepanelsWithSamePosition(
+            this.openedSidepanels[index].config
+        );
+
+        return [
+            openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 2],
+            openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 3]
+        ];
     }
 }

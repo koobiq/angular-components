@@ -8,16 +8,18 @@
     --kbq-sidepanel-size-close-button-margin-left: var(--kbq-size-s);
     --kbq-sidepanel-size-content-padding-horizontal: var(--kbq-size-xxl);
     --kbq-sidepanel-size-content-padding-bottom: var(--kbq-size-xxl);
+    --kbq-sidepanel-size-panel-viewport-margin: var(--kbq-size-s);
+    --kbq-sidepanel-size-panel-lower-offset: var(--kbq-size-l);
     // Added top padding to prevent the outline of the first focused field from being clipped
     --kbq-sidepanel-size-content-padding-top: 1px;
-    --kbq-sidepanel-size-footer-padding-top: var(--kbq-size-s);
-    --kbq-sidepanel-size-footer-padding-bottom: var(--kbq-size-3xl);
+    --kbq-sidepanel-size-footer-padding-top: var(--kbq-size-xl);
+    --kbq-sidepanel-size-footer-padding-bottom: var(--kbq-size-xl);
     --kbq-sidepanel-size-footer-padding-horizontal: var(--kbq-size-xxl);
     --kbq-sidepanel-size-footer-content-gap-horizontal: var(--kbq-size-l);
     /* THEME TOKENS */
     --kbq-sidepanel-overlay-background: var(--kbq-background-overlay);
     --kbq-sidepanel-container-background: var(--kbq-background-card);
-    --kbq-sidepanel-container-shadow: var(--kbq-shadow-overlay);
+    --kbq-sidepanel-container-shadow: var(--kbq-shadow-popup);
     --kbq-sidepanel-header-text-color: var(--kbq-foreground-contrast);
     --kbq-sidepanel-content-text-color: var(--kbq-foreground-contrast);
 }

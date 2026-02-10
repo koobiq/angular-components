@@ -33,6 +33,7 @@ import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_SIDEPANEL_DATA: InjectionToken<any>;
@@ -43,7 +44,7 @@ export const KBQ_SIDEPANEL_DEFAULT_OPTIONS: InjectionToken<KbqSidepanelConfig<an
 // @public (undocumented)
 export const KBQ_SIDEPANEL_WITH_INDENT: InjectionToken<boolean>;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const KBQ_SIDEPANEL_WITH_SHADOW: InjectionToken<boolean>;
 
 // @public
@@ -56,6 +57,7 @@ export class KbqSidepanelActions {
 
 // @public
 export class KbqSidepanelBody {
+    protected checkOverflow(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -101,14 +103,16 @@ export class KbqSidepanelConfig<D = any> {
 
 // @public (undocumented)
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, sidepanelConfig: KbqSidepanelConfig, withIndent: boolean, withShadow: boolean);
+    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, sidepanelConfig: KbqSidepanelConfig, withIndent: boolean);
     // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point index.d.ts
     animationState: KbqSidepanelAnimationState;
     animationStateChanged: EventEmitter<AnimationEvent_2>;
-    // (undocumented)
     animationTransform: {
         transformIn: string;
         transformOut: string;
+        lower: string;
+        bottomPanel: string;
+        becomingNormal: string;
     };
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
@@ -119,21 +123,16 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     protected readonly indentClickEmitter: Subject<MouseEvent>;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     onAnimation(event: AnimationEvent_2): void;
     portalOutlet: CdkPortalOutlet;
+    setAnimationState(state: KbqSidepanelAnimationState): void;
     // (undocumented)
     sidepanelConfig: KbqSidepanelConfig;
-    // (undocumented)
     get size(): string;
-    // (undocumented)
     get trapFocus(): boolean;
-    // (undocumented)
     get trapFocusAutoCapture(): boolean;
     // (undocumented)
     withIndent: boolean;
-    // (undocumented)
-    withShadow: boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelContainerComponent, "kbq-sidepanel-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -142,6 +141,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
 // @public
 export class KbqSidepanelFooter {
+    protected sidepanelRef: KbqSidepanelRef<any, any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelFooter, "kbq-sidepanel-footer, [kbq-sidepanel-footer], kbqSidepanelFooter", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -155,6 +155,7 @@ export class KbqSidepanelHeader {
     static ngAcceptInputType_closeable: unknown;
     // (undocumented)
     static ngAcceptInputType_truncateText: unknown;
+    protected sidepanelRef: KbqSidepanelRef<any, any>;
     truncateText: boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelHeader, "kbq-sidepanel-header", never, { "closeable": { "alias": "closeable"; "required": false; }; "truncateText": { "alias": "truncateText"; "required": false; }; }, {}, never, ["*"], true, never>;
@@ -192,6 +193,11 @@ export class KbqSidepanelRef<T = any, R = any> {
     constructor(containerInstance: KbqSidepanelContainerComponent, overlayRef: OverlayRef, config: KbqSidepanelConfig);
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
+    beforeClosed(): Observable<void>;
+    bodyOverflow: WritableSignal<    {
+    top: boolean;
+    bottom: boolean;
+    }>;
     // (undocumented)
     close(result?: R): void;
     // (undocumented)
