@@ -1039,7 +1039,7 @@ const structure: DocsStructure = makeStructure({
                     hasExamples: false,
                     isNew: expiresAt('2025-08-24')
                 }
-            ]
+            ].sort((a, b) => a.name.en.localeCompare(b.name.en))
         }
     ],
     [DocsStructureCategoryId.Other]: [
