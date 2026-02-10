@@ -28,6 +28,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { startWith } from 'rxjs';
 import { InputExamplesModule } from '../../docs-examples/components/input';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -56,7 +57,8 @@ export class DevExamples {}
         KbqToolTipModule,
         KbqIconModule,
         DevExamples,
-        KbqNormalizeWhitespace
+        KbqNormalizeWhitespace,
+        DevThemeToggle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
