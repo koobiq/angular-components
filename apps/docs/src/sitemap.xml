@@ -103,18 +103,6 @@
 		<loc>https://koobiq.io/ru/components/actions-panel/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/app-switcher/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/app-switcher/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/app-switcher/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/app-switcher/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/ag-grid/overview</loc>
 	</url>
 	<url>
@@ -131,6 +119,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/alert/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/app-switcher/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/app-switcher/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/app-switcher/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/app-switcher/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/autocomplete/overview</loc>
@@ -265,18 +265,6 @@
 		<loc>https://koobiq.io/ru/components/datepicker/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/divider/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/divider/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/divider/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/divider/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/dl/overview</loc>
 	</url>
 	<url>
@@ -287,6 +275,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/dl/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/divider/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/divider/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/divider/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/divider/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/dropdown/overview</loc>
@@ -323,6 +323,42 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/empty-state/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/file-upload/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/file-upload/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/file-upload/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/file-upload/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/filter-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/filter-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/form-field/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/form-field/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/form-field/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/form-field/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/icon/overview</loc>
@@ -385,42 +421,6 @@
 		<loc>https://koobiq.io/ru/components/input/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/file-upload/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/file-upload/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/file-upload/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/file-upload/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/filter-bar/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/filter-bar/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/filter-bar/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/filter-bar/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/form-field/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/form-field/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/form-field/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/form-field/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/layout-flex/overview</loc>
 	</url>
 	<url>
@@ -449,18 +449,6 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/list/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/loader-overlay/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/loader-overlay/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/loader-overlay/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/loader-overlay/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/markdown/overview</loc>
@@ -521,6 +509,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/overflow-items/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/loader-overlay/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/loader-overlay/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/loader-overlay/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/loader-overlay/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/popover/overview</loc>
@@ -595,18 +595,6 @@
 		<loc>https://koobiq.io/ru/components/scrollbar/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/select/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/select/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/select/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/select/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/search-expandable/overview</loc>
 	</url>
 	<url>
@@ -617,6 +605,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/search-expandable/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/select/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/select/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/select/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/select/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/sidebar/overview</loc>
@@ -655,18 +655,6 @@
 		<loc>https://koobiq.io/ru/components/skeleton/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/splitter/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/splitter/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/splitter/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/splitter/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/split-button/overview</loc>
 	</url>
 	<url>
@@ -677,6 +665,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/split-button/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/splitter/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/splitter/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/splitter/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/splitter/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/table/overview</loc>
@@ -763,18 +763,6 @@
 		<loc>https://koobiq.io/ru/components/textarea/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/timepicker/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/timepicker/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/timepicker/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/timepicker/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/time-range/overview</loc>
 	</url>
 	<url>
@@ -785,6 +773,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/time-range/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/timepicker/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/timepicker/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/timepicker/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/timepicker/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/timezone/overview</loc>
