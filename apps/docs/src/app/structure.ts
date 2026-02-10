@@ -163,10 +163,6 @@ const expiresAt = (expiresAt: string): boolean => {
     return createdDate.diffNow('days').days > 0;
 };
 
-const sortAlphabetically = (items: DocsStructureItem[]): DocsStructureItem[] => {
-    return items.sort((a, b) => a.name.en.localeCompare(b.name.en));
-};
-
 const structure: DocsStructure = makeStructure({
     [DocsStructureCategoryId.Main]: [
         {
@@ -274,7 +270,7 @@ const structure: DocsStructure = makeStructure({
                 en: 'Components'
             },
             isPreviewed: true,
-            items: sortAlphabetically([
+            items: [
                 {
                     id: DocsStructureItemId.Accordion,
                     name: {
@@ -1043,7 +1039,7 @@ const structure: DocsStructure = makeStructure({
                     hasExamples: false,
                     isNew: expiresAt('2025-08-24')
                 }
-            ])
+            ].sort((a, b) => a.name.en.localeCompare(b.name.en))
         }
     ],
     [DocsStructureCategoryId.Other]: [
@@ -1054,7 +1050,7 @@ const structure: DocsStructure = makeStructure({
                 en: 'Other'
             },
             isPreviewed: true,
-            items: sortAlphabetically([
+            items: [
                 {
                     id: DocsStructureItemId.DateFormatter,
                     name: {
@@ -1110,7 +1106,7 @@ const structure: DocsStructure = makeStructure({
                     hasExamples: false,
                     isNew: expiresAt('2025-08-17')
                 }
-            ])
+            ]
         }
     ],
     [DocsStructureCategoryId.Icons]: [
@@ -1132,7 +1128,7 @@ const structure: DocsStructure = makeStructure({
                 en: 'CDK'
             },
             isPreviewed: false,
-            items: sortAlphabetically([
+            items: [
                 {
                     id: DocsStructureItemId.A11y,
                     name: {
@@ -1153,7 +1149,7 @@ const structure: DocsStructure = makeStructure({
                     apiId: 'keycodes',
                     hasExamples: false
                 }
-            ])
+            ]
         }
     ]
 });
