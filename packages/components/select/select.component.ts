@@ -1376,6 +1376,8 @@ export class KbqSelect
         this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.panelOpen && this.panel) {
                 this.scrollActiveOptionIntoView();
+
+                this.search?.focus();
             } else if (!this.panelOpen && !this.multiSelection && this.keyManager.activeItem) {
                 this.keyManager.activeItem.selectViaInteraction();
             }
