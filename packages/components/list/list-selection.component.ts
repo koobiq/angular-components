@@ -277,8 +277,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.resetOptions();
 
-            // Check to see if we need to update our tab index
             this.updateTabIndex();
+            this.initializeSelection();
         });
 
         this.updateScrollSize();
@@ -541,7 +541,18 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         this.selectionChange.emit(new KbqListSelectionChange(this, option));
     }
 
+    private initializeSelection(): void {
+        // Defer setting the value in order to avoid the "Expression
+        // has changed after it was checked" errors from Angular.
+        Promise.resolve().then(() => {
+            if (this._value) {
+                this.setOptionsFromValues(Array.isArray(this._value) ? this._value : [this._value]);
+            }
+        });
+    }
+
     protected updateTabIndex(): void {
+        // Check to see if we need to update our tab index
         this._tabIndex = this.userTabIndex || (this.options.length === 0 ? -1 : 0);
     }
 

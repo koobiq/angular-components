@@ -2829,6 +2829,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-overview-example.ts",
     "importPath": "components/list"
   },
+  "list-virtual-scroll": {
+    "packagePath": "components/list/list-virtual-scroll",
+    "title": "List with virtual-scroll",
+    "componentName": "ListVirtualScrollExample",
+    "files": [
+      "list-virtual-scroll-example.ts"
+    ],
+    "selector": "list-virtual-scroll-example",
+    "additionalComponents": [],
+    "primaryFile": "list-virtual-scroll-example.ts",
+    "importPath": "components/list"
+  },
   "loader-overlay-default": {
     "packagePath": "components/loader-overlay/loader-overlay-default",
     "title": "Loader-overlay default",
@@ -6312,6 +6324,8 @@ return import('@koobiq/docs-examples/components/list');
   case 'list-multiple-keyboard':
 return import('@koobiq/docs-examples/components/list');
   case 'list-overview':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-virtual-scroll':
 return import('@koobiq/docs-examples/components/list');
   case 'loader-overlay-default':
 return import('@koobiq/docs-examples/components/loader-overlay');
