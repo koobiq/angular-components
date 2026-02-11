@@ -254,7 +254,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         this._color = value || KbqComponentColors.Contrast;
     }
 
-    private _color: KbqComponentColors | string = KbqComponentColors.Contrast;
+    /** @docs-private */
+    protected _color: KbqComponentColors | string = KbqComponentColors.Contrast;
 
     @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = true;
     @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
@@ -411,6 +412,8 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     }
 })
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
+    protected _color = KbqComponentColors.ContrastFade;
+
     @Input('kbqExtendedTooltip')
     get content(): string | TemplateRef<any> {
         return this._content;
