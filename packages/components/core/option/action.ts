@@ -5,10 +5,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
-    ElementRef,
     EventEmitter,
     inject,
-    Inject,
     InjectionToken,
     Input,
     OnDestroy,
@@ -16,6 +14,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
+import { kbqInjectNativeElement } from '../utils';
 
 export interface KbqOptionActionParent {
     dropdownTrigger: {
@@ -56,6 +55,10 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly option = inject(KBQ_OPTION_ACTION_PARENT);
+
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -77,15 +80,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
 
     private readonly destroyRef = inject(DestroyRef);
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private focusMonitor: FocusMonitor,
-        @Inject(KBQ_OPTION_ACTION_PARENT) private option: KbqOptionActionParent
-    ) {}
-
     ngAfterViewInit(): void {
         this.focusMonitor
-            .monitor(this.elementRef.nativeElement, true)
+            .monitor(this.nativeElement, true)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((result) => (this.hasFocus = !!result));
 
@@ -96,22 +93,23 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         this.option.dropdownTrigger.dropdownClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.preventShowingTooltip();
 
-            const destroyReason: FocusOrigin =
-                this.option.dropdownTrigger.lastDestroyReason === 'keydown' ? 'keyboard' : 'program';
+            const lastDestroyReason = this.option.dropdownTrigger.lastDestroyReason;
 
-            this.focus(destroyReason);
+            if (lastDestroyReason) {
+                this.focus(lastDestroyReason === 'keydown' ? 'keyboard' : 'program');
+            }
         });
     }
 
     ngOnDestroy(): void {
-        this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
+        this.focusMonitor.stopMonitoring(this.nativeElement);
     }
 
     focus(origin?: FocusOrigin, options?: FocusOptions) {
         if (this.focusMonitor && origin) {
-            this.focusMonitor.focusVia(this.elementRef.nativeElement, origin, options);
+            this.focusMonitor.focusVia(this.nativeElement, origin, options);
         } else {
-            this.elementRef.nativeElement.focus();
+            this.nativeElement.focus();
         }
 
         this.hasFocus = true;
