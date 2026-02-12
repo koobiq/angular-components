@@ -27,7 +27,6 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
@@ -2391,7 +2390,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
 // @public (undocumented)
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor, option: KbqOptionActionParent);
     // (undocumented)
     get active(): boolean;
     // (undocumented)
