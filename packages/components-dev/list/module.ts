@@ -1,4 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
@@ -18,6 +19,9 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [ListExamplesModule],
     selector: 'dev-examples',
     template: `
+        <list-virtual-scroll-example />
+        <br />
+        <br />
         <list-intermediate-state-example />
         <br />
         <br />
@@ -42,7 +46,8 @@ export class DevExamples {}
         DevExamples,
         JsonPipe,
         AsyncPipe,
-        DevThemeToggle
+        DevThemeToggle,
+        ScrollingModule
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
@@ -52,6 +57,12 @@ export class DevExamples {}
 })
 export class DevApp {
     list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
+
+    readonly options = Array.from({ length: 10000 }).map((_, i) => ({
+        id: i,
+        label: `Option #${i}`
+    }));
+
     popUpPlacements = PopUpPlacements;
 
     typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
