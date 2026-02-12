@@ -5,6 +5,7 @@ import { ListIntermediateStateExample } from './list-intermediate-state/list-int
 import { ListMultipleCheckboxExample } from './list-multiple-checkbox/list-multiple-checkbox-example';
 import { ListMultipleKeyboardExample } from './list-multiple-keyboard/list-multiple-keyboard-example';
 import { ListOverviewExample } from './list-overview/list-overview-example';
+import { ListVirtualScrollExample } from './list-virtual-scroll/list-virtual-scroll-example';
 
 export {
     ListActionButtonExample,
@@ -12,7 +13,8 @@ export {
     ListIntermediateStateExample,
     ListMultipleCheckboxExample,
     ListMultipleKeyboardExample,
-    ListOverviewExample
+    ListOverviewExample,
+    ListVirtualScrollExample
 };
 
 const EXAMPLES = [
@@ -21,7 +23,8 @@ const EXAMPLES = [
     ListMultipleKeyboardExample,
     ListGroupsExample,
     ListActionButtonExample,
-    ListIntermediateStateExample
+    ListIntermediateStateExample,
+    ListVirtualScrollExample
 ];
 
 @NgModule({
