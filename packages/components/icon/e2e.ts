@@ -65,6 +65,23 @@ type IconButtonStates = IconStates & {
                         }
                     </tr>
                 }
+
+                @for (row of iconButtonStates; track $index) {
+                    <tr class="e2e-icon-button-row">
+                        @for (cell of row; track $index) {
+                            <td>
+                                <button
+                                    kbq-icon-button="kbq-chevron-down-s_16"
+                                    [color]="cell.color"
+                                    [small]="cell.state === 'small'"
+                                    [disabled]="cell.state === 'disabled'"
+                                    [class.kbq-hovered]="cell.state === 'hover'"
+                                    [class.cdk-keyboard-focused]="cell.state === 'focused'"
+                                ></button>
+                            </td>
+                        }
+                    </tr>
+                }
             </table>
         </div>
     `,
@@ -88,15 +105,11 @@ export class E2eIconStateAndStyle {
     ).filter((color) => color !== KbqComponentColors.ThemeFade);
 
     iconStates: IconStates[][] = [
-        this.colors.map((color) => ({
-            color
-        }))
+        this.colors.map((color) => ({ color }))
     ];
 
     iconItemStates: IconItemStates[][] = [
-        this.colors.map((color) => ({
-            color
-        })),
+        this.colors.map((color) => ({ color })),
 
         this.colors.map((color) => ({
             color,
