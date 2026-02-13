@@ -3,6 +3,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as const;
 const HTML_SPECIAL_CHARS = /[&<>"']/;
 const HTML_SPECIAL_CHARS_GLOBAL = new RegExp(HTML_SPECIAL_CHARS.source, 'g');
+/** @docs-private */
+export const kbqHighlightMark = (text: string): string => `<mark class="kbq-highlight">${text}</mark>`;
 
 export function escapeRegExp(value: string) {
     if (value) {
@@ -21,13 +23,18 @@ function escapeHtml(value: string): string {
 @Pipe({ name: 'mcHighlight' })
 export class KbqHighlightPipe implements PipeTransform {
     transform(value: any, args: any): any {
-        const escapedValue = escapeHtml(value ?? '');
+        if (typeof value !== 'string') return '';
+        if (!args || typeof args !== 'string') return escapeHtml(value);
 
-        if (!args || typeof args !== 'string') return escapedValue;
+        const parts = value.split(new RegExp(`(${escapeRegExp(args)})`, 'gi'));
 
-        return escapedValue.replace(
-            new RegExp(`(${escapeRegExp(escapeHtml(args))})`, 'gi'),
-            '<mark class="kbq-highlight">$1</mark>'
-        );
+        return parts
+            .map((part, i) => {
+                const escaped = escapeHtml(part);
+                const isMatch = i % 2 === 1;
+
+                return isMatch ? kbqHighlightMark(escaped) : escaped;
+            })
+            .join('');
     }
 }

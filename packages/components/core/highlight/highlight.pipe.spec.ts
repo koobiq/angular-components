@@ -1,6 +1,4 @@
-import { KbqHighlightPipe } from './highlight.pipe';
-
-const mark = (text: string): string => `<mark class="kbq-highlight">${text}</mark>`;
+import { KbqHighlightPipe, kbqHighlightMark } from './highlight.pipe';
 
 describe(KbqHighlightPipe.name, () => {
     let pipe: KbqHighlightPipe;
@@ -10,15 +8,17 @@ describe(KbqHighlightPipe.name, () => {
     });
 
     it('should wrap matched text in mark tag', () => {
-        expect(pipe.transform('Hello world', 'world')).toBe(`Hello ${mark('world')}`);
+        expect(pipe.transform('Hello world', 'world')).toBe(`Hello ${kbqHighlightMark('world')}`);
     });
 
     it('should be case insensitive', () => {
-        expect(pipe.transform('Hello World', 'world')).toBe(`Hello ${mark('World')}`);
+        expect(pipe.transform('Hello World', 'world')).toBe(`Hello ${kbqHighlightMark('World')}`);
     });
 
     it('should highlight all occurrences', () => {
-        expect(pipe.transform('ab ab ab', 'ab')).toBe(`${mark('ab')} ${mark('ab')} ${mark('ab')}`);
+        expect(pipe.transform('ab ab ab', 'ab')).toBe(
+            `${kbqHighlightMark('ab')} ${kbqHighlightMark('ab')} ${kbqHighlightMark('ab')}`
+        );
     });
 
     it('should return escaped value when search is empty', () => {
@@ -58,6 +58,13 @@ describe(KbqHighlightPipe.name, () => {
         expect(pipe.transform('', '')).toBe('');
     });
 
+    it('should return empty string for object value', () => {
+        expect(pipe.transform({}, 'test')).toBe('');
+        expect(pipe.transform({}, null)).toBe('');
+        expect(pipe.transform([], undefined)).toBe('');
+        expect(pipe.transform([], '')).toBe('');
+    });
+
     it('should not match when search term is not found', () => {
         expect(pipe.transform('Hello world', 'xyz')).toBe('Hello world');
     });
@@ -72,17 +79,21 @@ describe(KbqHighlightPipe.name, () => {
         expect(pipe.transform('Tom & Jerry', '')).toBe('Tom &amp; Jerry');
     });
 
+    it('should not highlight inside escaped HTML entities', () => {
+        expect(pipe.transform('Tom & Jerry', 'amp')).toBe('Tom &amp; Jerry');
+    });
+
     it('should escape single quotes in value', () => {
         expect(pipe.transform("it's", '')).toBe('it&#39;s');
     });
 
     it('should escape HTML in value when highlighting', () => {
-        expect(pipe.transform('<b>bold</b>', 'bold')).toBe(`&lt;b&gt;${mark('bold')}&lt;/b&gt;`);
+        expect(pipe.transform('<b>bold</b>', 'bold')).toBe(`&lt;b&gt;${kbqHighlightMark('bold')}&lt;/b&gt;`);
     });
 
     it('should match search term containing HTML special characters', () => {
-        expect(pipe.transform('a < b & c > d', '<')).toBe(`a ${mark('&lt;')} b &amp; c &gt; d`);
-        expect(pipe.transform('a < b & c > d', '&')).toBe(`a &lt; b ${mark('&amp;')} c &gt; d`);
+        expect(pipe.transform('a < b & c > d', '<')).toBe(`a ${kbqHighlightMark('&lt;')} b &amp; c &gt; d`);
+        expect(pipe.transform('a < b & c > d', '&')).toBe(`a &lt; b ${kbqHighlightMark('&amp;')} c &gt; d`);
     });
 
     it('should prevent XSS through value', () => {
@@ -96,18 +107,18 @@ describe(KbqHighlightPipe.name, () => {
     });
 
     it('should handle search term with regex special characters', () => {
-        expect(pipe.transform('price is $100', '$100')).toBe(`price is ${mark('$100')}`);
+        expect(pipe.transform('price is $100', '$100')).toBe(`price is ${kbqHighlightMark('$100')}`);
     });
 
     it('should handle search term with parentheses', () => {
-        expect(pipe.transform('call()', 'call()')).toBe(mark('call()'));
+        expect(pipe.transform('call()', 'call()')).toBe(kbqHighlightMark('call()'));
     });
 
     it('should handle search term with dots', () => {
-        expect(pipe.transform('file.ts', '.')).toBe(`file${mark('.')}ts`);
+        expect(pipe.transform('file.ts', '.')).toBe(`file${kbqHighlightMark('.')}ts`);
     });
 
     it('should handle search term with square brackets', () => {
-        expect(pipe.transform('arr[0]', '[0]')).toBe(`arr${mark('[0]')}`);
+        expect(pipe.transform('arr[0]', '[0]')).toBe(`arr${kbqHighlightMark('[0]')}`);
     });
 });
