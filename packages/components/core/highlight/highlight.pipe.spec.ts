@@ -86,17 +86,13 @@ describe(KbqHighlightPipe.name, () => {
     });
 
     it('should prevent XSS through value', () => {
-        const result = pipe.transform('<img src=x onerror=alert(1)>', '');
-
-        expect(result).not.toContain('<img');
-        expect(result).toContain('&lt;img');
+        expect(pipe.transform('<img src=x onerror=alert(1)>', '')).toBe('&lt;img src=x onerror=alert(1)&gt;');
     });
 
     it('should prevent XSS through innerHTML injection', () => {
-        const result = pipe.transform('<a href="javascript:alert(1)">click</a>', 'click');
-
-        expect(result).not.toContain('<a');
-        expect(result).toContain(mark('click'));
+        expect(pipe.transform('<a href="javascript:alert(1)">click</a>', 'click')).toBe(
+            '&lt;a href=&quot;javascript:alert(1)&quot;&gt;<mark class=\"kbq-highlight\">click</mark>&lt;/a&gt;'
+        );
     });
 
     it('should handle search term with regex special characters', () => {
