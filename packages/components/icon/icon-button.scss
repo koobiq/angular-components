@@ -7,15 +7,16 @@
         cursor: pointer;
     }
 
-    &.kbq-disabled:not(button) {
-        pointer-events: none;
-    }
-
     padding: var(--kbq-icon-button-size-normal-vertical-padding) var(--kbq-icon-button-size-normal-horizontal-padding);
 
     &.kbq-icon-button_small {
         padding: var(--kbq-icon-button-size-small-vertical-padding) var(--kbq-icon-button-size-small-horizontal-padding);
     }
+}
+
+button.kbq-icon-button {
+    border: none;
+    background-color: unset;
 }
 
 @include kbq-icon-button-theme();
