@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
-import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
+import { KbqExtendedTooltipTrigger, KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 @Component({
@@ -11,6 +11,7 @@ import { KbqToolTipModule } from './tooltip.module';
             <ng-template #customContent>customContentTemplate</ng-template>
 
             <div kbqTooltip></div>
+            <div kbqExtendedTooltip></div>
             <div class="layout-row" style="gap: 16px">
                 <kbq-tooltip-component #tooltipContrast />
                 <kbq-tooltip-component #tooltipContrastFade />
@@ -23,6 +24,10 @@ import { KbqToolTipModule } from './tooltip.module';
                 <kbq-tooltip-component #tooltipNoArrow />
                 <kbq-tooltip-component #tooltipTemplates />
             </div>
+
+            <div class="layout-row" style="gap: 16px">
+                <kbq-tooltip-component #tooltipExtended />
+            </div>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +37,7 @@ import { KbqToolTipModule } from './tooltip.module';
 })
 export class E2eTooltipStates implements AfterViewInit {
     @ViewChild(KbqTooltipTrigger) trigger: KbqTooltipTrigger;
+    @ViewChild(KbqExtendedTooltipTrigger) extendedTooltipTrigger: KbqExtendedTooltipTrigger;
     @ViewChild('customHeader') customHeader: TemplateRef<any>;
     @ViewChild('customContent') customContent: TemplateRef<any>;
 
@@ -40,6 +46,7 @@ export class E2eTooltipStates implements AfterViewInit {
     @ViewChild('tooltipError') tooltipError: KbqTooltipComponent;
     @ViewChild('tooltipWarning') tooltipWarning: KbqTooltipComponent;
     @ViewChild('tooltipTheme') tooltipTheme: KbqTooltipComponent;
+    @ViewChild('tooltipExtended') tooltipExtended: KbqTooltipComponent;
 
     @ViewChild('tooltipNoArrow') tooltipNoArrow: KbqTooltipComponent;
     @ViewChild('tooltipTemplates') tooltipTemplates: KbqTooltipComponent;
@@ -132,5 +139,15 @@ export class E2eTooltipStates implements AfterViewInit {
         this.tooltipTemplates.arrow = false;
         this.tooltipTemplates.offset = null;
         this.tooltipTemplates.show(0);
+
+        this.tooltipExtended.trigger = this.extendedTooltipTrigger;
+        this.tooltipExtended.header = header;
+        this.tooltipExtended.content = content;
+        (this.extendedTooltipTrigger as any).instance = this.tooltipExtended;
+        this.extendedTooltipTrigger.updateClassMap();
+
+        this.tooltipExtended.arrow = false;
+        this.tooltipExtended.offset = null;
+        this.tooltipExtended.show(0);
     }
 }
