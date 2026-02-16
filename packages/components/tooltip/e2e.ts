@@ -6,7 +6,7 @@ import { KbqToolTipModule } from './tooltip.module';
     selector: 'e2e-tooltip-states',
     imports: [KbqToolTipModule],
     template: `
-        <div data-testid="e2eScreenshotTarget" class="layout-padding-l" style="width: 1300px; height: 190px">
+        <div data-testid="e2eScreenshotTarget" class="layout-padding-l" style="width: 1300px; height: 270px">
             <ng-template #customHeader>customHeaderTemplate</ng-template>
             <ng-template #customContent>customContentTemplate</ng-template>
 
