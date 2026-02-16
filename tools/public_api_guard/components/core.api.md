@@ -2222,6 +2222,9 @@ export class KbqFormsModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormsModule, never, [typeof i1_3.KbqForm, typeof i1_3.KbqFormElement], [typeof i1_3.KbqForm, typeof i1_3.KbqFormElement]>;
 }
 
+// @public
+export const kbqHighlightMark: (text: string) => string;
+
 // @public (undocumented)
 export class KbqHighlightModule {
     // (undocumented)
