@@ -20,8 +20,7 @@
             type="text"
             autocomplete="off"
             [placeholder]="placeholder"
-            [ngModel]="value | async"
-            (ngModelChange)="value.next($event)"
+            [formControl]="$any(ngControl?.control)"
             (blur)="onTouch()"
             (keyup.escape)="toggle()"
         />
