@@ -86,7 +86,7 @@ describe(KbqHighlightPipe.name, () => {
 
     it('should prevent XSS through innerHTML injection', () => {
         expect(pipe.transform('<a href="javascript:alert(1)">click</a>', 'click')).toBe(
-            '&lt;a href=&quot;javascript:alert(1)&quot;&gt;<mark class=\"kbq-highlight\">click</mark>&lt;/a&gt;'
+            `&lt;a href=&quot;javascript:alert(1)&quot;&gt;${kbqHighlightMark('click')}&lt;/a&gt;`
         );
     });
 
