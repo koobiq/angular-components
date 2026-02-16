@@ -412,6 +412,7 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     }
 })
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
+    /** @docs-private */
     protected _color = KbqComponentColors.ContrastFade;
 
     @Input('kbqExtendedTooltip')
