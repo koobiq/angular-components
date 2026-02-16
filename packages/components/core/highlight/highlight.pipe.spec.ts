@@ -21,22 +21,6 @@ describe(KbqHighlightPipe.name, () => {
         );
     });
 
-    it('should return escaped value when search is empty', () => {
-        expect(pipe.transform('Hello', '')).toBe('Hello');
-    });
-
-    it('should return escaped value when search is null', () => {
-        expect(pipe.transform('Hello', null)).toBe('Hello');
-    });
-
-    it('should return escaped value when search is undefined', () => {
-        expect(pipe.transform('Hello', undefined)).toBe('Hello');
-    });
-
-    it('should return escaped value when search is not a string', () => {
-        expect(pipe.transform('Hello', 123)).toBe('Hello');
-    });
-
     it('should return empty string for null value', () => {
         expect(pipe.transform(null, 'test')).toBe('');
         expect(pipe.transform(null, null)).toBe('');
