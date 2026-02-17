@@ -108,7 +108,6 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     // (undocumented)
     get color(): string;
     set color(value: KbqComponentColors | string);
-    protected _color: KbqComponentColors | string;
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
