@@ -14,6 +14,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqLocaleService } from '@koobiq/components/core';
+import { NgControl } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 
 // @public (undocumented)
@@ -63,6 +64,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
+    protected readonly ngControl: NgControl | null;
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: string) => void;
@@ -71,6 +73,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     set placeholder(value: string);
     registerOnChange(fn: (value: string) => void): void;
     registerOnTouched(fn: () => void): void;
+    setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);

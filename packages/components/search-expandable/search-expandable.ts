@@ -195,10 +195,10 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this.stopFocusMonitor();
     }
 
-    /** Implemented as part of ControlValueAccessor. */
+    /** @docs-private */
     onChange: (value: string) => void;
 
-    /** Implemented as part of ControlValueAccessor. */
+    /** @docs-private */
     onTouch: () => void = () => {};
 
     /** Implemented as part of ControlValueAccessor. */
@@ -214,6 +214,11 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Implemented as part of ControlValueAccessor. */
     writeValue(value: string): void {
         this.value.next(value || defaultValue);
+    }
+
+    /** Implemented as part of ControlValueAccessor. */
+    setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
     }
 
     toggle(): void {
