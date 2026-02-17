@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -14,23 +15,25 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     template: `
         <button
             kbq-button
-            [kbqExtendedTooltip]="tooltipContent"
+            [kbqTooltip]="tooltipContent"
             [kbqTooltipClass]="'custom-tooltip'"
-            [kbqTooltipHeader]="tooltipHeader"
+            [kbqTooltipColor]="extendedTooltipPreferredColor"
         >
-            Кнопка со сложным тултипом
+            Button with extended tooltip
         </button>
 
         <ng-template #tooltipContent>
+            <div class="kbq-subheading">Extended tooltip header</div>
             <div>
-                В западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О
-                пределах добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора
-                шрифтовых образцов неизвестным печатником еще в XVI веке.
+                In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks
+                to make a machine or network resource unavailable to its intended users by temporarily or indefinitely
+                disrupting services of a host connected to a network. Denial of service is typically accomplished by
+                flooding the targeted machine or resource with superfluous requests in an attempt to overload systems
+                and prevent some or all legitimate requests from being fulfilled. The range of attacks varies widely,
+                spanning from inundating a server with millions of requests to slow its performance, overwhelming a
+                server with a substantial amount of invalid data, to submitting requests with an illegitimate IP
+                address.
             </div>
-        </ng-template>
-
-        <ng-template #tooltipHeader>
-            <span>Заголовок</span>
         </ng-template>
     `,
     styles: `
@@ -40,4 +43,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TooltipExtendedExample {}
+export class TooltipExtendedExample {
+    protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;
+}

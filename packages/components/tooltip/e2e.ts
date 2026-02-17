@@ -11,7 +11,6 @@ import { KbqToolTipModule } from './tooltip.module';
             <ng-template #customContent>customContentTemplate</ng-template>
 
             <div kbqTooltip></div>
-            <div kbqExtendedTooltip></div>
             <div class="layout-row" style="gap: 16px">
                 <kbq-tooltip-component #tooltipContrast />
                 <kbq-tooltip-component #tooltipContrastFade />
@@ -23,7 +22,6 @@ import { KbqToolTipModule } from './tooltip.module';
                 <kbq-tooltip-component #tooltipTheme />
                 <kbq-tooltip-component #tooltipNoArrow />
                 <kbq-tooltip-component #tooltipTemplates />
-                <kbq-tooltip-component #tooltipExtended />
             </div>
         </div>
     `,
@@ -43,7 +41,6 @@ export class E2eTooltipStates implements AfterViewInit {
     @ViewChild('tooltipError') tooltipError: KbqTooltipComponent;
     @ViewChild('tooltipWarning') tooltipWarning: KbqTooltipComponent;
     @ViewChild('tooltipTheme') tooltipTheme: KbqTooltipComponent;
-    @ViewChild('tooltipExtended') tooltipExtended: KbqTooltipComponent;
 
     @ViewChild('tooltipNoArrow') tooltipNoArrow: KbqTooltipComponent;
     @ViewChild('tooltipTemplates') tooltipTemplates: KbqTooltipComponent;
@@ -136,15 +133,5 @@ export class E2eTooltipStates implements AfterViewInit {
         this.tooltipTemplates.arrow = false;
         this.tooltipTemplates.offset = null;
         this.tooltipTemplates.show(0);
-
-        this.tooltipExtended.trigger = this.extendedTooltipTrigger;
-        this.tooltipExtended.header = header;
-        this.tooltipExtended.content = content;
-        (this.extendedTooltipTrigger as any).instance = this.tooltipExtended;
-        this.extendedTooltipTrigger.updateClassMap();
-
-        this.tooltipExtended.arrow = false;
-        this.tooltipExtended.offset = null;
-        this.tooltipExtended.show(0);
     }
 }

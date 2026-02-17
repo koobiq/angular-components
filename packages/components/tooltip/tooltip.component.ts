@@ -375,6 +375,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     }
 }
 
+/**
+ * @docs-private
+ * @deprecated Will be removed in next major release
+ */
 @Directive({
     selector: '[kbqWarningTooltip]',
     exportAs: 'kbqWarningTooltip',
@@ -400,6 +404,10 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     protected modifier: TooltipModifier = TooltipModifier.Warning;
 }
 
+/**
+ * @docs-private
+ * @deprecated Will be removed in next major release
+ */
 @Directive({
     selector: '[kbqExtendedTooltip]',
     exportAs: 'kbqExtendedTooltip',
@@ -436,11 +444,6 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     private _header: string | TemplateRef<any>;
 
     protected modifier: TooltipModifier = TooltipModifier.Extended;
-
-    constructor() {
-        super();
-        this.color = KbqComponentColors.ContrastFade;
-    }
 
     updateData() {
         if (!this.instance) {
