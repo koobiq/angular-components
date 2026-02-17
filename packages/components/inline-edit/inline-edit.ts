@@ -12,9 +12,11 @@ import {
     Directive,
     ElementRef,
     inject,
+    InjectionToken,
     input,
     numberAttribute,
     output,
+    Provider,
     signal,
     TemplateRef,
     viewChild,
@@ -51,6 +53,41 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 ]);
 
 const baseClass = 'kbq-inline-edit';
+
+/** Defines how to open panel for a specific control type. */
+export type KbqOpenStrategy<T> = { type: new (...args: any[]) => T; open: (control: T) => void };
+
+/**
+ * Built-in open strategies.
+ * Used as the default value for {@link KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES}.
+ */
+export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy<any>[] = [
+    { type: KbqSelect, open: (c: KbqSelect) => c.open() },
+    { type: KbqTreeSelect, open: (c: KbqTreeSelect) => c.open() },
+    { type: KbqAutocompleteTrigger, open: (c: KbqAutocompleteTrigger) => c.openPanel() }
+];
+
+/**
+ * Injection token for providing a list of {@link KbqOpenStrategy} instances.
+ * Inject this to customize or extend which controls can be opened in inline edit panels.
+ *
+ * @see kbqInlineEditPanelOpenStrategiesProvider
+ */
+export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES = new InjectionToken<KbqOpenStrategy<any>[]>(
+    'KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES_TOKEN',
+    {
+        providedIn: 'root',
+        factory: () => KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT
+    }
+);
+
+/** Creates a provider that overrides the default panel open strategies. */
+export const kbqInlineEditPanelOpenStrategiesProvider = (strategies: KbqOpenStrategy<any>[]): Provider => {
+    return {
+        provide: KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES,
+        useValue: strategies
+    };
+};
 
 /** @docs-private */
 @Directive({
@@ -227,6 +264,8 @@ export class KbqInlineEdit {
     protected readonly colors = KbqComponentColors;
 
     private initialValue: unknown;
+
+    private panelOpenStrategy = inject(KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES);
 
     constructor() {
         toObservable(this.mode)
@@ -436,15 +475,12 @@ export class KbqInlineEdit {
         this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
     }
 
-    // @TODO refactor this (#DS-4181)
     private openPanel(formFieldRef: KbqFormField) {
         const control = formFieldRef.control;
 
-        if (control instanceof KbqSelect || control instanceof KbqTreeSelect) {
-            control.open();
-        } else if (control instanceof KbqAutocompleteTrigger) {
-            control.openPanel();
-        }
+        const strategy = this.panelOpenStrategy.find(({ type }) => control instanceof type);
+
+        strategy?.open(control);
     }
 
     private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {
