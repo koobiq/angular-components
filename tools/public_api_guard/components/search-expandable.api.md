@@ -14,6 +14,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqLocaleService } from '@koobiq/components/core';
+import { NgControl } from '@angular/forms';
 
 // @public (undocumented)
 export const defaultEmitValueTimeout = 200;
@@ -55,6 +56,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     static ngAcceptInputType_isOpened: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
+    protected readonly ngControl: NgControl | null;
     onChange: (value: string) => void;
     onTouch: () => void;
     get placeholder(): string;
