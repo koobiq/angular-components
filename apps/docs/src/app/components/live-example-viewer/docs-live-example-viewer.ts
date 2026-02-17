@@ -16,6 +16,9 @@ import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqModalService } from '@koobiq/components/modal';
+import { KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { KbqToastService } from '@koobiq/components/toast';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -94,6 +97,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly httpClient = inject(HttpClient);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly sidepanelService = inject(KbqSidepanelService);
+    private readonly modalService = inject(KbqModalService);
+    private readonly toastService = inject(KbqToastService);
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;
@@ -112,6 +118,10 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
         this._example = '';
         this.exampleComponentType = null;
+
+        this.sidepanelService.closeAll();
+        this.modalService.closeAll();
+        this.toastService.toasts.forEach(({ instance }) => this.toastService.hide(instance.id));
 
         this.example = previous;
     }
