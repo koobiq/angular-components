@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
-import { KbqExtendedTooltipTrigger, KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
+import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 @Component({
@@ -32,7 +32,6 @@ import { KbqToolTipModule } from './tooltip.module';
 })
 export class E2eTooltipStates implements AfterViewInit {
     @ViewChild(KbqTooltipTrigger) trigger: KbqTooltipTrigger;
-    @ViewChild(KbqExtendedTooltipTrigger) extendedTooltipTrigger: KbqExtendedTooltipTrigger;
     @ViewChild('customHeader') customHeader: TemplateRef<any>;
     @ViewChild('customContent') customContent: TemplateRef<any>;
 
