@@ -1,6 +1,10 @@
 <div class="docs-live-example__container">
     @if (exampleData) {
-        <div class="docs-live-example__example docs-live-example__example_{{ exampleId }}">
+        <div
+            #exampleElement
+            class="docs-live-example__example docs-live-example__example_{{ exampleId }}"
+            [style.height.px]="exampleHeight()"
+        >
             @if (exampleComponentType) {
                 <ng-template [ngComponentOutlet]="exampleComponentType" />
             }
@@ -20,7 +24,11 @@
             }}
         </span>
 
-        <docs-stackblitz-button [exampleId]="exampleId" />
+        <div class="layout-row layout-gap-xxs layout-align-center-center">
+            <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="'theme'" (click)="reload()"></i>
+            <kbq-divider class="docs-live-example-footer__divider" [vertical]="true" />
+            <docs-stackblitz-button [exampleId]="exampleId" />
+        </div>
     </div>
 </div>
 

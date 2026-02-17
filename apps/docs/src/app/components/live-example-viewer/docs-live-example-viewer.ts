@@ -1,8 +1,20 @@
 import { NgComponentOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, inject, Input, Type, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    inject,
+    Input,
+    signal,
+    Type,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KbqDivider } from '@koobiq/components/divider';
+import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
@@ -25,7 +37,9 @@ interface ExampleFileData {
         DocsStackblitzButtonComponent,
         KbqLinkModule,
         KbqCodeBlockModule,
-        NgComponentOutlet
+        NgComponentOutlet,
+        KbqIconButton,
+        KbqDivider
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
@@ -47,6 +61,8 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /** Component type for the current example. */
     exampleComponentType: Type<any> | null = null;
 
+    exampleHeight = signal<number | null>(null);
+
     get exampleId() {
         return this.exampleData?.selector.replace('-example', '');
     }
@@ -61,9 +77,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         if (exampleName && exampleName !== this._example && EXAMPLE_COMPONENTS[exampleName]) {
             this._example = exampleName;
             this.exampleData = EXAMPLE_COMPONENTS[exampleName];
-            this.loadExampleComponent().catch((error) =>
-                console.error(`Could not load example '${exampleName}': ${error}`)
-            );
+            this.loadExampleComponent()
+                .then(() => this.exampleHeight.set(null))
+                .catch((error) => console.error(`Could not load example '${exampleName}': ${error}`));
             this.generateExampleTabs();
         } else {
             console.error(`Could not find example: ${exampleName}`);
@@ -72,6 +88,8 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     private _example: string | null;
 
+    @ViewChild('exampleElement') exampleElement: ElementRef<HTMLElement>;
+
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly httpClient = inject(HttpClient);
     private readonly cdr = inject(ChangeDetectorRef);
@@ -79,6 +97,23 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;
+    }
+
+    protected reload(): void {
+        const previous = this.example;
+
+        const style = this.window.getComputedStyle(this.exampleElement.nativeElement);
+        const height =
+            this.exampleElement.nativeElement.clientHeight -
+            parseFloat(style.paddingTop) -
+            parseFloat(style.paddingBottom);
+
+        this.exampleHeight.set(height);
+
+        this._example = '';
+        this.exampleComponentType = null;
+
+        this.example = previous;
     }
 
     /**
@@ -152,7 +187,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     private async loadExampleComponent() {
         if (this._example != null) {
-            const { componentName } = EXAMPLE_COMPONENTS[this._example];
+            const { componentName } = this.exampleData;
             // Lazily loads the example package that contains the requested example.
             const moduleExports = await loadExample(this._example);
 

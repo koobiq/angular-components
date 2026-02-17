@@ -27,6 +27,10 @@
     justify-content: space-between;
 
     padding: var(--kbq-size-m) var(--kbq-size-xl);
+
+    .docs-live-example-footer__divider {
+        height: var(--kbq-size-s);
+    }
 }
 
 .docs-example-vertical-margin {
