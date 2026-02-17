@@ -29,7 +29,6 @@ const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
     },
     '@koobiq/components/input': {
         '@maskito/angular': '^5.0.1',
-        '@maskito/core': '^5.0.1',
         '@maskito/kit': '^5.0.1'
     },
     '@koobiq/components/code-block': {
