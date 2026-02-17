@@ -46,7 +46,7 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
-    protected _color: KbqComponentColors;
+    constructor();
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);

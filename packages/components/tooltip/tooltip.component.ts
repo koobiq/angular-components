@@ -412,9 +412,6 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     }
 })
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
-    /** @docs-private */
-    protected _color = KbqComponentColors.ContrastFade;
-
     @Input('kbqExtendedTooltip')
     get content(): string | TemplateRef<any> {
         return this._content;
@@ -440,6 +437,11 @@ export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     private _header: string | TemplateRef<any>;
 
     protected modifier: TooltipModifier = TooltipModifier.Extended;
+
+    constructor() {
+        super();
+        this._color = KbqComponentColors.ContrastFade;
+    }
 
     updateData() {
         if (!this.instance) {
