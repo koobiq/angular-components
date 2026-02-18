@@ -1,29 +1,5 @@
 @use './accordion-theme' as *;
 
-@keyframes slideDown {
-    from {
-        height: 0;
-        padding-bottom: 0;
-    }
-
-    to {
-        height: var(--radix-accordion-content-height);
-        padding-bottom: 0;
-    }
-}
-
-@keyframes slideUp {
-    from {
-        height: var(--radix-accordion-content-height);
-        padding-bottom: 0;
-    }
-
-    to {
-        height: 0;
-        padding-bottom: 0;
-    }
-}
-
 .kbq-accordion {
     display: block;
 }
@@ -46,14 +22,20 @@
 .kbq-accordion-content {
     display: block;
     overflow: hidden;
-    padding: var(--kbq-accordion-size-item-content-padding);
+
+    & > p {
+        margin: unset;
+        padding: var(--kbq-accordion-size-item-content-padding);
+    }
 
     &[data-state='open'] {
-        animation: slideDown 300ms ease-out;
+        transition: 300ms ease-out;
+        height: var(--radix-accordion-content-height);
     }
 
     &[data-state='closed'] {
-        animation: slideUp 300ms ease-out;
+        transition: 300ms ease-out;
+        height: 0;
     }
 }
 

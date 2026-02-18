@@ -5,6 +5,7 @@
         "testing"
     ],
     "components": [
+        "accordion",
         "actions-panel",
         "app-switcher",
         "autocomplete",

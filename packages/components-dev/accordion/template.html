@@ -1,12 +1,12 @@
-<kbq-accordion [defaultValue]="'item-1'">
-    <kbq-accordion-item [value]="'item-1'">
+<kbq-accordion [type]="'multiple'" useStateSaving>
+    <kbq-accordion-item>
         <kbq-accordion-header>
             <button kbq-accordion-trigger type="button">Is it accessible?</button>
         </kbq-accordion-header>
         <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
     </kbq-accordion-item>
 
-    <kbq-accordion-item [disabled]="true" [value]="'item-2'">
+    <kbq-accordion-item>
         <kbq-accordion-header>
             <button kbq-accordion-trigger type="button">Is it unstyled?</button>
         </kbq-accordion-header>
@@ -14,28 +14,7 @@
             Yes. It's unstyled by default, giving you freedom over the look and feel.
         </kbq-accordion-content>
     </kbq-accordion-item>
-
-    <kbq-accordion-item [value]="'item-3'">
-        <kbq-accordion-header>
-            <button kbq-accordion-trigger type="button">Can it be animated?</button>
-        </kbq-accordion-header>
-        <kbq-accordion-content>Yes! You can animate the Accordion with CSS or JavaScript.</kbq-accordion-content>
-    </kbq-accordion-item>
-</kbq-accordion>
-
-<br />
-<br />
-<br />
-
-<kbq-accordion [defaultValue]="'item-1'" [variant]="'hug'">
-    <kbq-accordion-item [value]="'item-1'">
-        <kbq-accordion-header>
-            <button kbq-accordion-trigger type="button">Is it accessible?</button>
-        </kbq-accordion-header>
-        <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
-    </kbq-accordion-item>
-
-    <kbq-accordion-item [disabled]="true" [value]="'item-2'">
+    <kbq-accordion-item>
         <kbq-accordion-header>
             <button kbq-accordion-trigger type="button">Is it unstyled?</button>
         </kbq-accordion-header>
@@ -43,40 +22,62 @@
             Yes. It's unstyled by default, giving you freedom over the look and feel.
         </kbq-accordion-content>
     </kbq-accordion-item>
-
-    <kbq-accordion-item [value]="'item-3'">
-        <kbq-accordion-header>
-            <button kbq-accordion-trigger type="button">Can it be animated?</button>
-        </kbq-accordion-header>
-        <kbq-accordion-content>Yes! You can animate the Accordion with CSS or JavaScript.</kbq-accordion-content>
-    </kbq-accordion-item>
 </kbq-accordion>
 
-<br />
-<br />
-<br />
+<!--<br />-->
+<!--<br />-->
+<!--<br />-->
 
-<kbq-accordion [defaultValue]="'item-1'" [variant]="'hugSpaceBetween'">
-    <kbq-accordion-item [value]="'item-1'">
-        <kbq-accordion-header>
-            <button kbq-accordion-trigger type="button">Is it accessible?</button>
-        </kbq-accordion-header>
-        <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
-    </kbq-accordion-item>
+<!--<kbq-accordion [defaultValue]="'item-1'" [variant]="'hug'">-->
+<!--    <kbq-accordion-item [value]="'item-1'">-->
+<!--        <kbq-accordion-header>-->
+<!--            <button kbq-accordion-trigger type="button">Is it accessible?</button>-->
+<!--        </kbq-accordion-header>-->
+<!--        <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>-->
+<!--    </kbq-accordion-item>-->
 
-    <kbq-accordion-item [disabled]="true" [value]="'item-2'">
-        <kbq-accordion-header>
-            <button kbq-accordion-trigger type="button">Is it unstyled?</button>
-        </kbq-accordion-header>
-        <kbq-accordion-content>
-            Yes. It's unstyled by default, giving you freedom over the look and feel.
-        </kbq-accordion-content>
-    </kbq-accordion-item>
+<!--    <kbq-accordion-item [disabled]="true" [value]="'item-2'">-->
+<!--        <kbq-accordion-header>-->
+<!--            <button kbq-accordion-trigger type="button">Is it unstyled?</button>-->
+<!--        </kbq-accordion-header>-->
+<!--        <kbq-accordion-content>-->
+<!--            Yes. It's unstyled by default, giving you freedom over the look and feel.-->
+<!--        </kbq-accordion-content>-->
+<!--    </kbq-accordion-item>-->
 
-    <kbq-accordion-item [value]="'item-3'">
-        <kbq-accordion-header>
-            <button kbq-accordion-trigger type="button">Can it be animated?</button>
-        </kbq-accordion-header>
-        <kbq-accordion-content>Yes! You can animate the Accordion with CSS or JavaScript.</kbq-accordion-content>
-    </kbq-accordion-item>
-</kbq-accordion>
+<!--    <kbq-accordion-item [value]="'item-3'">-->
+<!--        <kbq-accordion-header>-->
+<!--            <button kbq-accordion-trigger type="button">Can it be animated?</button>-->
+<!--        </kbq-accordion-header>-->
+<!--        <kbq-accordion-content>Yes! You can animate the Accordion with CSS or JavaScript.</kbq-accordion-content>-->
+<!--    </kbq-accordion-item>-->
+<!--</kbq-accordion>-->
+
+<!--<br />-->
+<!--<br />-->
+<!--<br />-->
+
+<!--<kbq-accordion [defaultValue]="'item-1'" [variant]="'hugSpaceBetween'">-->
+<!--    <kbq-accordion-item [value]="'item-1'">-->
+<!--        <kbq-accordion-header>-->
+<!--            <button kbq-accordion-trigger type="button">Is it accessible?</button>-->
+<!--        </kbq-accordion-header>-->
+<!--        <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>-->
+<!--    </kbq-accordion-item>-->
+
+<!--    <kbq-accordion-item [disabled]="true" [value]="'item-2'">-->
+<!--        <kbq-accordion-header>-->
+<!--            <button kbq-accordion-trigger type="button">Is it unstyled?</button>-->
+<!--        </kbq-accordion-header>-->
+<!--        <kbq-accordion-content>-->
+<!--            Yes. It's unstyled by default, giving you freedom over the look and feel.-->
+<!--        </kbq-accordion-content>-->
+<!--    </kbq-accordion-item>-->
+
+<!--    <kbq-accordion-item [value]="'item-3'">-->
+<!--        <kbq-accordion-header>-->
+<!--            <button kbq-accordion-trigger type="button">Can it be animated?</button>-->
+<!--        </kbq-accordion-header>-->
+<!--        <kbq-accordion-content>Yes! You can animate the Accordion with CSS or JavaScript.</kbq-accordion-content>-->
+<!--    </kbq-accordion-item>-->
+<!--</kbq-accordion>-->
