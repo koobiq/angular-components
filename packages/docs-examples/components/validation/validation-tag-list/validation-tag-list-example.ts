@@ -10,7 +10,7 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagRemove } from '@koobiq/components/tags';
+import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -25,10 +25,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule,
         KbqButtonModule,
         KbqIcon,
-        KbqTag,
-        KbqTagInput,
-        KbqTagList,
-        KbqTagRemove
+        KbqTagsModule
     ],
     template: `
         <form
@@ -38,7 +35,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             (ngSubmit)="onSubmitReactiveForm(reactiveForm)"
         >
             <kbq-form-field class="layout-margin-bottom-l">
-                <kbq-tag-list #inputTagList formControlName="reactiveTypeaheadValue">
+                <kbq-tag-list #inputTagList formControlName="reactiveTypeaheadValue" [emitOnTagChanges]="false">
                     @for (tag of reactiveForm.controls['reactiveTypeaheadValue'].value; track tag) {
                         <kbq-tag [value]="tag" (removed)="reactiveInputOnRemoveTag(tag)">
                             {{ tag }}
@@ -54,7 +51,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     />
                 </kbq-tag-list>
 
-                <kbq-error>asd</kbq-error>
+                @if (inputTagList.errorState) {
+                    <kbq-error>Required</kbq-error>
+                }
 
                 <kbq-hint>Provide only latin letters</kbq-hint>
             </kbq-form-field>
@@ -113,6 +112,7 @@ export class ValidationTagListExample implements OnInit {
         if (index >= 0) {
             controlValue.splice(index, 1);
             control.patchValue(controlValue);
+            control.markAsDirty();
         }
     }
 

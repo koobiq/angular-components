@@ -253,6 +253,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
+    emitOnTagChanges: boolean;
     get empty(): boolean;
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
@@ -271,6 +272,8 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     static ngAcceptInputType_draggable: unknown;
     // (undocumented)
     static ngAcceptInputType_editable: unknown;
+    // (undocumented)
+    static ngAcceptInputType_emitOnTagChanges: unknown;
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;
     // (undocumented)
@@ -336,7 +339,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i1.CdkDropList; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "emitOnTagChanges": { "alias": "emitOnTagChanges"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i1.CdkDropList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagList, [null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
 }
