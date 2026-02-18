@@ -12,6 +12,7 @@ import {
     InjectionToken,
     Input,
     numberAttribute,
+    OnDestroy,
     Output,
     QueryList,
     ViewChild,
@@ -58,7 +59,7 @@ export const defaultEmitValueTimeout = 200;
         '[class.kbq-search-expandable_opened]': 'isOpened'
     }
 })
-export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit {
+export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
@@ -104,6 +105,30 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
 
     private _placeholder = this.localeData?.placeholder;
 
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        this._disabled = value;
+
+        this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
+    }
+
+    private _disabled: boolean = false;
+
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
+
     /** Event emitted when the search has been toggled. */
     @Output() readonly isOpenedChange = new EventEmitter<boolean>();
 
@@ -124,11 +149,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
 
         this.ngControl.valueChanges?.pipe(takeUntilDestroyed()).subscribe((value) => this.value.next(value));
 
-        this.focusMonitor
-            .monitor(this.nativeElement, true)
-            .pipe(takeUntilDestroyed())
-            .subscribe((origin) => (this.lastFocusOrigin = origin));
-
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         if (!this.localeService) {
@@ -146,6 +166,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     }
 
     ngAfterViewInit(): void {
+        this.runFocusMonitor();
+
         this.button.changes
             .pipe(
                 filter((queryList) => queryList.length),
@@ -169,10 +191,14 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
             .subscribe((input: KbqInput) => input.focus());
     }
 
-    /** Implemented as part of ControlValueAccessor. */
+    ngOnDestroy() {
+        this.stopFocusMonitor();
+    }
+
+    /** @docs-private */
     onChange: (value: string) => void;
 
-    /** Implemented as part of ControlValueAccessor. */
+    /** @docs-private */
     onTouch: () => void = () => {};
 
     /** Implemented as part of ControlValueAccessor. */
@@ -190,7 +216,14 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
         this.value.next(value || defaultValue);
     }
 
+    /** Implemented as part of ControlValueAccessor. */
+    setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
+    }
+
     toggle(): void {
+        if (this.disabled) return;
+
         this.isOpened = !this.isOpened;
 
         if (!this.isOpened) {
@@ -222,4 +255,12 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
             this.lastEmittedValue = value;
         }
     };
+
+    private runFocusMonitor() {
+        this.focusMonitor.monitor(this.nativeElement, true).subscribe((origin) => (this.lastFocusOrigin = origin));
+    }
+
+    private stopFocusMonitor() {
+        this.focusMonitor.stopMonitoring(this.nativeElement);
+    }
 }
