@@ -11,14 +11,16 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
-import { KbqIconButton } from '@koobiq/components/icon';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqToastService } from '@koobiq/components/toast';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -41,8 +43,11 @@ interface ExampleFileData {
         KbqLinkModule,
         KbqCodeBlockModule,
         NgComponentOutlet,
-        KbqIconButton,
-        KbqDivider
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqIcon,
+        KbqDivider,
+        KbqTooltipTrigger
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],

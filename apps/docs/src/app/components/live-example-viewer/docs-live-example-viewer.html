@@ -24,8 +24,18 @@
             }}
         </span>
 
-        <div class="layout-row layout-gap-xxs layout-align-center-center">
-            <i kbq-icon-button="kbq-arrow-rotate-left_16" [color]="'theme'" (click)="reload()"></i>
+        <div class="layout-row layout-align-center-center">
+            <button
+                kbq-button
+                class="docs-live-example-footer__reload-button"
+                [color]="'theme'"
+                [kbqStyle]="'transparent'"
+                [kbqTooltip]="isRuLocale() ? 'Сбросить состояние' : 'Reset state'"
+                [kbqPlacement]="'bottom'"
+                (click)="reload()"
+            >
+                <i kbq-icon="kbq-arrow-rotate-left_16"></i>
+            </button>
             <kbq-divider class="docs-live-example-footer__divider" [vertical]="true" />
             <docs-stackblitz-button [exampleId]="exampleId" />
         </div>
