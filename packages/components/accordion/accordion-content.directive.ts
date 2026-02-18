@@ -1,45 +1,77 @@
-import { Directive, ElementRef, inject } from '@angular/core';
-import { KbqAccordionItemDirective } from './accordion-item.directive';
+import {
+    AfterContentInit,
+    afterNextRender,
+    AfterRenderRef,
+    AfterViewInit,
+    Directive,
+    inject,
+    Renderer2,
+    signal
+} from '@angular/core';
+import { KbqAccordionItem } from './accordion-item';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 
 @Directive({
     selector: '[kbqAccordionContent]',
     exportAs: 'kbqAccordionContent',
     host: {
         '[attr.role]': '"region"',
-        '[style.display]': 'hidden ? "none" : ""',
+        '[attr.hidden]': 'hidden().toString()',
+
         '[attr.data-state]': 'item.dataState',
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation',
-        '(animationend)': 'onAnimationEnd()'
+
+        '(transitionend)': 'hidden.set(!this.item.expanded)'
     }
 })
-export class KbqAccordionContentDirective {
-    protected readonly item = inject(KbqAccordionItemDirective);
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
+export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
+    private readonly renderer: Renderer2 = inject(Renderer2);
 
-    protected hidden = false;
+    /** @docs-private */
+    protected readonly nativeElement = kbqInjectNativeElement();
+    /** @docs-private */
+    protected readonly item = inject(KbqAccordionItem);
 
-    protected onAnimationEnd() {
-        this.hidden = !this.item.expanded;
+    /** @docs-private */
+    protected readonly hidden = signal<boolean>(true);
 
-        const { height, width } = this.nativeElement.getBoundingClientRect();
 
-        this.nativeElement.style.setProperty('--radix-collapsible-content-height', `${height}px`);
-        this.nativeElement.style.setProperty('--radix-collapsible-content-width', `${width}px`);
+    private savedTransition: string;
+    private readonly afterRenderRef?: AfterRenderRef;
 
-        this.nativeElement.style.setProperty(
-            '--radix-accordion-content-height',
-            'var(--radix-collapsible-content-height)'
-        );
-        this.nativeElement.style.setProperty(
-            '--radix-accordion-content-width',
-            'var(--radix-collapsible-content-width)'
-        );
+    constructor() {
+        this.afterRenderRef = afterNextRender(() => {
+            this.enableAnimation();
+
+            this.afterRenderRef?.destroy();
+        });
     }
 
-    onToggle() {
-        if (!this.item.expanded) {
-            this.hidden = false;
-        }
+    ngAfterViewInit(): void {
+        this.disableAnimation();
+    }
+
+    ngAfterContentInit(): void {
+        const { height, width } = this.nativeElement.getBoundingClientRect();
+
+        this.renderer.setProperty(this.nativeElement, 'style', `
+            --radix-accordion-content-height: ${height}px;
+            --radix-accordion-content-width: ${width}px;
+        `);
+    }
+
+    toggle() {
+        this.hidden.set(!this.item.expanded);
+    }
+
+    disableAnimation() {
+        this.savedTransition = this.nativeElement.style.transition;
+
+        this.nativeElement.style.transition = 'none';
+    }
+
+    enableAnimation() {
+        this.nativeElement.style.transition = this.savedTransition;
     }
 }
