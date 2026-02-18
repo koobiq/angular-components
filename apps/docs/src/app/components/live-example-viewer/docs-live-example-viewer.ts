@@ -97,9 +97,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly httpClient = inject(HttpClient);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly window = inject(KBQ_WINDOW);
-    private readonly sidepanelService = inject(KbqSidepanelService);
-    private readonly modalService = inject(KbqModalService);
-    private readonly toastService = inject(KbqToastService);
+    private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
+    private readonly modalService = inject(KbqModalService, { optional: true });
+    private readonly toastService = inject(KbqToastService, { optional: true });
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;
@@ -119,9 +119,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         this._example = '';
         this.exampleComponentType = null;
 
-        this.sidepanelService.closeAll();
-        this.modalService.closeAll();
-        this.toastService.toasts.forEach(({ instance }) => this.toastService.hide(instance.id));
+        this.sidepanelService?.closeAll();
+        this.modalService?.closeAll();
+        this.toastService?.toasts.forEach(({ instance }) => this.toastService?.hide(instance.id));
 
         this.example = previous;
     }
