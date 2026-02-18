@@ -21,13 +21,14 @@ import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES: InjectionToken<KbqOpenStrategy<any>[]>;
 
 // @public
-export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy<any>[];
+export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy[];
 
 // @public
 export class KbqFocusRegionItem {
@@ -108,7 +109,7 @@ export class KbqInlineEditModule {
 }
 
 // @public
-export const kbqInlineEditPanelOpenStrategiesProvider: (strategies: KbqOpenStrategy<any>[]) => Provider;
+export const kbqInlineEditPanelOpenStrategiesProvider: (strategies: KbqOpenStrategy[]) => Provider;
 
 // @public
 export class KbqInlineEditPlaceholder {
@@ -119,8 +120,8 @@ export class KbqInlineEditPlaceholder {
 }
 
 // @public
-export type KbqOpenStrategy<T> = {
-    type: new (...args: any[]) => T;
+export type KbqOpenStrategy<T = any> = {
+    type: Type<T>;
     open: (control: T) => void;
 };
 

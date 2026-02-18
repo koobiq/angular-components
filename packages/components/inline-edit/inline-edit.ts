@@ -19,6 +19,7 @@ import {
     Provider,
     signal,
     TemplateRef,
+    Type,
     viewChild,
     viewChildren,
     ViewEncapsulation
@@ -55,16 +56,19 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 const baseClass = 'kbq-inline-edit';
 
 /** Defines how to open panel for a specific control type. */
-export type KbqOpenStrategy<T> = { type: new (...args: any[]) => T; open: (control: T) => void };
+export type KbqOpenStrategy<T = any> = { type: Type<T>; open: (control: T) => void };
 
 /**
  * Built-in open strategies.
  * Used as the default value for {@link KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES}.
  */
-export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy<any>[] = [
-    { type: KbqSelect, open: (c: KbqSelect) => c.open() },
-    { type: KbqTreeSelect, open: (c: KbqTreeSelect) => c.open() },
-    { type: KbqAutocompleteTrigger, open: (c: KbqAutocompleteTrigger) => c.openPanel() }
+export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy[] = [
+    { type: KbqSelect, open: (control) => control.open() } satisfies KbqOpenStrategy<KbqSelect>,
+    { type: KbqTreeSelect, open: (control) => control.open() } satisfies KbqOpenStrategy<KbqTreeSelect>,
+    {
+        type: KbqAutocompleteTrigger,
+        open: (control) => control.openPanel()
+    } satisfies KbqOpenStrategy<KbqAutocompleteTrigger>
 ];
 
 /**
@@ -73,7 +77,7 @@ export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy<any>[]
  *
  * @see kbqInlineEditPanelOpenStrategiesProvider
  */
-export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES = new InjectionToken<KbqOpenStrategy<any>[]>(
+export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES = new InjectionToken<KbqOpenStrategy[]>(
     'KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES_TOKEN',
     {
         providedIn: 'root',
@@ -82,7 +86,7 @@ export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES = new InjectionToken<KbqOpenS
 );
 
 /** Creates a provider that overrides the default panel open strategies. */
-export const kbqInlineEditPanelOpenStrategiesProvider = (strategies: KbqOpenStrategy<any>[]): Provider => {
+export const kbqInlineEditPanelOpenStrategiesProvider = (strategies: KbqOpenStrategy[]): Provider => {
     return {
         provide: KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES,
         useValue: strategies
