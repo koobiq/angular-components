@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
@@ -21,7 +21,9 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 @if (!displayValue()) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <span class="kbq-headline example-inline-edit__display-value">{{ displayValue() }}</span>
+                    <div #displayValueElement class="kbq-headline example-inline-edit__display-value">
+                        {{ displayValue() }}
+                    </div>
                 }
             </div>
             <div class="example-textarea_editable-header" kbqInlineEditEditMode>
@@ -30,11 +32,13 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     <kbq-form-field>
                         <textarea
                             kbqTextarea
-                            [rows]="1"
+                            [canGrow]="false"
                             [freeRowsHeight]="0"
                             [maxRows]="maxRows"
                             [placeholder]="placeholder"
                             [formControl]="control"
+                            [style.min-height.px]="displayValueElement()?.nativeElement?.clientHeight ?? null"
+                            (paste)="onPaste($event)"
                         ></textarea>
                     </kbq-form-field>
                 }
@@ -50,10 +54,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             --kbq-inline-edit-padding-horizontal: 5px;
         }
 
-        .kbq-inline-edit_view {
-            .example-inline-edit__display-value {
-                overflow-wrap: break-word;
-            }
+        .example-inline-edit__display-value {
+            overflow-wrap: break-word;
         }
 
         .kbq-textarea {
@@ -81,6 +83,8 @@ export class InlineEditEditableHeaderExample {
     protected readonly content =
         "Spanish football is characterized by technical skill, tactical innovation, and fierce regional rivalries. La Liga, founded in 1929, features some of the world's best clubs. Spain's national team dominated world football from 2008-2012, winning two European Championships and a World Cup with their 'tiki-taka' style.";
 
+    protected displayValueElement = viewChild<ElementRef<HTMLElement>>('displayValueElement');
+
     protected onSave(): void {
         if (!this.control.value) {
             this.control.setValue(this.control.defaultValue);
@@ -90,4 +94,16 @@ export class InlineEditEditableHeaderExample {
     }
 
     protected canSaveOnEnterFn = () => true;
+
+    protected onPaste(event: ClipboardEvent) {
+        const text = event.clipboardData?.getData('text');
+
+        if (text) {
+            event.preventDefault();
+
+            this.control.setValue(text.replace(/\n/g, ' '));
+        }
+
+        return undefined;
+    }
 }
