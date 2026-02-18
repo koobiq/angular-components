@@ -6,6 +6,8 @@
         [color]="'contrast'"
         [kbqStyle]="'transparent'"
         kbqTooltip="{{ localeData.tooltip }}"
+        [tabIndex]="tabIndex"
+        [disabled]="disabled"
         (click)="toggle()"
     >
         <i kbq-icon="kbq-magnifying-glass_16"></i>
@@ -19,12 +21,20 @@
             name="value"
             type="text"
             autocomplete="off"
+            [tabIndex]="tabIndex"
+            [disabled]="disabled"
             [placeholder]="placeholder"
             [formControl]="$any(ngControl?.control)"
             (blur)="onTouch()"
             (keyup.escape)="toggle()"
         />
 
-        <i kbqSuffix kbq-icon-button="kbq-xmark-circle_16" (click)="toggle()" (keyup.enter)="toggle()"></i>
+        <i
+            kbqSuffix
+            kbq-icon-button="kbq-circle-xmark_16"
+            [disabled]="disabled"
+            (click)="toggle()"
+            (keyup.enter)="toggle()"
+        ></i>
     </kbq-form-field>
 }

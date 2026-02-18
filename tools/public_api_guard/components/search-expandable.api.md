@@ -15,6 +15,7 @@ import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
 
 // @public (undocumented)
 export const defaultEmitValueTimeout = 200;
@@ -32,12 +33,15 @@ export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: {
 };
 
 // @public (undocumented)
-export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit {
+export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, OnDestroy {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     configuration: any;
     protected readonly destroyRef: DestroyRef;
+    // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
     emitValueTimeout: number;
     // (undocumented)
     readonly externalConfiguration: unknown;
@@ -51,24 +55,34 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     protected readonly localeService: KbqLocaleService | null;
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
     static ngAcceptInputType_emitValueTimeout: unknown;
     // (undocumented)
     static ngAcceptInputType_isOpened: unknown;
     // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     protected readonly ngControl: NgControl | null;
+    // (undocumented)
+    ngOnDestroy(): void;
     onChange: (value: string) => void;
     onTouch: () => void;
     get placeholder(): string;
     set placeholder(value: string);
     registerOnChange(fn: (value: string) => void): void;
     registerOnTouched(fn: () => void): void;
+    setDisabledState(isDisabled: boolean): void;
+    // (undocumented)
+    get tabIndex(): number;
+    set tabIndex(value: number);
     // (undocumented)
     toggle(): void;
     value: BehaviorSubject<string>;
     writeValue(value: string): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }
