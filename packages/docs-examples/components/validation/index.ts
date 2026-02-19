@@ -10,6 +10,7 @@ import { ValidationOnSubmitExample } from './validation-on-submit/validation-on-
 import { ValidationOnTypeExample } from './validation-on-type/validation-on-type-example';
 import { ValidationOptionalLabelExample } from './validation-optional-label/validation-optional-label-example';
 import { ValidationRequiredLabelExample } from './validation-required-label/validation-required-label-example';
+import { ValidationTagListExample } from './validation-tag-list/validation-tag-list-example';
 
 export {
     ValidationMessageForSpecificFieldExample,
@@ -22,7 +23,8 @@ export {
     ValidationOnSubmitExample,
     ValidationOnTypeExample,
     ValidationOptionalLabelExample,
-    ValidationRequiredLabelExample
+    ValidationRequiredLabelExample,
+    ValidationTagListExample
 };
 
 const EXAMPLES = [
@@ -36,7 +38,8 @@ const EXAMPLES = [
     ValidationRequiredLabelExample,
     ValidationMessageForSpecificFieldExample,
     ValidationMessageGlobalExample,
-    ValidationNoMessageExample
+    ValidationNoMessageExample,
+    ValidationTagListExample
 ];
 
 @NgModule({

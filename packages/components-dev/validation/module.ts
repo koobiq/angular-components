@@ -41,6 +41,7 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
     selector: 'dev-examples',
     imports: [ValidationExamplesModule],
     template: `
+        <validation-tag-list-example />
         <validation-on-open-example />
         <validation-optional-label-example />
         <validation-required-label-example />
@@ -198,11 +199,14 @@ export class DevApp {
     }
 
     reactiveInputOnCreate(event: KbqTagInputEvent): void {
+        console.log(event);
         const input = event.input;
         const value = event.value;
+        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
 
         if ((value || '').trim()) {
             this.reactiveTypeaheadItems.push(value.trim());
+            control.patchValue(this.reactiveTypeaheadItems);
         }
 
         if (input) {
@@ -226,16 +230,22 @@ export class DevApp {
     reactiveInputOnRemoveTag(tag: string): void {
         const index = this.reactiveTypeaheadItems.indexOf(tag);
 
+        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+
         if (index >= 0) {
             this.reactiveTypeaheadItems.splice(index, 1);
+            control.patchValue(this.reactiveTypeaheadItems.slice());
         }
     }
 
     reactiveFormControlInputOnRemoveTag(tag: string): void {
         const index = this.reactiveFormControlTypeaheadItems.indexOf(tag);
 
+        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+
         if (index >= 0) {
             this.reactiveFormControlTypeaheadItems.splice(index, 1);
+            control.patchValue(this.reactiveFormControlTypeaheadItems.slice());
         }
     }
 

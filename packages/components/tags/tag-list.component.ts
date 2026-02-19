@@ -315,6 +315,12 @@ export class KbqTagList
     /** Whether the tags in the list are editable. */
     @Input({ transform: booleanAttribute }) editable = false;
 
+    /**
+     * Whether to emit change events when tags are added/removed.
+     * Set to `false` to prevent the form control from being marked as dirty during programmatic updates.
+     */
+    @Input({ transform: booleanAttribute }) emitOnTagChanges = true;
+
     /** Whether the tags in the list are removable. */
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
@@ -503,7 +509,7 @@ export class KbqTagList
                     this.stateChanges.next();
 
                     // do not call on initial
-                    if (currentTags) {
+                    if (currentTags && this.emitOnTagChanges) {
                         this.propagateTagsChanges();
                     }
                 });
