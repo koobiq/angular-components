@@ -72,7 +72,7 @@
                     @include _kbq-form-field-state(states-focused);
 
                     & .kbq-form-field__container {
-                        box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+                        box-shadow: inset 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
                     }
                 }
 
@@ -83,7 +83,7 @@
                     @include _kbq-form-field-state(states-error);
 
                     &.cdk-focused .kbq-form-field__container {
-                        box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
+                        box-shadow: inset 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
                     }
 
                     & .kbq-icon.kbq-empty {
