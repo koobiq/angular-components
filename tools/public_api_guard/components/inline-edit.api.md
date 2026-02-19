@@ -7,7 +7,6 @@
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import * as i0 from '@angular/core';
-import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -17,18 +16,10 @@ import { KbqLabel } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OutputEmitterRef } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
-import { Type } from '@angular/core';
 import { WritableSignal } from '@angular/core';
-
-// @public
-export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES: InjectionToken<KbqOpenStrategy<any>[]>;
-
-// @public
-export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy[];
 
 // @public
 export class KbqFocusRegionItem {
@@ -109,21 +100,12 @@ export class KbqInlineEditModule {
 }
 
 // @public
-export const kbqInlineEditPanelOpenStrategiesProvider: (strategies: KbqOpenStrategy[]) => Provider;
-
-// @public
 export class KbqInlineEditPlaceholder {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditPlaceholder, "[kbqInlineEditPlaceholder]", ["kbqInlineEditPlaceholder"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditPlaceholder, never>;
 }
-
-// @public
-export type KbqOpenStrategy<T = any> = {
-    type: Type<T>;
-    open: (control: T) => void;
-};
 
 // (No @packageDocumentation comment for this package)
 

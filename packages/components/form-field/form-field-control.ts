@@ -48,4 +48,7 @@ export abstract class KbqFormFieldControl<T> {
 
     /** Focuses the control. */
     abstract focus(options?: FocusOptions): void;
+
+    /** Opens control's overlay. */
+    abstract open?(): void;
 }

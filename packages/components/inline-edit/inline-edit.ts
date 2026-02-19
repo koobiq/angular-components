@@ -12,21 +12,17 @@ import {
     Directive,
     ElementRef,
     inject,
-    InjectionToken,
     input,
     numberAttribute,
     output,
-    Provider,
     signal,
     TemplateRef,
-    Type,
     viewChild,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
-import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqAnimationCurves,
@@ -37,9 +33,7 @@ import {
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -54,44 +48,6 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 ]);
 
 const baseClass = 'kbq-inline-edit';
-
-/** Defines how to open panel for a specific control type. */
-export type KbqOpenStrategy<T = any> = { type: Type<T>; open: (control: T) => void };
-
-/**
- * Built-in open strategies.
- * Used as the default value for {@link KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES}.
- */
-export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT: KbqOpenStrategy[] = [
-    { type: KbqSelect, open: (control) => control.open() } satisfies KbqOpenStrategy<KbqSelect>,
-    { type: KbqTreeSelect, open: (control) => control.open() } satisfies KbqOpenStrategy<KbqTreeSelect>,
-    {
-        type: KbqAutocompleteTrigger,
-        open: (control) => control.openPanel()
-    } satisfies KbqOpenStrategy<KbqAutocompleteTrigger>
-];
-
-/**
- * Injection token for providing a list of {@link KbqOpenStrategy} instances.
- * Inject this to customize or extend which controls can be opened in inline edit panels.
- *
- * @see kbqInlineEditPanelOpenStrategiesProvider
- */
-export const KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES = new InjectionToken<KbqOpenStrategy[]>(
-    'KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES_TOKEN',
-    {
-        providedIn: 'root',
-        factory: () => KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGY_DEFAULT
-    }
-);
-
-/** Creates a provider that overrides the default panel open strategies. */
-export const kbqInlineEditPanelOpenStrategiesProvider = (strategies: KbqOpenStrategy[]): Provider => {
-    return {
-        provide: KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES,
-        useValue: strategies
-    };
-};
 
 /** @docs-private */
 @Directive({
@@ -268,8 +224,6 @@ export class KbqInlineEdit {
     protected readonly colors = KbqComponentColors;
 
     private initialValue: unknown;
-
-    private panelOpenStrategy = inject(KBQ_INLINE_EDIT_PANEL_OPEN_STRATEGIES);
 
     constructor() {
         toObservable(this.mode)
@@ -482,9 +436,7 @@ export class KbqInlineEdit {
     private openPanel(formFieldRef: KbqFormField) {
         const control = formFieldRef.control;
 
-        const strategy = this.panelOpenStrategy.find(({ type }) => control instanceof type);
-
-        strategy?.open(control);
+        control?.open?.();
     }
 
     private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {

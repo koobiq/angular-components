@@ -257,6 +257,14 @@ export class KbqAutocompleteTrigger
     onTouched: () => void = () => {};
 
     /** Opens the autocomplete suggestion panel. */
+    open(): void {
+        this.attachOverlay();
+    }
+
+    /**
+     * @deprecated Will be removed in next major release. Use `open` instead.
+     * @docs-private
+     */
     openPanel(): void {
         this.attachOverlay();
     }

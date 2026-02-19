@@ -158,6 +158,7 @@ export abstract class KbqFormFieldControl<T> {
     readonly id: string;
     readonly ngControl: NgControl | null;
     abstract onContainerClick(event: MouseEvent): void;
+    abstract open?(): void;
     readonly placeholder: string;
     readonly required: boolean;
     readonly stateChanges: Observable<void>;

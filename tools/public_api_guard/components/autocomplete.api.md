@@ -175,6 +175,8 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     onChange: (value: any) => void;
     onInputBlur: (event: FocusEvent) => boolean;
     onTouched: () => void;
+    open(): void;
+    // @deprecated (undocumented)
     openPanel(): void;
     // (undocumented)
     readonly optionSelections: Observable<KbqOptionSelectionChange>;
