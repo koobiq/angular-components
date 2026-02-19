@@ -23,7 +23,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
-import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqAnimationCurves,
@@ -34,9 +33,7 @@ import {
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -436,15 +433,10 @@ export class KbqInlineEdit {
         this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
     }
 
-    // @TODO refactor this (#DS-4181)
     private openPanel(formFieldRef: KbqFormField) {
         const control = formFieldRef.control;
 
-        if (control instanceof KbqSelect || control instanceof KbqTreeSelect) {
-            control.open();
-        } else if (control instanceof KbqAutocompleteTrigger) {
-            control.openPanel();
-        }
+        control?.open?.();
     }
 
     private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {
