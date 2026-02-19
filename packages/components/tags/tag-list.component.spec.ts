@@ -826,14 +826,26 @@ describe(KbqTagList.name, () => {
             expect(fixture.componentInstance.control.touched).toBe(false);
         });
 
-        // todo need rethink this selection logic
-        xit('should not set the control to dirty when the value changes programmatically', () => {
+        it('should not set the control to dirty when the value changes programmatically', () => {
             expect(fixture.componentInstance.control.dirty).toEqual(false);
 
             fixture.componentInstance.control.setValue(['pizza-1']);
 
             expect(fixture.componentInstance.control.dirty).toEqual(false);
         });
+
+        it('should not set the control to dirty when rendered tags changed programmatically', fakeAsync(() => {
+            expect(fixture.componentInstance.control.dirty).toEqual(false);
+
+            fixture.componentInstance.emitOnTagChanges = false;
+            fixture.detectChanges();
+            fixture.componentInstance.foods = [...fixture.componentInstance.foods, 'pizza-1'];
+
+            fixture.detectChanges();
+            tick(100);
+
+            expect(fixture.componentInstance.control.dirty).toEqual(false);
+        }));
 
         xit('should set an asterisk after the placeholder if the control is required', () => {
             let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
@@ -1610,7 +1622,13 @@ class BasicTagList {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList1 placeholder="Food" [formControl]="control" [required]="isRequired">
+            <kbq-tag-list
+                #tagList1
+                placeholder="Food"
+                [formControl]="control"
+                [required]="isRequired"
+                [emitOnTagChanges]="emitOnTagChanges"
+            >
                 @for (food of foods; track food) {
                     <kbq-tag [value]="food.value" (removed)="remove(food)">
                         {{ food.viewValue }}
@@ -1628,6 +1646,7 @@ class BasicTagList {
     `
 })
 class InputTagList {
+    emitOnTagChanges = true;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
