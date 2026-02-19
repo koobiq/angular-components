@@ -44,7 +44,7 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     useFactory: typeof kbqTooltipScrollStrategyFactory;
 };
 
-// @public (undocumented)
+// @public @deprecated
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     // (undocumented)
     get content(): string | TemplateRef<any>;
@@ -184,7 +184,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipTrigger, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated
 export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     // (undocumented)
     get content(): string | TemplateRef<any>;
