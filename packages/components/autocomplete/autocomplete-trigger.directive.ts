@@ -266,7 +266,7 @@ export class KbqAutocompleteTrigger
      * @docs-private
      */
     openPanel(): void {
-        this.attachOverlay();
+        this.open();
     }
 
     closePanel(): void {
