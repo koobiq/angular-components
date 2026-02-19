@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { PlatformModule } from '@angular/cdk/platform';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, Provider, signal, Type, viewChild, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,44 @@ import { KbqTagsModule } from './index';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagInput, KbqTagInputEvent } from './tag-input';
 import { KbqTagList } from './tag-list.component';
+
+const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({
+        imports: [component, NoopAnimationsModule],
+        providers
+    });
+
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
+
+const getInputElement = (fixture: ComponentFixture<any>): HTMLInputElement => {
+    return fixture.debugElement.query(By.directive(KbqTagInput)).nativeElement;
+};
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList>
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
+                }
+            </kbq-tag-list>
+            <input [kbqTagInputFor]="tagList" [distinct]="distinct()" (kbqTagInputTokenEnd)="add($event)" />
+        </kbq-form-field>
+    `
+})
+class TestTagInputDistinct {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly distinct = signal(false);
+    readonly tags: string[] = ['existing-tag'];
+    readonly add = jest.fn();
+}
 
 describe('KbqTagInput', () => {
     let fixture: ComponentFixture<any>;
@@ -239,6 +277,83 @@ describe('KbqTagInput', () => {
             tagInputDirective.onKeydown(ENTER_EVENT);
             expect(addSpyFn).not.toHaveBeenCalled();
         });
+    });
+});
+
+describe('[distinct]', () => {
+    it('should not emit (tagEnd) when distinct=true and a duplicate value is entered', () => {
+        const fixture = createComponent(TestTagInputDistinct);
+        const { componentInstance } = fixture;
+        const directive = componentInstance.tagInput();
+
+        componentInstance.distinct.set(true);
+        fixture.detectChanges();
+
+        getInputElement(fixture).value = 'existing-tag';
+        directive.emitTagEnd();
+
+        expect(componentInstance.add).not.toHaveBeenCalled();
+    });
+
+    it('should emit (tagEnd) when distinct=true and a unique value is entered', () => {
+        const fixture = createComponent(TestTagInputDistinct);
+        const { componentInstance } = fixture;
+        const directive = componentInstance.tagInput();
+
+        componentInstance.distinct.set(true);
+        fixture.detectChanges();
+
+        getInputElement(fixture).value = 'new-tag';
+        directive.emitTagEnd();
+
+        expect(componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'new-tag' }));
+    });
+
+    it('should emit (tagEnd) when distinct=false and a duplicate value is entered', () => {
+        const fixture = createComponent(TestTagInputDistinct);
+        const { componentInstance } = fixture;
+        const directive = componentInstance.tagInput();
+
+        getInputElement(fixture).value = 'existing-tag';
+        directive.emitTagEnd();
+
+        expect(componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'existing-tag' }));
+    });
+
+    it('should filter duplicate values on paste when distinct=true', () => {
+        const fixture = createComponent(TestTagInputDistinct);
+        const { componentInstance } = fixture;
+        const directive = componentInstance.tagInput();
+
+        componentInstance.distinct.set(true);
+        directive.separatorKeyCodes = [COMMA];
+        fixture.detectChanges();
+
+        directive.onPaste({
+            clipboardData: { getData: (_: string) => 'existing-tag,new-tag' },
+            preventDefault: () => {},
+            stopPropagation: () => {}
+        } as unknown as ClipboardEvent);
+
+        expect(componentInstance.add).toHaveBeenCalledTimes(1);
+        expect(componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'new-tag' }));
+    });
+
+    it('should not filter duplicate values on paste when distinct=false', () => {
+        const fixture = createComponent(TestTagInputDistinct);
+        const { componentInstance } = fixture;
+        const directive = componentInstance.tagInput();
+
+        directive.separatorKeyCodes = [COMMA];
+        fixture.detectChanges();
+
+        directive.onPaste({
+            clipboardData: { getData: (_: string) => 'existing-tag,new-tag' },
+            preventDefault: () => {},
+            stopPropagation: () => {}
+        } as unknown as ClipboardEvent);
+
+        expect(componentInstance.add).toHaveBeenCalledTimes(2);
     });
 });
 
