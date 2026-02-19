@@ -27,6 +27,17 @@
     justify-content: space-between;
 
     padding: var(--kbq-size-m) var(--kbq-size-xl);
+
+    .docs-live-example-footer__reload-button {
+        --kbq-button-size-height: var(--kbq-size-xxl);
+        width: var(--kbq-size-xxl);
+    }
+
+    .docs-live-example-footer__divider.kbq-divider {
+        height: var(--kbq-size-s);
+        --kbq-divider-size-vertical-margin-horizontal: var(--kbq-size-s);
+        margin-left: var(--kbq-size-xxs);
+    }
 }
 
 .docs-example-vertical-margin {
