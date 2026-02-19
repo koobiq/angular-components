@@ -257,17 +257,19 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             [...data.split(new RegExp(`${separatorsInString.join('|')}`))] :
             [data];
 
-        const items: string[] = dividedString.map((item) => this.trimValue(item));
+        let items: string[] = dividedString.map((item) => this.trimValue(item));
 
         if (items.length === 0) {
             items.push(data);
         }
 
-        const tagValues: string[] = this._tagList.tags.map(({ value }) => value);
+        if (this.distinct) {
+            const tagValues: string[] = this._tagList.tags.map(({ value }) => value);
 
-        items
-            .filter((item) => !tagValues.includes(item))
-            .forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));
+            items = items.filter((item) => !tagValues.includes(item));
+        }
+
+        items.forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));
 
         $event.preventDefault();
         $event.stopPropagation();
