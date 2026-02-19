@@ -32,13 +32,13 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     <kbq-form-field>
                         <textarea
                             kbqTextarea
-                            [canGrow]="false"
+                            [rows]="1"
                             [freeRowsHeight]="0"
                             [maxRows]="maxRows"
                             [placeholder]="placeholder"
                             [formControl]="control"
-                            [style.min-height.px]="displayValueElement()?.nativeElement?.clientHeight ?? null"
-                            (paste)="onPaste($event)"
+                            [style.height.px]="displayValueElement()?.nativeElement?.clientHeight ?? null"
+                            (paste)="onPaste()"
                         ></textarea>
                     </kbq-form-field>
                 }
@@ -95,15 +95,9 @@ export class InlineEditEditableHeaderExample {
 
     protected canSaveOnEnterFn = () => true;
 
-    protected onPaste(event: ClipboardEvent) {
-        const text = event.clipboardData?.getData('text');
-
-        if (text) {
-            event.preventDefault();
-
-            this.control.setValue(text.replace(/\n/g, ' '));
-        }
-
-        return undefined;
+    protected onPaste() {
+        setTimeout(() => {
+            this.control.setValue(this.control.value.replace(/\n/g, ' '));
+        });
     }
 }
