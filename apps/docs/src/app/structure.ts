@@ -1091,8 +1091,7 @@ const structure: DocsStructure = makeStructure({
                     },
                     svgPreview: 'validation',
                     hasApi: false,
-                    hasExamples: false,
-                    isNew: expiresAt('2025-08-17')
+                    hasExamples: true
                 }
             ]
         }

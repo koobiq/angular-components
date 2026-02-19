@@ -5638,6 +5638,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "validation-required-label-example.ts",
     "importPath": "components/validation"
+  },
+  "validation-tag-list": {
+    "packagePath": "components/validation/validation-tag-list",
+    "title": "Validation tag list",
+    "componentName": "ValidationTagListExample",
+    "files": [
+      "validation-tag-list-example.ts"
+    ],
+    "selector": "validation-tag-list-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-tag-list-example.ts",
+    "importPath": "components/validation"
   }
 };
 export async function loadExample(id: string): Promise<any> {
@@ -6551,6 +6563,8 @@ return import('@koobiq/docs-examples/components/validation');
   case 'validation-optional-label':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-required-label':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-tag-list':
 return import('@koobiq/docs-examples/components/validation');
     default:
 return undefined;
