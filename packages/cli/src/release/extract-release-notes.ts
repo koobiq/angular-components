@@ -7,7 +7,7 @@ export function extractReleaseNotes(changelogPath: string, versionName: string):
 
     // Regular expression that matches the release notes for the given version.
     const releaseNotesRegex = new RegExp(
-        `^(##? ${escapedVersion} \\(\\d{4}-\\d{2}-\\d{2}\\)\n\n### .+?)\n([\\s\\S]*?)(?=\n# )`
+        `##? (${escapedVersion} \\(\\d{4}-\\d{2}-\\d{2}\\)\n\n### .+?)\n\n([\\s\\S]*?)(?=\n# )`
     );
 
     const matches = releaseNotesRegex.exec(changelogContent);
@@ -15,7 +15,7 @@ export function extractReleaseNotes(changelogPath: string, versionName: string):
     return matches
         ? {
               releaseTitle: matches[1],
-              releaseNotes: matches[2].trim()
+              releaseNotes: matches[2]
           }
         : null;
 }
