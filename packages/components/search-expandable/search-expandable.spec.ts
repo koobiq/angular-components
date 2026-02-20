@@ -1,5 +1,6 @@
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
@@ -55,10 +56,12 @@ describe('KbqSearchExpandable', () => {
 
 @Component({
     selector: 'test-app',
+    imports: [KbqSearchExpandableModule, FormsModule],
     template: `
-        <kbq-search-expandable [isOpened]="openedState" />
+        <kbq-search-expandable [isOpened]="openedState" [(ngModel)]="search" />
     `
 })
 class TestApp {
     openedState: boolean = false;
+    search: string;
 }

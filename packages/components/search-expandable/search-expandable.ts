@@ -1,5 +1,4 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -20,7 +19,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, ruRULocaleData } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -55,19 +54,14 @@ export const defaultEmitValueTimeout = 200;
         KbqIconModule,
         KbqInputModule,
         FormsModule,
-        AsyncPipe,
         KbqToolTipModule,
-        KbqFormFieldModule
-    ],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: KbqSearchExpandable,
-            multi: true
-        }
+        KbqFormFieldModule,
+        ReactiveFormsModule
     ]
 })
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit {
+    /** @docs-private */
+    protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
     /** @docs-private */
@@ -123,6 +117,14 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
     private lastEmittedValue = defaultValue;
 
     constructor() {
+        if (!this.ngControl) {
+            throw Error(`kbq-search-expandable must be used with the [formControl], [formControlName] or [(ngModel)].`);
+        }
+
+        this.ngControl.valueAccessor = this;
+
+        this.ngControl.valueChanges?.pipe(takeUntilDestroyed()).subscribe((value) => this.value.next(value));
+
         this.focusMonitor
             .monitor(this.nativeElement, true)
             .pipe(takeUntilDestroyed())
@@ -168,10 +170,10 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit 
             .subscribe((input: KbqInput) => input.focus());
     }
 
-    /** @docs-private */
+    /** Implemented as part of ControlValueAccessor. */
     onChange: (value: string) => void;
 
-    /** @docs-private */
+    /** Implemented as part of ControlValueAccessor. */
     onTouch: () => void = () => {};
 
     /** Implemented as part of ControlValueAccessor. */
