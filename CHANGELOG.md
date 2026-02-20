@@ -1,3 +1,9 @@
+## 19.4.1 (2026-02-20)
+
+### Koobiq
+
+ * bug fix  **styles:** revert "use .kbq-progress only for buttons" ([#DS-4355](https://github.com/koobiq/angular-components/issues/issue/DS-4355)) ([#1377](https://github.com/koobiq/angular-components/issues/1377)) ([ca7e71d](https://github.com/koobiq/angular-components/commit/ca7e71d579f27f150f0aa78da58995b1cd7be567))
+
 # 19.4.0 (2026-02-19)
 
 ### Koobiq
