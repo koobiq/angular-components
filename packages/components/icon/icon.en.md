@@ -1,34 +1,52 @@
 ### Installation
 
-Note that koobiq Icons is optional package and it should be installed manually.
+Note that Koobiq Icons is an optional package and must be installed manually.
 
-##### NPM
+#### Updated icon package
 
-`npm install @koobiq/icons --save`
+We are excited to introduce the updated icon package!
+We want to keep the package name `@koobiq/icons` and allow a smooth migration (using both packages in a project simultaneously).
 
-##### Yarn
+The new version of icons is available on [GitHub](https://github.com/koobiq/icons) as `@koobiq/icons@9.0.0`.
 
-`yarn add @koobiq/icons`
+The old icon set will now be called `@koobiq/icons-lts`.
 
-Then you should add icons styles:
+#### NPM
 
-`@use '@koobiq/icons/fonts/kbq-icons.css';`
+```bash
+npm install @koobiq/icons --save
+```
 
-And finally import KbqIconModule to your component module.
+Then import the styles:
 
-`import { KbqIconModule } from '@koobiq/components';`
+```scss
+@use '@koobiq/icons/fonts/kbq-icons.css';
+```
 
-If kbq-icons.css does't suit your project, you can also add:
+And import `KbqIconModule` into your module:
+
+```ts
+import { KbqIconModule } from '@koobiq/components';
+```
+
+If `*.css` is not used in your project, you can also use one of these alternatives:
 
 - kbq-icons.less;
-- kbq-icons-embed.css with embedded font included.
+- kbq-icons.scss;
+- kbq-icons-embed.css (includes embedded fonts)
 
-### Variants
+### Usage examples
 
-There are two icon usage variants:
+There are two ways to use icons:
 
-1. `<i kbq-icon="kbq-gear_16"></i>`;
+1. Add the `[color]` attribute using one of the following values: _theme_, _contrast_, _contrast-fade_, _error_, _warning_, _success_.
 
-    In this case you can provide `[color]` attribute. It can have following values: _primary_, _secondary_, _error_.
+```html
+<i kbq-icon="kbq-gear_16" [color]="'contrast'"></i>
+```
 
-2. Simply `<i class="kbq kbq-gear_16"></i>`.
+2. The simpler way:
+
+```html
+<i class="kbq kbq-gear_16"></i>
+```

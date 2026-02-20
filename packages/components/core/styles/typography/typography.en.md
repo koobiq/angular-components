@@ -20,7 +20,7 @@ Add it to your application via [Fontsource](#fontsource), or with the [Google Fo
 Install packages:
 
 ```bash
-yarn add @fontsource/inter @fontsource/jetbrains-mono
+npm install @fontsource/inter @fontsource/jetbrains-mono
 ```
 
 Then you add the following code inside your global styles:

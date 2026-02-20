@@ -1,5 +1,55 @@
-🚧 **Documentation in progress** 🚧
+### With default parameters
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(tree-select-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### Multiple tree-select
+
+<!-- example(tree-select-multiple-overview) -->
+
+### Multiline tree-select (multiline)
+
+<!-- example(tree-select-with-multiline-matcher) -->
+
+### Multiple with child selection
+
+<!-- example(tree-select-child-selection-overview) -->
+
+### With search
+
+<!-- example(tree-select-search-overview) -->
+
+### Lazy loading tree-select
+
+<!-- example(tree-select-lazyload) -->
+
+### With custom footer
+
+<!-- example(tree-select-footer-overview) -->
+
+### Dropdown width
+
+By default, the dropdown width equals the select width and grows when the list contains long text. This behavior can be changed using the `panelWidth` attribute.
+
+For a specific dropdown:
+
+```ts
+@Component({
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [panelWidth]="700">...</kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+```
+
+For all dropdowns in a module, using _Dependency Injection_ with the `kbqTreeSelectOptionsProvider` provider:
+
+```ts
+import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
+
+@NgModule({
+    providers: [
+        kbqTreeSelectOptionsProvider({ panelWidth: 'auto' })
+    ]
+})
+```

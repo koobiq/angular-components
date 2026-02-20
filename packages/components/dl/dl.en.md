@@ -1,5 +1,15 @@
-🚧 **Documentation in progress** 🚧
+### Default (adaptive)
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(dl-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### Small (adaptive)
+
+<!-- example(dl-small) -->
+
+### Horizontal
+
+<!-- example(dl-horizontal-overview) -->
+
+### Vertical
+
+<!-- example(dl-vertical-overview) -->

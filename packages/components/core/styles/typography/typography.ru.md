@@ -20,7 +20,7 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 Установите пакеты:
 
 ```bash
-yarn add @fontsource/inter @fontsource/jetbrains-mono
+npm install @fontsource/inter @fontsource/jetbrains-mono
 ```
 
 Затем добавьте следующий код в ваши глобальные стили:

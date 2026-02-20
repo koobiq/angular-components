@@ -1,5 +1,10 @@
-🚧 **Documentation in progress** 🚧
+#### Setup
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+To use the formatter, you need to import: `KbqFormattersModule` and `KbqLuxonDateModule`.
+`KbqLuxonDateModule` imports `KBQ_LOCALE_SERVICE`, so there is no need to import it separately.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(date-formatter-typical-use) -->
+
+It is also possible to connect all the necessary services without using modules (`KbqFormattersModule` and `KbqLuxonDateModule`).
+
+<!-- example(date-formatter-special-use) -->
