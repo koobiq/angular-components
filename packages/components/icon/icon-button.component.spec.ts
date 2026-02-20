@@ -68,6 +68,7 @@ describe('KbqIconButton', () => {
 });
 
 @Component({
+    standalone: true,
     selector: 'test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `

@@ -12,8 +12,7 @@ describe('KbqSearchExpandable', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [KbqSearchExpandableModule],
-            declarations: [TestApp]
+            imports: [KbqSearchExpandableModule, TestApp]
         }).compileComponents();
     });
 
@@ -55,6 +54,7 @@ describe('KbqSearchExpandable', () => {
 });
 
 @Component({
+    standalone: true,
     selector: 'test-app',
     imports: [KbqSearchExpandableModule, FormsModule],
     template: `

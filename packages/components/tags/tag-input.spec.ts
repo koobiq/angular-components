@@ -31,6 +31,7 @@ const getInputElement = (fixture: ComponentFixture<any>): HTMLInputElement => {
 };
 
 @Component({
+    standalone: true,
     imports: [KbqTagsModule, KbqFormFieldModule],
     template: `
         <kbq-form-field>

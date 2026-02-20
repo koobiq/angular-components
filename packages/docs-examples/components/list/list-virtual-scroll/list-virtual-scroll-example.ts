@@ -8,6 +8,7 @@ import { KbqListModule } from '@koobiq/components/list';
  * @title List with virtual-scroll
  */
 @Component({
+    standalone: true,
     selector: 'list-virtual-scroll-example',
     imports: [KbqListModule, FormsModule, ScrollingModule, JsonPipe],
     template: `
