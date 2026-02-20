@@ -18,7 +18,7 @@
         background: var(--kbq-popover-container-background);
     }
 
-    .kbq-popover__close {
+    .kbq-popover__close.kbq-popover__close_background-overlay-inverse {
         background-color: var(--kbq-background-overlay-inverse);
     }
 

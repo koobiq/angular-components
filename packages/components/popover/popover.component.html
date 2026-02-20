@@ -73,7 +73,7 @@
     }
 
     <ng-template #closeButton>
-        <div class="kbq-popover__close">
+        <div class="kbq-popover__close" [class.kbq-popover__close_background-overlay-inverse]="!header">
             <button kbq-button class="kbq-button_transparent" [color]="componentColors.Contrast" (click)="hide(0)">
                 <i kbq-icon="kbq-xmark_16" [color]="componentColors.Contrast"></i>
             </button>
