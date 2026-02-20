@@ -191,7 +191,7 @@ export class KbqSidepanelService implements OnDestroy {
             return config.backdropClass;
         }
 
-        return config.requiredBackdrop ? 'cdk-overlay-dark-backdrop' : 'kbq-overlay-dark-backdrop';
+        return '';
     }
 
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {
@@ -203,8 +203,6 @@ export class KbqSidepanelService implements OnDestroy {
 
         // only allow animations if ref is last element in sidepanels list
         if (index === -1 || index !== this.openedSidepanels.length - 1) return;
-
-        this.openedSidepanels[index].overlayRef.backdropElement?.classList?.remove('kbq-overlay-dark-backdrop');
 
         const [lower, bottom] = this.getLowerSidepanelsWithSamePosition(index);
 

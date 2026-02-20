@@ -54,6 +54,49 @@ export class KbqSidepanelRef<T = any, R = any> {
                 this.afterOpened$.complete();
             });
 
+        containerInstance.animationStateChanged
+            .pipe(
+                filter(
+                    (event) =>
+                        event.phaseName === 'start' &&
+                        event.toState === KbqSidepanelAnimationState.Visible &&
+                        event.fromState !== KbqSidepanelAnimationState.BecomingNormal
+                ),
+                take(1)
+            )
+            .subscribe(() => {
+                overlayRef.backdropElement?.classList?.add('kbq-overlay-dark-backdrop');
+            });
+
+        containerInstance.animationStateChanged
+            .pipe(
+                filter(
+                    (event) =>
+                        event.phaseName === 'start' &&
+                        [KbqSidepanelAnimationState.Lower, KbqSidepanelAnimationState.BottomPanel].includes(
+                            event.toState as any
+                        )
+                )
+            )
+            .subscribe(() => {
+                if (overlayRef.backdropElement?.style) {
+                    overlayRef.backdropElement.style.opacity = '0';
+                }
+            });
+
+        containerInstance.animationStateChanged
+            .pipe(
+                filter(
+                    (event) =>
+                        event.phaseName === 'start' && event.toState === KbqSidepanelAnimationState.BecomingNormal
+                )
+            )
+            .subscribe(() => {
+                if (overlayRef.backdropElement?.style) {
+                    overlayRef.backdropElement.style.opacity = '1';
+                }
+            });
+
         // Act on close
         containerInstance.animationStateChanged
             .pipe(
@@ -63,6 +106,12 @@ export class KbqSidepanelRef<T = any, R = any> {
                 take(1)
             )
             .subscribe(() => {
+                overlayRef.detachBackdrop();
+
+                if (overlayRef.backdropElement?.style) {
+                    overlayRef.backdropElement.style.opacity = '0';
+                }
+
                 this.beforeClosed$.next();
                 this.beforeClosed$.complete();
             });
