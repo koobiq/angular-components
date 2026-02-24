@@ -30,8 +30,6 @@ For example, in a hierarchical product category filter. When we search in coffee
 
 **How it works**
 
-<!-- cspell:ignore -ного -->
-
 The algorithm for this tree-select is the familiar 3-state checkbox behavior:
 
 - If all N-level children are selected, their parent (N-1) becomes selected.
