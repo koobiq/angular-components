@@ -1,5 +1,5 @@
-🚧 **Documentation in progress** 🚧
+#### Interactive Tooltip
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+In this example, the tooltip hides with a delay and stays open if the user moves the cursor from the trigger to the tooltip in time.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(tooltip-hide-with-timeout) -->

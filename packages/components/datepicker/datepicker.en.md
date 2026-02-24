@@ -1,5 +1,33 @@
-🚧 **Documentation in progress** 🚧
+A date field (datepicker) is a special input field with a widget for selecting a date.
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(datepicker-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### States
+
+#### Inactive field
+
+<!-- example(datepicker-inactive) -->
+
+### Required
+
+If the date field is required, use the `required` parameter.
+
+<!-- example(datepicker-required) -->
+
+### Usage examples
+
+#### Date selection restriction
+
+The calendar widget will not allow selecting a date outside the allowed range.
+
+<!-- example(datepicker-minimax) -->
+
+#### Date range
+
+There is no dedicated date range widget, so use separate input fields to specify the boundaries.
+
+<!-- example(datepicker-range) -->
+
+#### Using Datepicker and Timepicker together
+
+<!-- example(datepicker-and-timepicker) -->

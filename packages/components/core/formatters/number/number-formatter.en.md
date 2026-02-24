@@ -1,5 +1,9 @@
-🚧 **Documentation in progress** 🚧
+### Decimal separator
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+In Russian, a comma is used as the separator in decimal fractions, not a dot.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### Numbers are grouped by digit groups
+
+In large numbers, digit groups are separated by a thin space — they are grouped in threes, counting from the right: in text — starting from 5 digits: 1234, 56 789, 987 654, 1 000 000 000. In tables — always: 1 234, 56 789, 987 654, 1 000 000 000.
+
+<!-- example(number-formatter-overview) -->

@@ -1,5 +1,23 @@
-🚧 **Documentation in progress** 🚧
+#### With default parameters (autoselect="true", no-unselect="true")
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(list-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### Single mode with groups
+
+<!-- example(list-groups) -->
+
+### Multiple mode with checkboxes
+
+<!-- example(list-multiple-checkbox) -->
+
+### Multiple mode without checkboxes
+
+<!-- example(list-multiple-keyboard) -->
+
+### Action button
+
+<!-- example(list-action-button) -->
+
+### Virtual scroll
+
+<!-- example(list-virtual-scroll) -->

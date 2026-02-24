@@ -13,25 +13,19 @@
 
 #### NPM
 
-```
+```bash
 npm install @koobiq/icons --save
-```
-
-#### Yarn
-
-```
-yarn add @koobiq/icons
 ```
 
 Затем вы должны импортировать стили:
 
-```
+```scss
 @use '@koobiq/icons/fonts/kbq-icons.css';
 ```
 
 И импортируйте KbqIconModule в ваш модуль.
 
-```
+```ts
 import { KbqIconModule } from '@koobiq/components';
 ```
 
@@ -47,12 +41,12 @@ import { KbqIconModule } from '@koobiq/components';
 
 1. Добавить атрибут `[color]`, используя следующие значения: _theme_, _contrast_, _contrast-fade_, _error_, _warning_, _success_.
 
-```
+```html
 <i kbq-icon="kbq-gear_16" [color]="'contrast'"></i>
 ```
 
 2. Более простой способ
 
-```
+```html
 <i class="kbq kbq-gear_16"></i>
 ```

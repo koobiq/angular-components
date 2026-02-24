@@ -1,5 +1,5 @@
-🚧 **Documentation in progress** 🚧
+#### Multiple selection with mixed state
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+In the privilege assignment interface, clicking the "Assign" button opens a window where you can specify which users should receive a specific privilege. A list item with a checkbox in the indeterminate state indicates that the privilege is assigned to only some users. Activating this list item will assign the privilege to all selected users.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(list-intermediate-state) -->

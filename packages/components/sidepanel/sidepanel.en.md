@@ -1,121 +1,97 @@
-The `KbqSidepanelService` can be used to open sidepanels.
-These panels appear at the edge of the screen and can be used to perform
-some actions or display additional information without losing context.
+A sidepanel is a window that slides in from the edge of the screen and appears on top of the main page content.
 
-You can open a sidepanel by calling `open` method with a component to be loaded or a template
-and an optional config object.
-The `open` method will return an instance of `KbqSidepanelRef`:
+### When to use
 
-```ts
-const sidepanelRef = sidepanelService.open(ExampleSidepanelComponent, {
-    hasBackdrop: false
-});
-```
+A sidepanel is similar to a [modal](/components/modal). It works well when you need to display a large amount of data.
 
-The `KbqSidepanelRef` is a reference to the opened sidepanel and can be used to close it or
-to receive notification when the sidepanel has been opened (after animation) or closed.
+### Component structure
 
-```ts
-sidepanelRef.afterClosed().subscribe((result) => {
-    console.log(`Sidepanel result: ${result}`); // I was closed
-});
+- Header
+- Close button (×)
+- Body. Can contain text, controls, and input fields
+- Footer with action buttons
 
-sidepanelRef.close('I was closed');
-```
+### How it works
 
-Note that multiple sidepanels can be open at a time. Any component contained inside of a sidepanel
-can inject the `KbqSidepanelRef` as well.
+By default the sidepanel appears on the right, but depending on context it can also appear on the left.
 
-### Specifying global configuration defaults
+#### Modal mode (with page blocking)
 
-Default sidepanel options can be specified by providing an instance of `KbqSidepanelConfig`
-for `KBQ_SIDEPANEL_DEFAULT_OPTIONS` in your application's root module.
+When opening, the sidepanel slides in from the edge of the screen and dims the rest of the page (indicating that the dimmed area is not interactive). When closed (or when the overlay is clicked), it slides back out.
 
-```ts
-@NgModule({
-    providers: [
-        { provide: KBQ_SIDEPANEL_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } }
-    ]
-})
-```
+<!-- example(sidepanel-modal-mode) -->
 
-### Sharing data with the sidepanel component
+#### Non-modal mode (without page blocking)
 
-If you want to pass in some data to the sidepanel, you can do so by using `data` property
-in configuration:
+When opening, the sidepanel slides in from the edge of the screen without dimming the rest of the page, so all elements behind it remain interactive.
 
-```ts
-const sidepanelRef = sidepanelService.open(ExampleSidepanelComponent, {
-    data: { items: ['One', 'Two', 'Three'] }
-});
-```
+<!-- example(sidepanel-normal-mode) -->
 
-Afterwards you can access thr injected data using the `KBQ_SIDEPANEL_DATA` injection token:
+#### Stacked panels
 
-```ts
-import { Component, Inject } from '@angular/core';
-import { KBQ_SIDEPANEL_DATA } from '@koobiq/components';
+You can open another sidepanel from within a sidepanel. Non-modal sidepanels stack on top of each other with an offset. Regardless of how many sidepanels are open, only a single offset is shown to avoid visual noise.
 
-@Component({
-    template: 'passed in {{ data.items }}'
-})
-export class ExampleSidepanelComponent {
-    constructor(@Inject(KBQ_SIDEPANEL_DATA) public data: any) {}
-}
-```
+Use this mode when you want to create navigation flows within a sidepanel.
 
-### Configuring sidepanel content
+Clicking the vertical area exposed by the panel underneath closes the top panel.
 
-`KbqSidepanelService` instantiates components at run-time. In order for it to work,
-the Angular compiler needs extra information to create the necessary `ComponentFactory`
-for your sidepanel content component.
+<!-- example(sidepanel-overlayed) -->
 
-```ts
-@NgModule({
-    imports: [
-        // ...
-        KbqSidepanelModule
-    ],
+##### Mode comparison
 
-    declarations: [AppComponent, ExampleSidepanelComponent],
+| Modal                                        | Non-modal                                                                            |
+| -------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Not recommended for read-only viewing        | Recommended for read-only viewing                                                    |
+| Used for editing like a regular modal dialog | Used only for editing parts of a large object, without explicitly saving those parts |
+| Action buttons are always required           | Action buttons are optional                                                          |
 
-    bootstrap: [AppComponent]
-})
-export class AppModule {}
-```
+#### Focus and keyboard interaction
 
-### Sidepanel content
+While the sidepanel is open, focus cycles only through elements inside the panel, including the close button and footer buttons, and does not leave the panel.
 
-To structure your sidepanel content you can use several directives:
-`<kbq-sidepanel-header>`, `<kbq-sidepanel-body>`, `<kbq-sidepanel-footer>`
-and `<kbq-sidepanel-actions>`.
+##### Focus when the sidepanel is open
 
-Also `kbq-sidepanel-close` directive is available to mark button which need
-to close sidepanel. For example, cancel button in footer.
+When a sidepanel opens, focus moves to an element inside it. Where focus lands depends on the nature and size of the content:
 
-```html
-<kbq-sidepanel-header [closeable]="true">Sidepanel Header</kbq-sidepanel-header>
-<kbq-sidepanel-body class="layout-padding">Sidepanel Body</kbq-sidepanel-body>
-<kbq-sidepanel-footer>
-    <kbq-sidepanel-actions align="left">
-        <button kbq-button [color]="'contrast'" (click)="doAnotherAction()">
-            <span>Another Action</span>
-        </button>
-    </kbq-sidepanel-actions>
-    <kbq-sidepanel-actions align="right">
-        <button kbq-button [color]="'contrast'" (click)="doAction()">
-            <span>Action</span>
-        </button>
+- Focus is set on the first available element inside the sidepanel body, unless there are specific requirements
+- If the sidepanel contains a form, focus should be placed on the first input field
+- If the sidepanel contains an important irreversible action, it is better to focus on a different, less destructive element
+- If the sidepanel contains only action buttons, it is helpful to focus on the button the user is most likely to click ("OK" or "Cancel", depending on the situation)
+- If the sidepanel has a lot of content with a scrollbar, setting focus on the first available element may automatically scroll the content and hide its beginning. In this case, add `tabindex=-1` to a static element at the start of the content (a heading or first paragraph) and set focus on it.
 
-        <button kbq-button kbq-sidepanel-close>
-            <span>Close</span>
-        </button>
-    </kbq-sidepanel-actions>
-</kbq-sidepanel-footer>
-```
+##### Focus after closing the sidepanel
 
-#### Keyboard interaction
+When the sidepanel closes, focus returns by default to the element that triggered it (though it is unlikely the user will want to reopen the same sidepanel immediately). If the trigger element no longer exists, focus returns to another element appropriate to the interaction flow.
 
-By default pressing the escape key will close the sidepanel. While this behavior can
-be turned off via the `disableClose` option, users should generally avoid doing so
-as it breaks the expected interaction pattern for screen-reader users.
+In some situations, focus may intentionally return to a different element than the one that originally opened the sidepanel. For example, if the task performed in the sidepanel is directly connected to the next step in the workflow. Suppose a table toolbar has an "Add rows" button. Clicking it opens a sidepanel asking for the number and format of new rows. After the sidepanel closes, focus is placed on the first cell of the first new row.
+
+##### Keyboard controls
+
+| <div style="min-width: 100px;">Key</div>                                                   | Action                                                                                                                                     |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">↵</span> | Perform the primary action of the sidepanel                                                                                                |
+| <span class="docs-hot-key-button">Esc</span>                                               | Close the sidepanel:<br>1. If no data was changed in the sidepanel<br>2. If the focused element does not have its own handler for this key |
+| <span class="docs-hot-key-button">↵</span>                                                 | Submit the form when pressing Enter in any text input                                                                                      |
+
+### Design and animation
+
+#### Size
+
+The panel takes up the full height of the browser window. There is no horizontal scroll — content must fit within the panel width.
+
+| Preset | Width         |
+| ------ | ------------- |
+| Small  | 400           |
+| Medium | 640 (default) |
+| Large  | 960           |
+
+<!-- example(sidepanel-sizes) -->
+
+The width is chosen by the designer and analyst based on the task. In addition to a fixed pixel width, the width can be set as a percentage of the total screen width, with defined minimum and maximum pixel values. Percentages allow the sidepanel to scale proportionally, while the limits prevent it from becoming too wide or too narrow. In specific cases a plain fixed pixel width can be used.
+
+When choosing the sidepanel size, consider the following:
+
+- Content size. A panel that is too wide or too narrow looks poor.
+- Page grid. It looks good when the sidepanel appears proportional on the page and aligns with other blocks. Ideal sidepanel proportions: 1/4, 1/3, 1/2, 2/3, or 3/4 of the main window.
+- Usage scenarios. If a non-modal panel is used to view an item from a list, it should ideally not cover the entire list — this preserves the ability to quickly switch between items. If a non-modal panel is used to organize parallel workspaces, verify that the areas do not interfere with each other or with the primary workflow.
+- Consistency. The product will look cleaner and more cohesive if it does not use many sidepanels with different widths. Ideally, use one size, two at most.

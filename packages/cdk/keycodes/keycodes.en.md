@@ -1,26 +1,5 @@
-### KeyCodes
+🚧 **Documentation in progress** 🚧
 
-Commonly used keycode constants.
+Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
 
-#### Example
-
-```ts
-import {Directive} from '@angular/core';
-import {UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@koobiq/cdk/keycodes';
-
-@Directive({
-  selector: '[count-arrows]'
-  host: {
-    (keypress): 'handleKeyPress($event)'
-  }
-})
-export class ArrowCounterDirective {
-  arrowPressCount = 0;
-
-  handleKeyPress(event: KeyboardEvent) {
-    if ([UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
-      this.arrowPressCount++;
-    }
-  }
-}
-```
+If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.

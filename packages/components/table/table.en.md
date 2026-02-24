@@ -1,5 +1,15 @@
-🚧 **Documentation in progress** 🚧
+A table is similar to a grid but simpler in structure. Users cannot sort columns or change their widths. Only standard HTML table capabilities are available.
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(table-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+By default, text in cells wraps to a new line:
+
+<!-- example(table-full-width) -->
+
+### Borders
+
+In most cases, borders should be avoided, but sometimes they help support the layout when a table has gaps due to cell content varying between long and short text.
+
+Borders are also useful in tables with complex structures — for example, when rows are grouped or some cells are merged vertically.
+
+<!-- example(table-with-borders) -->

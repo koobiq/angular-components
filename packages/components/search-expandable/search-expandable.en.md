@@ -1,5 +1,7 @@
-🚧 **Documentation in progress** 🚧
+A search field that expands from a compact icon button.
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(search-expandable-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+The expandable search can be used, for example, in an action panel:
+
+<!-- example(search-expandable-in-header) -->

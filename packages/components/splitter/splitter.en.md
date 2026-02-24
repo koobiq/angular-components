@@ -1,5 +1,19 @@
-🚧 **Documentation in progress** 🚧
+#### With default parameters
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(splitter-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### With fixed width of the first block
+
+<!-- example(splitter-fixed) -->
+
+### Vertical
+
+<!-- example(splitter-vertical) -->
+
+### Nested
+
+<!-- example(splitter-nested) -->
+
+### With \*ngIf
+
+<!-- example(splitter-dynamic-data) -->
