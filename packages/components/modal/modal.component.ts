@@ -44,7 +44,7 @@ import { IModalButtonOptions, ModalOptions, ModalSize, ModalType, OnClickCallbac
  * Duration when perform animations (ms)
  * @docs-private
  */
-export const MODAL_ANIMATE_DURATION = 200;
+export const MODAL_ANIMATE_DURATION = 300;
 
 type AnimationState = 'enter' | 'leave' | null;
 
@@ -144,6 +144,8 @@ export class KbqModalComponent<T = any, R = any>
     @Output() readonly kbqAfterOpen = new EventEmitter<void>();
     // Trigger when modal leave-animation over
     @Output() readonly kbqAfterClose = new EventEmitter<R | undefined>();
+    /** Emitted before the modal begins its closing animation. */
+    @Output() readonly kbqBeforeClose = new EventEmitter<R | undefined>();
 
     // --- Predefined OK & Cancel buttons
     @Input() kbqOkText: string;
@@ -184,14 +186,19 @@ export class KbqModalComponent<T = any, R = any>
     isTopOverflow: boolean = false;
     isBottomOverflow: boolean = false;
 
-    maskAnimationClassMap: object;
-    modalAnimationClassMap: object;
+    maskAnimationClassMap: object | null;
+    modalAnimationClassMap: object | null;
     // The origin point that animation based on
     transformOrigin = '0px 0px 0px';
 
     // Observable alias for kbqAfterOpen
     get afterOpen(): Observable<void> {
         return this.kbqAfterOpen.asObservable();
+    }
+
+    /** Observable alias for `kbqBeforeClose` */
+    get beforeClose(): Observable<R | undefined> {
+        return this.kbqBeforeClose.asObservable();
     }
 
     // Observable alias for kbqAfterClose
@@ -496,11 +503,26 @@ export class KbqModalComponent<T = any, R = any>
         }
     }
 
+    /**
+     * Sets mask animation classes for the given state, or clears them if state is null.
+     * @docs-private
+     */
+    animateMaskTo(state: AnimationState) {
+        this.maskAnimationClassMap = state
+            ? {
+                  [`fade-${state}`]: true,
+                  [`fade-${state}-active`]: true
+              }
+            : null;
+    }
+
     // Do rest things when visible state changed
     private handleVisibleStateChange(visible: boolean, animation: boolean = true, closeResult?: R): Promise<any> {
         // Hide scrollbar at the first time when shown up
         if (visible) {
             this.changeBodyOverflow(1);
+        } else {
+            this.kbqBeforeClose.emit(closeResult);
         }
 
         return (
@@ -534,20 +556,15 @@ export class KbqModalComponent<T = any, R = any>
     private changeAnimationState(state: AnimationState) {
         this.animationState = state;
 
-        if (state) {
-            this.maskAnimationClassMap = {
-                [`fade-${state}`]: true,
-                [`fade-${state}-active`]: true
-            };
+        this.animateMaskTo(state);
 
+        if (state) {
             this.modalAnimationClassMap = {
                 [`zoom-${state}`]: true,
                 [`zoom-${state}-active`]: true
             };
         } else {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            this.maskAnimationClassMap = this.modalAnimationClassMap = null;
+            this.modalAnimationClassMap = null;
         }
 
         if (this.contentComponentRef) {

@@ -1,6 +1,6 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { KbqModalComponent } from '.';
+import { KbqModalComponent, MODAL_ANIMATE_DURATION } from '.';
 import { KbqModalRef } from './modal-ref.class';
 
 interface IRegisteredMeta {
@@ -79,22 +79,35 @@ export class KbqModalControlService {
         const modals = Array.from(this.registeredMetaMap.values()).map((v) => v.modalRef) as KbqModalComponent[];
 
         if (modals.filter((modal) => modal.kbqVisible).length > 1) {
-            const otherModals = modals
+            const visibleModalsWithMask = modals
                 .splice(0, modals.length - 1)
                 .filter((modal) => modal.kbqVisible && modal.kbqMask);
 
-            // hide other masks
-            setTimeout(() => {
-                otherModals.forEach((modal) => {
+            // Trigger leave animation on other masks, then disable them after animation completes
+            visibleModalsWithMask.forEach((modal) => {
+                setTimeout(() => {
+                    modal.getInstance().animateMaskTo(null);
                     modal.getInstance().kbqMask = false;
-                    modal.markForCheck();
-                });
+                }, MODAL_ANIMATE_DURATION);
+
+                modal.getInstance().animateMaskTo('leave');
+                modal.markForCheck();
             });
 
-            // show other masks on close
-            modalRef.afterClose.subscribe(() => {
-                otherModals.forEach((modal) => {
+            // On close, restore other masks with enter animation, then reset animation state after it completes
+            modalRef.beforeClose.subscribe(() => {
+                visibleModalsWithMask.forEach((modal) => {
+                    setTimeout(() => {
+                        modalRef.getInstance().animateMaskTo(null);
+                        modalRef.getInstance().kbqMask = false;
+                        modal.getInstance().animateMaskTo(null);
+                        modal.markForCheck();
+                    }, MODAL_ANIMATE_DURATION);
+
+                    modalRef.getInstance().animateMaskTo('leave');
                     modal.getInstance().kbqMask = true;
+                    modal.getInstance().animateMaskTo('enter');
+
                     modal.markForCheck();
                 });
             });
