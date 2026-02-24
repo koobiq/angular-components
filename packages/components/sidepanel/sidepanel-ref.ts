@@ -42,6 +42,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     ) {
         this.id = this.config.id || `kbq-sidepanel-${uniqueId++}`;
         this.containerInstance.id = this.id;
+        overlayRef.backdropElement?.classList?.add(config.backdropClass ?? 'kbq-overlay-dark-backdrop');
 
         const slideBelowStart = containerInstance.animationStateChanged.pipe(
             filter(
@@ -72,20 +73,6 @@ export class KbqSidepanelRef<T = any, R = any> {
             .subscribe(() => {
                 this.afterOpened$.next();
                 this.afterOpened$.complete();
-            });
-
-        containerInstance.animationStateChanged
-            .pipe(
-                filter(
-                    (event) =>
-                        event.phaseName === 'start' &&
-                        event.toState === KbqSidepanelAnimationState.Visible &&
-                        event.fromState !== KbqSidepanelAnimationState.BecomingNormal
-                ),
-                take(1)
-            )
-            .subscribe(() => {
-                overlayRef.backdropElement?.classList?.add(config.backdropClass ?? 'kbq-overlay-dark-backdrop');
             });
 
         containerInstance.animationStateChanged

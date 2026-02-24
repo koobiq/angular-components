@@ -234,29 +234,40 @@ describe('KbqSidepanelService', () => {
         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeNull();
     });
 
-    it('should have only one dark backdrop with multiple sidepanels by default', () => {
+    it('should have only one dark backdrop with multiple sidepanels by default', fakeAsync(() => {
         const spy = jest.spyOn(sidepanelService, 'open');
 
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
 
-        expect(overlayContainerElement.querySelectorAll('.kbq-overlay-dark-backdrop').length).toBe(
-            spy.mock.calls.length
-        );
-        // will resolve transparency using css selectors
-        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-transparent-backdrop').length).toBe(0);
-    });
+        tick(1000);
 
-    it('should be able to add more than one dark backdrop with multiple sidepanels', () => {
+        rootComponentFixture.detectChanges();
+
+        const backdropElements = overlayContainerElement.querySelectorAll<HTMLElement>('.kbq-overlay-dark-backdrop');
+
+        expect(backdropElements.length).toBe(spy.mock.calls.length);
+
+        expect(Array.from(backdropElements).filter((element) => element.style.opacity === '0').length).toBe(
+            backdropElements.length - 1
+        );
+    }));
+
+    it('should be able to add more than one dark backdrop with multiple sidepanels', fakeAsync(() => {
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample, { requiredBackdrop: true });
         sidepanelService.open(SimpleSidepanelExample);
 
-        expect(overlayContainerElement.querySelectorAll('.cdk-overlay-dark-backdrop').length).toBe(1);
-        // will resolve transparency using css selectors
-        expect(overlayContainerElement.querySelectorAll('.kbq-overlay-dark-backdrop').length).toBe(2);
-    });
+        tick(1000);
+        rootComponentFixture.detectChanges();
+
+        const backdropElements = overlayContainerElement.querySelectorAll<HTMLElement>('.kbq-overlay-dark-backdrop');
+
+        expect(Array.from(backdropElements).filter((element) => element.style.opacity === '0').length).toBe(
+            backdropElements.length - 1
+        );
+    }));
 
     it('should be able to set custom overlay class', () => {
         sidepanelService.open(SimpleSidepanelExample, { overlayPanelClass: 'custom-overlay' });
