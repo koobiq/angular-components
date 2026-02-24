@@ -170,7 +170,7 @@ export class KbqSidepanelService implements OnDestroy {
     private createOverlay(config: KbqSidepanelConfig): OverlayRef {
         const overlayConfig = new OverlayConfig({
             hasBackdrop: config.hasBackdrop,
-            backdropClass: this.getBackdropClass(config),
+            backdropClass: '',
             maxWidth: '100%',
             panelClass: config.overlayPanelClass,
             scrollStrategy: this.overlay.scrollStrategies.block(),
@@ -184,14 +184,6 @@ export class KbqSidepanelService implements OnDestroy {
         const reversedOpenedSidepanels = [...sidepanels.reverse()];
 
         reversedOpenedSidepanels.forEach((sidepanelRef: KbqSidepanelRef) => sidepanelRef.close());
-    }
-
-    private getBackdropClass(config: KbqSidepanelConfig): string | string[] {
-        if (config.hasBackdrop && config.backdropClass) {
-            return config.backdropClass;
-        }
-
-        return '';
     }
 
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {

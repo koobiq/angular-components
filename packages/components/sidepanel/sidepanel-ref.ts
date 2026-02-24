@@ -65,7 +65,7 @@ export class KbqSidepanelRef<T = any, R = any> {
                 take(1)
             )
             .subscribe(() => {
-                overlayRef.backdropElement?.classList?.add('kbq-overlay-dark-backdrop');
+                overlayRef.backdropElement?.classList?.add(config.backdropClass ?? 'kbq-overlay-dark-backdrop');
             });
 
         containerInstance.animationStateChanged
@@ -106,8 +106,6 @@ export class KbqSidepanelRef<T = any, R = any> {
                 take(1)
             )
             .subscribe(() => {
-                overlayRef.detachBackdrop();
-
                 if (overlayRef.backdropElement?.style) {
                     overlayRef.backdropElement.style.opacity = '0';
                 }
