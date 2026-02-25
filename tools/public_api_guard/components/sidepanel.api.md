@@ -94,6 +94,7 @@ export class KbqSidepanelConfig<D = any> {
     overlayPanelClass?: string | string[];
     // (undocumented)
     position?: KbqSidepanelPosition;
+    // @deprecated
     requiredBackdrop?: boolean;
     // (undocumented)
     size?: KbqSidepanelSize;
