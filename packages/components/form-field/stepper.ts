@@ -138,6 +138,8 @@ export class KbqStepper {
     }
 
     private handleStep($event: MouseEvent, emitter: EventEmitter<void>): void {
+        if (this.control.disabled) return;
+
         emitter.emit();
         // handle case when cursor is out of viewport.
         fromEvent(this.document, 'mouseup')
