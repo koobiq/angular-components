@@ -38,13 +38,14 @@ import { CssUnitPipe } from './css-unit.pipe';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { modalUtilObject as ModalUtil } from './modal-util';
-import { IModalButtonOptions, ModalOptions, ModalSize, ModalType, OnClickCallback } from './modal.type';
-
-/**
- * Duration when perform animations (ms)
- * @docs-private
- */
-export const MODAL_ANIMATE_DURATION = 300;
+import {
+    IModalButtonOptions,
+    MODAL_ANIMATE_DURATION,
+    ModalOptions,
+    ModalSize,
+    ModalType,
+    OnClickCallback
+} from './modal.type';
 
 type AnimationState = 'enter' | 'leave' | null;
 

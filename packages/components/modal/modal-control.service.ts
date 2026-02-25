@@ -1,7 +1,8 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { KbqModalRef } from './modal-ref.class';
-import { KbqModalComponent, MODAL_ANIMATE_DURATION } from './modal.component';
+import { KbqModalComponent } from './modal.component';
+import { MODAL_ANIMATE_DURATION } from './modal.type';
 
 interface IRegisteredMeta {
     modalRef: KbqModalRef;
