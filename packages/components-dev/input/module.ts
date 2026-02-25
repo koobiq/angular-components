@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     Inject,
+    model,
     QueryList,
     ViewChild,
     ViewChildren,
@@ -17,14 +18,15 @@ import {
     KbqNormalizeWhitespace
 } from '@koobiq/components/core';
 import {
+    hasPasswordStrengthError,
     KbqFormField,
     KbqFormFieldModule,
     KbqPasswordHint,
-    PasswordRules,
-    hasPasswordStrengthError
+    PasswordRules
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqToggleComponent } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
     InputChangePasswordExample,
@@ -73,12 +75,16 @@ export class DevDocsExamples {}
         KbqIconModule,
         DevDocsExamples,
         KbqNormalizeWhitespace,
-        DevThemeToggle
+        DevThemeToggle,
+        KbqToggleComponent
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-column layout-align-center-center'
+    }
 })
 export class DevApp implements AfterViewInit {
     passwordRules = PasswordRules;
@@ -90,6 +96,8 @@ export class DevApp implements AfterViewInit {
     numberValue: number | null = null;
     min = -5;
     customRegex = /\D/;
+
+    disabled = model(false);
 
     locales: string[];
 
