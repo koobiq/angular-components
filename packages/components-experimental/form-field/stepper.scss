@@ -21,7 +21,7 @@
         width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
 
-        &[disabled='true'] {
+        &.kbq-disabled {
             pointer-events: none;
         }
     }

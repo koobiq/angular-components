@@ -23,7 +23,7 @@
         width: 100%;
         text-align: center;
 
-        &[disabled='true'] {
+        &.kbq-disabled {
             pointer-events: none;
         }
     }
