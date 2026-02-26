@@ -1,4 +1,4 @@
-import { Renderer } from 'marked';
+import { Renderer, Tokens } from 'marked';
 import { basename, extname } from 'path';
 import {
     CLASS_PREFIX,
@@ -63,10 +63,10 @@ export class DocsMarkdownRenderer extends Renderer {
 
     // Transforms a Markdown code block into the corresponding HTML output. In our case, we
     // want to add a data-docs-code-language attribute to the code element.
-    code(code: string, infostring: string | undefined, escaped: boolean): string {
-        const result = super.code(code, infostring, escaped);
+    code({ text, lang, escaped, ...rest }: Tokens.Code): string {
+        const result = super.code({ text, lang, escaped, ...rest });
 
-        return result.replace('<pre>', `<pre data-docs-code-language="${infostring}">`);
+        return result.replace('<pre>', `<pre data-docs-code-language="${lang}">`);
     }
 
     /**
@@ -74,27 +74,29 @@ export class DocsMarkdownRenderer extends Renderer {
      * want to create a header-link for each H2, H3, and H4 heading. This allows users to jump to
      * specific parts of the docs.
      */
-    heading(text: string, level: number) {
-        if ([3, 4, 5].includes(level)) {
+    heading({ tokens, depth }: Tokens.Heading): string {
+        const text = this.parser.parseInline(tokens);
+
+        if ([3, 4, 5].includes(depth)) {
             const escapedText = text.toLowerCase().replace(/\s/g, '-');
 
             return `
-                <div id="${escapedText}" class="docs-header-link kbq-markdown__h${level}">
+                <div id="${escapedText}" class="docs-header-link kbq-markdown__h${depth}">
                   <span header-link="${escapedText}"></span>
                   ${text}
                 </div>
               `;
         } else {
-            return `<div class="docs-header-link kbq-markdown__h${level}">${text}</div>`;
+            return `<div class="docs-header-link kbq-markdown__h${depth}">${text}</div>`;
         }
     }
 
     /** Transforms markdown links into the corresponding HTML output. */
-    link(href: string, title: string, text: string) {
+    link({ href, title, tokens, ...rest }: Tokens.Link): string {
         // We only want to fix up markdown links that are relative and do not refer to guides already.
         // Otherwise we always map the link to the "guides/" path.
         if (!href.startsWith('http') && !href.startsWith('#') && href.includes('guides/')) {
-            return super.link(`guide/${basename(href, extname(href))}`, title, text);
+            return super.link({ href: `guide/${basename(href, extname(href))}`, title, tokens, ...rest });
         }
 
         // Keep track of all fragments discovered in a file.
@@ -102,7 +104,7 @@ export class DocsMarkdownRenderer extends Renderer {
         //   this._referencedFragments.add(href.slice(1));
         // }
 
-        return super.link(href, title, text);
+        return super.link({ href, title, tokens, ...rest });
     }
 
     /**
@@ -127,8 +129,8 @@ export class DocsMarkdownRenderer extends Renderer {
      *  turns into
      *  `<div koobiq-docs-example="name"></div>`
      */
-    html(html: string) {
-        html = html.replace(EXAMPLE_PATTERN, (_match: string, content: string) => {
+    html(token: Tokens.HTML | Tokens.Tag): string {
+        const text = token.text.replace(EXAMPLE_PATTERN, (_match: string, content: string) => {
             // using [\s\S]* because .* does not match line breaks
             if (content.match(/\{[\s\S]*\}/g)) {
                 const { example, file, region } = JSON.parse(content) as {
@@ -145,7 +147,7 @@ export class DocsMarkdownRenderer extends Renderer {
             }
         });
 
-        return super.html(html, true);
+        return super.html({ ...token, text });
     }
 
     /**

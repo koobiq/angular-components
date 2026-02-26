@@ -4,10 +4,10 @@
 <div class="kbq-callout__header">Обрати внимание</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Для работы компонента, необходимо наличие [`marked@^15`](https://github.com/markedjs/marked/tree/v15.0.7) зависимости:
+Для работы компонента, необходимо наличие [`marked`](https://github.com/markedjs/marked) зависимости:
 
 ```bash
-npm install marked@^15
+npm install marked
 ```
 
 </div>
