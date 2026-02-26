@@ -57,13 +57,14 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     ],
     template: `
         <kbq-form-field>
-            <input kbqNumberInput [(ngModel)]="value" />
+            <input kbqNumberInput [disabled]="disabled" [(ngModel)]="value" />
             <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
         </kbq-form-field>
     `
 })
 class KbqNumberInputTestComponent {
     value: number | null = null;
+    disabled = false;
 
     stepUp = jest.fn().mockImplementation(() => true);
     stepDown = jest.fn().mockImplementation(() => false);
@@ -290,6 +291,30 @@ describe('KbqNumberInput', () => {
         expect(stepper).toBeNull();
     }));
 
+    it('should block steps when disabled', fakeAsync(() => {
+        const fixture = createComponent(KbqNumberInputTestComponent);
+
+        fixture.componentInstance.disabled = true;
+
+        fixture.detectChanges();
+        flush();
+
+        const initialValue = fixture.componentInstance.value;
+
+        const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+        const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+        dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.value).toEqual(initialValue);
+
+        dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.value).toEqual(initialValue);
+    }));
+
     describe('with long press on stepper', () => {
         const initialValue = 0;
 
@@ -491,6 +516,30 @@ describe('KbqNumberInput', () => {
 
             expect(formFieldDebugElement.classes['ng-touched']).toBeTruthy();
         });
+
+        it('should block steps when disabled', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputWithFormControl);
+
+            fixture.componentInstance.formControl.disable();
+
+            fixture.detectChanges();
+            flush();
+
+            const initialValue = fixture.componentInstance.formControl.value;
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.formControl.value).toEqual(initialValue);
+
+            dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.formControl.value).toEqual(initialValue);
+        }));
     });
 
     describe('formControlName', () => {
@@ -542,6 +591,30 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toBe(9);
+        }));
+
+        it('should block steps when disabled', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputWithFormControlName);
+
+            fixture.componentInstance.reactiveForm.disable();
+
+            fixture.detectChanges();
+            flush();
+
+            const initialValue = fixture.componentInstance.reactiveForm.value['reactiveInputValue'];
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toEqual(initialValue);
+
+            dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toEqual(initialValue);
         }));
     });
 
