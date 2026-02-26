@@ -185,6 +185,13 @@ export class KbqOverflowItems {
      */
     readonly orientation = input<KbqOrientation>('horizontal');
 
+    /**
+     * Defines the wrap of the overflow items.
+     *
+     * @default 'nowrap'
+     */
+    readonly wrap = input<'wrap' | 'nowrap'>('nowrap');
+
     private readonly orientationConfig: Record<
         KbqOrientation,
         {
@@ -192,6 +199,7 @@ export class KbqOverflowItems {
             paddingStart: (computedStyle: CSSStyleDeclaration) => number;
             paddingEnd: (computedStyle: CSSStyleDeclaration) => number;
             itemSize: (element: HTMLElement) => number;
+            checkCrossAxisExceeded: (element: HTMLElement) => boolean;
             flexDirection: 'row' | 'column';
         }
     > = {
@@ -199,6 +207,7 @@ export class KbqOverflowItems {
             containerSize: (element) => element.clientWidth,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
+            checkCrossAxisExceeded: ({ clientHeight, scrollHeight }) => clientHeight < scrollHeight,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
@@ -210,6 +219,7 @@ export class KbqOverflowItems {
             containerSize: (element) => element.clientHeight,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
+            checkCrossAxisExceeded: ({ clientWidth, scrollWidth }) => clientWidth < scrollWidth,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
@@ -303,7 +313,6 @@ export class KbqOverflowItems {
         this.renderer.setStyle(this.element, 'overflow', 'hidden');
         this.renderer.setStyle(this.element, 'display', 'flex');
         this.renderer.setStyle(this.element, 'flex-grow', '1');
-        this.renderer.setStyle(this.element, 'flex-wrap', 'nowrap');
 
         toObservable(this.orientation)
             .pipe(takeUntilDestroyed())
@@ -312,6 +321,10 @@ export class KbqOverflowItems {
 
                 this.renderer.setStyle(this.element, 'flex-direction', flexDirection);
             });
+
+        toObservable(this.wrap)
+            .pipe(takeUntilDestroyed())
+            .subscribe((wrap) => this.renderer.setStyle(this.element, 'flex-wrap', wrap));
     }
 
     private hasOverflown(
@@ -320,14 +333,16 @@ export class KbqOverflowItems {
         result: KbqOverflowItemsResult | undefined,
         orientation: KbqOrientation
     ): boolean {
-        const { containerSize, paddingStart, paddingEnd, itemSize } = this.orientationConfig[orientation];
+        const { containerSize, paddingStart, paddingEnd, itemSize, checkCrossAxisExceeded } =
+            this.orientationConfig[orientation];
         const computedStyle = this.window.getComputedStyle(container);
         const containerSizeWithoutPaddings =
             containerSize(container) - paddingStart(computedStyle) - paddingEnd(computedStyle);
         const itemsSize = items.reduce((size, item) => size + (item.hidden() ? 0 : itemSize(item.element)), 0);
         const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
+        const isCrossAxisExceeded = this.wrap() === 'wrap' ? checkCrossAxisExceeded(container) : true;
 
-        return itemsSize + resultSize > containerSizeWithoutPaddings;
+        return itemsSize + resultSize > containerSizeWithoutPaddings && isCrossAxisExceeded;
     }
 
     /**
