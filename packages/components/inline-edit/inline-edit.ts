@@ -1,6 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -144,6 +145,7 @@ export class KbqInlineEdit {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
+    private readonly resizeObserver = inject(SharedResizeObserver);
 
     /**
      * Whether to show save/cancel action buttons in edit mode.
@@ -429,6 +431,15 @@ export class KbqInlineEdit {
         const elementRef: ElementRef<HTMLElement> | undefined = this.label()
             ? this.overlayOrigin().elementRef
             : this.elementRef;
+
+        if (elementRef) {
+            this.resizeObserver
+                .observe(elementRef.nativeElement)
+                .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
+                .subscribe(() => {
+                    this.overlayWidth.set(elementRef.nativeElement.offsetWidth);
+                });
+        }
 
         this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
     }
