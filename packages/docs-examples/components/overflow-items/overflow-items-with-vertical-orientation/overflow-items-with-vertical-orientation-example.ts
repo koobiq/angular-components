@@ -15,31 +15,62 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             Reverse overflow order
         </kbq-toggle>
 
-        <div class="example-resize-container">
-            <div
-                #kbqOverflowItems="kbqOverflowItems"
-                kbqOverflowItems
-                orientation="vertical"
-                [reverseOverflowOrder]="reverseOverflowOrder()"
-            >
-                @if (reverseOverflowOrder()) {
-                    <div kbqOverflowItemsResult class="layout-margin-bottom-xs">
-                        and {{ kbqOverflowItems.hiddenItemIDs().size }} more
-                    </div>
-                }
-                @for (item of items; track item.id) {
-                    <kbq-badge
-                        [class.layout-margin-bottom-xs]="!$last"
-                        [kbqOverflowItem]="item.id"
-                        [alwaysVisible]="item.alwaysVisible"
-                        [badgeColor]="item.alwaysVisible ? badgeColor.Theme : badgeColor.FadeContrast"
-                    >
-                        {{ item.id }}
-                    </kbq-badge>
-                }
-                @if (!reverseOverflowOrder()) {
-                    <div kbqOverflowItemsResult>and {{ kbqOverflowItems.hiddenItemIDs().size }} more</div>
-                }
+        <div class="layout-row">
+            <div class="example-resize-container">
+                <div
+                    #kbqOverflowItems="kbqOverflowItems"
+                    kbqOverflowItems
+                    orientation="vertical"
+                    [reverseOverflowOrder]="reverseOverflowOrder()"
+                >
+                    @if (reverseOverflowOrder()) {
+                        <div kbqOverflowItemsResult class="layout-margin-bottom-xs">
+                            and {{ kbqOverflowItems.hiddenItemIDs().size }} more
+                        </div>
+                    }
+                    @for (item of items; track item.id) {
+                        <kbq-badge
+                            [class.layout-margin-bottom-xs]="!$last"
+                            [kbqOverflowItem]="item.id"
+                            [alwaysVisible]="item.alwaysVisible"
+                            [badgeColor]="item.alwaysVisible ? badgeColor.Theme : badgeColor.FadeContrast"
+                        >
+                            {{ item.id }}
+                        </kbq-badge>
+                    }
+                    @if (!reverseOverflowOrder()) {
+                        <div kbqOverflowItemsResult>and {{ kbqOverflowItems.hiddenItemIDs().size }} more</div>
+                    }
+                </div>
+            </div>
+
+            <div class="example-resize-container" style="max-width: 240px; width: unset; min-width: 100px">
+                <div
+                    #kbqOverflowItems="kbqOverflowItems"
+                    kbqOverflowItems
+                    orientation="vertical"
+                    wrap="wrap"
+                    style="max-width: 240px;"
+                    [reverseOverflowOrder]="reverseOverflowOrder()"
+                >
+                    @if (reverseOverflowOrder()) {
+                        <div kbqOverflowItemsResult class="layout-margin-bottom-xs">
+                            and {{ kbqOverflowItems.hiddenItemIDs().size }} more
+                        </div>
+                    }
+                    @for (item of verticalWrap; track $index) {
+                        <kbq-badge
+                            [class.layout-margin-bottom-xs]="!$last"
+                            [kbqOverflowItem]="$index"
+                            [badgeColor]="badgeColor.FadeContrast"
+                        >
+                            {{ item }}
+                        </kbq-badge>
+                    }
+                    @if (!reverseOverflowOrder()) {
+                        <div kbqOverflowItemsResult>and {{ kbqOverflowItems.hiddenItemIDs().size }} more</div>
+                    }
+                </div>
             </div>
         </div>
     `,
@@ -78,6 +109,21 @@ export class OverflowItemsWithVerticalOrientationExample {
         id: `Item${i}`,
         alwaysVisible: i === 8
     }));
+    readonly verticalWrap = [
+        '09:00',
+        '09:30',
+        '10:00',
+        '10:30',
+        '11:00',
+        '11:30',
+        '12:00',
+        '12:30',
+        '13:00',
+        '13:30',
+        '14:00',
+        '14:30',
+        '15:00'
+    ];
     readonly reverseOverflowOrder = model(false);
     readonly badgeColor = KbqBadgeColors;
 }
