@@ -1,13 +1,13 @@
 import highlightJs from 'highlight.js';
-import { Renderer as MarkedRenderer } from 'marked';
+import { Renderer, Tokens } from 'marked';
 import { splitLines } from '../transforms/code-transforms';
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
  * files that can be used in the Angular docs.
  */
-export const renderer: Partial<MarkedRenderer> = {
-    code(code: string, language: string): string {
+export const renderer: Partial<Renderer> = {
+    code({ text, lang }: Tokens.Code): string {
         let highlightResult;
 
         // Use try catch because there are existing content issues when there is provided nonexistent
@@ -15,9 +15,9 @@ export const renderer: Partial<MarkedRenderer> = {
         // find the language 'typescript=', did you forget to load/include a language module?`
         // Let's try to use `highlightAuto`.
         try {
-            highlightResult = language ? highlightJs.highlight(code, { language }) : highlightJs.highlightAuto(code);
+            highlightResult = lang ? highlightJs.highlight(text, { language: lang }) : highlightJs.highlightAuto(text);
         } catch {
-            highlightResult = highlightJs.highlightAuto(code);
+            highlightResult = highlightJs.highlightAuto(text);
         }
 
         const lines = splitLines(highlightResult.value);
@@ -33,20 +33,20 @@ export const renderer: Partial<MarkedRenderer> = {
       </div>
     `;
     },
-    image(href: string | null, title: string | null, text: string): string {
+    image({ href, title, text }: Tokens.Image): string {
         return `
     <img src="${href}" alt="${text}" title="${title}" class="docs-image">
     `;
     },
-    link(href: string, _: string, text: string): string {
-        // TODO: check later
-        // const link = rewriteLinks(href);
-        // text = text.startsWith(AIO_URL) ? 'our guides' : text;
-        // return `<a href="${link}">${text}</a>`;
+    link(this: Renderer, { href, tokens }: Tokens.Link): string {
+        const text = this.parser.parseInline(tokens);
+
         return `<a href="${href}">${text}</a>`;
     },
-    list(body: string, ordered: boolean, _: number) {
-        if (ordered) {
+    list(this: Renderer, token: Tokens.List): string {
+        const body = token.items.map((item) => this.listitem(item)).join('');
+
+        if (token.ordered) {
             return `
       <ol class="docs-ordered-list">
         ${body}
@@ -60,7 +60,27 @@ export const renderer: Partial<MarkedRenderer> = {
     </ul>
     `;
     },
-    table(header: string, body: string): string {
+    table(this: Renderer, token: Tokens.Table): string {
+        let headerCells = '';
+
+        for (const cell of token.header) {
+            headerCells += this.tablecell(cell);
+        }
+
+        const header = this.tablerow({ text: headerCells });
+
+        let body = '';
+
+        for (const row of token.rows) {
+            let cells = '';
+
+            for (const cell of row) {
+                cells += this.tablecell(cell);
+            }
+
+            body += this.tablerow({ text: cells });
+        }
+
         return `
       <div class="docs-table docs-scroll-track-transparent">
         <table>

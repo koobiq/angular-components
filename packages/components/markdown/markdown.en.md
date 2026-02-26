@@ -4,10 +4,10 @@
 <div class="kbq-callout__header">Note</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-For the component to work, the [`marked@^15`](https://github.com/markedjs/marked/tree/v15.0.7) dependency is required:
+For the component to work, the [`marked`](https://github.com/markedjs/marked) dependency is required:
 
 ```bash
-npm install marked@^15
+npm install marked
 ```
 
 </div>

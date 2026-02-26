@@ -25,7 +25,7 @@ const PROJECT_TEMPLATE = 'node';
  */
 const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
     '@koobiq/components/markdown': {
-        marked: '^15.0.7'
+        marked: '^17.0.3'
     },
     '@koobiq/components/input': {
         '@maskito/angular': '^5.0.1',

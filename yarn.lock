@@ -16645,7 +16645,7 @@ __metadata:
     license-checker: "npm:^25.0.1"
     lint-staged: "npm:^15.5.2"
     luxon: "npm:^3.7.2"
-    marked: "npm:^12.0.2"
+    marked: "npm:^17.0.3"
     merge2: "npm:^1.2.3"
     moment: "npm:~2.29.2"
     ng-packagr: "npm:^19.2.2"
@@ -17484,21 +17484,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^12.0.2":
-  version: 12.0.2
-  resolution: "marked@npm:12.0.2"
-  bin:
-    marked: bin/marked.js
-  checksum: 10c0/45ae2e1e3f06b30a5b5f64efc6cde9830c81d1d024fd7668772a3217f1bc0f326e66a6b8970482d9783edf1f581fecac7023a7fa160f2c14dbcc16e064b4eafb
-  languageName: node
-  linkType: hard
-
 "marked@npm:^13.0.2":
   version: 13.0.3
   resolution: "marked@npm:13.0.3"
   bin:
     marked: bin/marked.js
   checksum: 10c0/b1121f420f815206ae5ae109b9b0eb6c21f84d8d459cbe38ffa00543652e091f36a55c2c96ff1414821d8752682af8c0de3f44f0a2a5bd9c8612a4ef520e9b3d
+  languageName: node
+  linkType: hard
+
+"marked@npm:^17.0.3":
+  version: 17.0.3
+  resolution: "marked@npm:17.0.3"
+  bin:
+    marked: bin/marked.js
+  checksum: 10c0/3970f96ce3b1a7fd5bba82a6c7e4dffec9f7e0f238633e57139e8aa8fe637bccb1c1b61f2b3ed21b1afdbd4e076326f29e449d147203a0bdb9394e21e9a6a722
   languageName: node
   linkType: hard
 
