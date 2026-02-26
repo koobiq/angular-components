@@ -89,6 +89,7 @@ export class KbqModalControlService {
                 setTimeout(() => {
                     modal.getInstance().animateMaskTo(null);
                     modal.getInstance().kbqMask = false;
+                    modal.markForCheck();
                 }, MODAL_ANIMATE_DURATION);
 
                 modal.getInstance().animateMaskTo('leave');
