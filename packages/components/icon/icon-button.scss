@@ -12,6 +12,10 @@
     &.kbq-icon-button_small {
         padding: var(--kbq-icon-button-size-small-vertical-padding) var(--kbq-icon-button-size-small-horizontal-padding);
     }
+
+    &.kbq-disabled {
+        pointer-events: none;
+    }
 }
 
 button.kbq-icon-button {

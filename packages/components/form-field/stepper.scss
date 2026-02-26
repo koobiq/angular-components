@@ -22,9 +22,5 @@
     .kbq-stepper-step-down {
         width: 100%;
         text-align: center;
-
-        &.kbq-disabled {
-            pointer-events: none;
-        }
     }
 }

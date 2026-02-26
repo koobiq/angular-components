@@ -20,9 +20,5 @@
     .kbq-stepper__step-down {
         width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
-
-        &.kbq-disabled {
-            pointer-events: none;
-        }
     }
 }
