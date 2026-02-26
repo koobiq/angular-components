@@ -63,8 +63,8 @@ export class DocsMarkdownRenderer extends Renderer {
 
     // Transforms a Markdown code block into the corresponding HTML output. In our case, we
     // want to add a data-docs-code-language attribute to the code element.
-    code({ text, lang, escaped }: Tokens.Code): string {
-        const result = super.code({ text, lang, escaped } as Tokens.Code);
+    code({ text, lang, escaped, ...rest }: Tokens.Code): string {
+        const result = super.code({ text, lang, escaped, ...rest });
 
         return result.replace('<pre>', `<pre data-docs-code-language="${lang}">`);
     }
@@ -92,11 +92,11 @@ export class DocsMarkdownRenderer extends Renderer {
     }
 
     /** Transforms markdown links into the corresponding HTML output. */
-    link({ href, title, tokens }: Tokens.Link): string {
+    link({ href, title, tokens, ...rest }: Tokens.Link): string {
         // We only want to fix up markdown links that are relative and do not refer to guides already.
         // Otherwise we always map the link to the "guides/" path.
         if (!href.startsWith('http') && !href.startsWith('#') && href.includes('guides/')) {
-            return super.link({ href: `guide/${basename(href, extname(href))}`, title, tokens } as Tokens.Link);
+            return super.link({ href: `guide/${basename(href, extname(href))}`, title, tokens, ...rest });
         }
 
         // Keep track of all fragments discovered in a file.
@@ -104,7 +104,7 @@ export class DocsMarkdownRenderer extends Renderer {
         //   this._referencedFragments.add(href.slice(1));
         // }
 
-        return super.link({ href, title, tokens } as Tokens.Link);
+        return super.link({ href, title, tokens, ...rest });
     }
 
     /**
