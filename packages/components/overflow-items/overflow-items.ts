@@ -207,11 +207,18 @@ export class KbqOverflowItems {
             containerSize: (element) => element.clientWidth,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
-            checkCrossAxisExceeded: ({ clientHeight, scrollHeight }) => clientHeight < scrollHeight,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
                 return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
+            },
+            checkCrossAxisExceeded: (element) => {
+                const { paddingTop, paddingBottom } = this.window.getComputedStyle(element);
+                const { clientHeight, scrollHeight } = element;
+
+                const crossAxisPadding = (parseFloat(paddingTop) || 0) + parseFloat(paddingBottom) || 0;
+
+                return scrollHeight - crossAxisPadding > clientHeight - crossAxisPadding;
             },
             flexDirection: 'row'
         },
@@ -219,11 +226,18 @@ export class KbqOverflowItems {
             containerSize: (element) => element.clientHeight,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
-            checkCrossAxisExceeded: ({ clientWidth, scrollWidth }) => clientWidth < scrollWidth,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
                 return element.offsetHeight + (parseFloat(marginTop) || 0) + (parseFloat(marginBottom) || 0);
+            },
+            checkCrossAxisExceeded: (element) => {
+                const { paddingLeft, paddingRight } = this.window.getComputedStyle(element);
+                const { clientWidth, scrollWidth } = element;
+
+                const crossAxisPadding = (parseFloat(paddingLeft) || 0) + parseFloat(paddingRight) || 0;
+
+                return scrollWidth - crossAxisPadding > clientWidth - crossAxisPadding;
             },
             flexDirection: 'column'
         }
