@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, input, signal, viewChild } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 
@@ -19,20 +19,34 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             style="max-height: 48px; min-width: 60px"
+            [reverseOverflowOrder]="order()"
             [wrap]="'wrap'"
         >
-            @for (item of items; track item) {
+            @for (item of countries; track item) {
                 <span [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">
                     <span>
                         {{ item }}
                     </span>
-                    @if (!$last) {
-                        <span>,</span>
-                    }
+                    <span>,</span>
                 </span>
             }
-            <a kbqOverflowItemsResult kbq-link pseudo (click)="expand(overflowItemsContainer)">
-                еще {{ kbqOverflowItems.hiddenItemIDs().size }}
+            @if (expanded()) {
+                <a
+                    kbq-link
+                    pseudo
+                    [kbqOverflowItem]="'expanded'"
+                    [alwaysVisible]
+                    (click)="expanded.set(!this.expanded())"
+                >
+                    Hide
+                </a>
+            }
+            <a kbqOverflowItemsResult kbq-link pseudo (click)="expanded.set(!this.expanded())">
+                @if (expanded()) {
+                    Hide
+                } @else {
+                    and {{ kbqOverflowItems.hiddenItemIDs().size }}
+                }
             </a>
         </div>
     `,
@@ -63,11 +77,51 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsAsClampedListExample {
-    readonly items = Array.from({ length: 7 }, (_, i) => `Item${i}`);
-    readonly changeDetectorRef = inject(ChangeDetectorRef);
+    rows = input(1);
 
-    expand(overflowItemsContainer: HTMLDivElement) {
-        overflowItemsContainer.style.maxHeight = 'unset';
-        this.changeDetectorRef.detectChanges();
+    overflowItemsContainer = viewChild.required<ElementRef<HTMLDivElement>>('overflowItemsContainer');
+
+    protected order = signal(false);
+    protected expanded = signal(false);
+    protected countries = [
+        'Australia',
+        'Austria',
+        'Argentina',
+        'Belgium',
+        'Brazil',
+        'United Kingdom',
+        'Germany',
+        'Greece',
+        'Denmark',
+        'Egypt',
+        'India',
+        'Spain',
+        'Italy',
+        'Canada',
+        'Mexico',
+        'Netherlands',
+        'Norway',
+        'Poland',
+        'Portugal',
+        'Russia',
+        'United States',
+        'Thailand',
+        'Turkey',
+        'France',
+        'Japan'
+    ];
+
+    constructor() {
+        effect(() => {
+            const overflowItemsContainer = this.overflowItemsContainer().nativeElement;
+
+            if (this.expanded()) {
+                overflowItemsContainer.style.maxHeight = 'unset';
+                // TODO paddings
+                overflowItemsContainer.style.width = `${overflowItemsContainer.offsetWidth}px`;
+            } else {
+                overflowItemsContainer.style.maxHeight = `${overflowItemsContainer.offsetHeight}px`;
+            }
+        });
     }
 }
