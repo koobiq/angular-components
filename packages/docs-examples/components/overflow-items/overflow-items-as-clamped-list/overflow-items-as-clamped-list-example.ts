@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import { KbqBadge, KbqBadgeCssStyler } from '@koobiq/components/badge';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 
 /**
@@ -11,19 +11,29 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
         KbqOverflowItems,
         KbqOverflowItem,
         KbqOverflowItemsResult,
-        KbqBadge,
-        KbqBadgeCssStyler
+        KbqLink
     ],
     template: `
-        <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems style="max-height: 48px;" [wrap]="'wrap'">
+        <div
+            #overflowItemsContainer
+            #kbqOverflowItems="kbqOverflowItems"
+            kbqOverflowItems
+            style="max-height: 48px; min-width: 60px"
+            [wrap]="'wrap'"
+        >
             @for (item of items; track item) {
-                <kbq-badge [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">
-                    {{ item }}
-                </kbq-badge>
+                <span [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">
+                    <span>
+                        {{ item }}
+                    </span>
+                    @if (!$last) {
+                        <span>,</span>
+                    }
+                </span>
             }
-            <div class="layout-margin-right-xs" kbqOverflowItemsResult>
-                and {{ kbqOverflowItems.hiddenItemIDs().size }} more
-            </div>
+            <a kbqOverflowItemsResult kbq-link pseudo (click)="expand(overflowItemsContainer)">
+                еще {{ kbqOverflowItems.hiddenItemIDs().size }}
+            </a>
         </div>
     `,
     styles: `
@@ -31,6 +41,10 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
             display: flex;
             flex-direction: column;
             padding-right: var(--kbq-size-3xs);
+        }
+
+        .kbq-overflow-item {
+            display: inline-flex;
         }
 
         .kbq-overflow-items {
@@ -44,19 +58,16 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
 
         .kbq-overflow-items-result {
             text-wrap: nowrap;
-            color: var(--kbq-foreground-contrast-secondary);
-            user-select: none;
-        }
-
-        .kbq-form-field {
-            margin-bottom: var(--kbq-size-m);
-            max-width: 200px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsAsClampedListExample {
     readonly items = Array.from({ length: 7 }, (_, i) => `Item${i}`);
-    readonly justifyContentOptions = ['center', 'start', 'end', 'space-between', 'space-around'] as const;
-    readonly justifyContent = model(this.justifyContentOptions[0]);
+    readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    expand(overflowItemsContainer: HTMLDivElement) {
+        overflowItemsContainer.style.maxHeight = 'unset';
+        this.changeDetectorRef.detectChanges();
+    }
 }
