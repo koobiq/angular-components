@@ -1,5 +1,16 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { ChangeDetectionStrategy, Component, computed, inject, model } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+    KbqAgGridCopyEvent,
+    KbqAgGridCopyFormatter,
+    kbqAgGridCopyFormatterCsv,
+    kbqAgGridCopyFormatterJson,
+    kbqAgGridCopyFormatterTsv,
+    KbqAgGridThemeModule
+} from '@koobiq/ag-grid-angular-theme';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqToastService } from '@koobiq/components/toast';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -25,12 +36,20 @@ type ExampleRowData = {
 };
 
 /**
- * @title AG Grid with row dragging
+ * @title AG Grid with `KbqAgGridCopyByCtrlC` directive
  */
 @Component({
-    selector: 'ag-grid-row-dragging-example',
-    imports: [AgGridModule, KbqAgGridThemeModule],
+    selector: 'ag-grid-copy-selected-example',
+    imports: [AgGridModule, KbqAgGridThemeModule, KbqSelectModule, KbqFormFieldModule, FormsModule],
     template: `
+        <kbq-form-field>
+            <kbq-select [(ngModel)]="copyFormat">
+                @for (option of copyFormatOptions; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+
         <ag-grid-angular
             kbqAgGridTheme
             disableCellFocusStyles
@@ -38,20 +57,53 @@ type ExampleRowData = {
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
+            kbqAgGridCopyByCtrlC
+            [kbqAgGridCopyFormatter]="copyFormatter()"
             [rowSelection]="rowSelection"
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
-            [rowDragManaged]="true"
-            [rowDragMultiRow]="true"
-            [suppressMoveWhenRowDragging]="true"
+            (kbqAgGridCopyDone)="onCopyDone($event)"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-m);
+        }
+
+        .kbq-form-field {
+            width: 200px;
+            align-self: center;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowDraggingExample {
+export class AgGridCopySelectedExample {
+    private readonly toast = inject(KbqToastService);
+    protected readonly copyFormatOptions = ['TSV', 'CSV', 'JSON', 'Custom'] as const;
+    protected readonly copyFormat = model<(typeof this.copyFormatOptions)[number]>('TSV');
+    protected readonly copyFormatter = computed<KbqAgGridCopyFormatter | undefined>(() => {
+        switch (this.copyFormat()) {
+            case 'Custom': {
+                return ({ selectedNodes }) => `Custom copy formatter output. Selected nodes: ${selectedNodes.length}.`;
+            }
+            case 'CSV': {
+                return kbqAgGridCopyFormatterCsv;
+            }
+            case 'JSON': {
+                return kbqAgGridCopyFormatterJson;
+            }
+            case 'TSV':
+            default: {
+                return kbqAgGridCopyFormatterTsv;
+            }
+        }
+    });
+
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -69,8 +121,7 @@ export class AgGridRowDraggingExample {
         {
             field: 'column0',
             headerName: 'Project name',
-            width: 180,
-            rowDrag: true
+            width: 180
         },
         {
             field: 'column1',
@@ -131,5 +182,13 @@ export class AgGridRowDraggingExample {
         });
 
         api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
+    }
+
+    protected onCopyDone({ success }: KbqAgGridCopyEvent): void {
+        success &&
+            this.toast.show({
+                title: 'Data copied',
+                caption: `Selected nodes have been copied to clipboard. Format: ${this.copyFormat()}`
+            });
     }
 }

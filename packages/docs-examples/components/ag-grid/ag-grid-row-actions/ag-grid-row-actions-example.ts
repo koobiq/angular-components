@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { KBQ_AG_GRID_ROW_ACTIONS_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToastService } from '@koobiq/components/toast';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -24,11 +27,47 @@ type ExampleRowData = {
     column9: string;
 };
 
+@Component({
+    selector: 'example-row-actions',
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon-button="kbq-square-multiple-o_16" color="contrast-fade" (click)="copy()"></i>
+        <i kbq-icon-button="kbq-box-archive_16" color="contrast-fade" (click)="delete()"></i>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: var(--kbq-size-s);
+            height: 100%;
+            width: 200px;
+            padding: 0 var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ExampleRowActionsComponent {
+    private readonly clipboard = inject(Clipboard);
+    private readonly toast = inject(KbqToastService);
+    private readonly params = inject(KBQ_AG_GRID_ROW_ACTIONS_PARAMS);
+
+    protected copy(): void {
+        this.clipboard.copy(JSON.stringify(this.params.data));
+        this.toast.show({ title: `Row #${this.params.rowIndex} copied` });
+    }
+
+    protected delete(): void {
+        this.params.api.applyTransaction({ remove: [this.params.data] });
+        this.toast.show({ title: `Row #${this.params.rowIndex} archived` });
+    }
+}
+
 /**
- * @title AG Grid with row dragging
+ * @title AG Grid with `KbqAgGridRowActions` directive
  */
 @Component({
-    selector: 'ag-grid-row-dragging-example',
+    selector: 'ag-grid-row-actions-example',
     imports: [AgGridModule, KbqAgGridThemeModule],
     template: `
         <ag-grid-angular
@@ -38,20 +77,20 @@ type ExampleRowData = {
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
+            [kbqAgGridRowActions]="rowActionsComponent"
             [rowSelection]="rowSelection"
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
-            [rowDragManaged]="true"
-            [rowDragMultiRow]="true"
-            [suppressMoveWhenRowDragging]="true"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowDraggingExample {
+export class AgGridRowActionsExample {
+    protected readonly rowActionsComponent = ExampleRowActionsComponent;
+
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -69,8 +108,7 @@ export class AgGridRowDraggingExample {
         {
             field: 'column0',
             headerName: 'Project name',
-            width: 180,
-            rowDrag: true
+            width: 180
         },
         {
             field: 'column1',
