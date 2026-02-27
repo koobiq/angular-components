@@ -3,7 +3,7 @@ import { signal } from '@angular/core';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { isHtmlElement } from '@koobiq/components/core';
 import { merge, Observable, Subject } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { filter, take, tap } from 'rxjs/operators';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KbqSidepanelConfig } from './sidepanel-config';
 import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
@@ -42,6 +42,27 @@ export class KbqSidepanelRef<T = any, R = any> {
     ) {
         this.id = this.config.id || `kbq-sidepanel-${uniqueId++}`;
         this.containerInstance.id = this.id;
+        overlayRef.backdropElement?.classList?.add(config.backdropClass ?? 'kbq-overlay-dark-backdrop');
+
+        const slideBelowStart = containerInstance.animationStateChanged.pipe(
+            filter(
+                (event) =>
+                    event.phaseName === 'start' &&
+                    [KbqSidepanelAnimationState.Lower, KbqSidepanelAnimationState.BottomPanel].includes(
+                        event.toState as any
+                    )
+            )
+        );
+
+        // Act on close
+        const beforeClosed = containerInstance.animationStateChanged.pipe(
+            filter(({ phaseName, toState }) => phaseName === 'start' && toState === KbqSidepanelAnimationState.Hidden),
+            take(1),
+            tap(() => {
+                this.beforeClosed$.next();
+                this.beforeClosed$.complete();
+            })
+        );
 
         // Emit when opening animation completes
         containerInstance.animationStateChanged
@@ -54,18 +75,24 @@ export class KbqSidepanelRef<T = any, R = any> {
                 this.afterOpened$.complete();
             });
 
-        // Act on close
         containerInstance.animationStateChanged
             .pipe(
                 filter(
-                    ({ phaseName, toState }) => phaseName === 'start' && toState === KbqSidepanelAnimationState.Hidden
-                ),
-                take(1)
+                    (event) =>
+                        event.phaseName === 'start' && event.toState === KbqSidepanelAnimationState.BecomingNormal
+                )
             )
             .subscribe(() => {
-                this.beforeClosed$.next();
-                this.beforeClosed$.complete();
+                if (overlayRef.backdropElement?.style) {
+                    overlayRef.backdropElement.style.opacity = '1';
+                }
             });
+
+        merge(slideBelowStart, beforeClosed).subscribe(() => {
+            if (overlayRef.backdropElement?.style) {
+                overlayRef.backdropElement.style.opacity = '0';
+            }
+        });
 
         // Dispose overlay when closing animation is complete
         containerInstance.animationStateChanged

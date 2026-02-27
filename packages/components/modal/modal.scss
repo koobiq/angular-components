@@ -1,5 +1,6 @@
 @use '../core/styles/common/tokens' as *;
 @use './modal-confirm';
+@use './modal-animation';
 @use './modal-theme' as *;
 
 .kbq-modal-container {

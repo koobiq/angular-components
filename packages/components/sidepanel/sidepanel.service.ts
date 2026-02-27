@@ -170,7 +170,7 @@ export class KbqSidepanelService implements OnDestroy {
     private createOverlay(config: KbqSidepanelConfig): OverlayRef {
         const overlayConfig = new OverlayConfig({
             hasBackdrop: config.hasBackdrop,
-            backdropClass: this.getBackdropClass(config),
+            backdropClass: '',
             maxWidth: '100%',
             panelClass: config.overlayPanelClass,
             scrollStrategy: this.overlay.scrollStrategies.block(),
@@ -186,14 +186,6 @@ export class KbqSidepanelService implements OnDestroy {
         reversedOpenedSidepanels.forEach((sidepanelRef: KbqSidepanelRef) => sidepanelRef.close());
     }
 
-    private getBackdropClass(config: KbqSidepanelConfig): string | string[] {
-        if (config.hasBackdrop && config.backdropClass) {
-            return config.backdropClass;
-        }
-
-        return config.requiredBackdrop ? 'cdk-overlay-dark-backdrop' : 'kbq-overlay-dark-backdrop';
-    }
-
     private getOpenedSidepanelsWithSamePosition(config: KbqSidepanelConfig): KbqSidepanelRef[] {
         return this.openedSidepanels.filter((sidepanelRef) => sidepanelRef.config.position === config.position);
     }
@@ -203,8 +195,6 @@ export class KbqSidepanelService implements OnDestroy {
 
         // only allow animations if ref is last element in sidepanels list
         if (index === -1 || index !== this.openedSidepanels.length - 1) return;
-
-        this.openedSidepanels[index].overlayRef.backdropElement?.classList?.remove('kbq-overlay-dark-backdrop');
 
         const [lower, bottom] = this.getLowerSidepanelsWithSamePosition(index);
 

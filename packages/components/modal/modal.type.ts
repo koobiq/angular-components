@@ -16,6 +16,12 @@ export enum ModalSize {
     Large = 'large'
 }
 
+/**
+ * Duration when perform animations (ms)
+ * @docs-private
+ */
+export const MODAL_ANIMATE_DURATION = 300;
+
 // Public options for using by service
 export interface ModalOptions<C = any, R = any> {
     kbqModalType?: ModalType;

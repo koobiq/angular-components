@@ -3,7 +3,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef, Injectable, InjectionToken, Injector } from '@angular/core';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
@@ -33,17 +33,17 @@ export class ModalBuilderForService {
         }
 
         this.changeProps(options);
+
+        // Defers ESC handling until the modal is fully open, avoiding premature close during the opening animation.
+        this.modalRef!.instance.kbqAfterOpen.pipe(
+            switchMap(() => this.overlayRef.keydownEvents()),
+            filter((event: KeyboardEvent) => {
+                return !!(event.keyCode === ESCAPE && options.kbqCloseByESC);
+            })
+        ).subscribe(() => this.getInstance()?.handleCloseResult('cancel', () => true));
+
         this.modalRef!.instance.open();
         this.modalRef!.instance.kbqAfterClose.subscribe(() => this.destroyModal());
-
-        this.overlayRef
-            .keydownEvents()
-            .pipe(
-                filter((event: KeyboardEvent) => {
-                    return !!(event.keyCode === ESCAPE && options.kbqCloseByESC);
-                })
-            )
-            .subscribe(() => this.getInstance()?.handleCloseResult('cancel', () => true));
     }
 
     getInstance(): KbqModalComponent | null {
