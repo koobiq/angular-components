@@ -8,8 +8,8 @@ import {
     Renderer2,
     signal
 } from '@angular/core';
-import { KbqAccordionItem } from './accordion-item';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { KbqAccordionItem } from './accordion-item';
 
 @Directive({
     selector: '[kbqAccordionContent]',
@@ -36,7 +36,6 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     /** @docs-private */
     protected readonly hidden = signal<boolean>(true);
 
-
     private savedTransition: string;
     private readonly afterRenderRef?: AfterRenderRef;
 
@@ -55,10 +54,14 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     ngAfterContentInit(): void {
         const { height, width } = this.nativeElement.getBoundingClientRect();
 
-        this.renderer.setProperty(this.nativeElement, 'style', `
+        this.renderer.setProperty(
+            this.nativeElement,
+            'style',
+            `
             --radix-accordion-content-height: ${height}px;
             --radix-accordion-content-width: ${width}px;
-        `);
+        `
+        );
     }
 
     toggle() {

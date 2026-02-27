@@ -13,9 +13,9 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
+import { KbqAccordionTrigger } from './accordion-trigger.component';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 import { KbqAccordion, KbqAccordionOrientation } from './accordion.component';
-import { KbqAccordionTrigger } from './accordion-trigger.component';
 
 let uniqueIdCounter: number = 0;
 

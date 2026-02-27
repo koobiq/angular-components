@@ -4,7 +4,9 @@ import { KbqAccordionContentDirective } from './accordion-content.directive';
 @Component({
     selector: 'kbq-accordion-content, [kbq-accordion-content]',
     hostDirectives: [KbqAccordionContentDirective],
-    template: `<p><ng-content /></p>`,
+    template: `
+        <p><ng-content /></p>
+    `,
     host: {
         class: 'kbq-accordion-content'
     }
