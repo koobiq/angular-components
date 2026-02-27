@@ -1,5 +1,5 @@
 import { Directive, inject } from '@angular/core';
-import { KbqAccordionItemDirective } from './accordion-item.directive';
+import { KbqAccordionItem } from './accordion-item';
 
 @Directive({
     selector: '[kbqAccordionHeader]',
@@ -10,5 +10,5 @@ import { KbqAccordionItemDirective } from './accordion-item.directive';
     }
 })
 export class KbqAccordionHeaderDirective {
-    protected readonly item = inject(KbqAccordionItemDirective);
+    protected readonly item = inject(KbqAccordionItem);
 }

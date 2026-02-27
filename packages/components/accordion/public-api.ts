@@ -3,8 +3,6 @@ export * from './accordion-content.directive';
 export * from './accordion-header';
 export * from './accordion-header.directive';
 export * from './accordion-item';
-export * from './accordion-item.directive';
-export * from './accordion-root.directive';
 export * from './accordion-trigger.component';
 export * from './accordion-trigger.directive';
 export * from './accordion.component';
