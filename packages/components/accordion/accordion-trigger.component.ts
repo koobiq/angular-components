@@ -7,16 +7,19 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
 
 @Component({
     selector: 'kbq-accordion-trigger, [kbq-accordion-trigger]',
     imports: [KbqIcon],
     template: `
-        <i class="kbq-accordion-trigger__icon" kbq-icon="{{ isHugSpaceBetween ? 'kbq-chevron-down-s_16' : 'kbq-chevron-right-s_16' }}"></i>
+        <i
+            class="kbq-accordion-trigger__icon"
+            kbq-icon="{{ isHugSpaceBetween ? 'kbq-chevron-down-s_16' : 'kbq-chevron-right-s_16' }}"
+        ></i>
 
         <ng-content />
     `,

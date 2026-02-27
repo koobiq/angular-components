@@ -2,6 +2,7 @@ import { FocusKeyManager, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import { ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -24,7 +25,6 @@ import {
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
 import { KbqAccordionItem } from './accordion-item';
-import { Platform } from '@angular/cdk/platform';
 
 export enum KbqAccordionVariant {
     fill = 'fill',
@@ -87,7 +87,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
 
     /** Whether the Accordion is disabled. */
     @Input({ transform: booleanAttribute }) disabled: boolean;
-
 
     /** The orientation of the accordion. */
     @Input() orientation: KbqAccordionOrientation = 'vertical';
@@ -168,7 +167,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
                 if (this.state && this.state[key].expanded) {
                     this.selectionDispatcher.notify(this.state[key].value as unknown as string, this.id);
                 }
-            })
+            });
         } else {
             this.selectionDispatcher.notify(this._defaultValue as string, this.id);
         }

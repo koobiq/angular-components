@@ -1,7 +1,7 @@
 import { Directive, inject } from '@angular/core';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqAccordionItem } from './accordion-item';
 import { KbqAccordion } from './accordion.component';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
 
 @Directive({
     selector: '[kbqAccordionTrigger]',
