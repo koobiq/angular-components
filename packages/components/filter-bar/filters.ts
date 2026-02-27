@@ -139,7 +139,7 @@ export class KbqFilters implements OnInit {
 
     /** header of popover. Depends on the mode */
     get popoverHeader(): string {
-        return this.saveNewFilter ? this.localeData.saveAsNew : this.localeData.saveChanges;
+        return this.saveNewFilter ? this.localeData.saveAsNewHeader : this.localeData.saveChangesHeader;
     }
 
     /** Component state. true if opened dropdown or popup */
