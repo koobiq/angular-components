@@ -161,8 +161,7 @@ export class TestOrderedOverflowItems {
     protected readonly lastItemOrder = computed(() => (this.reverseOverflowOrder() ? +Infinity : -Infinity));
 }
 
-// todo fix me after update angular
-xdescribe('KbqOverflowItems', () => {
+describe('KbqOverflowItems', () => {
     it('should render all items', () => {
         const { debugElement } = createComponent(TestOverflowItems);
 
@@ -183,6 +182,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerPadding.set(25);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(13);
@@ -193,6 +193,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.itemMarginRight.set(10);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(14);
@@ -212,6 +213,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerPadding.set(25);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(12);
@@ -222,6 +224,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.itemMarginBottom.set(10);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(13);
@@ -232,6 +235,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.justifyContent.set('end');
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(12);
@@ -242,6 +246,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerWidth.set(600);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(10);
@@ -252,6 +257,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerHeight.set(600);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(9);
@@ -263,6 +269,7 @@ xdescribe('KbqOverflowItems', () => {
 
         componentInstance.justifyContent.set('end');
         componentInstance.containerWidth.set(600);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(10);
@@ -273,6 +280,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.reverseOverflowOrder.set(true);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowVisibleItems(debugElement).at(-1)!.nativeElement.textContent.trim()).toBe('Item19');
@@ -283,6 +291,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.reverseOverflowOrder.set(true);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowVisibleItems(debugElement).at(-1)!.nativeElement.textContent.trim()).toBe('Item19');
@@ -294,6 +303,7 @@ xdescribe('KbqOverflowItems', () => {
 
         componentInstance.justifyContent.set('end');
         componentInstance.reverseOverflowOrder.set(true);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowVisibleItems(debugElement).at(-1)!.nativeElement.textContent.trim()).toBe('Item19');
@@ -328,6 +338,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerWidth.set(1000);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(isOverflowItemsResultVisible(debugElement)).toBeFalse();
@@ -339,6 +350,7 @@ xdescribe('KbqOverflowItems', () => {
 
         componentInstance.justifyContent.set('end');
         componentInstance.containerWidth.set(1000);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(isOverflowItemsResultVisible(debugElement)).toBeFalse();
@@ -358,6 +370,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.justifyContent.set('end');
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
@@ -368,6 +381,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerWidth.set(200);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         const visibleItems = getOverflowVisibleItems(debugElement);
@@ -382,6 +396,7 @@ xdescribe('KbqOverflowItems', () => {
 
         componentInstance.containerWidth.set(200);
         componentInstance.reverseOverflowOrder.set(true);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         const visibleItems = getOverflowVisibleItems(debugElement);
@@ -395,6 +410,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerWidth.set(componentInstance.itemWidth() - 1);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         const visibleItems = getOverflowVisibleItems(debugElement);
@@ -407,6 +423,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerWidth.set(250);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         const visibleItems = getOverflowVisibleItems(debugElement);
@@ -420,6 +437,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerHeight.set(200);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         const visibleItems = getOverflowVisibleItems(debugElement);
@@ -433,6 +451,7 @@ xdescribe('KbqOverflowItems', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerWidth.set(componentInstance.itemWidth() - 1);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         const visibleItems = getOverflowVisibleItems(debugElement);
@@ -447,6 +466,7 @@ xdescribe('KbqOverflowItems', () => {
 
         componentInstance.containerWidth.set(200);
         componentInstance.reverseOverflowOrder.set(true);
+        fixture.detectChanges();
         await fixture.whenStable();
         const visibleItems = getOverflowVisibleItems(debugElement);
 
