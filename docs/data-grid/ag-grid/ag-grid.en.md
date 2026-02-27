@@ -48,16 +48,35 @@ To disable the focus styles for table cells, add the `disableCellFocusStyles` at
 
 <!-- example(ag-grid-row-dragging) -->
 
+### Row actions
+
+The `kbqAgGridRowActions` directive adds an action panel that appears when hovering over a row.
+
+<!-- example(ag-grid-row-actions) -->
+
+### Copying selected rows
+
+The `kbqAgGridCopyByCtrlC` directive allows you to copy selected rows to the clipboard using the `Ctrl+C` keyboard shortcut.
+
+<!-- example(ag-grid-copy-selected) -->
+
+### Status bar
+
+The `kbqAgGridStatusBar` directive adds a customizable panel below the table.
+
+<!-- example(ag-grid-status-bar) -->
+
 ### Custom keyboard shortcuts
 
-You can apply custom keyboard shortcuts by adding the corresponding directives to your `<ag-grid-angular>` component.
+You can add custom keyboard shortcuts by adding the appropriate directives to your `<ag-grid-angular>` component.
 
-| <div style="min-width: 120px;">Key</div>                                                       | Action                     | Directive                         |
-| ---------------------------------------------------------------------------------------------- | -------------------------- | --------------------------------- |
-| <span class="docs-hot-key-button">Tab</span>                                                   | Move focus to the next row | `kbqAgGridToNextRowByTab`         |
-| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Select multiple rows       | `kbqAgGridSelectRowsByShiftArrow` |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Select all rows            | `kbqAgGridSelectAllRowsByCtrlA`   |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Select row                 | `kbqAgGridSelectRowsByCtrlClick`  |
+| <div style="min-width: 120px;">Key</div>                                                       | Action               | Directive                         |
+| ---------------------------------------------------------------------------------------------- | -------------------- | --------------------------------- |
+| <span class="docs-hot-key-button">Tab</span>                                                   | Move to next row     | `kbqAgGridToNextRowByTab`         |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Select multiple rows | `kbqAgGridSelectRowsByShiftArrow` |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Select all rows      | `kbqAgGridSelectAllRowsByCtrlA`   |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Select a row         | `kbqAgGridSelectRowsByCtrlClick`  |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>     | Copy selected rows   | `kbqAgGridCopyByCtrlC`            |
 
 More information about keyboard shortcuts can be found in the [ag-grid-angular documentation](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 

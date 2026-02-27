@@ -48,16 +48,35 @@ import { AgGridModule } from 'ag-grid-angular';
 
 <!-- example(ag-grid-row-dragging) -->
 
+### Действия в строке
+
+Директива `kbqAgGridRowActions` добавляет панель действий, появляющуюся при наведении на строку.
+
+<!-- example(ag-grid-row-actions) -->
+
+### Копирование выделенных строк
+
+Директива `kbqAgGridCopyByCtrlC` позволяет копировать выделенные строки в буфер обмена при помощи комбинации клавиш `Ctrl+C`.
+
+<!-- example(ag-grid-copy-selected) -->
+
+### Панель статуса
+
+Директива `kbqAgGridStatusBar` добавляет настраиваемую панель под таблицей.
+
+<!-- example(ag-grid-status-bar) -->
+
 ### Пользовательские сочетания клавиш
 
 Вы можете добавить пользовательские сочетания клавиш, добавив соответствующие директивы к вашему компоненту `<ag-grid-angular>`.
 
-| <div style="min-width: 120px;">Клавиша</div>                                                   | Действие                   | Директива                         |
-| ---------------------------------------------------------------------------------------------- | -------------------------- | --------------------------------- |
-| <span class="docs-hot-key-button">Tab</span>                                                   | Перейти к следующей строке | `kbqAgGridToNextRowByTab`         |
-| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Выделить несколько строк   | `kbqAgGridSelectRowsByShiftArrow` |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Выделить все строки        | `kbqAgGridSelectAllRowsByCtrlA`   |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Выделить строку            | `kbqAgGridSelectRowsByCtrlClick`  |
+| <div style="min-width: 120px;">Клавиша</div>                                                   | Действие                     | Директива                         |
+| ---------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------- |
+| <span class="docs-hot-key-button">Tab</span>                                                   | Перейти к следующей строке   | `kbqAgGridToNextRowByTab`         |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Выделить несколько строк     | `kbqAgGridSelectRowsByShiftArrow` |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Выделить все строки          | `kbqAgGridSelectAllRowsByCtrlA`   |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Выделить строку              | `kbqAgGridSelectRowsByCtrlClick`  |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>     | Копировать выделенные строки | `kbqAgGridCopyByCtrlC`            |
 
 Больше информации о сочетаниях клавиш можно найти в [документации ag-grid-angular](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 

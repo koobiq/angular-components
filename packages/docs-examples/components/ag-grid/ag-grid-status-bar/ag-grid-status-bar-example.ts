@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { KBQ_AG_GRID_STATUS_BAR_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -24,11 +24,55 @@ type ExampleRowData = {
     column9: string;
 };
 
+@Component({
+    selector: 'example-ag-grid-status-bar',
+    template: `
+        <div>Total rows: {{ totalRows() }}</div>
+        <div>Selected: {{ selectedRows() }}</div>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            gap: var(--kbq-size-l);
+            height: var(--kbq-size-4xl);
+            padding: 0 var(--kbq-size-l);
+            border-top: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ExampleAgGridStatusBarComponent {
+    private readonly params = inject(KBQ_AG_GRID_STATUS_BAR_PARAMS);
+    private readonly destroyRef = inject(DestroyRef);
+
+    protected readonly totalRows = signal(0);
+    protected readonly selectedRows = signal(0);
+
+    constructor() {
+        const { api } = this.params;
+
+        const updateTotal = (): void => this.totalRows.set(api.getDisplayedRowCount());
+        const updateSelected = (): void => this.selectedRows.set(api.getSelectedNodes().length);
+
+        updateTotal();
+        updateSelected();
+
+        api.addEventListener('modelUpdated', updateTotal);
+        api.addEventListener('selectionChanged', updateSelected);
+
+        this.destroyRef.onDestroy(() => {
+            api.removeEventListener('modelUpdated', updateTotal);
+            api.removeEventListener('selectionChanged', updateSelected);
+        });
+    }
+}
+
 /**
- * @title AG Grid with row dragging
+ * @title AG Grid with `KbqAgGridStatusBar` directive
  */
 @Component({
-    selector: 'ag-grid-row-dragging-example',
+    selector: 'ag-grid-status-bar-example',
     imports: [AgGridModule, KbqAgGridThemeModule],
     template: `
         <ag-grid-angular
@@ -38,20 +82,21 @@ type ExampleRowData = {
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
+            pagination
+            [kbqAgGridStatusBar]="statusBarComponent"
             [rowSelection]="rowSelection"
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
-            [rowDragManaged]="true"
-            [rowDragMultiRow]="true"
-            [suppressMoveWhenRowDragging]="true"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowDraggingExample {
+export class AgGridStatusBarExample {
+    protected readonly statusBarComponent = ExampleAgGridStatusBarComponent;
+
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -69,8 +114,7 @@ export class AgGridRowDraggingExample {
         {
             field: 'column0',
             headerName: 'Project name',
-            width: 180,
-            rowDrag: true
+            width: 180
         },
         {
             field: 'column1',
