@@ -195,6 +195,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-with-dropdown-and-popover-example.ts",
     "importPath": "components/actions-panel"
   },
+  "ag-grid-copy-selected": {
+    "packagePath": "components/ag-grid/ag-grid-copy-selected",
+    "title": "AG Grid with `KbqAgGridCopyByCtrlC` directive",
+    "componentName": "AgGridCopySelectedExample",
+    "files": [
+      "ag-grid-copy-selected-example.ts"
+    ],
+    "selector": "ag-grid-copy-selected-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-copy-selected-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-overview": {
     "packagePath": "components/ag-grid/ag-grid-overview",
     "title": "AG Grid overview",
@@ -209,6 +221,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-overview-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-row-actions": {
+    "packagePath": "components/ag-grid/ag-grid-row-actions",
+    "title": "AG Grid with `KbqAgGridRowActions` directive",
+    "componentName": "AgGridRowActionsExample",
+    "files": [
+      "ag-grid-row-actions-example.ts"
+    ],
+    "selector": "ag-grid-row-actions-example",
+    "additionalComponents": [
+      "ExampleRowActionsComponent"
+    ],
+    "primaryFile": "ag-grid-row-actions-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-row-dragging": {
     "packagePath": "components/ag-grid/ag-grid-row-dragging",
     "title": "AG Grid with row dragging",
@@ -219,6 +245,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "ag-grid-row-dragging-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-row-dragging-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-status-bar": {
+    "packagePath": "components/ag-grid/ag-grid-status-bar",
+    "title": "AG Grid with `KbqAgGridStatusBar` directive",
+    "componentName": "AgGridStatusBarExample",
+    "files": [
+      "ag-grid-status-bar-example.ts"
+    ],
+    "selector": "ag-grid-status-bar-example",
+    "additionalComponents": [
+      "ExampleAgGridStatusBarComponent"
+    ],
+    "primaryFile": "ag-grid-status-bar-example.ts",
     "importPath": "components/ag-grid"
   },
   "alert-close": {
@@ -5909,9 +5949,15 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-with-dropdown-and-popover':
 return import('@koobiq/docs-examples/components/actions-panel');
+  case 'ag-grid-copy-selected':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-overview':
 return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-actions':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-dragging':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-status-bar':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'alert-close':
 return import('@koobiq/docs-examples/components/alert');

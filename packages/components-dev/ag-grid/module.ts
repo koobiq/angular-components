@@ -1,15 +1,32 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { AgGridExamplesModule } from 'packages/docs-examples/components/ag-grid';
+import {
+    AgGridCopySelectedExample,
+    AgGridOverviewExample,
+    AgGridRowActionsExample,
+    AgGridRowDraggingExample,
+    AgGridStatusBarExample
+} from 'packages/docs-examples/components/ag-grid';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [AgGridExamplesModule],
+    imports: [
+        AgGridOverviewExample,
+        AgGridRowDraggingExample,
+        AgGridCopySelectedExample,
+        AgGridStatusBarExample,
+        AgGridRowActionsExample
+    ],
     template: `
         <ag-grid-overview-example />
         <hr />
         <ag-grid-row-dragging-example />
         <hr />
+        <ag-grid-copy-selected-example />
+        <hr />
+        <ag-grid-status-bar-example />
+        <hr />
+        <ag-grid-row-actions-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
