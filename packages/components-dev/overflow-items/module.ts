@@ -15,6 +15,8 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
         <hr />
         <overflow-items-justify-content-example />
         <hr />
+        <overflow-items-as-clamped-list-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
