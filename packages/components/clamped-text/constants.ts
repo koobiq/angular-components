@@ -1,4 +1,4 @@
-import { InjectionToken, InputSignal, OutputEmitterRef, Provider, Signal } from '@angular/core';
+import { InjectionToken, InputSignal, OutputEmitterRef, Provider } from '@angular/core';
 import { KbqClampedTextLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
 
 /**
@@ -24,13 +24,10 @@ export const kbqClampedTextLocaleConfigurationProvider = (configuration: KbqClam
     useValue: configuration
 });
 
-export interface KbqClamped<T = any> {
+export interface KbqClamped {
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto. model */
     isCollapsed: InputSignal<boolean | undefined>;
 
     /** Emits when collapsed state changes. Used for two-way binding with `isCollapsed`. */
     isCollapsedChange: OutputEmitterRef<boolean>;
-
-    /** count of hidden items */
-    exceededItemCount: Signal<T>;
 }

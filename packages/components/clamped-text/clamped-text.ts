@@ -19,7 +19,7 @@ import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig } from '@koobiq/componen
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { debounceTime, map, of, pairwise, skip } from 'rxjs';
-import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } from './constants';
+import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, kbqClampedTextDefaultMaxRows } from './constants';
 
 @Component({
     selector: 'kbq-clamped-text',
@@ -73,7 +73,7 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } f
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqClampedText implements AfterViewInit {
+export class KbqClampedText implements KbqClamped, AfterViewInit {
     /**
      * Max rows before text is clamped.
      * @default kbqClampedTextDefaultMaxRows
