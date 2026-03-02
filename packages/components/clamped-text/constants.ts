@@ -1,4 +1,4 @@
-import { InjectionToken, InputSignal, OutputEmitterRef, Provider } from '@angular/core';
+import { InjectionToken, Provider, Signal } from '@angular/core';
 import { KbqClampedTextLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
 
 /**
@@ -24,10 +24,14 @@ export const kbqClampedTextLocaleConfigurationProvider = (configuration: KbqClam
     useValue: configuration
 });
 
-export interface KbqClamped {
-    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto. model */
-    isCollapsed: InputSignal<boolean | undefined>;
+export const KbqClampedRoot = new InjectionToken<KbqClamped>('KbqClampedRoot');
 
-    /** Emits when collapsed state changes. Used for two-way binding with `isCollapsed`. */
-    isCollapsedChange: OutputEmitterRef<boolean>;
+export interface KbqClamped {
+    /**
+     * Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto.
+     * Behavior for auto may vary according to clamped-list/clamped-text
+     */
+    isCollapsed: Signal<boolean | undefined>;
+    /** Toggles the collapsed state of the list. Stops event propagation. */
+    toggleIsCollapsed(event: Event): void;
 }

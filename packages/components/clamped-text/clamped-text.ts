@@ -19,7 +19,13 @@ import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig } from '@koobiq/componen
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { debounceTime, map, of, pairwise, skip } from 'rxjs';
-import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, kbqClampedTextDefaultMaxRows } from './constants';
+import { KbqClampedListTrigger } from './clamped-list';
+import {
+    KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION,
+    KbqClamped,
+    KbqClampedRoot,
+    kbqClampedTextDefaultMaxRows
+} from './constants';
 
 @Component({
     selector: 'kbq-clamped-text',
@@ -27,7 +33,8 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, kbqClampedTextDefaul
     imports: [
         KbqIcon,
         KbqButtonModule,
-        KbqLinkModule
+        KbqLinkModule,
+        KbqClampedListTrigger
     ],
     template: `
         <div
@@ -43,16 +50,7 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, kbqClampedTextDefaul
         </div>
 
         @if (hasToggle()) {
-            <span
-                class="kbq-clamped-text__toggle"
-                kbq-link
-                noUnderline
-                pseudo
-                role="button"
-                (click)="toggleIsCollapsed($event)"
-                (keydown.enter)="toggleIsCollapsed($event)"
-                (keydown.space)="toggleIsCollapsed($event)"
-            >
+            <span kbq-link noUnderline pseudo role="button" kbqClampedListTrigger>
                 @let config = localeConfiguration();
 
                 @if (collapsedState()) {
@@ -70,6 +68,8 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, kbqClampedTextDefaul
         class: 'kbq-clamped-text',
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
     },
+    providers: [
+        { provide: KbqClampedRoot, useExisting: KbqClampedText }],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

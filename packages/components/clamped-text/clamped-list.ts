@@ -1,47 +1,47 @@
-import { computed, Directive, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { computed, Directive, inject, input, model } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { map, of } from 'rxjs';
-import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped } from './constants';
+import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, KbqClampedRoot } from './constants';
 
 @Directive({
     selector: '[kbqClampedList]',
     exportAs: 'kbqClampedList',
     host: {
         class: 'kbq-clamped-list',
-        '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
-    }
+        '[attr.aria-expanded]': 'isCollapsed() ? "false" : "true"'
+    },
+    providers: [
+        { provide: KbqClampedRoot, useExisting: KbqClampedList }]
 })
 export class KbqClampedList<T> implements KbqClamped {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
-    readonly isCollapsed = input<boolean>();
+
+    /** The list of items to display. */
     readonly items = input<T[]>([]);
-
-    readonly minVisibleCount = input(10);
+    /**
+     * Maximum number of items visible in collapsed state.
+     * @default 10
+     */
+    readonly collapsedVisibleCount = input(10);
+    /**
+     * Minimum number of hidden items required to show the toggle trigger.
+     * @default 6
+     */
     readonly hiddenThreshold = input(6);
+    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
+    readonly isCollapsed = model<boolean>(true);
 
-    readonly isCollapsedChange = output<boolean>();
-
-    // public, used outside
-    isExceededItem = computed(() => this.items().length - this.minVisibleCount() >= this.hiddenThreshold());
-    exceededItemCount = computed(() => this.items().length - this.minVisibleCount());
-    visibleItems = computed(() =>
-        this.collapsedState() ? this.items().slice(0, this.minVisibleCount()) : this.items()
+    /** Number of items hidden when the list is collapsed. */
+    readonly exceededItemCount = computed(() => this.items().length - this.collapsedVisibleCount());
+    /** Whether the number of hidden items meets the threshold to render the toggle trigger. */
+    readonly hasToggle = computed(() => this.exceededItemCount() >= this.hiddenThreshold());
+    /** Slice of items currently rendered — truncated to `minVisibleCount` when collapsed, full list otherwise. */
+    readonly visibleItems = computed(() =>
+        this.isCollapsed() ? this.items().slice(0, this.collapsedVisibleCount()) : this.items()
     );
 
-    /**
-     * This flag controls event emission, aria/css-class calculation
-     * @docs-private
-     */
-    readonly collapsedState = signal<boolean | undefined>(undefined);
-    /** @docs-private */
-    readonly hasToggle = computed(() => this.items().length - this.minVisibleCount() >= this.hiddenThreshold());
-
-    /**
-     * Clamped text locale configuration.
-     * @docs-private
-     */
+    /** Clamped text locale configuration. */
     readonly localeConfiguration = toSignal<KbqClampedTextLocaleConfig>(
         this.localeService
             ? this.localeService.changes.pipe(
@@ -50,17 +50,10 @@ export class KbqClampedList<T> implements KbqClamped {
             : of(inject(KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION))
     );
 
-    constructor() {
-        toObservable(this.isCollapsed)
-            .pipe(takeUntilDestroyed())
-            .subscribe((value) => {
-                this.collapsedState.set(value);
-            });
-    }
-
+    /** Toggles the collapsed state of the list. Stops event propagation. */
     toggleIsCollapsed(event: Event) {
         event.stopPropagation();
-        this.collapsedState.update((state) => !(state ?? false));
+        this.isCollapsed.update((state) => !(state ?? false));
     }
 }
 
@@ -75,5 +68,5 @@ export class KbqClampedList<T> implements KbqClamped {
     }
 })
 export class KbqClampedListTrigger {
-    root = inject(KbqClampedList, { optional: true });
+    root = inject(KbqClampedRoot, { optional: true });
 }

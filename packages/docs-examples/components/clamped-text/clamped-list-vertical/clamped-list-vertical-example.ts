@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqClampedList, KbqClampedListItem, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
+import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 
@@ -8,27 +8,31 @@ import { KbqLink } from '@koobiq/components/link';
  */
 @Component({
     selector: 'clamped-list-vertical-example',
-    imports: [KbqClampedList, KbqClampedListItem, KbqClampedListTrigger, KbqIcon, KbqLink],
+    imports: [KbqClampedList, KbqClampedListTrigger, KbqIcon, KbqLink],
     template: `
         <div class="layout-margin-bottom-l layout-margin-top-l">
             <div #clampedList="kbqClampedList" kbqClampedList [items]="items">
                 @for (item of clampedList.visibleItems(); track item.id) {
-                    <div class="layout-row layout-align-space-between-center">
+                    <div class="layout-row layout-align-space-between-start">
                         <a
                             kbq-link
+                            class="kbq-link_external layout-margin-bottom-xxs"
                             style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden"
+                            target="_blank"
+                            [class.layout-padding-bottom-xxs]="!$first"
                             [href]="item.url"
                         >
-                            {{ item.name }}
+                            <span class="kbq-link__text">{{ item.name }}</span>
+                            <i kbq-icon="kbq-north-east_16"></i>
                         </a>
                         <div style="min-width: 45px;">{{ item.id }}</div>
                     </div>
                 }
                 @if (clampedList.hasToggle()) {
-                    <a #trigger="kbqClampedListTrigger" kbqClampedListTrigger kbq-link pseudo>
-                        @if (clampedList.collapsedState()) {
+                    <a kbqClampedListTrigger kbq-link pseudo>
+                        @if (clampedList.isCollapsed()) {
                             <i kbq-icon="kbq-chevron-down_16"></i>
-                            <span class="kbq-link__text">Show {{ clampedList.exceededItemCount() }} more</span>
+                            <span class="kbq-link__text">+ {{ clampedList.exceededItemCount() }}</span>
                         } @else {
                             <i kbq-icon="kbq-chevron-up_16"></i>
                             <span class="kbq-link__text">

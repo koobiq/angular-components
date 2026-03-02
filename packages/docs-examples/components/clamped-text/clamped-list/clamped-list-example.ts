@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqClampedList, KbqClampedListItem, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqLink } from '@koobiq/components/link';
 
 /**
@@ -8,21 +7,21 @@ import { KbqLink } from '@koobiq/components/link';
  */
 @Component({
     selector: 'clamped-list-example',
-    imports: [KbqClampedList, KbqClampedListItem, KbqClampedListTrigger, KbqIcon, KbqLink],
+    imports: [KbqClampedList, KbqClampedListTrigger, KbqLink],
     template: `
         <div class="layout-margin-bottom-l layout-margin-top-l">
-            <div #clampedList1="kbqClampedList" kbqClampedList class="layout-row layout-wrap" [items]="countries">
-                @for (item of clampedList1.visibleItems(); track item) {
-                    <div kbqClampedListItem>
+            <div #clampedList="kbqClampedList" kbqClampedList class="layout-row layout-wrap" [items]="countries">
+                @for (item of clampedList.visibleItems(); track item) {
+                    <div>
                         <span>
                             <span>{{ item }}</span>
-                            @if (clampedList1.hasToggle()) {
+                            @if (clampedList.hasToggle()) {
                                 <span>,&nbsp;</span>
                             }
                         </span>
                     </div>
                 }
-                @if (clampedList1.hasToggle()) {
+                @if (clampedList.hasToggle()) {
                     <a
                         #trigger="kbqClampedListTrigger"
                         kbqClampedListTrigger
@@ -30,10 +29,10 @@ import { KbqLink } from '@koobiq/components/link';
                         pseudo
                         style="margin-top: 0px !important"
                     >
-                        @if (clampedList1.collapsedState()) {
-                            {{ clampedList1.localeConfiguration()?.openText ?? 'open' }}
+                        @if (clampedList.isCollapsed()) {
+                            {{ clampedList.localeConfiguration()?.openText ?? 'open' }}
                         } @else {
-                            {{ clampedList1.localeConfiguration()?.closeText ?? 'close' }}
+                            {{ clampedList.localeConfiguration()?.closeText ?? 'close' }}
                         }
                     </a>
                 }

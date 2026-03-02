@@ -11,6 +11,7 @@ import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -20,7 +21,43 @@ import { WritableSignal } from '@angular/core';
 export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfig>;
 
 // @public (undocumented)
-export class KbqClampedText implements AfterViewInit {
+export interface KbqClamped {
+    isCollapsed: Signal<boolean | undefined>;
+    toggleIsCollapsed(event: Event): void;
+}
+
+// @public (undocumented)
+export class KbqClampedList<T> implements KbqClamped {
+    readonly collapsedVisibleCount: InputSignal<number>;
+    readonly exceededItemCount: Signal<number>;
+    readonly hasToggle: Signal<boolean>;
+    readonly hiddenThreshold: InputSignal<number>;
+    readonly isCollapsed: ModelSignal<boolean>;
+    readonly items: InputSignal<T[]>;
+    readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig | undefined>;
+    toggleIsCollapsed(event: Event): void;
+    readonly visibleItems: Signal<T[]>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "items": { "alias": "items"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedList<any>, never>;
+}
+
+// @public (undocumented)
+export class KbqClampedListTrigger {
+    // (undocumented)
+    root: KbqClamped | null;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqClampedListTrigger, "[kbqClampedListTrigger]", ["kbqClampedListTrigger"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedListTrigger, never>;
+}
+
+// @public (undocumented)
+export const KbqClampedRoot: InjectionToken<KbqClamped>;
+
+// @public (undocumented)
+export class KbqClampedText implements KbqClamped, AfterViewInit {
     constructor();
     protected readonly collapsedState: WritableSignal<boolean | undefined>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
@@ -55,9 +92,10 @@ export class KbqClampedTextModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqClampedTextModule>;
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqClampedTextModule, never, [typeof i1.KbqClampedText], [typeof i1.KbqClampedText]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqClampedTextModule, never, [typeof i1.KbqClampedText, typeof i2.KbqClampedList, typeof i2.KbqClampedListTrigger], [typeof i1.KbqClampedText, typeof i2.KbqClampedList, typeof i2.KbqClampedListTrigger]>;
 }
 
 // (No @packageDocumentation comment for this package)
