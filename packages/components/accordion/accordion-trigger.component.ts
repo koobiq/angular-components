@@ -17,8 +17,8 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
     imports: [KbqIcon],
     template: `
         <i
-            class="kbq-accordion-trigger__icon"
             kbq-icon="{{ isHugSpaceBetween ? 'kbq-chevron-down-s_16' : 'kbq-chevron-right-s_16' }}"
+            class="kbq-accordion-trigger__icon"
         ></i>
 
         <ng-content />
