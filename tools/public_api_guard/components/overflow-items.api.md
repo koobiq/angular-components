@@ -44,8 +44,9 @@ export class KbqOverflowItems {
     readonly hiddenItemIDs: Signal<ReadonlySet<unknown>>;
     readonly orientation: InputSignal<KbqOrientation>;
     readonly reverseOverflowOrder: InputSignalWithTransform<boolean, unknown>;
+    readonly wrap: InputSignal<"wrap" | "nowrap">;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "additionalResizeObserverTargets": { "alias": "additionalResizeObserverTargets"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "additionalResizeObserverTargets": { "alias": "additionalResizeObserverTargets"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItems, never>;
 }
