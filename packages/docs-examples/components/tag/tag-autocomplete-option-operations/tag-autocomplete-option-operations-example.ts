@@ -8,9 +8,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { Observable, merge } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
+const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag ${i}`);
 
 /**
  * @title Tag autocomplete option operations
@@ -46,26 +47,22 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                     [kbqAutocomplete]="autocomplete"
                     [kbqTagInputAddOnBlur]="false"
                     [kbqTagInputFor]="tagList"
-                    [kbqTagInputSeparatorKeyCodes]="[]"
+                    [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
                     (blur)="addOnBlurFunc($event)"
                     (kbqTagInputTokenEnd)="onCreate($event)"
                 />
 
-                <kbq-cleaner #kbqTagListCleaner (click)="selectedTags.length = 0" />
+                <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
             </kbq-tag-list>
             <kbq-autocomplete #autocomplete (optionSelected)="onSelect($event)">
                 @if (canCreate) {
-                    <kbq-option [value]="{ new: true, value: tagInput.value }">
-                        Создать: {{ tagInput.value }}
-                    </kbq-option>
+                    <kbq-option [value]="{ new: true, value: tagInput.value }">Create: {{ tagInput.value }}</kbq-option>
                 }
                 @if (hasDuplicates) {
-                    <kbq-option [disabled]="true">Ничего не найдено</kbq-option>
+                    <kbq-option [disabled]="true">Nothing found</kbq-option>
                 }
                 @for (tag of filteredTags | async; track tag) {
-                    <kbq-option [value]="tag">
-                        {{ tag }}
-                    </kbq-option>
+                    <kbq-option [value]="tag">{{ tag }}</kbq-option>
                 }
             </kbq-autocomplete>
         </kbq-form-field>
@@ -83,8 +80,9 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
     providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
-    allTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
-    selectedTags: string[] = ['tag1'];
+    protected readonly allTags = getAutocompleteOptions();
+    protected readonly selectedTags = [...this.allTags.slice(0, 2)];
+    protected readonly separatorKeysCodes = [];
 
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
     @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
@@ -116,7 +114,7 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
                 })
             ),
             this.control.valueChanges.pipe(map((e) => this.onControlValueChanges(e)))
-        );
+        ).pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
     }
 
     onCreate({ input, value }: KbqTagInputEvent): void {
@@ -192,5 +190,9 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
     protected afterRemove(): void {
         this.tagInputDirective.focus();
+    }
+
+    protected clear(): void {
+        this.selectedTags.length = 0;
     }
 }
