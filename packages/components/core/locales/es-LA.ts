@@ -94,7 +94,7 @@ export const esLALocaleData = {
             customPeriodFrom: 'desde',
             customPeriodTo: 'hasta',
             customPeriodErrorHint: 'El inicio del período no puede estar después del fin',
-            backToPeriodSelection: 'Volver a la selección del período'
+            backToPeriodSelection: 'Atrás'
         }
     },
     clampedText: {
