@@ -26,6 +26,7 @@ import {
 } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, switchMap, take } from 'rxjs/operators';
 import { kbqDropdownAnimations } from './dropdown-animations';
@@ -65,6 +66,8 @@ export class KbqDropdownStaticContent {}
         { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }]
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
+    @ContentChild(KbqFormField) private search?: KbqFormField;
+
     @Input() navigationWithWrap: boolean = false;
 
     /** Position of the dropdown in the X axis. */
@@ -235,6 +238,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
                 switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.focused)))
             )
             .subscribe((focusedItem) => this.keyManager.updateActiveItem(focusedItem as KbqDropdownItem));
+
+        this.search?.inOverlay.set(true);
     }
 
     ngOnDestroy() {

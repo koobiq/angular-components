@@ -22,6 +22,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqValidationOptions } from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -46,6 +47,7 @@ export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint
 // @public
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     noBorders: boolean;
+    inOverlay: boolean;
 }>>;
 
 // @public
@@ -119,6 +121,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     get hasSuffix(): boolean;
     hint: QueryList<KbqHint>;
     hovered: boolean;
+    readonly inOverlay: ModelSignal<boolean | undefined>;
     get invalid(): boolean;
     // (undocumented)
     ngAfterContentChecked(): void;
@@ -142,7 +145,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     suffix: QueryList<KbqSuffix>;
     protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; "inOverlay": { "alias": "inOverlay"; "required": false; "isSignal": true; }; }, { "inOverlay": "inOverlayChange"; }, ["control", "stepper", "cleaner", "passwordToggle", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
@@ -168,6 +171,7 @@ export abstract class KbqFormFieldControl<T> {
 // @public
 export type KbqFormFieldDefaultOptions = Partial<{
     noBorders: boolean;
+    inOverlay: boolean;
 }>;
 
 // @public

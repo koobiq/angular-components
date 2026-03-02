@@ -122,7 +122,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     get yPosition(): DropdownPositionY;
     set yPosition(value: DropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }

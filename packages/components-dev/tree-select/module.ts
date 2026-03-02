@@ -24,6 +24,7 @@ import {
     kbqTreeSelectOptionsProvider
 } from '@koobiq/components/tree-select';
 import { TreeSelectExamplesModule } from '../../docs-examples/components/tree-select';
+import { DevThemeToggle } from '../theme-toggle';
 import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
@@ -54,7 +55,8 @@ export class DevDocsExamples {}
         ReactiveFormsModule,
         KbqPseudoCheckboxModule,
         KbqTitleModule,
-        DevDocsExamples
+        DevDocsExamples,
+        DevThemeToggle
     ],
     providers: [
         kbqTreeSelectOptionsProvider({
