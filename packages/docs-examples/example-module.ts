@@ -3328,6 +3328,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "number-formatter-overview-example.ts",
     "importPath": "components/number-formatter"
   },
+  "overflow-items-as-clamped-list": {
+    "packagePath": "components/overflow-items/overflow-items-as-clamped-list",
+    "title": "Overflow items as clamped list",
+    "componentName": "OverflowItemsAsClampedListExample",
+    "files": [
+      "overflow-items-as-clamped-list-example.ts"
+    ],
+    "selector": "overflow-items-as-clamped-list-example",
+    "additionalComponents": [],
+    "primaryFile": "overflow-items-as-clamped-list-example.ts",
+    "importPath": "components/overflow-items"
+  },
   "overflow-items-justify-content": {
     "packagePath": "components/overflow-items/overflow-items-justify-content",
     "title": "Overflow items justify content",
@@ -6415,6 +6427,8 @@ return import('@koobiq/docs-examples/components/notification-center');
 return import('@koobiq/docs-examples/components/notification-center');
   case 'number-formatter-overview':
 return import('@koobiq/docs-examples/components/number-formatter');
+  case 'overflow-items-as-clamped-list':
+return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-justify-content':
 return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-overview':

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, effect, ElementRef, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 /**
  * @title Overflow items as clamped list
@@ -11,7 +12,8 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
         KbqOverflowItems,
         KbqOverflowItem,
         KbqOverflowItemsResult,
-        KbqLink
+        KbqLink,
+        KbqTooltipTrigger
     ],
     template: `
         <div
@@ -19,7 +21,6 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             style="max-height: 48px; min-width: 60px"
-            [reverseOverflowOrder]="order()"
             [wrap]="'wrap'"
         >
             @for (item of countries; track item) {
@@ -30,24 +31,20 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
                     <span>,</span>
                 </span>
             }
-            @if (expanded()) {
-                <a
-                    kbq-link
-                    pseudo
-                    [kbqOverflowItem]="'expanded'"
-                    [alwaysVisible]
-                    (click)="expanded.set(!this.expanded())"
-                >
-                    Hide
-                </a>
-            }
-            <a kbqOverflowItemsResult kbq-link pseudo (click)="expanded.set(!this.expanded())">
-                @if (expanded()) {
-                    Hide
-                } @else {
-                    and {{ kbqOverflowItems.hiddenItemIDs().size }}
+            <span kbqOverflowItemsResult [kbqTooltip]="template" [kbqTooltipArrow]="false">
+                and {{ kbqOverflowItems.hiddenItemIDs().size }}
+            </span>
+
+            <ng-template #template>
+                @for (item of kbqOverflowItems.hiddenItemIDs().values(); track item) {
+                    <span>
+                        <span>{{ item }}</span>
+                        @if (!$last) {
+                            <span>,&nbsp;</span>
+                        }
+                    </span>
                 }
-            </a>
+            </ng-template>
         </div>
     `,
     styles: `
@@ -72,16 +69,14 @@ import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koob
 
         .kbq-overflow-items-result {
             text-wrap: nowrap;
+            text-align: center;
+            color: var(--kbq-foreground-contrast-secondary);
+            user-select: none;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsAsClampedListExample {
-    rows = input(1);
-
-    overflowItemsContainer = viewChild.required<ElementRef<HTMLDivElement>>('overflowItemsContainer');
-
-    protected order = signal(false);
     protected expanded = signal(false);
     protected countries = [
         'Australia',
@@ -110,18 +105,4 @@ export class OverflowItemsAsClampedListExample {
         'France',
         'Japan'
     ];
-
-    constructor() {
-        effect(() => {
-            const overflowItemsContainer = this.overflowItemsContainer().nativeElement;
-
-            if (this.expanded()) {
-                overflowItemsContainer.style.maxHeight = 'unset';
-                // TODO paddings
-                overflowItemsContainer.style.width = `${overflowItemsContainer.offsetWidth}px`;
-            } else {
-                overflowItemsContainer.style.maxHeight = `${overflowItemsContainer.offsetHeight}px`;
-            }
-        });
-    }
 }

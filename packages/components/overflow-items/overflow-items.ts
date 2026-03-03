@@ -14,7 +14,13 @@ import {
     signal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqInjectNativeElement, KbqOrientation } from '@koobiq/components/core';
+import {
+    KBQ_WINDOW,
+    KbqFlexDirection,
+    KbqFlexWrap,
+    kbqInjectNativeElement,
+    KbqOrientation
+} from '@koobiq/components/core';
 import { debounceTime, merge, skip, switchMap } from 'rxjs';
 
 /**
@@ -190,7 +196,7 @@ export class KbqOverflowItems {
      *
      * @default 'nowrap'
      */
-    readonly wrap = input<'wrap' | 'nowrap'>('nowrap');
+    readonly wrap = input<KbqFlexWrap>('nowrap');
 
     private readonly orientationConfig: Record<
         KbqOrientation,
@@ -200,7 +206,7 @@ export class KbqOverflowItems {
             paddingEnd: (computedStyle: CSSStyleDeclaration) => number;
             itemSize: (element: HTMLElement) => number;
             checkCrossAxisExceeded: (element: HTMLElement) => boolean;
-            flexDirection: 'row' | 'column';
+            flexDirection: KbqFlexDirection;
         }
     > = {
         horizontal: {
@@ -356,7 +362,7 @@ export class KbqOverflowItems {
         const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
         const isCrossAxisExceeded = this.wrap() === 'wrap' ? checkCrossAxisExceeded(container) : true;
 
-        return itemsSize + resultSize > containerSizeWithoutPaddings && isCrossAxisExceeded;
+        return isCrossAxisExceeded && itemsSize + resultSize > containerSizeWithoutPaddings;
     }
 
     /**

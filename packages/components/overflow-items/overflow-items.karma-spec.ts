@@ -213,11 +213,9 @@ describe('KbqOverflowItems', () => {
         it('should render all items if fit in cross axis', async () => {
             const fixture = createComponent(TestOverflowItems);
             const { debugElement, componentInstance } = fixture;
-            const itemHeght =
-                parseFloat(getComputedStyle(getOverflowItemDebugElements(debugElement)[0].nativeElement).height) || 0;
 
             componentInstance.flexWrap.set('wrap');
-            componentInstance.containerMaxHeight.set(itemHeght * 2);
+            componentInstance.containerMaxHeight.set(100);
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -227,23 +225,16 @@ describe('KbqOverflowItems', () => {
         it('should hide items if not fit in cross axis', async () => {
             const fixture = createComponent(TestOverflowItems);
             const { debugElement, componentInstance } = fixture;
-            const itemMainAxisSize = componentInstance.itemWidth();
-            const itemCrossAxisSize =
-                parseFloat(getComputedStyle(getOverflowItemDebugElements(debugElement)[0].nativeElement).height) || 0;
 
             componentInstance.flexWrap.set('wrap');
-            componentInstance.containerMaxHeight.set(itemCrossAxisSize * 2);
+            componentInstance.containerMaxHeight.set(36);
             componentInstance.itemMarginRight.set(10);
             fixture.detectChanges();
             await fixture.whenStable();
 
             expect(getOverflowHiddenItems(debugElement).length).toBeTruthy();
-
-            const hiddenItemsCount =
-                Math.ceil(componentInstance.resultWidth() / itemMainAxisSize) +
-                Math.ceil((componentInstance.items().length * componentInstance.itemMarginRight()) / itemMainAxisSize);
-
-            expect(getOverflowHiddenItems(debugElement).length).toBe(hiddenItemsCount);
+            // hidden = ceil(resultHeight / itemSize) + ceil((itemsCount * marginRight) / itemSize)
+            expect(getOverflowHiddenItems(debugElement).length).toBe(6);
         });
     });
 
@@ -295,9 +286,7 @@ describe('KbqOverflowItems', () => {
         it('should hide items if not fit in cross axis', async () => {
             const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
             const { debugElement, componentInstance } = fixture;
-            const itemMainAxisSize = componentInstance.itemHeight();
 
-            // for te
             componentInstance.containerMaxWidth.set(122);
             componentInstance.flexWrap.set('wrap');
             fixture.detectChanges();
@@ -313,12 +302,8 @@ describe('KbqOverflowItems', () => {
 
             // for testing purposes, itemWidth + resultClientWidth set as containerMaxWidth
             expect(resultClientWidth + componentInstance.itemWidth()!).toBe(componentInstance.containerMaxWidth()!);
-
-            const hiddenItemsCount =
-                Math.ceil(componentInstance.resultHeight() / itemMainAxisSize) +
-                Math.ceil((componentInstance.items().length * componentInstance.itemMarginBottom()) / itemMainAxisSize);
-
-            expect(getOverflowHiddenItems(debugElement).length).toBe(hiddenItemsCount);
+            // hidden = ceil(resultHeight / itemSize) + ceil((itemsCount * marginBottom) / itemSize)
+            expect(getOverflowHiddenItems(debugElement).length).toBe(5);
         });
     });
 
