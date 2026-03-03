@@ -13,7 +13,7 @@ yarn run build:angular-moment-adapter   # Build Moment date adapter
 yarn run build:cli                      # Build release management CLI
 yarn run build:schematics               # Build Angular CLI schematics
 yarn run styles:build-all               # Build all SCSS bundles
-yarn run docs:build                     # Build docs app for production (requires all packages to be pre-built: cdk, components, styles, adapters, docs-examples, docs-content) and starts docs dev server
+yarn run docs:build                     # Build docs app for production and starts docs dev server
 ```
 
 #### Development
