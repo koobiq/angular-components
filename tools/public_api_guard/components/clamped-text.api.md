@@ -18,11 +18,16 @@ import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
+export function injectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextLocaleConfig>;
+
+// @public
 export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfig>;
 
 // @public (undocumented)
 export interface KbqClamped {
+    hasToggle: Signal<boolean>;
     isCollapsed: Signal<boolean | undefined>;
+    localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
     toggleIsCollapsed(event: Event): void;
 }
 
@@ -34,7 +39,7 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly hiddenThreshold: InputSignal<number>;
     readonly isCollapsed: ModelSignal<boolean>;
     readonly items: InputSignal<T[]>;
-    readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig | undefined>;
+    readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
     toggleIsCollapsed(event: Event): void;
     readonly visibleItems: Signal<T[]>;
     // (undocumented)
@@ -61,12 +66,12 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     constructor();
     protected readonly collapsedState: WritableSignal<boolean | undefined>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
-    protected readonly hasToggle: WritableSignal<boolean>;
+    readonly hasToggle: WritableSignal<boolean>;
     readonly isCollapsed: InputSignal<boolean | undefined>;
     readonly isCollapsedChange: OutputEmitterRef<boolean>;
     protected readonly isToggleCollapsed: WritableSignal<boolean | undefined>;
     protected readonly lineClamp: WritableSignal<number | null>;
-    protected readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig | undefined>;
+    readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
     // (undocumented)
     ngAfterViewInit(): void;
     readonly rows: InputSignal<number>;

@@ -1,8 +1,5 @@
 import { computed, Directive, inject, input, model } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig } from '@koobiq/components/core';
-import { map, of } from 'rxjs';
-import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, KbqClampedRoot } from './constants';
+import { injectKbqClampedLocaleConfiguration, KbqClamped, KbqClampedRoot } from './constants';
 
 @Directive({
     selector: '[kbqClampedList]',
@@ -15,8 +12,6 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, KbqClampedRoot } fro
         { provide: KbqClampedRoot, useExisting: KbqClampedList }]
 })
 export class KbqClampedList<T> implements KbqClamped {
-    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
     readonly isCollapsed = model<boolean>(true);
     /** The list of items to display. */
@@ -42,13 +37,7 @@ export class KbqClampedList<T> implements KbqClamped {
     );
 
     /** Clamped text locale configuration. */
-    readonly localeConfiguration = toSignal<KbqClampedTextLocaleConfig>(
-        this.localeService
-            ? this.localeService.changes.pipe(
-                  map(() => this.localeService!.getParams('clampedText') satisfies KbqClampedTextLocaleConfig)
-              )
-            : of(inject(KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION))
-    );
+    readonly localeConfiguration = injectKbqClampedLocaleConfiguration();
 
     /** Toggles the collapsed state of the list. Stops event propagation. */
     toggleIsCollapsed(event: Event) {
