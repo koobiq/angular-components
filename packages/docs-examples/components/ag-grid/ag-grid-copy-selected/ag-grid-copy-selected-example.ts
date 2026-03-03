@@ -22,17 +22,11 @@ import {
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-type ExampleRowData = {
-    column0: string;
-    column1: string;
-    column2: string;
-    column3: string;
-    column4: string;
-    column5: string;
-    column6: string;
-    column7: string;
-    column8: string;
-    column9: string;
+const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
+    const columns = api.getAllDisplayedColumns().filter((col) => col.getColId() !== 'ag-Grid-SelectionColumn');
+    const headerRow = columns.map((col) => col.getColDef().headerName ?? col.getColId()).join('\t');
+
+    return `${headerRow}\n${kbqAgGridCopyFormatterTsv(api)}`;
 };
 
 /**
@@ -89,7 +83,7 @@ export class AgGridCopySelectedExample {
     protected readonly copyFormatter = computed<KbqAgGridCopyFormatter | undefined>(() => {
         switch (this.copyFormat()) {
             case 'Custom': {
-                return ({ selectedNodes }) => `Custom copy formatter output. Selected nodes: ${selectedNodes.length}.`;
+                return customCopyFormatterWithHeaderRow;
             }
             case 'CSV': {
                 return kbqAgGridCopyFormatterCsv;
@@ -161,7 +155,7 @@ export class AgGridCopySelectedExample {
         }
     ];
 
-    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => ({
+    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
         column0: 'Project name ' + index,
         column1: 'Text ' + index,
         column2: 'Text ' + index,

@@ -11,19 +11,6 @@ import {
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-type ExampleRowData = {
-    column0: string;
-    column1: string;
-    column2: string;
-    column3: string;
-    column4: string;
-    column5: string;
-    column6: string;
-    column7: string;
-    column8: string;
-    column9: string;
-};
-
 @Component({
     selector: 'example-ag-grid-status-bar',
     template: `
@@ -154,7 +141,7 @@ export class AgGridStatusBarExample {
         }
     ];
 
-    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => ({
+    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
         column0: 'Project name ' + index,
         column1: 'Text ' + index,
         column2: 'Text ' + index,
