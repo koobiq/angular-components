@@ -37,9 +37,7 @@
         width: 320px;
 
         & .kbq-date-period__header {
-            padding-top: var(--kbq-size-xs);
-            padding-left: var(--kbq-size-xxs);
-            padding-right: var(--kbq-size-xxs);
+            padding: var(--kbq-size-xs) var(--kbq-size-xxs) var(--kbq-size-s);
 
             & .kbq-button {
                 width: 100%;
@@ -54,21 +52,11 @@
         & .kbq-date-period__content {
             display: grid;
             grid-auto-columns: minmax(min-content, 1fr);
-            grid-template-columns: min-content;
+            grid-template-columns: min-content minmax(min-content, 1fr);
 
             padding: 0;
 
             gap: var(--kbq-size-s);
-
-            & .kbq-date-period__content-header {
-                grid-column: 2 span;
-
-                padding-top: var(--kbq-size-s);
-                padding-left: var(--kbq-size-l);
-                padding-right: var(--kbq-size-l);
-
-                color: var(--kbq-foreground-contrast-secondary);
-            }
 
             & .kbq-form__label {
                 padding-left: var(--kbq-size-l);
@@ -80,7 +68,7 @@
 
             & .kbq-date-period__date,
             & .kbq-date-period__time {
-                flex: 1;
+                width: auto;
             }
 
             & .kbq-form__row_with-time {

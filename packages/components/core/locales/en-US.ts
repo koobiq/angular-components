@@ -95,7 +95,7 @@ export const enUSLocaleData = {
             customPeriodFrom: 'from',
             customPeriodTo: 'to',
             customPeriodErrorHint: 'The period cannot start later than it ends',
-            backToPeriodSelection: 'Back to selecting the period'
+            backToPeriodSelection: 'Back'
         }
     },
     clampedText: {

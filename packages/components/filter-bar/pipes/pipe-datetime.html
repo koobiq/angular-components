@@ -55,10 +55,7 @@
                 </button>
             </div>
 
-            <kbq-divider />
-
             <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
-                <div class="kbq-date-period__content-header">{{ localeData.datePipe.customPeriod }}</div>
                 <label class="kbq-form__label">{{ localeData.datePipe.customPeriodFrom }}</label>
 
                 <div class="kbq-form__row_with-time kbq-form__control">
@@ -127,7 +124,7 @@
                 >
                     <span>{{ localeData.pipe.applyButton }}</span>
                     &nbsp;
-                    <span class="kbq-button_hot-key">{{ isMac ? '⌘' : 'Ctrl+' }}Enter</span>
+                    <span class="kbq-button_hot-key">{{ isMac ? '⌘ ' : 'Ctrl + ' }}Enter</span>
                 </button>
             </div>
         </div>
