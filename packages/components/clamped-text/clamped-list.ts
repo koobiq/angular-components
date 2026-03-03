@@ -17,6 +17,8 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, KbqClamped, KbqClampedRoot } fro
 export class KbqClampedList<T> implements KbqClamped {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
+    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
+    readonly isCollapsed = model<boolean>(true);
     /** The list of items to display. */
     readonly items = input<T[]>([]);
     /**
@@ -29,8 +31,6 @@ export class KbqClampedList<T> implements KbqClamped {
      * @default 6
      */
     readonly hiddenThreshold = input(6);
-    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
-    readonly isCollapsed = model<boolean>(true);
 
     /** Number of items hidden when the list is collapsed. */
     readonly exceededItemCount = computed(() => this.items().length - this.collapsedVisibleCount());
@@ -57,6 +57,10 @@ export class KbqClampedList<T> implements KbqClamped {
     }
 }
 
+/**
+ * Clamped list trigger.
+ * Used for calling toggle collapsed state on click events
+ */
 @Directive({
     selector: '[kbqClampedListTrigger]',
     exportAs: 'kbqClampedListTrigger',

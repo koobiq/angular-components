@@ -43,7 +43,7 @@ export class KbqClampedList<T> implements KbqClamped {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedList<any>, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqClampedListTrigger {
     // (undocumented)
     root: KbqClamped | null;
