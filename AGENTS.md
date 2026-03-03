@@ -1,14 +1,70 @@
 ## Architecture
 
+### Common Commands
+
+#### Build
+
+```bash
+yarn run build:components               # Build main components library
+yarn run build:cdk                      # Build CDK utilities
+yarn run build:components-experimental  # Build experimental components
+yarn run build:angular-luxon-adapter    # Build Luxon date adapter
+yarn run build:angular-moment-adapter   # Build Moment date adapter
+yarn run build:cli                      # Build release management CLI
+yarn run build:schematics               # Build Angular CLI schematics
+yarn run styles:build-all               # Build all SCSS bundles
+yarn run docs:build                     # Build docs app for production (requires all packages to be pre-built: cdk, components, styles, adapters, docs-examples, docs-content) and starts docs dev server
+```
+
+#### Development
+
+```bash
+yarn run dev:<component>           # Start dev server for specific component (e.g., yarn run dev:button)
+yarn run dev:all                   # Start dev server with all components
+yarn run docs:start:dev            # Start docs dev server
+```
+
+#### Testing
+
+```bash
+# Unit tests (Jest + Karma)
+yarn run unit:components           # Run component unit tests
+yarn run unit:cdk                  # Run CDK unit tests
+yarn run unit:schematics           # Run schematics tests
+npx jest <pattern>                 # Run specific unit (jest) tests (e.g., npx jest packages/components/button/button.component.spec.ts)
+
+# E2E tests (Playwright)
+yarn run e2e:setup                 # Install Playwright browsers (run once)
+yarn run e2e:components            # Run all E2E tests
+npx playwright test <pattern>      # Run specific E2E tests (e.g., npx playwright test packages/components/button/e2e.playwright-spec.ts)
+```
+
+#### Linting
+
+```bash
+yarn run eslint                                                         # Lint TypeScript/HTML
+yarn run stylelint                                                      # Lint SCSS
+yarn run prettier                                                       # Check formatting
+yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix  # Auto-fix all
+```
+
+#### API Management
+
+```bash
+yarn run check-api                 # Verify public API hasn't changed unexpectedly
+yarn run approve-api               # Approve API changes (updates tools/public_api_guard/**/*.api.md files)
+```
+
 ### Package Structure
 
 ```
 packages/
 ├── cdk/                       # Component Development Kit (a11y, keycodes, testing utils)
 ├── components/                # Main library - each subdirectory is a component
-├── components-experimental/   # Experimental features
+├── components-experimental/   # Experimental components (not production-ready)
+├── docs-examples/             # Documentation examples and components usage
 ├── components-dev/            # Dev apps for each component (yarn run dev:<component-name>)
-├── e2e/                       # Shared E2E testing utilities
+├── e2e/                       # Shared E2E testing application and utilities
 ├── angular-luxon-adapter/     # Luxon date adapter
 ├── angular-moment-adapter/    # Moment date adapter
 ├── schematics/                # Angular CLI schematics
