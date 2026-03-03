@@ -353,7 +353,18 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
     @ContentChild(KbqIcon) icon: KbqIcon;
 
-    @Input() collapsedText: string;
+    @Input()
+    get collapsedText(): string {
+        return this._collapsedText;
+    }
+
+    set collapsedText(value: string) {
+        this._collapsedText = value;
+
+        this.updateTooltip();
+    }
+
+    private _collapsedText: string;
 
     @Input('kbqTrigger')
     get trigger(): string {
@@ -401,7 +412,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     private _collapsable: boolean = true;
 
     get titleText(): string | null {
-        return this.collapsedText || this.title?.text || null;
+        return this._collapsedText || this.title?.text || null;
     }
 
     get disabled(): boolean {

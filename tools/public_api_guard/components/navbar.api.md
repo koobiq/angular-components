@@ -231,7 +231,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     set collapsed(value: boolean);
     // (undocumented)
-    collapsedText: string;
+    get collapsedText(): string;
+    set collapsedText(value: string);
     // (undocumented)
     get croppedText(): string;
     // (undocumented)
