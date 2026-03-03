@@ -89,7 +89,7 @@ export const ptBRLocaleData = {
             customPeriodFrom: 'de',
             customPeriodTo: 'até',
             customPeriodErrorHint: 'O período não pode começar depois de quando acaba',
-            backToPeriodSelection: 'Voltar à seleção de período'
+            backToPeriodSelection: 'Voltar'
         }
     },
     clampedText: {

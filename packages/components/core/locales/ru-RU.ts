@@ -90,7 +90,7 @@ export const ruRULocaleData = {
             customPeriodFrom: 'с',
             customPeriodTo: 'по',
             customPeriodErrorHint: 'Начало периода не может быть позже окончания',
-            backToPeriodSelection: 'Назад к выбору периода'
+            backToPeriodSelection: 'Назад'
         }
     },
     clampedText: {

@@ -90,7 +90,7 @@ export const tkTMLocaleData = {
             customPeriodFrom: 'başy',
             customPeriodTo: 'soňy',
             customPeriodErrorHint: 'Döwür gutarýan wagtyndan soň başlap bilmeýär',
-            backToPeriodSelection: 'Döwri saýlamaga dolan'
+            backToPeriodSelection: 'Yzyna'
         }
     },
     clampedText: {
