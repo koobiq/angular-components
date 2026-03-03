@@ -1,4 +1,4 @@
-import { computed, Directive, inject, input, model } from '@angular/core';
+import { computed, Directive, inject, input, model, numberAttribute } from '@angular/core';
 import { injectKbqClampedLocaleConfiguration, KbqClamped, KbqClampedRoot } from './constants';
 
 @Directive({
@@ -20,12 +20,12 @@ export class KbqClampedList<T> implements KbqClamped {
      * Maximum number of items visible in collapsed state.
      * @default 10
      */
-    readonly collapsedVisibleCount = input(10);
+    readonly collapsedVisibleCount = input(10, { transform: numberAttribute });
     /**
      * Minimum number of hidden items required to show the toggle trigger.
      * @default 6
      */
-    readonly hiddenThreshold = input(6);
+    readonly hiddenThreshold = input(6, { transform: numberAttribute });
 
     /** Number of items hidden when the list is collapsed. */
     readonly exceededItemCount = computed(() => this.items().length - this.collapsedVisibleCount());
@@ -42,7 +42,7 @@ export class KbqClampedList<T> implements KbqClamped {
     /** Toggles the collapsed state of the list. Stops event propagation. */
     toggleIsCollapsed(event: Event) {
         event.stopPropagation();
-        this.isCollapsed.update((state) => !(state ?? false));
+        this.isCollapsed.update((state) => !state);
     }
 }
 
@@ -61,5 +61,5 @@ export class KbqClampedList<T> implements KbqClamped {
     }
 })
 export class KbqClampedListTrigger {
-    root = inject(KbqClampedRoot, { optional: true });
+    protected readonly root = inject(KbqClampedRoot, { optional: true });
 }

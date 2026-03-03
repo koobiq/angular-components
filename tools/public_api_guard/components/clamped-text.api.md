@@ -33,10 +33,10 @@ export interface KbqClamped {
 
 // @public (undocumented)
 export class KbqClampedList<T> implements KbqClamped {
-    readonly collapsedVisibleCount: InputSignal<number>;
+    readonly collapsedVisibleCount: InputSignalWithTransform<number, unknown>;
     readonly exceededItemCount: Signal<number>;
     readonly hasToggle: Signal<boolean>;
-    readonly hiddenThreshold: InputSignal<number>;
+    readonly hiddenThreshold: InputSignalWithTransform<number, unknown>;
     readonly isCollapsed: ModelSignal<boolean>;
     readonly items: InputSignal<T[]>;
     readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
@@ -51,7 +51,7 @@ export class KbqClampedList<T> implements KbqClamped {
 // @public
 export class KbqClampedListTrigger {
     // (undocumented)
-    root: KbqClamped | null;
+    protected readonly root: KbqClamped | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqClampedListTrigger, "[kbqClampedListTrigger]", ["kbqClampedListTrigger"], {}, {}, never, never, true, never>;
     // (undocumented)
