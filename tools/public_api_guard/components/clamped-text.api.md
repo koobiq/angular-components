@@ -28,7 +28,7 @@ export interface KbqClamped {
     hasToggle: Signal<boolean>;
     isCollapsed: Signal<boolean | undefined>;
     localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
-    toggleIsCollapsed(event: Event): void;
+    toggle(event: Event): void;
 }
 
 // @public (undocumented)
@@ -40,7 +40,7 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly isCollapsed: ModelSignal<boolean>;
     readonly items: InputSignal<T[]>;
     readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
-    toggleIsCollapsed(event: Event): void;
+    toggle(event: Event): void;
     readonly visibleItems: Signal<T[]>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "items": { "alias": "items"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, never, true, never>;
@@ -77,6 +77,8 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     readonly rows: InputSignal<number>;
     readonly text: Signal<ElementRef<HTMLSpanElement>>;
     readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
+    toggle(event: Event): void;
+    // @deprecated
     toggleIsCollapsed(event: Event): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*"], true, never>;

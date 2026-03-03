@@ -154,7 +154,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     }
 
     /** @docs-private */
-    toggleIsCollapsed(event: Event): void {
+    toggle(event: Event): void {
         event.stopPropagation();
 
         this.collapsedState.update((state) => this.toggleCollapseState(this.isToggleCollapsed() ?? state));
@@ -165,6 +165,14 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
         if (this.collapsedState()) {
             setTimeout(() => this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' }));
         }
+    }
+
+    /**
+     * @docs-private
+     * @deprecated Will be removed in next major release
+     */
+    toggleIsCollapsed(event: Event): void {
+        this.toggle(event);
     }
 
     private updateToggleVisibilityState(): void {

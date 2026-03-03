@@ -39,7 +39,7 @@ export interface KbqClamped {
     /** Reactive locale strings for open/close labels. */
     localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
     /** Toggles the collapsed state of the list. Stops event propagation. */
-    toggleIsCollapsed(event: Event): void;
+    toggle(event: Event): void;
 }
 
 /**

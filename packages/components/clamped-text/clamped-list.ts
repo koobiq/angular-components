@@ -40,7 +40,7 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly localeConfiguration = injectKbqClampedLocaleConfiguration();
 
     /** Toggles the collapsed state of the list. Stops event propagation. */
-    toggleIsCollapsed(event: Event) {
+    toggle(event: Event) {
         event.stopPropagation();
         this.isCollapsed.update((state) => !state);
     }
@@ -55,9 +55,9 @@ export class KbqClampedList<T> implements KbqClamped {
     exportAs: 'kbqClampedListTrigger',
     host: {
         class: 'kbq-clamped-list__trigger kbq-clamped-text__toggle',
-        '(click)': 'root?.toggleIsCollapsed($event)',
-        '(keydown.enter)': 'root?.toggleIsCollapsed($event)',
-        '(keydown.space)': 'root?.toggleIsCollapsed($event)'
+        '(click)': 'root?.toggle($event)',
+        '(keydown.enter)': 'root?.toggle($event)',
+        '(keydown.space)': 'root?.toggle($event)'
     }
 })
 export class KbqClampedListTrigger {
