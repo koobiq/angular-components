@@ -24,6 +24,7 @@ export enum DocsStructureItemId {
     ButtonToggle = 'button-toggle',
     Checkbox = 'checkbox',
     ClampedText = 'clamped-text',
+    ClampedList = 'clamped-list',
     CodeBlock = 'code-block',
     ContentPanel = 'content-panel',
     Core = 'core',
@@ -392,6 +393,17 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'checkbox',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.ClampedList,
+                    name: {
+                        ru: 'Clamped List',
+                        en: 'Clamped List'
+                    },
+                    hasApi: true,
+                    apiId: 'clamped-list',
+                    hasExamples: false,
+                    isNew: expiresAt('2026-03-31')
                 },
                 {
                     id: DocsStructureItemId.ClampedText,
