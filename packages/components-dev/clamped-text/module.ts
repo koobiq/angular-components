@@ -11,6 +11,8 @@ import { DevLocaleSelector } from '../locale-selector';
         <hr />
         <clamped-list-example />
         <hr />
+        <clamped-list-dotted-example />
+        <hr />
         <clamped-list-vertical-example />
         <hr />
     `,
