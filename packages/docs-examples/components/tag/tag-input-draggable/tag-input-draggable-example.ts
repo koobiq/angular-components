@@ -1,4 +1,5 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -37,6 +38,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
                     kbqInput
                     placeholder="New tag"
                     [kbqTagInputFor]="tagList"
+                    [kbqTagInputSeparatorKeyCodes]="separators"
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
@@ -58,6 +60,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
 export class TagInputDraggableExample {
     protected readonly tags = model(getTags());
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+    protected readonly separators = [COMMA, SPACE, SEMICOLON, ENTER, TAB];
 
     protected dropped(event: KbqTagListDroppedEvent): void {
         moveItemInArray(this.tags(), event.previousIndex, event.currentIndex);

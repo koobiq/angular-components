@@ -1,15 +1,26 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Optional, Output, Self } from '@angular/core';
+import {
+    booleanAttribute,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    OnChanges,
+    Optional,
+    Output,
+    Self
+} from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import { isBoolean, KbqFieldSizingContent } from '@koobiq/components/core';
+import { KbqFieldSizingContent } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagList } from './tag-list.component';
 import { KbqTagTextControl } from './tag-text-control';
 
-const KbqTagInputDefaultSeparators: { [key: number]: KbqTagSeparator } = {
+const KBQ_TAG_INPUT_DEFAULT_SEPARATORS: { [key: number]: KbqTagSeparator } = {
     [ENTER]: { symbol: /\r?\n/, key: 'Enter' },
     [TAB]: { symbol: /\t/, key: 'Tab' },
     [SPACE]: { symbol: / /, key: ' ' },
@@ -71,6 +82,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     private _separatorKeyCodes: number[] = this.defaultOptions.separatorKeyCodes;
 
+    /** @docs-private */
     get separators(): KbqTagSeparator[] {
         return this._separatorKeyCodes.reduce((acc: any, key) => {
             const separator = this.getSeparatorByKeyCode(key);
@@ -79,7 +91,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }, []);
     }
 
-    private _separators: { [key: number]: KbqTagSeparator };
+    private _separators = this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
 
     /** Emitted when a tag is to be added. */
     @Output('kbqTagInputTokenEnd') readonly tagEnd: EventEmitter<KbqTagInputEvent> =
@@ -121,17 +133,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     /**
      * Whether the tagEnd event will be emitted when the text pasted.
+     * @default true
      */
-    @Input('kbqTagInputAddOnPaste')
-    get addOnPaste(): boolean {
-        return this._addOnPaste;
-    }
-
-    set addOnPaste(value: boolean) {
-        this._addOnPaste = coerceBooleanProperty(value);
-    }
-
-    private _addOnPaste: boolean;
+    @Input({ alias: 'kbqTagInputAddOnPaste', transform: booleanAttribute }) addOnPaste =
+        this.defaultOptions.addOnPaste ?? true;
 
     /** Whether the input is disabled. */
     @Input()
@@ -168,9 +173,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         @Optional() @Self() public autocompleteTrigger?: KbqAutocompleteTrigger
     ) {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
-
-        this._separators = this.defaultOptions.separators || KbqTagInputDefaultSeparators;
-        this._addOnPaste = isBoolean(this.defaultOptions.addOnPaste) ? this.defaultOptions.addOnPaste : true;
     }
 
     ngOnChanges() {
@@ -296,8 +298,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     private getSeparatorsForString(value: string): string[] {
         return this.separators
-            .filter((separator) => value.search(separator.key) > -1)
-            .map((separator) => separator.key);
+            .filter((separator) => value.search(separator.symbol) > -1)
+            .map((separator) => separator.symbol.source);
     }
 
     private trimValue(value) {
