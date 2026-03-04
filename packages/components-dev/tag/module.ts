@@ -13,15 +13,7 @@ import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } 
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import {
-    KBQ_TAGS_DEFAULT_OPTIONS,
-    KbqTag,
-    KbqTagInput,
-    KbqTagInputEvent,
-    KbqTagList,
-    KbqTagsDefaultOptions,
-    KbqTagsModule
-} from '@koobiq/components/tags';
+import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -98,10 +90,10 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        {
-            provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } satisfies KbqTagsDefaultOptions
-        }
+        // {
+        //     provide: KBQ_TAGS_DEFAULT_OPTIONS,
+        //     useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } satisfies KbqTagsDefaultOptions
+        // }
     ]
 })
 export class DevApp implements AfterViewInit {

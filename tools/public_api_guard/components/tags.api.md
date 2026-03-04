@@ -183,8 +183,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     constructor(elementRef: ElementRef<HTMLInputElement>, defaultOptions: KbqTagsDefaultOptions, trimDirective: KbqTrim, ngControl: NgControl, autocompleteTrigger?: KbqAutocompleteTrigger | undefined);
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
-    get addOnPaste(): boolean;
-    set addOnPaste(value: boolean);
+    addOnPaste: boolean;
     // (undocumented)
     autocompleteTrigger?: KbqAutocompleteTrigger | undefined;
     blur(event: FocusEvent): void;
@@ -201,6 +200,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     get hasDuplicates(): boolean;
     id: string;
     // (undocumented)
+    static ngAcceptInputType_addOnPaste: unknown;
+    // (undocumented)
     ngControl: NgControl;
     // (undocumented)
     ngOnChanges(): void;
@@ -212,7 +213,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     onPaste($event: ClipboardEvent): void;
     placeholder: string;
     set separatorKeyCodes(value: number[]);
-    // (undocumented)
     get separators(): KbqTagSeparator[];
     readonly tagEnd: EventEmitter<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
