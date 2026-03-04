@@ -1,5 +1,5 @@
 import { computed, Directive, inject, input, model, numberAttribute } from '@angular/core';
-import { injectKbqClampedLocaleConfiguration, KbqClamped, KbqClampedRoot } from './constants';
+import { KbqClamped, KbqClampedRoot, kbqInjectKbqClampedLocaleConfiguration } from './constants';
 
 @Directive({
     selector: '[kbqClampedList]',
@@ -37,7 +37,7 @@ export class KbqClampedList<T> implements KbqClamped {
     );
 
     /** Clamped text locale configuration. */
-    readonly localeConfiguration = injectKbqClampedLocaleConfiguration();
+    readonly localeConfiguration = kbqInjectKbqClampedLocaleConfiguration();
 
     /** Toggles the collapsed state of the list. Stops event propagation. */
     toggle(event: Event) {

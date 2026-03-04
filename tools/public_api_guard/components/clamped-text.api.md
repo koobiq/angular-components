@@ -18,9 +18,6 @@ import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
-export function injectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextLocaleConfig>;
-
-// @public
 export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfig>;
 
 // @public (undocumented)
@@ -104,6 +101,9 @@ export class KbqClampedTextModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqClampedTextModule, never, [typeof i1.KbqClampedText, typeof i2.KbqClampedList, typeof i2.KbqClampedListTrigger], [typeof i1.KbqClampedText, typeof i2.KbqClampedList, typeof i2.KbqClampedListTrigger]>;
 }
+
+// @public
+export function kbqInjectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextLocaleConfig>;
 
 // (No @packageDocumentation comment for this package)
 

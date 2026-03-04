@@ -47,7 +47,7 @@ export interface KbqClamped {
  * @see {KbqClampedText, KbqClampedList}
  * @docs-private
  */
-export function injectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextLocaleConfig> {
+export function kbqInjectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextLocaleConfig> {
     const localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     const initialValue = inject(KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION);
     const config = localeService

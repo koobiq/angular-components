@@ -20,10 +20,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { debounceTime, pairwise, skip } from 'rxjs';
 import { KbqClampedListTrigger } from './clamped-list';
 import {
-    injectKbqClampedLocaleConfiguration,
     KbqClamped,
     KbqClampedRoot,
-    kbqClampedTextDefaultMaxRows
+    kbqClampedTextDefaultMaxRows,
+    kbqInjectKbqClampedLocaleConfiguration
 } from './constants';
 
 @Component({
@@ -113,7 +113,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
      * Clamped text locale configuration.
      * @docs-private
      */
-    readonly localeConfiguration = injectKbqClampedLocaleConfiguration();
+    readonly localeConfiguration = kbqInjectKbqClampedLocaleConfiguration();
 
     /**
      * This flag is used to prevent trigger resize observer on toggle click.
