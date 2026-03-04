@@ -42,8 +42,8 @@ const createPasteEvent = (data: string): ClipboardEvent => {
 };
 
 @Component({
-    standalone: true,
     imports: [KbqTagsModule, KbqFormFieldModule],
+    standalone: true,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
@@ -65,6 +65,7 @@ class TestTagInputDistinct {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule],
+    standalone: true,
     template: `
         <kbq-tag-list #tagList>
             <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
@@ -78,6 +79,7 @@ class TestTagInputDefaultSeparators {
 
 @Component({
     imports: [KbqTagsModule],
+    standalone: true,
     template: `
         <kbq-tag-list #tagList>
             <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
@@ -101,6 +103,7 @@ class TestTagInputWithDashSeparator {
 
 @Component({
     imports: [KbqTagsModule, KbqFormFieldModule],
+    standalone: true,
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
