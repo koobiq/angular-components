@@ -205,7 +205,7 @@ export class KbqOverflowItems {
             paddingStart: (computedStyle: CSSStyleDeclaration) => number;
             paddingEnd: (computedStyle: CSSStyleDeclaration) => number;
             itemSize: (element: HTMLElement) => number;
-            checkCrossAxisExceeded: (element: HTMLElement) => boolean;
+            isCrossAxisExceeded: (element: HTMLElement) => boolean;
             flexDirection: KbqFlexDirection;
         }
     > = {
@@ -218,11 +218,11 @@ export class KbqOverflowItems {
 
                 return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
             },
-            checkCrossAxisExceeded: (element) => {
+            isCrossAxisExceeded: (element) => {
                 const { paddingTop, paddingBottom } = this.window.getComputedStyle(element);
                 const { clientHeight, scrollHeight } = element;
 
-                const crossAxisPadding = (parseFloat(paddingTop) || 0) + parseFloat(paddingBottom) || 0;
+                const crossAxisPadding = (parseFloat(paddingTop) || 0) + (parseFloat(paddingBottom) || 0);
 
                 return scrollHeight - crossAxisPadding > clientHeight - crossAxisPadding;
             },
@@ -237,11 +237,11 @@ export class KbqOverflowItems {
 
                 return element.offsetHeight + (parseFloat(marginTop) || 0) + (parseFloat(marginBottom) || 0);
             },
-            checkCrossAxisExceeded: (element) => {
+            isCrossAxisExceeded: (element) => {
                 const { paddingLeft, paddingRight } = this.window.getComputedStyle(element);
                 const { clientWidth, scrollWidth } = element;
 
-                const crossAxisPadding = (parseFloat(paddingLeft) || 0) + parseFloat(paddingRight) || 0;
+                const crossAxisPadding = (parseFloat(paddingLeft) || 0) + (parseFloat(paddingRight) || 0);
 
                 return scrollWidth - crossAxisPadding > clientWidth - crossAxisPadding;
             },
@@ -353,16 +353,18 @@ export class KbqOverflowItems {
         result: KbqOverflowItemsResult | undefined,
         orientation: KbqOrientation
     ): boolean {
-        const { containerSize, paddingStart, paddingEnd, itemSize, checkCrossAxisExceeded } =
-            this.orientationConfig[orientation];
+        if (this.wrap() === 'wrap' && this.orientationConfig[orientation].isCrossAxisExceeded(container)) {
+            return true;
+        }
+
+        const { containerSize, paddingStart, paddingEnd, itemSize } = this.orientationConfig[orientation];
         const computedStyle = this.window.getComputedStyle(container);
         const containerSizeWithoutPaddings =
             containerSize(container) - paddingStart(computedStyle) - paddingEnd(computedStyle);
         const itemsSize = items.reduce((size, item) => size + (item.hidden() ? 0 : itemSize(item.element)), 0);
         const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
-        const isCrossAxisExceeded = this.wrap() === 'wrap' ? checkCrossAxisExceeded(container) : true;
 
-        return isCrossAxisExceeded && itemsSize + resultSize > containerSizeWithoutPaddings;
+        return itemsSize + resultSize > containerSizeWithoutPaddings;
     }
 
     /**
