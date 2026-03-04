@@ -6,7 +6,7 @@ import { KbqClamped, KbqClampedRoot, kbqInjectKbqClampedLocaleConfiguration } fr
     exportAs: 'kbqClampedList',
     host: {
         class: 'kbq-clamped-list',
-        '[attr.aria-expanded]': 'isCollapsed() ? "false" : "true"'
+        '[attr.aria-expanded]': 'isCollapsed() && hasToggle() ? "false" : "true"'
     },
     providers: [
         { provide: KbqClampedRoot, useExisting: KbqClampedList }]
@@ -31,9 +31,9 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly exceededItemCount = computed(() => this.items().length - this.collapsedVisibleCount());
     /** Whether the number of hidden items meets the threshold to render the toggle trigger. */
     readonly hasToggle = computed(() => this.exceededItemCount() >= this.hiddenThreshold());
-    /** Slice of items currently rendered — truncated to `minVisibleCount` when collapsed, full list otherwise. */
+    /** Slice of items currently rendered — truncated to `minVisibleCount` when collapsed, a full list otherwise. */
     readonly visibleItems = computed(() =>
-        this.isCollapsed() ? this.items().slice(0, this.collapsedVisibleCount()) : this.items()
+        this.isCollapsed() && this.hasToggle() ? this.items().slice(0, this.collapsedVisibleCount()) : this.items()
     );
 
     /** Clamped text locale configuration. */

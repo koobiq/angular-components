@@ -108,6 +108,15 @@ describe('KbqClampedList', () => {
         expect(getTrigger(debugElement)).toBeNull();
     });
 
+    it('should show all items and aria-expanded="true" when exceeded count is below hiddenThreshold', () => {
+        fixture.componentInstance.items.set(Array.from({ length: 12 }, (_, i) => `Item ${i + 1}`));
+        fixture.detectChanges();
+
+        expect(getTrigger(debugElement)).toBeNull();
+        expect(getItems(debugElement).length).toBe(12);
+        expect(getHost(debugElement).getAttribute('aria-expanded')).toBe('true');
+    });
+
     it('should collapse back when clicked twice', () => {
         const trigger = getTrigger(debugElement).nativeElement;
 
