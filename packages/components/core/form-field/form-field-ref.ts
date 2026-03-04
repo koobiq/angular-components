@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, ModelSignal } from '@angular/core';
 
 /**
  * @deprecated Will be removed in next major release, use `KbqFormField` instead.
@@ -6,6 +6,8 @@ import { InjectionToken } from '@angular/core';
 export interface KbqFormFieldRef {
     control: any;
     canCleanerClearByEsc: boolean;
+    /** Use when KbqFormField is in an overlay container. */
+    inOverlay: ModelSignal<boolean>;
     /**
      * @TODO should be removed, is private method (#DS-2915)
      * @deprecated use `formField.control?.errorState` instead

@@ -17,6 +17,7 @@ import {
     inject,
     InjectionToken,
     input,
+    model,
     OnDestroy,
     Optional,
     Provider,
@@ -60,6 +61,8 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
 export type KbqFormFieldDefaultOptions = Partial<{
     /** Disables form field borders and shadows. */
     noBorders: boolean;
+    /** Use when KbqFormField is in an overlay container. */
+    inOverlay: boolean;
 }>;
 
 /**
@@ -98,6 +101,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '[class.kbq-form-field_invalid]': 'invalid',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-form-field_no-borders]': 'noBorders()',
+        '[class.kbq-form-field_in-overlay]': 'inOverlay()',
 
         '[class.ng-untouched]': 'shouldForward("untouched")',
         '[class.ng-touched]': 'shouldForward("touched")',
@@ -130,6 +134,9 @@ export class KbqFormField
 
     /** Disables form field borders and shadows. */
     readonly noBorders = input(this.defaultOptions?.noBorders, { transform: booleanAttribute });
+
+    /** Use when KbqFormField is in an overlay container. */
+    readonly inOverlay = model(this.defaultOptions?.inOverlay);
 
     /**
      * The form field control.

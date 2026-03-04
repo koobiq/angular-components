@@ -35,6 +35,7 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import * as i1_4 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -2206,6 +2207,7 @@ export interface KbqFormFieldRef {
     focus(): void;
     // @deprecated (undocumented)
     focusViaKeyboard(): void;
+    inOverlay: ModelSignal<boolean>;
     // @deprecated
     shouldForward(str: string): boolean;
 }
@@ -2884,7 +2886,7 @@ export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => 
 
 // @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    constructor(formField: KbqFormFieldRef);
+    constructor();
     // (undocumented)
     readonly changes: EventEmitter<string>;
     // (undocumented)
@@ -2912,7 +2914,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, never>;
 }
 
 // @public (undocumented)

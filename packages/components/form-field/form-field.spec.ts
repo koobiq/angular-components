@@ -244,6 +244,20 @@ export class PasswordFormField {
 })
 export class InputFormFieldWithLegacyValidationDirective {}
 
+@Component({
+    selector: 'input-form-field-in-overlay',
+    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field [inOverlay]="inOverlay">
+            <input kbqInput />
+        </kbq-form-field>
+    `
+})
+export class InputFormFieldInOverlay {
+    inOverlay: boolean;
+}
+
 describe(KbqFormField.name, () => {
     it('should display KbqHint', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
@@ -575,5 +589,25 @@ describe(KbqFormField.name, () => {
 
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_has-validate-directive']).toBeFalsy();
         expect(getInputDebugElement(debugElement).classes['kbq-control_has-validate-directive']).toBeFalsy();
+    });
+
+    it('should add .kbq-form-field_in-overlay for KbqFormField', () => {
+        const fixture = createComponent(InputFormFieldInOverlay);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.inOverlay = false;
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_in-overlay']).toBeFalsy();
+
+        componentInstance.inOverlay = true;
+        fixture.detectChanges();
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_in-overlay']).toBeTruthy();
+    });
+
+    it('should add .kbq-form-field_in-overlay for KbqFormField by KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
+        const { debugElement } = createComponent(InputFormFieldWithLabel, [
+            kbqFormFieldDefaultOptionsProvider({ inOverlay: true })
+        ]);
+
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_in-overlay']).toBeTruthy();
     });
 });

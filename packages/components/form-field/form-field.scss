@@ -97,6 +97,10 @@
         box-shadow: none !important;
     }
 
+    &.kbq-form-field_in-overlay .kbq-form-field__container {
+        background-color: var(--kbq-background-card) !important;
+    }
+
     & + .kbq-password-hint {
         margin-top: var(--kbq-size-m);
     }
