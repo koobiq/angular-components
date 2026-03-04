@@ -339,9 +339,7 @@ export class KbqOverflowItems {
         result: KbqOverflowItemsResult | undefined,
         orientation: KbqOrientation
     ): boolean {
-        if (this.wrap() === 'wrap' && this.orientationConfig[orientation].isCrossAxisExceeded(container)) {
-            return true;
-        }
+        if (this.wrap() === 'wrap') return this.orientationConfig[orientation].isCrossAxisExceeded(container);
 
         const { containerSize, paddingStart, paddingEnd, itemSize } = this.orientationConfig[orientation];
         const computedStyle = this.window.getComputedStyle(container);
