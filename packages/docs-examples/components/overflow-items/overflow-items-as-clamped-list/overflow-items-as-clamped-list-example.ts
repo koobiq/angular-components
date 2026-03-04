@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqLink } from '@koobiq/components/link';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
@@ -12,12 +11,10 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
         KbqOverflowItems,
         KbqOverflowItem,
         KbqOverflowItemsResult,
-        KbqLink,
         KbqTooltipTrigger
     ],
     template: `
         <div
-            #overflowItemsContainer
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             style="max-height: 48px; min-width: 60px"
@@ -77,7 +74,6 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsAsClampedListExample {
-    protected expanded = signal(false);
     protected countries = [
         'Australia',
         'Austria',

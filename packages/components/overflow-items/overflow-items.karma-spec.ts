@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DebugElement, Provider, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { KbqFlexWrap } from '@koobiq/components/core';
 import { KbqOverflowItemsModule } from './module';
 import { KbqOverflowItem, KbqOverflowItemsResult } from './overflow-items';
 
@@ -80,7 +81,7 @@ export class TestOverflowItems {
     readonly itemMarginRight = signal(0);
     readonly resultWidth = signal(100);
     readonly justifyContent = signal<'start' | 'end'>('start');
-    readonly flexWrap = signal<'nowrap' | 'wrap'>('nowrap');
+    readonly flexWrap = signal<KbqFlexWrap>('nowrap');
 }
 
 @Component({
@@ -128,7 +129,7 @@ export class TestOverflowItemsWithVerticalOrientation {
     readonly itemWidth = signal<number | null>(null);
     readonly itemMarginBottom = signal(0);
     readonly resultHeight = signal(50);
-    readonly flexWrap = signal<'nowrap' | 'wrap'>('nowrap');
+    readonly flexWrap = signal<KbqFlexWrap>('nowrap');
 }
 
 @Component({
