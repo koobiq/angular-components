@@ -4,6 +4,19 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
+import { TabsVerticalExample } from 'packages/docs-examples/components/tabs';
+import { DevThemeToggle } from '../theme-toggle';
+
+@Component({
+    selector: 'dev-examples',
+    imports: [TabsVerticalExample],
+    template: `
+        <tabs-vertical-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -12,7 +25,9 @@ import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
         KbqTabsModule,
         KbqPopoverModule,
         KbqButtonModule,
-        NgClass
+        NgClass,
+        DevDocsExamples,
+        DevThemeToggle
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
