@@ -1,4 +1,4 @@
-import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
@@ -67,7 +67,7 @@ export class TagInputEditableExample {
     protected readonly tags = model(getTags());
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
     protected readonly editInputModel = model<string>('');
-    protected readonly separators = [COMMA, SPACE, SEMICOLON];
+    protected readonly separators = [COMMA, SPACE, SEMICOLON, ENTER, TAB];
 
     protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
         switch (type) {
