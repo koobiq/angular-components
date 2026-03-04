@@ -199,6 +199,17 @@ describe(KbqTagInput.name, () => {
         expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'tag' }));
     });
 
+    it('should kbqTagInputAddOnPaste by default', () => {
+        const fixture = createComponent(TestTagInputWithDashSeparator);
+        const directive = fixture.componentInstance.tagInput();
+
+        directive.onPaste(createPasteEvent('a-b'));
+
+        expect(fixture.componentInstance.add).toHaveBeenCalledTimes(2);
+        expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'a' }));
+        expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'b' }));
+    });
+
     it('should NOT trigger tagEnd when separatorKeyCodes is empty', () => {
         const fixture = createComponent(TestTagInputSeparators);
         const { componentInstance } = fixture;
