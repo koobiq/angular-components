@@ -1,4 +1,5 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -36,6 +37,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }
                     autocomplete="off"
                     kbqInput
                     placeholder="New tag"
+                    [kbqTagInputSeparatorKeyCodes]="separators"
                     [kbqTagInputFor]="tagList"
                     (kbqTagInputTokenEnd)="create($event)"
                 />
@@ -60,6 +62,7 @@ export class TagInputOverviewExample {
     protected readonly colors = KbqComponentColors;
     protected readonly removable = model(true);
     protected readonly tags = model(getTags());
+    protected readonly separators = [COMMA, SPACE, SEMICOLON, ENTER, TAB];
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     protected removed(event: KbqTagEvent): void {
