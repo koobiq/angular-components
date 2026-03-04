@@ -80,7 +80,7 @@ export class KbqAccordionItem implements OnDestroy {
             if (expanded) {
                 this.opened.emit();
                 /**
-                 * In the unique selection dispatcher, the id parameter is the id of the CdkAccordionItem,
+                 * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
                  * the name value is the id of the accordion.
                  */
                 const accordionId = this.accordion ? this.accordion.id : this.value;

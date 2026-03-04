@@ -80,8 +80,8 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     @ContentChildren(forwardRef(() => KbqAccordionItem), { descendants: true })
     items: QueryList<KbqAccordionItem>;
 
-    /** Whether the Accordion is disabled. */
-    @Input({ transform: booleanAttribute }) useStateSaving: boolean = false;
+    /** Specifies whether the accordion saves its states. Default is false */
+    useStateSaving: boolean = inject(new HostAttributeToken('useStateSaving'), { optional: true }) !== null;
 
     @Input() variant: KbqAccordionVariant | string = KbqAccordionVariant.fill;
 
@@ -152,8 +152,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     private state: KbqAccordionState | null;
 
     constructor() {
-        this.useStateSaving = inject(new HostAttributeToken('useStateSaving'), { optional: true }) !== null;
-
         if (this.useStateSaving) {
             this.getSavedState();
         }

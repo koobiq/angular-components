@@ -22,7 +22,7 @@ import { KbqAccordionItem } from './accordion-item';
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation',
 
-        '(transitionend)': 'hidden.set(!this.item.expanded)'
+        '(transitionend)': 'toggle()'
     }
 })
 export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
