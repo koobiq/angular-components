@@ -218,14 +218,7 @@ export class KbqOverflowItems {
 
                 return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
             },
-            isCrossAxisExceeded: (element) => {
-                const { paddingTop, paddingBottom } = this.window.getComputedStyle(element);
-                const { clientHeight, scrollHeight } = element;
-
-                const crossAxisPadding = (parseFloat(paddingTop) || 0) + (parseFloat(paddingBottom) || 0);
-
-                return scrollHeight - crossAxisPadding > clientHeight - crossAxisPadding;
-            },
+            isCrossAxisExceeded: ({ clientHeight, scrollHeight }) => scrollHeight > clientHeight,
             flexDirection: 'row'
         },
         vertical: {
@@ -237,14 +230,7 @@ export class KbqOverflowItems {
 
                 return element.offsetHeight + (parseFloat(marginTop) || 0) + (parseFloat(marginBottom) || 0);
             },
-            isCrossAxisExceeded: (element) => {
-                const { paddingLeft, paddingRight } = this.window.getComputedStyle(element);
-                const { clientWidth, scrollWidth } = element;
-
-                const crossAxisPadding = (parseFloat(paddingLeft) || 0) + (parseFloat(paddingRight) || 0);
-
-                return scrollWidth - crossAxisPadding > clientWidth - crossAxisPadding;
-            },
+            isCrossAxisExceeded: ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth,
             flexDirection: 'column'
         }
     } as const;
