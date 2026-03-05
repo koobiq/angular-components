@@ -5491,6 +5491,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@messageformat/core@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "@messageformat/core@npm:3.4.0"
+  dependencies:
+    "@messageformat/date-skeleton": "npm:^1.0.0"
+    "@messageformat/number-skeleton": "npm:^1.0.0"
+    "@messageformat/parser": "npm:^5.1.0"
+    "@messageformat/runtime": "npm:^3.0.1"
+    make-plural: "npm:^7.0.0"
+    safe-identifier: "npm:^0.4.1"
+  checksum: 10c0/8f5591c3e72b7771b036452465ee60c912c1cea6adb3d0f55e7a4be8737c02e1d1cb8620bb894dbc9dfcf28f77faff378c3c159e177a0cbe500b1ee74c41f70f
+  languageName: node
+  linkType: hard
+
+"@messageformat/date-skeleton@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "@messageformat/date-skeleton@npm:1.1.0"
+  checksum: 10c0/5dffb194a3f067be427123de0a567433e1e9219afe2e8c20e78afaf61cb24de479b8e52c5dfb94200d9757c3504e4d52c1cb3e13ff3c837fa7c71d0cc01980c3
+  languageName: node
+  linkType: hard
+
+"@messageformat/number-skeleton@npm:^1.0.0":
+  version: 1.2.0
+  resolution: "@messageformat/number-skeleton@npm:1.2.0"
+  checksum: 10c0/a1ad6b6eed4508996121b7f0283bca3e18e755240eefb30c0dfa58f70de0494d390397ffa105689fbb314e06af6365b4a9e9ab1e8902d11fefe673a4e024642e
+  languageName: node
+  linkType: hard
+
+"@messageformat/parser@npm:^5.1.0":
+  version: 5.1.1
+  resolution: "@messageformat/parser@npm:5.1.1"
+  dependencies:
+    moo: "npm:^0.5.1"
+  checksum: 10c0/fc24596d85a20fa9959a0a1c34f9bfd341e4f6eb235d0648e54296e0bed2ebe91d067c7b91036aea8cc2e4af4ddb0722257b0c04f3c610cd9c7ef4f7659d8668
+  languageName: node
+  linkType: hard
+
+"@messageformat/runtime@npm:^3.0.1":
+  version: 3.0.2
+  resolution: "@messageformat/runtime@npm:3.0.2"
+  dependencies:
+    make-plural: "npm:^7.0.0"
+  checksum: 10c0/5efb037fab20ab9529da220553f868f857be9ee7c3dd58b12eb96ee16c7d3b32e3bc1f88821e458a4e35fce71ed93e8846818532d97f5e933b442c4b56b1d176
+  languageName: node
+  linkType: hard
+
 "@microsoft/api-extractor-model@npm:7.32.2":
   version: 7.32.2
   resolution: "@microsoft/api-extractor-model@npm:7.32.2"
@@ -16538,6 +16584,7 @@ __metadata:
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.0.1"
     "@maskito/kit": "npm:^5.1.0"
+    "@messageformat/core": "npm:^3.4.0"
     "@microsoft/api-extractor": "npm:7.56.0"
     "@octokit/rest": "npm:^18.9.1"
     "@playwright/test": "npm:^1.55.0"
@@ -17399,6 +17446,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"make-plural@npm:^7.0.0":
+  version: 7.5.0
+  resolution: "make-plural@npm:7.5.0"
+  checksum: 10c0/4cfecc77301cda7d01539027de3aedbacd91555767a4afb7ec18dbb8d9648293bf712a1d968e333c448f4e13e95cfef6457b338cf562620abcc4e7b313eeca29
+  languageName: node
+  linkType: hard
+
 "makeerror@npm:1.0.12":
   version: 1.0.12
   resolution: "makeerror@npm:1.0.12"
@@ -17928,6 +17982,13 @@ __metadata:
   version: 0.5.2
   resolution: "moo@npm:0.5.2"
   checksum: 10c0/a9d9ad8198a51fe35d297f6e9fdd718298ca0b39a412e868a0ebd92286379ab4533cfc1f1f34516177f5129988ab25fe598f78e77c84e3bfe0d4a877b56525a8
+  languageName: node
+  linkType: hard
+
+"moo@npm:^0.5.1":
+  version: 0.5.3
+  resolution: "moo@npm:0.5.3"
+  checksum: 10c0/5c5e00d7c57a69ce1cc2f21a90655ff10556481cc10fa70528c01e91f00deff8a65fa8da6dc7b27d136d66085055aab238fd1b19a75070263e0028e8f07c8213
   languageName: node
   linkType: hard
 
@@ -21012,6 +21073,13 @@ __metadata:
   version: 5.2.1
   resolution: "safe-buffer@npm:5.2.1"
   checksum: 10c0/6501914237c0a86e9675d4e51d89ca3c21ffd6a31642efeba25ad65720bce6921c9e7e974e5be91a786b25aa058b5303285d3c15dbabf983a919f5f630d349f3
+  languageName: node
+  linkType: hard
+
+"safe-identifier@npm:^0.4.1":
+  version: 0.4.2
+  resolution: "safe-identifier@npm:0.4.2"
+  checksum: 10c0/a6b0cdb5347e48c5ea4ddf4cdca5359b12529a11a7368225c39f882fcc0e679c81e82e3b13e36bd27ba7bdec9286f4cc062e3e527464d93ba61290b6e0bc6747
   languageName: node
   linkType: hard
 
