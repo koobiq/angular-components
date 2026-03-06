@@ -37,6 +37,7 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly isCollapsed: ModelSignal<boolean>;
     readonly items: InputSignal<T[]>;
     readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
+    readonly showMoreCountText: Signal<string>;
     toggle(event: Event): void;
     readonly visibleItems: Signal<T[]>;
     // (undocumented)

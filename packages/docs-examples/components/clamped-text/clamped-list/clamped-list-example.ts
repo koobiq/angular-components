@@ -36,9 +36,9 @@ import { KbqLink } from '@koobiq/components/link';
                         style="margin-top: 0px !important"
                     >
                         @if (clampedList.isCollapsed()) {
-                            {{ clampedList.exceededItemCount() }} more
+                            {{ clampedList.exceededItemCount() }} {{ clampedList.localeConfiguration().moreText }}
                         } @else {
-                            close
+                            {{ clampedList.localeConfiguration().closeText }}
                         }
                     </a>
                 }

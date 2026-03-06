@@ -100,7 +100,9 @@ export const enUSLocaleData = {
     },
     clampedText: {
         openText: 'Expand',
-        closeText: 'Collapse'
+        closeText: 'Collapse',
+        showMoreText: 'Show {exceededItemCount} more',
+        moreText: 'more'
     } satisfies KbqClampedTextLocaleConfig,
     navbarIc: {
         toggle: {

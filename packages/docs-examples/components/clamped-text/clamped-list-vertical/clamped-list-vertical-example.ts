@@ -19,37 +19,43 @@ import { KbqLink } from '@koobiq/components/link';
             @for (item of clampedList.visibleItems(); track item.id) {
                 <div class="layout-row layout-align-space-between-start">
                     <a
+                        class="layout-padding-bottom-xxs"
                         kbq-link
                         target="_blank"
-                        [class.layout-padding-bottom-xxs]="!$last"
                         [class.layout-padding-top-xxs]="!$first"
                         [href]="item.url"
                     >
                         {{ item.name }}
                     </a>
                     <div
+                        class="layout-padding-bottom-xxs"
                         style="min-width: 45px;"
                         [class.layout-padding-bottom-xxs]="!$last"
-                        [class.layout-padding-top-xxs]="!$first"
                     >
                         {{ item.id }}
                     </div>
                 </div>
             }
             @if (clampedList.hasToggle()) {
-                <a kbqClampedListTrigger kbq-link pseudo class="layout-padding-top-xxs">
+                <a kbq-link kbqClampedListTrigger pseudo class="layout-padding-top-xxs">
                     @if (clampedList.isCollapsed()) {
                         <i kbq-icon="kbq-chevron-down_16"></i>
-                        <span class="kbq-link__text">+ {{ clampedList.exceededItemCount() }}</span>
+                        <span class="kbq-link__text">{{ clampedList.showMoreCountText() }}</span>
                     } @else {
                         <i kbq-icon="kbq-chevron-up_16"></i>
                         <span class="kbq-link__text">
-                            {{ clampedList.localeConfiguration()?.closeText ?? 'close' }}
+                            {{ clampedList.localeConfiguration().closeText }}
                         </span>
                     }
                 </a>
             }
         </div>
+    `,
+    styles: `
+        .kbq-clamped-list__trigger {
+            margin-top: 0;
+            display: inline-block;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -100,7 +100,9 @@ export const ruRULocaleData = {
     },
     clampedText: {
         openText: 'Развернуть',
-        closeText: 'Свернуть'
+        closeText: 'Свернуть',
+        showMoreText: 'Показать еще {exceededItemCount}',
+        moreText: 'еще'
     } satisfies KbqClampedTextLocaleConfig,
     navbarIc: {
         toggle: {

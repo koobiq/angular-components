@@ -35,6 +35,10 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly visibleItems = computed(() =>
         this.isCollapsed() && this.hasToggle() ? this.items().slice(0, this.collapsedVisibleCount()) : this.items()
     );
+    /** Localized "show more" label with the exceeded item count interpolated into the `{exceededItemCount}` placeholder. */
+    readonly showMoreCountText = computed(() =>
+        this.localeConfiguration().showMoreText.replace('{exceededItemCount}', this.exceededItemCount().toString(10))
+    );
 
     /** Clamped text locale configuration. */
     readonly localeConfiguration = kbqInjectKbqClampedLocaleConfiguration();

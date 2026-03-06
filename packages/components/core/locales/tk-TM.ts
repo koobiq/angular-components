@@ -100,7 +100,9 @@ export const tkTMLocaleData = {
     },
     clampedText: {
         openText: 'Giňelt',
-        closeText: 'Ýap'
+        closeText: 'Ýap',
+        showMoreText: 'Ýene {exceededItemCount} görkeziň',
+        moreText: 'has köp'
     } satisfies KbqClampedTextLocaleConfig,
     navbarIc: {
         toggle: {
