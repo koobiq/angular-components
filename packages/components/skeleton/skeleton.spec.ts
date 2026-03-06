@@ -16,7 +16,10 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
                     getComputedStyle: (_: Element) => ({
                         getPropertyValue: (prop: string) =>
                             prop === '--kbq-skeleton-animation-duration' ? `1200ms` : ''
-                    })
+                    }),
+                    performance: {
+                        now: () => Date.now()
+                    }
                 }
             },
             ...providers
