@@ -8,9 +8,10 @@ import {
     inject,
     Inject,
     OnDestroy,
-    Optional
+    Optional,
+    Renderer2
 } from '@angular/core';
-import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, kbqInjectNativeElement, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -25,6 +26,9 @@ import { debounceTime } from 'rxjs/operators';
     }
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+    private readonly renderer = inject(Renderer2);
+    private readonly nativeElement = kbqInjectNativeElement();
+
     private contentObserver = inject(ContentObserver);
 
     // todo need rename kbqTrigger in popover, tooltip and title. Here workaround for kbq-title and popover on one button
@@ -42,6 +46,19 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             !this.isVerticalOverflown &&
             (this.child.scrollWidth === 0 || this.parent.offsetWidth === this.child.scrollWidth)
         ) {
+            if (this.hasOnlyText) {
+                const wrapper = this.renderer.createElement('span');
+
+                wrapper.innerText = this.child.innerText;
+                this.parent.appendChild(wrapper);
+
+                const result = this.parent.getBoundingClientRect().width < wrapper.getBoundingClientRect().width;
+
+                wrapper.remove();
+
+                return result;
+            }
+
             return this.parent.getBoundingClientRect().width < this.child.getBoundingClientRect().width;
         }
 
@@ -66,6 +83,12 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
     get child(): HTMLElement {
         return this.childContainer.nativeElement || this.childContainer;
+    }
+
+    get hasOnlyText(): boolean {
+        return (
+            this.nativeElement.childNodes.length === 1 && this.nativeElement.childNodes[0].nodeType === Node.TEXT_NODE
+        );
     }
 
     readonly resizeStream = new Subject<Event>();
