@@ -17,17 +17,15 @@ import { KbqLink } from '@koobiq/components/link';
             (isCollapsedChange)="focusWhenExpanded($event)"
         >
             @for (item of clampedList.visibleItems(); track item.id) {
-                <div class="layout-row layout-align-space-between-start example-vertical-list__item">
+                <div class="layout-row layout-align-space-between-start">
                     <a
                         kbq-link
-                        class="kbq-link_external"
                         target="_blank"
                         [class.layout-padding-bottom-xxs]="!$last"
                         [class.layout-padding-top-xxs]="!$first"
                         [href]="item.url"
                     >
-                        <span class="kbq-link__text">{{ item.name }}</span>
-                        <i kbq-icon="kbq-north-east_16"></i>
+                        {{ item.name }}
                     </a>
                     <div
                         style="min-width: 45px;"
@@ -52,15 +50,6 @@ import { KbqLink } from '@koobiq/components/link';
                 </a>
             }
         </div>
-    `,
-    styles: `
-        .example-vertical-list__item {
-            .kbq-link {
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            }
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

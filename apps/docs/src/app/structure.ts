@@ -397,8 +397,8 @@ const structure: DocsStructure = makeStructure({
                 {
                     id: DocsStructureItemId.ClampedList,
                     name: {
-                        ru: 'Clamped List',
-                        en: 'Clamped List'
+                        ru: 'Clamped list',
+                        en: 'Clamped list'
                     },
                     hasApi: true,
                     apiId: 'clamped-list',
