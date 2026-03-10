@@ -84,7 +84,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly scrollableCodeContent: CdkScrollable;
     softWrap: boolean;
     readonly softWrapChange: EventEmitter<boolean>;
-    protected readonly tabLinkDef: TemplateRef<any>;
+    protected readonly tabLinkDef: TemplateRef<KbqTabLinkDefContext>;
     toggleSoftWrap(): void;
     toggleViewAll(): void;
     viewAll: boolean;
@@ -150,6 +150,12 @@ export class KbqCodeBlockTabLinkDef {
 
 // @public @deprecated (undocumented)
 export type KbqCodeFile = KbqCodeBlockFile;
+
+// @public
+export type KbqTabLinkDefContext = {
+    $implicit: KbqCodeBlockFile;
+    fallbackFileName: string;
+};
 
 // (No @packageDocumentation comment for this package)
 

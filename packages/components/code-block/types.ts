@@ -1,3 +1,10 @@
+/**
+ * Context provided to the tab link definition template.
+ * @property $implicit - Code block file for the current tab.
+ * @property fallbackFileName - Displayed when the file has no explicit name.
+ */
+export type KbqTabLinkDefContext = { $implicit: KbqCodeBlockFile; fallbackFileName: string };
+
 /** Code block file object. */
 export type KbqCodeBlockFile = {
     /**
