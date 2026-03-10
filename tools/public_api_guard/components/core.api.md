@@ -381,6 +381,8 @@ export const enUSLocaleData: {
     clampedText: {
         openText: string;
         closeText: string;
+        showMoreText: string;
+        moreText: string;
     };
     navbarIc: {
         toggle: {
@@ -610,6 +612,8 @@ export const esLALocaleData: {
     clampedText: {
         openText: string;
         closeText: string;
+        showMoreText: string;
+        moreText: string;
     };
     navbarIc: {
         toggle: {
@@ -924,6 +928,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+            showMoreText: string;
+            moreText: string;
         };
         navbarIc: {
             toggle: {
@@ -1134,6 +1140,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+            showMoreText: string;
+            moreText: string;
         };
         navbarIc: {
             toggle: {
@@ -1340,6 +1348,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+            showMoreText: string;
+            moreText: string;
         };
         navbarIc: {
             toggle: {
@@ -1552,6 +1562,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+            showMoreText: string;
+            moreText: string;
         };
         navbarIc: {
             toggle: {
@@ -1760,6 +1772,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+            showMoreText: string;
+            moreText: string;
         };
         navbarIc: {
             toggle: {
@@ -2004,6 +2018,8 @@ export type KbqCheckedState = 'true' | 'false' | 'mixed';
 export type KbqClampedTextLocaleConfig = {
     openText: string;
     closeText: string;
+    showMoreText: string;
+    moreText: string;
 };
 
 // @public
@@ -3338,6 +3354,8 @@ export const ptBRLocaleData: {
     clampedText: {
         openText: string;
         closeText: string;
+        showMoreText: string;
+        moreText: string;
     };
     navbarIc: {
         toggle: {
@@ -3748,6 +3766,8 @@ export const ruRULocaleData: {
     clampedText: {
         openText: string;
         closeText: string;
+        showMoreText: string;
+        moreText: string;
     };
     navbarIc: {
         toggle: {
@@ -4052,6 +4072,8 @@ export const tkTMLocaleData: {
     clampedText: {
         openText: string;
         closeText: string;
+        showMoreText: string;
+        moreText: string;
     };
     navbarIc: {
         toggle: {

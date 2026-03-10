@@ -13,13 +13,18 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { debounceTime, map, of, pairwise, skip } from 'rxjs';
-import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } from './constants';
+import { debounceTime, pairwise, skip } from 'rxjs';
+import { KbqClampedListTrigger } from './clamped-list';
+import {
+    KbqClamped,
+    KbqClampedRoot,
+    kbqClampedTextDefaultMaxRows,
+    kbqInjectKbqClampedLocaleConfiguration
+} from './constants';
 
 @Component({
     selector: 'kbq-clamped-text',
@@ -27,7 +32,8 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } f
     imports: [
         KbqIcon,
         KbqButtonModule,
-        KbqLinkModule
+        KbqLinkModule,
+        KbqClampedListTrigger
     ],
     template: `
         <div
@@ -43,24 +49,15 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } f
         </div>
 
         @if (hasToggle()) {
-            <span
-                class="kbq-clamped-text__toggle"
-                kbq-link
-                noUnderline
-                pseudo
-                role="button"
-                (click)="toggleIsCollapsed($event)"
-                (keydown.enter)="toggleIsCollapsed($event)"
-                (keydown.space)="toggleIsCollapsed($event)"
-            >
+            <span kbq-link noUnderline pseudo role="button" kbqClampedListTrigger>
                 @let config = localeConfiguration();
 
                 @if (collapsedState()) {
                     <i kbq-icon="kbq-chevron-down_16"></i>
-                    <span class="kbq-link__text">{{ config!.openText }}</span>
+                    <span class="kbq-link__text">{{ config.openText }}</span>
                 } @else {
                     <i kbq-icon="kbq-chevron-up_16"></i>
-                    <span class="kbq-link__text">{{ config!.closeText }}</span>
+                    <span class="kbq-link__text">{{ config.closeText }}</span>
                 }
             </span>
         }
@@ -70,10 +67,12 @@ import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } f
         class: 'kbq-clamped-text',
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
     },
+    providers: [
+        { provide: KbqClampedRoot, useExisting: KbqClampedText }],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqClampedText implements AfterViewInit {
+export class KbqClampedText implements KbqClamped, AfterViewInit {
     /**
      * Max rows before text is clamped.
      * @default kbqClampedTextDefaultMaxRows
@@ -102,26 +101,19 @@ export class KbqClampedText implements AfterViewInit {
     /** @docs-private */
     protected readonly isToggleCollapsed = signal<boolean | undefined>(undefined);
     /** @docs-private */
-    protected readonly hasToggle = signal(true);
-    /** @docs-private */
     protected readonly lineClamp = signal<number | null>(null);
+    /** @docs-private */
+    readonly hasToggle = signal(true);
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
     /**
      * Clamped text locale configuration.
      * @docs-private
      */
-    protected readonly localeConfiguration = toSignal<KbqClampedTextLocaleConfig>(
-        this.localeService
-            ? this.localeService.changes.pipe(
-                  map(() => this.localeService!.getParams('clampedText') satisfies KbqClampedTextLocaleConfig)
-              )
-            : of(inject(KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION))
-    );
+    readonly localeConfiguration = kbqInjectKbqClampedLocaleConfiguration();
 
     /**
      * This flag is used to prevent trigger resize observer on toggle click.
@@ -162,7 +154,7 @@ export class KbqClampedText implements AfterViewInit {
     }
 
     /** @docs-private */
-    toggleIsCollapsed(event: Event): void {
+    toggle(event: Event): void {
         event.stopPropagation();
 
         this.collapsedState.update((state) => this.toggleCollapseState(this.isToggleCollapsed() ?? state));
@@ -173,6 +165,14 @@ export class KbqClampedText implements AfterViewInit {
         if (this.collapsedState()) {
             setTimeout(() => this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' }));
         }
+    }
+
+    /**
+     * @docs-private
+     * @deprecated Will be removed in next major release
+     */
+    toggleIsCollapsed(event: Event): void {
+        this.toggle(event);
     }
 
     private updateToggleVisibilityState(): void {

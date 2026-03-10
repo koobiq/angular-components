@@ -43,6 +43,8 @@ export type KbqNumberInputLocaleConfig = {
 export type KbqClampedTextLocaleConfig = {
     openText: string;
     closeText: string;
+    showMoreText: string;
+    moreText: string;
 };
 
 /** Locale configuration for `KbqTimeRange` */

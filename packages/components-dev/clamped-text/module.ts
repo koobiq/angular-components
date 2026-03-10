@@ -8,6 +8,13 @@ import { DevLocaleSelector } from '../locale-selector';
     imports: [ClampedTextExamplesModule],
     template: `
         <clamped-text-overview-example />
+        <hr />
+        <clamped-list-example />
+        <hr />
+        <clamped-list-dotted-example />
+        <hr />
+        <clamped-list-vertical-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -795,6 +795,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
   },
+  "clamped-list-dotted": {
+    "packagePath": "components/clamped-text/clamped-list-dotted",
+    "title": "Clamped-list dotted",
+    "componentName": "ClampedListDottedExample",
+    "files": [
+      "clamped-list-dotted-example.ts"
+    ],
+    "selector": "clamped-list-dotted-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-list-dotted-example.ts",
+    "importPath": "components/clamped-text"
+  },
+  "clamped-list-vertical": {
+    "packagePath": "components/clamped-text/clamped-list-vertical",
+    "title": "Clamped-list vertical",
+    "componentName": "ClampedListVerticalExample",
+    "files": [
+      "clamped-list-vertical-example.ts"
+    ],
+    "selector": "clamped-list-vertical-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-list-vertical-example.ts",
+    "importPath": "components/clamped-text"
+  },
+  "clamped-list": {
+    "packagePath": "components/clamped-text/clamped-list",
+    "title": "Clamped-list",
+    "componentName": "ClampedListExample",
+    "files": [
+      "clamped-list-example.ts"
+    ],
+    "selector": "clamped-list-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-list-example.ts",
+    "importPath": "components/clamped-text"
+  },
   "clamped-text-overview": {
     "packagePath": "components/clamped-text/clamped-text-overview",
     "title": "Clamped-text overview",
@@ -6043,6 +6079,12 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'clamped-list-dotted':
+return import('@koobiq/docs-examples/components/clamped-text');
+  case 'clamped-list-vertical':
+return import('@koobiq/docs-examples/components/clamped-text');
+  case 'clamped-list':
+return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-text-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'code-block-with-custom-locale-configuration':

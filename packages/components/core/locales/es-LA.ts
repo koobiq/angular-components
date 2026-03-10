@@ -99,7 +99,9 @@ export const esLALocaleData = {
     },
     clampedText: {
         openText: 'Expandir',
-        closeText: 'Contraer'
+        closeText: 'Contraer',
+        showMoreText: 'Mostrar {exceededItemCount} más',
+        moreText: 'más'
     } satisfies KbqClampedTextLocaleConfig,
     navbarIc: {
         toggle: {

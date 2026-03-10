@@ -1,0 +1,69 @@
+import { computed, Directive, inject, input, model, numberAttribute } from '@angular/core';
+import { KbqClamped, KbqClampedRoot, kbqInjectKbqClampedLocaleConfiguration } from './constants';
+
+@Directive({
+    selector: '[kbqClampedList]',
+    exportAs: 'kbqClampedList',
+    host: {
+        class: 'kbq-clamped-list',
+        '[attr.aria-expanded]': 'isCollapsed() && hasToggle() ? "false" : "true"'
+    },
+    providers: [
+        { provide: KbqClampedRoot, useExisting: KbqClampedList }]
+})
+export class KbqClampedList<T> implements KbqClamped {
+    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
+    readonly isCollapsed = model<boolean>(true);
+    /** The list of items to display. */
+    readonly items = input<T[]>([]);
+    /**
+     * Maximum number of items visible in collapsed state.
+     * @default 10
+     */
+    readonly collapsedVisibleCount = input(10, { transform: numberAttribute });
+    /**
+     * Minimum number of hidden items required to show the toggle trigger.
+     * @default 6
+     */
+    readonly hiddenThreshold = input(6, { transform: numberAttribute });
+
+    /** Number of items hidden when the list is collapsed. */
+    readonly exceededItemCount = computed(() => this.items().length - this.collapsedVisibleCount());
+    /** Whether the number of hidden items meets the threshold to render the toggle trigger. */
+    readonly hasToggle = computed(() => this.exceededItemCount() >= this.hiddenThreshold());
+    /** Slice of items currently rendered — truncated to `minVisibleCount` when collapsed, a full list otherwise. */
+    readonly visibleItems = computed(() =>
+        this.isCollapsed() && this.hasToggle() ? this.items().slice(0, this.collapsedVisibleCount()) : this.items()
+    );
+    /** Localized "show more" label with the exceeded item count interpolated into the `{exceededItemCount}` placeholder. */
+    readonly showMoreCountText = computed(() =>
+        this.localeConfiguration().showMoreText.replace('{exceededItemCount}', this.exceededItemCount().toString(10))
+    );
+
+    /** Clamped text locale configuration. */
+    readonly localeConfiguration = kbqInjectKbqClampedLocaleConfiguration();
+
+    /** Toggles the collapsed state of the list. Stops event propagation. */
+    toggle(event: Event) {
+        event.stopPropagation();
+        this.isCollapsed.update((state) => !state);
+    }
+}
+
+/**
+ * Clamped list trigger.
+ * Used for calling toggle collapsed state on click events
+ */
+@Directive({
+    selector: '[kbqClampedListTrigger]',
+    exportAs: 'kbqClampedListTrigger',
+    host: {
+        class: 'kbq-clamped-list__trigger kbq-clamped-text__toggle',
+        '(click)': 'root?.toggle($event)',
+        '(keydown.enter)': 'root?.toggle($event)',
+        '(keydown.space)': 'root?.toggle($event)'
+    }
+})
+export class KbqClampedListTrigger {
+    protected readonly root = inject(KbqClampedRoot, { optional: true });
+}

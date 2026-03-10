@@ -99,7 +99,9 @@ export const ptBRLocaleData = {
     },
     clampedText: {
         openText: 'Expandir',
-        closeText: 'Recolher'
+        closeText: 'Recolher',
+        showMoreText: 'Mostrar mais {exceededItemCount}',
+        moreText: 'mais'
     } satisfies KbqClampedTextLocaleConfig,
     navbarIc: {
         toggle: {
