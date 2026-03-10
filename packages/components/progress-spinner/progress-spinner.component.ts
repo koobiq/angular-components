@@ -74,5 +74,6 @@ export class KbqProgressSpinner extends KbqColorDirective {
         super();
 
         this.color = KbqComponentColors.Theme;
+        this.setDefaultColor(KbqComponentColors.Theme);
     }
 }
