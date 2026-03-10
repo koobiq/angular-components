@@ -21,10 +21,10 @@ let animationStartTime: number | null = null;
 export class KbqSkeleton {
     private readonly element = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
-    private readonly createdAt = this.window.performance.now();
+    private readonly createdAt = Date.now();
 
     constructor() {
-        if (animationStartTime === null) animationStartTime = this.createdAt;
+        animationStartTime = animationStartTime ?? this.createdAt;
 
         afterNextRender(() => this.syncAnimation());
     }
