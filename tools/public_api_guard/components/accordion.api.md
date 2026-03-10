@@ -46,8 +46,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_useStateSaving: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -68,7 +66,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     // (undocumented)
     variant: KbqAccordionVariant | string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "useStateSaving": { "alias": "useStateSaving"; "required": false; }; "variant": { "alias": "variant"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; "defaultValue": { "alias": "defaultValue"; "required": false; }; "type": { "alias": "type"; "required": false; }; "collapsible": { "alias": "collapsible"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, { "onValueChange": "onValueChange"; }, ["items"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "variant": { "alias": "variant"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; "defaultValue": { "alias": "defaultValue"; "required": false; }; "type": { "alias": "type"; "required": false; }; "collapsible": { "alias": "collapsible"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, { "onValueChange": "onValueChange"; }, ["items"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordion, never>;
 }
