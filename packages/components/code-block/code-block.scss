@@ -114,6 +114,7 @@
     &.kbq-code-block_soft-wrap {
         .kbq-code-block__code {
             white-space: pre-wrap;
+            word-break: break-all;
         }
     }
 
