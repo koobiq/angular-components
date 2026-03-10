@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { KbqCodeBlock } from './code-block';
+import { KbqCodeBlock, KbqCodeBlockTabLinkDef } from './code-block';
 
 const COMPONENTS = [
-    KbqCodeBlock
+    KbqCodeBlock,
+    KbqCodeBlockTabLinkDef
 ];
 
 @NgModule({
