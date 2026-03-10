@@ -21,9 +21,11 @@ import {
     NgZone,
     OnDestroy,
     OnInit,
+    signal,
     TemplateRef,
     Type,
-    ViewContainerRef
+    ViewContainerRef,
+    WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
@@ -111,7 +113,16 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 
-    isOpen: boolean = false;
+    get isOpen(): boolean {
+        return this.isOpenSignal();
+    }
+
+    set isOpen(value: boolean) {
+        this.isOpenSignal.set(value);
+    }
+
+    /** @docs-private */
+    isOpenSignal: WritableSignal<boolean> = signal(false);
 
     enterDelay: number = 0;
     leaveDelay: number = 0;
