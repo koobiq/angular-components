@@ -10,7 +10,8 @@
 
 .kbq-skeleton {
     --kbq-skeleton-min-height: var(--kbq-size-l);
-    --kbq-skeleton-animation-duration: 1.2s;
+    --kbq-skeleton-animation-duration: 1200ms;
+    --kbq-skeleton-animation-delay: 0ms;
     --kbq-skeleton-border-radius: var(--kbq-size-xxs);
     --kbq-skeleton-wave-width: 100px;
 
@@ -36,6 +37,6 @@
             var(--kbq-skeleton-animation-wave-center) 50%,
             var(--kbq-skeleton-animation-wave-end) 100%
         );
-        animation: wave var(--kbq-skeleton-animation-duration) ease-in infinite;
+        animation: wave var(--kbq-skeleton-animation-duration) ease-in var(--kbq-skeleton-animation-delay) infinite;
     }
 }

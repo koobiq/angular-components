@@ -8,6 +8,7 @@ import * as i0 from '@angular/core';
 
 // @public
 export class KbqSkeleton {
+    constructor();
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSkeleton, "kbq-skeleton", ["kbqSkeleton"], {}, {}, never, never, true, never>;
     // (undocumented)
