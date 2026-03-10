@@ -10,6 +10,7 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'clamped-list-vertical-example',
     imports: [KbqClampedList, KbqClampedListTrigger, KbqIcon, KbqLink],
     template: `
+        <!--@TODO update gap with paddings when link underline with text-decoration used (#DS-4778)-->
         <div
             #clampedList="kbqClampedList"
             kbqClampedList
