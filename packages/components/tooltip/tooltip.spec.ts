@@ -321,7 +321,7 @@ describe('KbqTooltip', () => {
     selector: 'tooltip-simple',
     imports: [KbqToolTipModule],
     template: `
-        <button [kbqTooltip]="'MOST-SIMPLE'">Show</button>
+        <button [kbqTooltip]="'MOST-SIMPLE'" [kbqTooltipArrow]="true">Show</button>
     `
 })
 export class TooltipSimple {

@@ -257,7 +257,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     private _color: KbqComponentColors | string = KbqComponentColors.Contrast;
 
-    @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = true;
+    @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = false;
     @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
 
     @Output('kbqPlacementChange') readonly placementChange = new EventEmitter();
