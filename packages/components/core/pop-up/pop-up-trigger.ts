@@ -13,6 +13,7 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
+    ChangeDetectorRef,
     DestroyRef,
     Directive,
     ElementRef,
@@ -21,11 +22,9 @@ import {
     NgZone,
     OnDestroy,
     OnInit,
-    signal,
     TemplateRef,
     Type,
-    ViewContainerRef,
-    WritableSignal
+    ViewContainerRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
@@ -113,16 +112,19 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 
+    private popUpChangeDetectorRef = inject(ChangeDetectorRef);
+
     get isOpen(): boolean {
-        return this.isOpenSignal();
+        return this._isOpen;
     }
 
     set isOpen(value: boolean) {
-        this.isOpenSignal.set(value);
+        this._isOpen = value;
+
+        this.popUpChangeDetectorRef.markForCheck();
     }
 
-    /** @docs-private */
-    isOpenSignal: WritableSignal<boolean> = signal(false);
+    private _isOpen: boolean = false;
 
     enterDelay: number = 0;
     leaveDelay: number = 0;

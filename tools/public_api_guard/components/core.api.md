@@ -61,7 +61,6 @@ import { Type } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
@@ -2700,7 +2699,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     get isOpen(): boolean;
     set isOpen(value: boolean);
-    isOpenSignal: WritableSignal<boolean>;
     // (undocumented)
     keydownHandler(event: KeyboardEvent): void;
     // (undocumented)
