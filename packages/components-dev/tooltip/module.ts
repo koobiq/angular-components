@@ -81,7 +81,7 @@ export class DevApp {
              добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых образцов
             неизвестным печатником еще в XVI веке.`
     };
-    hasArrow = true;
+    hasArrow = false;
 
     constructor() {
         this.tooltipActiveStage = 1;
