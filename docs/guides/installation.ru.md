@@ -11,7 +11,7 @@ ng add @koobiq/components
 Ручная установка:
 
 ```bash
-npm install @koobiq/cdk @koobiq/components @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon @messageformat/core
+npm install @koobiq/cdk @koobiq/components @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
 ```
 
 ### Настройка стилей
