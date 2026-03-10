@@ -13,31 +13,22 @@ import { KbqLink } from '@koobiq/components/link';
         <div
             #clampedList="kbqClampedList"
             kbqClampedList
+            class="layout-column layout-gap-xxs"
             [items]="items"
             (isCollapsedChange)="focusWhenExpanded($event)"
         >
             @for (item of clampedList.visibleItems(); track item.id) {
                 <div class="layout-row layout-align-space-between-start">
-                    <a
-                        class="layout-padding-bottom-xxs"
-                        kbq-link
-                        target="_blank"
-                        [class.layout-padding-top-xxs]="!$first"
-                        [href]="item.url"
-                    >
+                    <a kbq-link target="_blank" [href]="item.url">
                         {{ item.name }}
                     </a>
-                    <div
-                        class="layout-padding-bottom-xxs"
-                        style="min-width: 45px;"
-                        [class.layout-padding-bottom-xxs]="!$last"
-                    >
+                    <div style="min-width: 45px;">
                         {{ item.id }}
                     </div>
                 </div>
             }
             @if (clampedList.hasToggle()) {
-                <a kbq-link kbqClampedListTrigger pseudo class="layout-padding-top-xxs">
+                <a kbq-link kbqClampedListTrigger pseudo>
                     @if (clampedList.isCollapsed()) {
                         <i kbq-icon="kbq-chevron-down_16"></i>
                         <span class="kbq-link__text">{{ clampedList.showMoreCountText() }}</span>
