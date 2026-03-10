@@ -704,7 +704,7 @@ const structure: DocsStructure = makeStructure({
                     },
                     hasApi: true,
                     apiId: 'overflow-items',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.Popover,

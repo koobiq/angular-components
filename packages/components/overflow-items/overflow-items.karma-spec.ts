@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DebugElement, Provider, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { KbqFlexWrap } from '@koobiq/components/core';
 import { KbqOverflowItemsModule } from './module';
 import { KbqOverflowItem, KbqOverflowItemsResult } from './overflow-items';
 
@@ -44,10 +45,12 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             [style.width.px]="containerWidth()"
+            [style.max-height.px]="containerMaxHeight()"
             [style.padding.px]="containerPadding()"
             [style.justify-content]="justifyContent()"
             [style.box-sizing]="containerBoxSizing()"
             [reverseOverflowOrder]="reverseOverflowOrder()"
+            [wrap]="flexWrap()"
         >
             <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItems.hiddenItemIDs().size }} more
@@ -73,10 +76,12 @@ export class TestOverflowItems {
     readonly containerBoxSizing = signal<'border-box' | 'content-box'>('border-box');
     readonly containerPadding = signal(0);
     readonly containerWidth = signal(500);
+    readonly containerMaxHeight = signal(24);
     readonly itemWidth = signal(50);
     readonly itemMarginRight = signal(0);
     readonly resultWidth = signal(100);
     readonly justifyContent = signal<'start' | 'end'>('start');
+    readonly flexWrap = signal<KbqFlexWrap>('nowrap');
 }
 
 @Component({
@@ -90,13 +95,16 @@ export class TestOverflowItems {
             [style.padding.px]="containerPadding()"
             [style.box-sizing]="containerBoxSizing()"
             [style.height.px]="containerHeight()"
+            [style.max-width.px]="containerMaxWidth()"
             [reverseOverflowOrder]="reverseOverflowOrder()"
+            [wrap]="flexWrap()"
         >
             @for (item of items(); track item.id) {
                 <div
                     [kbqOverflowItem]="item.id"
                     [alwaysVisible]="item.alwaysVisible"
                     [style.height.px]="itemHeight()"
+                    [style.width.px]="itemWidth()"
                     [style.flex-shrink]="0"
                     [style.margin-bottom.px]="itemMarginBottom()"
                 >
@@ -116,9 +124,12 @@ export class TestOverflowItemsWithVerticalOrientation {
     readonly containerBoxSizing = signal<'border-box' | 'content-box'>('border-box');
     readonly containerPadding = signal(0);
     readonly containerHeight = signal(500);
+    readonly containerMaxWidth = signal<number | null>(null);
     readonly itemHeight = signal(50);
+    readonly itemWidth = signal<number | null>(null);
     readonly itemMarginBottom = signal(0);
     readonly resultHeight = signal(50);
+    readonly flexWrap = signal<KbqFlexWrap>('nowrap');
 }
 
 @Component({
@@ -199,6 +210,35 @@ describe('KbqOverflowItems', () => {
         expect(getOverflowHiddenItems(debugElement).length).toBe(14);
     });
 
+    describe('wrap', () => {
+        it('should render all items if fit in cross axis', async () => {
+            const fixture = createComponent(TestOverflowItems);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.flexWrap.set('wrap');
+            componentInstance.containerMaxHeight.set(100);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(getOverflowHiddenItems(debugElement).length).toBe(0);
+        });
+
+        it('should hide items if not fit in cross axis', async () => {
+            const fixture = createComponent(TestOverflowItems);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.flexWrap.set('wrap');
+            componentInstance.containerMaxHeight.set(36);
+            componentInstance.itemMarginRight.set(10);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(getOverflowHiddenItems(debugElement).length).toBeTruthy();
+            // hidden = ceil(resultHeight / itemSize) + ceil((itemsCount * marginRight) / itemSize)
+            expect(getOverflowHiddenItems(debugElement).length).toBe(6);
+        });
+    });
+
     it('should hide overflown items (vertical orientation)', async () => {
         const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
         const { debugElement } = fixture;
@@ -228,6 +268,44 @@ describe('KbqOverflowItems', () => {
         await fixture.whenStable();
 
         expect(getOverflowHiddenItems(debugElement).length).toBe(13);
+    });
+
+    describe('wrap (vertical orientation)', () => {
+        it('should render all items if fit in cross axis', async () => {
+            const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.containerMaxWidth.set(100);
+            componentInstance.flexWrap.set('wrap');
+            componentInstance.itemWidth.set(componentInstance.containerMaxWidth()! / 2);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(getOverflowHiddenItems(debugElement).length).toBe(0);
+        });
+
+        it('should hide items if not fit in cross axis', async () => {
+            const fixture = createComponent(TestOverflowItemsWithVerticalOrientation);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.containerMaxWidth.set(122);
+            componentInstance.flexWrap.set('wrap');
+            fixture.detectChanges();
+            componentInstance.itemWidth.set(50);
+            componentInstance.itemMarginBottom.set(10);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(getOverflowHiddenItems(debugElement).length).toBeTruthy();
+
+            const resultClientWidth = (getOverflowItemsResultDebugElement(debugElement).nativeElement as HTMLDivElement)
+                .clientWidth;
+
+            // for testing purposes, itemWidth + resultClientWidth set as containerMaxWidth
+            expect(resultClientWidth + componentInstance.itemWidth()!).toBe(componentInstance.containerMaxWidth()!);
+            // hidden = ceil(resultHeight / itemSize) + ceil((itemsCount * marginBottom) / itemSize)
+            expect(getOverflowHiddenItems(debugElement).length).toBe(5);
+        });
     });
 
     it('should hide overflown items with justify-content end', async () => {

@@ -2162,6 +2162,12 @@ export type KbqFileUploadLocaleConfig = {
     multiple: KbqMultipleFileUploadLocaleConfig;
 };
 
+// @public
+export type KbqFlexDirection = 'row' | 'column';
+
+// @public
+export type KbqFlexWrap = 'nowrap' | 'wrap';
+
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
