@@ -21,7 +21,7 @@ jobs:
       - id: run-e2e-tests
         run: |
           yarn run e2e:components
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ always() }}
         id: upload-report
         with:
