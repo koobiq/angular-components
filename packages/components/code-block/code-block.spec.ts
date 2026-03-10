@@ -103,6 +103,38 @@ class BaseCodeBlock {
     maxHeight: number | undefined = undefined;
 }
 
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block
+            [files]="files"
+            [filled]="filled"
+            [lineNumbers]="lineNumbers"
+            [canToggleSoftWrap]="canToggleSoftWrap"
+            [canDownload]="canDownload"
+            [noBorder]="noBorder"
+            [hideTabs]="hideTabs"
+            [canCopy]="canCopy"
+            [maxHeight]="maxHeight"
+            [(activeFileIndex)]="activeFileIndex"
+            [(softWrap)]="softWrap"
+        >
+            <ng-template let-file let-fallback="fallbackFileName" kbqCodeBlockTabLinkDef>
+                {{ customFileName }}
+            </ng-template>
+        </kbq-code-block>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestCodeBlockWithTemplateTabLink extends BaseCodeBlock {
+    customFileName = 'TEST';
+
+    constructor() {
+        super();
+        this.files = this.files.slice(0, 1);
+    }
+}
+
 describe(KbqCodeBlock.name, () => {
     it('should hide lineNumbers', () => {
         const fixture = createComponent(BaseCodeBlock);
@@ -454,5 +486,15 @@ describe(KbqCodeBlock.name, () => {
         getViewAllButtonElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
         expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should use template for tabLink when provided', () => {
+        const fixture = createComponent(TestCodeBlockWithTemplateTabLink);
+        const { debugElement, componentInstance } = fixture;
+        const textContent = getTabLinkElements(debugElement)[0].textContent;
+
+        expect(componentInstance.files[0].filename).toBeTruthy();
+        expect(textContent).not.toBe(componentInstance.files[0].filename);
+        expect(textContent).toBe(componentInstance.customFileName);
     });
 });

@@ -2,14 +2,16 @@ import { A11yModule, FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Platform } from '@angular/cdk/platform';
 import { CdkScrollable, CdkScrollableModule } from '@angular/cdk/scrolling';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     DestroyRef,
+    Directive,
     ElementRef,
     EventEmitter,
     inject,
@@ -20,6 +22,7 @@ import {
     Provider,
     Renderer2,
     SecurityContext,
+    TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -63,6 +66,13 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
     useValue: fileName
 });
 
+/** Marks a template as a custom tab link. */
+@Directive({
+    selector: '[kbqCodeBlockTabLinkDef]',
+    exportAs: 'kbqCodeBlockTabLinkDef'
+})
+export class KbqCodeBlockTabLinkDef {}
+
 /**
  * Component which highlights blocks of code.
  */
@@ -75,7 +85,8 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
         A11yModule,
         CdkScrollableModule,
         KbqToolTipModule,
-        KbqIconModule
+        KbqIconModule,
+        NgTemplateOutlet
     ],
     templateUrl: './code-block.html',
     styleUrls: ['./code-block.scss', './code-block-tokens.scss'],
@@ -99,6 +110,9 @@ export class KbqCodeBlock implements AfterViewInit {
      * Reference to the scrollable code content.
      */
     @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
+
+    /** @docs-private */
+    @ContentChild(KbqCodeBlockTabLinkDef, { read: TemplateRef }) protected readonly tabLinkDef: TemplateRef<any>;
 
     /** Whether to display line numbers. */
     @Input({ transform: booleanAttribute }) lineNumbers = false;

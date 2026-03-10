@@ -7,11 +7,17 @@
                 @for (file of files; track file) {
                     <div
                         kbqTabLink
-                        [active]="activeFileIndex === $index"
-                        [disabled]="$count === 1"
+                        [active]="activeFileIndex === $index && $count !== 1"
+                        [style.pointer-events]="$count === 1 && 'none'"
                         (click)="onSelectedTabChange($index)"
                     >
-                        {{ file.filename || fallbackFileName }}
+                        @if (tabLinkDef) {
+                            <ng-container
+                                *ngTemplateOutlet="tabLinkDef; context: { $implicit: file, fallbackFileName }"
+                            />
+                        } @else {
+                            {{ file.filename || fallbackFileName }}
+                        }
                     </div>
                 }
             </div>
