@@ -5,6 +5,7 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
+    inject,
     Inject,
     Input,
     OnChanges,
@@ -13,7 +14,7 @@ import {
     Self
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, KBQ_VALIDATION } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { getKbqInputUnsupportedTypeError } from './input-errors';
@@ -58,6 +59,8 @@ let nextUniqueId = 0;
 export class KbqInput
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
+    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
+
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
@@ -254,7 +257,7 @@ export class KbqInput
     onBlur(): void {
         this.focusChanged(false);
 
-        if (this.ngControl?.control) {
+        if (this.useLegacyValidation && this.ngControl?.control) {
             const control = this.ngControl.control;
 
             control.updateValueAndValidity({ emitEvent: false });
