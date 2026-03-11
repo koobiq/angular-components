@@ -224,6 +224,25 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeTruthy();
     });
 
+    it('should NOT hide tabs for single file without filename when set outside', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+
+        // simulate the absence of input property
+        componentInstance.hideTabs = undefined as any;
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        fixture.detectChanges();
+
+        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
+        expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
+        componentInstance.files = [{ content: '<div>koobiq</div>', language: 'html' }];
+        componentInstance.hideTabs = false;
+        fixture.detectChanges();
+        expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
+        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
+    });
+
     it('should set activeFileIndex', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
