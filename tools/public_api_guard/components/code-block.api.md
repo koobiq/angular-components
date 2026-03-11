@@ -84,13 +84,13 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly scrollableCodeContent: CdkScrollable;
     softWrap: boolean;
     readonly softWrapChange: EventEmitter<boolean>;
-    protected readonly tabLinkDef: TemplateRef<KbqTabLinkDefContext>;
+    protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
     toggleSoftWrap(): void;
     toggleViewAll(): void;
     viewAll: boolean;
     readonly viewAllChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; }, ["tabLinkDef"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; }, ["tabLinkTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }
@@ -137,22 +137,22 @@ export class KbqCodeBlockModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkDef], [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkDef]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent], [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent]>;
 }
 
 // @public
-export class KbqCodeBlockTabLinkDef {
+export class KbqCodeBlockTabLinkContent {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockTabLinkDef, "[kbqCodeBlockTabLinkDef]", ["kbqCodeBlockTabLinkDef"], {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockTabLinkContent, "ng-template[kbqCodeBlockTabLinkContent]", ["kbqCodeBlockTabLinkContent"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkDef, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkContent, never>;
 }
 
 // @public @deprecated (undocumented)
 export type KbqCodeFile = KbqCodeBlockFile;
 
 // @public
-export type KbqTabLinkDefContext = {
+export type KbqTabLinkTemplateContext = {
     $implicit: KbqCodeBlockFile;
     fallbackFileName: string;
 };

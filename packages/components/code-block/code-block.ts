@@ -41,7 +41,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { debounceTime, fromEvent, merge } from 'rxjs';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
-import { KbqCodeBlockFile, KbqTabLinkDefContext } from './types';
+import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
 /** Localization configuration provider. */
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION = new InjectionToken<KbqCodeBlockLocaleConfiguration>(
@@ -68,10 +68,10 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
 
 /** Marks a template as a custom tab link. */
 @Directive({
-    selector: '[kbqCodeBlockTabLinkDef]',
-    exportAs: 'kbqCodeBlockTabLinkDef'
+    selector: 'ng-template[kbqCodeBlockTabLinkContent]',
+    exportAs: 'kbqCodeBlockTabLinkContent'
 })
-export class KbqCodeBlockTabLinkDef {}
+export class KbqCodeBlockTabLinkContent {}
 
 /**
  * Component which highlights blocks of code.
@@ -112,8 +112,8 @@ export class KbqCodeBlock implements AfterViewInit {
     @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
 
     /** @docs-private */
-    @ContentChild(KbqCodeBlockTabLinkDef, { read: TemplateRef })
-    protected readonly tabLinkDef: TemplateRef<KbqTabLinkDefContext>;
+    @ContentChild(KbqCodeBlockTabLinkContent, { read: TemplateRef })
+    protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
 
     /** Whether to display line numbers. */
     @Input({ transform: booleanAttribute }) lineNumbers = false;

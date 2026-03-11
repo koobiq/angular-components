@@ -25,13 +25,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             [softWrap]="true"
             [hideTabs]="false"
         >
-            <ng-template let-file let-fallback="fallbackFileName" kbqCodeBlockTabLinkDef>
-                {{ file.filename || fallback }}
-            </ng-template>
+            <ng-template let-file let-fallback="fallbackFileName" kbqCodeBlockTabLinkContent>data</ng-template>
         </kbq-code-block>
 
         <kbq-code-block canToggleSoftWrap canDownload lineNumbers [softWrap]="true" [files]="files" [hideTabs]="false">
-            <ng-template let-file let-fallback="fallbackFileName" kbqCodeBlockTabLinkDef>
+            <ng-template let-file let-fallback="fallbackFileName" kbqCodeBlockTabLinkContent>
                 <i kbq-icon="kbq-diamond_16" class="layout-margin-right-xs"></i>
                 <span class="kbq-caps-normal-strong">
                     {{ file.language || fallback }}
@@ -52,7 +50,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 export class CodeBlockHeaderPinnedExample {
     readonly files: KbqCodeBlockFile[] = [
         {
-            filename: 'data.json',
             language: 'json',
             content: `{
   "data": [{

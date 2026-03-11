@@ -107,7 +107,7 @@ class BaseCodeBlock {
     imports: [KbqCodeBlockModule],
     template: `
         <kbq-code-block [files]="files">
-            <ng-template kbqCodeBlockTabLinkDef>
+            <ng-template kbqCodeBlockTabLinkContent>
                 {{ customFileName }}
             </ng-template>
         </kbq-code-block>
