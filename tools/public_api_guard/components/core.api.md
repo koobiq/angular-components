@@ -2719,7 +2719,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected instance: any | null;
     // (undocumented)
-    isOpen: boolean;
+    get isOpen(): boolean;
+    set isOpen(value: boolean);
     // (undocumented)
     keydownHandler(event: KeyboardEvent): void;
     // (undocumented)
