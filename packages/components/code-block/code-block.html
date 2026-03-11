@@ -5,6 +5,7 @@
         <div class="kbq-code-block__header-tabs">
             <div kbqTabNavBar transparent [tabNavPanel]="tabPanel">
                 @for (file of files; track file) {
+                    <!-- Mark tab-link as readonly if only single file present -->
                     <div
                         kbqTabLink
                         [active]="$count > 1 && activeFileIndex === $index"
