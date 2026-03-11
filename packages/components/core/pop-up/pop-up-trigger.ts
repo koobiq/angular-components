@@ -13,6 +13,7 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
+    ChangeDetectorRef,
     DestroyRef,
     Directive,
     ElementRef,
@@ -105,7 +106,19 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 
-    isOpen: boolean = false;
+    private popUpChangeDetectorRef = inject(ChangeDetectorRef);
+
+    get isOpen(): boolean {
+        return this._isOpen;
+    }
+
+    set isOpen(value: boolean) {
+        this._isOpen = value;
+
+        this.popUpChangeDetectorRef.markForCheck();
+    }
+
+    private _isOpen: boolean = false;
 
     enterDelay: number = 0;
     leaveDelay: number = 0;
