@@ -449,7 +449,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     dropdownTrigger: KbqDropdownTrigger;
     // (undocumented)
-    emitSelectionChangeEvent(isUserInput?: boolean): void;
+    emitSelectionChangeEvent(): void;
     // (undocumented)
     get externalPseudoCheckbox(): boolean;
     // (undocumented)
@@ -528,7 +528,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeOption, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqTreeOptionChange {
     constructor(source: KbqTreeOption, isUserInput?: boolean);
     // (undocumented)
