@@ -4,14 +4,21 @@
     @if (!hideTabs) {
         <div class="kbq-code-block__header-tabs">
             <div kbqTabNavBar transparent [tabNavPanel]="tabPanel">
-                @for (file of files; track file; let index = $index) {
+                @for (file of files; track file) {
+                    <!-- Mark tab-link as readonly if only single file present -->
                     <div
                         kbqTabLink
-                        [active]="activeFileIndex === index"
-                        [disabled]="files.length === 1"
-                        (click)="onSelectedTabChange(index)"
+                        [active]="$count > 1 && activeFileIndex === $index"
+                        [style.pointer-events]="$count === 1 ? 'none' : null"
+                        (click)="onSelectedTabChange($index)"
                     >
-                        {{ file.filename || fallbackFileName }}
+                        @if (tabLinkTemplate) {
+                            <ng-container
+                                *ngTemplateOutlet="tabLinkTemplate; context: { $implicit: file, fallbackFileName }"
+                            />
+                        } @else {
+                            {{ file.filename || fallbackFileName }}
+                        }
                     </div>
                 }
             </div>

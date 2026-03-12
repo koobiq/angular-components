@@ -104,6 +104,29 @@ class BaseCodeBlock {
     maxHeight: number | undefined = undefined;
 }
 
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [files]="files">
+            <ng-template kbqCodeBlockTabLinkContent>
+                {{ customFileName }}
+            </ng-template>
+        </kbq-code-block>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestCodeBlockWithTemplateTabLink {
+    customFileName = 'TEST';
+
+    files: KbqCodeBlockFile[] = [
+        {
+            language: 'html',
+            filename: 'index.html',
+            content: `<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>Koobiq</title>\n\t\t<meta charset="UTF-8" />\n\t\t<base href="/">\n\t</head>\n\t<body>\n\t\t<app-root>Loading...</app-root>\n\t</body>\n</html>`
+        }
+    ];
+}
+
 describe(KbqCodeBlock.name, () => {
     it('should hide lineNumbers', () => {
         const fixture = createComponent(BaseCodeBlock);
@@ -200,6 +223,25 @@ describe(KbqCodeBlock.name, () => {
         fixture.detectChanges();
         expect(getTabNavBarDebugElement(debugElement)).toBeFalsy();
         expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeTruthy();
+    });
+
+    it('should NOT hide tabs for single file without filename when set outside', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+
+        // simulate the absence of input property
+        componentInstance.hideTabs = undefined as any;
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        fixture.detectChanges();
+
+        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
+        expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
+        componentInstance.files = [{ content: '<div>koobiq</div>', language: 'html' }];
+        componentInstance.hideTabs = false;
+        fixture.detectChanges();
+        expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
+        expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
     });
 
     it('should set activeFileIndex', () => {
@@ -456,5 +498,15 @@ describe(KbqCodeBlock.name, () => {
         getViewAllButtonElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
         expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should use template for tabLink when provided', () => {
+        const fixture = createComponent(TestCodeBlockWithTemplateTabLink);
+        const { debugElement, componentInstance } = fixture;
+        const textContent = getTabLinkElements(debugElement)[0].textContent?.trim();
+
+        expect(componentInstance.files[0].filename).toBeTruthy();
+        expect(textContent).not.toBe(componentInstance.files[0].filename);
+        expect(textContent).toBe(componentInstance.customFileName);
     });
 });
