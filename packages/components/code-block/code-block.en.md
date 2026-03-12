@@ -19,6 +19,12 @@ Numbering lines is useful for referencing a specific location in the document. L
 
 <!-- example(code-block-with-line-numbers) -->
 
+### Header with title
+
+In the header, you can specify the document name or define the syntax. A shadow appears in the header when scrolling.
+
+<!-- example(code-block-header-pinned) -->
+
 ### Changing the block height
 
 The block can expand to fill the available screen area if reviewing the code is one of the main tasks in the interface. When screen space is limited or the code only supplements the main content, a developer can use a block with a fixed height, configured using the `maxHeight` attribute.
