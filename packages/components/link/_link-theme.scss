@@ -5,6 +5,9 @@
 @mixin kbq-link-geometry() {
     display: inline;
 
+    padding-top: var(--kbq-link-size-multiline-hit-area-gap);
+    box-decoration-break: clone;
+
     text-decoration: none;
     cursor: pointer;
 
