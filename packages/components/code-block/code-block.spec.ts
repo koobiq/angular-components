@@ -105,6 +105,7 @@ class BaseCodeBlock {
 }
 
 @Component({
+    standalone: true,
     imports: [KbqCodeBlockModule],
     template: `
         <kbq-code-block [files]="files">

@@ -68,6 +68,7 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
 
 /** Marks a template as a custom tab link. */
 @Directive({
+    standalone: true,
     selector: 'ng-template[kbqCodeBlockTabLinkContent]',
     exportAs: 'kbqCodeBlockTabLinkContent'
 })
