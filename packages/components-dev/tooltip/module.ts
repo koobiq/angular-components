@@ -12,8 +12,51 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { TooltipExtendedExample } from '../../docs-examples/components/tooltip';
+import { TooltipExamplesModule } from '../../docs-examples/components/tooltip';
 import { DevThemeToggle } from '../theme-toggle';
+
+@Component({
+    selector: 'dev-examples',
+    imports: [TooltipExamplesModule],
+    template: `
+        <tooltip-dynamic-example />
+        <br />
+        <br />
+        <tooltip-overview-example />
+        <br />
+        <br />
+        <tooltip-hide-with-timeout-example />
+        <br />
+        <br />
+        <tooltip-arrow-and-offset-example />
+        <br />
+        <br />
+        <tooltip-extended-example />
+        <br />
+        <br />
+        <tooltip-hide-with-timeout-example />
+        <br />
+        <br />
+        <tooltip-long-example />
+        <br />
+        <br />
+        <tooltip-multiple-lines-example />
+        <br />
+        <br />
+        <tooltip-placement-center-example />
+        <br />
+        <br />
+        <tooltip-placement-edges-example />
+        <br />
+        <br />
+        <tooltip-relative-to-pointer-example />
+        <br />
+        <br />
+        <tooltip-style-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -32,7 +75,7 @@ import { DevThemeToggle } from '../theme-toggle';
         KbqToggleModule,
         NgClass,
         DevThemeToggle,
-        TooltipExtendedExample
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

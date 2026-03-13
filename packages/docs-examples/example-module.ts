@@ -5287,6 +5287,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-arrow-and-offset-example.ts",
     "importPath": "components/tooltip"
   },
+  "tooltip-dynamic": {
+    "packagePath": "components/tooltip/tooltip-dynamic",
+    "title": "tooltip-dynamic-example",
+    "componentName": "TooltipDynamicExample",
+    "files": [
+      "tooltip-dynamic-example.ts"
+    ],
+    "selector": "tooltip-dynamic-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-dynamic-example.ts",
+    "importPath": "components/tooltip"
+  },
   "tooltip-extended": {
     "packagePath": "components/tooltip/tooltip-extended",
     "title": "Tooltip extended",
@@ -6822,6 +6834,8 @@ return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-with-hint':
 return import('@koobiq/docs-examples/components/toggle');
   case 'tooltip-arrow-and-offset':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-dynamic':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-extended':
 return import('@koobiq/docs-examples/components/tooltip');
