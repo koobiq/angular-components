@@ -28,7 +28,7 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipDynamicExample {
-    injector = inject(Injector);
+    private readonly injector = inject(Injector);
 
     private dynamicTooltip: KbqTooltipTrigger;
 

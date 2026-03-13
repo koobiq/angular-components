@@ -112,6 +112,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 
+    /** @docs-private */
     protected externalNativeElement: HTMLElement;
 
     private popUpChangeDetectorRef = inject(ChangeDetectorRef);
@@ -435,10 +436,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.getNativeElement().focus();
     }
 
+    /** @docs-private */
     getNativeElement(): HTMLElement {
         return this.externalNativeElement || this.elementRef.nativeElement;
     }
 
+    /** @docs-private */
     setExternalNativeElement(value: HTMLElement) {
         this.externalNativeElement = value;
     }
