@@ -196,7 +196,6 @@ class TextareaControlWithAsyncValidators {
         <form [formGroup]="form">
             <kbq-form-field>
                 <textarea kbqTextarea formControlName="textarea"></textarea>
-                <kbq-error>Error</kbq-error>
             </kbq-form-field>
         </form>
     `
@@ -213,7 +212,6 @@ class TextareaWithDIErrorStateMatcher {
         <form [formGroup]="form">
             <kbq-form-field>
                 <textarea kbqTextarea formControlName="textarea" [errorStateMatcher]="errorStateMatcher"></textarea>
-                <kbq-error>Error</kbq-error>
             </kbq-form-field>
             <button #submitButton type="submit">Submit</button>
         </form>
