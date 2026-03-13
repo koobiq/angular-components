@@ -19,6 +19,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <code-block-with-tabs-and-shadow-example />
         <hr />
+        <code-block-header-pinned-example />
+        <hr />
         <code-block-with-filled-example />
         <hr />
         <code-block-with-no-border-example />
