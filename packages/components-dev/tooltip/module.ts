@@ -19,10 +19,29 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [TooltipExamplesModule],
     template: `
-        <tooltip-dynamic-example />
-        <br />
-        <br />
         <tooltip-overview-example />
+        <br />
+        <br />
+        <tooltip-width-example />
+        <br />
+        <br />
+        <tooltip-wide-width-example />
+        <br />
+        <br />
+        <tooltip-style-example />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <tooltip-dynamic-example />
         <br />
         <br />
         <tooltip-hide-with-timeout-example />
@@ -52,7 +71,6 @@ import { DevThemeToggle } from '../theme-toggle';
         <tooltip-relative-to-pointer-example />
         <br />
         <br />
-        <tooltip-style-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

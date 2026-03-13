@@ -11,6 +11,8 @@ import { TooltipDynamicExample } from './tooltip-dynamic/tooltip-dynamic-example
 import { TooltipHideWithTimeoutExample } from './tooltip-hide-with-timeout/tooltip-hide-with-timeout-example';
 import { TooltipRelativeToPointerExample } from './tooltip-relative-to-pointer/tooltip-relative-to-pointer-example';
 import { TooltipStyleExample } from './tooltip-style/tooltip-style-example';
+import { TooltipWideWidthExample } from './tooltip-wide-width/tooltip-wide-width-example';
+import { TooltipWidthExample } from './tooltip-width/tooltip-width-example';
 
 export {
     TooltipArrowAndOffsetExample,
@@ -23,7 +25,9 @@ export {
     TooltipPlacementCenterExample,
     TooltipPlacementEdgesExample,
     TooltipRelativeToPointerExample,
-    TooltipStyleExample
+    TooltipStyleExample,
+    TooltipWideWidthExample,
+    TooltipWidthExample
 };
 
 const EXAMPLES = [
@@ -37,7 +41,9 @@ const EXAMPLES = [
     TooltipStyleExample,
     TooltipRelativeToPointerExample,
     TooltipHideWithTimeoutExample,
-    TooltipDynamicExample
+    TooltipDynamicExample,
+    TooltipWidthExample,
+    TooltipWideWidthExample
 ];
 
 @NgModule({

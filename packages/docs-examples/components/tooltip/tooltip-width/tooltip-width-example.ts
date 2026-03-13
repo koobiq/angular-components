@@ -5,24 +5,28 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
- * @title Tooltip
+ * @title Tooltip width
  */
 @Component({
-    selector: 'tooltip-overview-example',
+    selector: 'tooltip-width-example',
     imports: [
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule
     ],
     template: `
-        <div class="layout-column" style="align-items: center">
-            <button kbq-button kbqTooltip="Create">
-                <i kbq-icon="kbq-plus_16"></i>
+        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: center">
+            <button kbq-button kbqTooltip="Tooltip">Tooltip</button>
+            <button
+                kbq-button
+                kbqTooltip="A tooltip is a hint that appears when the pointer hovers over or focuses on an interface element. A tooltip cannot contain interactive elements."
+            >
+                Max Width
             </button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TooltipOverviewExample {
+export class TooltipWidthExample {
     placement: PopUpPlacements = PopUpPlacements.Top;
 }

@@ -5,24 +5,24 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
- * @title Tooltip
+ * @title Tooltip wide width
  */
 @Component({
-    selector: 'tooltip-overview-example',
+    selector: 'tooltip-wide-width-example',
     imports: [
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule
     ],
     template: `
-        <div class="layout-column" style="align-items: center">
-            <button kbq-button kbqTooltip="Create">
-                <i kbq-icon="kbq-plus_16"></i>
+        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: center">
+            <button kbq-button kbqTooltip="9f1c2e4a8b7d3f6c5e2a1d9b0c4e7f8a6d3c2b1a9e8f7d6c5b4a3e2d1c0f9a8">
+                9f1c...f9a8
             </button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TooltipOverviewExample {
+export class TooltipWideWidthExample {
     placement: PopUpPlacements = PopUpPlacements.Top;
 }

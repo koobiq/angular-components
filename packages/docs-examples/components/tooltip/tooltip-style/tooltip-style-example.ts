@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -13,57 +13,24 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="layout-row layout-wrap" style="gap: 16px">
-            <button
-                kbq-button
-                kbqTooltip="Тултип"
-                [kbqPlacement]="placement"
-                [kbqTooltipColor]="KbqComponentColors.Contrast"
-            >
-                {{ buttonText }}
+        <div class="layout-row layout-wrap" style="gap: 16px; justify-content: center">
+            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
+                Contrast (default)
             </button>
 
-            <button
-                kbq-button
-                kbqTooltip="Тултип"
-                [kbqPlacement]="placement"
-                [kbqTooltipColor]="KbqComponentColors.ContrastFade"
-            >
-                {{ buttonText }}
+            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
+                Contrast Fade
             </button>
 
-            <button
-                kbq-button
-                kbqTooltip="Тултип"
-                [kbqPlacement]="placement"
-                [kbqTooltipColor]="KbqComponentColors.Error"
-            >
-                {{ buttonText }}
-            </button>
+            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
 
-            <button
-                kbq-button
-                kbqTooltip="Тултип"
-                [kbqPlacement]="placement"
-                [kbqTooltipColor]="KbqComponentColors.Warning"
-            >
-                {{ buttonText }}
-            </button>
+            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
 
-            <button
-                kbq-button
-                kbqTooltip="Тултип"
-                [kbqPlacement]="placement"
-                [kbqTooltipColor]="KbqComponentColors.Theme"
-            >
-                {{ buttonText }}
-            </button>
+            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipStyleExample {
-    buttonText = 'Кнопка с тултипом';
-    placement = PopUpPlacements.TopLeft;
     KbqComponentColors = KbqComponentColors;
 }
