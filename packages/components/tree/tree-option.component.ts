@@ -38,16 +38,24 @@ export interface KbqTreeOptionEvent {
     option: KbqTreeOption;
 }
 
-/**
- * Injection token used to provide the parent component to options.
- */
+/** Injection token used to provide the parent component to options. */
 export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<any>('KBQ_TREE_OPTION_PARENT_COMPONENT');
 
+/**
+ * Represents a change event for a tree option.
+ *
+ * @param source - The tree option that has been modified or selected.
+ * @param isUserInput - DEPRECATED Will be removed in version 20.
+ */
 export class KbqTreeOptionChange {
+    isUserInput: boolean;
+
     constructor(
         public source: KbqTreeOption,
-        public isUserInput = false
-    ) {}
+        isUserInput = false
+    ) {
+        this.isUserInput = isUserInput;
+    }
 }
 
 let uniqueIdCounter: number = 0;
@@ -370,8 +378,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         this.tree.setSelectedOptionsByClick(this, shiftKey, ctrlKey);
     }
 
-    emitSelectionChangeEvent(isUserInput = false): void {
-        this.onSelectionChange.emit(new KbqTreeOptionChange(this, isUserInput));
+    emitSelectionChangeEvent(): void {
+        this.onSelectionChange.emit(new KbqTreeOptionChange(this));
     }
 
     getHostElement(): HTMLElement {
