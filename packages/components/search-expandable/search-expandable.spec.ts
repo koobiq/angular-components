@@ -1,23 +1,25 @@
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
+import { KbqButton } from '@koobiq/components/button';
+import { KbqInput } from '@koobiq/components/input';
 import { KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 
 describe('KbqSearchExpandable', () => {
     let debugElement: DebugElement;
     let nativeElement: HTMLElement;
-    let fixture: ComponentFixture<TestApp>;
+    let fixture: ComponentFixture<TestSearchExpandable>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [KbqSearchExpandableModule, TestApp]
+            imports: [KbqSearchExpandableModule, TestSearchExpandable, TestSearchExpandableWithFormControl]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(TestApp);
+        fixture = TestBed.createComponent(TestSearchExpandable);
         debugElement = fixture.debugElement.query(By.directive(KbqSearchExpandable));
         nativeElement = debugElement.nativeElement;
         fixture.detectChanges();
@@ -51,16 +53,69 @@ describe('KbqSearchExpandable', () => {
         expect(nativeElement.querySelectorAll('.kbq-search-expandable__button').length).toBe(0);
         expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
     });
+
+    it('disabled state', () => {
+        expect(debugElement.query(By.directive(KbqInput))).toBe(null);
+        expect(debugElement.query(By.directive(KbqButton)).nativeElement.hasAttribute('disabled')).toBe(false);
+
+        fixture.componentInstance.disabled = true;
+        fixture.detectChanges();
+        expect(debugElement.query(By.directive(KbqButton)).nativeElement.hasAttribute('disabled')).toBe(true);
+
+        fixture.componentInstance.openedState = true;
+        fixture.detectChanges();
+
+        expect(debugElement.query(By.directive(KbqButton))).toBe(null);
+        expect(debugElement.query(By.directive(KbqInput)).nativeElement.hasAttribute('disabled')).toBe(true);
+    });
+
+    describe('with formControl', () => {
+        let fixture: ComponentFixture<TestSearchExpandableWithFormControl>;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestSearchExpandableWithFormControl);
+            debugElement = fixture.debugElement.query(By.directive(KbqSearchExpandable));
+            nativeElement = debugElement.nativeElement;
+            fixture.detectChanges();
+        });
+
+        it('disabled state', () => {
+            expect(debugElement.query(By.directive(KbqInput))).toBe(null);
+            expect(debugElement.componentInstance.disabled).toBe(false);
+
+            fixture.componentInstance.searchControl.disable();
+            fixture.componentInstance.openedState = true;
+            fixture.detectChanges();
+
+            expect(debugElement.componentInstance.disabled).toBe(true);
+            expect(debugElement.query(By.directive(KbqButton))).toBe(null);
+            expect(debugElement.query(By.directive(KbqInput)).nativeElement.hasAttribute('disabled')).toBe(true);
+        });
+    });
 });
 
 @Component({
     selector: 'test-app',
     imports: [KbqSearchExpandableModule, FormsModule],
     template: `
-        <kbq-search-expandable [isOpened]="openedState" [(ngModel)]="search" />
+        <kbq-search-expandable [isOpened]="openedState" [disabled]="disabled" [(ngModel)]="search" />
     `
 })
-class TestApp {
+class TestSearchExpandable {
     openedState: boolean = false;
+    disabled: boolean = false;
     search: string;
+}
+
+@Component({
+    selector: 'test-app-search-expandable-with-form-control',
+    imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="openedState" [formControl]="searchControl" />
+    `
+})
+class TestSearchExpandableWithFormControl {
+    searchControl = new FormControl<string>('');
+
+    openedState: boolean = false;
 }
