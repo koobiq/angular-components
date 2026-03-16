@@ -299,6 +299,19 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
     }
 
+    /** method allows to show the tooltip relative to the given mouse event. */
+    showForMouseEvent(event: MouseEvent) {
+        if (!(event.currentTarget instanceof HTMLElement)) return;
+
+        this.triggerName = 'mouseenter';
+        this.mouseEvent = event;
+        this.setExternalNativeElement(event.currentTarget);
+
+        super.show();
+
+        this.applyRelativeToPointer();
+    }
+
     /**
      * method allows to show the tooltip relative to the element
      * Use this approach when it is not possible to define a trigger in the template.
@@ -358,7 +371,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
             return;
         }
 
-        const triggerRects = this.elementRef.nativeElement.getBoundingClientRect();
+        const triggerRects = this.getNativeElement().getBoundingClientRect();
         const point: Point = { x: 0, y: 0 };
 
         this.placementPriority = null;

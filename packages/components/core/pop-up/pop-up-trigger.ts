@@ -112,6 +112,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 
+    /** @docs-private */
+    protected externalNativeElement: HTMLElement;
+
     private popUpChangeDetectorRef = inject(ChangeDetectorRef);
 
     get isOpen(): boolean {
@@ -318,12 +321,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         // Create connected position strategy that listens for scroll events to reposition.
         this.strategy = this.overlay
             .position()
-            .flexibleConnectedTo(this.elementRef)
+            .flexibleConnectedTo(this.getNativeElement())
             .withTransformOriginOn(this.originSelector)
             .withFlexibleDimensions(false)
             .withPositions([...EXTENDED_OVERLAY_POSITIONS])
             .withLockedPosition()
-            .withScrollableContainers(this.scrollDispatcher.getAncestorScrollContainers(this.elementRef));
+            .withScrollableContainers(this.scrollDispatcher.getAncestorScrollContainers(this.getNativeElement()));
 
         this.strategy.positionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.onPositionChange);
 
@@ -342,7 +345,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     resetOrigin() {
-        this.strategy.setOrigin(this.elementRef);
+        this.strategy.setOrigin(this.getNativeElement());
     }
 
     onPositionChange = ($event: ConnectedOverlayPositionChange): void => {
@@ -430,7 +433,17 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     focus() {
-        this.elementRef.nativeElement.focus();
+        this.getNativeElement().focus();
+    }
+
+    /** @docs-private */
+    getNativeElement(): HTMLElement {
+        return this.externalNativeElement || this.elementRef.nativeElement;
+    }
+
+    /** @docs-private */
+    setExternalNativeElement(value: HTMLElement) {
+        this.externalNativeElement = value;
     }
 
     /**
@@ -442,7 +455,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         for (const pos of this.getPrioritizedPositions()) {
             const offset: KbqPopupTriggerOffset = this.arrow
-                ? getOffset(pos, this.elementRef.nativeElement.getBoundingClientRect())
+                ? getOffset(pos, this.getNativeElement().getBoundingClientRect())
                 : {};
 
             res.push({
@@ -504,11 +517,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     private addEventListener = (listener: EventListener, event: string) => {
-        this.elementRef.nativeElement.addEventListener(event, listener);
+        this.getNativeElement().addEventListener(event, listener);
     };
 
     private removeEventListener = (listener: EventListener, event: string) => {
-        this.elementRef.nativeElement.removeEventListener(event, listener);
+        this.getNativeElement().removeEventListener(event, listener);
     };
 
     private subscribeOnClosingActions() {

@@ -158,6 +158,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     // (undocumented)
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;
+    showForMouseEvent(event: MouseEvent): void;
     // (undocumented)
     get tooltipPlacement(): KbqPopUpPlacementValues;
     set tooltipPlacement(value: KbqPopUpPlacementValues);

@@ -2697,11 +2697,13 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     enterDelay: number;
+    protected externalNativeElement: HTMLElement;
     // (undocumented)
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
     // (undocumented)
     getMouseLeaveListener(): (delay?: number) => void;
+    getNativeElement(): HTMLElement;
     // (undocumented)
     abstract getOverlayHandleComponentType(): Type<T>;
     // (undocumented)
@@ -2764,6 +2766,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly scrollDispatcher: ScrollDispatcher;
     // (undocumented)
     protected abstract scrollStrategy: () => ScrollStrategy;
+    setExternalNativeElement(value: HTMLElement): void;
     // (undocumented)
     show(delay?: number): void;
     // (undocumented)
