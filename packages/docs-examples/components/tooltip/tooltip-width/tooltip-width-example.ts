@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -11,11 +10,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'tooltip-width-example',
     imports: [
         KbqButtonModule,
-        KbqToolTipModule,
-        KbqIconModule
+        KbqToolTipModule
     ],
     template: `
-        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: center">
+        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-l);">
             <button kbq-button kbqTooltip="Tooltip">Tooltip</button>
             <button
                 kbq-button

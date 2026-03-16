@@ -2,7 +2,7 @@
 
 В данном примере Tooltip скрывается с задержкой и остается открытым если пользователь успеет переместить курсор с триггера на Tooltip.
 
-<!-- example(tooltip-hide-with-timeout) -->
+<!-- example(tooltip-interactive) -->
 
 #### Динамический Tooltip
 

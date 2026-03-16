@@ -4,22 +4,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
- * @title Tooltip
+ * @title tooltip-interactive
  */
 @Component({
-    selector: 'tooltip-overview-example',
+    selector: 'tooltip-interactive-example',
     imports: [
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule
     ],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px;">
-            <button kbq-button kbqTooltip="Create">
-                <i kbq-icon="kbq-plus_16"></i>
-            </button>
+        <div class="layout-column" style="gap: 16px; align-items: flex-start">
+            <button kbq-button kbqTooltip="Тултип" [hideWithTimeout]="true">Кнопка с тултипом</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TooltipOverviewExample {}
+export class TooltipInteractiveExample {}

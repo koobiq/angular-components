@@ -1,29 +1,29 @@
 import { NgModule } from '@angular/core';
-import { TooltipArrowAndOffsetExample } from './tooltip-arrow-and-offset/tooltip-arrow-and-offset-example';
+import { TooltipDisabledExample } from './tooltip-disabled/tooltip-disabled-example';
 import { TooltipExtendedExample } from './tooltip-extended/tooltip-extended-example';
-import { TooltipLongExample } from './tooltip-long/tooltip-long-example';
-import { TooltipMultipleLinesExample } from './tooltip-multiple-lines/tooltip-multiple-lines-example';
+import { TooltipOffsetExample } from './tooltip-offset/tooltip-offset-example';
 import { TooltipOverviewExample } from './tooltip-overview/tooltip-overview-example';
-import { TooltipPlacementCenterExample } from './tooltip-placement-center/tooltip-placement-center-example';
-import { TooltipPlacementEdgesExample } from './tooltip-placement-edges/tooltip-placement-edges-example';
+import { TooltipPlacementsExample } from './tooltip-placements/tooltip-placements-example';
 
+import { TooltipArrowExample } from './tooltip-arrow/tooltip-arrow-example';
 import { TooltipDynamicExample } from './tooltip-dynamic/tooltip-dynamic-example';
 import { TooltipHideWithTimeoutExample } from './tooltip-hide-with-timeout/tooltip-hide-with-timeout-example';
+import { TooltipInteractiveExample } from './tooltip-interactive/tooltip-interactive-example';
 import { TooltipRelativeToPointerExample } from './tooltip-relative-to-pointer/tooltip-relative-to-pointer-example';
 import { TooltipStyleExample } from './tooltip-style/tooltip-style-example';
 import { TooltipWideWidthExample } from './tooltip-wide-width/tooltip-wide-width-example';
 import { TooltipWidthExample } from './tooltip-width/tooltip-width-example';
 
 export {
-    TooltipArrowAndOffsetExample,
+    TooltipArrowExample,
+    TooltipDisabledExample,
     TooltipDynamicExample,
     TooltipExtendedExample,
     TooltipHideWithTimeoutExample,
-    TooltipLongExample,
-    TooltipMultipleLinesExample,
+    TooltipInteractiveExample,
+    TooltipOffsetExample,
     TooltipOverviewExample,
-    TooltipPlacementCenterExample,
-    TooltipPlacementEdgesExample,
+    TooltipPlacementsExample,
     TooltipRelativeToPointerExample,
     TooltipStyleExample,
     TooltipWideWidthExample,
@@ -31,19 +31,19 @@ export {
 };
 
 const EXAMPLES = [
-    TooltipArrowAndOffsetExample,
+    TooltipOffsetExample,
     TooltipOverviewExample,
     TooltipExtendedExample,
-    TooltipMultipleLinesExample,
-    TooltipLongExample,
-    TooltipPlacementCenterExample,
-    TooltipPlacementEdgesExample,
+    TooltipDisabledExample,
+    TooltipPlacementsExample,
     TooltipStyleExample,
     TooltipRelativeToPointerExample,
     TooltipHideWithTimeoutExample,
     TooltipDynamicExample,
     TooltipWidthExample,
-    TooltipWideWidthExample
+    TooltipWideWidthExample,
+    TooltipArrowExample,
+    TooltipInteractiveExample
 ];
 
 @NgModule({

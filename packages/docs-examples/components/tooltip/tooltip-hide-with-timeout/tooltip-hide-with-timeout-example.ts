@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -9,11 +10,16 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'tooltip-hide-with-timeout-example',
     imports: [
         KbqButtonModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        KbqIconModule
     ],
     template: `
-        <div class="layout-column" style="gap: 16px; align-items: flex-start">
-            <button kbq-button kbqTooltip="Тултип" [hideWithTimeout]="true">Кнопка с тултипом</button>
+        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-m);">
+            @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+                <button kbqTooltip="Action{{ item }}" kbq-button>
+                    <i kbq-icon="kbq-diamond_16"></i>
+                </button>
+            }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

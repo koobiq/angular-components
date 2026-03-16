@@ -13,7 +13,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="layout-row layout-wrap" style="gap: 16px; justify-content: center">
+        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-l);">
             <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
                 Contrast (default)
             </button>

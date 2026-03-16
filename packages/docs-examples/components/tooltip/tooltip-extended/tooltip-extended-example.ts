@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
-import { KbqTable, KbqTableCellContent } from '@koobiq/components/table';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTableModule } from '@koobiq/components/table';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
  * @title Tooltip extended
@@ -12,22 +12,23 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
     selector: 'tooltip-extended-example',
     imports: [
         KbqButtonModule,
-        KbqTooltipTrigger,
+        KbqToolTipModule,
         KbqDivider,
-        KbqTable,
-        KbqTableCellContent
+        KbqTableModule
     ],
     template: `
-        <button
-            kbq-button
-            [kbqTooltip]="tooltipContent"
-            [kbqTooltipClass]="'example__custom-extended-tooltip'"
-            [kbqTooltipColor]="extendedTooltipPreferredColor"
-            [kbqTrigger]="'click'"
-            [kbqPlacement]="'bottom'"
-        >
-            Button with extended tooltip
-        </button>
+        <div class="layout-row layout-align-center-center" style="min-height: 120px;">
+            <button
+                kbq-button
+                [kbqTooltip]="tooltipContent"
+                [kbqTooltipClass]="'example__custom-extended-tooltip'"
+                [kbqTooltipColor]="extendedTooltipPreferredColor"
+                [kbqTrigger]="'click'"
+                [kbqPlacement]="'bottom'"
+            >
+                Button with extended tooltip
+            </button>
+        </div>
 
         <ng-template #tooltipContent>
             <div

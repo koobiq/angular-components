@@ -12,9 +12,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="relativeToPointer" [kbqRelativeToPointer]="true">
-            Button with a tooltip positioned relative to the cursor
-        </button>
+        <div class="layout-row layout-align-center-center" style="min-height: 120px;">
+            <button kbq-button kbqTooltip="relativeToPointer" [kbqRelativeToPointer]="true">
+                Button with a tooltip positioned relative to the cursor
+            </button>
+        </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

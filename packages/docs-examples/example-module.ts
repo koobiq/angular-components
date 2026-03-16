@@ -843,6 +843,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "clamped-text-overview-example.ts",
     "importPath": "components/clamped-text"
   },
+  "code-block-header-pinned": {
+    "packagePath": "components/code-block/code-block-header-pinned",
+    "title": "Code block header pinned",
+    "componentName": "CodeBlockHeaderPinnedExample",
+    "files": [
+      "code-block-header-pinned-example.ts"
+    ],
+    "selector": "code-block-header-pinned-example",
+    "additionalComponents": [],
+    "primaryFile": "code-block-header-pinned-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
     "title": "Code-block with custom locale configuration, without KBQ_LOCALE_SERVICE",
@@ -5275,16 +5287,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toggle-with-hint-example.ts",
     "importPath": "components/toggle"
   },
-  "tooltip-arrow-and-offset": {
-    "packagePath": "components/tooltip/tooltip-arrow-and-offset",
-    "title": "Tooltip arrow and offset example",
-    "componentName": "TooltipArrowAndOffsetExample",
+  "tooltip-arrow": {
+    "packagePath": "components/tooltip/tooltip-arrow",
+    "title": "Tooltip arrow",
+    "componentName": "TooltipArrowExample",
     "files": [
-      "tooltip-arrow-and-offset-example.ts"
+      "tooltip-arrow-example.ts"
     ],
-    "selector": "tooltip-arrow-and-offset-example",
+    "selector": "tooltip-arrow-example",
     "additionalComponents": [],
-    "primaryFile": "tooltip-arrow-and-offset-example.ts",
+    "primaryFile": "tooltip-arrow-example.ts",
+    "importPath": "components/tooltip"
+  },
+  "tooltip-disabled": {
+    "packagePath": "components/tooltip/tooltip-disabled",
+    "title": "Tooltip disabled",
+    "componentName": "TooltipDisabledExample",
+    "files": [
+      "tooltip-disabled-example.ts"
+    ],
+    "selector": "tooltip-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-disabled-example.ts",
     "importPath": "components/tooltip"
   },
   "tooltip-dynamic": {
@@ -5323,28 +5347,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-hide-with-timeout-example.ts",
     "importPath": "components/tooltip"
   },
-  "tooltip-long": {
-    "packagePath": "components/tooltip/tooltip-long",
-    "title": "Tooltip long",
-    "componentName": "TooltipLongExample",
+  "tooltip-interactive": {
+    "packagePath": "components/tooltip/tooltip-interactive",
+    "title": "tooltip-interactive",
+    "componentName": "TooltipInteractiveExample",
     "files": [
-      "tooltip-long-example.ts"
+      "tooltip-interactive-example.ts"
     ],
-    "selector": "tooltip-long-example",
+    "selector": "tooltip-interactive-example",
     "additionalComponents": [],
-    "primaryFile": "tooltip-long-example.ts",
+    "primaryFile": "tooltip-interactive-example.ts",
     "importPath": "components/tooltip"
   },
-  "tooltip-multiple-lines": {
-    "packagePath": "components/tooltip/tooltip-multiple-lines",
-    "title": "Tooltip multiple lines",
-    "componentName": "TooltipMultipleLinesExample",
+  "tooltip-offset": {
+    "packagePath": "components/tooltip/tooltip-offset",
+    "title": "Tooltip offset",
+    "componentName": "TooltipOffsetExample",
     "files": [
-      "tooltip-multiple-lines-example.ts"
+      "tooltip-offset-example.ts"
     ],
-    "selector": "tooltip-multiple-lines-example",
+    "selector": "tooltip-offset-example",
     "additionalComponents": [],
-    "primaryFile": "tooltip-multiple-lines-example.ts",
+    "primaryFile": "tooltip-offset-example.ts",
     "importPath": "components/tooltip"
   },
   "tooltip-overview": {
@@ -5359,30 +5383,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-overview-example.ts",
     "importPath": "components/tooltip"
   },
-  "tooltip-placement-center": {
-    "packagePath": "components/tooltip/tooltip-placement-center",
-    "title": "Tooltip placement center",
-    "componentName": "TooltipPlacementCenterExample",
+  "tooltip-placements": {
+    "packagePath": "components/tooltip/tooltip-placements",
+    "title": "Tooltip placements",
+    "componentName": "TooltipPlacementsExample",
     "files": [
-      "tooltip-placement-center-example.ts",
-      "tooltip-placement-center-example.css"
+      "tooltip-placements-example.ts"
     ],
-    "selector": "tooltip-placement-center-example",
+    "selector": "tooltip-placements-example",
     "additionalComponents": [],
-    "primaryFile": "tooltip-placement-center-example.ts",
-    "importPath": "components/tooltip"
-  },
-  "tooltip-placement-edges": {
-    "packagePath": "components/tooltip/tooltip-placement-edges",
-    "title": "Tooltip placement edges",
-    "componentName": "TooltipPlacementEdgesExample",
-    "files": [
-      "tooltip-placement-edges-example.ts",
-      "tooltip-placement-edges-example.css"
-    ],
-    "selector": "tooltip-placement-edges-example",
-    "additionalComponents": [],
-    "primaryFile": "tooltip-placement-edges-example.ts",
+    "primaryFile": "tooltip-placements-example.ts",
     "importPath": "components/tooltip"
   },
   "tooltip-relative-to-pointer": {
@@ -5407,6 +5417,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-style-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-style-example.ts",
+    "importPath": "components/tooltip"
+  },
+  "tooltip-wide-width": {
+    "packagePath": "components/tooltip/tooltip-wide-width",
+    "title": "Tooltip wide width",
+    "componentName": "TooltipWideWidthExample",
+    "files": [
+      "tooltip-wide-width-example.ts"
+    ],
+    "selector": "tooltip-wide-width-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-wide-width-example.ts",
+    "importPath": "components/tooltip"
+  },
+  "tooltip-width": {
+    "packagePath": "components/tooltip/tooltip-width",
+    "title": "Tooltip width",
+    "componentName": "TooltipWidthExample",
+    "files": [
+      "tooltip-width-example.ts"
+    ],
+    "selector": "tooltip-width-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-width-example.ts",
     "importPath": "components/tooltip"
   },
   "top-bar-actions": {
@@ -6111,6 +6145,8 @@ return import('@koobiq/docs-examples/components/clamped-text');
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-text-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
+  case 'code-block-header-pinned':
+return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-custom-locale-configuration':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':
@@ -6833,7 +6869,9 @@ return import('@koobiq/docs-examples/components/toggle');
 return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-with-hint':
 return import('@koobiq/docs-examples/components/toggle');
-  case 'tooltip-arrow-and-offset':
+  case 'tooltip-arrow':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-disabled':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-dynamic':
 return import('@koobiq/docs-examples/components/tooltip');
@@ -6841,19 +6879,21 @@ return import('@koobiq/docs-examples/components/tooltip');
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-hide-with-timeout':
 return import('@koobiq/docs-examples/components/tooltip');
-  case 'tooltip-long':
+  case 'tooltip-interactive':
 return import('@koobiq/docs-examples/components/tooltip');
-  case 'tooltip-multiple-lines':
+  case 'tooltip-offset':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-overview':
 return import('@koobiq/docs-examples/components/tooltip');
-  case 'tooltip-placement-center':
-return import('@koobiq/docs-examples/components/tooltip');
-  case 'tooltip-placement-edges':
+  case 'tooltip-placements':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-relative-to-pointer':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-style':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-wide-width':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-width':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'top-bar-actions':
 return import('@koobiq/docs-examples/components/top-bar');
