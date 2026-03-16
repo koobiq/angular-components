@@ -6,6 +6,7 @@
     display: inline;
 
     padding-top: var(--kbq-link-size-multiline-hit-area-gap);
+    padding-bottom: var(--kbq-link-size-multiline-hit-area-gap);
     box-decoration-break: clone;
 
     text-decoration: none;
@@ -19,9 +20,11 @@
 
     &.kbq-text-only,
     & .kbq-link__text {
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        border-bottom-color: transparent;
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-thickness: var(--kbq-link-border-bottom-width);
+        text-decoration-color: transparent;
+        text-underline-offset: calc(var(--kbq-link-size-multiline-hit-area-gap) + var(--kbq-link-border-bottom-width));
     }
 
     &.kbq-text-with-icon .kbq-icon {
@@ -107,7 +110,7 @@
     &:not(.kbq-link_pseudo, .kbq-link_no-underline) {
         &.kbq-text-only:not(.kbq-text-with-dot),
         & .kbq-link__text {
-            border-bottom-color: var(--kbq-#{$base-path}-border-bottom);
+            text-decoration-color: var(--kbq-#{$base-path}-border-bottom);
         }
     }
 
@@ -133,7 +136,7 @@
             &.kbq-link_pseudo {
                 &.kbq-text-only:not(.kbq-text-with-dot),
                 & .kbq-link__text {
-                    border-bottom-color: var(--kbq-link-state-hover-border-bottom);
+                    text-decoration-color: var(--kbq-link-state-hover-border-bottom);
                 }
             }
         }
@@ -145,7 +148,7 @@
             &.kbq-link_pseudo {
                 &.kbq-text-only:not(.kbq-text-with-dot),
                 & .kbq-link__text {
-                    border-bottom-color: var(--kbq-link-state-active-border-bottom);
+                    text-decoration-color: var(--kbq-link-state-active-border-bottom);
                 }
             }
         }
@@ -181,7 +184,7 @@
                 &.kbq-text-only,
                 &.kbq-text-with-icon .kbq-link__text,
                 &.kbq-text-with-dot .kbq-link__text {
-                    border-bottom: none;
+                    text-decoration: none;
                 }
 
                 &::after {
