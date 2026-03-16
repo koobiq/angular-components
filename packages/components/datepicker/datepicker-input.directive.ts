@@ -55,7 +55,6 @@ import {
     ErrorStateMatcher,
     KBQ_DATE_FORMATS,
     KBQ_LOCALE_SERVICE,
-    KBQ_VALIDATION,
     KbqDateFormats,
     KbqErrorStateTracker,
     ruRULocaleData,
@@ -274,7 +273,6 @@ interface DateTimeObject {
 export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
     /** @docs-private */
     protected readonly formField = inject(KbqFormField, { optional: true, host: true });
     /** @docs-private */
@@ -817,7 +815,7 @@ export class KbqDatepickerInput<D>
 
         this.onInput();
 
-        if (this.useLegacyValidation && this.control) {
+        if (this.control) {
             this.control.updateValueAndValidity({ emitEvent: false });
             (this.control.statusChanges as EventEmitter<string>).emit(this.control.status);
         }

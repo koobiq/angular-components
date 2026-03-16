@@ -7,10 +7,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     DebugElement,
-    ElementRef,
     OnInit,
     QueryList,
-    Signal,
     TemplateRef,
     Type,
     ViewChild,
@@ -19,7 +17,6 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import {
-    AbstractControl,
     AsyncValidatorFn,
     ControlValueAccessor,
     FormControl,
@@ -75,7 +72,7 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { Observable, Subject, Subscription, iif, merge, of, timer } from 'rxjs';
+import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { KbqSelect } from './select.component';
 import { KbqSelectModule } from './select.module';
@@ -89,12 +86,20 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
     return fixture;
 };
 
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+
 const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
 };
 
 const getSelectElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
     fixture.debugElement.query(By.directive(KbqSelect)).nativeElement;
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -1511,15 +1516,6 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     }
 }
 
-const getAsyncSelectValidator = (): AsyncValidatorFn => {
-    return (control: AbstractControl): Observable<ValidationErrors | null> =>
-        iif(
-            () => control.value,
-            timer(1000).pipe(map(() => (control.value === 'pizza-1' ? { forbiddenPizza: true } : null))),
-            of(null)
-        );
-};
-
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
@@ -1532,15 +1528,12 @@ const getAsyncSelectValidator = (): AsyncValidatorFn => {
                     <kbq-option value="pizza-1">Pizza</kbq-option>
                 </kbq-select>
             </kbq-form-field>
-            <button #submitButton type="submit">Submit</button>
+            <button type="submit">Submit</button>
         </form>
     `
 })
 class SelectWithErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
-    readonly submitButton: Signal<ElementRef<HTMLButtonElement>> = viewChild.required('submitButton', {
-        read: ElementRef
-    });
     readonly form = new FormGroup({ select: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -1579,7 +1572,7 @@ class LegacySelectControlWithAsyncValidators {
     readonly select = viewChild.required(KbqSelect);
     readonly control = new FormControl<string>('', {
         nonNullable: true,
-        asyncValidators: [getAsyncSelectValidator()]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -1599,7 +1592,7 @@ class SelectControlWithAsyncValidators {
     readonly select = viewChild.required(KbqSelect);
     readonly control = new FormControl<string>('', {
         nonNullable: true,
-        asyncValidators: [getAsyncSelectValidator()]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -5347,7 +5340,7 @@ describe('KbqSelect', () => {
 
                 fixture.detectChanges();
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.select().errorState).toBe(true);
@@ -5385,7 +5378,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.select().errorState).toBe(true);

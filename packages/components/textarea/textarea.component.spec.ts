@@ -1,7 +1,6 @@
-import { Component, ElementRef, Provider, Signal, Type, ViewChild, viewChild } from '@angular/core';
+import { Component, Provider, Type, ViewChild, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
-    AbstractControl,
     AsyncValidatorFn,
     FormControl,
     FormControlStatus,
@@ -16,7 +15,7 @@ import { By } from '@angular/platform-browser';
 import { createMouseEvent, dispatchEvent } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { Observable, iif, map, of, timer } from 'rxjs';
+import { Observable, map, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
     ShowOnControlDirtyErrorStateMatcher,
@@ -46,12 +45,20 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     return TestBed.createComponent<T>(component);
 }
 
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+
 const getTextareaElement = (fixture: ComponentFixture<unknown>): HTMLTextAreaElement =>
     fixture.debugElement.query(By.directive(KbqTextarea)).nativeElement;
 
 const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
 };
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
     imports: [
@@ -138,21 +145,6 @@ class KbqTextareaForBehaviors {
 })
 class KbqFormFieldWithoutBorders {}
 
-const getAsyncMaxLengthValidator = (maxLength: number): AsyncValidatorFn => {
-    return (control: AbstractControl): Observable<ValidationErrors | null> =>
-        iif(
-            () => control.value,
-            timer(1000).pipe(
-                map(() => {
-                    const actualLength = control.value.length;
-
-                    return actualLength > maxLength ? { maxLength: { actual: actualLength, max: maxLength } } : null;
-                })
-            ),
-            of(null)
-        );
-};
-
 @Component({
     imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
     template: `
@@ -165,7 +157,7 @@ class LegacyTextareaControlWithAsyncValidators {
     readonly textarea = viewChild.required(KbqTextarea);
     readonly control = new FormControl<string>('', {
         nonNullable: true,
-        asyncValidators: [getAsyncMaxLengthValidator(3)]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -182,7 +174,7 @@ class TextareaControlWithAsyncValidators {
     readonly textarea = viewChild.required(KbqTextarea);
     readonly control = new FormControl<string>('', {
         nonNullable: true,
-        asyncValidators: [getAsyncMaxLengthValidator(3)]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -213,15 +205,12 @@ class TextareaWithDIErrorStateMatcher {
             <kbq-form-field>
                 <textarea kbqTextarea formControlName="textarea" [errorStateMatcher]="errorStateMatcher"></textarea>
             </kbq-form-field>
-            <button #submitButton type="submit">Submit</button>
+            <button type="submit">Submit</button>
         </form>
     `
 })
 class TextareaWithErrorStateMatcher {
     readonly textarea = viewChild.required(KbqTextarea);
-    readonly submitButton: Signal<ElementRef<HTMLButtonElement>> = viewChild.required('submitButton', {
-        read: ElementRef
-    });
     readonly form = new FormGroup({ textarea: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -360,7 +349,7 @@ describe('KbqTextarea', () => {
             it('should be in error state when form is submitted and control is invalid', () => {
                 const fixture = createComponent(TextareaWithErrorStateMatcher);
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.textarea().errorState).toBe(true);
@@ -398,7 +387,7 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.textarea().errorState).toBe(true);

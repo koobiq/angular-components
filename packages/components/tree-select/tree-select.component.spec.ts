@@ -6,19 +6,27 @@ import {
     Component,
     DebugElement,
     OnInit,
+    Provider,
     QueryList,
+    Type,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import {
+    AsyncValidatorFn,
     ControlValueAccessor,
+    FormControl,
+    FormControlStatus,
+    FormGroup,
     FormGroupDirective,
     FormsModule,
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
+    ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -52,9 +60,12 @@ import {
     KbqPseudoCheckbox,
     KbqPseudoCheckboxModule,
     KbqPseudoCheckboxState,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
+    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -69,9 +80,103 @@ import {
     KbqTreeOption,
     KbqTreeSelectionChange
 } from '@koobiq/components/tree';
-import { Observable, Subject, Subscription, of } from 'rxjs';
+import { Observable, Subject, Subscription, map, of, timer } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectChange } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
+
+const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component], providers });
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
+
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+
+const getTreeSelectElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
+    fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement;
+
+const customErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.untouched
+};
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class LegacyTreeSelectControlWithAsyncValidators {
+    readonly treeSelect = viewChild.required(KbqTreeSelect);
+    readonly control = new FormControl<string>('', {
+        nonNullable: true,
+        asyncValidators: [getAsyncValidator()]
+    });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class TreeSelectControlWithAsyncValidators {
+    readonly treeSelect = viewChild.required(KbqTreeSelect);
+    readonly control = new FormControl<string>('', {
+        nonNullable: true,
+        asyncValidators: [getAsyncValidator()]
+    });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <kbq-tree-select formControlName="treeSelect" />
+            </kbq-form-field>
+        </form>
+    `
+})
+class TreeSelectWithDIErrorStateMatcher {
+    readonly treeSelect = viewChild.required(KbqTreeSelect);
+    readonly form = new FormGroup({ treeSelect: new FormControl('', Validators.required) });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <kbq-tree-select formControlName="treeSelect" [errorStateMatcher]="errorStateMatcher" />
+            </kbq-form-field>
+            <button type="submit">Submit</button>
+        </form>
+    `
+})
+class TreeSelectWithErrorStateMatcher {
+    readonly treeSelect = viewChild.required(KbqTreeSelect);
+    readonly form = new FormGroup({ treeSelect: new FormControl('', Validators.required) });
+    errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
+}
 
 const TREE_DATA = {
     rootNode_1: 'app',
@@ -1609,7 +1714,7 @@ describe('KbqTreeSelect', () => {
     }
 
     afterEach(() => {
-        overlayContainer.ngOnDestroy();
+        overlayContainer?.ngOnDestroy();
     });
 
     describe('core', () => {
@@ -5102,6 +5207,210 @@ describe('KbqTreeSelect', () => {
             expect(fixture.componentInstance.select.hiddenItemsText).toEqual(
                 localeService.getParams('select').hiddenItemsText
             );
+        }));
+    });
+
+    describe('ErrorStateMatcher', () => {
+        describe(ErrorStateMatcher.name, () => {
+            it('should not be in error state initially when invalid but untouched', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and touched', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.form.controls.treeSelect.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+            });
+
+            it('should be in error state when form is submitted and control is invalid', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and update errorState on blur', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+
+                getTreeSelectElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+            });
+        });
+
+        describe(ShowOnFormSubmitErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid and touched but form not submitted', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.componentInstance.form.controls.treeSelect.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+            });
+
+            it('should be in error state after form is submitted when invalid', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+
+                getTreeSelectElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+            });
+        });
+
+        describe(ShowOnControlDirtyErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid but pristine', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and dirty', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.componentInstance.form.controls.treeSelect.markAsDirty();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+
+                getTreeSelectElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+            });
+        });
+
+        describe('custom ErrorStateMatcher', () => {
+            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
+                const fixture = createComponent(TreeSelectWithDIErrorStateMatcher);
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.treeSelect.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+            });
+
+            it('should use custom errorStateMatcher logic', () => {
+                const fixture = createComponent(TreeSelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.treeSelect.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+            });
+        });
+    });
+
+    describe('async validation', () => {
+        it('should emit PENDING via statusChanges on blur', fakeAsync(() => {
+            const fixture = createComponent(LegacyTreeSelectControlWithAsyncValidators);
+            const { control, treeSelect } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
+
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue('1');
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(1001);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            treeSelect().onBlur();
+            tick(1001);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
+
+            subscription.unsubscribe();
+        }));
+
+        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+            const fixture = createComponent(TreeSelectControlWithAsyncValidators);
+            const { control, treeSelect } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
+
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue('1');
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(1001);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            treeSelect().onBlur();
+            tick(1001);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            subscription.unsubscribe();
         }));
     });
 });

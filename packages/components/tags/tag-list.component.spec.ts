@@ -6,12 +6,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     DebugElement,
-    ElementRef,
     model,
     NgZone,
     Provider,
     QueryList,
-    Signal,
     signal,
     Type,
     ViewChild,
@@ -20,7 +18,6 @@ import {
 } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
-    AbstractControl,
     AsyncValidatorFn,
     FormControl,
     FormControlStatus,
@@ -44,7 +41,7 @@ import {
     typeInElement
 } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { iif, map, Observable, of, Subject, timer } from 'rxjs';
+import { map, Observable, Subject, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
     kbqDisableLegacyValidationDirectiveProvider,
@@ -69,8 +66,20 @@ const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] 
     return fixture;
 };
 
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+
 const getTagListElement = (debugElement: DebugElement): HTMLElement => {
     return debugElement.query(By.directive(KbqTagList)).nativeElement;
+};
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+
+const customErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.untouched
 };
 
 const getTagElements = (debugElement: DebugElement): HTMLElement[] => {
@@ -170,25 +179,6 @@ export class TestFormFieldTagList {
     );
 }
 
-const getAsyncMaxLengthValidator = (maxLength: number): AsyncValidatorFn => {
-    return (control: AbstractControl): Observable<ValidationErrors | null> =>
-        iif(
-            () => control.value,
-            timer(1000).pipe(
-                map(() => {
-                    const actualLength = control.value.length;
-
-                    return actualLength > maxLength ? { maxLength: { actual: actualLength, max: maxLength } } : null;
-                })
-            ),
-            of(null)
-        );
-};
-
-const customErrorStateMatcher: ErrorStateMatcher = {
-    isErrorState: (control) => !!control?.untouched
-};
-
 @Component({
     imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
     template: `
@@ -206,7 +196,7 @@ class LegacyTagListControlWithAsyncValidators {
     readonly tagList = viewChild.required(KbqTagList);
     readonly control = new FormControl('', {
         nonNullable: true,
-        asyncValidators: [getAsyncMaxLengthValidator(3)]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -228,7 +218,7 @@ class TagListControlWithAsyncValidators {
     readonly tagList = viewChild.required(KbqTagList);
     readonly control = new FormControl('', {
         nonNullable: true,
-        asyncValidators: [getAsyncMaxLengthValidator(3)]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -269,15 +259,12 @@ class TagListWithDIErrorStateMatcher {
                     <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
                 </kbq-tag-list>
             </kbq-form-field>
-            <button #submitButton type="submit">Submit</button>
+            <button type="submit">Submit</button>
         </form>
     `
 })
 class TagListWithErrorStateMatcher {
     readonly tagList = viewChild.required(KbqTagList);
-    readonly submitButton: Signal<ElementRef<HTMLButtonElement>> = viewChild.required('submitButton', {
-        read: ElementRef
-    });
     readonly form = new FormGroup({ tagList: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -1667,7 +1654,7 @@ describe(KbqTagList.name, () => {
             it('should be in error state when form is submitted and control is invalid', () => {
                 const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.tagList().errorState).toBe(true);
@@ -1706,7 +1693,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.tagList().errorState).toBe(true);
@@ -1808,7 +1795,7 @@ describe(KbqTagList.name, () => {
 
             const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
 
-            control.setValue('ab');
+            control.setValue('1');
 
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
@@ -1834,7 +1821,7 @@ describe(KbqTagList.name, () => {
 
             const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
 
-            control.setValue('ab');
+            control.setValue('1');
 
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);

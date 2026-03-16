@@ -1,7 +1,6 @@
-import { Component, ElementRef, Provider, Signal, Type, viewChild, ViewChild } from '@angular/core';
+import { Component, Provider, Type, viewChild, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
-    AbstractControl,
     AsyncValidatorFn,
     FormControl,
     FormControlStatus,
@@ -26,7 +25,7 @@ import {
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { iif, map, Observable, of, timer } from 'rxjs';
+import { map, Observable, timer } from 'rxjs';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -42,6 +41,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
     return TestBed.createComponent<T>(component);
 }
+
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
 
 @Component({
     imports: [
@@ -230,20 +232,10 @@ const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
 };
 
-const getAsyncMaxLengthValidator = (maxLength: number): AsyncValidatorFn => {
-    return (control: AbstractControl): Observable<ValidationErrors | null> =>
-        iif(
-            () => control.value,
-            timer(1000).pipe(
-                map(() => {
-                    const actualLength = control.value.length;
-
-                    return actualLength > maxLength ? { maxLength: { actual: actualLength, max: maxLength } } : null;
-                })
-            ),
-            of(null)
-        );
-};
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
@@ -257,7 +249,7 @@ class LegacyInputControlWithAsyncValidators {
     readonly input = viewChild.required(KbqInput);
     readonly control = new FormControl<string>('', {
         nonNullable: true,
-        asyncValidators: [getAsyncMaxLengthValidator(3)]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -274,7 +266,7 @@ class InputControlWithAsyncValidators {
     readonly input = viewChild.required(KbqInput);
     readonly control = new FormControl<string>('', {
         nonNullable: true,
-        asyncValidators: [getAsyncMaxLengthValidator(3)]
+        asyncValidators: [getAsyncValidator()]
     });
 }
 
@@ -305,15 +297,12 @@ class InputWithDIErrorStateMatcher {
             <kbq-form-field>
                 <input kbqInput formControlName="input" [errorStateMatcher]="errorStateMatcher" />
             </kbq-form-field>
-            <button #submitButton type="submit">Submit</button>
+            <button type="submit">Submit</button>
         </form>
     `
 })
 class InputWithErrorStateMatcher {
     readonly input = viewChild.required(KbqInput);
-    readonly submitButton: Signal<ElementRef<HTMLButtonElement>> = viewChild.required('submitButton', {
-        read: ElementRef
-    });
     readonly form = new FormGroup({ input: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -550,7 +539,7 @@ describe('KbqInput', () => {
             it('should be in error state when form is submitted and control is invalid', () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.input().errorState).toBe(true);
@@ -588,7 +577,7 @@ describe('KbqInput', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                fixture.componentInstance.submitButton().nativeElement.click();
+                getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.input().errorState).toBe(true);
