@@ -10,7 +10,7 @@ const extractedReleaseNotes = extractReleaseNotes(changelogFilePath, packageJson
 if (extractedReleaseNotes) {
     const { releaseTitle, releaseNotes } = extractedReleaseNotes;
 
-    const resultNotes = `# ${releaseTitle}\n\n${releaseNotes}`;
+    const resultNotes = `${releaseTitle}\n\n${releaseNotes}`;
 
     writeFileSync('./CHANGELOG_CURRENT.md', resultNotes, 'utf-8');
     console.log('Result Notes: \n', resultNotes);

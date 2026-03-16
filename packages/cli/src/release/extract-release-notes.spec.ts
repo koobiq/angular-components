@@ -5,8 +5,6 @@ const CHANGELOG_CONTENT = `# 18.10.0 (2024-12-11)
 
 ### Cdk
 
- * bug fix  resolve event target within shadow-root ([#DS-2632](https://github.com/koobiq/angular-components/issues/issue/DS-2632)) ([#475](https://github.com/koobiq/angular-components/issues/475)) ([b41f2ea](https://github.com/koobiq/angular-components/commit/b41f2ea5d0f36d86d31397ed72a7073438ecac09))
-
 ### Koobiq
 
  * bug fix  **docs:** added build-tokens script missing transform ([#474](https://github.com/koobiq/angular-components/issues/474)) ([f1b873b](https://github.com/koobiq/angular-components/commit/f1b873b1a14ebc36c96432cf67997390d4b73b18))
@@ -71,7 +69,7 @@ describe(extractReleaseNotes.name, () => {
         const result = extractReleaseNotes('CHANGELOG.md', targetVersion);
 
         expect(result).not.toBeNull();
-        expect(result!.releaseTitle).toBe(`${targetVersion} (2024-12-11)`);
+        expect(result!.releaseTitle).toBe(`# ${targetVersion} (2024-12-11)`);
         expect(result!.releaseNotes).toContain('Cdk');
         expect(result!.releaseNotes).toContain('Koobiq');
         expect(result!.releaseNotes).toContain('* feature  **markdown:** code with links styles');

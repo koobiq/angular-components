@@ -68,7 +68,7 @@ export async function notify(releaseData: ChangelogReleaseNotes): Promise<void> 
         channel: `${config.channel}`,
         username: 'Wall-e',
         short: false,
-        text: `## ${releaseData.releaseTitle}\n${releaseData.releaseNotes}`
+        text: `${releaseData.releaseTitle}\n${releaseData.releaseNotes}`
     };
 
     try {
