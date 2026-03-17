@@ -1,11 +1,11 @@
 import { readFileSync } from 'fs';
 
 /**
- * Cli tools automatically set heading with ## or #, so this is the condition to get version tag heading.
+ * Condition to get version tag heading X.Y.Z (YYYY-MM-DD).
  *
  * @param line
  */
-const isTagHeading = (line: string): boolean => !!line.match(/^#{1,2}\s+(.*)/);
+export const isVersionLine = (line: string): boolean => /\d+\.\d+\.\d+.*\(\d{4}-\d{2}-\d{2}\)/.test(line);
 
 /**
  * Represents the extracted release notes and title for a specific version from a changelog.
@@ -27,14 +27,14 @@ export function extractReleaseNotes(changelogPath: string, versionName: string):
     let releaseNotes = '';
 
     for (const line of lines) {
-        const isLineWithVersion = isTagHeading(line);
+        const isLineWithReleaseVersion = isVersionLine(line);
 
-        if (isLineWithVersion && line.includes(versionName)) {
+        if (isLineWithReleaseVersion && line.includes(versionName)) {
             releaseTitle = line;
             continue;
         }
 
-        if (releaseTitle && isLineWithVersion) break;
+        if (releaseTitle && isLineWithReleaseVersion) break;
 
         if (releaseTitle) {
             releaseNotes += `${line}\n`;

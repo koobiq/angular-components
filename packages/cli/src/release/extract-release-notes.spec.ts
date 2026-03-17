@@ -38,6 +38,14 @@ const CHANGELOG_CONTENT = `# 18.10.0 (2024-12-11)
  * feature  **scrollbar:** removed overlayscrollbars from dependencies ([#DS-2982](https://github.com/koobiq/angular-components/issues/issue/DS-2982)) ([#456](https://github.com/koobiq/angular-components/issues/456)) ([e9aaac1](https://github.com/koobiq/angular-components/commit/e9aaac17db021da4a4ea920fdbb1639540cff3f2))
  * feature  **select:** added support for panel width customization ([#DS-2922](https://github.com/koobiq/angular-components/issues/issue/DS-2922)) ([#447](https://github.com/koobiq/angular-components/issues/447)) ([db0dd2a](https://github.com/koobiq/angular-components/commit/db0dd2a1dbe91a3e319adc2179d1ab15fd5b9495))
  * feature  **visual:** updated border-radius for list components ([#DS-2171](https://github.com/koobiq/angular-components/issues/issue/DS-2171)) ([#454](https://github.com/koobiq/angular-components/issues/454)) ([26ed111](https://github.com/koobiq/angular-components/commit/26ed111f32a90e3e5e3523b92f5e08ef9462c175))
+ 
+# 18.8.99 (2024-11-29)
+
+ * bumped package to 15.10.1
+ 
+# 18.8.11 (2024-11-29)
+
+source code didn't change.
 
 # 18.8.0 (2024-11-26)
 
@@ -96,5 +104,25 @@ describe(extractReleaseNotes.name, () => {
         const result = extractReleaseNotes('CHANGELOG.md', '3.0.0');
 
         expect(result).toBeNull();
+    });
+
+    it('should extract properly if release notes contains only simple string', () => {
+        const targetVersion = '18.8.11';
+        const result = extractReleaseNotes('CHANGELOG.md', targetVersion);
+
+        expect(result).not.toBeNull();
+        expect(result!.releaseTitle).toContain(targetVersion);
+        expect(result!.releaseNotes).toContain("source code didn't change.");
+        expect(result!.releaseNotes).not.toContain('18.8.0');
+    });
+
+    it('should extract properly if release notes contains third-party package version bump', () => {
+        const targetVersion = '18.8.99';
+        const result = extractReleaseNotes('CHANGELOG.md', targetVersion);
+
+        expect(result).not.toBeNull();
+        expect(result!.releaseTitle).toContain(targetVersion);
+        expect(result!.releaseTitle).not.toContain('15.10.1');
+        expect(result!.releaseNotes).toContain('bumped package to 15.10.1');
     });
 });
