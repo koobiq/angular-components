@@ -38,6 +38,35 @@ import { KbqIcon } from '@koobiq/components/icon';
             </div>
         }
     `,
+    styles: `
+        .kbq-fieldset-item:is(.kbq-button, .kbq-button-icon).kbq-button_filled {
+            position: relative;
+
+            /*border-right: 0;*/
+            margin-left: 0;
+
+            &:not(:last-child) {
+                &::after {
+                    display: block;
+                    content: '';
+                    height: 100%;
+                    width: var(--kbq-size-border-width);
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    background-color: var(--splitter-color);
+                }
+            }
+
+            &.kbq-contrast {
+                --splitter-color: var(--kbq-background-contrast-fade);
+            }
+
+            &.kbq-contrast-fade {
+                --splitter-color: var(--kbq-line-contrast-fade);
+            }
+        }
+    `,
     host: {
         class: 'layout-column layout-align-center-center layout-gap-xl'
     },

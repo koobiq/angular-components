@@ -24,6 +24,27 @@ import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
             }
         </kbq-fieldset>
     `,
+    styles: `
+        .kbq-fieldset-item.kbq-button.kbq-contrast-fade {
+            position: relative;
+
+            /*border-right: 0;*/
+            margin-left: 0;
+
+            &:not(:last-child) {
+                &::after {
+                    display: block;
+                    content: '';
+                    height: 100%;
+                    width: var(--kbq-size-border-width);
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    background-color: var(--kbq-line-contrast-fade);
+                }
+            }
+        }
+    `,
     host: {
         class: 'layout-column layout-align-center-center layout-gap-xl'
     },
