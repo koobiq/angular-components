@@ -110,6 +110,8 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
 
     /** Focuses the dropdown item. */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
+        if (this.disabled) return;
+
         if (this.focusMonitor && origin) {
             this.focusMonitor.focusVia(this.getHostElement(), origin, options);
         } else {

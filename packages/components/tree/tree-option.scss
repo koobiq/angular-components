@@ -66,15 +66,12 @@
         }
     }
 
-    &:is(.kbq-checked, .kbq-selected, .kbq-focused, .kbq-active):has(
-            + :is(.kbq-checked, .kbq-selected, .kbq-focused, .kbq-active)
-        ) {
+    &:is(.kbq-checked, .kbq-selected, .kbq-focused):has(+ :is(.kbq-checked, .kbq-selected, .kbq-focused)) {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }
 
-    &:is(.kbq-checked, .kbq-selected, .kbq-focused, .kbq-active)
-        + :is(.kbq-checked, .kbq-selected, .kbq-focused, .kbq-active) {
+    &:is(.kbq-checked, .kbq-selected, .kbq-focused) + :is(.kbq-checked, .kbq-selected, .kbq-focused) {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }

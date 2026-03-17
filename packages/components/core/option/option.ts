@@ -17,6 +17,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import { ENTER, hasModifierKey, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { KbqPseudoCheckboxModule } from '../selection';
@@ -46,6 +47,7 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     multiSelection?: boolean;
     withVirtualScroll?: boolean;
+    keyManager?: ActiveDescendantKeyManager<KbqOption>;
     setSelectedOptionsByClick: (option: KbqOption) => void;
 }
 
@@ -143,11 +145,12 @@ export class KbqVirtualOption extends KbqOptionBase {
         class: 'kbq-option',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-option-multiple]': 'multiple',
-        '[class.kbq-active]': 'active',
+        '[class.kbq-focused]': 'active',
         '[class.kbq-disabled]': 'disabled',
         '[id]': 'id',
 
         '(click)': 'handleClick($event)',
+        '(mouseenter)': 'parent?.keyManager?.setActiveItem(this)',
         '(keydown)': 'handleKeydown($event)'
     },
     providers: [
@@ -247,7 +250,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     constructor(
         private readonly elementRef: ElementRef<HTMLElement>,
         private readonly changeDetectorRef: ChangeDetectorRef,
-        @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) private readonly parent: KbqOptionParentComponent,
+        @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) protected readonly parent: KbqOptionParentComponent,
         @Optional() readonly group: KbqOptgroup
     ) {
         super();

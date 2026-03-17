@@ -5,6 +5,7 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
+import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
@@ -2446,6 +2447,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     ngOnDestroy(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
+    protected readonly parent: KbqOptionParentComponent;
+    // (undocumented)
     select(emitEvent?: boolean): void;
     // (undocumented)
     selectable: boolean;
@@ -2552,6 +2555,8 @@ export class KbqOptionModule {
 
 // @public
 export interface KbqOptionParentComponent {
+    // (undocumented)
+    keyManager?: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
     multiple?: boolean;
     // (undocumented)

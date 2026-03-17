@@ -25,11 +25,6 @@
             @include kbq-option(states-hover);
         }
 
-        &.kbq-active:not(.kbq-disabled),
-        &:active:not(.kbq-disabled) {
-            @include kbq-option(states-active);
-        }
-
         &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(states-selected);
 
@@ -37,23 +32,18 @@
             &:hover {
                 @include kbq-option(states-selected-hover);
             }
-
-            &.kbq-active,
-            &:active {
-                @include kbq-option(states-selected-active);
-            }
         }
 
         &.kbq-disabled {
             @include kbq-option(states-disabled);
         }
 
-        &:is(.kbq-selected, .kbq-focused, .kbq-active):has(+ :is(.kbq-selected, .kbq-focused, .kbq-active)) {
+        &:is(.kbq-selected, .kbq-focused):has(+ :is(.kbq-selected, .kbq-focused)) {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
 
-        &:is(.kbq-selected, .kbq-focused, .kbq-active) + :is(.kbq-selected, .kbq-focused, .kbq-active) {
+        &:is(.kbq-selected, .kbq-focused) + :is(.kbq-selected, .kbq-focused) {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
@@ -63,12 +53,9 @@
         &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(multiple-states-selected);
 
+            &.kbq-hovered,
             &:hover {
                 @include kbq-option(multiple-states-selected-hover);
-            }
-
-            &:active {
-                @include kbq-option(multiple-states-selected-active);
             }
         }
     }

@@ -82,6 +82,7 @@ let uniqueIdCounter: number = 0;
         '[attr.tabindex]': '-1',
         '[attr.disabled]': 'disabled || null',
         '(focusin)': 'focus()',
+        '(mouseenter)': 'focus("mouse")',
         '(blur)': 'blur()',
         '(click)': 'selectViaInteraction($event)',
         '(keydown)': 'onKeydown($event)'

@@ -8,4 +8,4 @@
     <i kbq-icon="kbq-chevron-right-s_16" class="kbq-dropdown-trigger__icon" [color]="componentColors.ContrastFade"></i>
 }
 
-<div class="kbq-dropdown-item-overlay" (click)="haltDisabledEvents($event)"></div>
+<div class="kbq-dropdown-item-overlay" (mouseenter)="focus('mouse')" (click)="haltDisabledEvents($event)"></div>

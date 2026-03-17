@@ -335,7 +335,8 @@ export class KbqSelect
      * Automatically enables search hiding if value provided, even if `defaultOptions.minOptionsThreshold` is provided.
      * @default undefined
      */
-    @Input() set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
+    @Input()
+    set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
         this._searchMinOptionsThreshold =
             this.resolveSearchMinOptionsThreshold(value) ??
             this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
