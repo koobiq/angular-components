@@ -5,9 +5,11 @@ import {
     contentChild,
     Directive,
     ElementRef,
+    input,
     Signal,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqOrientation } from '@koobiq/components/core';
 
 /** Directive for marking an element as legend of `KbqFieldset` */
 @Directive({
@@ -51,11 +53,14 @@ export class KbqFieldsetItem {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-fieldset',
+        '[class]': 'className()',
         role: 'group',
         '[attr.aria-label]': 'ariaLabel()'
     }
 })
 export class KbqFieldset {
+    orientation = input<KbqOrientation>('horizontal');
+
     private readonly legend: Signal<ElementRef<HTMLElement> | undefined> = contentChild(KbqLegend, {
         read: ElementRef
     });
@@ -66,4 +71,7 @@ export class KbqFieldset {
      * @docs-private
      */
     protected readonly ariaLabel = computed(() => this.legend()?.nativeElement?.innerText);
+
+    /** @docs-private */
+    protected readonly className = computed(() => `kbq-fieldset__${this.orientation()}`);
 }
