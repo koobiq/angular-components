@@ -708,6 +708,66 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "button-fixed-content-example.ts",
     "importPath": "components/button"
   },
+  "button-group-content": {
+    "packagePath": "components/button/button-group-content",
+    "title": "Button group content",
+    "componentName": "ButtonGroupContentExample",
+    "files": [
+      "button-group-content-example.ts"
+    ],
+    "selector": "button-group-content-example",
+    "additionalComponents": [],
+    "primaryFile": "button-group-content-example.ts",
+    "importPath": "components/button"
+  },
+  "button-group-custom-content": {
+    "packagePath": "components/button/button-group-custom-content",
+    "title": "Button group custom content",
+    "componentName": "ButtonGroupCustomContentExample",
+    "files": [
+      "button-group-custom-content-example.ts"
+    ],
+    "selector": "button-group-custom-content-example",
+    "additionalComponents": [],
+    "primaryFile": "button-group-custom-content-example.ts",
+    "importPath": "components/button"
+  },
+  "button-group-overview": {
+    "packagePath": "components/button/button-group-overview",
+    "title": "Button group overview",
+    "componentName": "ButtonGroupOverviewExample",
+    "files": [
+      "button-group-overview-example.ts"
+    ],
+    "selector": "button-group-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "button-group-overview-example.ts",
+    "importPath": "components/button"
+  },
+  "button-group-style": {
+    "packagePath": "components/button/button-group-style",
+    "title": "Button group style",
+    "componentName": "ButtonGroupStyleExample",
+    "files": [
+      "button-group-style-example.ts"
+    ],
+    "selector": "button-group-style-example",
+    "additionalComponents": [],
+    "primaryFile": "button-group-style-example.ts",
+    "importPath": "components/button"
+  },
+  "button-group-vertical": {
+    "packagePath": "components/button/button-group-vertical",
+    "title": "Button group vertical",
+    "componentName": "ButtonGroupVerticalExample",
+    "files": [
+      "button-group-vertical-example.ts"
+    ],
+    "selector": "button-group-vertical-example",
+    "additionalComponents": [],
+    "primaryFile": "button-group-vertical-example.ts",
+    "importPath": "components/button"
+  },
   "button-hug-content": {
     "packagePath": "components/button/button-hug-content",
     "title": "Button hug content",
@@ -842,6 +902,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "clamped-text-overview-example.ts",
     "importPath": "components/clamped-text"
+  },
+  "code-block-header-pinned": {
+    "packagePath": "components/code-block/code-block-header-pinned",
+    "title": "Code block header pinned",
+    "componentName": "CodeBlockHeaderPinnedExample",
+    "files": [
+      "code-block-header-pinned-example.ts"
+    ],
+    "selector": "code-block-header-pinned-example",
+    "additionalComponents": [],
+    "primaryFile": "code-block-header-pinned-example.ts",
+    "importPath": "components/code-block"
   },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
@@ -6089,6 +6161,16 @@ return import('@koobiq/docs-examples/components/button');
 return import('@koobiq/docs-examples/components/button');
   case 'button-fixed-content':
 return import('@koobiq/docs-examples/components/button');
+  case 'button-group-content':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-group-custom-content':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-group-overview':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-group-style':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-group-vertical':
+return import('@koobiq/docs-examples/components/button');
   case 'button-hug-content':
 return import('@koobiq/docs-examples/components/button');
   case 'button-loading-state':
@@ -6111,6 +6193,8 @@ return import('@koobiq/docs-examples/components/clamped-text');
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-text-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
+  case 'code-block-header-pinned':
+return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-custom-locale-configuration':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':

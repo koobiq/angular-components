@@ -22,6 +22,7 @@ export enum DocsStructureItemId {
     Breadcrumbs = 'breadcrumbs',
     Button = 'button',
     ButtonToggle = 'button-toggle',
+    ButtonGroup = 'button-group',
     Checkbox = 'checkbox',
     ClampedText = 'clamped-text',
     ClampedList = 'clamped-list',
@@ -381,6 +382,15 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'button toggle',
                     hasApi: true,
                     apiId: 'button-toggle',
+                    hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.ButtonGroup,
+                    name: {
+                        ru: 'Button Group',
+                        en: 'Button Group'
+                    },
+                    hasApi: false,
                     hasExamples: false
                 },
                 {

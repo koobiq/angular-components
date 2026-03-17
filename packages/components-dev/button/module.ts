@@ -10,6 +10,15 @@ import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
     template: `
         <button-overview-example />
         <hr />
+        <button-group-overview-example />
+        <hr />
+        <button-group-style-example />
+        <hr />
+        <button-group-content-example />
+        <hr />
+        <button-group-custom-content-example />
+        <hr />
+        <button-group-vertical-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
