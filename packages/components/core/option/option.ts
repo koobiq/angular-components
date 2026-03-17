@@ -145,7 +145,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         class: 'kbq-option',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-option-multiple]': 'multiple',
-        '[class.kbq-focused]': 'active',
+        '[class.kbq-active]': 'active',
         '[class.kbq-disabled]': 'disabled',
         '[id]': 'id',
 

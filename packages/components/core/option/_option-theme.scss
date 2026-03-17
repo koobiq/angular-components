@@ -61,7 +61,7 @@
     }
 
     .cdk-keyboard-focused {
-        .kbq-option.kbq-focused {
+        .kbq-option.kbq-active {
             border-color: var(--kbq-list-states-focused-focus-outline-color);
         }
     }
