@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { ChangelogReleaseNotes } from './extract-release-notes';
 
 const { green, red, cyan } = chalk;
 
@@ -52,7 +53,7 @@ function logNotificationResult(success: boolean, error?: Error): void {
  *
  * @param {} releaseData - The data of the release to be included in the notification.
  */
-export async function notify(releaseData: any): Promise<void> {
+export async function notify(releaseData: ChangelogReleaseNotes): Promise<void> {
     console.log(green('Start MM notification'));
 
     const config = getMattermostConfig();
@@ -67,7 +68,7 @@ export async function notify(releaseData: any): Promise<void> {
         channel: `${config.channel}`,
         username: 'Wall-e',
         short: false,
-        text: `## ${releaseData.releaseTitle}\n${releaseData.releaseNotes}`
+        text: `${releaseData.releaseTitle}\n${releaseData.releaseNotes}`
     };
 
     try {

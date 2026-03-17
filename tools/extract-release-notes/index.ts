@@ -5,9 +5,13 @@ import { extractReleaseNotes } from '../../packages/cli/src/release/extract-rele
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 const changelogFilePath = `./${CHANGELOG_FILE_NAME}`;
-const { releaseTitle, releaseNotes } = extractReleaseNotes(changelogFilePath, packageJson.version);
+const extractedReleaseNotes = extractReleaseNotes(changelogFilePath, packageJson.version);
 
-const resultNotes = `# ${releaseTitle}\n\n${releaseNotes}`;
+if (extractedReleaseNotes) {
+    const { releaseTitle, releaseNotes } = extractedReleaseNotes;
 
-writeFileSync('./CHANGELOG_CURRENT.md', resultNotes, 'utf-8');
-console.log('Result Notes: \n', resultNotes);
+    const resultNotes = `${releaseTitle}\n\n${releaseNotes}`;
+
+    writeFileSync('./CHANGELOG_CURRENT.md', resultNotes, 'utf-8');
+    console.log('Result Notes: \n', resultNotes);
+}
