@@ -5363,7 +5363,7 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur', fakeAsync(() => {
+        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacyTreeSelectControlWithAsyncValidators);
             const { control, treeSelect } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];

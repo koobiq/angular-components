@@ -672,7 +672,7 @@ describe('KbqInput', () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur', fakeAsync(() => {
+        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacyInputControlWithAsyncValidators);
             const { control, input } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];

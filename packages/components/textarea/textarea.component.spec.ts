@@ -482,7 +482,7 @@ describe('KbqTextarea', () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur', fakeAsync(() => {
+        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacyTextareaControlWithAsyncValidators);
             const { control, textarea } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];
