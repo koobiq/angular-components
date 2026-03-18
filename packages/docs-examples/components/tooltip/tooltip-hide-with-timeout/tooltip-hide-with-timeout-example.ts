@@ -14,14 +14,15 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconModule
     ],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-m);">
-            @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-                <button kbqTooltip="Action{{ item }}" kbq-button>
-                    <i kbq-icon="kbq-diamond_16"></i>
-                </button>
-            }
-        </div>
+        @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+            <button kbqTooltip="Action{{ item }}" kbq-button>
+                <i kbq-icon="kbq-diamond_16"></i>
+            </button>
+        }
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-m'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipHideWithTimeoutExample {}

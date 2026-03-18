@@ -10,13 +10,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'tooltip-disabled-example',
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px;">
-            <button kbq-button kbqTooltip="This item is locked and cannot be deleted" [disabled]="true">
-                <i kbq-icon="kbq-trash_16"></i>
-                Delete
-            </button>
-        </div>
+        <button kbq-button kbqTooltip="This item is locked and cannot be deleted" [disabled]="true">
+            <i kbq-icon="kbq-trash_16"></i>
+            Delete
+        </button>
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipDisabledExample {}

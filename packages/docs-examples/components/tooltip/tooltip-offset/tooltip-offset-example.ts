@@ -12,14 +12,15 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-l);">
-            <button kbq-button kbqTooltip="Tooltip">Default</button>
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipArrow]="true">Default with arrow</button>
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="0">0px</button>
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="32">32px</button>
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="-8">-8px</button>
-        </div>
+        <button kbq-button kbqTooltip="Tooltip">Default</button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipArrow]="true">Default with arrow</button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="0">0px</button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="32">32px</button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="-8">-8px</button>
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipOffsetExample {}

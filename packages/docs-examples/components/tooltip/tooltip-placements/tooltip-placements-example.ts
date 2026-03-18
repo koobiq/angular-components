@@ -9,7 +9,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'tooltip-placements-example',
     imports: [KbqToolTipModule, KbqButtonModule],
     template: `
-        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: center">
+        <div class="layout-row layout-gap-l layout-align-center-center">
             <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'topLeft'" [kbqTooltipArrow]="true">
                 topLeft
             </button>
@@ -23,7 +23,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
         <br />
 
-        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: space-between">
+        <div class="layout-row layout-gap-l layout-align-space-between">
             <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'leftTop'" [kbqTooltipArrow]="true">
                 leftTop
             </button>
@@ -34,7 +34,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
         <br />
 
-        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: space-between">
+        <div class="layout-row layout-gap-l layout-align-space-between">
             <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'left'" [kbqTooltipArrow]="true">
                 left
             </button>
@@ -45,7 +45,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
         <br />
 
-        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: space-between">
+        <div class="layout-row layout-gap-l layout-align-space-between">
             <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'leftBottom'" [kbqTooltipArrow]="true">
                 leftBottom
             </button>
@@ -56,7 +56,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
         <br />
 
-        <div class="layout-row" style="gap: var(--kbq-size-l); justify-content: center">
+        <div class="layout-row layout-gap-l layout-align-center-center">
             <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'bottomLeft'" [kbqTooltipArrow]="true">
                 bottomLeft
             </button>

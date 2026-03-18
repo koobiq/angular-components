@@ -13,22 +13,23 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-l);">
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
-                Contrast (default)
-            </button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
+            Contrast (default)
+        </button>
 
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
-                Contrast Fade
-            </button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
+            Contrast Fade
+        </button>
 
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
 
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
 
-            <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
-        </div>
+        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipStyleExample {

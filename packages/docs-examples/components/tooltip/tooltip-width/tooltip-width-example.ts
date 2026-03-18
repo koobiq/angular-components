@@ -13,16 +13,17 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-l);">
-            <button kbq-button kbqTooltip="Tooltip">Tooltip</button>
-            <button
-                kbq-button
-                kbqTooltip="A tooltip is a hint that appears when the pointer hovers over or focuses on an interface element. A tooltip cannot contain interactive elements."
-            >
-                Max Width
-            </button>
-        </div>
+        <button kbq-button kbqTooltip="Tooltip">Tooltip</button>
+        <button
+            kbq-button
+            kbqTooltip="A tooltip is a hint that appears when the pointer hovers over or focuses on an interface element. A tooltip cannot contain interactive elements."
+        >
+            Max Width
+        </button>
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipWidthExample {

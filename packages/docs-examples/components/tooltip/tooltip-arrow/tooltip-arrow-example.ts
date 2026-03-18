@@ -12,11 +12,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px; gap: var(--kbq-size-l);">
-            <button kbq-button kbqTooltip="Tooltip without arrow">No arrow</button>
-            <button kbq-button kbqTooltip="Tooltip with arrow" [kbqTooltipArrow]="true">With arrow</button>
-        </div>
+        <button kbq-button kbqTooltip="Tooltip without arrow">No arrow</button>
+        <button kbq-button kbqTooltip="Tooltip with arrow" [kbqTooltipArrow]="true">With arrow</button>
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipArrowExample {}

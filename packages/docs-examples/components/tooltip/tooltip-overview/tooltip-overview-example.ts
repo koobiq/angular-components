@@ -14,12 +14,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconModule
     ],
     template: `
-        <div class="layout-row layout-align-center-center" style="min-height: 120px;">
-            <button kbq-button kbqTooltip="Create">
-                <i kbq-icon="kbq-plus_16"></i>
-            </button>
-        </div>
+        <button kbq-button kbqTooltip="Create">
+            <i kbq-icon="kbq-plus_16"></i>
+        </button>
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipOverviewExample {}
