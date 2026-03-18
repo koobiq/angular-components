@@ -232,10 +232,12 @@ const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
 };
 
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
 const getAsyncValidator =
     (valid: boolean = true): AsyncValidatorFn =>
     (): Observable<ValidationErrors | null> =>
-        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
@@ -682,13 +684,13 @@ describe('KbqInput', () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             input().onBlur();
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
@@ -708,13 +710,13 @@ describe('KbqInput', () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             input().onBlur();
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);

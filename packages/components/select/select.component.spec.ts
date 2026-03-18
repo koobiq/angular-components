@@ -96,10 +96,12 @@ const customErrorStateMatcher: ErrorStateMatcher = {
 const getSelectElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
     fixture.debugElement.query(By.directive(KbqSelect)).nativeElement;
 
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
 const getAsyncValidator =
     (valid: boolean = true): AsyncValidatorFn =>
     (): Observable<ValidationErrors | null> =>
-        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -5483,13 +5485,13 @@ describe('KbqSelect', () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             select().onBlur();
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
@@ -5509,13 +5511,13 @@ describe('KbqSelect', () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             select().onBlur();
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);

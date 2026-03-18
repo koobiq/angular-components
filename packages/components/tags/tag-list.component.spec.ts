@@ -73,10 +73,12 @@ const getTagListElement = (debugElement: DebugElement): HTMLElement => {
     return debugElement.query(By.directive(KbqTagList)).nativeElement;
 };
 
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
 const getAsyncValidator =
     (valid: boolean = true): AsyncValidatorFn =>
     (): Observable<ValidationErrors | null> =>
-        timer(1000).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
@@ -1800,13 +1802,13 @@ describe(KbqTagList.name, () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             tagList().blur();
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
@@ -1826,13 +1828,13 @@ describe(KbqTagList.name, () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             tagList().blur();
-            tick(1001);
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
