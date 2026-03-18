@@ -10,18 +10,25 @@ import {
     OnInit,
     QueryList,
     TemplateRef,
+    Type,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import {
+    AsyncValidatorFn,
     ControlValueAccessor,
+    FormControl,
+    FormControlStatus,
+    FormGroup,
     FormGroupDirective,
     FormsModule,
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
+    ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -52,20 +59,49 @@ import {
     KbqOption,
     KbqOptionSelectionChange,
     KbqVirtualOption,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { Observable, Subject, Subscription, merge, of } from 'rxjs';
+import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { KbqSelect } from './select.component';
 import { KbqSelectModule } from './select.module';
+
+const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
+
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+
+const customErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.untouched
+};
+
+const getSelectElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
+    fixture.debugElement.query(By.directive(KbqSelect)).nativeElement;
+
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -1480,6 +1516,86 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     constructor(public scrollDispatcher: ScrollDispatcher) {
         super(scrollDispatcher);
     }
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <kbq-select formControlName="select" [errorStateMatcher]="errorStateMatcher">
+                    <kbq-option value="steak-0">Steak</kbq-option>
+                    <kbq-option value="pizza-1">Pizza</kbq-option>
+                </kbq-select>
+            </kbq-form-field>
+            <button type="submit">Submit</button>
+        </form>
+    `
+})
+class SelectWithErrorStateMatcher {
+    readonly select = viewChild.required(KbqSelect);
+    readonly form = new FormGroup({ select: new FormControl('', Validators.required) });
+    errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <kbq-select formControlName="select">
+                    <kbq-option value="1">1</kbq-option>
+                    <kbq-option value="2">2</kbq-option>
+                </kbq-select>
+            </kbq-form-field>
+        </form>
+    `
+})
+class SelectWithDIErrorStateMatcher {
+    readonly select = viewChild.required(KbqSelect);
+    readonly form = new FormGroup({ select: new FormControl('', Validators.required) });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [formControl]="control">
+                <kbq-option value="1">1</kbq-option>
+                <kbq-option value="2">2</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class LegacySelectControlWithAsyncValidators {
+    readonly select = viewChild.required(KbqSelect);
+    readonly control = new FormControl<string>('', {
+        nonNullable: true,
+        asyncValidators: [getAsyncValidator()]
+    });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field>
+            <kbq-select [formControl]="control">
+                <kbq-option value="1">1</kbq-option>
+                <kbq-option value="2">2</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectControlWithAsyncValidators {
+    readonly select = viewChild.required(KbqSelect);
+    readonly control = new FormControl<string>('', {
+        nonNullable: true,
+        asyncValidators: [getAsyncValidator()]
+    });
 }
 
 describe('KbqSelect', () => {
@@ -5197,6 +5313,216 @@ describe('KbqSelect', () => {
             });
 
             expect(testInstance.select.hiddenItems).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
+        }));
+    });
+
+    describe('ErrorStateMatcher', () => {
+        describe(ErrorStateMatcher.name, () => {
+            it('should not be in error state initially when invalid but untouched', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and touched', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.detectChanges();
+
+                fixture.componentInstance.form.controls.select.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(true);
+            });
+
+            it('should be in error state when form is submitted and control is invalid', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.detectChanges();
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and update errorState on blur', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+
+                getSelectElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.select().errorState).toBe(true);
+            });
+        });
+
+        describe(ShowOnFormSubmitErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid and touched but form not submitted', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.componentInstance.form.controls.select.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+            });
+
+            it('should be in error state after form is submitted when invalid', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+
+                getSelectElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+            });
+        });
+
+        describe(ShowOnControlDirtyErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid but pristine', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and dirty', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.componentInstance.form.controls.select.markAsDirty();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+
+                getSelectElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+            });
+        });
+
+        describe('custom ErrorStateMatcher', () => {
+            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
+                const fixture = createComponent(SelectWithDIErrorStateMatcher);
+
+                expect(fixture.componentInstance.select().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.select.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+            });
+
+            it('should use custom errorStateMatcher logic', () => {
+                const fixture = createComponent(SelectWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.select.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().errorState).toBe(false);
+            });
+        });
+    });
+
+    describe('async validation', () => {
+        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+            const fixture = createComponent(LegacySelectControlWithAsyncValidators);
+            const { select, control } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
+
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue('1');
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            select().onBlur();
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
+
+            subscription.unsubscribe();
+        }));
+
+        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+            const fixture = createComponent(SelectControlWithAsyncValidators);
+            const { select, control } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
+
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue('1');
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            select().onBlur();
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            subscription.unsubscribe();
         }));
     });
 });

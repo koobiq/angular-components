@@ -6,31 +6,49 @@ import {
     ChangeDetectionStrategy,
     Component,
     DebugElement,
+    model,
     NgZone,
     Provider,
     QueryList,
+    signal,
     Type,
     ViewChild,
-    ViewChildren,
-    model,
-    signal,
-    viewChild
+    viewChild,
+    ViewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import {
+    AsyncValidatorFn,
+    FormControl,
+    FormControlStatus,
+    FormGroup,
+    FormsModule,
+    NgForm,
+    ReactiveFormsModule,
+    UntypedFormControl,
+    ValidationErrors,
+    Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { BACKSPACE, DELETE, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import {
-    MockNgZone,
     createKeyboardEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    MockNgZone,
     typeInElement
 } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { Subject } from 'rxjs';
+import { map, Observable, Subject, timer } from 'rxjs';
+import {
+    ErrorStateMatcher,
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher
+} from '../core';
 import { KbqInputModule } from '../input/index';
 import { KbqTagList, KbqTagsModule } from './index';
 import { KbqTagInput, KbqTagInputEvent } from './tag-input';
@@ -48,8 +66,22 @@ const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] 
     return fixture;
 };
 
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+
 const getTagListElement = (debugElement: DebugElement): HTMLElement => {
     return debugElement.query(By.directive(KbqTagList)).nativeElement;
+};
+
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+
+const customErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.untouched
 };
 
 const getTagElements = (debugElement: DebugElement): HTMLElement[] => {
@@ -147,6 +179,96 @@ export class TestFormFieldTagList {
             selected: false
         }))
     );
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList="kbqTagList" [formControl]="control">
+                <kbq-tag value="1">1</kbq-tag>
+                <kbq-tag value="2">2</kbq-tag>
+
+                <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class LegacyTagListControlWithAsyncValidators {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly control = new FormControl('', {
+        nonNullable: true,
+        asyncValidators: [getAsyncValidator()]
+    });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList="kbqTagList" [formControl]="control">
+                <kbq-tag value="1">1</kbq-tag>
+                <kbq-tag value="2">2</kbq-tag>
+
+                <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListControlWithAsyncValidators {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly control = new FormControl('', {
+        nonNullable: true,
+        asyncValidators: [getAsyncValidator()]
+    });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <kbq-tag-list #tagList="kbqTagList" formControlName="tagList">
+                    <kbq-tag value="1">1</kbq-tag>
+                    <kbq-tag value="2">2</kbq-tag>
+
+                    <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
+                </kbq-tag-list>
+            </kbq-form-field>
+        </form>
+    `
+})
+class TagListWithDIErrorStateMatcher {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly form = new FormGroup({ tagList: new FormControl('', Validators.required) });
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <kbq-tag-list #tagList="kbqTagList" formControlName="tagList" [errorStateMatcher]="errorStateMatcher">
+                    <kbq-tag value="1">1</kbq-tag>
+                    <kbq-tag value="2">2</kbq-tag>
+
+                    <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
+                </kbq-tag-list>
+            </kbq-form-field>
+            <button type="submit">Submit</button>
+        </form>
+    `
+})
+class TagListWithErrorStateMatcher {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly form = new FormGroup({ tagList: new FormControl('', Validators.required) });
+    errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
 
 describe(KbqTagList.name, () => {
@@ -1512,6 +1634,213 @@ describe(KbqTagList.name, () => {
         const { debugElement } = fixture;
 
         expect(getTagListElement(debugElement).hasAttribute('tabindex')).toBe(false);
+    });
+
+    describe('ErrorStateMatcher', () => {
+        describe(ErrorStateMatcher.name, () => {
+            it('should not be in error state initially when invalid but untouched', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and touched', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.form.controls.tagList.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+            });
+
+            it('should be in error state when form is submitted and control is invalid', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and update errorState on blur', fakeAsync(() => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+
+                getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+                tick();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+            }));
+        });
+
+        describe(ShowOnFormSubmitErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid and touched but form not submitted', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.componentInstance.form.controls.tagList.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+            });
+
+            it('should be in error state after form is submitted when invalid', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', fakeAsync(() => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+
+                getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+                tick();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+            }));
+        });
+
+        describe(ShowOnControlDirtyErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid but pristine', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and dirty', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.componentInstance.form.controls.tagList.markAsDirty();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', fakeAsync(() => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+
+                getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+                tick();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+            }));
+        });
+
+        describe('custom ErrorStateMatcher', () => {
+            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
+                const fixture = createStandaloneComponent(TagListWithDIErrorStateMatcher);
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.tagList.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+            });
+
+            it('should use custom errorStateMatcher logic', () => {
+                const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.tagList.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+            });
+        });
+    });
+
+    describe('async validation', () => {
+        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+            const fixture = createStandaloneComponent(LegacyTagListControlWithAsyncValidators);
+            const { control, tagList } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
+
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue('1');
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            tagList().blur();
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
+
+            subscription.unsubscribe();
+        }));
+
+        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+            const fixture = createStandaloneComponent(TagListControlWithAsyncValidators);
+            const { control, tagList } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
+
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue('1');
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            tagList().blur();
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            subscription.unsubscribe();
+        }));
     });
 });
 
