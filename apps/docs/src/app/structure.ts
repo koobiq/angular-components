@@ -5,7 +5,6 @@ export enum DocsStructureItemId {
     // Main
     Installation = 'installation',
     Versioning = 'versioning',
-    DirectoryStructure = 'directory-structure',
     Theming = 'theming',
     Typography = 'typography',
     DesignTokens = 'design-tokens',
@@ -192,17 +191,6 @@ const structure: DocsStructure = makeStructure({
                         en: 'Versioning'
                     },
                     svgPreview: 'versioning',
-                    isGuide: true,
-                    hasApi: false,
-                    hasExamples: false
-                },
-                {
-                    id: DocsStructureItemId.DirectoryStructure,
-                    name: {
-                        ru: 'Структура каталогов',
-                        en: 'Directory structure'
-                    },
-                    svgPreview: 'catalog structure',
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false
