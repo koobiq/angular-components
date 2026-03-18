@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 
 /**
@@ -13,30 +12,28 @@ import { KbqIcon } from '@koobiq/components/icon';
     imports: [
         KbqButtonModule,
         FormsModule,
-        KbqFieldset,
-        KbqFieldsetItem,
         KbqIcon
     ],
     template: `
-        <kbq-fieldset>
-            <button kbq-button kbqFieldsetItem [kbqStyle]="style" [color]="color">
+        <div class="kbq-group layout-gap-3xs">
+            <button kbq-button class="kbq-group-item" [kbqStyle]="style" [color]="color">
                 <i kbq-icon="kbq-diamond_16"></i>
                 {{ data[0] }}
             </button>
 
-            <button kbq-button kbqFieldsetItem [kbqStyle]="style" [color]="color">
+            <button kbq-button class="kbq-group-item" [kbqStyle]="style" [color]="color">
                 {{ data[1] }}
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
-            <button kbq-button kbqFieldsetItem [kbqStyle]="style" [color]="color">
+            <button kbq-button class="kbq-group-item" [kbqStyle]="style" [color]="color">
                 {{ data[2] }}
             </button>
 
-            <button kbq-button kbqFieldsetItem [kbqStyle]="style" [color]="color">
+            <button kbq-button class="kbq-group-item" [kbqStyle]="style" [color]="color">
                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
             </button>
-        </kbq-fieldset>
+        </div>
     `,
     host: {
         class: 'layout-column layout-align-center-center layout-gap-l'

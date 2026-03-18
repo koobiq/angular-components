@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 
 /**
@@ -13,21 +12,36 @@ import { KbqIcon } from '@koobiq/components/icon';
     imports: [
         KbqButtonModule,
         FormsModule,
-        KbqFieldset,
-        KbqFieldsetItem,
         KbqIcon
     ],
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <kbq-fieldset [orientation]="'vertical'">
-                    <button kbq-button kbqFieldsetItem [color]="style.color" [kbqStyle]="style.style">
+                <div
+                    class="kbq-vertical-group"
+                    [class.layout-gap-3xs]="
+                        (style.color === 'contrast' || style.color === 'contrast-fade') && style.style === 'filled'
+                    "
+                >
+                    <button
+                        kbq-button
+                        class="kbq-group-item"
+                        aria-label="Plus"
+                        [color]="style.color"
+                        [kbqStyle]="style.style"
+                    >
                         <i kbq-icon="kbq-plus_16"></i>
                     </button>
-                    <button kbq-button kbqFieldsetItem [color]="style.color" [kbqStyle]="style.style">
+                    <button
+                        kbq-button
+                        class="kbq-group-item"
+                        aria-label="Minus"
+                        [color]="style.color"
+                        [kbqStyle]="style.style"
+                    >
                         <i kbq-icon="kbq-minus_16"></i>
                     </button>
-                </kbq-fieldset>
+                </div>
             </div>
         }
     `,

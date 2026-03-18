@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 
 /**
@@ -12,47 +10,79 @@ import { KbqIcon } from '@koobiq/components/icon';
     selector: 'button-group-style-example',
     imports: [
         KbqButtonModule,
-        FormsModule,
-        KbqFieldset,
-        KbqFieldsetItem,
         KbqIcon
     ],
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <kbq-fieldset>
+                <div
+                    class="kbq-group"
+                    [class.layout-gap-3xs]="
+                        (style.color === 'contrast' || style.color === 'contrast-fade') && style.style === 'filled'
+                    "
+                >
                     @for (item of data; track item) {
-                        <button kbq-button kbqFieldsetItem [color]="style.color" [kbqStyle]="style.style">
+                        <button kbq-button class="kbq-group-item" [color]="style.color" [kbqStyle]="style.style">
                             {{ item }}
                         </button>
                     }
-                </kbq-fieldset>
+                </div>
 
-                <kbq-fieldset>
+                <div
+                    class="kbq-group"
+                    [class.layout-gap-3xs]="
+                        (style.color === 'contrast' || style.color === 'contrast-fade') && style.style === 'filled'
+                    "
+                >
                     @for (item of data; track item) {
-                        <button kbq-button kbqFieldsetItem [color]="style.color" [kbqStyle]="style.style">
+                        <button kbq-button class="kbq-group-item" [color]="style.color" [kbqStyle]="style.style">
                             <i kbq-icon="kbq-diamond_16"></i>
                         </button>
                     }
-                </kbq-fieldset>
+                </div>
             </div>
         }
     `,
     styles: `
-        .kbq-fieldset-item:is(.kbq-button, .kbq-button-icon).kbq-button_filled {
+        .dev-button-group:is(.kbq-button, .kbq-button-icon).kbq-button_filled {
             position: relative;
+            /*z-index: unset !important;*/
 
             /*border-right: 0;*/
-            margin-left: 0;
+            margin-left: 0 !important;
 
-            &:not(:last-child) {
-                &::after {
+            &:first-child:not(:last-child) {
+                /*border-right: 0;*/
+            }
+
+            &:not(:first-child):not(:last-child) {
+                /*border-left: 0;*/
+                /*border-right: 0;*/
+            }
+
+            &:last-child:not(:first-child) {
+                /*border-left: 0;*/
+            }
+
+            &:not(:first-child):not(:last-child) {
+                &::before {
                     display: block;
-                    content: '';
+                    /*content: '';*/
                     height: 100%;
                     width: var(--kbq-size-border-width);
                     position: absolute;
-                    right: 0;
+                    left: -1px;
+                    top: 0;
+                    background-color: var(--splitter-color);
+                }
+
+                &::after {
+                    display: block;
+                    /*content: '';*/
+                    height: 100%;
+                    width: var(--kbq-size-border-width);
+                    position: absolute;
+                    right: -1px;
                     top: 0;
                     background-color: var(--splitter-color);
                 }
