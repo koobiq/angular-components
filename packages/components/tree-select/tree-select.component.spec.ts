@@ -108,7 +108,7 @@ const ASYNC_VALIDATOR_TIMER_DUE = 1000;
 const getAsyncValidator =
     (valid: boolean = true): AsyncValidatorFn =>
     (): Observable<ValidationErrors | null> =>
-        timer(ASYNC_VALIDATOR_TIMER_DUEf).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
     imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
