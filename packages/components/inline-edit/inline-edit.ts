@@ -10,6 +10,7 @@ import {
     Component,
     computed,
     contentChild,
+    contentChildren,
     Directive,
     effect,
     ElementRef,
@@ -204,6 +205,7 @@ export class KbqInlineEdit {
     protected readonly label = contentChild(KbqLabel);
     /** @docs-private */
     protected readonly formFieldRef = contentChild(KbqFormField);
+    protected readonly formFieldRefList = contentChildren(KbqFormField);
 
     /** @docs-private */
     protected overlayOrigin: HTMLElement = this.elementRef.nativeElement;
@@ -394,11 +396,11 @@ export class KbqInlineEdit {
     }
 
     private isInvalid(): boolean {
-        const formFieldRef = this.formFieldRef();
+        const formFieldRef = this.formFieldRefList();
 
-        if (!formFieldRef) return false;
+        if (!formFieldRef || formFieldRef.length === 0) return false;
 
-        return formFieldRef.invalid;
+        return formFieldRef.some((ref) => ref.invalid);
     }
 
     private getValue() {
