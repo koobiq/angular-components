@@ -67,6 +67,7 @@
     & .kbq-tab-label__content {
         display: flex;
         align-items: center;
+        overflow: hidden;
 
         gap: var(--kbq-tabs-size-tab-item-content-gap-horizontal);
     }
@@ -83,7 +84,7 @@
     &.kbq-tab-label_vertical {
         justify-content: flex-start;
 
-        & .kbq-tab-label__content {
+        & .kbq-tab-label__content:not(.kbq-tab-label__template) {
             display: block;
             overflow: hidden;
             text-overflow: ellipsis;

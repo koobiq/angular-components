@@ -3,9 +3,15 @@
 }
 
 .example-tabs-vertical .kbq-tab-header {
-    max-width: 160px;
+    max-width: 140px;
 }
 
 .example-tabs-vertical .kbq-tab-body__wrapper {
     padding-left: var(--kbq-size-xl);
+}
+
+.example-tabs-vertical .example-tab-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
