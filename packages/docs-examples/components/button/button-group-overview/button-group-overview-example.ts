@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButton, KbqButtonCssStyler, KbqButtonGroup, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
 /**
@@ -9,13 +8,14 @@ import { KbqComponentColors } from '@koobiq/components/core';
 @Component({
     selector: 'button-group-overview-example',
     imports: [
-        KbqButtonModule,
-        FormsModule
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqButtonGroup
     ],
     template: `
-        <div class="kbq-group layout-gap-3xs">
+        <div class="layout-gap-3xs" kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button class="kbq-group-item" [kbqStyle]="style" [color]="color">
+                <button kbq-button [kbqStyle]="style" [color]="color">
                     {{ item }}
                 </button>
             }

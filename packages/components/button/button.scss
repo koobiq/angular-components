@@ -37,13 +37,5 @@
     border-radius: inherit;
 }
 
-.kbq-button-group {
-    @include groups-mixins.group(kbq-button);
-
-    &.kbq-button-group_vertical {
-        @include groups-mixins.vertical-group(kbq-button);
-    }
-}
-
 @include kbq-button-theme();
 @include kbq-button-typography();

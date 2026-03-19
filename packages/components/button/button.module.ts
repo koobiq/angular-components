@@ -2,6 +2,7 @@ import { A11yModule } from '@angular/cdk/a11y';
 import { ObserversModule } from '@angular/cdk/observers';
 import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
+import { KbqButtonGroup } from './button-group';
 import { KbqButton, KbqButtonCssStyler } from './button.component';
 import { KbqButtonDropdownTrigger } from './button.dropdown-trigger.directive';
 
@@ -12,12 +13,14 @@ import { KbqButtonDropdownTrigger } from './button.dropdown-trigger.directive';
         ObserversModule,
         KbqButtonDropdownTrigger,
         KbqButton,
-        KbqButtonCssStyler
+        KbqButtonCssStyler,
+        KbqButtonGroup
     ],
     exports: [
         KbqButton,
         KbqButtonCssStyler,
-        KbqButtonDropdownTrigger
+        KbqButtonDropdownTrigger,
+        KbqButtonGroup
     ]
 })
 export class KbqButtonModule {}

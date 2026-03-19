@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButton, KbqButtonCssStyler, KbqButtonGroup, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -10,35 +9,19 @@ import { KbqIcon } from '@koobiq/components/icon';
 @Component({
     selector: 'button-group-vertical-example',
     imports: [
-        KbqButtonModule,
-        FormsModule,
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqButtonGroup,
         KbqIcon
     ],
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <div
-                    class="kbq-vertical-group"
-                    [class.layout-gap-3xs]="
-                        (style.color === 'contrast' || style.color === 'contrast-fade') && style.style === 'filled'
-                    "
-                >
-                    <button
-                        kbq-button
-                        class="kbq-group-item"
-                        aria-label="Plus"
-                        [color]="style.color"
-                        [kbqStyle]="style.style"
-                    >
+                <div kbq-button-group [orientation]="'vertical'" [class.layout-gap-3xs]="!!style.gap">
+                    <button kbq-button aria-label="Plus" [color]="style.color" [kbqStyle]="style.appearance">
                         <i kbq-icon="kbq-plus_16"></i>
                     </button>
-                    <button
-                        kbq-button
-                        class="kbq-group-item"
-                        aria-label="Minus"
-                        [color]="style.color"
-                        [kbqStyle]="style.style"
-                    >
+                    <button kbq-button aria-label="Minus" [color]="style.color" [kbqStyle]="style.appearance">
                         <i kbq-icon="kbq-minus_16"></i>
                     </button>
                 </div>
@@ -51,12 +34,12 @@ import { KbqIcon } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonGroupVerticalExample {
-    protected readonly buttonStyles: { color: KbqComponentColors; style: KbqButtonStyles }[] = [
-        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Filled },
-        { color: KbqComponentColors.ContrastFade, style: KbqButtonStyles.Filled },
-        { color: KbqComponentColors.ThemeFade, style: KbqButtonStyles.Outline },
-        { color: KbqComponentColors.ContrastFade, style: KbqButtonStyles.Outline },
-        { color: KbqComponentColors.Theme, style: KbqButtonStyles.Transparent },
-        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }
+    protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles; gap?: boolean }[] = [
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled, gap: true },
+        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled, gap: true },
+        { color: KbqComponentColors.ThemeFade, appearance: KbqButtonStyles.Outline },
+        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Outline },
+        { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Transparent }
     ];
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButton, KbqButtonCssStyler, KbqButtonGroup, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -9,33 +9,25 @@ import { KbqIcon } from '@koobiq/components/icon';
 @Component({
     selector: 'button-group-style-example',
     imports: [
-        KbqButtonModule,
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqButtonGroup,
         KbqIcon
     ],
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <div
-                    class="kbq-group"
-                    [class.layout-gap-3xs]="
-                        (style.color === 'contrast' || style.color === 'contrast-fade') && style.style === 'filled'
-                    "
-                >
+                <div kbq-button-group [class.layout-gap-3xs]="!!style.gap">
                     @for (item of data; track item) {
-                        <button kbq-button class="kbq-group-item" [color]="style.color" [kbqStyle]="style.style">
+                        <button kbq-button [color]="style.color" [kbqStyle]="style.appearance">
                             {{ item }}
                         </button>
                     }
                 </div>
 
-                <div
-                    class="kbq-group"
-                    [class.layout-gap-3xs]="
-                        (style.color === 'contrast' || style.color === 'contrast-fade') && style.style === 'filled'
-                    "
-                >
+                <div kbq-button-group [class.layout-gap-3xs]="!!style.gap">
                     @for (item of data; track item) {
-                        <button kbq-button class="kbq-group-item" [color]="style.color" [kbqStyle]="style.style">
+                        <button kbq-button [color]="style.color" [kbqStyle]="style.appearance">
                             <i kbq-icon="kbq-diamond_16"></i>
                         </button>
                     }
@@ -55,12 +47,12 @@ export class ButtonGroupStyleExample {
         'Snooze'
     ] as const;
 
-    protected readonly buttonStyles: { color: KbqComponentColors; style: KbqButtonStyles }[] = [
-        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Filled },
-        { color: KbqComponentColors.ContrastFade, style: KbqButtonStyles.Filled },
-        { color: KbqComponentColors.ThemeFade, style: KbqButtonStyles.Outline },
-        { color: KbqComponentColors.ContrastFade, style: KbqButtonStyles.Outline },
-        { color: KbqComponentColors.Theme, style: KbqButtonStyles.Transparent },
-        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }
+    protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles; gap?: boolean }[] = [
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled, gap: true },
+        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled, gap: true },
+        { color: KbqComponentColors.ThemeFade, appearance: KbqButtonStyles.Outline },
+        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Outline },
+        { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Transparent }
     ];
 }
