@@ -4,18 +4,15 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
- * @title Tooltip
+ * @title Tooltip disabled
  */
 @Component({
-    selector: 'tooltip-overview-example',
-    imports: [
-        KbqButtonModule,
-        KbqToolTipModule,
-        KbqIconModule
-    ],
+    selector: 'tooltip-disabled-example',
+    imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button kbqTooltip="Create">
-            <i kbq-icon="kbq-plus_16"></i>
+        <button kbq-button kbqTooltip="This item is locked and cannot be deleted" [disabled]="true">
+            <i kbq-icon="kbq-trash_16"></i>
+            Delete
         </button>
     `,
     host: {
@@ -23,4 +20,4 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TooltipOverviewExample {}
+export class TooltipDisabledExample {}

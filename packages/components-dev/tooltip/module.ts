@@ -19,40 +19,43 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [TooltipExamplesModule],
     template: `
-        <tooltip-dynamic-example />
-        <br />
-        <br />
         <tooltip-overview-example />
         <br />
         <br />
-        <tooltip-hide-with-timeout-example />
+        <tooltip-width-example />
         <br />
         <br />
-        <tooltip-arrow-and-offset-example />
+        <tooltip-wide-width-example />
         <br />
         <br />
-        <tooltip-extended-example />
+        <tooltip-style-example />
         <br />
         <br />
-        <tooltip-hide-with-timeout-example />
+        <tooltip-arrow-example />
         <br />
         <br />
-        <tooltip-long-example />
-        <br />
-        <br />
-        <tooltip-multiple-lines-example />
-        <br />
-        <br />
-        <tooltip-placement-center-example />
-        <br />
-        <br />
-        <tooltip-placement-edges-example />
+        <tooltip-placements-example />
         <br />
         <br />
         <tooltip-relative-to-pointer-example />
         <br />
         <br />
-        <tooltip-style-example />
+        <tooltip-offset-example />
+        <br />
+        <br />
+        <tooltip-hide-with-timeout-example />
+        <br />
+        <br />
+        <tooltip-disabled-example />
+        <br />
+        <br />
+        <tooltip-extended-example />
+        <br />
+        <br />
+        <tooltip-dynamic-example />
+        <br />
+        <br />
+        <tooltip-interactive-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

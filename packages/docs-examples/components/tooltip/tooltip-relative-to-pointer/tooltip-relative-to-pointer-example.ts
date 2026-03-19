@@ -16,6 +16,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             Button with a tooltip positioned relative to the cursor
         </button>
     `,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipRelativeToPointerExample {}
