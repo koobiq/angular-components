@@ -43,60 +43,6 @@ import { KbqIcon } from '@koobiq/components/icon';
             </div>
         }
     `,
-    styles: `
-        .dev-button-group:is(.kbq-button, .kbq-button-icon).kbq-button_filled {
-            position: relative;
-            /*z-index: unset !important;*/
-
-            /*border-right: 0;*/
-            margin-left: 0 !important;
-
-            &:first-child:not(:last-child) {
-                /*border-right: 0;*/
-            }
-
-            &:not(:first-child):not(:last-child) {
-                /*border-left: 0;*/
-                /*border-right: 0;*/
-            }
-
-            &:last-child:not(:first-child) {
-                /*border-left: 0;*/
-            }
-
-            &:not(:first-child):not(:last-child) {
-                &::before {
-                    display: block;
-                    /*content: '';*/
-                    height: 100%;
-                    width: var(--kbq-size-border-width);
-                    position: absolute;
-                    left: -1px;
-                    top: 0;
-                    background-color: var(--splitter-color);
-                }
-
-                &::after {
-                    display: block;
-                    /*content: '';*/
-                    height: 100%;
-                    width: var(--kbq-size-border-width);
-                    position: absolute;
-                    right: -1px;
-                    top: 0;
-                    background-color: var(--splitter-color);
-                }
-            }
-
-            &.kbq-contrast {
-                --splitter-color: var(--kbq-background-contrast-fade);
-            }
-
-            &.kbq-contrast-fade {
-                --splitter-color: var(--kbq-line-contrast-fade);
-            }
-        }
-    `,
     host: {
         class: 'layout-column layout-align-center-center layout-gap-xl'
     },
