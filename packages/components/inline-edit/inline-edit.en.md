@@ -33,6 +33,24 @@ For fields without labels, the placeholder can include the field name, e.g., _De
 
 ### Validation
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Usage inside FormGroup</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+If the component is used inside a form, add `kbqDisableLegacyValidationDirectiveProvider` to your providers.
+Otherwise, validation won't work - the component will wait for form submission and will never show an error.
+
+```typescript
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+
+@NgModule({
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+})
+```
+
+</div>
+</div>
+
 Exiting edit mode attempts to save changes. If the new value is invalid, the system displays an error message, highlights the field, and keeps focus in the input.
 
 When certain characters are always invalid (e.g., letters in an IP address), block their input directly. Prevented characters do not appear, and a yellow tooltip explains why.
