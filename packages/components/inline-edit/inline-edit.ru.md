@@ -30,6 +30,23 @@
 
 ### Валидация
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Использование внутри FormGroup</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Если компонент используется внутри формы, добавьте в провайдеры `kbqDisableLegacyValidationDirectiveProvider`.
+
+Иначе валидация не заработает - компонент будет ждать отправки формы и никогда не покажет ошибку.
+
+```typescript
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+
+providers: [kbqDisableLegacyValidationDirectiveProvider()];
+```
+
+</div>
+</div>
+
 Выход из режима редактирования запускает попытку применить изменения. Если новое значение невалидно, то показывается сообщение об ошибке, поле подсвечивается, фокус остается в поле.
 
 <!-- example(inline-edit-validation) -->
