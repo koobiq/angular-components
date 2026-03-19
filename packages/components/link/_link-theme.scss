@@ -5,10 +5,6 @@
 @mixin kbq-link-geometry() {
     display: inline;
 
-    padding-top: var(--kbq-link-size-multiline-hit-area-gap);
-    padding-bottom: var(--kbq-link-size-multiline-hit-area-gap);
-    box-decoration-break: clone;
-
     text-decoration: none;
     cursor: pointer;
 
@@ -22,9 +18,15 @@
     & .kbq-link__text {
         text-decoration-line: underline;
         text-decoration-style: solid;
-        text-decoration-thickness: var(--kbq-link-border-bottom-width);
+        text-decoration-thickness: var(--kbq-link-underline-width);
         text-decoration-color: transparent;
-        text-underline-offset: calc(var(--kbq-link-size-multiline-hit-area-gap) + var(--kbq-link-border-bottom-width));
+        text-underline-offset: calc(var(--kbq-link-size-multiline-hit-area-gap) + var(--kbq-link-underline-width));
+    }
+
+    &.kbq-link_multiline {
+        padding-top: var(--kbq-link-size-multiline-hit-area-gap);
+        padding-bottom: var(--kbq-link-size-multiline-hit-area-gap);
+        box-decoration-break: clone;
     }
 
     &.kbq-text-with-icon .kbq-icon {

@@ -11,7 +11,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     template: `
         <p>
             I fully agree
-            <a kbq-link class="kbq-link_external">
+            <a kbq-link class="kbq-link_external" multiline>
                 <i kbq-icon="kbq-scroll-o_16"></i>
                 <span class="kbq-link__text">with the terms of the license agreement</span>
                 <i kbq-icon="kbq-north-east_16"></i>
