@@ -41,6 +41,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     icon: KbqIcon;
     // (undocumented)
     icons: QueryList<ElementRef>;
+    multiline: boolean;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
@@ -49,6 +50,8 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     static ngAcceptInputType_compact: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_multiline: unknown;
     // (undocumented)
     static ngAcceptInputType_noUnderline: unknown;
     // (undocumented)
@@ -81,7 +84,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     useVisited: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon", "icons"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon", "icons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLink, never>;
 }
