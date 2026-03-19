@@ -98,7 +98,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
         <kbq-form-field>
             <kbq-timezone-select data-testid="e2eTimezoneSelect" [panelClass]="'custom-select-panel'">
                 @for (group of data; track group) {
-                    <kbq-optgroup [label]="group.countryName">
+                    <kbq-optgroup class="cdk-keyboard-focused" [label]="group.countryName">
                         <kbq-timezone-option [timezone]="group.zones[0]" />
 
                         <kbq-timezone-option class="kbq-hovered" [timezone]="group.zones[1]" />

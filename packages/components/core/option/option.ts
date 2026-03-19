@@ -17,6 +17,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import { ENTER, hasModifierKey, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { KbqPseudoCheckboxModule } from '../selection';
@@ -46,6 +47,7 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     multiSelection?: boolean;
     withVirtualScroll?: boolean;
+    keyManager?: ActiveDescendantKeyManager<KbqOption>;
     setSelectedOptionsByClick: (option: KbqOption) => void;
 }
 
@@ -148,6 +150,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         '[id]': 'id',
 
         '(click)': 'handleClick($event)',
+        '(mouseenter)': 'onMouseenter()',
         '(keydown)': 'handleKeydown($event)'
     },
     providers: [
@@ -247,7 +250,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     constructor(
         private readonly elementRef: ElementRef<HTMLElement>,
         private readonly changeDetectorRef: ChangeDetectorRef,
-        @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) private readonly parent: KbqOptionParentComponent,
+        @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) protected readonly parent: KbqOptionParentComponent,
         @Optional() readonly group: KbqOptgroup
     ) {
         super();
@@ -379,6 +382,13 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     getHostElement(): HTMLElement {
         return this.elementRef.nativeElement;
+    }
+
+    /** @docs-private */
+    protected onMouseenter() {
+        if (this.disabled) return;
+
+        this.parent?.keyManager?.setActiveItem(this);
     }
 }
 

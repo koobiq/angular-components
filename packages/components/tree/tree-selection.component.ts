@@ -45,7 +45,7 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
-import { getKbqSelectNonArrayValueError, MultipleMode } from '@koobiq/components/core';
+import { getKbqSelectNonArrayValueError, KBQ_FORM_FIELD_REF, MultipleMode } from '@koobiq/components/core';
 import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
@@ -132,6 +132,9 @@ export class KbqTreeSelection
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
     protected readonly focusMonitor = inject(FocusMonitor);
+
+    /** Indicates whether this component is placed inside a KbqFormField component. */
+    protected readonly inSelect = !!inject(KBQ_FORM_FIELD_REF, { optional: true, host: true });
 
     renderedOptions = new QueryList<KbqTreeOption>();
 

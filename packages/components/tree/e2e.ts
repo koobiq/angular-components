@@ -31,7 +31,6 @@ const DATA_OBJECT = {
     States: {
         Normal: '',
         Hovered: '',
-        Active: '',
         Selected: '',
         SelectedHovered: '',
         Focused: '',
@@ -93,7 +92,6 @@ function buildFileTree(value: any, level: number): FileNode[] {
                 *kbqTreeNodeDef="let node"
                 kbqTreeNodePadding
                 [class.kbq-hovered]="node.name === 'Hovered' || node.name === 'SelectedHovered'"
-                [class.kbq-active]="node.name === 'Active'"
                 [class.kbq-selected]="node.name === 'Selected' || node.name === 'SelectedHovered'"
                 [class.kbq-focused]="node.name === 'Focused'"
             >
@@ -119,7 +117,6 @@ function buildFileTree(value: any, level: number): FileNode[] {
                 *kbqTreeNodeDef="let node"
                 kbqTreeNodePadding
                 [class.kbq-hovered]="node.name === 'Hovered' || node.name === 'SelectedHovered'"
-                [class.kbq-active]="node.name === 'Active'"
                 [class.kbq-selected]="node.name === 'Selected' || node.name === 'SelectedHovered'"
                 [class.kbq-focused]="node.name === 'Focused'"
             >

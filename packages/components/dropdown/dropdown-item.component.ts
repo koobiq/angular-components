@@ -110,6 +110,8 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
 
     /** Focuses the dropdown item. */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
+        if (this.disabled) return;
+
         if (this.focusMonitor && origin) {
             this.focusMonitor.focusVia(this.getHostElement(), origin, options);
         } else {
@@ -148,6 +150,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
     @HostListener('mouseenter') handleMouseEnter() {
         this.hovered.next(this);
+        this.focus('mouse');
     }
 
     /** Gets the label to be used when determining whether the option should be focused. */
