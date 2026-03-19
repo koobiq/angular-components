@@ -5,6 +5,8 @@
 
 @use './button-theme' as *;
 
+@use '../core/styles/common/groups-mixins';
+
 .kbq-button {
     @extend %kbq-button-base;
 
@@ -33,6 +35,14 @@
     bottom: calc(-1 * #{var(--kbq-button-size-border-width)});
 
     border-radius: inherit;
+}
+
+.kbq-button-group {
+    @include groups-mixins.group(kbq-button);
+
+    &.kbq-button-group_vertical {
+        @include groups-mixins.vertical-group(kbq-button);
+    }
 }
 
 @include kbq-button-theme();
