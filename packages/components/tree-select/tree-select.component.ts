@@ -59,6 +59,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KBQ_VALIDATION,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
@@ -181,6 +182,7 @@ export class KbqTreeSelect
 {
     protected readonly isBrowser = inject(Platform).isBrowser;
 
+    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
 
     /** Whether the component is in an error state. */
@@ -982,7 +984,7 @@ export class KbqTreeSelect
             this.changeDetectorRef.markForCheck();
             this.stateChanges.next();
 
-            if (this.ngControl?.control) {
+            if (this.useLegacyValidation && this.ngControl?.control) {
                 const control = this.ngControl.control;
 
                 control.updateValueAndValidity({ emitEvent: false });
