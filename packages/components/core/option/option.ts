@@ -150,7 +150,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         '[id]': 'id',
 
         '(click)': 'handleClick($event)',
-        '(mouseenter)': 'parent?.keyManager?.setActiveItem(this)',
+        '(mouseenter)': 'onMouseenter()',
         '(keydown)': 'handleKeydown($event)'
     },
     providers: [
@@ -382,6 +382,13 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     getHostElement(): HTMLElement {
         return this.elementRef.nativeElement;
+    }
+
+    /** @docs-private */
+    protected onMouseenter() {
+        if (this.disabled) return;
+
+        this.parent?.keyManager?.setActiveItem(this);
     }
 }
 

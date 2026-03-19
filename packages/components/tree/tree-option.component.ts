@@ -82,7 +82,7 @@ let uniqueIdCounter: number = 0;
         '[attr.tabindex]': '-1',
         '[attr.disabled]': 'disabled || null',
         '(focusin)': 'focus()',
-        '(mouseenter)': 'focus("mouse")',
+        '(mouseenter)': 'onMouseenter()',
         '(blur)': 'blur()',
         '(click)': 'selectViaInteraction($event)',
         '(keydown)': 'onKeydown($event)'
@@ -393,5 +393,12 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if (this.showCheckbox) {
             this.updateCheckboxState();
         }
+    }
+
+    /** @docs-private */
+    protected onMouseenter() {
+        if (this.disabled || !this.tree.inSelect) return;
+
+        this.focus('mouse');
     }
 }

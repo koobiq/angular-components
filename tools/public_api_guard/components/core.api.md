@@ -2445,6 +2445,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     ngAfterViewChecked(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    protected onMouseenter(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
     protected readonly parent: KbqOptionParentComponent;
