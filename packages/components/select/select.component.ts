@@ -65,6 +65,7 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KBQ_VALIDATION,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
@@ -183,6 +184,8 @@ export class KbqSelect
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
+    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
+
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
@@ -967,7 +970,7 @@ export class KbqSelect
             this._changeDetectorRef.markForCheck();
             this.stateChanges.next();
 
-            if (this.ngControl?.control) {
+            if (this.useLegacyValidation && this.ngControl?.control) {
                 const control = this.ngControl.control;
 
                 control.updateValueAndValidity({ emitEvent: false });
