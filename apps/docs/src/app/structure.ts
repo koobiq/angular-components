@@ -391,7 +391,8 @@ const structure: DocsStructure = makeStructure({
                         en: 'Button Group'
                     },
                     hasApi: false,
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2026-04-20')
                 },
                 {
                     id: DocsStructureItemId.Checkbox,
