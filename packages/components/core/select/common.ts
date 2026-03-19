@@ -1,8 +1,17 @@
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
-import { AfterContentInit, booleanAttribute, Directive, EventEmitter, inject, Input, OnDestroy } from '@angular/core';
+import {
+    AfterContentInit,
+    booleanAttribute,
+    Directive,
+    EventEmitter,
+    Inject,
+    Input,
+    OnDestroy,
+    Optional
+} from '@angular/core';
 import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
-import { KBQ_FORM_FIELD_REF } from '../form-field';
+import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
@@ -31,7 +40,6 @@ export class KbqSelectFooter {}
     }
 })
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    protected formField = inject(KBQ_FORM_FIELD_REF);
     readonly changes: EventEmitter<string> = new EventEmitter<string>();
 
     isSearchChanged: boolean = false;
@@ -42,7 +50,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
 
     private searchChangesSubscription: Subscription = new Subscription();
 
-    constructor() {
+    constructor(@Optional() @Inject(KBQ_FORM_FIELD_REF) protected formField: KbqFormFieldRef) {
         this.formField.canCleanerClearByEsc = false;
         this.formField.inOverlay.set(true);
     }

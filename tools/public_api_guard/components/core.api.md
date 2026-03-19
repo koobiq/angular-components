@@ -2918,7 +2918,7 @@ export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => 
 
 // @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    constructor();
+    constructor(formField: KbqFormFieldRef);
     // (undocumented)
     readonly changes: EventEmitter<string>;
     // (undocumented)
@@ -2946,7 +2946,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, [{ optional: true; }]>;
 }
 
 // @public (undocumented)
