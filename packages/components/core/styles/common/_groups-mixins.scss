@@ -28,31 +28,35 @@
     }
 }
 
-@mixin group($group-item-name: kbq-group-item) {
+@mixin group($group-item-selectors: kbq-group-item) {
     & {
         display: flex;
         flex-direction: row;
 
         &_justified {
-            > .#{$group-item-name} {
-                width: 100%;
+            @each $selector in $group-item-selectors {
+                > .#{$selector} {
+                    width: 100%;
+                }
             }
         }
 
-        .#{$group-item-name} + .#{$group-item-name} {
-            margin-left: calc(-1 * #{var(--kbq-size-border-width)});
-        }
+        @each $selector in $group-item-selectors {
+            .#{$selector} + .#{$selector} {
+                margin-left: calc(-1 * #{var(--kbq-size-border-width)});
+            }
 
-        & > .#{$group-item-name}:first-child:not(:last-child) {
-            @include border-right-radius(0);
-        }
+            & > .#{$selector}:first-child:not(:last-child) {
+                @include border-right-radius(0);
+            }
 
-        & > .#{$group-item-name}:last-child:not(:first-child) {
-            @include border-left-radius(0);
-        }
+            & > .#{$selector}:last-child:not(:first-child) {
+                @include border-left-radius(0);
+            }
 
-        & > .#{$group-item-name}:not(:first-child):not(:last-child) {
-            border-radius: 0;
+            & > .#{$selector}:not(:first-child):not(:last-child) {
+                border-radius: 0;
+            }
         }
     }
 }
