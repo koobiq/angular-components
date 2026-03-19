@@ -38,6 +38,7 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[class.kbq-link_big]': 'big',
         '[class.kbq-link_compact]': 'compact',
         '[class.kbq-link_pseudo]': 'pseudo',
+        '[class.kbq-link_multiline]': 'multiline',
         '[class.kbq-link_print]': 'printMode',
         '[class.kbq-text-only]': '!hasIcon',
         '[class.kbq-text-with-icon]': 'hasIcon',
@@ -87,6 +88,9 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     @Input({ transform: booleanAttribute }) big: boolean = false;
 
     @Input({ transform: booleanAttribute }) compact: boolean = false;
+
+    /** Whether the link has an increased hit area for multiline usage. */
+    @Input({ transform: booleanAttribute }) multiline: boolean = false;
 
     @Input({ transform: booleanAttribute }) useVisited: boolean = false;
 

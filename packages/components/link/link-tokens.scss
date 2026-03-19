@@ -1,9 +1,11 @@
 .kbq-link {
     --kbq-link-size-state-focused-outline-offset: 0px;
     --kbq-link-size-state-focused-outline-width: 2px;
+    --kbq-link-size-multiline-hit-area-gap: calc((1lh - 1em) / 2);
     --kbq-link-size-compact-content-padding: var(--kbq-size-xxs);
     --kbq-link-size-normal-content-padding: var(--kbq-size-xxs);
     --kbq-link-size-big-content-padding: var(--kbq-size-xxs);
+    --kbq-link-underline-width: 1px;
     /* THEME TOKENS */
     --kbq-link-text: var(--kbq-foreground-theme);
     --kbq-link-border-bottom: var(--kbq-line-theme-less);

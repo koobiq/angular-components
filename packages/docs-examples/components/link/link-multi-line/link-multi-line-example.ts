@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
@@ -6,14 +7,23 @@ import { KbqLinkModule } from '@koobiq/components/link';
  */
 @Component({
     selector: 'link-multi-line-example',
-    imports: [
-        KbqLinkModule
-    ],
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
-        <div style="padding: 16px; width: 275px">
-            Просим вас обратитесь
-            <a kbq-link>в Центр технической поддержки</a>
-        </div>
+        <p>
+            I fully agree
+            <a kbq-link class="kbq-link_external" multiline>
+                <i kbq-icon="kbq-scroll-o_16"></i>
+                <span class="kbq-link__text">with the terms of the license agreement</span>
+                <i kbq-icon="kbq-north-east_16"></i>
+            </a>
+        </p>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            padding: var(--kbq-size-l);
+            width: 200px;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
