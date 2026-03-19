@@ -13,13 +13,16 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/cdk/observers';
+import { InputSignal } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public (undocumented)
 export const buttonLeftIconClassName = "kbq-button-icon_left";
@@ -100,6 +103,16 @@ export class KbqButtonDropdownTrigger {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonDropdownTrigger, never>;
 }
 
+// @public
+export class KbqButtonGroup {
+    protected readonly className: Signal<string>;
+    readonly orientation: InputSignal<KbqOrientation>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonGroup, "kbq-button-group, [kbq-button-group]", never, { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonGroup, never>;
+}
+
 // @public (undocumented)
 export class KbqButtonModule {
     // (undocumented)
@@ -108,9 +121,10 @@ export class KbqButtonModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonModule>;
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i4.KbqButtonDropdownTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonGroup], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i4.KbqButtonDropdownTrigger, typeof i6.KbqButtonGroup]>;
 }
 
 // @public (undocumented)
