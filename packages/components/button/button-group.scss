@@ -1,9 +1,11 @@
 @use '../core/styles/common/groups-mixins';
 
 .kbq-button-group {
-    @include groups-mixins.group((kbq-button, kbq-button-icon));
+    &.kbq-button-group_horizontal {
+        @include groups-mixins.group(':is(.kbq-button, .kbq-button-icon)');
+    }
 
     &.kbq-button-group_vertical {
-        @include groups-mixins.vertical-group((kbq-button, kbq-button-icon));
+        @include groups-mixins.vertical-group(':is(.kbq-button, .kbq-button-icon)');
     }
 }

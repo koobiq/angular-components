@@ -28,45 +28,41 @@
     }
 }
 
-@mixin group($group-item-selectors: kbq-group-item) {
+@mixin group($item-selector: kbq-group-item) {
     & {
         display: flex;
         flex-direction: row;
 
         &_justified {
-            @each $selector in $group-item-selectors {
-                > .#{$selector} {
-                    width: 100%;
-                }
+            > #{$item-selector} {
+                width: 100%;
             }
         }
 
-        @each $selector in $group-item-selectors {
-            .#{$selector} + .#{$selector} {
-                margin-left: calc(-1 * #{var(--kbq-size-border-width)});
-            }
+        #{$item-selector} + #{$item-selector} {
+            margin-left: calc(-1 * #{var(--kbq-size-border-width)});
+        }
 
-            & > .#{$selector}:first-child:not(:last-child) {
-                @include border-right-radius(0);
-            }
+        & > #{$item-selector}:first-child:not(:last-child) {
+            @include border-right-radius(0);
+        }
 
-            & > .#{$selector}:last-child:not(:first-child) {
-                @include border-left-radius(0);
-            }
+        & > #{$item-selector}:last-child:not(:first-child) {
+            @include border-left-radius(0);
+        }
 
-            & > .#{$selector}:not(:first-child):not(:last-child) {
-                border-radius: 0;
-            }
+        & > #{$item-selector}:not(:first-child):not(:last-child) {
+            border-radius: 0;
         }
     }
 }
 
-@mixin vertical-group($group-item-name: kbq-group-item) {
+@mixin vertical-group($item-selector: kbq-group-item) {
     & {
         display: flex;
         flex-direction: column;
 
-        > .#{$group-item-name} {
+        > #{$item-selector} {
             &:first-child:not(:last-child) {
                 @include border-bottom-radius(0);
 
@@ -84,7 +80,7 @@
             }
         }
 
-        .#{$group-item-name} + .#{$group-item-name} {
+        #{$item-selector} + #{$item-selector} {
             margin-top: calc(-1 * #{var(--kbq-size-border-width)});
         }
     }

@@ -27,7 +27,12 @@ import { KbqIcon } from '@koobiq/components/icon';
 
                 <div kbq-button-group [class.layout-gap-3xs]="!!style.gap">
                     @for (item of data; track item) {
-                        <button kbq-button [color]="style.color" [kbqStyle]="style.appearance">
+                        <button
+                            kbq-button
+                            aria-label="Diamond icon"
+                            [color]="style.color"
+                            [kbqStyle]="style.appearance"
+                        >
                             <i kbq-icon="kbq-diamond_16"></i>
                         </button>
                     }
