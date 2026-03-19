@@ -7,7 +7,7 @@ import { E2eAutocompleteStates } from '../components/autocomplete/e2e';
 import { E2eBadgeStyles } from '../components/badge/e2e';
 import { E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
 import { E2eButtonToggleStates } from '../components/button-toggle/e2e';
-import { E2eButtonStateAndStyle } from '../components/button/e2e';
+import { E2eButtonGroup, E2eButtonStateAndStyle } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
@@ -69,6 +69,7 @@ import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 const components = [
     E2eButtonStateAndStyle,
+    E2eButtonGroup,
     E2eSplitButtonStateAndStyle,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,

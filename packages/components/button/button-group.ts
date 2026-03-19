@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from '@angular/core';
 import { KbqOrientation } from '@koobiq/components/core';
 
+/** Groups and styling related `KbqButton`s into a single visual unit. */
 @Component({
     selector: 'kbq-button-group, [kbq-button-group]',
     template: `
@@ -17,7 +18,12 @@ import { KbqOrientation } from '@koobiq/components/core';
     }
 })
 export class KbqButtonGroup {
+    /**
+     * Layout direction: `'horizontal'` or `'vertical'`
+     * @default 'horizontal'
+     */
     readonly orientation = input<KbqOrientation>('horizontal');
 
+    /** @docs-private */
     protected readonly className = computed(() => `kbq-button-group_${this.orientation()}`);
 }
