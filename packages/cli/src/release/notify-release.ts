@@ -9,7 +9,7 @@ type MattermostConfig = {
 };
 
 function getMattermostConfig(): MattermostConfig | null {
-    const url = process.env['MATTERMOST_ENDPOINT_URL'];
+    const url = process.env['MATTERMOST_WEBHOOK_URL'];
     const channel = process.env['MATTERMOST_CHANNEL'];
 
     if (!url || !channel) {
@@ -59,7 +59,7 @@ export async function notify(releaseData: ChangelogReleaseNotes): Promise<void> 
     const config = getMattermostConfig();
 
     if (!config) {
-        console.error(red(`  ✘   MATTERMOST_ENDPOINT_URL or MATTERMOST_CHANNEL not found.`));
+        console.error(red(`  ✘   MATTERMOST_WEBHOOK_URL or MATTERMOST_CHANNEL not found.`));
 
         return;
     }
