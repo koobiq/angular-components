@@ -1,8 +1,6 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
     DateAdapter,
     DateFormatter,
@@ -10,10 +8,10 @@ import {
     kbqDisableLegacyValidationDirectiveProvider
 } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
-import { KbqTimepickerModule } from '@koobiq/components/timepicker';
+import { KbqFieldset, KbqFieldsetItem, KbqFormField } from '@koobiq/components/form-field';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqInlineEdit, KbqInlineEditPlaceholder } from '@koobiq/components/inline-edit';
+import { KbqTimepicker } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
 
 /**
@@ -22,18 +20,16 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'inline-edit-date-time-example',
     imports: [
-        FormsModule,
         ReactiveFormsModule,
         LuxonDateModule,
-        KbqInlineEditModule,
-        KbqFormFieldModule,
-        KbqBadgeModule,
-        KbqIconModule,
+        KbqInlineEdit,
+        KbqInlineEditPlaceholder,
+        KbqIcon,
         KbqDatepickerModule,
-        KbqTimepickerModule,
         KbqFieldset,
         KbqFieldsetItem,
-        JsonPipe
+        KbqFormField,
+        KbqTimepicker
     ],
     template: `
         <kbq-inline-edit showActions (saved)="update()">
@@ -65,7 +61,16 @@ import { DateTime } from 'luxon';
     styles: `
         :host {
             display: block;
-            width: 300px;
+            width: 284px;
+        }
+
+        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-datepicker {
+            width: 50%;
+        }
+
+        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-timepicker {
+            width: unset;
+            flex-grow: 1;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,8 +86,8 @@ export class InlineEditDateTimeExample {
     protected readonly displayValue: WritableSignal<string>;
 
     protected readonly form: FormGroup<{
-        date: FormControl<DateTime<boolean> | null>;
-        time: FormControl<DateTime<boolean> | null>;
+        date: FormControl<DateTime | null>;
+        time: FormControl<DateTime | null>;
     }>;
 
     constructor() {
@@ -94,6 +99,8 @@ export class InlineEditDateTimeExample {
         });
 
         this.displayValue = signal<string>(this.format(this.form.value.date));
+
+        this.form.valueChanges.subscribe((value) => console.log(value));
     }
 
     protected update(): void {
