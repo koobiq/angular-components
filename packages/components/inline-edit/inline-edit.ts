@@ -38,7 +38,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { skip } from 'rxjs';
+import { merge, skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -203,9 +203,11 @@ export class KbqInlineEdit {
     protected readonly menu = contentChild(KbqInlineEditMenu);
     /** @docs-private */
     protected readonly label = contentChild(KbqLabel);
+
     /** @docs-private */
-    protected readonly formFieldRef = contentChild(KbqFormField);
-    protected readonly formFieldRefList = contentChildren(KbqFormField);
+    protected formFieldRef = computed(() => this.formFieldRefList()[0]);
+    /** @docs-private */
+    protected readonly formFieldRefList = contentChildren(KbqFormField, { descendants: true });
 
     /** @docs-private */
     protected overlayOrigin: HTMLElement = this.elementRef.nativeElement;
@@ -272,9 +274,9 @@ export class KbqInlineEdit {
         this.setOverlayWidth();
         this.setOverlayKeydownListener();
 
-        const formFieldRef = this.formFieldRef();
+        const formFieldRefList = this.formFieldRefList();
 
-        formFieldRef?.control.stateChanges
+        merge(formFieldRefList.map((ref) => ref.control.stateChanges))
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
@@ -285,16 +287,18 @@ export class KbqInlineEdit {
             });
 
         setTimeout(() => {
-            formFieldRef?.focus();
+            const firstFormField = !!formFieldRefList.length && formFieldRefList[0];
+
+            if (!firstFormField) return;
+
+            firstFormField.focus();
             this.initialValue = this.getValue();
 
             const input = this.getInputNativeElement();
 
             if (this.initialValue) input?.select();
 
-            if (formFieldRef) {
-                this.openPanel(formFieldRef);
-            }
+            this.openPanel(firstFormField);
         }, 0);
     }
 
@@ -325,7 +329,7 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected onOverlayKeydown(event: KeyboardEvent): void {
-        this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
+        this.markAllAsTouched();
         const canSaveOnEnter = this.canSaveOnEnter();
 
         switch (event.key) {
@@ -336,7 +340,7 @@ export class KbqInlineEdit {
             case 'Enter': {
                 if (canSaveOnEnter(event)) {
                     event.preventDefault();
-                    this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
+                    this.markAllAsTouched();
                     setTimeout(() => this.save(event));
                 }
 
@@ -396,11 +400,11 @@ export class KbqInlineEdit {
     }
 
     private isInvalid(): boolean {
-        const formFieldRef = this.formFieldRefList();
+        const formFieldRefList = this.formFieldRefList();
 
-        if (!formFieldRef || formFieldRef.length === 0) return false;
+        if (!formFieldRefList.length) return false;
 
-        return formFieldRef.some((ref) => ref.invalid);
+        return formFieldRefList.some((ref) => ref.invalid);
     }
 
     private getValue() {
@@ -408,36 +412,40 @@ export class KbqInlineEdit {
 
         if (getValueHandler) return getValueHandler();
 
-        const control = this.coerceControl();
+        const formFieldRefList = this.formFieldRefList();
 
-        return control?.value;
+        if (!formFieldRefList.length) return;
+
+        return this.formFieldRefList().map((ref) => this.coerceControl(ref)?.value);
     }
 
     private setValue<T>(value: T): void {
         const setValue = this.setValueHandler();
 
         if (setValue) {
-            setValue(this.initialValue);
+            setValue(value);
 
             return;
         }
 
-        const control = this.coerceControl();
+        const formFieldRefList = this.formFieldRefList();
 
-        if (!control) return;
+        if (!formFieldRefList.length || !Array.isArray(value)) return;
 
-        if (control instanceof AbstractControl) {
-            control.setValue(value);
-        } else {
-            control.value = value;
-        }
+        value.forEach((controlValue, index) => {
+            const control = this.coerceControl(formFieldRefList[index]);
+
+            if (!control) return;
+
+            if (control instanceof AbstractControl) {
+                control.setValue(controlValue);
+            } else {
+                control.value = controlValue;
+            }
+        });
     }
 
-    private coerceControl() {
-        const formFieldRef = this.formFieldRef();
-
-        if (!formFieldRef) return null;
-
+    private coerceControl(formFieldRef: KbqFormField) {
         if (formFieldRef.control.ngControl instanceof NgControl) {
             return formFieldRef.control.ngControl.control;
         }
@@ -478,5 +486,9 @@ export class KbqInlineEdit {
 
     private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {
         return this.overlayDir()?.overlayRef.overlayElement.querySelector('input:not([type="file"]),textarea') ?? null;
+    }
+
+    private markAllAsTouched(): void {
+        this.formFieldRefList().forEach((formField) => formField.control.ngControl?.control?.markAsTouched());
     }
 }
