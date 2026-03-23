@@ -20,55 +20,61 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
-        <select-with-multiline-matcher-example />
+        <select-loading-example />
         <hr />
 
-        <select-with-panel-width-default-example />
+        <select-empty-example />
         <hr />
 
-        <select-with-panel-width-auto-example />
-        <hr />
+<!--        <select-with-multiline-matcher-example />-->
+<!--        <hr />-->
 
-        <select-with-panel-width-fixed-example />
-        <hr />
+<!--        <select-with-panel-width-default-example />-->
+<!--        <hr />-->
 
-        <select-with-panel-min-width-example />
-        <hr />
+<!--        <select-with-panel-width-auto-example />-->
+<!--        <hr />-->
 
-        <select-virtual-scroll-example />
-        <hr />
+<!--        <select-with-panel-width-fixed-example />-->
+<!--        <hr />-->
 
-        <select-validation-example />
-        <hr />
+<!--        <select-with-panel-min-width-example />-->
+<!--        <hr />-->
 
-        <select-search-example />
-        <hr />
+<!--        <select-virtual-scroll-example />-->
+<!--        <hr />-->
 
-        <select-prioritized-selected-example />
-        <hr />
+<!--        <select-validation-example />-->
+<!--        <hr />-->
 
-        <select-overview-example />
-        <hr />
+<!--        <select-search-example />-->
+<!--        <hr />-->
 
-        <select-multiple-example />
-        <hr />
+<!--        <select-prioritized-selected-example />-->
+<!--        <hr />-->
 
-        <select-icon-example />
-        <hr />
+<!--        <select-overview-example />-->
+<!--        <hr />-->
 
-        <select-height-example />
-        <hr />
+<!--        <select-multiple-example />-->
+<!--        <hr />-->
 
-        <select-groups-example />
-        <hr />
+<!--        <select-icon-example />-->
+<!--        <hr />-->
 
-        <select-cleaner-example />
-        <hr />
+<!--        <select-height-example />-->
+<!--        <hr />-->
 
-        <select-disabled-example />
-        <hr />
+<!--        <select-groups-example />-->
+<!--        <hr />-->
 
-        <select-footer-example />
+<!--        <select-cleaner-example />-->
+<!--        <hr />-->
+
+<!--        <select-disabled-example />-->
+<!--        <hr />-->
+
+<!--        <select-footer-example />-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

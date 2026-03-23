@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import {
     KBQ_SELECT_SCROLL_STRATEGY_PROVIDER,
     KbqOptionModule,
+    KbqSelectNoOptions,
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
@@ -30,6 +31,7 @@ import { KbqSelect } from './select.component';
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
+        KbqSelectNoOptions,
         NgClass,
         NgTemplateOutlet,
         A11yModule,
@@ -45,6 +47,7 @@ import { KbqSelect } from './select.component';
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
+        KbqSelectNoOptions,
         KbqFormFieldModule
     ],
     providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
