@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
+import { SelectAddNewOptionExample } from './select-add-new-option/select-add-new-option-example';
 import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
 import { SelectCustomMatcherExample } from './select-custom-matcher/select-custom-matcher-example';
 import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
 import { SelectDisabledExample } from './select-disabled/select-disabled-example';
+import { SelectEmptyExample } from './select-empty/select-empty-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
 import { SelectHeightExample } from './select-height/select-height-example';
 import { SelectIconExample } from './select-icon/select-icon-example';
+import { SelectLoadingErrorCustomExample } from './select-loading-error-custom/select-loading-error-custom-example';
+import { SelectLoadingErrorExample } from './select-loading-error/select-loading-error-example';
+import { SelectLoadingExample } from './select-loading/select-loading-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
+import { SelectNoVariantsExample } from './select-no-variants/select-no-variants-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
 import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
@@ -22,15 +28,21 @@ import { SelectWithPanelWidthDefaultExample } from './select-with-panel-width-de
 import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixed/select-with-panel-width-fixed-example';
 
 export {
+    SelectAddNewOptionExample,
     SelectCleanerExample,
     SelectCustomMatcherExample,
     SelectCustomTriggerExample,
     SelectDisabledExample,
+    SelectEmptyExample,
     SelectFooterExample,
     SelectGroupsExample,
     SelectHeightExample,
     SelectIconExample,
+    SelectLoadingErrorCustomExample,
+    SelectLoadingErrorExample,
+    SelectLoadingExample,
     SelectMultipleExample,
+    SelectNoVariantsExample,
     SelectOverviewExample,
     SelectPreselectedValuesExample,
     SelectPrioritizedSelectedExample,
@@ -67,7 +79,13 @@ const EXAMPLES = [
     SelectPrioritizedSelectedExample,
     SelectWithPanelWidthFixedExample,
     SelectWithPanelMinWidthExample,
-    SelectScrollingAndLayeringExample
+    SelectScrollingAndLayeringExample,
+    SelectLoadingExample,
+    SelectEmptyExample,
+    SelectLoadingErrorExample,
+    SelectNoVariantsExample,
+    SelectAddNewOptionExample,
+    SelectLoadingErrorCustomExample
 ];
 
 @NgModule({

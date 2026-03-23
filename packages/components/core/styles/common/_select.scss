@@ -182,9 +182,13 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: center;
         box-sizing: border-box;
 
         position: relative;
+
+        margin-bottom: var(--kbq-size-3xl);
+        margin-top: var(--kbq-size-3xl);
 
         max-width: 100%;
         height: var(--kbq-option-size-height, var(--kbq-size-3xl));

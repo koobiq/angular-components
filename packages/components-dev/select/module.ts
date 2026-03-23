@@ -1,6 +1,6 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { AsyncPipe } from '@angular/common';
+// import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -21,57 +21,75 @@ import { DEV_OPTIONS } from './mock';
     imports: [SelectExamplesModule],
     template: `
         <select-scrolling-and-layering-example />
+        <select-loading-error-custom-example />
         <hr />
 
-        <select-with-multiline-matcher-example />
         <hr />
 
-        <select-with-panel-width-default-example />
+        <select-add-new-option-example />
         <hr />
 
-        <select-with-panel-width-auto-example />
+        <select-no-variants-example />
         <hr />
 
-        <select-with-panel-width-fixed-example />
+        <select-loading-example />
         <hr />
 
-        <select-with-panel-min-width-example />
+        <select-loading-error-example />
         <hr />
 
-        <select-virtual-scroll-example />
+        <select-empty-example />
         <hr />
 
-        <select-validation-example />
-        <hr />
+        <!--        <select-with-multiline-matcher-example />-->
+        <!--        <hr />-->
 
-        <select-search-example />
-        <hr />
+        <!--        <select-with-panel-width-default-example />-->
+        <!--        <hr />-->
 
-        <select-prioritized-selected-example />
-        <hr />
+        <!--        <select-with-panel-width-auto-example />-->
+        <!--        <hr />-->
 
-        <select-overview-example />
-        <hr />
+        <!--        <select-with-panel-width-fixed-example />-->
+        <!--        <hr />-->
 
-        <select-multiple-example />
-        <hr />
+        <!--        <select-with-panel-min-width-example />-->
+        <!--        <hr />-->
 
-        <select-icon-example />
-        <hr />
+        <!--        <select-virtual-scroll-example />-->
+        <!--        <hr />-->
 
-        <select-height-example />
-        <hr />
+        <!--        <select-validation-example />-->
+        <!--        <hr />-->
 
-        <select-groups-example />
-        <hr />
+        <!--        <select-search-example />-->
+        <!--        <hr />-->
 
-        <select-cleaner-example />
-        <hr />
+        <!--        <select-prioritized-selected-example />-->
+        <!--        <hr />-->
 
-        <select-disabled-example />
-        <hr />
+        <!--        <select-overview-example />-->
+        <!--        <hr />-->
 
-        <select-footer-example />
+        <!--        <select-multiple-example />-->
+        <!--        <hr />-->
+
+        <!--        <select-icon-example />-->
+        <!--        <hr />-->
+
+        <!--        <select-height-example />-->
+        <!--        <hr />-->
+
+        <!--        <select-groups-example />-->
+        <!--        <hr />-->
+
+        <!--        <select-cleaner-example />-->
+        <!--        <hr />-->
+
+        <!--        <select-disabled-example />-->
+        <!--        <hr />-->
+
+        <!--        <select-footer-example />-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -80,7 +98,7 @@ export class DevDocsExamples {}
 @Component({
     selector: 'dev-app',
     imports: [
-        AsyncPipe,
+        // AsyncPipe,
         FormsModule,
         ScrollingModule,
         KbqButtonModule,
