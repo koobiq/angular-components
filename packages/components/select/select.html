@@ -129,12 +129,26 @@
             [@fadeInContent]="'showing'"
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
+        @if (!isLoading() && !noOptions) {
+            @if (noOptions) {
+                <ng-content select="[kbq-select-no-options]">
+                    <div class="kbq-text-normal layout-column layout-align-center-center layout-margin-top-4xl layout-margin-bottom-4xl"
+                         style="color: var(--kbq-foreground-contrast-secondary)">
+                        Нет вариантов выбора
+                    </div>
+                </ng-content>
+            }
+
             @if (isEmptySearchResult) {
                 <div class="kbq-select__no-options-message">
                     <ng-content select="[kbq-select-search-empty-result]" />
                 </div>
             }
             <ng-content />
+        }
+        @if (isLoading()) {
+            <kbq-progress-spinner class="layout-margin-top-4xl layout-margin-bottom-4xl layout-align-center-center" [mode]="'indeterminate'" />
+        }
         </div>
 
         <ng-content select="kbq-select-footer,[kbq-select-footer]" />

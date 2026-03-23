@@ -68,7 +68,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     reset(): void {
-        this.ngControl.reset();
+        this.ngControl?.reset();
     }
 
     value() {
@@ -115,6 +115,12 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     exportAs: 'kbqSelectSearchEmptyResult'
 })
 export class KbqSelectSearchEmptyResult {}
+
+@Directive({
+    selector: '[kbq-select-no-options]',
+    exportAs: 'kbqSelectNoOptions'
+})
+export class KbqSelectNoOptions {}
 
 /**
  * Abstract class representing a customizable select component with an overlay.
