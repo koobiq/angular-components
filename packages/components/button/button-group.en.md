@@ -28,3 +28,7 @@ Only icon buttons can be combined into a vertical group. In a group without a ba
 
 - To combine a primary action with less frequent related commands, use [Split Button](/en/components/split-button/overview).
 - To select a single value from multiple options in a form or filters, use [Button Toggle](/en/components/button-toggle/overview).
+
+## Links
+
+- [API](/en/components/button/api#KbqButtonGroup)

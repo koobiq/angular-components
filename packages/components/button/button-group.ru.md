@@ -28,3 +28,7 @@ Button Group объединяет несколько кнопок, когда п
 
 - Чтобы объединить основное действие и более редкие связанные с ним дополнительные команды, применяйте [Split Button](/ru/components/split-button/overview).
 - Для выбора одного значения из нескольких в форме или фильтрах используйте [Button Toggle](/ru/components/button-toggle/overview).
+
+## Ссылки
+
+- [API](/ru/components/button/api#KbqButtonGroup)

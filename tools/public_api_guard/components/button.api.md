@@ -22,7 +22,6 @@ import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { Signal } from '@angular/core';
 
 // @public (undocumented)
 export const buttonLeftIconClassName = "kbq-button-icon_left";
@@ -105,7 +104,6 @@ export class KbqButtonDropdownTrigger {
 
 // @public
 export class KbqButtonGroup {
-    protected readonly className: Signal<string>;
     readonly orientation: InputSignal<KbqOrientation>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonGroup, "kbq-button-group, [kbq-button-group]", never, { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
