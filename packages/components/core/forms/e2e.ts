@@ -41,8 +41,21 @@ import { KbqFormsModule } from './forms-module';
                 <label class="kbq-form__label flex-20">Tag input</label>
                 <kbq-form-field class="kbq-form__control flex-80">
                     <kbq-tag-list #tagList="kbqTagList">
-                        <kbq-tag value="1">Tag 1</kbq-tag>
-                        <input autocomplete="off" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList" />
+                        <kbq-tag value="1">Tag</kbq-tag>
+                        <input kbqInput placeholder="New tag" [kbqTagInputFor]="tagList" />
+                    </kbq-tag-list>
+                </kbq-form-field>
+            </div>
+
+            <div class="kbq-form__row">
+                <label class="kbq-form__label flex-20">Tag input multiline</label>
+                <kbq-form-field class="kbq-form__control flex-80">
+                    <kbq-tag-list #tagList2="kbqTagList">
+                        @for (_ of [0, 1, 2, 3, 4, 5, 6, 7, 8]; track $index) {
+                            <kbq-tag [value]="$index">Tag</kbq-tag>
+                        }
+
+                        <input kbqInput placeholder="New tag" [kbqTagInputFor]="tagList2" />
                     </kbq-tag-list>
                 </kbq-form-field>
             </div>
@@ -65,8 +78,10 @@ import { KbqFormsModule } from './forms-module';
             </div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label flex-20">Toggle</label>
-                <div class="kbq-form__control flex-80">
+                <label class="kbq-form__label flex-20">Toggle multiline</label>
+                <div class="kbq-form__control flex-80 layout-column">
+                    <kbq-toggle>Value</kbq-toggle>
+                    <kbq-toggle>Value</kbq-toggle>
                     <kbq-toggle>Value</kbq-toggle>
                 </div>
             </div>
@@ -74,14 +89,16 @@ import { KbqFormsModule } from './forms-module';
             <div class="kbq-form__row">
                 <label class="kbq-form__label flex-20">Radio</label>
                 <kbq-radio-group class="kbq-form__control flex-80" value="2">
-                    <kbq-radio-button value="1">Button 1</kbq-radio-button>
-                    <kbq-radio-button value="2">Button 2</kbq-radio-button>
+                    <kbq-radio-button value="1">Value</kbq-radio-button>
+                    <kbq-radio-button value="2">Value</kbq-radio-button>
                 </kbq-radio-group>
             </div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label flex-20">Checkbox</label>
-                <div class="kbq-form__control flex-80">
+                <label class="kbq-form__label flex-20">Checkbox multiline</label>
+                <div class="kbq-form__control flex-80 layout-column">
+                    <kbq-checkbox>Value</kbq-checkbox>
+                    <kbq-checkbox>Value</kbq-checkbox>
                     <kbq-checkbox>Value</kbq-checkbox>
                 </div>
             </div>
@@ -97,7 +114,7 @@ import { KbqFormsModule } from './forms-module';
             </div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label flex-20">File upload</label>
+                <label class="kbq-form__label flex-20">File upload multiline</label>
                 <div class="kbq-form__control flex-80">
                     <kbq-single-file-upload>
                         <i kbq-icon="kbq-file-o_16"></i>
