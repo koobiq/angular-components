@@ -23,7 +23,7 @@ import { KbqIcon } from './icon.component';
         class: 'kbq kbq-icon-button',
 
         '[attr.tabindex]': 'tabindex',
-        '[attr.disabled]': 'disabled',
+        '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-icon-button_small]': 'small'
