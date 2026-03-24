@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
@@ -133,7 +134,8 @@ const components = [
     E2eMultiTreeSelectStates,
     E2eMultilineTreeSelectStates,
     E2eSelectWithSearchAndFooter,
-    E2eInlineEditStates
+    E2eInlineEditStates,
+    E2eFormHorizontal
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {

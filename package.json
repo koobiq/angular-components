@@ -164,7 +164,7 @@
     "scripts": {
         "ng": "ng",
         "prepare": "husky",
-        "clean": "playwright clear-cache && rimraf .angular dist playwright-report test-results --verbose",
+        "clean": "playwright clear-cache && rimraf .angular dist playwright-report .playwright-mcp test-results --verbose",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
         "build:cdk": "ng build cdk",
         "build:angular-moment-adapter": "ng build angular-moment-adapter",
