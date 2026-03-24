@@ -128,26 +128,42 @@ export class E2eButtonStateAndStyle {
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <table data-testid="e2eScreenshotTarget">
+            <tr>
+                <td>
+                    <div class="layout-row layout-gap-xl layout-align-space-between">
+                        <div kbq-button-group>
+                            @for (item of data; track item) {
+                                <button kbq-button>
+                                    {{ item }}
+                                </button>
+                            }
+                        </div>
+
+                        <div kbq-button-group>
+                            @for (item of data; track item) {
+                                <button kbq-button aria-label="Diamond icon">
+                                    <i kbq-icon="kbq-diamond_16"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </td>
+            </tr>
             @for (style of buttonStyles; track style) {
                 <tr>
                     <td>
                         <div class="layout-row layout-gap-xl layout-align-space-between">
-                            <div kbq-button-group [class.layout-gap-3xs]="!!style.gap">
+                            <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
                                 @for (item of data; track item) {
-                                    <button kbq-button [color]="style.color" [kbqStyle]="style.appearance">
+                                    <button kbq-button>
                                         {{ item }}
                                     </button>
                                 }
                             </div>
 
-                            <div kbq-button-group [class.layout-gap-3xs]="!!style.gap">
+                            <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
                                 @for (item of data; track item) {
-                                    <button
-                                        kbq-button
-                                        aria-label="Diamond icon"
-                                        [color]="style.color"
-                                        [kbqStyle]="style.appearance"
-                                    >
+                                    <button kbq-button aria-label="Diamond icon">
                                         <i kbq-icon="kbq-diamond_16"></i>
                                     </button>
                                 }
@@ -158,22 +174,22 @@ export class E2eButtonStateAndStyle {
             }
             <tr>
                 <td>
-                    <div class="layout-gap-3xs" kbq-button-group>
-                        <button kbq-button [kbqStyle]="style" [color]="color">
+                    <div class="layout-gap-3xs" kbq-button-group [kbqStyle]="style" [color]="color">
+                        <button kbq-button>
                             <i kbq-icon="kbq-diamond_16"></i>
                             {{ data[0] }}
                         </button>
 
-                        <button kbq-button [kbqStyle]="style" [color]="color">
+                        <button kbq-button>
                             {{ data[1] }}
                             <i kbq-icon="kbq-chevron-down-s_16"></i>
                         </button>
 
-                        <button kbq-button [kbqStyle]="style" [color]="color">
+                        <button kbq-button>
                             {{ data[2] }}
                         </button>
 
-                        <button kbq-button [kbqStyle]="style" [color]="color">
+                        <button kbq-button>
                             <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                         </button>
                     </div>
@@ -183,21 +199,16 @@ export class E2eButtonStateAndStyle {
                 <td>
                     <div class="layout-row layout-align-center-center layout-gap-xl">
                         @for (style of buttonStyles; track style) {
-                            <div kbq-button-group [orientation]="'vertical'" [class.layout-gap-3xs]="!!style.gap">
-                                <button
-                                    kbq-button
-                                    aria-label="Plus"
-                                    [color]="style.color"
-                                    [kbqStyle]="style.appearance"
-                                >
+                            <div
+                                kbq-button-group
+                                [orientation]="'vertical'"
+                                [color]="style.color"
+                                [kbqStyle]="style.appearance"
+                            >
+                                <button kbq-button aria-label="Plus">
                                     <i kbq-icon="kbq-plus_16"></i>
                                 </button>
-                                <button
-                                    kbq-button
-                                    aria-label="Minus"
-                                    [color]="style.color"
-                                    [kbqStyle]="style.appearance"
-                                >
+                                <button kbq-button aria-label="Minus">
                                     <i kbq-icon="kbq-minus_16"></i>
                                 </button>
                             </div>
@@ -228,9 +239,9 @@ export class E2eButtonGroup {
         'Snooze'
     ] as const;
 
-    protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles; gap?: boolean }[] = [
-        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled, gap: true },
-        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled, gap: true },
+    protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles }[] = [
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
+        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ThemeFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },

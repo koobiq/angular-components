@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 
 /**
@@ -15,7 +14,7 @@ import { KbqIcon } from '@koobiq/components/icon';
     template: `
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button class="kbq-dropdown-trigger" [color]="color" [kbqStyle]="style">
+                <button kbq-button class="kbq-dropdown-trigger">
                     <i kbq-icon="kbq-diamond_16"></i>
                     {{ item }}
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -25,7 +24,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button [color]="color" [kbqStyle]="style">
+                <button kbq-button>
                     <i kbq-icon="kbq-diamond_16"></i>
                     {{ item }}
                 </button>
@@ -34,7 +33,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button [color]="color" [kbqStyle]="style">
+                <button kbq-button>
                     {{ item }}
                 </button>
             }
@@ -42,7 +41,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button class="kbq-dropdown-trigger" [color]="color" [kbqStyle]="style">
+                <button kbq-button class="kbq-dropdown-trigger">
                     <i kbq-icon="kbq-diamond_16"></i>
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
@@ -51,7 +50,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button [color]="color" [kbqStyle]="style">
+                <button kbq-button>
                     <i kbq-icon="kbq-diamond_16"></i>
                 </button>
             }
@@ -68,7 +67,4 @@ export class ButtonGroupContentExample {
         'Report',
         'Snooze'
     ] as const;
-
-    protected readonly color = KbqComponentColors.ContrastFade;
-    protected readonly style = KbqButtonStyles.Filled;
 }

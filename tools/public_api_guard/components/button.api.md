@@ -15,6 +15,7 @@ import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/cdk/observers';
 import { InputSignal } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOrientation } from '@koobiq/components/core';
@@ -22,6 +23,7 @@ import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { ThemePalette } from '@koobiq/components/core';
 
 // @public (undocumented)
 export const buttonLeftIconClassName = "kbq-button-icon_left";
@@ -106,9 +108,27 @@ export class KbqButtonDropdownTrigger {
 export class KbqButtonGroup {
     readonly orientation: InputSignal<KbqOrientation>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonGroup, "kbq-button-group, [kbq-button-group]", never, { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonGroup, "kbq-button-group, [kbq-button-group]", never, { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof KbqButtonGroupRoot; inputs: { "color": "color"; "kbqStyle": "kbqStyle"; "disabled": "disabled"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonGroup, never>;
+}
+
+// @public
+export class KbqButtonGroupRoot extends KbqColorDirective {
+    constructor();
+    get color(): KbqComponentColors | ThemePalette | string;
+    set color(value: KbqComponentColors | ThemePalette | string);
+    get disabled(): boolean;
+    set disabled(value: boolean);
+    protected _disabled: boolean;
+    get kbqStyle(): string;
+    set kbqStyle(value: KbqButtonStyles | string);
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonGroupRoot, "[kbqButtonGroupRoot]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["buttons"], never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonGroupRoot, never>;
 }
 
 // @public (undocumented)
@@ -122,7 +142,7 @@ export class KbqButtonModule {
     // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonGroup], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i4.KbqButtonDropdownTrigger, typeof i6.KbqButtonGroup]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonGroup, typeof i6.KbqButtonGroupRoot], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i4.KbqButtonDropdownTrigger, typeof i6.KbqButtonGroup, typeof i6.KbqButtonGroupRoot]>;
 }
 
 // @public (undocumented)

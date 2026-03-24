@@ -15,22 +15,17 @@ import { KbqIcon } from '@koobiq/components/icon';
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <div kbq-button-group>
+                <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
                     @for (item of data; track item) {
-                        <button kbq-button [color]="style.color" [kbqStyle]="style.appearance">
+                        <button kbq-button>
                             {{ item }}
                         </button>
                     }
                 </div>
 
-                <div kbq-button-group>
+                <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
                     @for (item of data; track item) {
-                        <button
-                            kbq-button
-                            aria-label="Diamond icon"
-                            [color]="style.color"
-                            [kbqStyle]="style.appearance"
-                        >
+                        <button kbq-button aria-label="Diamond icon">
                             <i kbq-icon="kbq-diamond_16"></i>
                         </button>
                     }

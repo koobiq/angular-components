@@ -1,12 +1,19 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
-import { leftIconClassName, rightIconClassName, ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors, leftIconClassName, rightIconClassName, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { buttonLeftIconClassName, buttonRightIconClassName, KbqButtonCssStyler, KbqButtonModule } from './index';
+import {
+    buttonLeftIconClassName,
+    buttonRightIconClassName,
+    KbqButtonCssStyler,
+    KbqButtonGroupRoot,
+    KbqButtonModule,
+    KbqButtonStyles
+} from './index';
 
 describe('KbqButton', () => {
     beforeEach(() => {
@@ -295,6 +302,124 @@ describe('Button with icon', () => {
     });
 });
 
+describe(KbqButtonGroupRoot.name, () => {
+    function createComponent<T>(
+        component: Type<T>,
+        imports: any[] = [],
+        providers: Provider[] = []
+    ): ComponentFixture<T> {
+        TestBed.resetTestingModule();
+
+        TestBed.configureTestingModule({
+            imports: [...imports, component],
+            providers: [...providers]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent<T>(component);
+
+        fixture.autoDetectChanges();
+
+        return fixture;
+    }
+
+    it('should propagate style to all child buttons', () => {
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.style = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        buttons.forEach((btn) => {
+            expect(btn.classList.toString()).toContain(KbqButtonStyles.Outline);
+        });
+    });
+
+    it('should fall back to Filled when falsy value is set', () => {
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        expect(componentInstance.groupRoot.kbqStyle).toBe(`kbq-button-group-root_${KbqButtonStyles.Filled}`);
+    });
+
+    it('should propagate color to all child buttons', () => {
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = KbqComponentColors.Theme;
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        buttons.forEach((btn) => {
+            expect(btn.classList.toString()).toContain(KbqComponentColors.Theme);
+        });
+    });
+
+    it('should accept arbitrary string color token', () => {
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = 'custom-brand';
+        fixture.detectChanges();
+
+        expect(componentInstance.groupRoot.color).toBe('custom-brand');
+    });
+
+    it('should propagate disabled state to all child buttons', () => {
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.disabled = true;
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        buttons.forEach((btn) => {
+            expect(btn.hasAttribute('disabled')).toBeTruthy();
+        });
+    });
+
+    it('should propagate color to dynamically added buttons via effect', () => {
+        const fixture = createComponent(DynamicChildrenTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = KbqComponentColors.Error;
+        fixture.detectChanges();
+
+        componentInstance.showExtra = true;
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        expect(buttons.length).toBe(2);
+
+        buttons.forEach((btn) => {
+            expect(btn.classList.toString()).toContain(KbqComponentColors.Error);
+        });
+    });
+
+    it('should propagate style to dynamically added buttons via effect', () => {
+        const fixture = createComponent(DynamicChildrenTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.style = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        componentInstance.showExtra = true;
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        expect(buttons.length).toBe(2);
+
+        buttons.forEach((btn) => {
+            expect(btn.classList.toString()).toContain(KbqButtonStyles.Outline);
+        });
+    });
+});
+
 @Component({
     selector: 'test-app',
     imports: [KbqButtonModule, KbqDropdownModule],
@@ -481,4 +606,41 @@ class KbqButtonIconNgIfCaseTestApp {
 class ButtonDropdownTrigger {
     @ViewChild('triggerEl', { static: false, read: ElementRef }) trigger: ElementRef;
     backdropClass: string;
+}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <div kbqButtonGroupRoot [kbqStyle]="style" [color]="color" [disabled]="disabled">
+            <button kbq-button>First</button>
+            <button kbq-button>Second</button>
+            <button kbq-button>Third</button>
+        </div>
+    `
+})
+class BasicButtonGroupRootTestComponent {
+    @ViewChild(KbqButtonGroupRoot) groupRoot: KbqButtonGroupRoot;
+
+    style: KbqButtonStyles | string = KbqButtonStyles.Filled;
+    color: KbqComponentColors | ThemePalette | string = KbqComponentColors.ContrastFade;
+    disabled = false;
+}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <div kbqButtonGroupRoot [kbqStyle]="style" [color]="color">
+            @if (showExtra) {
+                <button kbq-button>Dynamic</button>
+            }
+            <button kbq-button>Static</button>
+        </div>
+    `
+})
+class DynamicChildrenTestComponent {
+    @ViewChild(KbqButtonGroupRoot) groupRoot: KbqButtonGroupRoot;
+
+    style: KbqButtonStyles | string = KbqButtonStyles.Filled;
+    color: KbqComponentColors | string = KbqComponentColors.Theme;
+    showExtra = false;
 }

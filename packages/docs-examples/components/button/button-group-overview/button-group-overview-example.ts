@@ -11,7 +11,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     template: `
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button [kbqStyle]="style" [color]="color">
+                <button kbq-button>
                     {{ item }}
                 </button>
             }
