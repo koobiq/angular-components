@@ -70,12 +70,13 @@ The `kbqAgGridStatusBar` directive adds a customizable panel below the table.
 
 You can add custom keyboard shortcuts by adding the appropriate directives to your `<ag-grid-angular>` component.
 
-| <div style="min-width: 120px;">Key</div>                                                       | Action               | Directive                         |
-| ---------------------------------------------------------------------------------------------- | -------------------- | --------------------------------- |
-| <span class="docs-hot-key-button">Tab</span>                                                   | Move to next row     | `kbqAgGridToNextRowByTab`         |
-| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Select multiple rows | `kbqAgGridSelectRowsByShiftArrow` |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Select a row         | `kbqAgGridSelectRowsByCtrlClick`  |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>     | Copy selected rows   | `kbqAgGridCopyByCtrlC`            |
+| <div style="min-width: 120px;">Key</div>                                                        | Action                 | Directive                         |
+| ----------------------------------------------------------------------------------------------- | ---------------------- | --------------------------------- |
+| <span class="docs-hot-key-button">Tab</span>                                                    | Move to next row       | `kbqAgGridToNextRowByTab`         |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>    | Select multiple rows   | `kbqAgGridSelectRowsByShiftArrow` |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span>  | Select a row           | `kbqAgGridSelectRowsByCtrlClick`  |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>      | Copy selected rows     | `kbqAgGridCopyByCtrlC`            |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">click</span> | Select a range of rows | `kbqAgGridSelectRowsByShiftClick` |
 
 More information about keyboard shortcuts can be found in the [ag-grid-angular documentation](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 
