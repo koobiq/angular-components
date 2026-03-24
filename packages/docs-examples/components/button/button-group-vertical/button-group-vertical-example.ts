@@ -15,7 +15,7 @@ import { KbqIcon } from '@koobiq/components/icon';
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <div kbq-button-group [orientation]="'vertical'" [class.layout-gap-3xs]="!!style.gap">
+                <div kbq-button-group [orientation]="'vertical'">
                     <button kbq-button aria-label="Plus" [color]="style.color" [kbqStyle]="style.appearance">
                         <i kbq-icon="kbq-plus_16"></i>
                     </button>
@@ -33,8 +33,8 @@ import { KbqIcon } from '@koobiq/components/icon';
 })
 export class ButtonGroupVerticalExample {
     protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles; gap?: boolean }[] = [
-        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled, gap: true },
-        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled, gap: true },
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
+        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ThemeFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },

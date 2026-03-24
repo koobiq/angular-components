@@ -15,7 +15,7 @@ import { KbqIcon } from '@koobiq/components/icon';
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <div kbq-button-group [class.layout-gap-3xs]="!!style.gap">
+                <div kbq-button-group>
                     @for (item of data; track item) {
                         <button kbq-button [color]="style.color" [kbqStyle]="style.appearance">
                             {{ item }}
@@ -23,7 +23,7 @@ import { KbqIcon } from '@koobiq/components/icon';
                     }
                 </div>
 
-                <div kbq-button-group [class.layout-gap-3xs]="!!style.gap">
+                <div kbq-button-group>
                     @for (item of data; track item) {
                         <button
                             kbq-button
@@ -51,8 +51,8 @@ export class ButtonGroupStyleExample {
     ] as const;
 
     protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles; gap?: boolean }[] = [
-        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled, gap: true },
-        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled, gap: true },
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
+        { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ThemeFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },

@@ -9,7 +9,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     selector: 'button-group-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <div class="layout-gap-3xs" kbq-button-group>
+        <div kbq-button-group>
             @for (item of data; track item) {
                 <button kbq-button [kbqStyle]="style" [color]="color">
                     {{ item }}

@@ -13,9 +13,9 @@ import { KbqIcon } from '@koobiq/components/icon';
         KbqIcon
     ],
     template: `
-        <div kbq-button-group class="layout-gap-3xs">
+        <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button [color]="color" [kbqStyle]="style">
+                <button kbq-button class="kbq-dropdown-trigger" [color]="color" [kbqStyle]="style">
                     <i kbq-icon="kbq-diamond_16"></i>
                     {{ item }}
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -23,7 +23,7 @@ import { KbqIcon } from '@koobiq/components/icon';
             }
         </div>
 
-        <div kbq-button-group class="layout-gap-3xs">
+        <div kbq-button-group>
             @for (item of data; track item) {
                 <button kbq-button [color]="color" [kbqStyle]="style">
                     <i kbq-icon="kbq-diamond_16"></i>
@@ -32,7 +32,7 @@ import { KbqIcon } from '@koobiq/components/icon';
             }
         </div>
 
-        <div kbq-button-group class="layout-gap-3xs">
+        <div kbq-button-group>
             @for (item of data; track item) {
                 <button kbq-button [color]="color" [kbqStyle]="style">
                     {{ item }}
@@ -40,16 +40,16 @@ import { KbqIcon } from '@koobiq/components/icon';
             }
         </div>
 
-        <div kbq-button-group class="layout-gap-3xs">
+        <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button [color]="color" [kbqStyle]="style">
+                <button kbq-button class="kbq-dropdown-trigger" [color]="color" [kbqStyle]="style">
                     <i kbq-icon="kbq-diamond_16"></i>
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             }
         </div>
 
-        <div kbq-button-group class="layout-gap-3xs">
+        <div kbq-button-group>
             @for (item of data; track item) {
                 <button kbq-button [color]="color" [kbqStyle]="style">
                     <i kbq-icon="kbq-diamond_16"></i>

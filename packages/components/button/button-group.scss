@@ -8,4 +8,9 @@
     &.kbq-button-group_vertical {
         @include groups-mixins.vertical-group(':is(.kbq-button, .kbq-button-icon)');
     }
+
+    &:not(:has(> :not(.kbq-contrast-fade.kbq-button_filled))),
+    &:not(:has(> :not(.kbq-contrast.kbq-button_filled))) {
+        gap: var(--kbq-size-3xs);
+    }
 }

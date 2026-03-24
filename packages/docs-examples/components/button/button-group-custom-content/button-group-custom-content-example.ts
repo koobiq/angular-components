@@ -13,13 +13,13 @@ import { KbqIcon } from '@koobiq/components/icon';
         KbqIcon
     ],
     template: `
-        <div class="layout-gap-3xs" kbq-button-group>
+        <div kbq-button-group>
             <button kbq-button [kbqStyle]="style" [color]="color">
                 <i kbq-icon="kbq-diamond_16"></i>
                 {{ data[0] }}
             </button>
 
-            <button kbq-button [kbqStyle]="style" [color]="color">
+            <button kbq-button class="kbq-dropdown-trigger" [kbqStyle]="style" [color]="color">
                 {{ data[1] }}
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
