@@ -390,7 +390,8 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Button Group',
                         en: 'Button Group'
                     },
-                    hasApi: false,
+                    hasApi: true,
+                    apiId: 'button',
                     hasExamples: false,
                     isNew: expiresAt('2026-04-20')
                 },
