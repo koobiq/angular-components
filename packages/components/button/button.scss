@@ -5,8 +5,6 @@
 
 @use './button-theme' as *;
 
-@use '../core/styles/common/groups-mixins';
-
 .kbq-button {
     @extend %kbq-button-base;
 

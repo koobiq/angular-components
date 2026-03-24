@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqButton, KbqButtonCssStyler, KbqButtonGroup, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -9,9 +9,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 @Component({
     selector: 'button-group-style-example',
     imports: [
-        KbqButton,
-        KbqButtonCssStyler,
-        KbqButtonGroup,
+        KbqButtonModule,
         KbqIcon
     ],
     template: `
