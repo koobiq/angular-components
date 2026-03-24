@@ -46,10 +46,10 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
 
         <ag-grid-angular
             kbqAgGridTheme
+            kbqAgGridSelectRowsByShiftClick
             disableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
-            kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
             kbqAgGridCopyByCtrlC
             [kbqAgGridCopyFormatter]="copyFormatter()"

@@ -74,7 +74,6 @@ import { AgGridModule } from 'ag-grid-angular';
 | ---------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------- |
 | <span class="docs-hot-key-button">Tab</span>                                                   | Перейти к следующей строке   | `kbqAgGridToNextRowByTab`         |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Выделить несколько строк     | `kbqAgGridSelectRowsByShiftArrow` |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Выделить все строки          | `kbqAgGridSelectAllRowsByCtrlA`   |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Выделить строку              | `kbqAgGridSelectRowsByCtrlClick`  |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>     | Копировать выделенные строки | `kbqAgGridCopyByCtrlC`            |
 

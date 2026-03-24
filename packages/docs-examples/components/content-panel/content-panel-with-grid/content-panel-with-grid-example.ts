@@ -32,9 +32,9 @@ type ExampleRowData = Record<string, string>;
         <ag-grid-angular
             kbqAgGridTheme
             disableCellFocusStyles
+            kbqAgGridSelectRowsByShiftClick
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
-            kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
             [rowSelection]="rowSelection"
             [style.height]="'100%'"

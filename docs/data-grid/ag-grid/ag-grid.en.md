@@ -74,7 +74,6 @@ You can add custom keyboard shortcuts by adding the appropriate directives to yo
 | ---------------------------------------------------------------------------------------------- | -------------------- | --------------------------------- |
 | <span class="docs-hot-key-button">Tab</span>                                                   | Move to next row     | `kbqAgGridToNextRowByTab`         |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Select multiple rows | `kbqAgGridSelectRowsByShiftArrow` |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Select all rows      | `kbqAgGridSelectAllRowsByCtrlA`   |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Select a row         | `kbqAgGridSelectRowsByCtrlClick`  |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>     | Copy selected rows   | `kbqAgGridCopyByCtrlC`            |
 

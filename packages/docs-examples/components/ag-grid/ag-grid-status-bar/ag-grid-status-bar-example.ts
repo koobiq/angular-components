@@ -64,10 +64,10 @@ export class ExampleAgGridStatusBarComponent {
     template: `
         <ag-grid-angular
             kbqAgGridTheme
+            kbqAgGridSelectRowsByShiftClick
             disableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
-            kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
             pagination
             [kbqAgGridStatusBar]="statusBarComponent"
