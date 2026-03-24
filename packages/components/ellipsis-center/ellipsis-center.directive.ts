@@ -7,8 +7,7 @@ import {
     NgModule,
     numberAttribute,
     OnDestroy,
-    OnInit,
-    Renderer2
+    OnInit
 } from '@angular/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
@@ -24,7 +23,6 @@ const MIN_VISIBLE_LENGTH = 50;
     }
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
-    private renderer: Renderer2 = inject(Renderer2);
     private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     @Input() set kbqEllipsisCenter(value: string) {

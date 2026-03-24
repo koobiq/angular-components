@@ -8,8 +8,7 @@ import {
     inject,
     Inject,
     OnDestroy,
-    Optional,
-    Renderer2
+    Optional
 } from '@angular/core';
 import { KBQ_TITLE_TEXT_REF, kbqInjectNativeElement, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -26,7 +25,6 @@ import { debounceTime } from 'rxjs/operators';
     }
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    private readonly renderer = inject(Renderer2);
     private readonly nativeElement = kbqInjectNativeElement();
 
     private contentObserver = inject(ContentObserver);

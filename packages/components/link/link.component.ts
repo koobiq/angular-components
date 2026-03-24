@@ -3,7 +3,6 @@ import {
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
-    ChangeDetectorRef,
     ContentChild,
     ContentChildren,
     DestroyRef,
@@ -15,7 +14,8 @@ import {
     numberAttribute,
     OnDestroy,
     QueryList,
-    Renderer2
+    Renderer2,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -55,20 +55,21 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     @ContentChildren(forwardRef(() => KbqIcon), { read: ElementRef }) icons: QueryList<ElementRef>;
 
+    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the link is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledSignal();
     }
 
     set disabled(value: boolean) {
-        if (value !== this._disabled) {
-            this._disabled = value;
-            this.changeDetector.markForCheck();
+        if (this.disabledSignal() !== value) {
+            this.disabledSignal.set(value);
         }
     }
 
-    private _disabled = false;
+    /** @docs-private */
+    disabledSignal = signal(false);
 
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
@@ -117,8 +118,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     constructor(
         private elementRef: ElementRef<HTMLAnchorElement>,
-        private focusMonitor: FocusMonitor,
-        private changeDetector: ChangeDetectorRef
+        private focusMonitor: FocusMonitor
     ) {
         this.updatePrintUrl();
     }

@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, ElementRef, Input, NgZone, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, NgZone, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
@@ -44,11 +44,10 @@ export class DocsStackblitzButtonComponent extends KbqLink {
     constructor(
         elementRef: ElementRef<HTMLAnchorElement>,
         focusMonitor: FocusMonitor,
-        changeDetector: ChangeDetectorRef,
         private stackBlitzWriter: DocsStackblitzWriter,
         private ngZone: NgZone
     ) {
-        super(elementRef, focusMonitor, changeDetector);
+        super(elementRef, focusMonitor);
     }
 
     openStackBlitz(): void {

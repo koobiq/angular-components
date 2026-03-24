@@ -15,12 +15,16 @@ import {
     Input,
     OnDestroy,
     Output,
+    Renderer2,
     TemplateRef,
     Type,
     ViewChild,
     ViewEncapsulation,
+    WritableSignal,
     booleanAttribute,
+    effect,
     inject,
+    input,
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -133,6 +137,16 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
+    /** @docs-private */
+    protected renderer: Renderer2 = inject(Renderer2);
+
+    /**
+     * Input for controlling the disabled state of a component.
+     *
+     * The input expects a component containing `disabledSignal` property, which is
+     * a writable signal emitting boolean values.
+     */
+    readonly forDisabledComponent = input<Record<'disabledSignal', WritableSignal<boolean>>>();
 
     /**
      * Changes hiding behavior. By default, tooltip is hidden on mouseleave from trigger.
@@ -274,6 +288,25 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     };
 
     protected modifier: TooltipModifier = TooltipModifier.Default;
+
+    constructor() {
+        super();
+
+        effect(() => {
+            if (!this.forDisabledComponent()) return;
+
+            const disabled = this.forDisabledComponent()!.disabledSignal();
+
+            if (disabled) {
+                this.renderer.setAttribute(this.getNativeElement(), 'tabindex', '0');
+                this.renderer.setStyle(this.getNativeElement(), 'outline-color', 'var(--kbq-states-line-focus-theme)');
+            } else {
+                this.renderer.setAttribute(this.getNativeElement(), 'tabindex', '-1');
+            }
+
+            this.disabled = !disabled;
+        });
+    }
 
     ngAfterViewInit(): void {
         this.parentPopup?.closedStream.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());

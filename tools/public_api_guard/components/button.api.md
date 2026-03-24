@@ -24,6 +24,7 @@ import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const buttonLeftIconClassName = "kbq-button-icon_left";
@@ -34,9 +35,9 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 // @public (undocumented)
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     constructor(focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
+    disabledSignal: WritableSignal<boolean>;
     // (undocumented)
     focus(): void;
     // (undocumented)

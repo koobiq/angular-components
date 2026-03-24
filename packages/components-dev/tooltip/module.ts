@@ -19,6 +19,9 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [TooltipExamplesModule],
     template: `
+        <tooltip-disabled-for-component-example />
+        <br />
+        <br />
         <tooltip-overview-example />
         <br />
         <br />

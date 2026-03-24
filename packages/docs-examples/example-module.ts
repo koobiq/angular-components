@@ -5359,6 +5359,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-arrow-example.ts",
     "importPath": "components/tooltip"
   },
+  "tooltip-disabled-for-component": {
+    "packagePath": "components/tooltip/tooltip-disabled-for-component",
+    "title": "Tooltip disabled",
+    "componentName": "TooltipDisabledForComponentExample",
+    "files": [
+      "tooltip-disabled-for-component-example.ts"
+    ],
+    "selector": "tooltip-disabled-for-component-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-disabled-for-component-example.ts",
+    "importPath": "components/tooltip"
+  },
   "tooltip-disabled": {
     "packagePath": "components/tooltip/tooltip-disabled",
     "title": "Tooltip disabled",
@@ -6940,6 +6952,8 @@ return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-with-hint':
 return import('@koobiq/docs-examples/components/toggle');
   case 'tooltip-arrow':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-disabled-for-component':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-disabled':
 return import('@koobiq/docs-examples/components/tooltip');

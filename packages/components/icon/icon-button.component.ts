@@ -4,9 +4,11 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    effect,
     inject,
     Input,
     OnDestroy,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqIcon } from './icon.component';
@@ -46,23 +48,29 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     private _tabindex = 0;
 
+    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledSignal();
     }
 
     set disabled(value: boolean) {
-        if (this._disabled !== value) {
-            this._disabled = value;
-
-            this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
+        if (this.disabledSignal() !== value) {
+            this.disabledSignal.set(value);
         }
     }
 
-    private _disabled: boolean;
+    /** @docs-private */
+    disabledSignal = signal(false);
 
     override name = 'KbqIconButton';
+
+    constructor() {
+        super();
+
+        effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
+    }
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();
