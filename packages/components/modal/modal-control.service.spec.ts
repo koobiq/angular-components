@@ -33,6 +33,8 @@ describe(KbqModalControlService.name, () => {
     it('should register a modal ref', () => {
         const ref = new MockModalRef();
 
+        expect(service.hasRegistered(ref)).toBe(false);
+
         service.registerModal(ref);
 
         expect(service.hasRegistered(ref)).toBe(true);
@@ -48,13 +50,29 @@ describe(KbqModalControlService.name, () => {
         refs.forEach((ref) => expect(service.openModals).toContain(ref));
     });
 
-    it('should remove modal ref from openModals and unregister it when afterClose fires', () => {
+    it('should unregister modal ref when afterClose emits without prior afterOpen', () => {
         const ref = new MockModalRef();
 
         service.registerModal(ref);
         ref.afterOpen.next();
 
         expect(service.openModals.length).toBe(1);
+        expect(service.hasRegistered(ref)).toBe(true);
+
+        ref.afterClose.next();
+
+        expect(service.openModals.length).toBe(0);
+        expect(service.hasRegistered(ref)).toBe(false);
+    });
+
+    it('should remove modal ref from openModals and unregister it when afterClose emits', () => {
+        const ref = new MockModalRef();
+
+        service.registerModal(ref);
+        ref.afterOpen.next();
+
+        expect(service.openModals.length).toBe(1);
+        expect(service.hasRegistered(ref)).toBe(true);
 
         ref.afterClose.next();
 
