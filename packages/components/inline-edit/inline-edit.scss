@@ -39,6 +39,18 @@
 }
 
 @mixin _inline-edit-theme {
+    background: var(--kbq-inline-edit-background);
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &.cdk-keyboard-focused {
+        $focused-color: var(--kbq-states-line-focus-theme);
+        box-shadow: inset 0 0 0.1px 1px $focused-color;
+        border-color: $focused-color;
+    }
+
     &.kbq-inline-edit_view {
         &:not(.kbq-inline-edit_disabled) {
             &:hover {
@@ -68,18 +80,8 @@
     }
 
     .kbq-inline-edit__focus_container {
-        background: var(--kbq-inline-edit-background);
-        border-color: var(--kbq-inline-edit-background);
-
-        &:focus-visible {
-            outline: none;
-        }
-
-        &.cdk-keyboard-focused {
-            $focused-color: var(--kbq-states-line-focus-theme);
-            outline: 1px solid $focused-color;
-            border-color: $focused-color;
-        }
+        display: flex;
+        flex-direction: column;
     }
 }
 
@@ -91,16 +93,18 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-sizing: border-box;
+
+    border: var(--kbq-size-border-width) solid transparent;
     border-radius: var(--kbq-size-border-radius);
     padding: var(--kbq-inline-edit-padding-vertical) var(--kbq-inline-edit-padding-horizontal);
     min-height: var(--kbq-inline-edit-height);
-    box-sizing: border-box;
 
     @include _inline-edit-theme();
     @include _inline-edit-typography();
 
     &:not(.kbq-inline-edit_with-label) {
-        --kbq-inline-edit-padding-horizontal: var(--kbq-size-m);
+        --kbq-inline-edit-padding-horizontal: 11px;
     }
 
     &.kbq-inline-edit_with-label {
@@ -120,6 +124,12 @@
 
     &.kbq-inline-edit_view {
         .kbq-inline-edit__view-container {
+            display: flex;
+            text-overflow: ellipsis;
+        }
+
+        .kbq-inline-edit__view-content {
+            display: inline-block;
             text-overflow: ellipsis;
         }
     }
@@ -170,18 +180,6 @@
             padding: var(--kbq-size-s);
             z-index: 2;
         }
-    }
-
-    .kbq-inline-edit__focus_container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: calc(100% - 2 * var(--kbq-size-border-width));
-        height: calc(100% - 2 * var(--kbq-size-border-width));
-        border: var(--kbq-size-border-width) solid transparent;
-        border-radius: var(--kbq-size-border-radius);
-        // set z-index to hide mask borders
-        z-index: 1;
     }
 }
 

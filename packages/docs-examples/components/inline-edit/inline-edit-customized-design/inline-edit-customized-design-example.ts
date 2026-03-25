@@ -35,7 +35,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 @if (!linkControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <a kbq-link [href]="linkControl.value">{{ linkControl.value }}</a>
+                    <a kbq-link target="_blank" [href]="linkControl.value">{{ linkControl.value }}</a>
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
@@ -47,7 +47,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <kbq-label class="example-inline-text__content">
                 Badge
                 <i
-                    kbq-icon-button="kbq-circle-question_16"
+                    kbq-icon-button="kbq-circle-info_16"
                     [kbqTooltip]="'Tooltip on hover or focus'"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="popupPlacements.Top"
