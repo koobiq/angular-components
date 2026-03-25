@@ -60,9 +60,9 @@ export class ExampleRowActionsComponent {
         <ag-grid-angular
             kbqAgGridTheme
             disableCellFocusStyles
+            kbqAgGridSelectRowsByShiftClick
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
-            kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
             [kbqAgGridRowActions]="rowActionsComponent"
             [rowSelection]="rowSelection"

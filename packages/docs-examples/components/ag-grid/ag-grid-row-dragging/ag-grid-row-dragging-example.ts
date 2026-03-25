@@ -21,9 +21,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
         <ag-grid-angular
             kbqAgGridTheme
             disableCellFocusStyles
+            kbqAgGridSelectRowsByShiftClick
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
-            kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
             [rowSelection]="rowSelection"
             [style.height.px]="300"

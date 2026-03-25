@@ -1,5 +1,4 @@
 import {
-    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -11,16 +10,27 @@ import {
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
+import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KBQ_ACTIONS_PANEL_DATA, KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
-import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToastService } from '@koobiq/components/toast';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    ColDef,
+    FirstDataRenderedEvent,
+    GridApi,
+    ModuleRegistry,
+    RowSelectionOptions,
+    SelectionChangedEvent,
+    SelectionColumnDef
+} from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 type ExampleAction = {
     id: string;
@@ -28,94 +38,114 @@ type ExampleAction = {
     divider?: boolean;
 };
 
-type ExampleTableItem = {
-    threat: string;
-    description: string;
-    protectionMeasures: string;
-    selected: boolean;
-};
+type ExampleTableItem = unknown;
 
 @Component({
-    selector: 'example-table',
-    imports: [
-        KbqTableModule,
-        KbqCheckboxModule,
-        FormsModule
-    ],
+    selector: 'example-grid',
+    imports: [AgGridModule, KbqAgGridThemeModule],
     template: `
-        <table kbq-table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th [style.width.px]="100">Threat</th>
-                    <th>Description</th>
-                    <th>Protection measures</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (item of data; track item) {
-                    <tr>
-                        <td><kbq-checkbox [(ngModel)]="item.selected" (ngModelChange)="change()" /></td>
-                        <td>{{ item.threat }}</td>
-                        <td>{{ item.description }}</td>
-                        <td>{{ item.protectionMeasures }}</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <ag-grid-angular
+            kbqAgGridTheme
+            kbqAgGridSelectRowsByShiftClick
+            disableCellFocusStyles
+            kbqAgGridToNextRowByTab
+            kbqAgGridSelectRowsByShiftArrow
+            kbqAgGridSelectRowsByCtrlClick
+            [rowSelection]="rowSelection"
+            [selectionColumnDef]="selectionColumnDef"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [rowData]="rowData"
+            (firstDataRendered)="onFirstDataRendered($event)"
+            (selectionChanged)="onSelectionChanged($event)"
+        />
     `,
     styles: `
         :host {
+            display: flex;
             height: 300px;
-            overflow-y: scroll;
+            width: 100%;
+        }
+
+        ag-grid-angular {
+            height: 100%;
+            width: 100%;
+        }
+
+        /** Adding extra space for actions panel */
+        :host ::ng-deep .ag-body-viewport,
+        :host ::ng-deep .ag-body-vertical-scroll {
             padding-bottom: 80px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleTable {
-    protected readonly data: ExampleTableItem[] = Array.from({ length: 4 })
-        .map((_, index) => [
-            {
-                threat: 'DDoS attacks',
-                description: 'Overloading the system with requests to make it unavailable',
-                protectionMeasures: 'Using protective systems (e.g., CDN), traffic monitoring',
-                selected: index === 0
-            },
-            {
-                threat: 'Brute force attacks',
-                description: 'Password guessing to gain access to systems',
-                protectionMeasures: 'Using complex passwords and two-factor authentication',
-                selected: index === 0
-            },
-            {
-                threat: 'Fake Wi-Fi networks',
-                description: 'Creating fake access points to intercept data',
-                protectionMeasures: 'Using VPN, disabling automatic Wi-Fi connections',
-                selected: index === 0
-            },
-            {
-                threat: 'Supply chain attacks',
-                description: 'Injecting malicious code through third-party components',
-                protectionMeasures: 'Verifying third-party suppliers, using trusted sources',
-                selected: false
-            }
-        ])
-        .flat();
-
+export class ExampleGrid {
+    private api: GridApi<ExampleTableItem> | null = null;
+    protected readonly defaultColDef: ColDef = {
+        sortable: true,
+        resizable: true,
+        width: 140
+    };
+    protected readonly selectionColumnDef: SelectionColumnDef = {
+        pinned: 'left'
+    };
+    protected readonly rowSelection: RowSelectionOptions = {
+        mode: 'multiRow',
+        headerCheckbox: true,
+        checkboxes: true,
+        hideDisabledCheckboxes: false
+    };
+    protected readonly columnDefs: ColDef[] = [
+        {
+            field: 'column0',
+            headerName: 'Project name',
+            pinned: true
+        },
+        {
+            field: 'column1',
+            headerName: 'Text'
+        },
+        {
+            field: 'column2',
+            headerName: 'Text'
+        },
+        {
+            field: 'column3',
+            headerName: 'Text'
+        },
+        {
+            field: 'column4',
+            headerName: 'Text'
+        }
+    ];
+    protected readonly rowData = Array.from({ length: 33 }, (_, index) => ({
+        column0: 'Project name ' + index,
+        column1: 'Text ' + index,
+        column2: 'Text ' + index,
+        column3: 'Text ' + index,
+        column4: 'Text ' + index
+    }));
     readonly selectedItems = output<ExampleTableItem[]>();
 
-    constructor() {
-        afterNextRender(() => this.change());
-    }
-
     reset(): void {
-        this.data.forEach((item) => (item.selected = false));
-        this.change();
+        this.api?.deselectAll();
     }
 
-    protected change(): void {
-        this.selectedItems.emit(this.data.filter(({ selected }) => selected));
+    protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
+        api.setFocusedCell(0, 'column0');
+        api.forEachNode((node) => {
+            if (node.rowIndex === 3 || node.rowIndex === 4) {
+                node.setSelected(true);
+            }
+        });
+        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
+
+        this.api = api;
+    }
+
+    protected onSelectionChanged({ api }: SelectionChangedEvent<ExampleTableItem>): void {
+        this.selectedItems.emit(api.getSelectedRows());
     }
 }
 
@@ -222,7 +252,6 @@ export class ExampleActionsPanel {
         { id: 'Remove', icon: 'kbq-trash_16', divider: true }
     ];
     protected readonly action = { Counter: 'counter' };
-
     protected readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
     protected readonly actionsPanelRef = inject(KbqActionsPanelRef);
     private readonly toast = inject(KbqToastService);
@@ -237,9 +266,9 @@ export class ExampleActionsPanel {
  */
 @Component({
     selector: 'actions-panel-overview-example',
-    imports: [ExampleTable],
+    imports: [ExampleGrid],
     template: `
-        <example-table (selectedItems)="toggleActionsPanel($event)" />
+        <example-grid (selectedItems)="toggleActionsPanel($event)" />
     `,
     styles: `
         :host {
@@ -252,8 +281,8 @@ export class ExampleActionsPanel {
 })
 export class ActionsPanelOverviewExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly exampleTable = viewChild.required(ExampleTable);
+    private readonly container = viewChild.required(ExampleGrid, { read: ElementRef });
+    private readonly grid = viewChild.required(ExampleGrid);
     private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null;
     private readonly data = signal<ExampleTableItem[]>([]);
     private readonly destroyRef = inject(DestroyRef);
@@ -267,7 +296,7 @@ export class ActionsPanelOverviewExample {
 
         this.actionsPanelRef = this.actionsPanel.open(ExampleActionsPanel, {
             data: this.data,
-            overlayContainer: this.elementRef
+            overlayContainer: this.container()
         });
 
         this.actionsPanelRef.afterOpened.subscribe(() => {
@@ -278,7 +307,7 @@ export class ActionsPanelOverviewExample {
             console.log('ActionsPanel closed by action:', result);
 
             this.actionsPanelRef = null;
-            this.exampleTable().reset();
+            this.grid().reset();
         });
     }
 }

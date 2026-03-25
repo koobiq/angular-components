@@ -8,7 +8,8 @@ import {
     FirstDataRenderedEvent,
     ICellRendererParams,
     ModuleRegistry,
-    RowSelectionOptions
+    RowSelectionOptions,
+    SelectionColumnDef
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -48,12 +49,13 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     template: `
         <ag-grid-angular
             kbqAgGridTheme
+            kbqAgGridSelectRowsByShiftClick
             disableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
-            kbqAgGridSelectAllRowsByCtrlA
             kbqAgGridSelectRowsByCtrlClick
             [rowSelection]="rowSelection"
+            [selectionColumnDef]="selectionColumnDef"
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
@@ -70,6 +72,10 @@ export class AgGridOverviewExample {
         width: 140
     };
 
+    protected readonly selectionColumnDef: SelectionColumnDef = {
+        pinned: 'left'
+    };
+
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
@@ -81,7 +87,8 @@ export class AgGridOverviewExample {
         {
             field: 'column0',
             headerName: 'Link',
-            cellRenderer: ExampleLinkCellRenderer
+            cellRenderer: ExampleLinkCellRenderer,
+            pinned: true
         },
         {
             field: 'column1',
