@@ -24,7 +24,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </div>
 
         <div kbqTooltip="kbq-link" [forDisabledComponent]="link">
-            <a #link="kbqLink" kbq-link kbqTooltip="Create" href="http://localhost:8080" [disabled]="disableState">
+            <a
+                #link="kbqLink"
+                kbq-link
+                kbqTooltip="Create"
+                href="https://koobiq.io"
+                target="_blank"
+                [disabled]="disableState"
+            >
                 kbq-link
             </a>
         </div>

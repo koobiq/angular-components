@@ -63,13 +63,11 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     }
 
     set disabled(value: boolean) {
-        if (this.disabledSignal() !== value) {
-            this.disabledSignal.set(value);
-        }
+        this.disabledSignal.set(value);
     }
 
     /** @docs-private */
-    disabledSignal = signal(false);
+    readonly disabledSignal = signal(false);
 
     @Input({ transform: numberAttribute })
     get tabIndex(): number {

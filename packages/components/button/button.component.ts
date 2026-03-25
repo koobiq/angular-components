@@ -163,16 +163,14 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     }
 
     set disabled(value: boolean) {
-        if (this.disabledSignal() !== value) {
-            this.disabledSignal.set(value);
-        }
+        this.disabledSignal.set(value);
     }
 
     // @todo 20 In the next major release this line will be deleted.
     private _disabled: boolean;
 
     /** @docs-private */
-    disabledSignal = signal(false);
+    readonly disabledSignal = signal(false);
 
     @Input({ transform: numberAttribute })
     get tabIndex(): number {

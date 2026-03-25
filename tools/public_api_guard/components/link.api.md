@@ -31,7 +31,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
-    disabledSignal: WritableSignal<boolean>;
+    readonly disabledSignal: WritableSignal<boolean>;
     // (undocumented)
     focus(): void;
     // (undocumented)

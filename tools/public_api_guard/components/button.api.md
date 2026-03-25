@@ -37,7 +37,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     constructor(focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
     get disabled(): boolean;
     set disabled(value: boolean);
-    disabledSignal: WritableSignal<boolean>;
+    readonly disabledSignal: WritableSignal<boolean>;
     // (undocumented)
     focus(): void;
     // (undocumented)

@@ -49,7 +49,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     constructor();
     get disabled(): boolean;
     set disabled(value: boolean);
-    disabledSignal: WritableSignal<boolean>;
+    readonly disabledSignal: WritableSignal<boolean>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
