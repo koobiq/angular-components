@@ -40,8 +40,8 @@
         }
 
         .kbq-markdown__a {
-            color: var(--kbq-markdown-link-text, var(--kbq-foreground-theme));
-            border-bottom-color: var(--kbq-markdown-link-border-bottom, var(--kbq-line-theme-less));
+            color: var(--kbq-markdown-link-text);
+            border-bottom-color: var(--kbq-markdown-link-border-bottom);
 
             &:has(.kbq-markdown__code) {
                 display: inline;
@@ -49,23 +49,23 @@
             }
 
             &:visited {
-                color: var(--kbq-markdown-link-state-visited-text, var(--kbq-foreground-visited));
-                border-bottom-color: var(--kbq-markdown-link-state-visited-border-bottom, var(--kbq-line-visited));
+                color: var(--kbq-markdown-link-state-visited-text);
+                border-bottom-color: var(--kbq-markdown-link-state-visited-border-bottom);
             }
 
             &:hover {
-                color: var(--kbq-markdown-link-state-hover-text, var(--kbq-states-foreground-theme-hover));
+                color: var(--kbq-markdown-link-state-hover-text);
                 transition: color 0ms;
-                border-bottom-color: var(--kbq-markdown-link-state-hover-border-bottom, var(--kbq-line-theme-less));
+                border-bottom-color: var(--kbq-markdown-link-state-hover-border-bottom);
             }
 
             &:active {
-                color: var(--kbq-markdown-link-state-active, var(--kbq-states-foreground-theme-active));
+                color: var(--kbq-markdown-link-state-active);
             }
 
             &:focus {
-                outline: var(--kbq-markdown-link-state-focused-outline, var(--kbq-link-state-focused-outline)) solid
-                    var(--kbq-markdown-link-size-state-focused-outline-width, var(--kbq-size-3xs));
+                outline: var(--kbq-markdown-link-state-focused-outline) solid
+                    var(--kbq-markdown-link-size-state-focused-outline-width);
 
                 outline-offset: var(--kbq-markdown-link-size-state-focused-outline-offset, 0);
             }
