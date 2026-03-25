@@ -1,0 +1,79 @@
+@use 'sass:map';
+
+@mixin border-top-radius($radius) {
+    border-top-right-radius: $radius;
+    border-top-left-radius: $radius;
+}
+
+@mixin border-bottom-radius($radius) {
+    border-bottom-right-radius: $radius;
+    border-bottom-left-radius: $radius;
+}
+
+@mixin border-right-radius($radius) {
+    border-bottom-right-radius: $radius;
+    border-top-right-radius: $radius;
+}
+
+@mixin border-left-radius($radius) {
+    border-bottom-left-radius: $radius;
+    border-top-left-radius: $radius;
+}
+
+@mixin group($item-selector: kbq-group-item) {
+    & {
+        display: flex;
+        flex-direction: row;
+
+        &_justified {
+            > #{$item-selector} {
+                width: 100%;
+            }
+        }
+
+        #{$item-selector} + #{$item-selector} {
+            margin-left: calc(-1 * #{var(--kbq-size-border-width)});
+        }
+
+        & > #{$item-selector}:first-child:not(:last-child) {
+            @include border-right-radius(0);
+        }
+
+        & > #{$item-selector}:last-child:not(:first-child) {
+            @include border-left-radius(0);
+        }
+
+        & > #{$item-selector}:not(:first-child):not(:last-child) {
+            border-radius: 0;
+        }
+    }
+}
+
+@mixin vertical-group($item-selector: kbq-group-item) {
+    & {
+        display: flex;
+        flex-direction: column;
+
+        > #{$item-selector} {
+            &:first-child:not(:last-child) {
+                @include border-bottom-radius(0);
+
+                border-top-right-radius: var(--kbq-size-border-radius);
+            }
+
+            &:last-child:not(:first-child) {
+                @include border-top-radius(0);
+
+                border-bottom-left-radius: var(--kbq-size-border-radius);
+            }
+
+            &:not(:first-child):not(:last-child) {
+                border-radius: 0;
+            }
+        }
+
+        #{$item-selector} + #{$item-selector} {
+            margin-top: calc(-1 * #{var(--kbq-size-border-width)});
+        }
+    }
+}

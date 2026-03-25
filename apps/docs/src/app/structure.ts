@@ -21,6 +21,7 @@ export enum DocsStructureItemId {
     Breadcrumbs = 'breadcrumbs',
     Button = 'button',
     ButtonToggle = 'button-toggle',
+    ButtonGroup = 'button-group',
     Checkbox = 'checkbox',
     ClampedText = 'clamped-text',
     ClampedList = 'clamped-list',
@@ -370,6 +371,17 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'button-toggle',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.ButtonGroup,
+                    name: {
+                        ru: 'Button Group',
+                        en: 'Button Group'
+                    },
+                    hasApi: true,
+                    apiId: 'button',
+                    hasExamples: false,
+                    isNew: expiresAt('2026-04-20')
                 },
                 {
                     id: DocsStructureItemId.Checkbox,

@@ -38,4 +38,18 @@ test.describe('KbqButtonModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
         });
     });
+
+    test.describe('E2eButtonGroup', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eButtonGroup');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        test('default states', async ({ page }) => {
+            await page.goto('/E2eButtonGroup');
+            const locator = getComponent(page);
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-dark.png');
+        });
+    });
 });
