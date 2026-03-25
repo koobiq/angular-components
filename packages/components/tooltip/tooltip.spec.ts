@@ -1,12 +1,15 @@
 import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, viewChild, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT } from '@koobiq/components/core';
+import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
+import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
@@ -312,6 +315,56 @@ describe('KbqTooltip', () => {
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
         }));
     });
+
+    describe('forDisabledComponent', () => {
+        let fixture: ComponentFixture<KbqTooltipForDisabledComponent>;
+        let component: KbqTooltipForDisabledComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(KbqTooltipForDisabledComponent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should set attributes for kbqButton', fakeAsync(() => {
+            const triggerElement = component.buttonTooltip().getNativeElement();
+
+            expect(triggerElement.getAttribute('tabindex')).toBe('-1');
+            expect(component.buttonTooltip().disabled).toBe(true);
+
+            component.disableState = true;
+            fixture.detectChanges();
+
+            expect(triggerElement.getAttribute('tabindex')).toBe('0');
+            expect(component.buttonTooltip().disabled).toBe(false);
+        }));
+
+        it('should set attributes for kbqIconButton', fakeAsync(() => {
+            const triggerElement = component.iconButtonTooltip().getNativeElement();
+
+            expect(triggerElement.getAttribute('tabindex')).toBe('-1');
+            expect(component.iconButtonTooltip().disabled).toBe(true);
+
+            component.disableState = true;
+            fixture.detectChanges();
+
+            expect(triggerElement.getAttribute('tabindex')).toBe('0');
+            expect(component.iconButtonTooltip().disabled).toBe(false);
+        }));
+
+        it('should set attributes for kbqLink', fakeAsync(() => {
+            const triggerElement = component.linkTooltip().getNativeElement();
+
+            expect(triggerElement.getAttribute('tabindex')).toBe('-1');
+            expect(component.linkTooltip().disabled).toBe(true);
+
+            component.disableState = true;
+            fixture.detectChanges();
+
+            expect(triggerElement.getAttribute('tabindex')).toBe('0');
+            expect(component.linkTooltip().disabled).toBe(false);
+        }));
+    });
 });
 
 @Component({
@@ -415,4 +468,36 @@ class KbqTooltipDisabledComponent {
 class KbqTooltipWithTemplateRefContent {
     @ViewChild('trigger', { static: false }) trigger: ElementRef;
     tooltipContext = { content: 'TestContent' };
+}
+
+@Component({
+    selector: 'kbq-tooltip-for-disabled-component',
+    imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
+    template: `
+        <div #buttonTooltip="kbqTooltip" kbqTooltip="kbq-button" [forDisabledComponent]="button">
+            <button #button kbq-button [disabled]="disableState">
+                <i kbq-icon="kbq-plus_16"></i>
+            </button>
+        </div>
+
+        <div #iconButtonTooltip="kbqTooltip" kbqTooltip="kbq-icon-button" [forDisabledComponent]="iconButton">
+            <i #iconButton #button kbq-icon-button="kbq-plus_16" color="theme" [disabled]="disableState"></i>
+        </div>
+
+        <div #linkTooltip="kbqTooltip" kbqTooltip="kbq-link" [forDisabledComponent]="link">
+            <a #link="kbqLink" kbq-link kbqTooltip="Create" href="http://localhost:8080" [disabled]="disableState">
+                kbq-link
+            </a>
+        </div>
+    `
+})
+class KbqTooltipForDisabledComponent {
+    readonly button = viewChild.required(KbqButton);
+    readonly buttonTooltip = viewChild.required<KbqTooltipTrigger>('buttonTooltip');
+    readonly iconButton = viewChild.required(KbqIconButton);
+    readonly iconButtonTooltip = viewChild.required<KbqTooltipTrigger>('iconButtonTooltip');
+    readonly link = viewChild.required(KbqLink);
+    readonly linkTooltip = viewChild.required<KbqTooltipTrigger>('linkTooltip');
+
+    disableState: boolean = false;
 }
