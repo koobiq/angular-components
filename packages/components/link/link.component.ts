@@ -17,7 +17,7 @@ import {
     Renderer2,
     signal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
     getNodesWithoutComments,
     kbqInjectNativeElement,
@@ -59,7 +59,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     /** Whether the link is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this.disabledSignal();
+        return this._disabled;
     }
 
     set disabled(value: boolean) {
@@ -114,6 +114,9 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     printUrl: string;
 
+    // @todo 20 In the next major release this line will be deleted.
+    private _disabled: boolean;
+
     @ContentChild(KbqIcon) icon: KbqIcon;
 
     constructor(
@@ -121,6 +124,9 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
         private focusMonitor: FocusMonitor
     ) {
         this.updatePrintUrl();
+
+        // @todo 20 In the next major release this line will be deleted.
+        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
     }
 
     ngAfterViewInit(): void {

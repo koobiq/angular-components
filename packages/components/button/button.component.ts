@@ -23,6 +23,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import {
     getNodesWithoutComments,
     KBQ_TITLE_TEXT_REF,
@@ -158,7 +159,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     /** Whether the button is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this.disabledSignal();
+        return this._disabled;
     }
 
     set disabled(value: boolean) {
@@ -166,6 +167,9 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
             this.disabledSignal.set(value);
         }
     }
+
+    // @todo 20 In the next major release this line will be deleted.
+    private _disabled: boolean;
 
     /** @docs-private */
     disabledSignal = signal(false);
@@ -189,6 +193,9 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
         this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
+
+        // @todo 20 In the next major release this line will be deleted.
+        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
 
         effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
     }

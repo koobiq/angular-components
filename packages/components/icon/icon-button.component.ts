@@ -11,6 +11,7 @@ import {
     signal,
     ViewEncapsulation
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { KbqIcon } from './icon.component';
 
 @Component({
@@ -52,7 +53,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /** Whether the button is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this.disabledSignal();
+        return this._disabled;
     }
 
     set disabled(value: boolean) {
@@ -61,6 +62,9 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
         }
     }
 
+    // @todo 20 In the next major release this line will be deleted.
+    private _disabled: boolean;
+
     /** @docs-private */
     disabledSignal = signal(false);
 
@@ -68,6 +72,9 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     constructor() {
         super();
+
+        // @todo 20 In the next major release this line will be deleted.
+        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
 
         effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
     }
