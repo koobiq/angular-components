@@ -57,8 +57,9 @@
     }
 
     .kbq-form-field__infix {
+        box-sizing: border-box;
+
         width: 100%;
-        max-width: calc(100% - var(--kbq-size-xs));
         flex-grow: 1;
 
         padding-left: var(--kbq-form-field-size-infix-left-padding);
