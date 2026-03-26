@@ -39,10 +39,10 @@
         (overlayOutsideClick)="save($event)"
         (overlayKeydown)="onOverlayKeydown($event)"
     >
-        <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
+        <div class="cdk-visually-hidden" aria-hidden="true" kbqFocusRegionItem tabindex="0"></div>
+        <div class="kbq-inline-edit__panel" cdkTrapFocusAutoCapture [cdkTrapFocus]="false">
             <div
                 class="kbq-inline-edit__control-container"
-                kbqFocusRegionItem
                 [kbqTooltipColor]="colors.Error"
                 [kbqTooltip]="validationTooltip() ?? ''"
                 [kbqTooltipArrow]="false"
@@ -57,17 +57,12 @@
                     <button kbq-button [color]="'contrast'" (click)="save($event)">
                         <i kbq-icon="kbq-check_16"></i>
                     </button>
-                    <button
-                        kbqFocusRegionItem
-                        kbq-button
-                        [color]="'contrast-fade'"
-                        (click)="cancel()"
-                        (keydown.enter)="cancel()"
-                    >
+                    <button kbq-button [color]="'contrast-fade'" (click)="cancel()" (keydown.enter)="cancel()">
                         <i kbq-icon="kbq-xmark_16"></i>
                     </button>
                 </div>
             }
         </div>
+        <div class="cdk-visually-hidden" aria-hidden="true" kbqFocusRegionItem tabindex="0"></div>
     </ng-template>
 </div>

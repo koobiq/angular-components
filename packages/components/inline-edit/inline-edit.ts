@@ -51,6 +51,8 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 
 const baseClass = 'kbq-inline-edit';
 
+export type KbqInlineEditMode = 'view' | 'edit';
+
 /** @docs-private */
 @Directive({
     selector: '[kbqFocusRegionItem]',
@@ -186,7 +188,7 @@ export class KbqInlineEdit {
     /** Emitted when the inline edit is canceled and changes are discarded. */
     protected readonly canceled = output();
     /** Emitted when mode switched to edit/view */
-    protected readonly modeChange = output<'view' | 'edit'>();
+    protected readonly modeChange = output<KbqInlineEditMode>();
 
     /** @docs-private */
     protected readonly menu = contentChild(KbqInlineEditMenu);
@@ -194,7 +196,7 @@ export class KbqInlineEdit {
     protected readonly label = contentChild(KbqLabel);
 
     /** @docs-private */
-    protected formFieldRef = computed(() => this.formFieldRefList()[0]);
+    protected formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
     /** @docs-private */
     protected readonly formFieldRefList = contentChildren(KbqFormField, { descendants: true });
 
@@ -208,7 +210,7 @@ export class KbqInlineEdit {
     protected readonly regionItems = viewChildren(KbqFocusRegionItem);
 
     /** @docs-private */
-    protected readonly mode = signal<'view' | 'edit'>('view');
+    protected readonly mode = signal<KbqInlineEditMode>('view');
     /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
     /** @docs-private */
@@ -271,18 +273,19 @@ export class KbqInlineEdit {
             });
 
         setTimeout(() => {
-            const firstFormField = !!formFieldRefList.length && formFieldRefList[0];
+            const formFieldRef = this.formFieldRef();
 
-            if (!firstFormField) return;
+            if (!formFieldRef) return;
 
-            firstFormField.focus();
+            formFieldRef.focus();
+
             this.initialValue = this.getValue();
 
             const input = this.getInputNativeElement();
 
             if (this.initialValue) input?.select();
 
-            this.openPanel(firstFormField);
+            this.openPanel(formFieldRef);
         }, 0);
     }
 
@@ -362,7 +365,7 @@ export class KbqInlineEdit {
         }
     }
 
-    private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
+    private saveAndFocusNextInlineEdit(event: Event): void {
         this.save(event);
         if (this.isInvalid()) return;
 
