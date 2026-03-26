@@ -248,9 +248,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     show(delay: number = this.enterDelay): void {
-        if (this.disabled || this.instance) {
-            return;
-        }
+        if (this.disabled || this.instance) return;
 
         this.overlayRef = this.createOverlay();
         this.subscribeOnClosingActions();

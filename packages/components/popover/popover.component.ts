@@ -6,6 +6,7 @@ import {
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
+    OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -28,7 +29,8 @@ import {
     ViewEncapsulation,
     booleanAttribute,
     inject,
-    numberAttribute
+    numberAttribute,
+    Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -46,7 +48,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { NEVER, fromEvent, merge } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, take } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
 export const defaultOffsetYWithArrow = 8;
@@ -177,6 +179,9 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     }
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
+    private overlayContainer = inject(OverlayContainer);
+    private renderer = inject(Renderer2);
+
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
     /** prevents closure by any event */
@@ -426,6 +431,21 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
                 }
             });
         }
+    }
+
+    override show(delay: number = this.enterDelay) {
+        super.show(delay);
+
+        this.ngZone.onStable
+            .asObservable()
+            .pipe(take(1))
+            .subscribe(() => {
+                const overlayContainer = this.overlayContainer?.getContainerElement();
+
+                if (overlayContainer.childNodes.length === 1) {
+                    this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
+                }
+            });
     }
 
     updateData() {
