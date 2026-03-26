@@ -3,7 +3,6 @@ import {
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
-    ChangeDetectorRef,
     ContentChild,
     ContentChildren,
     DestroyRef,
@@ -15,9 +14,10 @@ import {
     numberAttribute,
     OnDestroy,
     QueryList,
-    Renderer2
+    Renderer2,
+    signal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
     getNodesWithoutComments,
     kbqInjectNativeElement,
@@ -55,6 +55,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     @ContentChildren(forwardRef(() => KbqIcon), { read: ElementRef }) icons: QueryList<ElementRef>;
 
+    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the link is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -62,13 +63,11 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     }
 
     set disabled(value: boolean) {
-        if (value !== this._disabled) {
-            this._disabled = value;
-            this.changeDetector.markForCheck();
-        }
+        this.disabledSignal.set(value);
     }
 
-    private _disabled = false;
+    /** @docs-private */
+    readonly disabledSignal = signal(false);
 
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
@@ -113,14 +112,19 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     printUrl: string;
 
+    // @todo 20 In the next major release this line will be deleted.
+    private _disabled: boolean;
+
     @ContentChild(KbqIcon) icon: KbqIcon;
 
     constructor(
         private elementRef: ElementRef<HTMLAnchorElement>,
-        private focusMonitor: FocusMonitor,
-        private changeDetector: ChangeDetectorRef
+        private focusMonitor: FocusMonitor
     ) {
         this.updatePrintUrl();
+
+        // @todo 20 In the next major release this line will be deleted.
+        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
     }
 
     ngAfterViewInit(): void {

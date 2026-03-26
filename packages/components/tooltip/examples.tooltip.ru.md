@@ -9,3 +9,7 @@
 В данном примере tooltip создается динамически в mouseenter.
 
 <!-- example(tooltip-dynamic) -->
+
+#### Состояние disabled
+
+<!-- example(tooltip-disabled-for-component) -->

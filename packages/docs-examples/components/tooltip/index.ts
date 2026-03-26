@@ -6,6 +6,7 @@ import { TooltipOverviewExample } from './tooltip-overview/tooltip-overview-exam
 import { TooltipPlacementsExample } from './tooltip-placements/tooltip-placements-example';
 
 import { TooltipArrowExample } from './tooltip-arrow/tooltip-arrow-example';
+import { TooltipDisabledForComponentExample } from './tooltip-disabled-for-component/tooltip-disabled-for-component-example';
 import { TooltipDynamicExample } from './tooltip-dynamic/tooltip-dynamic-example';
 import { TooltipHideWithTimeoutExample } from './tooltip-hide-with-timeout/tooltip-hide-with-timeout-example';
 import { TooltipInteractiveExample } from './tooltip-interactive/tooltip-interactive-example';
@@ -17,6 +18,7 @@ import { TooltipWidthExample } from './tooltip-width/tooltip-width-example';
 export {
     TooltipArrowExample,
     TooltipDisabledExample,
+    TooltipDisabledForComponentExample,
     TooltipDynamicExample,
     TooltipExtendedExample,
     TooltipHideWithTimeoutExample,
@@ -43,7 +45,8 @@ const EXAMPLES = [
     TooltipWidthExample,
     TooltipWideWidthExample,
     TooltipArrowExample,
-    TooltipInteractiveExample
+    TooltipInteractiveExample,
+    TooltipDisabledForComponentExample
 ];
 
 @NgModule({

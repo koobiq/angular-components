@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -16,13 +15,14 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const baseURLRegex: RegExp;
 
 // @public (undocumented)
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLAnchorElement>, focusMonitor: FocusMonitor, changeDetector: ChangeDetectorRef);
+    constructor(elementRef: ElementRef<HTMLAnchorElement>, focusMonitor: FocusMonitor);
     // (undocumented)
     big: boolean;
     // (undocumented)
@@ -31,6 +31,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledSignal: WritableSignal<boolean>;
     // (undocumented)
     focus(): void;
     // (undocumented)

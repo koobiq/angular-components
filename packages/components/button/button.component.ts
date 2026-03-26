@@ -9,6 +9,7 @@ import {
     Component,
     ContentChildren,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -17,10 +18,12 @@ import {
     OnDestroy,
     QueryList,
     Renderer2,
+    signal,
     SkipSelf,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import {
     getNodesWithoutComments,
     KBQ_TITLE_TEXT_REF,
@@ -152,18 +155,22 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     private _kbqStyle: string | KbqButtonStyles = KbqButtonStyles.Filled;
 
+    // @todo 20 In the next major release this feature will be replaced on the input signal.
+    /** Whether the button is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
 
     set disabled(value: boolean) {
-        this._disabled = value;
-
-        this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
+        this.disabledSignal.set(value);
     }
 
-    private _disabled: boolean = false;
+    // @todo 20 In the next major release this line will be deleted.
+    private _disabled: boolean;
+
+    /** @docs-private */
+    readonly disabledSignal = signal(false);
 
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
@@ -184,6 +191,11 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
         this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
+
+        // @todo 20 In the next major release this line will be deleted.
+        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
+
+        effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
     }
 
     ngAfterViewInit(): void {

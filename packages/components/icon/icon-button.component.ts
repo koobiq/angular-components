@@ -4,11 +4,14 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    effect,
     inject,
     Input,
     OnDestroy,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { KbqIcon } from './icon.component';
 
 @Component({
@@ -21,7 +24,7 @@ import { KbqIcon } from './icon.component';
         class: 'kbq kbq-icon-button',
 
         '[attr.tabindex]': 'tabindex',
-        '[attr.disabled]': 'disabled',
+        '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-icon-button_small]': 'small'
@@ -46,6 +49,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     private _tabindex = 0;
 
+    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -53,16 +57,25 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     }
 
     set disabled(value: boolean) {
-        if (this._disabled !== value) {
-            this._disabled = value;
-
-            this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
-        }
+        this.disabledSignal.set(value);
     }
 
+    // @todo 20 In the next major release this line will be deleted.
     private _disabled: boolean;
 
+    /** @docs-private */
+    readonly disabledSignal = signal(false);
+
     override name = 'KbqIconButton';
+
+    constructor() {
+        super();
+
+        // @todo 20 In the next major release this line will be deleted.
+        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
+
+        effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
+    }
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();

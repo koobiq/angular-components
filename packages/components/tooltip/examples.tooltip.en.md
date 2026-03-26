@@ -9,3 +9,7 @@ In this example, the tooltip hides with a delay and stays open if the user moves
 In this example, the tooltip is created dynamically on mouseenter.
 
 <!-- example(tooltip-dynamic) -->
+
+#### Disabled state
+
+<!-- example(tooltip-disabled-for-component) -->

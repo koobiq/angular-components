@@ -13,6 +13,7 @@ import * as i0 from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export class KbqIcon extends KbqColorDirective implements AfterContentInit {
@@ -45,8 +46,10 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit {
 
 // @public (undocumented)
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
+    constructor();
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledSignal: WritableSignal<boolean>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
