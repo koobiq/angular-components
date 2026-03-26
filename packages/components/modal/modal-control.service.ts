@@ -69,6 +69,15 @@ export class KbqModalControlService {
         if (index > -1) {
             this.openModals.splice(index, 1);
 
+            if (this.hasRegistered(modalRef)) {
+                const { afterOpenSubscription, afterCloseSubscription } = this.registeredMetaMap.get(modalRef)!;
+
+                afterOpenSubscription.unsubscribe();
+                afterCloseSubscription.unsubscribe();
+
+                this.registeredMetaMap.delete(modalRef);
+            }
+
             if (!this.openModals.length) {
                 this.afterAllClose.next();
             }
