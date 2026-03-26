@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -7,10 +7,10 @@ import {
     KBQ_DATE_LOCALE,
     kbqDisableLegacyValidationDirectiveProvider
 } from '@koobiq/components/core';
-import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFieldset, KbqFieldsetItem, KbqFormField } from '@koobiq/components/form-field';
+import { KbqDatepicker, KbqDatepickerModule } from '@koobiq/components/datepicker';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqInlineEdit, KbqInlineEditPlaceholder } from '@koobiq/components/inline-edit';
+import { KbqInlineEdit, KbqInlineEditMode, KbqInlineEditPlaceholder } from '@koobiq/components/inline-edit';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
 
@@ -26,13 +26,11 @@ import { DateTime } from 'luxon';
         KbqInlineEditPlaceholder,
         KbqIcon,
         KbqDatepickerModule,
-        KbqFieldset,
-        KbqFieldsetItem,
-        KbqFormField,
+        KbqFormFieldModule,
         KbqTimepicker
     ],
     template: `
-        <kbq-inline-edit showActions (saved)="update()">
+        <kbq-inline-edit showActions (saved)="update()" (modeChange)="onModeChange($event)">
             <kbq-label>Label</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
@@ -44,7 +42,7 @@ import { DateTime } from 'luxon';
             </div>
             <form novalidate kbqInlineEditEditMode [formGroup]="form">
                 <kbq-fieldset>
-                    <kbq-form-field kbqFieldsetItem (click)="datepicker.toggle()">
+                    <kbq-form-field #datepickerFormField kbqFieldsetItem (click)="datepicker.toggle()">
                         <input formControlName="date" [kbqDatepicker]="datepicker" />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="datepicker" />
                         <kbq-datepicker #datepicker />
@@ -84,6 +82,8 @@ export class InlineEditDateTimeExample {
 
     protected readonly placeholder = 'Placeholder';
     protected readonly displayValue: WritableSignal<string>;
+    protected readonly datepickerFormField = viewChild<KbqFormField>('datepickerFormField');
+    protected readonly datepicker = viewChild<KbqDatepicker<DateTime>>('datepicker');
 
     protected readonly form: FormGroup<{
         date: FormControl<DateTime | null>;
@@ -122,6 +122,14 @@ export class InlineEditDateTimeExample {
         } else {
             this.displayValue.set('');
         }
+    }
+
+    protected onModeChange(currentMode: KbqInlineEditMode): void {
+        setTimeout(() => {
+            if (currentMode === 'edit' && this.datepickerFormField()?.focusOrigin === 'keyboard') {
+                this.datepicker()?.open();
+            }
+        });
     }
 
     private format(date?: DateTime | null) {
