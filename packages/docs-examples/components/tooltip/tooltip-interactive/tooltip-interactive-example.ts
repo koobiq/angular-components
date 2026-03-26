@@ -15,7 +15,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     template: `
         <div class="layout-column" style="gap: 16px; align-items: flex-start">
-            <button kbq-button kbqTooltip="Тултип" [hideWithTimeout]="true">Кнопка с тултипом</button>
+            <button kbq-button kbqTooltip="Тултип" [ignoreTooltipPointerEvents]="false" [hideWithTimeout]="true">
+                Кнопка с тултипом
+            </button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
