@@ -14,7 +14,13 @@ function createTagNameStringAliaser(classPrefix: string) {
         let str = setImageCaption(content);
 
         MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
-            str = str.replace(new RegExp(`<${tag}`, 'g'), (_match: string) => `<${tag} class="${classPrefix}__${tag}"`);
+            str = str.replace(new RegExp(`<${tag}`, 'g'), (_match: string) => {
+                if (tag === 'a') {
+                    return `<${tag} class="${classPrefix}__${tag} docs-markdown__${tag} kbq-link kbq-text-only"`;
+                }
+
+                return `<${tag} class="${classPrefix}__${tag}"`;
+            });
         });
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {

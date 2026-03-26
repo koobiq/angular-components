@@ -23,10 +23,13 @@ export class KbqMarkdownService {
         let transformed = htmlContent;
 
         MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
-            transformed = transformed.replace(
-                new RegExp(`<${tag}`, 'g'),
-                (_match: string) => `<${tag} class="${CLASS_PREFIX}__${tag}"`
-            );
+            transformed = transformed.replace(new RegExp(`<${tag}`, 'g'), (_match: string) => {
+                if (tag === 'a') {
+                    return `<${tag} class="${CLASS_PREFIX}__${tag} kbq-link kbq-text-only"`;
+                }
+
+                return `<${tag} class="${CLASS_PREFIX}__${tag}"`;
+            });
         });
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {

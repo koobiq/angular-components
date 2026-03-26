@@ -39,36 +39,8 @@
             background-color: var(--kbq-markdown-code-background);
         }
 
-        .kbq-markdown__a {
-            color: var(--kbq-markdown-link-text);
-            border-bottom-color: var(--kbq-markdown-link-border-bottom);
-
-            &:has(.kbq-markdown__code) {
-                display: inline;
-                border-bottom: none;
-            }
-
-            &:visited {
-                color: var(--kbq-markdown-link-state-visited-text);
-                border-bottom-color: var(--kbq-markdown-link-state-visited-border-bottom);
-            }
-
-            &:hover {
-                color: var(--kbq-markdown-link-state-hover-text);
-                transition: color 0ms;
-                border-bottom-color: var(--kbq-markdown-link-state-hover-border-bottom);
-            }
-
-            &:active {
-                color: var(--kbq-markdown-link-state-active);
-            }
-
-            &:focus {
-                outline: var(--kbq-markdown-link-state-focused-outline) solid
-                    var(--kbq-markdown-link-size-state-focused-outline-width);
-
-                outline-offset: var(--kbq-markdown-link-size-state-focused-outline-offset, 0);
-            }
+        .kbq-markdown__a:has(.kbq-markdown__code) {
+            text-decoration-line: none;
         }
 
         .kbq-markdown__img + em {

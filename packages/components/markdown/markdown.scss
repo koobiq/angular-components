@@ -33,17 +33,6 @@
         }
     }
 
-    .kbq-markdown__a {
-        display: inline;
-
-        text-decoration: none;
-        cursor: pointer;
-
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        transition: color ease-out 300ms;
-    }
-
     .kbq-markdown__p {
         margin-top: var(--kbq-markdown-p-size-margin-top);
         margin-bottom: var(--kbq-markdown-p-size-margin-bottom);

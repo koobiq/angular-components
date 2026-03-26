@@ -49,6 +49,8 @@ Second line
 
 [title](https://www.koobiq.io)
 
+A [\`brute-force\` attack](#) is a cryptanalytic attack
+
 ![](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
 
 ![With caption text](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
@@ -254,11 +256,30 @@ npm install jquery
         class="kbq-markdown__p"
       >
         <a
-          class="kbq-markdown__a"
+          class="kbq-markdown__a kbq-link kbq-text-only"
           href="https://www.koobiq.io"
         >
           title
         </a>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        A 
+        <a
+          class="kbq-markdown__a kbq-link kbq-text-only"
+          href="#"
+        >
+          <code
+            class="kbq-markdown__code"
+          >
+            brute-force
+          </code>
+           attack
+        </a>
+         is a cryptanalytic attack
       </p>
       
 
@@ -661,7 +682,7 @@ Second line
         class="kbq-markdown__p"
       >
         <a
-          class="kbq-markdown__a"
+          class="kbq-markdown__a kbq-link kbq-text-only"
           href="https://www.koobiq.io"
         >
           title
@@ -675,7 +696,7 @@ Second line
         <img
           alt=""
           class="kbq-markdown__img"
-          src="https://koobiq.io/assets/images/koobiq-illustration-wip.png"
+          src="https://www.koobiq.io"
         />
       </p>
       
@@ -686,7 +707,7 @@ Second line
         <img
           alt="With caption text"
           class="kbq-markdown__img"
-          src="https://koobiq.io/assets/images/koobiq-illustration-wip.png"
+          src="https://www.koobiq.io"
         />
         
 
