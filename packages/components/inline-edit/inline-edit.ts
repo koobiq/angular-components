@@ -57,14 +57,12 @@ const baseClass = 'kbq-inline-edit';
     selector: '[kbqFocusRegionItem]',
     exportAs: 'kbqFocusRegionItem',
     host: {
-        class: 'kbq-focus-region-item',
         '(focusin)': 'isFocused = true',
         '(keydown.tab)': 'onTabOut($event)',
         '(keydown.shift.tab)': 'onTabOut($event)'
     }
 })
 export class KbqFocusRegionItem {
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     readonly tabOut = output<KeyboardEvent>();
 
     protected isFocused = false;
@@ -179,13 +177,20 @@ export class KbqInlineEdit {
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */
     readonly setValueHandler = input<(value: any) => void>();
-    /**
-     * Customizable function that checks if saving on enter available.
-     */
+    /** Customizable function that checks if saving on enter available. */
     readonly canSaveOnEnter = input(
         (event: KeyboardEvent): boolean =>
             hasModifierKey(event, 'ctrlKey', 'metaKey') || !(event.target instanceof HTMLTextAreaElement)
     );
+
+    /**
+     * CSS selectors for elements in view mode that should handle clicks instead of opening edit mode.
+     * Override to replace or extend the default list.
+     *
+     * @example
+     * `<kbq-inline-edit [interactiveSelectors]="['a', 'kbq-tag', 'button']">`
+     */
+    readonly interactiveSelectors = input<string[]>(['a', 'kbq-tag']);
 
     /** Emitted when the inline edit is saved successfully. */
     protected readonly saved = output();
@@ -255,12 +260,7 @@ export class KbqInlineEdit {
     protected onClick(event: Event): void {
         if (this.disabled() || this.isEditMode()) return;
 
-        if (
-            isHtmlElement(event.target) &&
-            !event.target.classList.contains('kbq-inline-edit__view-container') &&
-            event.target.closest('.kbq-inline-edit__view-container')
-        )
-            return;
+        if (isHtmlElement(event.target) && !!event.target.closest(this.interactiveSelectors().join(','))) return;
 
         event.preventDefault();
         event.stopPropagation();

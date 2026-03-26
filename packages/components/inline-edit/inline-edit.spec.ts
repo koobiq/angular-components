@@ -30,7 +30,7 @@ const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixt
 
 const componentCssClasses = {
     panel: '.kbq-inline-edit__panel',
-    focusContainer: '.kbq-inline-edit__focus_container',
+    focusContainer: '.kbq-inline-edit',
     terminalButtons: '.kbq-inline-edit__action-buttons',
     menuMask: '.kbq-inline-edit__menu-mask',
     menu: '.kbq-inline-edit__menu',
@@ -92,7 +92,7 @@ describe('KbqInlineEdit', () => {
         const spyFn = jest.spyOn(componentInstance, 'onModeChange');
 
         const resetToInitialMode = () => {
-            inlineEditDebugElement.nativeElement.click();
+            dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
             fixture.detectChanges();
         };
 
@@ -335,6 +335,42 @@ describe('KbqInlineEdit', () => {
         saveButtonHTMLElement?.click();
 
         expect(spyFn).not.toHaveBeenCalled();
+    });
+
+    describe('interactiveSelectors', () => {
+        it('should not toggle mode when clicking on a built-in interactive element', () => {
+            const fixture = setup(TestWithClickableContent);
+            const { componentInstance, debugElement } = fixture;
+            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+
+            debugElement.query(By.css('[data-testid="link"]')).nativeElement.click();
+
+            expect(spyFn).not.toHaveBeenCalled();
+        });
+
+        it('should toggle mode when clicking on plain text', () => {
+            const fixture = setup(TestWithClickableContent);
+            const { componentInstance, debugElement } = fixture;
+            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+
+            debugElement.query(By.css('[data-testid="text"]')).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(spyFn).toHaveBeenCalledWith('edit');
+        });
+
+        it('should not toggle mode when clicking on element matching custom interactiveSelectors', () => {
+            const fixture = setup(TestWithClickableContent);
+            const { componentInstance, debugElement } = fixture;
+            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+
+            componentInstance.interactiveSelectors.set(['a', 'kbq-tag', 'button']);
+            fixture.detectChanges();
+
+            debugElement.query(By.css('[data-testid="button"]')).nativeElement.click();
+
+            expect(spyFn).not.toHaveBeenCalled();
+        });
     });
 
     it('should open select panel on mode toggle', async () => {
@@ -614,6 +650,28 @@ export class TestWithValidatedControl extends BaseTestComponent {
     }
 
     cancel() {}
+}
+
+@Component({
+    selector: 'name',
+    imports: [FormsModule, KbqFormFieldModule, KbqInputModule, KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit [interactiveSelectors]="interactiveSelectors()" (modeChange)="onModeChange($event)">
+            <div kbqInlineEditViewMode>
+                <a data-testid="link" href="#">link</a>
+                <span data-testid="text">plain text</span>
+                <button data-testid="button" type="button">button</button>
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithClickableContent {
+    readonly interactiveSelectors = signal<string[]>(['a', 'kbq-tag']);
+
+    onModeChange(_event: 'edit' | 'view') {}
 }
 
 @Component({
