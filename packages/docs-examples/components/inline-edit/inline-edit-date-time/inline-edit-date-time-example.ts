@@ -40,7 +40,7 @@ import { DateTime } from 'luxon';
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 }
             </div>
-            <form novalidate kbqInlineEditEditMode [formGroup]="form">
+            <form kbqInlineEditEditMode [formGroup]="form">
                 <kbq-fieldset>
                     <kbq-form-field #datepickerFormField kbqFieldsetItem (click)="datepicker.toggle()">
                         <input formControlName="date" [kbqDatepicker]="datepicker" />
@@ -62,11 +62,11 @@ import { DateTime } from 'luxon';
             width: 284px;
         }
 
-        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-datepicker {
+        :host ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-datepicker {
             width: 50%;
         }
 
-        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-timepicker {
+        :host ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-timepicker {
             width: unset;
             flex-grow: 1;
         }

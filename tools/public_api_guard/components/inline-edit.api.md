@@ -45,7 +45,7 @@ export class KbqInlineEdit {
     protected readonly colors: typeof KbqComponentColors;
     readonly disabled: InputSignalWithTransform<boolean, unknown>;
     readonly editModeWidth: InputSignalWithTransform<number | undefined, unknown>;
-    protected formFieldRef: Signal<KbqFormField | undefined>;
+    protected readonly formFieldRef: Signal<KbqFormField | undefined>;
     protected readonly formFieldRefList: Signal<readonly KbqFormField[]>;
     readonly getValueHandler: InputSignal<(() => unknown) | undefined>;
     protected readonly isEditMode: Signal<boolean>;
@@ -57,6 +57,7 @@ export class KbqInlineEdit {
     protected onAttach(): void;
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
+    protected onOverlayOutsideClick($event: Event): void;
     protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
     protected readonly overlayOrigin: Signal<CdkOverlayOrigin>;
     protected readonly overlayWidth: WritableSignal<string | number>;

@@ -27,6 +27,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    isHtmlElement,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -196,7 +197,7 @@ export class KbqInlineEdit {
     protected readonly label = contentChild(KbqLabel);
 
     /** @docs-private */
-    protected formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
+    protected readonly formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
     /** @docs-private */
     protected readonly formFieldRefList = contentChildren(KbqFormField, { descendants: true });
 
@@ -337,6 +338,20 @@ export class KbqInlineEdit {
                 return;
             }
         }
+    }
+
+    /**
+     * Block propagation of overlay outside click.
+     * Used to prevent reopening when target is inline edit itself.
+     * @docs-private
+     */
+    protected onOverlayOutsideClick($event: Event) {
+        if (isHtmlElement($event.target) && this.elementRef.nativeElement.contains($event.target)) {
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+
+        this.save($event);
     }
 
     /**

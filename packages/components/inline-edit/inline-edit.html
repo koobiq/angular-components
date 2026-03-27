@@ -36,7 +36,7 @@
         [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
         [cdkConnectedOverlayHasBackdrop]="false"
         (attach)="onAttach()"
-        (overlayOutsideClick)="save($event)"
+        (overlayOutsideClick)="onOverlayOutsideClick($event)"
         (overlayKeydown)="onOverlayKeydown($event)"
     >
         <div class="cdk-visually-hidden" aria-hidden="true" kbqFocusRegionItem tabindex="0"></div>
