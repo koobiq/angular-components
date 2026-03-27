@@ -25,6 +25,47 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqToastComponent, KbqToastData, KbqToastModule, KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { _isTestEnvironment } from '@angular/cdk/platform';
+
+
+class DocsOverlayContainer extends OverlayContainer {
+    getContainerElement(): HTMLElement {
+        console.log('getContainerElement: ');
+        this._loadStyles();
+
+        if (!this._containerElement) {
+            this._createContainer();
+        }
+
+        return this._containerElement;
+    }
+
+    protected _createContainer(): void {
+        const containerClass = 'cdk-overlay-container';
+
+        if (this._platform.isBrowser || _isTestEnvironment()) {
+            const oppositePlatformContainers = this._document.querySelectorAll(
+                `.${containerClass}[platform="server"], ` + `.${containerClass}[platform="test"]`,
+            );
+
+            for (let i = 0; i < oppositePlatformContainers.length; i++) {
+                oppositePlatformContainers[i].remove();
+            }
+        }
+
+        const container = this._document.createElement('div');
+        container.classList.add(containerClass);
+
+        if (_isTestEnvironment()) {
+            container.setAttribute('platform', 'test');
+        } else if (!this._platform.isBrowser) {
+            container.setAttribute('platform', 'server');
+        }
+
+        this._document.body.appendChild(container);
+        this._containerElement = container;
+    }
+}
 
 @Component({
     selector: 'dev-toast-component',
@@ -70,7 +111,10 @@ export class DevToastComponent extends KbqToastComponent {
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: OverlayContainer, useClass: DocsOverlayContainer },
+    ]
 })
 export class DevApp {
     themePalette = ThemePalette;
@@ -92,7 +136,7 @@ export class DevApp {
     ) {
         console.log('overlayRef: ', overlayRef);
         console.log('overlayRef.getContainerElement(): ', overlayRef.getContainerElement());
-        console.log('qwe: ', overlayRef.getContainerElement().childNodes.length);
+        console.log('childNodes.length: ', overlayRef.getContainerElement().childNodes.length);
         // console.log('overlayRef.hasAttached(): ', overlayRef.hasAttached());
     }
 
@@ -102,7 +146,7 @@ export class DevApp {
             hasBackdrop: this.modalState
         });
 
-        console.log('qwe: ', this.overlayRef.getContainerElement().childNodes.length);
+        console.log('childNodes.length: ', this.overlayRef.getContainerElement().childNodes.length);
     }
 
     showManyActonToast(controls: TemplateRef<any>) {
