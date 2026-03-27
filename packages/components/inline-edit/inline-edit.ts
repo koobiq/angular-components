@@ -27,7 +27,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    isHtmlElement,
+    isElement,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -130,6 +130,7 @@ export class KbqInlineEditMenu {
     exportAs: 'kbqInlineEdit',
     host: {
         class: baseClass,
+        // @TODO: resolve tab queue with content-first (DS-4810)
         '[attr.tabindex]': 'tabIndex()',
         '[class]': 'className()',
         '[class.kbq-inline-edit_with-label]': '!!label()',
@@ -346,7 +347,11 @@ export class KbqInlineEdit {
     }
 
     private isInteractiveElement(target: EventTarget | null): boolean {
-        return isHtmlElement(target) && !!target.closest(this.interactiveSelectors().join(','));
+        const selectors = this.interactiveSelectors();
+
+        if (!selectors.length) return false;
+
+        return isElement(target) && !!target.closest(this.interactiveSelectors().join(','));
     }
 
     /**
