@@ -75,6 +75,10 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         // todo перепроверить
         margin: 0;
         padding: 0;
+
+        &.cdk-overlay-pane_ignore-pointer-events {
+            pointer-events: none !important;
+        }
     }
 
     .cdk-overlay-backdrop {

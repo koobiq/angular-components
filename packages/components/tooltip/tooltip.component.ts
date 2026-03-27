@@ -149,6 +149,15 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     readonly forDisabledComponent = input<Record<'disabledSignal', WritableSignal<boolean>>>();
 
     /**
+     * Determines whether pointer events should be ignored on tooltips.
+     *
+     * When set to `true`, tooltip elements will not receive pointer events,
+     * allowing interactions to pass through to underlying elements.
+     * Defaults to `true`.
+     */
+    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+
+    /**
      * Changes hiding behavior. By default, tooltip is hidden on mouseleave from trigger.
      * Setting hideWithTimeout to true will delay tooltip hiding and will not hide when the mouse moves from trigger
      * to tooltip.
@@ -284,7 +293,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected originSelector = '.kbq-tooltip';
 
     protected overlayConfig: OverlayConfig = {
-        panelClass: 'kbq-tooltip-panel'
+        panelClass: ['kbq-tooltip-panel']
     };
 
     protected modifier: TooltipModifier = TooltipModifier.Default;
@@ -312,6 +321,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         this.parentPopup?.closedStream.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
 
         this.focusMonitor.monitor(this.elementRef.nativeElement);
+
+        if (this.ignoreTooltipPointerEvents() && Array.isArray(this.overlayConfig.panelClass)) {
+            this.overlayConfig.panelClass.push('cdk-overlay-pane_ignore-pointer-events');
+        }
     }
 
     ngOnDestroy() {
