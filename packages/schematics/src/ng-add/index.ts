@@ -11,7 +11,6 @@ const VERSIONS = {
     KOOBIQ_DATE_FORMATTER: '^0.0.0',
     KOOBIQ_DATE_ADAPTER: '^0.0.0',
     KOOBIQ_ICONS: '^0.0.0',
-    KOOBIQ_TOKENS_BUILDER: '^0.0.0',
     KOOBIQ_DESIGN_TOKENS: '^0.0.0',
     LUXON: '^0.0.0'
 };
@@ -40,7 +39,6 @@ export default function ngAdd(options: Schema): Rule {
         addPackageToPackageJson(tree, '@koobiq/date-formatter', VERSIONS.KOOBIQ_DATE_FORMATTER);
         addPackageToPackageJson(tree, '@koobiq/date-adapter', VERSIONS.KOOBIQ_DATE_ADAPTER);
         addPackageToPackageJson(tree, '@koobiq/icons', VERSIONS.KOOBIQ_ICONS);
-        addPackageToPackageJson(tree, '@koobiq/tokens-builder', VERSIONS.KOOBIQ_TOKENS_BUILDER);
         addPackageToPackageJson(tree, '@koobiq/design-tokens', VERSIONS.KOOBIQ_DESIGN_TOKENS);
         addPackageToPackageJson(tree, 'luxon', VERSIONS.LUXON);
     };
