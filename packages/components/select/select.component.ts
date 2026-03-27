@@ -38,7 +38,8 @@ import {
     booleanAttribute,
     inject,
     isDevMode,
-    numberAttribute
+    numberAttribute,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -78,6 +79,7 @@ import {
     KbqOptionSelectionChange,
     KbqSelectFooter,
     KbqSelectMatcher,
+    KbqSelectNoOptions,
     KbqSelectSearch,
     KbqSelectTrigger,
     KbqVirtualOption,
@@ -104,6 +106,7 @@ import {
     take,
     takeUntil
 } from 'rxjs/operators';
+import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 
 let nextUniqueId = 0;
 
@@ -150,6 +153,9 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
     };
 };
 
+export const delayBeforeOpeningPanelWithoutOptions = 101;
+export const minimumTimeToDisplayLoading = 300;
+
 @Component({
     selector: 'kbq-select',
     imports: [
@@ -159,7 +165,8 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         CdkMonitorFocus,
         CdkConnectedOverlay,
         NgClass,
-        KbqIconModule
+        KbqIconModule,
+        KbqProgressSpinner
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
@@ -311,6 +318,8 @@ export class KbqSelect
     @ContentChildren(KbqOptgroup) optionGroups: QueryList<KbqOptgroup>;
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
+
+    @ContentChild(KbqSelectNoOptions, { static: false }) noOptionsContent: KbqSelectNoOptions;
 
     @Input() hiddenItemsText: string = '+{{ number }}';
 
@@ -616,6 +625,10 @@ export class KbqSelect
         return !!this.selectionModel?.isEmpty();
     }
 
+    get noOptions(): boolean {
+        return this.options?.length === 0;
+    }
+
     get firstSelected(): KbqOptionBase | null {
         return this.selectionModel.selected.filter((option) => !option.disabled)[0] || null;
     }
@@ -660,6 +673,9 @@ export class KbqSelect
 
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
+
+    protected isLoading = signal(false);
+    protected loadingTimerId?: ReturnType<typeof setTimeout>;
 
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
@@ -834,10 +850,43 @@ export class KbqSelect
 
     /** Opens the overlay panel. */
     open(): void {
-        if (this.disabled || !this.options?.length || this.panelOpen) {
-            return;
-        }
+        console.log('open(): ');
+        console.log('time: ', Date.now().toString());
+        if (this.disabled || this.panelOpen) return;
 
+        if (this.noOptions) {
+            setTimeout(() => this.openPanelAfterDelay(), delayBeforeOpeningPanelWithoutOptions);
+        } else {
+            this.openPanel();
+        }
+    }
+
+    openPanelAfterDelay() {
+        console.log('openPanelAfterDelay: ');
+        console.log('time: ', Date.now().toString());
+        // опций все еще нет
+        this.openPanel();
+
+        if (this.noOptions) {
+            this.isLoading.set(true);
+            console.log('this.isLoading.set(true);: ');
+            console.log('time: ', Date.now().toString());
+
+            // проверить после минимального времени показа лоадера
+            this.loadingTimerId = setTimeout(() => {
+                this.loadingTimerId = undefined;
+                // опции появились ?
+                if (!this.noOptions) {
+                    this.isLoading.set(false);
+                    console.log('this.isLoading.set(false);: ');
+                    console.log('time: ', Date.now().toString());
+                }
+            }, minimumTimeToDisplayLoading);
+        }
+    }
+
+    openPanel() {
+        console.log('openPanel: ');
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
             this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
@@ -891,9 +940,7 @@ export class KbqSelect
 
     /** Closes the overlay panel and focuses the host element. */
     close(): void {
-        if (!this.panelOpen) {
-            return;
-        }
+        if (!this.panelOpen) return;
 
         // the order of calls is important
         this.resetSearch();
@@ -958,9 +1005,7 @@ export class KbqSelect
     }
 
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         if (this.panelOpen) {
             this.handleOpenKeydown(event);
@@ -1010,7 +1055,15 @@ export class KbqSelect
             this.updateScrollSize();
         });
 
-        this.options.changes.pipe(delay(1)).subscribe(() => this.setOverlayPosition());
+        this.options.changes.pipe(delay(1)).subscribe(() => {
+            console.log('this.options.changes: ', this.options.length);
+            console.log('time: ', Date.now().toString());
+            if (this.isLoading() && !this.loadingTimerId) {
+                this.isLoading.set(false);
+            }
+
+            this.setOverlayPosition();
+        });
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }
