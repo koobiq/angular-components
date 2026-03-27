@@ -30,12 +30,13 @@ export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor, clickAction: KbqCheckboxClickAction);
+    constructor(changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     big: boolean;
     readonly change: EventEmitter<KbqCheckboxChange>;
     get checked(): boolean;
     set checked(value: boolean);
+    clickAction: KbqCheckboxClickAction;
     get disabled(): boolean;
     set disabled(value: boolean);
     focus(): void;
@@ -79,9 +80,9 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "clickAction": { "alias": "clickAction"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckbox, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckbox, never>;
 }
 
 // @public

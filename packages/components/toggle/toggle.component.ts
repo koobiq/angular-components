@@ -19,7 +19,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KBQ_CHECKBOX_CLICK_ACTION, TransitionCheckState } from '@koobiq/components/checkbox';
+import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction, TransitionCheckState } from '@koobiq/components/checkbox';
 import { KbqAnimationCurves, KbqAnimationDurations, KbqCheckedState, KbqColorDirective } from '@koobiq/components/core';
 
 let nextUniqueId = 0;
@@ -174,7 +174,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     /** @docs-private */
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
-    protected clickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true });
+    /** Defines the behavior when a user clicks on the toggle. */
+    @Input() clickAction: KbqCheckboxClickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) || undefined;
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
