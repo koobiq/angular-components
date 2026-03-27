@@ -2,7 +2,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -117,7 +117,6 @@ export class KbqInlineEditMenu {
     selector: 'kbq-inline-edit',
     imports: [
         CdkConnectedOverlay,
-        CdkOverlayOrigin,
         KbqButtonModule,
         KbqIcon,
         KbqTooltipTrigger,
@@ -146,7 +145,6 @@ export class KbqInlineEditMenu {
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION]
 })
 export class KbqInlineEdit {
-    // private readonly focusMonitor = inject(FocusMonitor);
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
     private readonly resizeObserver = inject(SharedResizeObserver);
@@ -258,9 +256,7 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected onClick(event: Event): void {
-        if (this.disabled() || this.isEditMode()) return;
-
-        if (isHtmlElement(event.target) && !!event.target.closest(this.interactiveSelectors().join(','))) return;
+        if (this.disabled() || this.isEditMode() || this.isInteractiveElement(event.target)) return;
 
         event.preventDefault();
         event.stopPropagation();
@@ -347,6 +343,10 @@ export class KbqInlineEdit {
                 return;
             }
         }
+    }
+
+    private isInteractiveElement(target: EventTarget | null): boolean {
+        return isHtmlElement(target) && !!target.closest(this.interactiveSelectors().join(','));
     }
 
     /**

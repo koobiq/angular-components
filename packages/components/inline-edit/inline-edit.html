@@ -51,13 +51,7 @@
                         <button kbq-button [color]="'contrast'" (click)="save($event)">
                             <i kbq-icon="kbq-check_16"></i>
                         </button>
-                        <button
-                            kbqFocusRegionItem
-                            kbq-button
-                            [color]="'contrast-fade'"
-                            (click)="cancel()"
-                            (keydown.enter)="cancel()"
-                        >
+                        <button kbqFocusRegionItem kbq-button [color]="'contrast-fade'" (click)="cancel()">
                             <i kbq-icon="kbq-xmark_16"></i>
                         </button>
                     </div>
