@@ -256,7 +256,7 @@ npm install jquery
         class="kbq-markdown__p"
       >
         <a
-          class="kbq-markdown__a kbq-link kbq-text-only"
+          class="kbq-markdown__a kbq-link kbq-text-only kbq-link_use-visited"
           href="https://www.koobiq.io"
         >
           title
@@ -269,7 +269,7 @@ npm install jquery
       >
         A 
         <a
-          class="kbq-markdown__a kbq-link kbq-text-only"
+          class="kbq-markdown__a kbq-link kbq-text-only kbq-link_use-visited"
           href="#"
         >
           <code
@@ -682,7 +682,7 @@ Second line
         class="kbq-markdown__p"
       >
         <a
-          class="kbq-markdown__a kbq-link kbq-text-only"
+          class="kbq-markdown__a kbq-link kbq-text-only kbq-link_use-visited"
           href="https://www.koobiq.io"
         >
           title
