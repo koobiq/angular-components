@@ -25,7 +25,7 @@ export class KbqMarkdownService {
         MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             transformed = transformed.replace(new RegExp(`<${tag}`, 'g'), (_match: string) => {
                 if (tag === 'a') {
-                    return `<${tag} class="${CLASS_PREFIX}__${tag} kbq-link kbq-text-only"`;
+                    return `<${tag} class="${CLASS_PREFIX}__${tag} kbq-link kbq-text-only kbq-link_use-visited"`;
                 }
 
                 return `<${tag} class="${CLASS_PREFIX}__${tag}"`;

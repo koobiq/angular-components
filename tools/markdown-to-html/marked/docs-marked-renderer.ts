@@ -16,7 +16,7 @@ function createTagNameStringAliaser(classPrefix: string) {
         MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             str = str.replace(new RegExp(`<${tag}`, 'g'), (_match: string) => {
                 if (tag === 'a') {
-                    return `<${tag} class="${classPrefix}__${tag} docs-markdown__${tag} kbq-link kbq-text-only"`;
+                    return `<${tag} class="${classPrefix}__${tag} docs-markdown__${tag} kbq-link kbq-text-only kbq-link_use-visited"`;
                 }
 
                 return `<${tag} class="${classPrefix}__${tag}"`;
