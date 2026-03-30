@@ -165,7 +165,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         </p>
         <p>
             Text
-            <a kbq-link class="cdk-keyboard-focused">
+            <a kbq-link multiline class="cdk-keyboard-focused">
                 <i kbq-icon="kbq-calendar-o_16"></i>
                 <span class="kbq-link__text">multiline focused</span>
             </a>
