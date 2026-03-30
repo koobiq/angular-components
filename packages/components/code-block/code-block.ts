@@ -39,7 +39,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, fromEvent, merge } from 'rxjs';
+import { debounceTime, EMPTY, fromEvent, merge, startWith, switchMap } from 'rxjs';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
 import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
@@ -227,11 +227,16 @@ export class KbqCodeBlock implements AfterViewInit {
 
     set hideTabs(value: boolean) {
         this._hideTabs = value;
-
+        this.hideTabsChange.emit(value);
         this.setupActionbarDisplay();
     }
 
     private _hideTabs: boolean = false;
+
+    /**
+     * Output to support two-way binding on `[(hideTabs)]` property.
+     */
+    @Output() readonly hideTabsChange = new EventEmitter<boolean>();
 
     /**
      * Component locale configuration.
@@ -296,7 +301,7 @@ export class KbqCodeBlock implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.handleScroll();
-        this.handleHover();
+        this.trackHoverState();
 
         // Setup initial actionbar display state
         this.setupActionbarDisplay();
@@ -360,14 +365,24 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     /**
-     * Handles the hover event on the code block element and updates the actionbar display accordingly.
+     * Tracks hover events to show/hide the actionbar when `hideTabs` is `true`.
+     * Reacts to `hideTabs` changes dynamically.
      */
-    private handleHover(): void {
-        merge(
-            fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter'),
-            fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseleave')
-        )
-            .pipe(debounceTime(100), takeUntilDestroyed(this.destroyRef))
+    private trackHoverState(): void {
+        this.hideTabsChange
+            .asObservable()
+            .pipe(
+                startWith(this._hideTabs),
+                switchMap((hideTabs) => {
+                    if (!hideTabs) return EMPTY;
+
+                    return merge(
+                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter'),
+                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseleave')
+                    ).pipe(debounceTime(100));
+                }),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe((event) => {
                 this.setupActionbarDisplay(event?.type === 'mouseenter');
             });
