@@ -96,10 +96,7 @@ export class E2eInlineEditStates {
 
     focusInlineEdits() {
         this.nativeElement
-            .querySelectorAll<HTMLElement>('.kbq-inline-edit__focus_container')
-            .forEach((focusContainer) => {
-                focusContainer.classList.add('cdk-focused');
-                focusContainer.classList.add('cdk-keyboard-focused');
-            });
+            .querySelectorAll<HTMLElement>('.kbq-inline-edit')
+            .forEach((focusContainer) => focusContainer.classList.add('cdk-focused', 'cdk-keyboard-focused'));
     }
 }
