@@ -1,10 +1,11 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqMarkdown, KbqMarkdownModule } from '@koobiq/components/markdown';
 
-const createComponent = async <T>(component: Type<T>, providers: any[] = []): Promise<ComponentFixture<T>> => {
-    await TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -12,9 +13,23 @@ const createComponent = async <T>(component: Type<T>, providers: any[] = []): Pr
     return fixture;
 };
 
+const getFocusMonitor = () => TestBed.inject(FocusMonitor);
+
 const getMarkdownDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqMarkdown));
 };
+
+@Component({
+    selector: 'markdown-with-link',
+    imports: [KbqMarkdownModule],
+    template: `
+        <kbq-markdown [markdownText]="markdownText" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class MarkdownWithLink {
+    readonly markdownText = '[koobiq](https://www.koobiq.io)';
+}
 
 @Component({
     selector: 'generate-html-from-markdown-string',
@@ -66,9 +81,9 @@ Second line
 
 [title](https://www.koobiq.io)
 
-![](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+![](https://www.koobiq.io)
 
-![With caption text](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+![With caption text](https://www.koobiq.io)
 _Image caption text_
 
 | Syntax    | Description | Left-aligned | Center-aligned | Right-aligned |
@@ -128,6 +143,8 @@ Second line
 
 [title](https://www.koobiq.io)
 
+A [\`brute-force\` attack](#) is a cryptanalytic attack
+
 ![](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
 
 ![With caption text](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
@@ -148,15 +165,28 @@ npm install jquery
 class GenerateHTMLFromMarkdownInlineTemplate {}
 
 describe(KbqMarkdown.name, () => {
-    it('should generate html from markdown string', async () => {
-        const { debugElement } = await createComponent(GenerateHTMLFromMarkdownString);
+    it('should generate html from markdown string', () => {
+        const { debugElement } = createComponent(GenerateHTMLFromMarkdownString);
 
         expect(getMarkdownDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should generate html from markdown inline template', async () => {
-        const { debugElement } = await createComponent(GenerateHTMLFromMarkdownInlineTemplate);
+    it('should generate html from markdown inline template', () => {
+        const { debugElement } = createComponent(GenerateHTMLFromMarkdownInlineTemplate);
 
         expect(getMarkdownDebugElement(debugElement)).toMatchSnapshot();
+    });
+
+    it('should add "cdk-keyboard-focused" class on keyboard focus of <a>', async () => {
+        const fixture = createComponent(MarkdownWithLink);
+        const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.kbq-markdown__a');
+
+        await fixture.whenStable();
+
+        expect(link.classList).not.toContain('cdk-keyboard-focused');
+
+        getFocusMonitor().focusVia(link, 'keyboard');
+
+        expect(link.classList).toContain('cdk-keyboard-focused');
     });
 });
