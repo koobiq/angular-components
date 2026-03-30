@@ -11,4 +11,8 @@
     .docs-top-overflown {
         box-shadow: 0 9px 8px -12px #6c739480;
     }
+
+    .docs-markdown__a:focus {
+        outline: var(--kbq-link-state-focused-outline) solid;
+    }
 }

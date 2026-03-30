@@ -21,6 +21,13 @@ export class E2eMarkdownLineBreakWithMarkdownTextInputExample {}
         E2eMarkdownLineBreakWithMarkdownTextInputExample
     ],
     templateUrl: './e2e.html',
+    styles: `
+        :host {
+            display: inline-flex;
+            flex-direction: column;
+            width: 500px;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMarkdownStates'

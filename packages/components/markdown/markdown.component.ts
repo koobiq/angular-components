@@ -1,14 +1,18 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
+    effect,
     ElementRef,
+    inject,
     Inject,
     InjectionToken,
     Input,
+    OnDestroy,
     Optional,
     Provider,
+    signal,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -31,7 +35,7 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
     template: `
         <pre #contentWrapper class="kbq-markdown__input" ngPreserveWhitespaces><ng-content /></pre>
-        <div class="kbq-markdown__output" [innerHtml]="resultHtml"></div>
+        <div #outputWrapper class="kbq-markdown__output" [innerHtml]="resultHtml()"></div>
     `,
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
@@ -40,8 +44,11 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
         class: 'kbq-markdown'
     }
 })
-export class KbqMarkdown {
-    @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef;
+export class KbqMarkdown implements OnDestroy {
+    @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef<HTMLPreElement>;
+    @ViewChild('outputWrapper', { static: true }) private readonly outputWrapper: ElementRef<HTMLDivElement>;
+
+    protected resultHtml = signal<SafeHtml | null>(null);
 
     /** `Markdown` text. */
     @Input()
@@ -51,31 +58,54 @@ export class KbqMarkdown {
 
     set markdownText(value: string | null) {
         if (value && this.markdownText !== value) {
-            this.resultHtml = this.getResultHTML(value);
+            this.resultHtml.set(this.getResultHTML(value));
         }
 
         this._markdownText = value;
     }
 
     private _markdownText: string | null = null;
-
-    protected resultHtml: SafeHtml;
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly links: HTMLAnchorElement[] = [];
 
     constructor(
         private readonly markdownService: KbqMarkdownService,
-        private readonly cdr: ChangeDetectorRef,
         private sanitizer: DomSanitizer,
         @Optional() @Inject(KBQ_MARKDOWN_MARKED_OPTIONS) private readonly markedOptions?: MarkedOptions | undefined
     ) {
         afterNextRender(() => {
             if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
-                this.resultHtml = this.getResultHTML(this.contentWrapper?.nativeElement.textContent);
-                this.cdr.detectChanges();
+                this.resultHtml.set(this.getResultHTML(this.contentWrapper?.nativeElement.textContent));
+            }
+        });
+
+        effect(() => {
+            if (this.resultHtml()) {
+                Promise.resolve().then(() => this.startMonitoringLinks());
+            } else {
+                this.stopMonitoringLinks();
             }
         });
     }
 
+    ngOnDestroy(): void {
+        this.stopMonitoringLinks();
+    }
+
     private getResultHTML(markdown: string): SafeHtml {
         return this.sanitizer.bypassSecurityTrustHtml(this.markdownService.parseToHtml(markdown, this.markedOptions));
+    }
+
+    private startMonitoringLinks(): void {
+        this.stopMonitoringLinks();
+        this.outputWrapper.nativeElement.querySelectorAll<HTMLAnchorElement>('.kbq-markdown__a').forEach((link) => {
+            this.links.push(link);
+            this.focusMonitor.monitor(link, true);
+        });
+    }
+
+    private stopMonitoringLinks(): void {
+        this.links.forEach((link) => this.focusMonitor.stopMonitoring(link));
+        this.links.length = 0;
     }
 }
