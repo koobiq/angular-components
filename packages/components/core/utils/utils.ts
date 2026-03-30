@@ -17,6 +17,9 @@ export const isHtmlElement = (value: unknown): value is HTMLElement => {
     return value instanceof HTMLElement;
 };
 
+/** Whether the value is Element. */
+export const isElement = (value: unknown): value is Element => value instanceof Element;
+
 /** Whether the value is HTMLElement or null. */
 export const isHtmlElementOrNull = (value: unknown): value is HTMLElement | null => {
     return isHtmlElement(value) || isNull(value);

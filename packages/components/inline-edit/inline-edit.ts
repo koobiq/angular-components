@@ -1,8 +1,8 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -11,6 +11,7 @@ import {
     computed,
     contentChild,
     Directive,
+    effect,
     ElementRef,
     inject,
     input,
@@ -26,6 +27,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    isElement,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -115,13 +117,11 @@ export class KbqInlineEditMenu {
     selector: 'kbq-inline-edit',
     imports: [
         CdkConnectedOverlay,
-        CdkOverlayOrigin,
         KbqButtonModule,
         KbqIcon,
         KbqTooltipTrigger,
         KbqFocusRegionItem,
-        CdkTrapFocus,
-        CdkMonitorFocus
+        CdkTrapFocus
     ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
@@ -130,6 +130,8 @@ export class KbqInlineEditMenu {
     exportAs: 'kbqInlineEdit',
     host: {
         class: baseClass,
+        // @TODO: resolve tab queue with content-first (DS-4810)
+        '[attr.tabindex]': 'tabIndex()',
         '[class]': 'className()',
         '[class.kbq-inline-edit_with-label]': '!!label()',
         '[class.kbq-inline-edit_with-menu]': '!!menu()',
@@ -138,14 +140,16 @@ export class KbqInlineEditMenu {
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
     },
+    hostDirectives: [
+        CdkMonitorFocus
+    ],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION]
 })
 export class KbqInlineEdit {
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly focusMonitor = inject(FocusMonitor);
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
     private readonly resizeObserver = inject(SharedResizeObserver);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
      * Whether to show save/cancel action buttons in edit mode.
@@ -172,13 +176,20 @@ export class KbqInlineEdit {
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */
     readonly setValueHandler = input<(value: any) => void>();
-    /**
-     * Customizable function that checks if saving on enter available.
-     */
+    /** Customizable function that checks if saving on enter available. */
     readonly canSaveOnEnter = input(
         (event: KeyboardEvent): boolean =>
             hasModifierKey(event, 'ctrlKey', 'metaKey') || !(event.target instanceof HTMLTextAreaElement)
     );
+
+    /**
+     * CSS selectors for elements in view mode that should handle clicks instead of opening edit mode.
+     * Override to replace or extend the default list.
+     *
+     * @example
+     * `<kbq-inline-edit [interactiveSelectors]="['a', 'kbq-tag', 'button']">`
+     */
+    readonly interactiveSelectors = input<string[]>(['a', 'kbq-tag']);
 
     /** Emitted when the inline edit is saved successfully. */
     protected readonly saved = output();
@@ -195,9 +206,11 @@ export class KbqInlineEdit {
     protected readonly formFieldRef = contentChild(KbqFormField);
 
     /** @docs-private */
-    protected readonly overlayOrigin = viewChild.required(CdkOverlayOrigin);
+    protected overlayOrigin: HTMLElement = this.elementRef.nativeElement;
     /** @docs-private */
     protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
+    /** @docs-private */
+    protected readonly viewContainer = viewChild.required<ElementRef<HTMLElement>>('viewContainer');
     /** @docs-private */
     protected readonly overlayDir = viewChild(CdkConnectedOverlay);
     /** @docs-private */
@@ -231,6 +244,10 @@ export class KbqInlineEdit {
         toObservable(this.mode)
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe((currentMode) => this.modeChange.emit(currentMode));
+
+        effect(() => {
+            this.overlayOrigin = this.label() ? this.viewContainer().nativeElement : this.elementRef.nativeElement;
+        });
     }
 
     /** Manually switch mode */
@@ -240,11 +257,10 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected onClick(event: Event): void {
-        if (this.disabled() || this.isEditMode()) return;
+        if (this.disabled() || this.isEditMode() || this.isInteractiveElement(event.target)) return;
 
         event.preventDefault();
         event.stopPropagation();
-        this.focusMonitor.focusVia(this.overlayOrigin().elementRef, 'program');
 
         this.toggleMode();
     }
@@ -330,6 +346,14 @@ export class KbqInlineEdit {
         }
     }
 
+    private isInteractiveElement(target: EventTarget | null): boolean {
+        const selectors = this.interactiveSelectors();
+
+        if (!selectors.length) return false;
+
+        return isElement(target) && !!target.closest(this.interactiveSelectors().join(','));
+    }
+
     /**
      * Sets up Tab key listeners on region items.
      * Single item: Tab moves to next edit.
@@ -363,7 +387,7 @@ export class KbqInlineEdit {
         setTimeout(() => {
             const activeElement = this.document.activeElement;
 
-            if (activeElement?.classList?.contains('kbq-inline-edit__focus_container')) {
+            if (activeElement?.classList?.contains('kbq-inline-edit')) {
                 activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
             }
         });
@@ -428,20 +452,20 @@ export class KbqInlineEdit {
             return;
         }
 
-        const elementRef: ElementRef<HTMLElement> | undefined = this.label()
-            ? this.overlayOrigin().elementRef
-            : this.elementRef;
+        const element: HTMLElement | null = this.label()
+            ? this.elementRef.nativeElement.querySelector('.kbq-inline-edit__focus_container')
+            : this.elementRef.nativeElement;
 
-        if (elementRef) {
+        if (element) {
             this.resizeObserver
-                .observe(elementRef.nativeElement)
+                .observe(element)
                 .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
                 .subscribe(() => {
-                    this.overlayWidth.set(elementRef.nativeElement.offsetWidth);
+                    this.overlayWidth.set(element.offsetWidth);
                 });
         }
 
-        this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
+        this.overlayWidth.set(element?.offsetWidth ?? '');
     }
 
     private openPanel(formFieldRef: KbqFormField) {
