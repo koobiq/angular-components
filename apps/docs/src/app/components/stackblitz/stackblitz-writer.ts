@@ -79,7 +79,8 @@ export class DocsStackblitzWriter {
                         files,
                         description: `${data.description}\n\nAuto-generated from: https://koobiq.io`,
                         template: 'angular-cli',
-                        dependencies
+                        dependencies,
+                        tags: ['angular', 'components', 'koobiq', 'example']
                     },
                     { openFile: `src/example/${data.indexFilename}` }
                 );
