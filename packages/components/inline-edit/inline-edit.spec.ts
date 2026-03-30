@@ -1,7 +1,7 @@
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ESCAPE, TAB } from '@koobiq/cdk/keycodes';
@@ -349,6 +349,156 @@ describe('KbqInlineEdit', () => {
 
         expect(document.querySelector(componentCssClasses.selectPanel)).toBeTruthy();
     });
+
+    describe('with multiple form fields', () => {
+        it('should emit saved event when both form fields are valid', async () => {
+            const fixture = setup(TestWithMultipleFormFields);
+            const { componentInstance, debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            componentInstance.showActions.set(true);
+            fixture.detectChanges();
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const saveButton = document.querySelector(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
+            )!.firstElementChild as HTMLButtonElement;
+
+            saveButton.click();
+
+            expect(componentInstance.update).toHaveBeenCalled();
+        });
+
+        it('should prevent save when first form field is invalid', async () => {
+            const fixture = setup(TestWithMultipleFormFields);
+            const { componentInstance, debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            componentInstance.showActions.set(true);
+            fixture.detectChanges();
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            componentInstance.form.controls.firstName.setValue('');
+            componentInstance.form.controls.firstName.markAsTouched();
+            componentInstance.form.controls.firstName.updateValueAndValidity();
+            fixture.detectChanges();
+
+            const saveButton = document.querySelector(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
+            )!.firstElementChild as HTMLButtonElement;
+
+            saveButton.click();
+
+            expect(componentInstance.update).not.toHaveBeenCalled();
+        });
+
+        it('should prevent save when second form field is invalid', async () => {
+            const fixture = setup(TestWithMultipleFormFields);
+            const { componentInstance, debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            componentInstance.showActions.set(true);
+            fixture.detectChanges();
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            componentInstance.form.controls.lastName.setValue('');
+            componentInstance.form.controls.lastName.markAsTouched();
+            componentInstance.form.controls.lastName.updateValueAndValidity();
+            fixture.detectChanges();
+
+            const saveButton = document.querySelector(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
+            )!.firstElementChild as HTMLButtonElement;
+
+            saveButton.click();
+
+            expect(componentInstance.update).not.toHaveBeenCalled();
+        });
+
+        it('should restore initial values for both form fields on cancel', async () => {
+            const fixture = setup(TestWithMultipleFormFields);
+            const { componentInstance, debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            componentInstance.showActions.set(true);
+            fixture.detectChanges();
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const inputs = getOverlayElement()!.querySelectorAll<HTMLInputElement>('input');
+
+            inputs[0].value = 'Jane';
+            inputs[0].dispatchEvent(new Event('input'));
+            inputs[1].value = 'Smith';
+            inputs[1].dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            const cancelButton = document.querySelector(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
+            )!.lastElementChild as HTMLButtonElement;
+
+            cancelButton.click();
+
+            expect(componentInstance.form.value).toEqual({ firstName: 'John', lastName: 'Doe' });
+        });
+
+        it('should save on Tab from last anchor when form is valid', async () => {
+            const fixture = setup(TestWithMultipleFormFields);
+            const { componentInstance, debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const overlayElement = getOverlayElement()!;
+            const anchors = overlayElement.querySelectorAll<HTMLElement>('.cdk-visually-hidden[tabindex="0"]');
+            const lastAnchor = anchors[anchors.length - 1];
+
+            dispatchEvent(lastAnchor, new FocusEvent('focusin'));
+            const tabEvent = createKeyboardEvent('keydown', TAB, lastAnchor, 'Tab');
+
+            dispatchEvent(lastAnchor, tabEvent);
+            await fixture.whenStable();
+
+            expect(componentInstance.update).toHaveBeenCalled();
+        });
+
+        it('should save on Shift+Tab from first anchor when form is valid', async () => {
+            const fixture = setup(TestWithMultipleFormFields);
+            const { componentInstance, debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const overlayElement = getOverlayElement()!;
+            const anchors = overlayElement.querySelectorAll<HTMLElement>('.cdk-visually-hidden[tabindex="0"]');
+            const firstAnchor = anchors[0];
+
+            dispatchEvent(firstAnchor, new FocusEvent('focusin'));
+
+            const shiftTabEvent = createKeyboardEvent('keydown', TAB, firstAnchor, 'Tab');
+
+            Object.defineProperties(shiftTabEvent, { shiftKey: { get: () => true } });
+            dispatchEvent(firstAnchor, shiftTabEvent);
+            await fixture.whenStable();
+
+            expect(componentInstance.update).toHaveBeenCalled();
+        });
+    });
 });
 
 @Directive({
@@ -686,4 +836,53 @@ export class TestWithSelect extends BaseTestComponent {
     }
 
     cancel = jest.fn();
+}
+
+@Component({
+    selector: 'name',
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqInlineEditModule
+    ],
+    template: `
+        <kbq-inline-edit
+            [showActions]="showActions()"
+            (saved)="update()"
+            (canceled)="cancel()"
+            (modeChange)="onModeChange($event)"
+        >
+            <div kbqInlineEditViewMode>
+                @if (displayValue()) {
+                    {{ displayValue() }}
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </div>
+            <form novalidate kbqInlineEditEditMode [formGroup]="form">
+                <kbq-form-field>
+                    <input kbqInput formControlName="firstName" />
+                </kbq-form-field>
+                <kbq-form-field>
+                    <input kbqInput formControlName="lastName" />
+                </kbq-form-field>
+            </form>
+        </kbq-inline-edit>
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+})
+export class TestWithMultipleFormFields extends BaseTestComponent {
+    readonly placeholder = 'Placeholder';
+    readonly displayValue = signal('');
+
+    readonly form = new FormGroup({
+        firstName: new FormControl('John', Validators.required),
+        lastName: new FormControl('Doe', Validators.required)
+    });
+
+    update = jest.fn();
+    cancel = jest.fn();
+
+    onModeChange(_$event: 'edit' | 'view') {}
 }

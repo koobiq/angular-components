@@ -46,16 +46,18 @@ export class KbqInlineEdit {
     readonly disabled: InputSignalWithTransform<boolean, unknown>;
     readonly editModeWidth: InputSignalWithTransform<number | undefined, unknown>;
     protected readonly formFieldRef: Signal<KbqFormField | undefined>;
+    protected readonly formFieldRefList: Signal<readonly KbqFormField[]>;
     readonly getValueHandler: InputSignal<(() => unknown) | undefined>;
     protected readonly isEditMode: Signal<boolean>;
     protected readonly label: Signal<KbqLabel | undefined>;
     protected readonly menu: Signal<KbqInlineEditMenu | undefined>;
-    protected readonly mode: WritableSignal<"view" | "edit">;
-    readonly modeAsReadonly: Signal<"view" | "edit">;
-    protected readonly modeChange: OutputEmitterRef<"view" | "edit">;
+    protected readonly mode: WritableSignal<KbqInlineEditMode>;
+    readonly modeAsReadonly: Signal<KbqInlineEditMode>;
+    protected readonly modeChange: OutputEmitterRef<KbqInlineEditMode>;
     protected onAttach(): void;
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
+    protected onOverlayOutsideClick($event: Event): void;
     protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
     protected readonly overlayOrigin: Signal<CdkOverlayOrigin>;
     protected readonly overlayWidth: WritableSignal<string | number>;
@@ -73,7 +75,7 @@ export class KbqInlineEdit {
     protected readonly tooltipTrigger: Signal<KbqTooltipTrigger | undefined>;
     readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRef"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
 }
@@ -86,6 +88,9 @@ export class KbqInlineEditMenu {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditMenu, never>;
 }
+
+// @public (undocumented)
+export type KbqInlineEditMode = 'view' | 'edit';
 
 // @public (undocumented)
 export class KbqInlineEditModule {

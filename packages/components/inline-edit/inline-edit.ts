@@ -10,6 +10,7 @@ import {
     Component,
     computed,
     contentChild,
+    contentChildren,
     Directive,
     ElementRef,
     inject,
@@ -26,6 +27,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    isHtmlElement,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -35,7 +37,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { skip } from 'rxjs';
+import { merge, skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -49,6 +51,8 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 ]);
 
 const baseClass = 'kbq-inline-edit';
+
+export type KbqInlineEditMode = 'view' | 'edit';
 
 /** @docs-private */
 @Directive({
@@ -185,14 +189,17 @@ export class KbqInlineEdit {
     /** Emitted when the inline edit is canceled and changes are discarded. */
     protected readonly canceled = output();
     /** Emitted when mode switched to edit/view */
-    protected readonly modeChange = output<'view' | 'edit'>();
+    protected readonly modeChange = output<KbqInlineEditMode>();
 
     /** @docs-private */
     protected readonly menu = contentChild(KbqInlineEditMenu);
     /** @docs-private */
     protected readonly label = contentChild(KbqLabel);
+
     /** @docs-private */
-    protected readonly formFieldRef = contentChild(KbqFormField);
+    protected readonly formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
+    /** @docs-private */
+    protected readonly formFieldRefList = contentChildren(KbqFormField, { descendants: true });
 
     /** @docs-private */
     protected readonly overlayOrigin = viewChild.required(CdkOverlayOrigin);
@@ -204,7 +211,7 @@ export class KbqInlineEdit {
     protected readonly regionItems = viewChildren(KbqFocusRegionItem);
 
     /** @docs-private */
-    protected readonly mode = signal<'view' | 'edit'>('view');
+    protected readonly mode = signal<KbqInlineEditMode>('view');
     /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
     /** @docs-private */
@@ -254,9 +261,9 @@ export class KbqInlineEdit {
         this.setOverlayWidth();
         this.setOverlayKeydownListener();
 
-        const formFieldRef = this.formFieldRef();
+        const formFieldRefList = this.formFieldRefList();
 
-        formFieldRef?.control.stateChanges
+        merge(formFieldRefList.map((ref) => ref.control.stateChanges))
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
@@ -267,16 +274,19 @@ export class KbqInlineEdit {
             });
 
         setTimeout(() => {
-            formFieldRef?.focus();
+            const formFieldRef = this.formFieldRef();
+
+            if (!formFieldRef) return;
+
+            formFieldRef.focus();
+
             this.initialValue = this.getValue();
 
             const input = this.getInputNativeElement();
 
             if (this.initialValue) input?.select();
 
-            if (formFieldRef) {
-                this.openPanel(formFieldRef);
-            }
+            this.openPanel(formFieldRef);
         }, 0);
     }
 
@@ -307,7 +317,7 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected onOverlayKeydown(event: KeyboardEvent): void {
-        this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
+        this.markAllAsTouched();
         const canSaveOnEnter = this.canSaveOnEnter();
 
         switch (event.key) {
@@ -318,7 +328,7 @@ export class KbqInlineEdit {
             case 'Enter': {
                 if (canSaveOnEnter(event)) {
                     event.preventDefault();
-                    this.formFieldRef()?.control.ngControl?.control?.markAsTouched();
+                    this.markAllAsTouched();
                     setTimeout(() => this.save(event));
                 }
 
@@ -328,6 +338,20 @@ export class KbqInlineEdit {
                 return;
             }
         }
+    }
+
+    /**
+     * Block propagation of overlay outside click.
+     * Used to prevent reopening when target is inline edit itself.
+     * @docs-private
+     */
+    protected onOverlayOutsideClick($event: Event) {
+        if (isHtmlElement($event.target) && this.elementRef.nativeElement.contains($event.target)) {
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+
+        this.save($event);
     }
 
     /**
@@ -356,7 +380,7 @@ export class KbqInlineEdit {
         }
     }
 
-    private saveAndFocusNextInlineEdit(event: KeyboardEvent): void {
+    private saveAndFocusNextInlineEdit(event: Event): void {
         this.save(event);
         if (this.isInvalid()) return;
 
@@ -370,11 +394,11 @@ export class KbqInlineEdit {
     }
 
     private isInvalid(): boolean {
-        const formFieldRef = this.formFieldRef();
+        const formFieldRefList = this.formFieldRefList();
 
-        if (!formFieldRef) return false;
+        if (!formFieldRefList.length) return false;
 
-        return formFieldRef.invalid;
+        return formFieldRefList.some((ref) => ref.invalid);
     }
 
     private getValue() {
@@ -382,36 +406,40 @@ export class KbqInlineEdit {
 
         if (getValueHandler) return getValueHandler();
 
-        const control = this.coerceControl();
+        const formFieldRefList = this.formFieldRefList();
 
-        return control?.value;
+        if (!formFieldRefList.length) return;
+
+        return this.formFieldRefList().map((ref) => this.coerceControl(ref)?.value);
     }
 
     private setValue<T>(value: T): void {
         const setValue = this.setValueHandler();
 
         if (setValue) {
-            setValue(this.initialValue);
+            setValue(value);
 
             return;
         }
 
-        const control = this.coerceControl();
+        const formFieldRefList = this.formFieldRefList();
 
-        if (!control) return;
+        if (!formFieldRefList.length || !Array.isArray(value)) return;
 
-        if (control instanceof AbstractControl) {
-            control.setValue(value);
-        } else {
-            control.value = value;
-        }
+        value.forEach((controlValue, index) => {
+            const control = this.coerceControl(formFieldRefList[index]);
+
+            if (!control) return;
+
+            if (control instanceof AbstractControl) {
+                control.setValue(controlValue);
+            } else {
+                control.value = controlValue;
+            }
+        });
     }
 
-    private coerceControl() {
-        const formFieldRef = this.formFieldRef();
-
-        if (!formFieldRef) return null;
-
+    private coerceControl(formFieldRef: KbqFormField) {
         if (formFieldRef.control.ngControl instanceof NgControl) {
             return formFieldRef.control.ngControl.control;
         }
@@ -452,5 +480,9 @@ export class KbqInlineEdit {
 
     private getInputNativeElement(): HTMLInputElement | HTMLTextAreaElement | null {
         return this.overlayDir()?.overlayRef.overlayElement.querySelector('input:not([type="file"]),textarea') ?? null;
+    }
+
+    private markAllAsTouched(): void {
+        this.formFieldRefList().forEach((formField) => formField.control.ngControl?.control?.markAsTouched());
     }
 }
