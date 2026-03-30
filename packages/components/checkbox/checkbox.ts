@@ -9,11 +9,10 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
-    Inject,
+    inject,
     Input,
     numberAttribute,
     OnDestroy,
-    Optional,
     Output,
     ViewChild,
     ViewEncapsulation
@@ -110,6 +109,9 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     /** The value attribute of the native input element */
     @Input() value: string;
 
+    /** Defines the behavior when a user clicks on the checkbox. */
+    @Input() clickAction: KbqCheckboxClickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) || undefined;
+
     /** The native `<input type="checkbox">` element */
     @ViewChild('input', { static: false }) inputElement: ElementRef;
 
@@ -201,8 +203,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor,
-        @Optional() @Inject(KBQ_CHECKBOX_CLICK_ACTION) private clickAction: KbqCheckboxClickAction
+        private focusMonitor: FocusMonitor
     ) {
         super();
 

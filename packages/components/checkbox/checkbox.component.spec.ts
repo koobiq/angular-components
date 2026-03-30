@@ -438,6 +438,45 @@ describe('KbqCheckbox', () => {
             }));
         });
 
+        describe('when clickAction input overrides KBQ_CHECKBOX_CLICK_ACTION token', () => {
+            beforeEach(() => {
+                TestBed.resetTestingModule();
+                TestBed.configureTestingModule({
+                    imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
+                    providers: [
+                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }]
+                });
+
+                fixture = TestBed.createComponent(SingleCheckbox);
+                fixture.detectChanges();
+
+                checkboxDebugElement = fixture.debugElement.query(By.directive(KbqCheckbox));
+                checkboxNativeElement = checkboxDebugElement.nativeElement;
+                checkboxInstance = checkboxDebugElement.componentInstance;
+                inputElement = checkboxNativeElement.querySelector<HTMLInputElement>('input')!;
+            });
+
+            it('should use clickAction input value instead of token when explicitly set', () => {
+                checkboxInstance.clickAction = 'check-indeterminate';
+                fixture.detectChanges();
+
+                expect(checkboxInstance.checked).toBe(false);
+                expect(checkboxInstance.indeterminate).toBe(false);
+
+                inputElement.click();
+                fixture.detectChanges();
+
+                expect(checkboxInstance.checked).toBe(true);
+                expect(checkboxInstance.indeterminate).toBe(false);
+
+                inputElement.click();
+                fixture.detectChanges();
+
+                expect(checkboxInstance.checked).toBe(false);
+                expect(checkboxInstance.indeterminate).toBe(false);
+            });
+        });
+
         describe(`when KBQ_CHECKBOX_CLICK_ACTION is 'noop'`, () => {
             beforeEach(() => {
                 TestBed.resetTestingModule();

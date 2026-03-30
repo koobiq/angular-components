@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testi
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqToggleComponent, KbqToggleModule } from './index';
 
@@ -530,6 +531,34 @@ describe('KbqToggle', () => {
             await fixture.whenRenderingDone();
             await fixture.whenStable();
             expect(innerInput.attributes['aria-checked']).toBe(fixture.componentInstance.toggle.checked.toString());
+        });
+    });
+
+    describe('when clickAction input overrides KBQ_CHECKBOX_CLICK_ACTION token', () => {
+        it('should use clickAction input value instead of token when explicitly set', () => {
+            const fixture = createComponent(SingleToggle, [
+                { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }]);
+            const toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
+            const toggleInstance: KbqToggleComponent = toggleDebugElement.componentInstance;
+            const inputElement = toggleDebugElement.nativeElement.querySelector('input') as HTMLInputElement;
+
+            expect(toggleInstance.checked).toBe(false);
+            expect(toggleInstance.indeterminate).toBe(false);
+
+            toggleInstance.clickAction = 'check-indeterminate';
+            fixture.detectChanges();
+
+            inputElement.click();
+            fixture.detectChanges();
+
+            expect(toggleInstance.checked).toBe(true);
+            expect(toggleInstance.indeterminate).toBe(false);
+
+            inputElement.click();
+            fixture.detectChanges();
+
+            expect(toggleInstance.checked).toBe(false);
+            expect(toggleInstance.indeterminate).toBe(false);
         });
     });
 
