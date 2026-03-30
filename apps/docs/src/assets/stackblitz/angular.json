@@ -35,16 +35,13 @@
                         "tsConfig": "tsconfig.app.json",
                         "assets": ["src/assets"],
                         "styles": [
-                            "node_modules/@koobiq/icons/fonts/kbq-icons.css",
-                            "node_modules/@koobiq/design-tokens/web/css-tokens.css",
-                            "node_modules/@koobiq/design-tokens/web/css-tokens-light.css",
-                            "node_modules/@koobiq/design-tokens/web/css-tokens-dark.css",
-                            "node_modules/@koobiq/components/prebuilt-themes/theme.css",
+                            "@koobiq/icons/fonts/kbq-icons.css",
+                            "@koobiq/design-tokens/web/css-tokens.css",
+                            "@koobiq/design-tokens/web/css-tokens-light.css",
+                            "@koobiq/design-tokens/web/css-tokens-dark.css",
+                            "@koobiq/components/prebuilt-themes/theme.css",
                             "src/styles.scss"
                         ],
-                        "stylePreprocessorOptions": {
-                            "includePaths": ["node_modules/"]
-                        },
                         "scripts": []
                     },
                     "configurations": {
