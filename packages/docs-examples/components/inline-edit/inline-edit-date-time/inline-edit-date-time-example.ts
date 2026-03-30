@@ -126,7 +126,7 @@ export class InlineEditDateTimeExample {
 
     protected onModeChange(currentMode: KbqInlineEditMode): void {
         setTimeout(() => {
-            if (currentMode === 'edit' && this.datepickerFormField()?.focusOrigin === 'keyboard') {
+            if (currentMode === 'edit' && this.datepickerFormField()?.focusOrigin !== 'keyboard') {
                 this.datepicker()?.open();
             }
         });
