@@ -9,7 +9,7 @@ import {
     PositionStrategy,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { _getEventTarget } from '@angular/cdk/platform';
+import { _getEventTarget, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
@@ -395,7 +395,9 @@ export class KbqAutocompleteTrigger
             this.previousValue = value;
             this.onChange(value);
 
-            if (this.canOpen() && this.document.activeElement === event.target) {
+            const activeElement = _getFocusedElementPierceShadowDom();
+
+            if (this.canOpen() && activeElement === target) {
                 this.openPanel();
             }
         }
@@ -411,7 +413,10 @@ export class KbqAutocompleteTrigger
     }
 
     handleClick($event: MouseEvent) {
-        if (!this.panelOpen && this.canOpen() && this.document.activeElement === $event.target) {
+        // const activeElement = _getFocusedElementPierceShadowDom();
+        const activeElement = this.document.activeElement;
+
+        if (!this.panelOpen && this.canOpen() && activeElement === $event.target) {
             this.openPanel();
         }
     }

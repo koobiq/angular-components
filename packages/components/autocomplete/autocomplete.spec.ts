@@ -1,5 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { _supportsShadowDom } from '@angular/cdk/platform';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -12,7 +13,8 @@ import {
     QueryList,
     Type,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    ViewEncapsulation
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
@@ -2109,6 +2111,46 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.trigger.panelOpen).toBe(true);
         });
     });
+
+    describe('with encapsulation: ViewEncapsulation.ShadowDom', () => {
+        it('should open the panel when the input is the shadow-DOM focused element', fakeAsync(() => {
+            const fixture = createComponent(TestShadowDomAutocomplete);
+
+            fixture.detectChanges();
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            // This test is only relevant for Shadow DOM-capable browsers.
+            if (!_supportsShadowDom()) return;
+
+            // emulate native behavior
+            input.focus();
+            input.value = 'Alabama';
+            dispatchFakeEvent(input, 'input');
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.trigger.panelOpen).toBeTruthy();
+        }));
+
+        it('should open the panel when the clicked input is the shadow-DOM focused element', fakeAsync(() => {
+            const fixture = createComponent(TestShadowDomAutocomplete);
+
+            fixture.detectChanges();
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            // This test is only relevant for Shadow DOM-capable browsers.
+            if (!_supportsShadowDom()) return;
+
+            expect(fixture.componentInstance.trigger.panelOpen).toBeFalsy();
+            // emulate native behavior
+            input.focus();
+            dispatchFakeEvent(input, 'click');
+            flush();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.trigger.panelOpen).toBeTruthy();
+        }));
+    });
 });
 
 @Component({
@@ -2144,6 +2186,86 @@ describe('KbqAutocomplete', () => {
     `
 })
 class SimpleAutocomplete implements OnDestroy {
+    stateCtrl = new UntypedFormControl();
+    filteredStates: any[];
+    valueSub: Subscription;
+    width: number;
+    kbqOptionWidth: number;
+    autocompleteDisabled = false;
+    openedSpy = jest.fn();
+    closedSpy = jest.fn();
+
+    @ViewChild(KbqAutocompleteTrigger, { static: true }) trigger: KbqAutocompleteTrigger;
+    @ViewChild(KbqAutocomplete, { static: false }) panel: KbqAutocomplete;
+    @ViewChild(KbqFormField, { static: false }) formField: KbqFormField;
+    @ViewChildren(KbqOption) options: QueryList<KbqOption>;
+
+    states = [
+        { code: 'AL', name: 'Alabama' },
+        { code: 'CA', name: 'California' },
+        { code: 'FL', name: 'Florida' },
+        { code: 'KS', name: 'Kansas' },
+        { code: 'MA', name: 'Massachusetts' },
+        { code: 'NY', name: 'New York' },
+        { code: 'OR', name: 'Oregon' },
+        { code: 'PA', name: 'Pennsylvania' },
+        { code: 'TN', name: 'Tennessee' },
+        { code: 'VA', name: 'Virginia' },
+        { code: 'WY', name: 'Wyoming' }
+    ];
+
+    constructor() {
+        this.filteredStates = this.states;
+        this.valueSub = this.stateCtrl.valueChanges.subscribe((val) => {
+            this.filteredStates = val ? this.states.filter((s) => s.name.match(new RegExp(val, 'gi'))) : this.states;
+        });
+    }
+
+    displayFn(value: any): string {
+        return value ? value.name : value;
+    }
+
+    ngOnDestroy() {
+        this.valueSub.unsubscribe();
+    }
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        KbqAutocompleteModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field [style.width.px]="width">
+            <input
+                kbqInput
+                placeholder="State"
+                [kbqAutocomplete]="auto"
+                [kbqAutocompleteDisabled]="autocompleteDisabled"
+                [formControl]="stateCtrl"
+            />
+        </kbq-form-field>
+
+        <kbq-autocomplete
+            #auto="kbqAutocomplete"
+            class="class-one class-two"
+            [displayWith]="displayFn"
+            (opened)="openedSpy()"
+            (closed)="closedSpy()"
+        >
+            @for (state of filteredStates; track state) {
+                <kbq-option [value]="state" [style.height.px]="kbqOptionWidth">
+                    <span>{{ state.code }}: {{ state.name }}</span>
+                </kbq-option>
+            }
+        </kbq-autocomplete>
+    `,
+    styles: ``,
+    encapsulation: ViewEncapsulation.ShadowDom,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestShadowDomAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();
     filteredStates: any[];
     valueSub: Subscription;
