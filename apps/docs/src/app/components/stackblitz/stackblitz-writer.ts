@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, NgZone, VERSION } from '@angular/core';
 import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
-import { default as StackBlitzSDK } from '@stackblitz/sdk';
+import { Project, ProjectFiles, default as StackBlitzSDK } from '@stackblitz/sdk';
 import { firstValueFrom, Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { docsKoobiqVersion } from '../../version';
@@ -16,7 +16,6 @@ const COPYRIGHT = `Use of this source code is governed by an MIT-style license.`
  */
 const DOCS_CONTENT_PATH = 'docs-content/examples-source';
 const TEMPLATE_PATH = 'assets/stackblitz/';
-const PROJECT_TEMPLATE = 'node';
 
 /**
  * Mapping from import patterns found in example `.ts` files to optional
@@ -50,7 +49,6 @@ const OPTIONAL_ANGULAR_JSON_STYLES = {
 export const DOCS_TEMPLATE_FILES = [
     '.editorconfig',
     '.gitignore',
-    '.stackblitzrc',
     'angular.json',
     'tsconfig.app.json',
     'tsconfig.json',
@@ -59,8 +57,6 @@ export const DOCS_TEMPLATE_FILES = [
     'src/styles.scss'
 ] as const;
 
-type FileDictionary = { [path: string]: string };
-
 /**
  * Stackblitz writer, write example files to stackblitz
  */
@@ -68,7 +64,7 @@ type FileDictionary = { [path: string]: string };
 export class DocsStackblitzWriter {
     private readonly http = inject(HttpClient);
     private readonly ngZone = inject(NgZone);
-    private fileCache = new Map<string, Observable<string>>();
+    private readonly fileCache = new Map<string, Observable<string>>();
 
     /**
      * Returns an HTMLFormElement that will open a new stackblitz template with the example data when
@@ -76,16 +72,19 @@ export class DocsStackblitzWriter {
      */
     createStackBlitzForExample(exampleId: string, data: ExampleData): Promise<() => void> {
         return this.ngZone.runOutsideAngular(async () => {
-            const files = await this.buildInMemoryFileDictionary(data, exampleId);
-            const exampleMainFile = `src/example/${data.indexFilename}`;
+            const { files, dependencies } = await this.buildInMemoryProject(data, exampleId);
 
             return () => {
-                this.openStackBlitz({
-                    files,
-                    title: `Angular Components - ${data.description}`,
-                    description: `${data.description}\n\nAuto-generated from: https://koobiq.io`,
-                    openFile: exampleMainFile
-                });
+                StackBlitzSDK.openProject(
+                    {
+                        title: `Angular Components - ${data.description}`,
+                        files,
+                        description: `${data.description}\n\nAuto-generated from: https://koobiq.io`,
+                        template: 'angular-cli',
+                        dependencies
+                    },
+                    { openFile: `src/example/${data.indexFilename}` }
+                );
             };
         });
     }
@@ -102,8 +101,6 @@ export class DocsStackblitzWriter {
                 .replace(/\${version}/g, `^${docsKoobiqVersion}`)
                 .replace(/koobiq-docs-example/g, data.selectorName)
                 .replace(/\${title}/g, data.description);
-        } else if (fileName === '.stackblitzrc') {
-            fileContent = fileContent.replace(/\${startCommand}/, 'npm start');
         } else if (fileName === 'src/main.ts') {
             const mainComponentName = data.componentNames[0];
 
@@ -138,8 +135,11 @@ export class DocsStackblitzWriter {
         return content;
     }
 
-    private async buildInMemoryFileDictionary(data: ExampleData, exampleId: string): Promise<FileDictionary> {
-        const result: FileDictionary = {};
+    private async buildInMemoryProject(
+        data: ExampleData,
+        exampleId: string
+    ): Promise<Pick<Project, 'files' | 'dependencies'>> {
+        const files: ProjectFiles = {};
         const tasks: Promise<unknown>[] = [];
         const liveExample = EXAMPLE_COMPONENTS[exampleId];
         const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${liveExample.importPath}/${exampleId}/`;
@@ -149,7 +149,7 @@ export class DocsStackblitzWriter {
                 this.loadFile(TEMPLATE_PATH + relativeFilePath)
                     // Replace example placeholders in the template files.
                     .then((content) => this.replaceExamplePlaceholders(data, relativeFilePath, content))
-                    .then((content) => (result[relativeFilePath] = content))
+                    .then((content) => (files[relativeFilePath] = content))
             );
         }
 
@@ -163,7 +163,7 @@ export class DocsStackblitzWriter {
                 this.loadFile(`${exampleBaseContentPath}${relativeFilePath}`)
                     // Insert a copyright footer for all example files inserted into the project.
                     .then((content) => this.appendCopyright(relativeFilePath, content))
-                    .then((content) => (result[targetPath] = content))
+                    .then((content) => (files[targetPath] = content))
             );
         }
 
@@ -172,18 +172,20 @@ export class DocsStackblitzWriter {
         await Promise.all(tasks);
 
         // Resolve which optional import patterns are used in example .ts files.
-        const matchedPatterns = this.resolveMatchedImportPatterns(result);
+        const matchedPatterns = this.resolveMatchedImportPatterns(files);
 
         // Generate package.json with only the deps this example needs.
-        result['package.json'] = this.buildPackageJson(matchedPatterns);
+        const packageJson = this.buildPackageJson(matchedPatterns);
+
+        files['package.json'] = JSON.stringify(packageJson, null, 4);
 
         // Patch angular.json with optional styles for matched patterns.
-        this.patchAngularJsonStyles(result, matchedPatterns);
+        this.patchAngularJsonStyles(files, matchedPatterns);
 
-        return result;
+        return { files, dependencies: { ...packageJson.dependencies, ...packageJson.devDependencies } };
     }
 
-    private resolveMatchedImportPatterns(files: FileDictionary): string[] {
+    private resolveMatchedImportPatterns(files: ProjectFiles): string[] {
         const tsContents = Object.entries(files)
             .filter(([path]) => path.endsWith('.ts'))
             .map(([, content]) => content);
@@ -193,11 +195,18 @@ export class DocsStackblitzWriter {
         );
     }
 
-    private buildPackageJson(matchedPatterns: string[]): string {
+    private buildPackageJson(patterns: string[]) {
         const ngVersion = `^${VERSION.full}`;
         const koobiqVersion = `^${docsKoobiqVersion}`;
-
-        const dependencies: Record<string, string> = {
+        const devDependencies = {
+            '@angular-devkit/build-angular': ngVersion,
+            '@angular/cli': ngVersion,
+            '@angular/compiler-cli': ngVersion,
+            '@types/luxon': '^3.7.1',
+            '@types/node': '^22.22.0',
+            typescript: '5.8.3'
+        } as const;
+        const dependencies = {
             '@angular/animations': ngVersion,
             '@angular/cdk': ngVersion,
             '@angular/common': ngVersion,
@@ -217,44 +226,32 @@ export class DocsStackblitzWriter {
             rxjs: '^7.8.2',
             tslib: '^2.8.1',
             'zone.js': '~0.15.0'
-        };
+        } as const;
 
-        for (const pattern of matchedPatterns) {
+        for (const pattern of patterns) {
             Object.assign(dependencies, OPTIONAL_PACKAGE_JSON_DEPENDENCIES[pattern]);
         }
 
-        return JSON.stringify(
-            {
-                name: 'koobiq-example',
-                version: '0.0.0',
-                homepage: 'https://github.com/koobiq/angular-components',
-                private: true,
-                license: 'MIT',
-                scripts: {
-                    ng: 'ng',
-                    start: 'ng serve',
-                    build: 'ng build',
-                    watch: 'ng build --watch --configuration development'
-                },
-                dependencies,
-                devDependencies: {
-                    '@angular-devkit/build-angular': ngVersion,
-                    '@angular/cli': ngVersion,
-                    '@angular/compiler-cli': ngVersion,
-                    '@types/luxon': '^3.7.1',
-                    '@types/node': '^18.19.0',
-                    typescript: '5.8.3'
-                }
+        return {
+            name: 'koobiq-example',
+            version: '0.0.0',
+            homepage: 'https://github.com/koobiq/angular-components',
+            private: true,
+            license: 'MIT',
+            scripts: {
+                ng: 'ng',
+                start: 'ng serve',
+                build: 'ng build'
             },
-            null,
-            4
-        );
+            dependencies,
+            devDependencies
+        } as const;
     }
 
-    private patchAngularJsonStyles(files: FileDictionary, matchedPatterns: string[]): void {
+    private patchAngularJsonStyles(files: ProjectFiles, patterns: string[]): void {
         const extraStyles: string[] = [];
 
-        for (const pattern of matchedPatterns) {
+        for (const pattern of patterns) {
             const styles = OPTIONAL_ANGULAR_JSON_STYLES[pattern];
 
             if (styles) {
@@ -271,20 +268,6 @@ export class DocsStackblitzWriter {
 
         styles.push(...extraStyles);
         files['angular.json'] = JSON.stringify(angularJson, null, 4);
-    }
-
-    private openStackBlitz({
-        title,
-        description,
-        openFile,
-        files
-    }: {
-        title: string;
-        description: string;
-        openFile: string;
-        files: FileDictionary;
-    }): void {
-        StackBlitzSDK.openProject({ title, files, description, template: PROJECT_TEMPLATE }, { openFile });
     }
 
     private loadFile(fileUrl: string): Promise<string> {
