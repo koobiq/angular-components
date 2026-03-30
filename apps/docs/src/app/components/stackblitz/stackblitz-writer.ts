@@ -47,8 +47,6 @@ const OPTIONAL_ANGULAR_JSON_STYLES = {
 } as const;
 
 export const DOCS_TEMPLATE_FILES = [
-    '.editorconfig',
-    '.gitignore',
     'angular.json',
     'tsconfig.app.json',
     'tsconfig.json',
