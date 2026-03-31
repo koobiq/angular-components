@@ -20,6 +20,9 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
+        <select-scrolling-and-layering-example />
+        <hr />
+
         <select-with-multiline-matcher-example />
         <hr />
 

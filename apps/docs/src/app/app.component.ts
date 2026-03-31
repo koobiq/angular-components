@@ -1,9 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, ViewEncapsulation } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { DocsNavbarComponent } from './components/navbar/navbar.component';
 import { DocsSidenav } from './components/sidenav/sidenav';
 import { DocsDocStates, DocsNavbarState } from './services/doc-states';
@@ -56,8 +56,19 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
 })
 export class DocsAppComponent {
     readonly docStates = inject(DocsDocStates);
+    readonly router = inject(Router);
 
     readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
         map((state) => state === DocsNavbarState.Opened)
     );
+
+    isExamplesPage = false;
+
+    constructor() {
+        this.router.events
+            .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+            .subscribe((event: NavigationEnd) => {
+                this.isExamplesPage = event.urlAfterRedirects.startsWith('/examples');
+            });
+    }
 }

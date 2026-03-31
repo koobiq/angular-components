@@ -11,6 +11,7 @@ import { SelectMultipleExample } from './select-multiple/select-multiple-example
 import { SelectOverviewExample } from './select-overview/select-overview-example';
 import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
+import { SelectScrollingAndLayeringExample } from './select-scrolling-and-layering/select-scrolling-and-layering-example';
 import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
@@ -33,6 +34,7 @@ export {
     SelectOverviewExample,
     SelectPreselectedValuesExample,
     SelectPrioritizedSelectedExample,
+    SelectScrollingAndLayeringExample,
     SelectSearchExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
@@ -64,7 +66,8 @@ const EXAMPLES = [
     SelectWithPanelWidthFixedExample,
     SelectPrioritizedSelectedExample,
     SelectWithPanelWidthFixedExample,
-    SelectWithPanelMinWidthExample
+    SelectWithPanelMinWidthExample,
+    SelectScrollingAndLayeringExample
 ];
 
 @NgModule({

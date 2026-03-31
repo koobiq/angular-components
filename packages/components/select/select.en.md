@@ -142,6 +142,14 @@ Add `cdk-virtual-scroll-viewport` to your component template to display only vis
 
 <!-- example(select-virtual-scroll) -->
 
+### Layering
+
+By default, the dropdown menu is hidden beneath the horizontal Navbar and Topbar; in other cases, it appears above adjacent elements.
+
+To prevent the menu from overlapping a required element during scrolling and instead have it hidden beneath it, adjust its position using a custom z-index or offset parameters.
+
+<!-- example(select-scrolling-and-layering) -->
+
 ### Recommendations
 
 - If you are using a select without a label, we suggest adding a placeholder to indicate what information the user should select. For example, “Country.”

@@ -6,6 +6,7 @@ import {
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
+    OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -22,12 +23,14 @@ import {
     Input,
     OnInit,
     Output,
+    Renderer2,
     TemplateRef,
     Type,
     ViewChild,
     ViewEncapsulation,
     booleanAttribute,
     inject,
+    input,
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -46,7 +49,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { NEVER, fromEvent, merge } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, take } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
 export const defaultOffsetYWithArrow = 8;
@@ -177,7 +180,13 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     }
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
+    private overlayContainer = inject(OverlayContainer);
+    private renderer = inject(Renderer2);
+
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
+
+    /** Controls whether the component should be hidden when it is not visible in the viewport. */
+    readonly hideIfNotInViewPort = input(true, { transform: booleanAttribute });
 
     /** prevents closure by any event */
     @Input({ alias: 'kbqPopoverPreventClose', transform: booleanAttribute }) override preventClose: boolean = false;
@@ -410,7 +419,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.scrollable
             ?.elementScrolled()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(this.hideIfNotInViewPort);
+            .subscribe(this.hideIfScrolledOutOfView);
     }
 
     ngAfterContentInit(): void {
@@ -426,6 +435,25 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
                 }
             });
         }
+    }
+
+    /**
+     * Overrides the base `show` method to display the overlay component with the
+     * specified entry delay and apply default positioning offsets.
+     */
+    override show(delay: number = this.enterDelay) {
+        super.show(delay);
+
+        this.ngZone.onStable
+            .asObservable()
+            .pipe(take(1))
+            .subscribe(() => {
+                const overlayContainer = this.overlayContainer?.getContainerElement();
+
+                if (overlayContainer.childNodes.length === 1) {
+                    this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
+                }
+            });
     }
 
     updateData() {
@@ -492,8 +520,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         return merge(...this.closingActionsForClick(), this.closeOnScroll ? this.scrollDispatcher.scrolled() : NEVER);
     }
 
-    private hideIfNotInViewPort = () => {
-        if (!this.scrollable) return;
+    private hideIfScrolledOutOfView = () => {
+        if (!this.scrollable || !this.hideIfNotInViewPort()) return;
 
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
         const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();

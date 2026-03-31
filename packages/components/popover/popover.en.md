@@ -82,6 +82,14 @@ The close button can be placed in the header or in the top right corner when the
 
 <!-- example(popover-close) -->
 
+### Layering
+
+By default, the popover is hidden beneath the horizontal Navbar and Topbar; in other cases, it appears above adjacent elements.
+
+To prevent the popover from overlapping a required element during scrolling and instead have it hidden beneath it, adjust its position using a custom z-index or offset parameters.
+
+<!-- example(popover-scrolling-and-layering) -->
+
 ### Recommendations
 
 When a short text without interactive elements needs to be shown in a popup, use a [tooltip](/en/components/tooltip).

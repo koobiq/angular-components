@@ -28,13 +28,21 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [PopoverExamplesModule],
     template: `
+        <popover-scrolling-and-layering-example />
+        <br />
         <popover-paddings-example />
+        <br />
         <popover-small-example />
-        <!--        <popover-width-example />-->
-        <!--        <popover-common-example />-->
-        <!--        <popover-hover-example />-->
-        <!--        <popover-arrowless-example />-->
-        <!--        <popover-arrow-and-offset-example />-->
+        <br />
+        <popover-width-example />
+        <br />
+        <popover-common-example />
+        <br />
+        <popover-hover-example />
+        <br />
+        <popover-arrowless-example />
+        <br />
+        <popover-arrow-and-offset-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
