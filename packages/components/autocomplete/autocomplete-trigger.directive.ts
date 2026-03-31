@@ -413,8 +413,7 @@ export class KbqAutocompleteTrigger
     }
 
     handleClick($event: MouseEvent) {
-        // const activeElement = _getFocusedElementPierceShadowDom();
-        const activeElement = this.document.activeElement;
+        const activeElement = _getFocusedElementPierceShadowDom();
 
         if (!this.panelOpen && this.canOpen() && activeElement === $event.target) {
             this.openPanel();
