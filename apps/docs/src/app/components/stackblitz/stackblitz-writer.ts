@@ -48,7 +48,6 @@ const OPTIONAL_ANGULAR_JSON_STYLES = {
 
 export const DOCS_TEMPLATE_FILES = [
     'angular.json',
-    'tsconfig.app.json',
     'tsconfig.json',
     'src/index.html',
     'src/main.ts',
@@ -76,11 +75,11 @@ export class DocsStackblitzWriter {
                 StackBlitzSDK.openProject(
                     {
                         title: `Angular Components - ${data.description}`,
-                        files,
+                        tags: ['angular', 'components', 'koobiq', 'example'],
                         description: `${data.description}\n\nAuto-generated from: https://koobiq.io`,
                         template: 'angular-cli',
                         dependencies,
-                        tags: ['angular', 'components', 'koobiq', 'example']
+                        files
                     },
                     { openFile: `src/example/${data.indexFilename}` }
                 );
@@ -197,14 +196,6 @@ export class DocsStackblitzWriter {
     private buildPackageJson(patterns: string[]) {
         const ngVersion = `^${VERSION.full}`;
         const koobiqVersion = `^${docsKoobiqVersion}`;
-        const devDependencies = {
-            '@angular-devkit/build-angular': ngVersion,
-            '@angular/cli': ngVersion,
-            '@angular/compiler-cli': ngVersion,
-            '@types/luxon': '^3.7.1',
-            '@types/node': '^22.22.0',
-            typescript: '5.8.3'
-        } as const;
         const dependencies = {
             '@angular/animations': ngVersion,
             '@angular/cdk': ngVersion,
@@ -219,13 +210,16 @@ export class DocsStackblitzWriter {
             '@koobiq/cdk': koobiqVersion,
             '@koobiq/components': koobiqVersion,
             '@koobiq/date-formatter': '^3.4.0',
+            '@koobiq/date-adapter': '^3.4.0',
+            '@koobiq/design-tokens': '3.14.0',
             '@koobiq/icons': '^11.2.0',
+            '@messageformat/core': '^3.4.0',
             luxon: '^3.7.2',
             overlayscrollbars: '2.7.3',
             rxjs: '^7.8.2',
             tslib: '^2.8.1',
             'zone.js': '~0.15.0'
-        } as const;
+        };
 
         for (const pattern of patterns) {
             Object.assign(dependencies, OPTIONAL_PACKAGE_JSON_DEPENDENCIES[pattern]);
@@ -243,7 +237,13 @@ export class DocsStackblitzWriter {
                 build: 'ng build'
             },
             dependencies,
-            devDependencies
+            devDependencies: {
+                '@angular-devkit/build-angular': ngVersion,
+                '@angular/cli': ngVersion,
+                '@angular/compiler-cli': ngVersion,
+                '@types/luxon': '^3.7.1',
+                typescript: '5.8.3'
+            }
         } as const;
     }
 

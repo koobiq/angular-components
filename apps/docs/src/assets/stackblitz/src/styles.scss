@@ -1,10 +1,10 @@
-@use '@koobiq/components/core/styles/common/tokens';
-@use '@koobiq/components/core/styles/visual';
+// @use '@koobiq/components/core/styles/common/tokens';
+// @use '@koobiq/components/core/styles/visual';
 
-@include visual.layouts-for-breakpoint();
+// @include visual.layouts-for-breakpoint();
 
 body {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    // @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
     background: var(--kbq-background-bg);
     color: var(--kbq-foreground-contrast);
