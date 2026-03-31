@@ -1,6 +1,5 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
-import { _supportsShadowDom } from '@angular/cdk/platform';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -2119,9 +2118,6 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
             const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-            // This test is only relevant for Shadow DOM-capable browsers.
-            if (!_supportsShadowDom()) return;
-
             // emulate native behavior
             input.focus();
             input.value = 'Alabama';
@@ -2137,9 +2133,6 @@ describe('KbqAutocomplete', () => {
 
             fixture.detectChanges();
             const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-            // This test is only relevant for Shadow DOM-capable browsers.
-            if (!_supportsShadowDom()) return;
 
             expect(fixture.componentInstance.trigger.panelOpen).toBeFalsy();
             // emulate native behavior
