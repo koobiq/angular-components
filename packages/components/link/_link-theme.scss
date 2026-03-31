@@ -171,7 +171,9 @@
         }
 
         &.cdk-keyboard-focused {
-            outline: var(--kbq-link-state-focused-outline) solid;
+            outline-style: solid;
+            outline-width: var(--kbq-link-size-state-focused-outline-width);
+            outline-color: var(--kbq-link-state-focused-outline);
         }
 
         &.kbq-disabled {
