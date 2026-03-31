@@ -9,6 +9,8 @@ import { KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE, KbqCodeBlockHighlight } from './
 import { KbqCodeBlockModule } from './code-block.module';
 import { KbqCodeBlockFile } from './types';
 
+const HOVER_DEBOUNCE_TIME = 100;
+
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
     const fixture = TestBed.createComponent<T>(component);
@@ -453,11 +455,32 @@ describe(KbqCodeBlock.name, () => {
         componentInstance.hideTabs = true;
         fixture.detectChanges();
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
-        tick(100); // debounceTime
+        tick(HOVER_DEBOUNCE_TIME);
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
-        tick(100); // debounceTime
+        tick(HOVER_DEBOUNCE_TIME);
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
+    }));
+
+    it('should stop tracking hover when hideTabs changes to false', fakeAsync(() => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        componentInstance.hideTabs = true;
+        fixture.detectChanges();
+
+        codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+        tick(HOVER_DEBOUNCE_TIME);
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
+
+        componentInstance.hideTabs = false;
+        fixture.detectChanges();
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
+
+        codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+        tick(HOVER_DEBOUNCE_TIME);
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
     }));
 
     it('should show viewAll button', () => {

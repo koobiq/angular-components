@@ -48,6 +48,7 @@ export class KbqCodeBlock implements AfterViewInit {
     filled: boolean;
     get hideTabs(): boolean;
     set hideTabs(value: boolean);
+    readonly hideTabsChange: EventEmitter<boolean>;
     lineNumbers: boolean;
     protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
     maxHeight: number;
@@ -90,7 +91,7 @@ export class KbqCodeBlock implements AfterViewInit {
     viewAll: boolean;
     readonly viewAllChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; }, ["tabLinkTemplate"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }
