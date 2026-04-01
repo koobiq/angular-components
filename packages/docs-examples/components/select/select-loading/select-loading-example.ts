@@ -1,13 +1,58 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
 import { AsyncPipe } from '@angular/common';
 import { KbqHighlightPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { from, Observable, timer } from 'rxjs';
+import { delay, Observable, race, Subject, switchMap, throwError, timer } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { tap } from 'rxjs';
+
+
+type Option = {
+    id: number;
+    label: string;
+};
+
+export class OptionsService {
+    private delay: number = 100;
+
+    private data = Array
+        .from({ length: 10 })
+        .map((_, i) => ({ id: i, label: `Option #${i}` }));
+
+    private readonly empty = new Subject<void>();
+
+    setEmpty(): void {
+        this.empty.next();
+    }
+
+    setDelay(delay: number) {
+        this.delay = delay;
+    }
+
+    getOptions(search: string, shouldFail: boolean = false): Observable<Option[]> {
+        if (shouldFail) {
+            return throwError(() => new Error('error')).pipe(delay(this.delay));
+        }
+
+        const term = search.toLowerCase().trim();
+
+        const filtered = !term
+            ? this.data
+            : this.data.filter((option) => option.label.toLowerCase().includes(term));
+
+        return race(
+            timer(this.delay).pipe(map(() => filtered)),
+            this.empty.pipe(
+                take(1),
+                map(() => [] as Option[])
+            )
+        );
+    }
+}
 
 /**
  * @title Select loading
@@ -35,7 +80,9 @@ import { from, Observable, timer } from 'rxjs';
             <!--            } @error {-->
             <!--                <p>Failed to load the component.</p>-->
             <!--            }-->
-            <kbq-button-toggle-group [(value)]="selectedDelayTime">
+            <kbq-button-toggle-group
+                [ngModel]="100"
+                (ngModelChange)="service.setDelay($event)">
                 <kbq-button-toggle [value]="100">100 ms</kbq-button-toggle>
                 <kbq-button-toggle [value]="250">250 ms</kbq-button-toggle>
                 <kbq-button-toggle [value]="500">500 ms</kbq-button-toggle>
@@ -43,18 +90,20 @@ import { from, Observable, timer } from 'rxjs';
             </kbq-button-toggle-group>
 
             <kbq-form-field>
-                <kbq-select placeholder="Placeholder" (click)="loadOptions()" (closed)="resetOptions()">
+                <kbq-select placeholder="Placeholder"
+                            (beforeOpened)="searchControl.setValue('')"
+                            (closed)="resetOptions()">
                     <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                        <input kbqInput type="text" [formControl]="searchControl" />
+                        <input kbqInput type="text" [formControl]="searchControl" autocomplete="off" />
                         <kbq-cleaner />
                     </kbq-form-field>
 
                     <div kbq-select-search-empty-result>Nothing found</div>
 
-                    @for (option of filteredOptions | async; track option) {
-                        <kbq-option [value]="option">
-                            <span [innerHTML]="option | mcHighlight: searchControl.value"></span>
+                    @for (option of filteredOptions$ | async; track option) {
+                        <kbq-option [value]="option.id">
+                            <span [innerHTML]="option.label | mcHighlight: searchControl.value"></span>
                         </kbq-option>
                     }
                 </kbq-select>
@@ -89,37 +138,33 @@ import { from, Observable, timer } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectLoadingExample {
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    service = new OptionsService();
 
-    selectedDelayTime = 3000;
+    readonly select = viewChild.required(KbqSelect);
 
-    readonly options = Array
-        .from({ length: 10 })
-        .map((_, i) => `Option #${i}`);
-    readonly searchControl = new FormControl();
-    filteredOptions: Observable<any> = from([]);
+    readonly searchControl = new FormControl('', { nonNullable: true });
 
-    private search(query: string | null): string[] {
-        return query
-            ? this.options.filter((option) => option.toLowerCase().includes(query.toLowerCase()))
-            : this.options;
-    }
+    readonly filteredOptions$ = this.searchControl.valueChanges.pipe(
+        tap((search: string) => {
+            console.log('time: ', Date.now().toString());
+            if (!!search) {
+                this.select().isLoading$.next(true);
+            }
+            console.log('tap: ');
 
-    private getOptions = () => {
-        this.filteredOptions = this.searchControl.valueChanges.pipe(
-            startWith(''),
-            map((query) => this.search(query))
-        );
+            return search;
+        }),
+        switchMap((search: string) => this.service.getOptions(search)),
+        tap((values) => {
+            console.log('time: ', Date.now().toString());
+            this.select().isLoading$.next(false);
+            console.log('tap: ');
 
-        this.changeDetectorRef.markForCheck();
-    }
-
-    protected loadOptions() {
-        timer(this.selectedDelayTime).subscribe(this.getOptions);
-
-    }
+            return values;
+        }),
+    );
 
     protected resetOptions() {
-        this.filteredOptions = from([]);
+        this.service.setEmpty();
     }
 }

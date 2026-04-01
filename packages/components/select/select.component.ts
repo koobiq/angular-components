@@ -39,9 +39,9 @@ import {
     inject,
     isDevMode,
     numberAttribute,
-    signal
+    output
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import {
@@ -94,17 +94,28 @@ import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/component
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { BehaviorSubject, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
+import {
+    BehaviorSubject,
+    Observable,
+    Subject,
+    Subscription,
+    defer,
+    fromEvent,
+    merge,
+    timer,
+    of
+} from 'rxjs';
 import {
     debounceTime,
     delay,
     distinctUntilChanged,
     filter,
     map,
+    mapTo,
     startWith,
     switchMap,
     take,
-    takeUntil
+    takeUntil, tap
 } from 'rxjs/operators';
 import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 
@@ -382,6 +393,8 @@ export class KbqSelect
 
     /** Event emitted when the select panel has been toggled. */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    beforeOpened = output<void>();
 
     /** Event emitted when the select has been opened. */
     @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
@@ -674,7 +687,38 @@ export class KbqSelect
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
-    protected isLoading = signal(false);
+    // readonly isLoading = signal(false);
+
+    isLoading$ = new Subject<boolean>();
+    lastTrueAt = 0;
+
+    isLoading = toSignal(
+        this.isLoading$.pipe(
+            switchMap((value) => {
+                if (value) {
+                    return timer(delayBeforeOpeningPanelWithoutOptions).pipe(
+                        tap(() => (this.lastTrueAt = Date.now())),
+                        mapTo(true)
+                    );
+                }
+
+                const elapsed = Date.now() - this.lastTrueAt;
+
+                if (!this.lastTrueAt) {
+                    return of(false);
+                }
+
+                const delay = elapsed >= minimumTimeToDisplayLoading ? 0 : minimumTimeToDisplayLoading - elapsed;
+
+                return delay === 0
+                    ? of(false)
+                    : timer(delay).pipe(mapTo(false));
+            }),
+            distinctUntilChanged()
+        ),
+        { initialValue: false }
+    );
+
     protected loadingTimerId?: ReturnType<typeof setTimeout>;
 
     constructor(
@@ -780,6 +824,16 @@ export class KbqSelect
                 filter(() => !this.keyManager.activeItem)
             )
             .subscribe(() => this.keyManager.updateActiveItem(0));
+
+        this.search?.changes
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                delay(0)
+            )
+            .subscribe(() => {
+                console.log('this.isLoading();: ');
+                // this.isLoading.set(true);
+            });
     }
 
     ngOnDestroy() {
@@ -850,9 +904,9 @@ export class KbqSelect
 
     /** Opens the overlay panel. */
     open(): void {
-        console.log('open(): ');
-        console.log('time: ', Date.now().toString());
         if (this.disabled || this.panelOpen) return;
+
+        this.beforeOpened.emit();
 
         if (this.noOptions) {
             setTimeout(() => this.openPanelAfterDelay(), delayBeforeOpeningPanelWithoutOptions);
@@ -862,24 +916,17 @@ export class KbqSelect
     }
 
     openPanelAfterDelay() {
-        console.log('openPanelAfterDelay: ');
-        console.log('time: ', Date.now().toString());
-        // опций все еще нет
         this.openPanel();
 
         if (this.noOptions) {
-            this.isLoading.set(true);
-            console.log('this.isLoading.set(true);: ');
-            console.log('time: ', Date.now().toString());
+            this.isLoading$.next(true);
 
             // проверить после минимального времени показа лоадера
             this.loadingTimerId = setTimeout(() => {
                 this.loadingTimerId = undefined;
                 // опции появились ?
                 if (!this.noOptions) {
-                    this.isLoading.set(false);
-                    console.log('this.isLoading.set(false);: ');
-                    console.log('time: ', Date.now().toString());
+                    this.isLoading$.next(false);
                 }
             }, minimumTimeToDisplayLoading);
         }
@@ -1056,10 +1103,8 @@ export class KbqSelect
         });
 
         this.options.changes.pipe(delay(1)).subscribe(() => {
-            console.log('this.options.changes: ', this.options.length);
-            console.log('time: ', Date.now().toString());
             if (this.isLoading() && !this.loadingTimerId) {
-                this.isLoading.set(false);
+                this.isLoading$.next(false);
             }
 
             this.setOverlayPosition();
