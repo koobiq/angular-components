@@ -14,7 +14,7 @@ const timeLabel = 'Runtime';
 console.time(timeLabel);
 
 try {
-    console.info('🚀 Generating prerenderedRoutes.txt');
+    console.info('🚀 Generating prerender-routes.txt');
 
     const paths = docsGetItems()
         .map(({ categoryId, id, hasApi }) => {
@@ -34,13 +34,16 @@ try {
     // We should manually add the icons path, because it does not have any items.
     paths.push(`${DocsStructureCategoryId.Icons}`);
 
-    const routes = DOCS_SUPPORTED_LOCALES.flatMap((locale) => paths.map((path) => `/${locale}/${path}`));
+    const routes = DOCS_SUPPORTED_LOCALES.flatMap((locale) => [
+        `/${locale}`,
+        ...paths.map((path) => `/${locale}/${path}`)
+    ]);
 
-    writeFileSync(join(process.cwd(), 'apps/docs/src/prerenderedRoutes.txt'), routes.join('\n') + '\n');
+    writeFileSync(join(process.cwd(), 'apps/docs/src/prerender-routes.txt'), routes.join('\n') + '\n');
 
-    console.info('✅ prerenderedRoutes.txt has been successfully generated!');
+    console.info('✅ prerender-routes.txt has been successfully generated!');
 } catch (error) {
-    console.info('❌ Error occurred while generating prerenderedRoutes.txt! Details:\n', error);
+    console.info('❌ Error occurred while generating prerender-routes.txt! Details:\n', error);
 } finally {
     console.timeEnd(timeLabel);
 }
