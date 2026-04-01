@@ -53,7 +53,8 @@ interface ExampleFileData {
     styleUrls: ['./docs-live-example-viewer.scss'],
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-live-example-viewer kbq-markdown'
+        class: 'docs-live-example-viewer kbq-markdown',
+        '[attr.ngSkipHydration]': 'true'
     }
 })
 export class DocsLiveExampleViewerComponent extends DocsLocaleState {

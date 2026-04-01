@@ -1,3 +1,4 @@
+/en
 /en/main/installation/overview
 /en/main/versioning/overview
 /en/main/theming/overview
@@ -160,6 +161,7 @@
 /en/cdk/keycodes/overview
 /en/cdk/keycodes/api
 /en/icons
+/ru
 /ru/main/installation/overview
 /ru/main/versioning/overview
 /ru/main/theming/overview
