@@ -395,9 +395,7 @@ export class KbqAutocompleteTrigger
             this.previousValue = value;
             this.onChange(value);
 
-            const activeElement = _getFocusedElementPierceShadowDom();
-
-            if (this.canOpen() && activeElement === target) {
+            if (this.canOpen() && _getFocusedElementPierceShadowDom() === target) {
                 this.openPanel();
             }
         }
@@ -413,9 +411,7 @@ export class KbqAutocompleteTrigger
     }
 
     handleClick($event: MouseEvent) {
-        const activeElement = _getFocusedElementPierceShadowDom();
-
-        if (!this.panelOpen && this.canOpen() && activeElement === $event.target) {
+        if (!this.panelOpen && this.canOpen() && _getFocusedElementPierceShadowDom() === $event.target) {
             this.openPanel();
         }
     }
