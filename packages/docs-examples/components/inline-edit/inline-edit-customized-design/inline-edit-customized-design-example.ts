@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider, KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -8,6 +7,7 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -25,7 +25,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqSelectModule,
         KbqIconModule,
         KbqLinkModule,
-        KbqBadgeModule
+        KbqTagsModule
     ],
     template: `
         <kbq-inline-edit>
@@ -35,7 +35,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 @if (!linkControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <a kbq-link [href]="linkControl.value">{{ linkControl.value }}</a>
+                    <a kbq-link target="_blank" [href]="linkControl.value">{{ linkControl.value }}</a>
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
@@ -45,9 +45,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
         <kbq-inline-edit>
             <kbq-label class="example-inline-text__content">
-                Badge
+                Tags
                 <i
-                    kbq-icon-button="kbq-circle-question_16"
+                    kbq-icon-button="kbq-circle-info_16"
                     [kbqTooltip]="'Tooltip on hover or focus'"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="popupPlacements.Top"
@@ -59,12 +59,23 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 @if (!badgeControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <kbq-badge [badgeColor]="'fade-success'">{{ badgeControl.value }}</kbq-badge>
+                    <kbq-tag-list removable>
+                        @for (option of options(); track option) {
+                            <kbq-tag
+                                [value]="option"
+                                [selected]="badgeControl.value === option"
+                                (removed)="removed($event)"
+                            >
+                                {{ option }}
+                                <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                            </kbq-tag>
+                        }
+                    </kbq-tag-list>
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
                 <kbq-select [placeholder]="placeholder" [formControl]="badgeControl">
-                    @for (option of options; track option) {
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
@@ -116,10 +127,30 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 })
 export class InlineEditCustomizedDesignExample {
     protected readonly placeholder = 'Placeholder';
-    protected readonly options = ['Critical', 'High', 'Medium', 'Low'];
+    protected readonly options = signal(['Critical', 'High', 'Medium', 'Low']);
 
     protected readonly linkControl = new FormControl('https://github.com/koobiq/icons');
-    protected readonly badgeControl = new FormControl(this.options[0]);
+    protected readonly badgeControl = new FormControl(this.options()[0]);
     protected readonly iconControl = new FormControl('Value');
     protected readonly popupPlacements = PopUpPlacements;
+
+    protected removed(event: KbqTagEvent): void {
+        this.options.update((tags) => {
+            const index = tags.indexOf(event.tag.value);
+
+            tags.splice(index, 1);
+
+            console.log(`Tag #${index} was removed:`, event);
+
+            if (event.tag.value === this.badgeControl.value) {
+                if (!tags.length) {
+                    this.badgeControl.setValue(null);
+                } else {
+                    this.badgeControl.setValue(tags[index]);
+                }
+            }
+
+            return tags;
+        });
+    }
 }
