@@ -184,6 +184,7 @@
         "docs:start:prod": "ng serve --configuration=production koobiq-docs",
         "docs:generate-sitemap": "ts-node tools/generate-sitemap.ts",
         "docs:generate-llms-txt": "ts-node tools/generate-llms-txt.ts",
+        "docs:generate-prerender-routes": "ts-node tools/generate-prerender-routes.ts",
         "docs:build": "ng build koobiq-docs --configuration production",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
         "docs:api-gen": "rimraf dist/api-gen && rollup -c tools/api-gen/rollup.config.js && node dist/api-gen/generate-api-docs.mjs",
