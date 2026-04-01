@@ -16840,7 +16840,7 @@ __metadata:
     postcss: "npm:^8.5.6"
     postcss-discard-comments: "npm:^7.0.4"
     prettier: "npm:^3.8.1"
-    prettier-plugin-multiline-arrays: "npm:^4.1.4"
+    prettier-plugin-multiline-arrays: "npm:^4.1.5"
     prettier-plugin-organize-imports: "npm:^4.3.0"
     rimraf: "npm:^5.0.10"
     rollup: "npm:^4.60.1"
@@ -20012,16 +20012,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-multiline-arrays@npm:^4.1.4":
-  version: 4.1.4
-  resolution: "prettier-plugin-multiline-arrays@npm:4.1.4"
+"prettier-plugin-multiline-arrays@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "prettier-plugin-multiline-arrays@npm:4.1.5"
   dependencies:
     "@augment-vir/assert": "npm:^31.59.3"
     "@augment-vir/common": "npm:^31.59.3"
     proxy-vir: "npm:^2.0.2"
   peerDependencies:
     prettier: ">=3.0.0 <4.0.0"
-  checksum: 10c0/86facb1b8ac568f95ad8f233f606ac45a77d36e702b2ce0b5730b318557abefc194495369c6f2bd26393ed2969dc3a328844e05a2451fa235d2e213042836e6b
+  checksum: 10c0/0897894adb8984039f143a618684f3ab059e9f7ea3f07b888b40d71b290f3bca4e5882642aaa0fda65b3947d95e3f1525e3af245a8a6be3e38a7359675475b9f
   languageName: node
   linkType: hard
 
