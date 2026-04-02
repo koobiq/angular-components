@@ -661,6 +661,8 @@ export class KbqSelect
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
+    private classAddedToOverlayContainer: boolean = false;
+
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
         private readonly _ngZone: NgZone,
@@ -881,11 +883,7 @@ export class KbqSelect
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
                 }
 
-                const overlayContainer = this.overlayContainer?.getContainerElement();
-
-                if (overlayContainer.childNodes.length === 1) {
-                    this._renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
-                }
+                this.addClassToOverlayContainer();
             });
     }
 
@@ -903,7 +901,7 @@ export class KbqSelect
         this._changeDetectorRef.markForCheck();
         this.onTouched();
 
-        this._renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
+        this.removeClassFromOverlayContainer();
     }
 
     /**
@@ -1549,5 +1547,21 @@ export class KbqSelect
         this._renderer.setStyle(triggerClone, 'left', '0');
 
         return triggerClone;
+    }
+
+    private addClassToOverlayContainer() {
+        const overlayContainer = this.overlayContainer?.getContainerElement();
+
+        if (overlayContainer.childNodes.length === 1) {
+            this.classAddedToOverlayContainer = true;
+
+            this._renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
+        }
+    }
+
+    private removeClassFromOverlayContainer() {
+        if (this.classAddedToOverlayContainer) {
+            this._renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
+        }
     }
 }

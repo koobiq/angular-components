@@ -49,7 +49,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { NEVER, fromEvent, merge } from 'rxjs';
-import { debounceTime, take } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
 export const defaultOffsetYWithArrow = 8;
@@ -413,6 +413,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         };
     }
 
+    private classAddedToOverlayContainer: boolean = false;
+
     ngOnInit(): void {
         super.ngOnInit();
 
@@ -444,16 +446,13 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     override show(delay: number = this.enterDelay) {
         super.show(delay);
 
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
-                const overlayContainer = this.overlayContainer?.getContainerElement();
+        this.addClassToOverlayContainer();
+    }
 
-                if (overlayContainer.childNodes.length === 1) {
-                    this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
-                }
-            });
+    override hide(delay: number = this.leaveDelay) {
+        super.hide(delay);
+
+        this.removeClassFromOverlayContainer();
     }
 
     updateData() {
@@ -537,4 +536,20 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
             this.hide();
         }
     };
+
+    private addClassToOverlayContainer() {
+        const overlayContainer = this.overlayContainer?.getContainerElement();
+
+        if (overlayContainer.childNodes.length === 1) {
+            this.classAddedToOverlayContainer = true;
+
+            this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
+        }
+    }
+
+    private removeClassFromOverlayContainer() {
+        if (this.classAddedToOverlayContainer) {
+            this.renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
+        }
+    }
 }
