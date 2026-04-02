@@ -14,7 +14,8 @@ import {
     ErrorStateMatcher,
     kbqDisableLegacyValidationDirectiveProvider,
     PasswordValidators,
-    ShowOnFormSubmitErrorStateMatcher
+    ShowOnFormSubmitErrorStateMatcher,
+    ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
 import { KbqCleaner } from './cleaner';
@@ -256,6 +257,28 @@ export class InputFormFieldWithLegacyValidationDirective {}
 })
 export class InputFormFieldInOverlay {
     inOverlay: boolean;
+}
+
+@Component({
+    selector: 'input-form-field-with-invalid-or-submit-matcher',
+    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <form [formGroup]="formGroup" (ngSubmit)="submitted = true">
+            <kbq-form-field>
+                <input kbqInput formControlName="value" [errorStateMatcher]="errorStateMatcher" />
+                <kbq-error id="test-error-id">Error</kbq-error>
+            </kbq-form-field>
+            <button type="submit">Submit</button>
+        </form>
+    `
+})
+class InputFormFieldWithInvalidOrSubmitMatcher {
+    readonly errorStateMatcher = new ShowRequiredOnSubmitErrorStateMatcher();
+    formGroup = new FormGroup({
+        value: new FormControl('', [Validators.required])
+    });
+    submitted = false;
 }
 
 describe(KbqFormField.name, () => {
@@ -609,5 +632,81 @@ describe(KbqFormField.name, () => {
         ]);
 
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_in-overlay']).toBeTruthy();
+    });
+
+    describe(ShowRequiredOnSubmitErrorStateMatcher.name, () => {
+        const setup = () => {
+            const fixture = createComponent(InputFormFieldWithInvalidOrSubmitMatcher);
+            const { debugElement, componentInstance } = fixture;
+            const input = getInputNativeElement(debugElement);
+            const submit = getSubmitButtonNativeElement(debugElement);
+
+            return { fixture, debugElement, componentInstance, input, submit };
+        };
+
+        it('should NOT show required error before form is submitted', () => {
+            const { debugElement } = setup();
+
+            expect(getErrorDebugElement(debugElement)).toBeFalsy();
+        });
+
+        it('should NOT show required error after the control is touched but form is not submitted', () => {
+            const { input, debugElement, fixture } = setup();
+
+            input.focus();
+            input.blur();
+            fixture.detectChanges();
+
+            expect(getErrorDebugElement(debugElement)).toBeFalsy();
+        });
+
+        it('should show required error after the form is submitted', () => {
+            const { submit, debugElement, fixture } = setup();
+
+            submit.click();
+            fixture.detectChanges();
+
+            expect(getErrorDebugElement(debugElement)).toBeTruthy();
+        });
+
+        it('should show non-required error as soon as the control is invalid and touched', () => {
+            const { componentInstance, input, debugElement, fixture } = setup();
+
+            componentInstance.formGroup.setValue({ value: 'x' });
+            componentInstance.formGroup.controls.value.addValidators(Validators.email);
+            componentInstance.formGroup.controls.value.updateValueAndValidity();
+            fixture.detectChanges();
+
+            input.focus();
+            input.blur();
+            fixture.detectChanges();
+
+            expect(getErrorDebugElement(debugElement)).toBeTruthy();
+        });
+
+        it('should NOT show non-required error before the control is touched', () => {
+            const { componentInstance, debugElement, fixture } = setup();
+
+            componentInstance.formGroup.setValue({ value: 'x' });
+            componentInstance.formGroup.controls.value.addValidators(Validators.email);
+            componentInstance.formGroup.controls.value.updateValueAndValidity();
+            fixture.detectChanges();
+
+            expect(getErrorDebugElement(debugElement)).toBeFalsy();
+        });
+
+        it('should stop showing required error after the form value becomes valid', () => {
+            const { componentInstance, submit, debugElement, fixture } = setup();
+
+            submit.click();
+            fixture.detectChanges();
+
+            expect(getErrorDebugElement(debugElement)).toBeTruthy();
+
+            componentInstance.formGroup.setValue({ value: 'any value' });
+            fixture.detectChanges();
+
+            expect(getErrorDebugElement(debugElement)).toBeFalsy();
+        });
     });
 });

@@ -6,6 +6,7 @@ import { ValidationNoMessageExample } from './validation-no-message/validation-n
 import { ValidationOnBlurFilledExample } from './validation-on-blur-filled/validation-on-blur-filled-example';
 import { ValidationOnBlurExample } from './validation-on-blur/validation-on-blur-example';
 import { ValidationOnOpenExample } from './validation-on-open/validation-on-open-example';
+import { ValidationOnSubmitCustomMatcherExample } from './validation-on-submit-custom-matcher/validation-on-submit-custom-matcher-example';
 import { ValidationOnSubmitExample } from './validation-on-submit/validation-on-submit-example';
 import { ValidationOnTypeExample } from './validation-on-type/validation-on-type-example';
 import { ValidationOptionalLabelExample } from './validation-optional-label/validation-optional-label-example';
@@ -20,6 +21,7 @@ export {
     ValidationOnBlurExample,
     ValidationOnBlurFilledExample,
     ValidationOnOpenExample,
+    ValidationOnSubmitCustomMatcherExample,
     ValidationOnSubmitExample,
     ValidationOnTypeExample,
     ValidationOptionalLabelExample,
@@ -39,7 +41,8 @@ const EXAMPLES = [
     ValidationMessageForSpecificFieldExample,
     ValidationMessageGlobalExample,
     ValidationNoMessageExample,
-    ValidationTagListExample
+    ValidationTagListExample,
+    ValidationOnSubmitCustomMatcherExample
 ];
 
 @NgModule({

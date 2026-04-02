@@ -49,6 +49,7 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         <validation-on-blur-example />
         <validation-on-blur-filled-example />
         <validation-on-submit-example />
+        <validation-on-submit-custom-matcher-example />
         <validation-message-for-specific-field-example />
         <validation-no-message-example />
         <validation-message-global-example />
