@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens';
+@use '../core/styles/common/overlay';
 
 @mixin _overflow-items-margins {
     padding: var(--kbq-size-border-width);
@@ -20,7 +21,7 @@
 }
 
 .kbq-top-bar {
-    z-index: 1000;
+    z-index: overlay.$overlay-z-index;
 
     display: flex;
     align-items: center;
