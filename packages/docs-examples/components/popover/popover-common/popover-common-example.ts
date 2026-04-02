@@ -41,6 +41,9 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
             width: 400px;
         }
     `,
+    host: {
+        class: 'layout-row layout-align-center'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverCommonExample {}

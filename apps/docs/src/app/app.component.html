@@ -1,6 +1,6 @@
 @let opened = opened$ | async;
 
-@if (isExamplesPage) {
+@if (isExamplesPage()) {
     <router-outlet />
 } @else {
     <docs-sidenav

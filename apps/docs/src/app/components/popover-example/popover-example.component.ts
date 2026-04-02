@@ -8,7 +8,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     selector: 'docs-popover-example',
     imports: [KbqButtonModule, KbqTopBarModule, CdkScrollable, KbqPopoverModule],
     template: `
-        <kbq-top-bar style="z-index: 1000">
+        <kbq-top-bar>
             <div
                 class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
                 kbqTopBarContainer

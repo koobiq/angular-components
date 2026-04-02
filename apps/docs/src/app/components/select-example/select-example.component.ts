@@ -4,10 +4,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
 @Component({
-    selector: 'docs-popover-example',
+    selector: 'docs-select-example',
     imports: [KbqTopBarModule, CdkScrollable, KbqSelectModule],
     template: `
-        <kbq-top-bar style="z-index: 1000">
+        <kbq-top-bar>
             <div
                 class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
                 kbqTopBarContainer
