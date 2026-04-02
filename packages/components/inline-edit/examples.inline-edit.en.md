@@ -21,3 +21,7 @@ When inline editing is disabled or in read-only mode, the element is displayed a
 If action menus are available, they remain accessible even in this state.
 
 <!-- example(inline-edit-disabled) -->
+
+### Date time input
+
+<!-- example(inline-edit-date-time) -->
