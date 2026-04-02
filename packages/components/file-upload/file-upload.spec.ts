@@ -1,8 +1,16 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, ViewChild, signal, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import {
+    AbstractControl,
+    AsyncValidatorFn,
+    FormControl,
+    FormControlStatus,
+    FormsModule,
+    ReactiveFormsModule,
+    ValidationErrors
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TAB } from '@koobiq/cdk/keycodes';
@@ -15,6 +23,8 @@ import {
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
 import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
+import { Observable, timer } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
 import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
@@ -65,6 +75,60 @@ const fileItemActionCssClass = 'kbq-file-upload__action';
 
 const fileItemTextCssClass = 'kbq-file-item__text';
 
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
+const getAsyncValidator =
+    (valid = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { asyncError: { actual: valid } } : null)));
+
+const MAX_FILE_LINES_FOR_TEST = 3;
+
+function readFileAsText(file: File): Observable<string> {
+    return new Observable((observer) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            observer.next(reader.result as string);
+            observer.complete();
+        };
+
+        reader.onerror = () => {
+            observer.error(reader.error);
+        };
+
+        reader.readAsText(file);
+    });
+}
+
+function fileContentLinesValidator(maxLines: number): AsyncValidatorFn {
+    return (control: AbstractControl<KbqFileItem | null>): Observable<ValidationErrors | null> => {
+        return new Observable((observer) => {
+            if (!control.value) {
+                observer.next(null);
+                observer.complete();
+
+                return;
+            }
+
+            const subscription = readFileAsText(control.value.file).subscribe({
+                next: (content) => {
+                    const lineCount = content.split('\n').length;
+
+                    observer.next(lineCount > maxLines ? { maxLines: { max: maxLines, actual: lineCount } } : null);
+                    observer.complete();
+                },
+                error: () => {
+                    observer.next({ fileReadError: true });
+                    observer.complete();
+                }
+            });
+
+            return () => subscription.unsubscribe();
+        });
+    };
+}
+
 const maxFileExceeded = (file: File): string | null => {
     const kilo = 1024;
     const mega = kilo * kilo;
@@ -86,7 +150,9 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 FormsModule,
                 ReactiveFormsModule,
                 BasicMultipleFileUpload,
-                ControlValueAccessorMultipleFileUpload
+                ControlValueAccessorMultipleFileUpload,
+                MultipleFileUploadWithAsyncValidator,
+                MultipleFileUploadWithInvalidAsyncValidator
             ]
         }).compileComponents();
 
@@ -289,6 +355,90 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.fileUpload.resolvedLocaleConfig()).toMatchSnapshot();
         });
     });
+
+    describe('with async validation', () => {
+        describe('using timer-based validator', () => {
+            let asyncFixture: ComponentFixture<MultipleFileUploadWithAsyncValidator>;
+            let asyncComponent: MultipleFileUploadWithAsyncValidator;
+
+            beforeEach(() => {
+                asyncFixture = TestBed.createComponent(MultipleFileUploadWithAsyncValidator);
+                asyncComponent = asyncFixture.componentInstance;
+                asyncFixture.detectChanges();
+            });
+
+            it('should have PENDING status immediately after files are added', fakeAsync(() => {
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(asyncComponent.control.status).toBe('PENDING');
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+            }));
+
+            it('should have VALID status after async validator resolves', fakeAsync(() => {
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(asyncComponent.control.status).toBe('VALID');
+            }));
+
+            it('should emit PENDING then VALID via statusChanges', fakeAsync(() => {
+                const statuses: FormControlStatus[] = [];
+                const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
+
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(statuses).toEqual(['PENDING']);
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(statuses).toEqual(['PENDING', 'VALID']);
+
+                subscription.unsubscribe();
+            }));
+        });
+
+        describe('using invalid timer-based validator', () => {
+            let asyncFixture: ComponentFixture<MultipleFileUploadWithInvalidAsyncValidator>;
+            let asyncComponent: MultipleFileUploadWithInvalidAsyncValidator;
+
+            beforeEach(() => {
+                asyncFixture = TestBed.createComponent(MultipleFileUploadWithInvalidAsyncValidator);
+                asyncComponent = asyncFixture.componentInstance;
+                asyncFixture.detectChanges();
+            });
+
+            it('should have INVALID status after async validator resolves with errors', fakeAsync(() => {
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(asyncComponent.control.status).toBe('INVALID');
+                expect(asyncComponent.control.errors).toEqual({ asyncError: { actual: false } });
+            }));
+
+            it('should emit PENDING then INVALID via statusChanges', fakeAsync(() => {
+                const statuses: FormControlStatus[] = [];
+                const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
+
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(statuses).toEqual(['PENDING']);
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(statuses).toEqual(['PENDING', 'INVALID']);
+
+                subscription.unsubscribe();
+            }));
+        });
+    });
 });
 
 describe(KbqSingleFileUploadComponent.name, () => {
@@ -303,7 +453,10 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 FormsModule,
                 ReactiveFormsModule,
                 BasicSingleFileUpload,
-                ControlValueAccessorSingleFileUpload
+                ControlValueAccessorSingleFileUpload,
+                SingleFileUploadWithAsyncValidator,
+                SingleFileUploadWithInvalidAsyncValidator,
+                SingleFileUploadWithFileReaderValidator
             ]
         }).compileComponents();
 
@@ -505,6 +658,174 @@ describe(KbqSingleFileUploadComponent.name, () => {
             fixture.detectChanges();
 
             expect(component.fileUpload.resolvedLocaleConfig()).toMatchSnapshot();
+        });
+    });
+
+    describe('with async validation', () => {
+        describe('using timer-based validator', () => {
+            let asyncFixture: ComponentFixture<SingleFileUploadWithAsyncValidator>;
+            let asyncComponent: SingleFileUploadWithAsyncValidator;
+
+            beforeEach(() => {
+                asyncFixture = TestBed.createComponent(SingleFileUploadWithAsyncValidator);
+                asyncComponent = asyncFixture.componentInstance;
+                asyncFixture.detectChanges();
+            });
+
+            it('should have PENDING status immediately after file is selected', fakeAsync(() => {
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(asyncComponent.control.status).toBe('PENDING');
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+            }));
+
+            it('should have VALID status after async validator resolves', fakeAsync(() => {
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(asyncComponent.control.status).toBe('VALID');
+            }));
+
+            it('should emit PENDING then VALID via statusChanges', fakeAsync(() => {
+                const statuses: FormControlStatus[] = [];
+                const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
+
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(statuses).toEqual(['PENDING']);
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(statuses).toEqual(['PENDING', 'VALID']);
+
+                subscription.unsubscribe();
+            }));
+        });
+
+        describe('using invalid timer-based validator', () => {
+            let asyncFixture: ComponentFixture<SingleFileUploadWithInvalidAsyncValidator>;
+            let asyncComponent: SingleFileUploadWithInvalidAsyncValidator;
+
+            beforeEach(() => {
+                asyncFixture = TestBed.createComponent(SingleFileUploadWithInvalidAsyncValidator);
+                asyncComponent = asyncFixture.componentInstance;
+                asyncFixture.detectChanges();
+            });
+
+            it('should have INVALID status after async validator resolves with errors', fakeAsync(() => {
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(asyncComponent.control.status).toBe('INVALID');
+                expect(asyncComponent.control.errors).toEqual({ asyncError: { actual: false } });
+            }));
+
+            it('should emit PENDING then INVALID via statusChanges', fakeAsync(() => {
+                const statuses: FormControlStatus[] = [];
+                const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
+
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(statuses).toEqual(['PENDING']);
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(statuses).toEqual(['PENDING', 'INVALID']);
+
+                subscription.unsubscribe();
+            }));
+        });
+
+        describe('using FileReader-based validator', () => {
+            let asyncFixture: ComponentFixture<SingleFileUploadWithFileReaderValidator>;
+            let asyncComponent: SingleFileUploadWithFileReaderValidator;
+            let originalFileReader: typeof FileReader;
+
+            const setupFileReaderMock = (content: string, shouldError = false) => {
+                (global as any).FileReader = jest.fn().mockImplementation(() => {
+                    const reader: any = { result: null, onload: null, onerror: null };
+
+                    reader.readAsText = function () {
+                        setTimeout(() => {
+                            if (shouldError) {
+                                reader.onerror?.(new Event('error'));
+                            } else {
+                                reader.result = content;
+                                reader.onload?.(new Event('load'));
+                            }
+                        }, 0);
+                    };
+
+                    return reader;
+                });
+            };
+
+            beforeEach(() => {
+                originalFileReader = global.FileReader;
+                asyncFixture = TestBed.createComponent(SingleFileUploadWithFileReaderValidator);
+                asyncComponent = asyncFixture.componentInstance;
+                asyncFixture.detectChanges();
+            });
+
+            afterEach(() => {
+                global.FileReader = originalFileReader;
+            });
+
+            it('should have VALID status when file content is within line limit', fakeAsync(() => {
+                // 2 lines — below MAX_FILE_LINES_FOR_TEST (3)
+                const content = Array.from({ length: 2 }, (_, i) => `line${i}`).join('\n');
+
+                setupFileReaderMock(content);
+
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(asyncComponent.control.status).toBe('PENDING');
+
+                tick(0);
+
+                expect(asyncComponent.control.status).toBe('VALID');
+                expect(asyncComponent.control.errors).toBeNull();
+            }));
+
+            it('should have INVALID status when file content exceeds line limit', fakeAsync(() => {
+                // 4 lines — exceeds MAX_FILE_LINES_FOR_TEST (3)
+                const content = Array.from({ length: 4 }, (_, i) => `line${i}`).join('\n');
+
+                setupFileReaderMock(content);
+
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                expect(asyncComponent.control.status).toBe('PENDING');
+
+                tick(0);
+
+                expect(asyncComponent.control.status).toBe('INVALID');
+                expect(asyncComponent.control.errors).toEqual({
+                    maxLines: { max: MAX_FILE_LINES_FOR_TEST, actual: 4 }
+                });
+            }));
+
+            it('should have INVALID status with fileReadError when FileReader fails', fakeAsync(() => {
+                setupFileReaderMock('', true);
+
+                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                asyncFixture.detectChanges();
+
+                tick(0);
+
+                expect(asyncComponent.control.status).toBe('INVALID');
+                expect(asyncComponent.control.errors).toEqual({ fileReadError: true });
+            }));
         });
     });
 });
@@ -988,6 +1309,86 @@ class ControlValueAccessorMultipleFileUpload {
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
+}
+
+@Component({
+    selector: '',
+    imports: [KbqFileUploadModule, ReactiveFormsModule],
+    template: `
+        <kbq-file-upload #fileUpload [formControl]="control" />
+    `
+})
+class SingleFileUploadWithAsyncValidator {
+    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly control = new FormControl<KbqFileItem | null>(null, {
+        asyncValidators: [getAsyncValidator()]
+    });
+
+    constructor(public elementRef: ElementRef) {}
+}
+
+@Component({
+    selector: '',
+    imports: [KbqFileUploadModule, ReactiveFormsModule],
+    template: `
+        <kbq-file-upload #fileUpload [formControl]="control" />
+    `
+})
+class SingleFileUploadWithInvalidAsyncValidator {
+    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly control = new FormControl<KbqFileItem | null>(null, {
+        asyncValidators: [getAsyncValidator(false)]
+    });
+
+    constructor(public elementRef: ElementRef) {}
+}
+
+@Component({
+    selector: '',
+    imports: [KbqFileUploadModule, ReactiveFormsModule],
+    template: `
+        <kbq-file-upload #fileUpload [formControl]="control" />
+    `
+})
+class SingleFileUploadWithFileReaderValidator {
+    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly control = new FormControl<KbqFileItem | null>(null, {
+        asyncValidators: [fileContentLinesValidator(MAX_FILE_LINES_FOR_TEST)]
+    });
+
+    constructor(public elementRef: ElementRef) {}
+}
+
+@Component({
+    selector: '',
+    imports: [KbqFileUploadModule, ReactiveFormsModule],
+    template: `
+        <kbq-multiple-file-upload #fileUpload [formControl]="control" />
+    `
+})
+class MultipleFileUploadWithAsyncValidator {
+    @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
+    readonly control = new FormControl<KbqFileItem[] | null>(null, {
+        asyncValidators: [getAsyncValidator()]
+    });
+
+    constructor(public elementRef: ElementRef) {}
+}
+
+@Component({
+    selector: '',
+    imports: [KbqFileUploadModule, ReactiveFormsModule],
+    template: `
+        <kbq-multiple-file-upload #fileUpload [formControl]="control" />
+    `
+})
+class MultipleFileUploadWithInvalidAsyncValidator {
+    @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
+    readonly control = new FormControl<KbqFileItem[] | null>(null, {
+        asyncValidators: [getAsyncValidator(false)]
+    });
+
+    constructor(public elementRef: ElementRef) {}
 }
 
 // Test host component
