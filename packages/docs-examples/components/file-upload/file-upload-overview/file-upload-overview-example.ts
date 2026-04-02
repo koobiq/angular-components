@@ -3,10 +3,10 @@ import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title File-upload single
+ * @title File-upload overview
  */
 @Component({
-    selector: 'file-upload-single-overview-example',
+    selector: 'file-upload-overview-example',
     imports: [
         KbqIconModule,
         KbqSingleFileUploadComponent
@@ -18,4 +18,4 @@ import { KbqIconModule } from '@koobiq/components/icon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleOverviewExample {}
+export class FileUploadOverviewExample {}

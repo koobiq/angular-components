@@ -12,7 +12,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <code-block-with-max-height-example />
         <hr />
-        <code-block-with-line-numbers-example />
+        <code-block-overview-example />
         <hr />
         <code-block-with-tabs-example />
         <hr />

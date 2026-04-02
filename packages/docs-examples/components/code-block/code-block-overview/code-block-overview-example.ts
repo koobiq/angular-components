@@ -7,7 +7,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Code-block with lineNumbers attribute
  */
 @Component({
-    selector: 'code-block-with-line-numbers-example',
+    selector: 'code-block-overview-example',
     imports: [
         KbqCodeBlockModule,
         KbqToggleModule,
@@ -19,7 +19,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockWithLineNumbersExample {
+export class CodeBlockOverviewExample {
     readonly files: KbqCodeBlockFile[] = [
         {
             content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,

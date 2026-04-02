@@ -5,9 +5,9 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
  * @title Markdown headers
  */
 @Component({
-    selector: 'markdown-headers-example',
+    selector: 'markdown-overview-example',
     imports: [KbqMarkdownModule],
-    templateUrl: './markdown-headers-example.html',
+    templateUrl: './markdown-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownHeadersExample {}
+export class MarkdownOverviewExample {}

@@ -12,7 +12,7 @@ import { ButtonOverviewExample } from 'packages/docs-examples/components/button'
 import { ButtonToggleAlignmentOverviewExample } from 'packages/docs-examples/components/button-toggle';
 import { CheckboxOverviewExample } from 'packages/docs-examples/components/checkbox';
 import { ClampedTextOverviewExample } from 'packages/docs-examples/components/clamped-text';
-import { CodeBlockWithLineNumbersExample } from 'packages/docs-examples/components/code-block';
+import { CodeBlockOverviewExample } from 'packages/docs-examples/components/code-block';
 import { ContentPanelOverviewExample } from 'packages/docs-examples/components/content-panel';
 import { DatepickerOverviewExample } from 'packages/docs-examples/components/datepicker';
 import { DividerOverviewExample } from 'packages/docs-examples/components/divider';
@@ -33,17 +33,17 @@ import { InputNumberOverviewExample } from 'packages/docs-examples/components/in
 import { LinkOverviewExample } from 'packages/docs-examples/components/link';
 import { ListOverviewExample } from 'packages/docs-examples/components/list';
 import { LoaderOverlayOverviewExample } from 'packages/docs-examples/components/loader-overlay';
-import { MarkdownHeadersExample } from 'packages/docs-examples/components/markdown';
+import { MarkdownOverviewExample } from 'packages/docs-examples/components/markdown';
 import { ModalOverviewExample } from 'packages/docs-examples/components/modal';
 import { NavbarOverviewExample } from 'packages/docs-examples/components/navbar';
 import { NavbarIcOverviewExample } from 'packages/docs-examples/components/navbar-ic';
 import { NotificationCenterOverviewExample } from 'packages/docs-examples/components/notification-center';
 import { OverflowItemsOverviewExample } from 'packages/docs-examples/components/overflow-items';
-import { PopoverCommonExample } from 'packages/docs-examples/components/popover';
+import { PopoverOverviewExample } from 'packages/docs-examples/components/popover';
 import { ProgressBarOverviewExample } from 'packages/docs-examples/components/progress-bar';
 import { ProgressSpinnerOverviewExample } from 'packages/docs-examples/components/progress-spinner';
 import { RadioSizeExample } from 'packages/docs-examples/components/radio';
-import { ScrollbarWithOptionsExample } from 'packages/docs-examples/components/scrollbar';
+import { ScrollbarOverviewExample } from 'packages/docs-examples/components/scrollbar';
 import { SearchExpandableOverviewExample } from 'packages/docs-examples/components/search-expandable';
 import { SelectOverviewExample } from 'packages/docs-examples/components/select';
 import { SidebarOverviewExample } from 'packages/docs-examples/components/sidebar';
@@ -56,7 +56,7 @@ import {
     TagAutocompleteOverviewExample,
     TagEditableExample,
     TagInputOverviewExample
-} from 'packages/docs-examples/components/tag';
+} from 'packages/docs-examples/components/tags';
 import { TextareaOverviewExample } from 'packages/docs-examples/components/textarea';
 import { TimeRangeOverviewExample } from 'packages/docs-examples/components/time-range';
 import { TimepickerValidationSymbolsExample } from 'packages/docs-examples/components/timepicker';
@@ -87,7 +87,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         ButtonToggleAlignmentOverviewExample,
         CheckboxOverviewExample,
         ClampedTextOverviewExample,
-        CodeBlockWithLineNumbersExample,
+        CodeBlockOverviewExample,
         ContentPanelOverviewExample,
         DatepickerOverviewExample,
         DividerOverviewExample,
@@ -106,13 +106,13 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         LinkOverviewExample,
         ListOverviewExample,
         LoaderOverlayOverviewExample,
-        MarkdownHeadersExample,
+        MarkdownOverviewExample,
         ModalOverviewExample,
         NavbarOverviewExample,
         NavbarIcOverviewExample,
         NotificationCenterOverviewExample,
         OverflowItemsOverviewExample,
-        PopoverCommonExample,
+        PopoverOverviewExample,
         ProgressBarOverviewExample,
         ProgressSpinnerOverviewExample,
         RadioSizeExample,
@@ -122,7 +122,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         SidepanelOverlayedExample,
         SplitButtonOverviewExample,
         SplitterOverviewExample,
-        ScrollbarWithOptionsExample,
+        ScrollbarOverviewExample,
         TableOverviewExample,
         TabsNavBarOverviewExample,
         TagAutocompleteOverviewExample,
@@ -164,7 +164,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <clamped-text-overview-example />
         <hr />
-        <code-block-with-line-numbers-example />
+        <code-block-overview-example />
         <hr />
         <icon-item-default-example />
         <hr />
@@ -202,7 +202,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <loader-overlay-overview-example />
         <hr />
-        <markdown-headers-example />
+        <markdown-overview-example />
         <hr />
         <modal-overview-example />
         <hr />
@@ -214,7 +214,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <overflow-items-overview-example />
         <hr />
-        <popover-common-example />
+        <popover-overview-example />
         <hr />
         <progress-bar-overview-example />
         <hr />
@@ -234,7 +234,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <splitter-overview-example />
         <hr />
-        <scrollbar-with-options-example />
+        <scrollbar-overview-example />
         <hr />
         <table-overview-example />
         <hr />

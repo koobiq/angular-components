@@ -1,6 +1,6 @@
 Позволяет пользователю загрузить файлы в продукт.
 
-<!-- example(file-upload-single-overview) -->
+<!-- example(file-upload-overview) -->
 
 ### Множественная загрузка
 

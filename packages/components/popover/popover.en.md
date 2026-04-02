@@ -1,6 +1,6 @@
 A popover is a small non-modal dialog without dimming that opens next to a trigger element. It can contain text, input fields, and any other controls.
 
-<!-- example(popover-common) -->
+<!-- example(popover-overview) -->
 
 ### States
 

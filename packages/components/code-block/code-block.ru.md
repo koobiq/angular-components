@@ -17,7 +17,7 @@ npm install highlight.js@^11
 
 Пронумеровать строки полезно, чтобы дать ссылку на конкретное место в документе. Нумерация строк отключена по умолчанию, включается при помощи атрибута `lineNumbers`.
 
-<!-- example(code-block-with-line-numbers) -->
+<!-- example(code-block-overview) -->
 
 ### Шапка с заголовком
 

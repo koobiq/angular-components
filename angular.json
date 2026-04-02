@@ -79,6 +79,11 @@
                                 "glob": "sitemap.xml",
                                 "input": "apps/docs/src",
                                 "output": "/"
+                            },
+                            {
+                                "glob": "llms.txt",
+                                "input": "apps/docs/src",
+                                "output": "/"
                             }
                         ],
                         "stylePreprocessorOptions": {

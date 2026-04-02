@@ -18,10 +18,10 @@ import { FileUploadMultipleRequiredReactiveValidationExample } from './file-uplo
 import { FileUploadMultipleWithCustomIconExample } from './file-upload-multiple-with-custom-icon/file-upload-multiple-with-custom-icon-example';
 import { FileUploadMultipleWithFixedHeightExample } from './file-upload-multiple-with-fixed-height/file-upload-multiple-with-fixed-height-example';
 import { FileUploadMultipleWithMaxHeightExample } from './file-upload-multiple-with-max-height/file-upload-multiple-with-max-height-example';
+import { FileUploadOverviewExample } from './file-upload-overview/file-upload-overview-example';
 import { FileUploadPrimitiveExample } from './file-upload-primitive/file-upload-primitive-example';
 import { FileUploadSingleAcceptValidationExample } from './file-upload-single-accept-validation/file-upload-single-accept-validation-example';
 import { FileUploadSingleMixedValidationExample } from './file-upload-single-mixed-validation/file-upload-single-mixed-validation-example';
-import { FileUploadSingleOverviewExample } from './file-upload-single-overview/file-upload-single-overview-example';
 import { FileUploadSingleRequiredReactiveValidationExample } from './file-upload-single-required-reactive-validation/file-upload-single-required-reactive-validation-example';
 import { FileUploadSingleValidationReactiveFormsOverviewExample } from './file-upload-single-validation-reactive-forms-overview/file-upload-single-validation-reactive-forms-overview-example';
 import { FileUploadSingleWithSignalExample } from './file-upload-single-with-signal/file-upload-single-with-signal-example';
@@ -47,10 +47,10 @@ export {
     FileUploadMultipleWithCustomIconExample,
     FileUploadMultipleWithFixedHeightExample,
     FileUploadMultipleWithMaxHeightExample,
+    FileUploadOverviewExample,
     FileUploadPrimitiveExample,
     FileUploadSingleAcceptValidationExample,
     FileUploadSingleMixedValidationExample,
-    FileUploadSingleOverviewExample,
     FileUploadSingleRequiredReactiveValidationExample,
     FileUploadSingleValidationReactiveFormsOverviewExample,
     FileUploadSingleWithSignalExample,
@@ -62,7 +62,7 @@ const EXAMPLES = [
     FileUploadAllowedExample,
     FileUploadCustomTextViaInputExample,
     FileUploadMultipleErrorExample,
-    FileUploadSingleOverviewExample,
+    FileUploadOverviewExample,
     FileUploadSingleWithSizeExample,
     FileUploadMultipleWithCustomIconExample,
     FileUploadMultipleWithMaxHeightExample,

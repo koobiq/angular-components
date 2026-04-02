@@ -8,7 +8,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover common
  */
 @Component({
-    selector: 'popover-common-example',
+    selector: 'popover-overview-example',
     imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],
     template: `
         <ng-template #customContent>
@@ -29,7 +29,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
             #kbqPopover="kbqPopover"
             kbq-button
             kbqPopover
-            [kbqPopoverClass]="'popover-common-example'"
+            [kbqPopoverClass]="'popover-overview-example'"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
         >
@@ -37,7 +37,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         </button>
     `,
     styles: `
-        ::ng-deep .kbq-popover.kbq-popover_medium.popover-common-example {
+        ::ng-deep .kbq-popover.kbq-popover_medium.popover-overview-example {
             width: 400px;
         }
     `,
@@ -46,4 +46,4 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverCommonExample {}
+export class PopoverOverviewExample {}

@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { PopoverArrowAndOffsetExample } from './popover-arrow-and-offset/popover-arrow-and-offset-example';
 import { PopoverArrowlessExample } from './popover-arrowless/popover-arrowless-example';
 import { PopoverCloseExample } from './popover-close/popover-close-example';
-import { PopoverCommonExample } from './popover-common/popover-common-example';
 import { PopoverContentExample } from './popover-content/popover-content-example';
 import { PopoverHeaderExample } from './popover-header/popover-header-example';
 import { PopoverHeightExample } from './popover-height/popover-height-example';
 import { PopoverHoverExample } from './popover-hover/popover-hover-example';
+import { PopoverOverviewExample } from './popover-overview/popover-overview-example';
 import { PopoverPaddingsExample } from './popover-paddings/popover-paddings-example';
 import { PopoverPlacementCenterExample } from './popover-placement-center/popover-placement-center-example';
 import { PopoverPlacementEdgesExample } from './popover-placement-edges/popover-placement-edges-example';
@@ -19,11 +19,11 @@ export {
     PopoverArrowAndOffsetExample,
     PopoverArrowlessExample,
     PopoverCloseExample,
-    PopoverCommonExample,
     PopoverContentExample,
     PopoverHeaderExample,
     PopoverHeightExample,
     PopoverHoverExample,
+    PopoverOverviewExample,
     PopoverPaddingsExample,
     PopoverPlacementCenterExample,
     PopoverPlacementEdgesExample,
@@ -36,7 +36,7 @@ export {
 const EXAMPLES = [
     PopoverArrowAndOffsetExample,
     PopoverArrowlessExample,
-    PopoverCommonExample,
+    PopoverOverviewExample,
     PopoverWidthExample,
     PopoverHeightExample,
     PopoverCloseExample,

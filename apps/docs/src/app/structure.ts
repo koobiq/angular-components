@@ -401,7 +401,7 @@ const structure: DocsStructure = makeStructure({
                         en: 'Clamped list'
                     },
                     hasApi: true,
-                    apiId: 'clamped-list',
+                    apiId: 'clamped-text',
                     hasExamples: false,
                     isNew: expiresAt('2026-03-31')
                 },

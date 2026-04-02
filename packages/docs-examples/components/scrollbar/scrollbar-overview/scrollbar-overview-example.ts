@@ -5,7 +5,7 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
  * @title Scrollbar with options
  */
 @Component({
-    selector: 'scrollbar-with-options-example',
+    selector: 'scrollbar-overview-example',
     imports: [KbqScrollbarModule],
     template: `
         <kbq-scrollbar style="width: 200px; height: 200px;" [options]="options">
@@ -17,7 +17,7 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarWithOptionsExample {
+export class ScrollbarOverviewExample {
     readonly options: KbqScrollbarOptions = {
         scrollbars: {
             autoHide: 'never'

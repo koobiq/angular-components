@@ -15,9 +15,9 @@ import {
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import {
-    SidepanelModalModeExample,
     SidepanelNormalModeExample,
     SidepanelOverlayedExample,
+    SidepanelOverviewExample,
     SidepanelSizesExample,
     SidepanelWithDynamicConfigUpdateExample
 } from '../../docs-examples/components/sidepanel';
@@ -26,13 +26,13 @@ import {
     selector: 'dev-examples',
     imports: [
         SidepanelWithDynamicConfigUpdateExample,
-        SidepanelModalModeExample,
+        SidepanelOverviewExample,
         SidepanelNormalModeExample,
         SidepanelOverlayedExample,
         SidepanelSizesExample
     ],
     template: `
-        <sidepanel-modal-mode-example />
+        <sidepanel-overview-example />
         <hr />
         <sidepanel-normal-mode-example />
         <hr />
