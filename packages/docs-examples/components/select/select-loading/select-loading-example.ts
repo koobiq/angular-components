@@ -6,9 +6,8 @@ import { AsyncPipe } from '@angular/common';
 import { KbqHighlightPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { delay, Observable, race, Subject, switchMap, throwError, timer } from 'rxjs';
+import { delay, Observable, race, Subject, switchMap, tap, throwError, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { tap } from 'rxjs';
 
 
 type Option = {
@@ -145,23 +144,9 @@ export class SelectLoadingExample {
     readonly searchControl = new FormControl('', { nonNullable: true });
 
     readonly filteredOptions$ = this.searchControl.valueChanges.pipe(
-        tap((search: string) => {
-            console.log('time: ', Date.now().toString());
-            if (!!search) {
-                this.select().isLoading$.next(true);
-            }
-            console.log('tap: ');
-
-            return search;
-        }),
+        tap(() => this.select().loadingWithDelay.next(true)),
         switchMap((search: string) => this.service.getOptions(search)),
-        tap((values) => {
-            console.log('time: ', Date.now().toString());
-            this.select().isLoading$.next(false);
-            console.log('tap: ');
-
-            return values;
-        }),
+        tap(() => this.select().loadingWithDelay.next(false))
     );
 
     protected resetOptions() {

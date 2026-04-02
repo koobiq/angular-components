@@ -39,7 +39,8 @@ import {
     inject,
     isDevMode,
     numberAttribute,
-    output
+    output,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -111,11 +112,10 @@ import {
     distinctUntilChanged,
     filter,
     map,
-    mapTo,
     startWith,
     switchMap,
     take,
-    takeUntil, tap
+    takeUntil
 } from 'rxjs/operators';
 import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 
@@ -687,18 +687,20 @@ export class KbqSelect
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
-    // readonly isLoading = signal(false);
+    readonly isLoading = signal(false);
 
-    isLoading$ = new Subject<boolean>();
-    lastTrueAt = 0;
+    readonly loadingWithDelay = new Subject<boolean>();
 
-    isLoading = toSignal(
-        this.isLoading$.pipe(
+    protected isLoadingWithDelay = toSignal(
+        this.loadingWithDelay.pipe(
             switchMap((value) => {
                 if (value) {
                     return timer(delayBeforeOpeningPanelWithoutOptions).pipe(
-                        tap(() => (this.lastTrueAt = Date.now())),
-                        mapTo(true)
+                        map(() => {
+                            this.lastTrueAt = Date.now();
+
+                            return true;
+                        })
                     );
                 }
 
@@ -712,12 +714,14 @@ export class KbqSelect
 
                 return delay === 0
                     ? of(false)
-                    : timer(delay).pipe(mapTo(false));
+                    : timer(delay).pipe(map(() => false));
             }),
             distinctUntilChanged()
         ),
         { initialValue: false }
     );
+
+    private lastTrueAt = 0;
 
     protected loadingTimerId?: ReturnType<typeof setTimeout>;
 
@@ -824,16 +828,6 @@ export class KbqSelect
                 filter(() => !this.keyManager.activeItem)
             )
             .subscribe(() => this.keyManager.updateActiveItem(0));
-
-        this.search?.changes
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                delay(0)
-            )
-            .subscribe(() => {
-                console.log('this.isLoading();: ');
-                // this.isLoading.set(true);
-            });
     }
 
     ngOnDestroy() {
@@ -919,14 +913,13 @@ export class KbqSelect
         this.openPanel();
 
         if (this.noOptions) {
-            this.isLoading$.next(true);
+            this.isLoading.set(true);
 
-            // проверить после минимального времени показа лоадера
             this.loadingTimerId = setTimeout(() => {
                 this.loadingTimerId = undefined;
-                // опции появились ?
+
                 if (!this.noOptions) {
-                    this.isLoading$.next(false);
+                    this.isLoading.set(false);
                 }
             }, minimumTimeToDisplayLoading);
         }
@@ -1104,7 +1097,7 @@ export class KbqSelect
 
         this.options.changes.pipe(delay(1)).subscribe(() => {
             if (this.isLoading() && !this.loadingTimerId) {
-                this.isLoading$.next(false);
+                this.isLoading.set(false);
             }
 
             this.setOverlayPosition();

@@ -129,7 +129,7 @@
             [@fadeInContent]="'showing'"
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
-        @if (!isLoading()) {
+        @if (!isLoading() && !isLoadingWithDelay()) {
 <!--            @if (noOptions) {-->
 <!--                <ng-content select="[kbq-select-no-options]">-->
 <!--                    <div class="kbq-text-normal layout-column layout-align-center-center layout-margin-top-4xl layout-margin-bottom-4xl"-->
@@ -146,7 +146,7 @@
             }
             <ng-content />
         }
-        @if (isLoading()) {
+        @if (isLoading() || isLoadingWithDelay()) {
             <kbq-progress-spinner class="layout-margin-top-4xl layout-margin-bottom-4xl layout-align-center-center" [mode]="'indeterminate'" />
         }
         </div>
