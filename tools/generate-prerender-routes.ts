@@ -9,12 +9,13 @@ import {
     DocsStructureTokensTab
 } from '../apps/docs/src/app/structure';
 
-const timeLabel = 'Runtime';
+const TIME_LABEL = 'Runtime';
+const FILE_NAME = 'prerender-routes.txt';
 
-console.time(timeLabel);
+console.time(TIME_LABEL);
 
 try {
-    console.info('🚀 Generating prerender-routes.txt');
+    console.info(`🚀 Generating ${FILE_NAME}`);
 
     const paths = docsGetItems()
         .map(({ categoryId, id, hasApi, hasExamples }) => {
@@ -40,11 +41,11 @@ try {
         ...paths.map((path) => `/${locale}/${path}`)
     ]);
 
-    writeFileSync(join(process.cwd(), 'apps/docs/src/prerender-routes.txt'), routes.join('\n') + '\n');
+    writeFileSync(join(process.cwd(), `apps/docs/src/${FILE_NAME}`), routes.join('\n') + '\n');
 
-    console.info('✅ prerender-routes.txt has been successfully generated!');
+    console.info(`✅ ${FILE_NAME} has been successfully generated!`);
 } catch (error) {
-    console.info('❌ Error occurred while generating prerender-routes.txt! Details:\n', error);
+    console.info(`❌ Error occurred while generating ${FILE_NAME}! Details:\n`, error);
 } finally {
-    console.timeEnd(timeLabel);
+    console.timeEnd(TIME_LABEL);
 }

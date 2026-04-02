@@ -103,9 +103,6 @@
                         "server": "apps/docs/src/main.server.ts",
                         "prerender": {
                             "routesFile": "apps/docs/src/prerender-routes.txt"
-                        },
-                        "ssr": {
-                            "entry": "apps/docs/src/server.ts"
                         }
                     },
                     "configurations": {

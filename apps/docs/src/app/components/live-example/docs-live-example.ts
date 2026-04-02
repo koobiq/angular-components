@@ -1,6 +1,8 @@
 import { CdkPortal, ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
+    afterNextRender,
     ApplicationRef,
     Component,
     ComponentFactoryResolver,
@@ -12,11 +14,13 @@ import {
     NgZone,
     OnDestroy,
     Output,
+    PLATFORM_ID,
     SecurityContext,
+    signal,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -39,7 +43,11 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
         KbqLinkModule
     ],
     template: `
-        {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
+        @if (documentContent()) {
+            <div [innerHTML]="documentContent()"></div>
+        } @else {
+            {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
+        }
         <ng-template let-htmlContent let-contentToCopy="textContent" let-language="language" cdkPortal>
             <kbq-code-block filled [files]="[{ content: contentToCopy, language }]" />
         </ng-template>
@@ -80,11 +88,14 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     /** The document text. It should not be HTML encoded. */
     textContent = '';
 
+    readonly documentContent = signal<SafeHtml | null>(null);
+
     private cache: Record<string, Observable<string>> = {};
 
     private portalHosts: DomPortalOutlet[] = [];
     private documentFetchSubscription: Subscription;
 
+    private readonly platformId = inject(PLATFORM_ID);
     private readonly appRef = inject(ApplicationRef);
     private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -134,23 +145,34 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
             return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
         });
 
-        this.nativeElement.innerHTML = rawDocument;
-        this.textContent = this.nativeElement.textContent || '';
+        this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(rawDocument));
 
-        this.loadComponents('koobiq-docs-example', DocsLiveExampleViewerComponent);
-        this.initCodeBlocks();
-        this.initCodeSnippets();
+        if (isPlatformBrowser(this.platformId)) {
+            // afterNextRender guarantees the [innerHTML] binding has been applied to the DOM
+            // before we query for elements to attach portals to.
+            afterNextRender(
+                () => {
+                    this.textContent = this.nativeElement.textContent || '';
+                    this.loadComponents('koobiq-docs-example', DocsLiveExampleViewerComponent);
+                    this.initCodeBlocks();
+                    this.initCodeSnippets();
 
-        // Resolving and creating components dynamically in Angular happens synchronously, but since
-        // we want to emit the output if the components are actually rendered completely, we wait
-        // until the Angular zone becomes stable.
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
+                    // Emit after dynamically created components have stabilised.
+                    this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
+                },
+                { injector: this.injector }
+            );
+        }
     }
 
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
         console.error(error);
-        this.nativeElement.innerHTML = `Failed to load document: ${url}. Error: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Create issue</a>`;
+        const errorHtml = this.isRuLocale()
+            ? `Не удалось загрузить документ: ${url}. Ошибка: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Создать issue</a>`
+            : `Failed to load document: ${url}. Error: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Create issue</a>`;
+
+        this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(errorHtml));
 
         this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.next());
     }

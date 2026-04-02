@@ -9,6 +9,7 @@
 /en/main/design-tokens/border-radius
 /en/main/design-tokens/sizes
 /en/main/design-tokens/palette
+/en/main/design-tokens/semantic
 /en/main/schematics/overview
 /en/main/migration/overview
 /en/components/accordion/overview
@@ -200,6 +201,7 @@
 /ru/main/design-tokens/border-radius
 /ru/main/design-tokens/sizes
 /ru/main/design-tokens/palette
+/ru/main/design-tokens/semantic
 /ru/main/schematics/overview
 /ru/main/migration/overview
 /ru/components/accordion/overview
