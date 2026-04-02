@@ -157,6 +157,8 @@ export class DevCustomTextDirective {}
         <file-upload-single-mixed-validation-example />
         <hr />
         <file-upload-primitive-example />
+        <hr />
+        <file-upload-single-async-validation-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

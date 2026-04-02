@@ -20,6 +20,7 @@ import { FileUploadMultipleWithFixedHeightExample } from './file-upload-multiple
 import { FileUploadMultipleWithMaxHeightExample } from './file-upload-multiple-with-max-height/file-upload-multiple-with-max-height-example';
 import { FileUploadPrimitiveExample } from './file-upload-primitive/file-upload-primitive-example';
 import { FileUploadSingleAcceptValidationExample } from './file-upload-single-accept-validation/file-upload-single-accept-validation-example';
+import { FileUploadSingleAsyncValidationExample } from './file-upload-single-async-validation/file-upload-single-async-validation-example';
 import { FileUploadSingleMixedValidationExample } from './file-upload-single-mixed-validation/file-upload-single-mixed-validation-example';
 import { FileUploadSingleOverviewExample } from './file-upload-single-overview/file-upload-single-overview-example';
 import { FileUploadSingleRequiredReactiveValidationExample } from './file-upload-single-required-reactive-validation/file-upload-single-required-reactive-validation-example';
@@ -49,6 +50,7 @@ export {
     FileUploadMultipleWithMaxHeightExample,
     FileUploadPrimitiveExample,
     FileUploadSingleAcceptValidationExample,
+    FileUploadSingleAsyncValidationExample,
     FileUploadSingleMixedValidationExample,
     FileUploadSingleOverviewExample,
     FileUploadSingleRequiredReactiveValidationExample,
@@ -84,7 +86,8 @@ const EXAMPLES = [
     FileUploadPrimitiveExample,
     FileUploadDropzoneExample,
     FileUploadLocalDropzoneExample,
-    FileUploadMultipleErrorFilledExample
+    FileUploadMultipleErrorFilledExample,
+    FileUploadSingleAsyncValidationExample
 ];
 
 @NgModule({
