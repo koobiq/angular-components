@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, NgZone, VERSION } from '@angular/core';
 import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
-import { Project, ProjectFiles, default as StackBlitzSDK } from '@stackblitz/sdk';
+import StackBlitzSDK, { Project, ProjectFiles } from '@stackblitz/sdk';
 import { firstValueFrom, Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { docsKoobiqVersion } from '../../version';

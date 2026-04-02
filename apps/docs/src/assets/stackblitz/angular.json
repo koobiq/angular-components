@@ -12,7 +12,6 @@
                 "@schematics/angular:component": {
                     "style": "scss",
                     "changeDetection": "OnPush",
-                    "skipTest": true,
                     "inlineTemplate": true,
                     "inlineStyle": true,
                     "skipTests": true
@@ -32,7 +31,6 @@
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "tsConfig": "tsconfig.json",
-                        "assets": [],
                         "styles": [
                             "node_modules/@koobiq/icons/fonts/kbq-icons.css",
                             "node_modules/@koobiq/design-tokens/web/css-tokens.css",
@@ -41,7 +39,6 @@
                             "node_modules/@koobiq/components/prebuilt-themes/theme.css",
                             "src/styles.scss"
                         ],
-                        "scripts": [],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
