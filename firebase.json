@@ -1,5 +1,5 @@
 {
-    "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/v13.35.1/schema/firebase-config.json",
+    "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/v15.3.1/schema/firebase-config.json",
     "hosting": [
         {
             "target": "stable",
@@ -24,6 +24,15 @@
                     ]
                 },
                 {
+                    "source": "/**/*.html",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/**",
                     "headers": [
                         {
@@ -75,11 +84,12 @@
                     ]
                 },
                 {
-                    "source": "/*.@(js|css)",
+                    "source": "/**/*.@(js|css)",
                     "headers": [
                         {
                             "key": "Cache-Control",
-                            "value": "public, max-age=31536000"
+                            // Hashed JS/CSS bundles are immutable — cache forever.
+                            "value": "public, max-age=31536000, immutable"
                         }
                     ]
                 }
@@ -102,8 +112,19 @@
                     "headers": [
                         {
                             "key": "Cache-Control",
-                            // The `index.html` file (or when loaded as SPA), should never be cached. Older
-                            // JavaScript sources and assets would be loaded that might no longer be available.
+                            // Pre-rendered SSG pages and SPA fallback routes should never be cached.
+                            // Older JavaScript sources and assets would be loaded that might no longer be available.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
+                    "source": "/**/*.html",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // HTML files (index.csr.html, pre-rendered index.html) must never be cached
+                            // as they reference hashed assets from the current deployment.
                             "value": "no-cache"
                         }
                     ]
@@ -164,11 +185,12 @@
                     ]
                 },
                 {
-                    "source": "/*.@(js|css)",
+                    "source": "/**/*.@(js|css)",
                     "headers": [
                         {
                             "key": "Cache-Control",
-                            "value": "public, max-age=31536000"
+                            // Hashed JS/CSS bundles are immutable — cache forever.
+                            "value": "public, max-age=31536000, immutable"
                         }
                     ]
                 }
