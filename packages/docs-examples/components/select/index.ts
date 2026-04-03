@@ -19,6 +19,9 @@ import { SelectWithPanelMinWidthExample } from './select-with-panel-min-width/se
 import { SelectWithPanelWidthAutoExample } from './select-with-panel-width-auto/select-with-panel-width-auto-example';
 import { SelectWithPanelWidthDefaultExample } from './select-with-panel-width-default/select-with-panel-width-default-example';
 import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixed/select-with-panel-width-fixed-example';
+import { SelectLoadingExample } from './select-loading/select-loading-example';
+import { SelectEmptyExample } from './select-empty/select-empty-example';
+import { SelectLoadingErrorExample } from './select-loading-error/select-loading-error-example';
 
 export {
     SelectCleanerExample,
@@ -40,7 +43,10 @@ export {
     SelectWithPanelMinWidthExample,
     SelectWithPanelWidthAutoExample,
     SelectWithPanelWidthDefaultExample,
-    SelectWithPanelWidthFixedExample
+    SelectWithPanelWidthFixedExample,
+    SelectLoadingExample,
+    SelectEmptyExample,
+    SelectLoadingErrorExample
 };
 
 const EXAMPLES = [
@@ -64,7 +70,10 @@ const EXAMPLES = [
     SelectWithPanelWidthFixedExample,
     SelectPrioritizedSelectedExample,
     SelectWithPanelWidthFixedExample,
-    SelectWithPanelMinWidthExample
+    SelectWithPanelMinWidthExample,
+    SelectLoadingExample,
+    SelectEmptyExample,
+    SelectLoadingErrorExample
 ];
 
 @NgModule({

@@ -38,7 +38,8 @@ import {
     booleanAttribute,
     inject,
     isDevMode,
-    numberAttribute
+    numberAttribute,
+    output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -78,6 +79,7 @@ import {
     KbqOptionSelectionChange,
     KbqSelectFooter,
     KbqSelectMatcher,
+    KbqSelectNoOptions,
     KbqSelectSearch,
     KbqSelectTrigger,
     KbqVirtualOption,
@@ -86,13 +88,22 @@ import {
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
     isUndefined,
-    kbqSelectAnimations
+    kbqSelectAnimations,
+    KbqSelectSearchEmptyResult
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { BehaviorSubject, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
+import {
+    BehaviorSubject,
+    Observable,
+    Subject,
+    Subscription,
+    defer,
+    fromEvent,
+    merge
+} from 'rxjs';
 import {
     debounceTime,
     delay,
@@ -149,6 +160,9 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         useValue: options
     };
 };
+
+export const delayBeforeDisplayingResultWithoutOptions = 101;
+export const minimumTimeToDisplayLoading = 300;
 
 @Component({
     selector: 'kbq-select',
@@ -312,6 +326,10 @@ export class KbqSelect
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
+    @ContentChild(KbqSelectSearchEmptyResult, { static: false }) searchEmpty: KbqSelectSearchEmptyResult;
+
+    @ContentChild(KbqSelectNoOptions, { static: false }) noOptionsContent: KbqSelectNoOptions;
+
     @Input() hiddenItemsText: string = '+{{ number }}';
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
@@ -373,6 +391,8 @@ export class KbqSelect
 
     /** Event emitted when the select panel has been toggled. */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    beforeOpened = output<void>();
 
     /** Event emitted when the select has been opened. */
     @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
@@ -616,6 +636,10 @@ export class KbqSelect
         return !!this.selectionModel?.isEmpty();
     }
 
+    get noOptions(): boolean {
+        return this.options?.length === 0;
+    }
+
     get firstSelected(): KbqOptionBase | null {
         return this.selectionModel.selected.filter((option) => !option.disabled)[0] || null;
     }
@@ -834,10 +858,19 @@ export class KbqSelect
 
     /** Opens the overlay panel. */
     open(): void {
-        if (this.disabled || !this.options?.length || this.panelOpen) {
-            return;
-        }
+        if (this.disabled || this.panelOpen) return;
 
+        this.beforeOpened.emit();
+
+        if (this.noOptions) {
+            setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
+        } else {
+            this.openPanel();
+        }
+    }
+
+    openPanel() {
+        console.log('openPanel: ');
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
             this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
@@ -891,9 +924,7 @@ export class KbqSelect
 
     /** Closes the overlay panel and focuses the host element. */
     close(): void {
-        if (!this.panelOpen) {
-            return;
-        }
+        if (!this.panelOpen) return;
 
         // the order of calls is important
         this.resetSearch();
@@ -958,9 +989,7 @@ export class KbqSelect
     }
 
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         if (this.panelOpen) {
             this.handleOpenKeydown(event);

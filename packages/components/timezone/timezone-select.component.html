@@ -74,9 +74,7 @@
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
             @if (isEmptySearchResult) {
-                <div class="kbq-select__no-options-message">
-                    <ng-content select="[kbq-select-search-empty-result]" />
-                </div>
+                <ng-content select="[kbq-select-search-empty-result]" />
             }
             <ng-content />
         </div>
