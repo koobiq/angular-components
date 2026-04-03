@@ -19,7 +19,7 @@ By default the sidepanel appears on the right, but depending on context it can a
 
 When opening, the sidepanel slides in from the edge of the screen and dims the rest of the page (indicating that the dimmed area is not interactive). When closed (or when the overlay is clicked), it slides back out.
 
-<!-- example(sidepanel-modal-mode) -->
+<!-- example(sidepanel-overview) -->
 
 #### Non-modal mode (without page blocking)
 

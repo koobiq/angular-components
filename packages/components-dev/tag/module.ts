@@ -17,7 +17,7 @@ import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from
 import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TagExamplesModule } from '../../docs-examples/components/tag';
+import { TagExamplesModule } from '../../docs-examples/components/tags';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({

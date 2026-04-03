@@ -1,6 +1,6 @@
 For icon buttons (clickable icons).
 
-<!-- example(icon-button) -->
+<!-- example(icon-button-overview) -->
 
 ### Size
 

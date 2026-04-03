@@ -2,7 +2,7 @@
 
 ### Size
 
-<!-- example(alert-size) -->
+<!-- example(alert-overview) -->
 
 ### Variant
 

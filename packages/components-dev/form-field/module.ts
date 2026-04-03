@@ -31,7 +31,7 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
     template: `
         <form-field-with-hint-example />
         <hr />
-        <form-field-with-label-example />
+        <form-field-overview-example />
         <hr />
         <form-field-with-error-example />
         <hr />

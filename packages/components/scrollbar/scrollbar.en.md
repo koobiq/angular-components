@@ -17,7 +17,7 @@ npm install overlayscrollbars@2.7.3
 
 - for a specific scrollbar, using the `options` attribute:
 
-<!-- example(scrollbar-with-options) -->
+<!-- example(scrollbar-overview) -->
 
 - for all scrollbars in a module, using _Dependency Injection_ with the `KBQ_SCROLLBAR_CONFIG` token:
 

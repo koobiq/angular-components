@@ -4,7 +4,7 @@ A time field (timepicker) is a special input field that allows entering only tim
 
 Use when you need to specify time.
 
-<!-- example(timepicker-validation-symbols) -->
+<!-- example(timepicker-overview) -->
 
 ### Component structure
 
@@ -45,7 +45,7 @@ In most cases, the field is empty, showing only the input mask. In other cases, 
 - when entering letters in any part of the mask;
 - when entering the first character, except digits.
 
-<!-- example(timepicker-validation-symbols) -->
+<!-- example(timepicker-overview) -->
 
 ##### Entering symbols and digits
 
@@ -55,13 +55,13 @@ If after entering one digit (in hours or minutes) any character other than digit
 
 If you enter values greater than 23 for hours and greater than 59 for minutes and seconds, they are converted to 23 for hours and 59 for minutes and seconds.
 
-<!-- example(timepicker-validation-symbols) -->
+<!-- example(timepicker-overview) -->
 
 #### Validation of copied values
 
 When copying values from the clipboard or pasting them using drag-and-drop, validation during input is triggered. If the copied value contained characters other than digits and letters, the rules from the "Entering symbols and digits" section above are applied to them.
 
-<!-- example(timepicker-validation-symbols) -->
+<!-- example(timepicker-overview) -->
 
 #### Validation using ReactiveFormsModule
 

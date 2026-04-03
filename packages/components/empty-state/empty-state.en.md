@@ -1,6 +1,6 @@
 A placeholder component for empty states or error messages. The border is not part of the component; it is shown only for illustration purposes.
 
-<!-- example(empty-state-default) -->
+<!-- example(empty-state-overview) -->
 
 ### Size
 

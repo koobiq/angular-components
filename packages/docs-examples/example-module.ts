@@ -287,18 +287,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "alert-content-example.ts",
     "importPath": "components/alert"
   },
-  "alert-size": {
-    "packagePath": "components/alert/alert-size",
+  "alert-overview": {
+    "packagePath": "components/alert/alert-overview",
     "title": "Alert size",
-    "componentName": "AlertSizeExample",
+    "componentName": "AlertOverviewExample",
     "files": [
-      "alert-size-example.ts",
-      "alert-size-example.html",
-      "alert-size-example.css"
+      "alert-overview-example.ts",
+      "alert-overview-example.html",
+      "alert-overview-example.css"
     ],
-    "selector": "alert-size-example",
+    "selector": "alert-overview-example",
     "additionalComponents": [],
-    "primaryFile": "alert-size-example.ts",
+    "primaryFile": "alert-overview-example.ts",
     "importPath": "components/alert"
   },
   "alert-status": {
@@ -376,20 +376,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "badge-content-example.ts",
     "importPath": "components/badge"
   },
-  "badge-fill-and-style": {
-    "packagePath": "components/badge/badge-fill-and-style",
-    "title": "Badge fill and style",
-    "componentName": "BadgeFillAndStyleExample",
-    "files": [
-      "badge-fill-and-style-example.ts",
-      "badge-fill-and-style-example.html",
-      "badge-fill-and-style-example.css"
-    ],
-    "selector": "badge-fill-and-style-example",
-    "additionalComponents": [],
-    "primaryFile": "badge-fill-and-style-example.ts",
-    "importPath": "components/badge"
-  },
   "badge-list": {
     "packagePath": "components/badge/badge-list",
     "title": "Badge list",
@@ -401,6 +387,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "badge-list-example",
     "additionalComponents": [],
     "primaryFile": "badge-list-example.ts",
+    "importPath": "components/badge"
+  },
+  "badge-overview": {
+    "packagePath": "components/badge/badge-overview",
+    "title": "Badge fill and style",
+    "componentName": "BadgeOverviewExample",
+    "files": [
+      "badge-overview-example.ts",
+      "badge-overview-example.html",
+      "badge-overview-example.css"
+    ],
+    "selector": "badge-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "badge-overview-example.ts",
     "importPath": "components/badge"
   },
   "badge-size": {
@@ -867,16 +867,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "clamped-list-dotted-example.ts",
     "importPath": "components/clamped-text"
   },
-  "clamped-list-vertical": {
-    "packagePath": "components/clamped-text/clamped-list-vertical",
+  "clamped-list-overview": {
+    "packagePath": "components/clamped-text/clamped-list-overview",
     "title": "Clamped-list vertical",
-    "componentName": "ClampedListVerticalExample",
+    "componentName": "ClampedListOverviewExample",
     "files": [
-      "clamped-list-vertical-example.ts"
+      "clamped-list-overview-example.ts"
     ],
-    "selector": "clamped-list-vertical-example",
+    "selector": "clamped-list-overview-example",
     "additionalComponents": [],
-    "primaryFile": "clamped-list-vertical-example.ts",
+    "primaryFile": "clamped-list-overview-example.ts",
     "importPath": "components/clamped-text"
   },
   "clamped-list": {
@@ -915,6 +915,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-header-pinned-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-overview": {
+    "packagePath": "components/code-block/code-block-overview",
+    "title": "Code-block with lineNumbers attribute",
+    "componentName": "CodeBlockOverviewExample",
+    "files": [
+      "code-block-overview-example.ts"
+    ],
+    "selector": "code-block-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "code-block-overview-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
     "title": "Code-block with custom locale configuration, without KBQ_LOCALE_SERVICE",
@@ -937,18 +949,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-with-filled-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-filled-example.ts",
-    "importPath": "components/code-block"
-  },
-  "code-block-with-line-numbers": {
-    "packagePath": "components/code-block/code-block-with-line-numbers",
-    "title": "Code-block with lineNumbers attribute",
-    "componentName": "CodeBlockWithLineNumbersExample",
-    "files": [
-      "code-block-with-line-numbers-example.ts"
-    ],
-    "selector": "code-block-with-line-numbers-example",
-    "additionalComponents": [],
-    "primaryFile": "code-block-with-line-numbers-example.ts",
     "importPath": "components/code-block"
   },
   "code-block-with-link": {
@@ -1460,18 +1460,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "empty-state-content-example.ts",
     "importPath": "components/empty-state"
   },
-  "empty-state-default": {
-    "packagePath": "components/empty-state/empty-state-default",
-    "title": "Empty-state default",
-    "componentName": "EmptyStateDefaultExample",
-    "files": [
-      "empty-state-default-example.ts"
-    ],
-    "selector": "empty-state-default-example",
-    "additionalComponents": [],
-    "primaryFile": "empty-state-default-example.ts",
-    "importPath": "components/empty-state"
-  },
   "empty-state-error": {
     "packagePath": "components/empty-state/empty-state-error",
     "title": "Empty-state error",
@@ -1494,6 +1482,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-icon-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-icon-example.ts",
+    "importPath": "components/empty-state"
+  },
+  "empty-state-overview": {
+    "packagePath": "components/empty-state/empty-state-overview",
+    "title": "Empty-state default",
+    "componentName": "EmptyStateOverviewExample",
+    "files": [
+      "empty-state-overview-example.ts"
+    ],
+    "selector": "empty-state-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-overview-example.ts",
     "importPath": "components/empty-state"
   },
   "empty-state-size": {
@@ -1868,6 +1868,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-multiple-with-max-height-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-overview": {
+    "packagePath": "components/file-upload/file-upload-overview",
+    "title": "File-upload overview",
+    "componentName": "FileUploadOverviewExample",
+    "files": [
+      "file-upload-overview-example.ts"
+    ],
+    "selector": "file-upload-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-overview-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-primitive": {
     "packagePath": "components/file-upload/file-upload-primitive",
     "title": "File upload primitive",
@@ -1902,18 +1914,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-single-mixed-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-mixed-validation-example.ts",
-    "importPath": "components/file-upload"
-  },
-  "file-upload-single-overview": {
-    "packagePath": "components/file-upload/file-upload-single-overview",
-    "title": "File-upload single",
-    "componentName": "FileUploadSingleOverviewExample",
-    "files": [
-      "file-upload-single-overview-example.ts"
-    ],
-    "selector": "file-upload-single-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "file-upload-single-overview-example.ts",
     "importPath": "components/file-upload"
   },
   "file-upload-single-required-reactive-validation": {
@@ -2171,6 +2171,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
+  "form-field-overview": {
+    "packagePath": "components/form-field/form-field-overview",
+    "title": "Form field with kbq-label",
+    "componentName": "FormFieldOverviewExample",
+    "files": [
+      "form-field-overview-example.ts"
+    ],
+    "selector": "form-field-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "form-field-overview-example.ts",
+    "importPath": "components/form-field"
+  },
   "form-field-password-overview": {
     "packagePath": "components/form-field/form-field-password-overview",
     "title": "Form field password overview",
@@ -2241,18 +2253,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-hint-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-hint-example.ts",
-    "importPath": "components/form-field"
-  },
-  "form-field-with-label": {
-    "packagePath": "components/form-field/form-field-with-label",
-    "title": "Form field with kbq-label",
-    "componentName": "FormFieldWithLabelExample",
-    "files": [
-      "form-field-with-label-example.ts"
-    ],
-    "selector": "form-field-with-label-example",
-    "additionalComponents": [],
-    "primaryFile": "form-field-with-label-example.ts",
     "importPath": "components/form-field"
   },
   "form-field-with-prefix-and-suffix": {
@@ -2356,7 +2356,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "importPath": "components/forms"
   },
   "icon-button-custom-size": {
-    "packagePath": "components/icon-button/icon-button-custom size",
+    "packagePath": "components/icon/icon-button-custom size",
     "title": "Icon-button custom size",
     "componentName": "IconButtonCustomSizeExample",
     "files": [
@@ -2365,10 +2365,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-button-custom-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-custom-size-example.ts",
-    "importPath": "components/icon-button"
+    "importPath": "components/icon"
+  },
+  "icon-button-overview": {
+    "packagePath": "components/icon/icon-button-overview",
+    "title": "Icon-button",
+    "componentName": "IconButtonOverviewExample",
+    "files": [
+      "icon-button-overview-example.ts"
+    ],
+    "selector": "icon-button-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-button-overview-example.ts",
+    "importPath": "components/icon"
   },
   "icon-button-size": {
-    "packagePath": "components/icon-button/icon-button-size",
+    "packagePath": "components/icon/icon-button-size",
     "title": "Icon-button size",
     "componentName": "IconButtonSizeExample",
     "files": [
@@ -2377,10 +2389,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-button-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-size-example.ts",
-    "importPath": "components/icon-button"
+    "importPath": "components/icon"
   },
   "icon-button-style": {
-    "packagePath": "components/icon-button/icon-button-style",
+    "packagePath": "components/icon/icon-button-style",
     "title": "Icon-button style",
     "componentName": "IconButtonStyleExample",
     "files": [
@@ -2389,22 +2401,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-button-style-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-style-example.ts",
-    "importPath": "components/icon-button"
-  },
-  "icon-button": {
-    "packagePath": "components/icon-button/icon-button",
-    "title": "Icon-button",
-    "componentName": "IconButtonExample",
-    "files": [
-      "icon-button-example.ts"
-    ],
-    "selector": "icon-button-example",
-    "additionalComponents": [],
-    "primaryFile": "icon-button-example.ts",
-    "importPath": "components/icon-button"
+    "importPath": "components/icon"
   },
   "icon-item-color": {
-    "packagePath": "components/icon-item/icon-item-color",
+    "packagePath": "components/icon/icon-item-color",
     "title": "Icon-item color",
     "componentName": "IconItemColorExample",
     "files": [
@@ -2414,23 +2414,23 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-color-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-color-example.ts",
-    "importPath": "components/icon-item"
+    "importPath": "components/icon"
   },
-  "icon-item-default": {
-    "packagePath": "components/icon-item/icon-item-default",
+  "icon-item-overview": {
+    "packagePath": "components/icon/icon-item-overview",
     "title": "Icon-item",
-    "componentName": "IconItemDefaultExample",
+    "componentName": "IconItemOverviewExample",
     "files": [
-      "icon-item-default-example.ts",
-      "icon-item-default-example.css"
+      "icon-item-overview-example.ts",
+      "icon-item-overview-example.css"
     ],
-    "selector": "icon-item-default-example",
+    "selector": "icon-item-overview-example",
     "additionalComponents": [],
-    "primaryFile": "icon-item-default-example.ts",
-    "importPath": "components/icon-item"
+    "primaryFile": "icon-item-overview-example.ts",
+    "importPath": "components/icon"
   },
   "icon-item-size": {
-    "packagePath": "components/icon-item/icon-item-size",
+    "packagePath": "components/icon/icon-item-size",
     "title": "Icon-item size",
     "componentName": "IconItemSizeExample",
     "files": [
@@ -2440,10 +2440,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-size-example.ts",
-    "importPath": "components/icon-item"
+    "importPath": "components/icon"
   },
   "icon-item-variant": {
-    "packagePath": "components/icon-item/icon-item-variant",
+    "packagePath": "components/icon/icon-item-variant",
     "title": "Icon Item Variant",
     "componentName": "IconItemVariantExample",
     "files": [
@@ -2453,7 +2453,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-variant-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-variant-example.ts",
-    "importPath": "components/icon-item"
+    "importPath": "components/icon"
   },
   "inline-edit-content-alignment": {
     "packagePath": "components/inline-edit/inline-edit-content-alignment",
@@ -2501,6 +2501,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "inline-edit-customized-design-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-customized-design-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-date-time": {
+    "packagePath": "components/inline-edit/inline-edit-date-time",
+    "title": "Inline edit date time",
+    "componentName": "InlineEditDateTimeExample",
+    "files": [
+      "inline-edit-date-time-example.ts"
+    ],
+    "selector": "inline-edit-date-time-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-date-time-example.ts",
     "importPath": "components/inline-edit"
   },
   "inline-edit-disabled": {
@@ -3114,19 +3126,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "markdown-headers-combinations-example.ts",
     "importPath": "components/markdown"
   },
-  "markdown-headers": {
-    "packagePath": "components/markdown/markdown-headers",
-    "title": "Markdown headers",
-    "componentName": "MarkdownHeadersExample",
-    "files": [
-      "markdown-headers-example.ts",
-      "./markdown-headers-example.html"
-    ],
-    "selector": "markdown-headers-example",
-    "additionalComponents": [],
-    "primaryFile": "markdown-headers-example.ts",
-    "importPath": "components/markdown"
-  },
   "markdown-image": {
     "packagePath": "components/markdown/markdown-image",
     "title": "Markdown image",
@@ -3189,6 +3188,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-list-example",
     "additionalComponents": [],
     "primaryFile": "markdown-list-example.ts",
+    "importPath": "components/markdown"
+  },
+  "markdown-overview": {
+    "packagePath": "components/markdown/markdown-overview",
+    "title": "Markdown headers",
+    "componentName": "MarkdownOverviewExample",
+    "files": [
+      "markdown-overview-example.ts",
+      "./markdown-overview-example.html"
+    ],
+    "selector": "markdown-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-overview-example.ts",
     "importPath": "components/markdown"
   },
   "markdown-paragraph": {
@@ -3586,18 +3598,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "popover-close-example.ts",
     "importPath": "components/popover"
   },
-  "popover-common": {
-    "packagePath": "components/popover/popover-common",
-    "title": "Popover common",
-    "componentName": "PopoverCommonExample",
-    "files": [
-      "popover-common-example.ts"
-    ],
-    "selector": "popover-common-example",
-    "additionalComponents": [],
-    "primaryFile": "popover-common-example.ts",
-    "importPath": "components/popover"
-  },
   "popover-content": {
     "packagePath": "components/popover/popover-content",
     "title": "Popover content",
@@ -3648,6 +3648,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-hover-example",
     "additionalComponents": [],
     "primaryFile": "popover-hover-example.ts",
+    "importPath": "components/popover"
+  },
+  "popover-overview": {
+    "packagePath": "components/popover/popover-overview",
+    "title": "Popover common",
+    "componentName": "PopoverOverviewExample",
+    "files": [
+      "popover-overview-example.ts"
+    ],
+    "selector": "popover-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-overview-example.ts",
     "importPath": "components/popover"
   },
   "popover-paddings": {
@@ -3824,16 +3836,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "radio-multiline-example.ts",
     "importPath": "components/radio"
   },
-  "radio-size": {
-    "packagePath": "components/radio/radio-size",
+  "radio-overview": {
+    "packagePath": "components/radio/radio-overview",
     "title": "Radio size",
-    "componentName": "RadioSizeExample",
+    "componentName": "RadioOverviewExample",
     "files": [
-      "radio-size-example.ts"
+      "radio-overview-example.ts"
     ],
-    "selector": "radio-size-example",
+    "selector": "radio-overview-example",
     "additionalComponents": [],
-    "primaryFile": "radio-size-example.ts",
+    "primaryFile": "radio-overview-example.ts",
     "importPath": "components/radio"
   },
   "radio-style": {
@@ -3860,6 +3872,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "resizer-overview-example.ts",
     "importPath": "components/resizer"
   },
+  "scrollbar-overview": {
+    "packagePath": "components/scrollbar/scrollbar-overview",
+    "title": "Scrollbar with options",
+    "componentName": "ScrollbarOverviewExample",
+    "files": [
+      "scrollbar-overview-example.ts"
+    ],
+    "selector": "scrollbar-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "scrollbar-overview-example.ts",
+    "importPath": "components/scrollbar"
+  },
   "scrollbar-scroll-to-top": {
     "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
     "title": "Scrollbar scroll to top",
@@ -3882,18 +3906,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "scrollbar-with-custom-config-example",
     "additionalComponents": [],
     "primaryFile": "scrollbar-with-custom-config-example.ts",
-    "importPath": "components/scrollbar"
-  },
-  "scrollbar-with-options": {
-    "packagePath": "components/scrollbar/scrollbar-with-options",
-    "title": "Scrollbar with options",
-    "componentName": "ScrollbarWithOptionsExample",
-    "files": [
-      "scrollbar-with-options-example.ts"
-    ],
-    "selector": "scrollbar-with-options-example",
-    "additionalComponents": [],
-    "primaryFile": "scrollbar-with-options-example.ts",
     "importPath": "components/scrollbar"
   },
   "search-expandable-in-header": {
@@ -4196,19 +4208,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidebar-with-splitter-example.ts",
     "importPath": "components/sidebar"
   },
-  "sidepanel-modal-mode": {
-    "packagePath": "components/sidepanel/sidepanel-modal-mode",
-    "title": "Sidepanel modal mode",
-    "componentName": "SidepanelModalModeExample",
-    "files": [
-      "sidepanel-modal-mode-example.ts",
-      "sidepanel-modal-mode-example.html"
-    ],
-    "selector": "sidepanel-modal-mode-example",
-    "additionalComponents": [],
-    "primaryFile": "sidepanel-modal-mode-example.ts",
-    "importPath": "components/sidepanel"
-  },
   "sidepanel-normal-mode": {
     "packagePath": "components/sidepanel/sidepanel-normal-mode",
     "title": "Sidepanel normal mode",
@@ -4233,6 +4232,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-overlayed-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-overlayed-example.ts",
+    "importPath": "components/sidepanel"
+  },
+  "sidepanel-overview": {
+    "packagePath": "components/sidepanel/sidepanel-overview",
+    "title": "Sidepanel modal mode",
+    "componentName": "SidepanelOverviewExample",
+    "files": [
+      "sidepanel-overview-example.ts",
+      "sidepanel-overview-example.html"
+    ],
+    "selector": "sidepanel-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "sidepanel-overview-example.ts",
     "importPath": "components/sidepanel"
   },
   "sidepanel-sizes": {
@@ -4642,7 +4654,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "importPath": "components/tabs"
   },
   "tag-autocomplete-draggable": {
-    "packagePath": "components/tag/tag-autocomplete-draggable",
+    "packagePath": "components/tags/tag-autocomplete-draggable",
     "title": "Tag autocomplete draggable",
     "componentName": "TagAutocompleteDraggableExample",
     "files": [
@@ -4651,10 +4663,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-autocomplete-draggable-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-draggable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-autocomplete-editable": {
-    "packagePath": "components/tag/tag-autocomplete-editable",
+    "packagePath": "components/tags/tag-autocomplete-editable",
     "title": "Tag autocomplete editable",
     "componentName": "TagAutocompleteEditableExample",
     "files": [
@@ -4663,10 +4675,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-autocomplete-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-editable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-autocomplete-option-operations": {
-    "packagePath": "components/tag/tag-autocomplete-option-operations",
+    "packagePath": "components/tags/tag-autocomplete-option-operations",
     "title": "Tag autocomplete option operations",
     "componentName": "TagAutocompleteOptionOperationsExample",
     "files": [
@@ -4675,10 +4687,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-autocomplete-option-operations-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-option-operations-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-autocomplete-overview": {
-    "packagePath": "components/tag/tag-autocomplete-overview",
+    "packagePath": "components/tags/tag-autocomplete-overview",
     "title": "Tag autocomplete overview",
     "componentName": "TagAutocompleteOverviewExample",
     "files": [
@@ -4687,10 +4699,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-autocomplete-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-overview-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-autocomplete-removable": {
-    "packagePath": "components/tag/tag-autocomplete-removable",
+    "packagePath": "components/tags/tag-autocomplete-removable",
     "title": "Tag autocomplete removable",
     "componentName": "TagAutocompleteRemovableExample",
     "files": [
@@ -4699,10 +4711,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-autocomplete-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-removable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-disabled": {
-    "packagePath": "components/tag/tag-disabled",
+    "packagePath": "components/tags/tag-disabled",
     "title": "Tag Disabled",
     "componentName": "TagDisabledExample",
     "files": [
@@ -4711,10 +4723,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-disabled-example",
     "additionalComponents": [],
     "primaryFile": "tag-disabled-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-editable-with-validation": {
-    "packagePath": "components/tag/tag-editable-with-validation",
+    "packagePath": "components/tags/tag-editable-with-validation",
     "title": "Tag editable with validation",
     "componentName": "TagEditableWithValidationExample",
     "files": [
@@ -4723,10 +4735,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-editable-with-validation-example",
     "additionalComponents": [],
     "primaryFile": "tag-editable-with-validation-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-editable": {
-    "packagePath": "components/tag/tag-editable",
+    "packagePath": "components/tags/tag-editable",
     "title": "Tag editable",
     "componentName": "TagEditableExample",
     "files": [
@@ -4735,10 +4747,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-editable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-fill-and-style": {
-    "packagePath": "components/tag/tag-fill-and-style",
+    "packagePath": "components/tags/tag-fill-and-style",
     "title": "Tag fill and style",
     "componentName": "TagFillAndStyleExample",
     "files": [
@@ -4747,10 +4759,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-fill-and-style-example",
     "additionalComponents": [],
     "primaryFile": "tag-fill-and-style-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-input-draggable": {
-    "packagePath": "components/tag/tag-input-draggable",
+    "packagePath": "components/tags/tag-input-draggable",
     "title": "Tag input draggable",
     "componentName": "TagInputDraggableExample",
     "files": [
@@ -4759,10 +4771,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-draggable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-draggable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-input-editable": {
-    "packagePath": "components/tag/tag-input-editable",
+    "packagePath": "components/tags/tag-input-editable",
     "title": "Tag input editable",
     "componentName": "TagInputEditableExample",
     "files": [
@@ -4771,10 +4783,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-editable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-input-overview": {
-    "packagePath": "components/tag/tag-input-overview",
+    "packagePath": "components/tags/tag-input-overview",
     "title": "Tag input overview",
     "componentName": "TagInputOverviewExample",
     "files": [
@@ -4783,10 +4795,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-overview-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-input-removable": {
-    "packagePath": "components/tag/tag-input-removable",
+    "packagePath": "components/tags/tag-input-removable",
     "title": "Tag input removable",
     "componentName": "TagInputRemovableExample",
     "files": [
@@ -4795,10 +4807,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-removable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-input-with-form-control-validators": {
-    "packagePath": "components/tag/tag-input-with-form-control-validators",
+    "packagePath": "components/tags/tag-input-with-form-control-validators",
     "title": "Tag input with form control validators.",
     "componentName": "TagInputWithFormControlValidatorsExample",
     "files": [
@@ -4807,10 +4819,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-with-form-control-validators-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-with-form-control-validators-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-list-draggable": {
-    "packagePath": "components/tag/tag-list-draggable",
+    "packagePath": "components/tags/tag-list-draggable",
     "title": "Tag list draggable",
     "componentName": "TagListDraggableExample",
     "files": [
@@ -4819,10 +4831,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-list-draggable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-draggable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-list-editable": {
-    "packagePath": "components/tag/tag-list-editable",
+    "packagePath": "components/tags/tag-list-editable",
     "title": "Tag list editable",
     "componentName": "TagListEditableExample",
     "files": [
@@ -4831,10 +4843,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-list-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-editable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-list-overview": {
-    "packagePath": "components/tag/tag-list-overview",
+    "packagePath": "components/tags/tag-list-overview",
     "title": "Tag list overview",
     "componentName": "TagListOverviewExample",
     "files": [
@@ -4843,10 +4855,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-list-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-overview-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-list-removable": {
-    "packagePath": "components/tag/tag-list-removable",
+    "packagePath": "components/tags/tag-list-removable",
     "title": "Tag list removable",
     "componentName": "TagListRemovableExample",
     "files": [
@@ -4855,10 +4867,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-list-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-removable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-long-text": {
-    "packagePath": "components/tag/tag-long-text",
+    "packagePath": "components/tags/tag-long-text",
     "title": "Tag Long Text",
     "componentName": "TagLongTextExample",
     "files": [
@@ -4867,10 +4879,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-long-text-example",
     "additionalComponents": [],
     "primaryFile": "tag-long-text-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-overview": {
-    "packagePath": "components/tag/tag-overview",
+    "packagePath": "components/tags/tag-overview",
     "title": "Tag",
     "componentName": "TagOverviewExample",
     "files": [
@@ -4879,10 +4891,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-overview-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-removable": {
-    "packagePath": "components/tag/tag-removable",
+    "packagePath": "components/tags/tag-removable",
     "title": "Tag removable",
     "componentName": "TagRemovableExample",
     "files": [
@@ -4891,10 +4903,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-removable-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tag-with-icon": {
-    "packagePath": "components/tag/tag-with-icon",
+    "packagePath": "components/tags/tag-with-icon",
     "title": "Tag with icon",
     "componentName": "TagWithIconExample",
     "files": [
@@ -4903,10 +4915,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-with-icon-example",
     "additionalComponents": [],
     "primaryFile": "tag-with-icon-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tags-autocomplete-onpaste-off": {
-    "packagePath": "components/tag/tags-autocomplete-onpaste-off",
+    "packagePath": "components/tags/tags-autocomplete-onpaste-off",
     "title": "Tags autocomplete onpaste off",
     "componentName": "TagsAutocompleteOnpasteOffExample",
     "files": [
@@ -4916,10 +4928,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tags-autocomplete-onpaste-off-example",
     "additionalComponents": [],
     "primaryFile": "tags-autocomplete-onpaste-off-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "tags-input-onpaste-off": {
-    "packagePath": "components/tag/tags-input-onpaste-off",
+    "packagePath": "components/tags/tags-input-onpaste-off",
     "title": "Tags input onpaste off",
     "componentName": "TagsInputOnpasteOffExample",
     "files": [
@@ -4929,7 +4941,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tags-input-onpaste-off-example",
     "additionalComponents": [],
     "primaryFile": "tags-input-onpaste-off-example.ts",
-    "importPath": "components/tag"
+    "importPath": "components/tags"
   },
   "textarea-can-grow": {
     "packagePath": "components/textarea/textarea-can-grow",
@@ -5087,16 +5099,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "timepicker-field-validation-example.ts",
     "importPath": "components/timepicker"
   },
-  "timepicker-validation-symbols": {
-    "packagePath": "components/timepicker/timepicker-validation-symbols",
+  "timepicker-overview": {
+    "packagePath": "components/timepicker/timepicker-overview",
     "title": "Timepicker validation symbols",
-    "componentName": "TimepickerValidationSymbolsExample",
+    "componentName": "TimepickerOverviewExample",
     "files": [
-      "timepicker-validation-symbols-example.ts"
+      "timepicker-overview-example.ts"
     ],
-    "selector": "timepicker-validation-symbols-example",
+    "selector": "timepicker-overview-example",
     "additionalComponents": [],
-    "primaryFile": "timepicker-validation-symbols-example.ts",
+    "primaryFile": "timepicker-overview-example.ts",
     "importPath": "components/timepicker"
   },
   "timepicker-variations": {
@@ -6153,7 +6165,7 @@ return import('@koobiq/docs-examples/components/ag-grid');
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-content':
 return import('@koobiq/docs-examples/components/alert');
-  case 'alert-size':
+  case 'alert-overview':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-status':
 return import('@koobiq/docs-examples/components/alert');
@@ -6167,9 +6179,9 @@ return import('@koobiq/docs-examples/components/app-switcher');
 return import('@koobiq/docs-examples/components/autocomplete');
   case 'badge-content':
 return import('@koobiq/docs-examples/components/badge');
-  case 'badge-fill-and-style':
-return import('@koobiq/docs-examples/components/badge');
   case 'badge-list':
+return import('@koobiq/docs-examples/components/badge');
+  case 'badge-overview':
 return import('@koobiq/docs-examples/components/badge');
   case 'badge-size':
 return import('@koobiq/docs-examples/components/badge');
@@ -6245,7 +6257,7 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'clamped-list-dotted':
 return import('@koobiq/docs-examples/components/clamped-text');
-  case 'clamped-list-vertical':
+  case 'clamped-list-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-list':
 return import('@koobiq/docs-examples/components/clamped-text');
@@ -6253,11 +6265,11 @@ return import('@koobiq/docs-examples/components/clamped-text');
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'code-block-header-pinned':
 return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-overview':
+return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-custom-locale-configuration':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':
-return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-with-line-numbers':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-link':
 return import('@koobiq/docs-examples/components/code-block');
@@ -6341,11 +6353,11 @@ return import('@koobiq/docs-examples/components/empty-state');
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-content':
 return import('@koobiq/docs-examples/components/empty-state');
-  case 'empty-state-default':
-return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-error':
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-icon':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-overview':
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-size':
 return import('@koobiq/docs-examples/components/empty-state');
@@ -6409,13 +6421,13 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-with-max-height':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-overview':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-primitive':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-mixed-validation':
-return import('@koobiq/docs-examples/components/file-upload');
-  case 'file-upload-single-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-required-reactive-validation':
 return import('@koobiq/docs-examples/components/file-upload');
@@ -6459,6 +6471,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'form-field-overview':
+return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-password-overview':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-cleaner':
@@ -6470,8 +6484,6 @@ return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-error':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-hint':
-return import('@koobiq/docs-examples/components/form-field');
-  case 'form-field-with-label':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-prefix-and-suffix':
 return import('@koobiq/docs-examples/components/form-field');
@@ -6490,21 +6502,21 @@ return import('@koobiq/docs-examples/components/forms');
   case 'vertical-form':
 return import('@koobiq/docs-examples/components/forms');
   case 'icon-button-custom-size':
-return import('@koobiq/docs-examples/components/icon-button');
+return import('@koobiq/docs-examples/components/icon');
+  case 'icon-button-overview':
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-button-size':
-return import('@koobiq/docs-examples/components/icon-button');
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-button-style':
-return import('@koobiq/docs-examples/components/icon-button');
-  case 'icon-button':
-return import('@koobiq/docs-examples/components/icon-button');
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-item-color':
-return import('@koobiq/docs-examples/components/icon-item');
-  case 'icon-item-default':
-return import('@koobiq/docs-examples/components/icon-item');
+return import('@koobiq/docs-examples/components/icon');
+  case 'icon-item-overview':
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-item-size':
-return import('@koobiq/docs-examples/components/icon-item');
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-item-variant':
-return import('@koobiq/docs-examples/components/icon-item');
+return import('@koobiq/docs-examples/components/icon');
   case 'inline-edit-content-alignment':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-controls':
@@ -6512,6 +6524,8 @@ return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-custom-handler':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-customized-design':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-date-time':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-disabled':
 return import('@koobiq/docs-examples/components/inline-edit');
@@ -6613,8 +6627,6 @@ return import('@koobiq/docs-examples/components/markdown');
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-headers-combinations':
 return import('@koobiq/docs-examples/components/markdown');
-  case 'markdown-headers':
-return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-image':
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-line-break-with-markdown-text-input':
@@ -6624,6 +6636,8 @@ return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-link':
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-list':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-overview':
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-paragraph':
 return import('@koobiq/docs-examples/components/markdown');
@@ -6687,8 +6701,6 @@ return import('@koobiq/docs-examples/components/popover');
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-close':
 return import('@koobiq/docs-examples/components/popover');
-  case 'popover-common':
-return import('@koobiq/docs-examples/components/popover');
   case 'popover-content':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-header':
@@ -6696,6 +6708,8 @@ return import('@koobiq/docs-examples/components/popover');
   case 'popover-height':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-hover':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-overview':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-paddings':
 return import('@koobiq/docs-examples/components/popover');
@@ -6725,17 +6739,17 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-multiline':
 return import('@koobiq/docs-examples/components/radio');
-  case 'radio-size':
+  case 'radio-overview':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-style':
 return import('@koobiq/docs-examples/components/radio');
   case 'resizer-overview':
 return import('@koobiq/docs-examples/components/resizer');
+  case 'scrollbar-overview':
+return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-scroll-to-top':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-with-custom-config':
-return import('@koobiq/docs-examples/components/scrollbar');
-  case 'scrollbar-with-options':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'search-expandable-in-header':
 return import('@koobiq/docs-examples/components/search-expandable');
@@ -6787,11 +6801,11 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/sidebar');
   case 'sidebar-with-splitter':
 return import('@koobiq/docs-examples/components/sidebar');
-  case 'sidepanel-modal-mode':
-return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-normal-mode':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-overlayed':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-overview':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-sizes':
 return import('@koobiq/docs-examples/components/sidepanel');
@@ -6860,53 +6874,53 @@ return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-with-scroll':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tag-autocomplete-draggable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-editable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-option-operations':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-overview':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-removable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-disabled':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-editable-with-validation':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-editable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-fill-and-style':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-draggable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-editable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-overview':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-removable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-with-form-control-validators':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-list-draggable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-list-editable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-list-overview':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-list-removable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-long-text':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-overview':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-removable':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-with-icon':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tags-autocomplete-onpaste-off':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'tags-input-onpaste-off':
-return import('@koobiq/docs-examples/components/tag');
+return import('@koobiq/docs-examples/components/tags');
   case 'textarea-can-grow':
 return import('@koobiq/docs-examples/components/textarea');
   case 'textarea-disabled':
@@ -6933,7 +6947,7 @@ return import('@koobiq/docs-examples/components/time-range');
 return import('@koobiq/docs-examples/components/time-range');
   case 'timepicker-field-validation':
 return import('@koobiq/docs-examples/components/timepicker');
-  case 'timepicker-validation-symbols':
+  case 'timepicker-overview':
 return import('@koobiq/docs-examples/components/timepicker');
   case 'timepicker-variations':
 return import('@koobiq/docs-examples/components/timepicker');

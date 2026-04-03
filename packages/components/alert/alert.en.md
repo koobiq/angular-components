@@ -2,7 +2,7 @@ Shows important information on a page. Can contain a hint, signal a status chang
 
 ### Size
 
-<!-- example(alert-size) -->
+<!-- example(alert-overview) -->
 
 ### Variant
 

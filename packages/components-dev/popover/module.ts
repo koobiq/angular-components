@@ -36,7 +36,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <br />
         <popover-width-example />
         <br />
-        <popover-common-example />
+        <popover-overview-example />
         <br />
         <popover-hover-example />
         <br />

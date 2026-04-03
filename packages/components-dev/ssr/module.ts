@@ -6,20 +6,20 @@ import { ActionsPanelOverviewExample } from 'packages/docs-examples/components/a
 import { AlertStatusExample } from 'packages/docs-examples/components/alert';
 import { AppSwitcherOverviewExample } from 'packages/docs-examples/components/app-switcher';
 import { AutocompleteOverviewExample } from 'packages/docs-examples/components/autocomplete';
-import { BadgeFillAndStyleExample } from 'packages/docs-examples/components/badge';
+import { BadgeOverviewExample } from 'packages/docs-examples/components/badge';
 import { BreadcrumbsOverviewExample } from 'packages/docs-examples/components/breadcrumbs';
 import { ButtonOverviewExample } from 'packages/docs-examples/components/button';
 import { ButtonToggleAlignmentOverviewExample } from 'packages/docs-examples/components/button-toggle';
 import { CheckboxOverviewExample } from 'packages/docs-examples/components/checkbox';
 import { ClampedTextOverviewExample } from 'packages/docs-examples/components/clamped-text';
-import { CodeBlockWithLineNumbersExample } from 'packages/docs-examples/components/code-block';
+import { CodeBlockOverviewExample } from 'packages/docs-examples/components/code-block';
 import { ContentPanelOverviewExample } from 'packages/docs-examples/components/content-panel';
 import { DatepickerOverviewExample } from 'packages/docs-examples/components/datepicker';
 import { DividerOverviewExample } from 'packages/docs-examples/components/divider';
 import { DlHorizontalOverviewExample } from 'packages/docs-examples/components/dl';
 import { DropdownOverviewExample } from 'packages/docs-examples/components/dropdown';
 import { DynamicTranslationOverviewExample } from 'packages/docs-examples/components/dynamic-translation';
-import { EmptyStateDefaultExample } from 'packages/docs-examples/components/empty-state';
+import { EmptyStateOverviewExample } from 'packages/docs-examples/components/empty-state';
 import {
     FileUploadCvaOverviewExample,
     FileUploadMultipleDefaultValidationReactiveFormsOverviewExample
@@ -27,23 +27,23 @@ import {
 import { FilterBarOverviewExample } from 'packages/docs-examples/components/filter-bar';
 import { FormFieldPasswordOverviewExample } from 'packages/docs-examples/components/form-field';
 import { FormFieldsetOverviewExample } from 'packages/docs-examples/components/forms';
-import { IconItemDefaultExample } from 'packages/docs-examples/components/icon-item';
+import { IconItemOverviewExample } from 'packages/docs-examples/components/icon-item';
 import { InlineEditOverviewExample } from 'packages/docs-examples/components/inline-edit';
 import { InputNumberOverviewExample } from 'packages/docs-examples/components/input';
 import { LinkOverviewExample } from 'packages/docs-examples/components/link';
 import { ListOverviewExample } from 'packages/docs-examples/components/list';
 import { LoaderOverlayOverviewExample } from 'packages/docs-examples/components/loader-overlay';
-import { MarkdownHeadersExample } from 'packages/docs-examples/components/markdown';
+import { MarkdownOverviewExample } from 'packages/docs-examples/components/markdown';
 import { ModalOverviewExample } from 'packages/docs-examples/components/modal';
 import { NavbarOverviewExample } from 'packages/docs-examples/components/navbar';
 import { NavbarIcOverviewExample } from 'packages/docs-examples/components/navbar-ic';
 import { NotificationCenterOverviewExample } from 'packages/docs-examples/components/notification-center';
 import { OverflowItemsOverviewExample } from 'packages/docs-examples/components/overflow-items';
-import { PopoverCommonExample } from 'packages/docs-examples/components/popover';
+import { PopoverOverviewExample } from 'packages/docs-examples/components/popover';
 import { ProgressBarOverviewExample } from 'packages/docs-examples/components/progress-bar';
 import { ProgressSpinnerOverviewExample } from 'packages/docs-examples/components/progress-spinner';
-import { RadioSizeExample } from 'packages/docs-examples/components/radio';
-import { ScrollbarWithOptionsExample } from 'packages/docs-examples/components/scrollbar';
+import { RadioOverviewExample } from 'packages/docs-examples/components/radio';
+import { ScrollbarOverviewExample } from 'packages/docs-examples/components/scrollbar';
 import { SearchExpandableOverviewExample } from 'packages/docs-examples/components/search-expandable';
 import { SelectOverviewExample } from 'packages/docs-examples/components/select';
 import { SidebarOverviewExample } from 'packages/docs-examples/components/sidebar';
@@ -56,10 +56,10 @@ import {
     TagAutocompleteOverviewExample,
     TagEditableExample,
     TagInputOverviewExample
-} from 'packages/docs-examples/components/tag';
+} from 'packages/docs-examples/components/tags';
 import { TextareaOverviewExample } from 'packages/docs-examples/components/textarea';
 import { TimeRangeOverviewExample } from 'packages/docs-examples/components/time-range';
-import { TimepickerValidationSymbolsExample } from 'packages/docs-examples/components/timepicker';
+import { TimepickerOverviewExample } from 'packages/docs-examples/components/timepicker';
 import { TimezoneOverviewExample } from 'packages/docs-examples/components/timezone';
 import { TitleOverviewExample } from 'packages/docs-examples/components/title';
 import { ToastActionsOverviewExample } from 'packages/docs-examples/components/toast';
@@ -81,21 +81,21 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         AlertStatusExample,
         AppSwitcherOverviewExample,
         AutocompleteOverviewExample,
-        BadgeFillAndStyleExample,
+        BadgeOverviewExample,
         BreadcrumbsOverviewExample,
         ButtonOverviewExample,
         ButtonToggleAlignmentOverviewExample,
         CheckboxOverviewExample,
         ClampedTextOverviewExample,
-        CodeBlockWithLineNumbersExample,
+        CodeBlockOverviewExample,
         ContentPanelOverviewExample,
         DatepickerOverviewExample,
         DividerOverviewExample,
         DlHorizontalOverviewExample,
         DropdownOverviewExample,
         DynamicTranslationOverviewExample,
-        EmptyStateDefaultExample,
-        IconItemDefaultExample,
+        EmptyStateOverviewExample,
+        IconItemOverviewExample,
         FileUploadCvaOverviewExample,
         FileUploadMultipleDefaultValidationReactiveFormsOverviewExample,
         FilterBarOverviewExample,
@@ -106,23 +106,23 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         LinkOverviewExample,
         ListOverviewExample,
         LoaderOverlayOverviewExample,
-        MarkdownHeadersExample,
+        MarkdownOverviewExample,
         ModalOverviewExample,
         NavbarOverviewExample,
         NavbarIcOverviewExample,
         NotificationCenterOverviewExample,
         OverflowItemsOverviewExample,
-        PopoverCommonExample,
+        PopoverOverviewExample,
         ProgressBarOverviewExample,
         ProgressSpinnerOverviewExample,
-        RadioSizeExample,
+        RadioOverviewExample,
         SearchExpandableOverviewExample,
         SelectOverviewExample,
         SidebarOverviewExample,
         SidepanelOverlayedExample,
         SplitButtonOverviewExample,
         SplitterOverviewExample,
-        ScrollbarWithOptionsExample,
+        ScrollbarOverviewExample,
         TableOverviewExample,
         TabsNavBarOverviewExample,
         TagAutocompleteOverviewExample,
@@ -137,7 +137,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         TooltipOverviewExample,
         TopBarOverviewExample,
         TreeOverviewExample,
-        TimepickerValidationSymbolsExample,
+        TimepickerOverviewExample,
         TreeSelectChildSelectionOverviewExample,
         UsernameOverviewExample
     ],
@@ -152,7 +152,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <alert-status-example />
         <hr />
-        <badge-fill-and-style-example />
+        <badge-overview-example />
         <hr />
         <breadcrumbs-overview-example />
         <hr />
@@ -164,9 +164,9 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <clamped-text-overview-example />
         <hr />
-        <code-block-with-line-numbers-example />
+        <code-block-overview-example />
         <hr />
-        <icon-item-default-example />
+        <icon-item-overview-example />
         <hr />
         <content-panel-overview-example />
         <hr />
@@ -180,7 +180,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <dynamic-translation-overview-example />
         <hr />
-        <empty-state-default-example />
+        <empty-state-overview-example />
         <hr />
         <file-upload-cva-overview-example />
         <hr />
@@ -202,7 +202,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <loader-overlay-overview-example />
         <hr />
-        <markdown-headers-example />
+        <markdown-overview-example />
         <hr />
         <modal-overview-example />
         <hr />
@@ -214,13 +214,13 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <overflow-items-overview-example />
         <hr />
-        <popover-common-example />
+        <popover-overview-example />
         <hr />
         <progress-bar-overview-example />
         <hr />
         <progress-spinner-overview-example />
         <hr />
-        <radio-size-example />
+        <radio-overview-example />
         <hr />
         <sidepanel-overlayed-example />
         <hr />
@@ -234,7 +234,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <splitter-overview-example />
         <hr />
-        <scrollbar-with-options-example />
+        <scrollbar-overview-example />
         <hr />
         <table-overview-example />
         <hr />
@@ -264,7 +264,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <hr />
         <tree-overview-example />
         <hr />
-        <timepicker-validation-symbols-example />
+        <timepicker-overview-example />
         <hr />
         <tree-select-child-selection-overview-example />
         <hr />
