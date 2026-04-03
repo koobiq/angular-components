@@ -149,14 +149,14 @@
         var(--kbq-background-bg) 100%
     );
     --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-card);
-    --kbq-code-block-hljs-addition-background: var(--kbq-plt-green-2, var(--kbq-palette-green-95));
-    --kbq-code-block-hljs-addition-color: var(--kbq-plt-green-17, var(--kbq-palette-green-25));
+    --kbq-code-block-hljs-addition-background: var(--kbq-plt-green-a-2, var(--kbq-palette-green-95));
+    --kbq-code-block-hljs-addition-color: var(--kbq-plt-green-a-16, var(--kbq-palette-green-25));
     --kbq-code-block-hljs-attr-background: null;
     --kbq-code-block-hljs-attr-color: null;
     --kbq-code-block-hljs-attribute-background: null;
     --kbq-code-block-hljs-attribute-color: null;
     --kbq-code-block-hljs-built-in-background: null;
-    --kbq-code-block-hljs-built-in-color: var(--kbq-plt-blue-16, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-built-in-color: var(--kbq-plt-blue-a-16, var(--kbq-palette-blue-35));
     --kbq-code-block-hljs-bullet-background: null;
     --kbq-code-block-hljs-bullet-color: null;
     --kbq-code-block-hljs-char-escape-background: null;
@@ -166,9 +166,9 @@
     --kbq-code-block-hljs-code-background: null;
     --kbq-code-block-hljs-code-color: null;
     --kbq-code-block-hljs-comment-background: null;
-    --kbq-code-block-hljs-comment-color: var(--kbq-plt-slate-13, var(--kbq-palette-grey-60));
-    --kbq-code-block-hljs-deletion-background: var(--kbq-plt-red-2, var(--kbq-palette-red-95));
-    --kbq-code-block-hljs-deletion-color: var(--kbq-plt-red-18, var(--kbq-palette-red-35));
+    --kbq-code-block-hljs-comment-color: var(--kbq-plt-slate-a-16, var(--kbq-palette-grey-60));
+    --kbq-code-block-hljs-deletion-background: var(--kbq-plt-red-a-2, var(--kbq-palette-red-95));
+    --kbq-code-block-hljs-deletion-color: var(--kbq-plt-red-a-16, var(--kbq-palette-red-35));
     --kbq-code-block-hljs-doctag-background: null;
     --kbq-code-block-hljs-doctag-color: null;
     --kbq-code-block-hljs-emphasis-background: null;
@@ -183,19 +183,19 @@
     --kbq-code-block-hljs-link-background: null;
     --kbq-code-block-hljs-link-color: null;
     --kbq-code-block-hljs-literal-background: null;
-    --kbq-code-block-hljs-literal-color: var(--kbq-plt-purple-18, var(--kbq-palette-purple-30));
+    --kbq-code-block-hljs-literal-color: var(--kbq-plt-purple-a-16, var(--kbq-palette-purple-30));
     --kbq-code-block-hljs-meta-background: null;
-    --kbq-code-block-hljs-meta-color: var(--kbq-plt-blue-18, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-meta-color: var(--kbq-plt-blue-a-16, var(--kbq-palette-blue-35));
     --kbq-code-block-hljs-meta-keyword-background: null;
     --kbq-code-block-hljs-meta-keyword-color: null;
     --kbq-code-block-hljs-meta-string-background: null;
-    --kbq-code-block-hljs-meta-string-color: var(--kbq-plt-blue-18, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-meta-string-color: var(--kbq-plt-blue-a-16, var(--kbq-palette-blue-35));
     --kbq-code-block-hljs-meta-prompt-background: null;
     --kbq-code-block-hljs-meta-prompt-color: null;
     --kbq-code-block-hljs-name-background: null;
-    --kbq-code-block-hljs-name-color: var(--kbq-plt-blue-18, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-name-color: var(--kbq-plt-blue-a-16, var(--kbq-palette-blue-35));
     --kbq-code-block-hljs-number-background: null;
-    --kbq-code-block-hljs-number-color: var(--kbq-plt-purple-18, var(--kbq-palette-purple-30));
+    --kbq-code-block-hljs-number-color: var(--kbq-plt-purple-a-16, var(--kbq-palette-purple-30));
     --kbq-code-block-hljs-operator-background: null;
     --kbq-code-block-hljs-operator-color: null;
     --kbq-code-block-hljs-params-background: null;
@@ -207,7 +207,7 @@
     --kbq-code-block-hljs-quote-background: null;
     --kbq-code-block-hljs-quote-color: null;
     --kbq-code-block-hljs-regexp-background: null;
-    --kbq-code-block-hljs-regexp-color: var(--kbq-plt-green-17, var(--kbq-palette-green-25));
+    --kbq-code-block-hljs-regexp-color: var(--kbq-plt-green-a-16, var(--kbq-palette-green-25));
     --kbq-code-block-hljs-section-background: null;
     --kbq-code-block-hljs-section-color: null;
     --kbq-code-block-hljs-selector-attr-background: null;
@@ -219,15 +219,15 @@
     --kbq-code-block-hljs-selector-pseudo-background: null;
     --kbq-code-block-hljs-selector-pseudo-color: null;
     --kbq-code-block-hljs-selector-tag-background: null;
-    --kbq-code-block-hljs-selector-tag-color: var(--kbq-plt-blue-18, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-selector-tag-color: var(--kbq-plt-blue-a-16, var(--kbq-palette-blue-35));
     --kbq-code-block-hljs-string-background: null;
-    --kbq-code-block-hljs-string-color: var(--kbq-plt-green-17, var(--kbq-palette-green-25));
+    --kbq-code-block-hljs-string-color: var(--kbq-plt-green-a-16, var(--kbq-palette-green-25));
     --kbq-code-block-hljs-strong-background: null;
     --kbq-code-block-hljs-strong-color: null;
     --kbq-code-block-hljs-subst-background: null;
     --kbq-code-block-hljs-subst-color: null;
     --kbq-code-block-hljs-symbol-background: null;
-    --kbq-code-block-hljs-symbol-color: var(--kbq-plt-blue-18, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-symbol-color: var(--kbq-plt-blue-a-16, var(--kbq-palette-blue-35));
     --kbq-code-block-hljs-tag-background: null;
     --kbq-code-block-hljs-tag-color: null;
     --kbq-code-block-hljs-template-tag-background: null;
@@ -235,7 +235,7 @@
     --kbq-code-block-hljs-template-variable-background: null;
     --kbq-code-block-hljs-template-variable-color: null;
     --kbq-code-block-hljs-title-background: null;
-    --kbq-code-block-hljs-title-color: var(--kbq-plt-blue-18, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-title-color: var(--kbq-plt-blue-a-16, var(--kbq-palette-blue-35));
     --kbq-code-block-hljs-title-class-background: null;
     --kbq-code-block-hljs-title-class-color: null;
     --kbq-code-block-hljs-title-class-inherited-background: null;
@@ -253,4 +253,23 @@
     --kbq-code-block-hljs-variable-language-background: null;
     --kbq-code-block-hljs-variable-language-color: null;
     --kbq-code-block-tab-size: 4;
+}
+
+.kbq-dark .kbq-code-block {
+    --kbq-code-block-hljs-addition-background: var(--kbq-plt-dark-green-a-5, var(--kbq-palette-green-95));
+    --kbq-code-block-hljs-addition-color: var(--kbq-plt-dark-green-a-14, var(--kbq-palette-green-25));
+    --kbq-code-block-hljs-built-in-color: var(--kbq-plt-dark-blue-a-14, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-comment-color: var(--kbq-plt-dark-slate-a-14, var(--kbq-palette-grey-60));
+    --kbq-code-block-hljs-deletion-background: var(--kbq-plt-dark-red-a-5, var(--kbq-palette-red-95));
+    --kbq-code-block-hljs-deletion-color: var(--kbq-plt-dark-red-a-14, var(--kbq-palette-red-35));
+    --kbq-code-block-hljs-literal-color: var(--kbq-plt-dark-purple-a-14, var(--kbq-palette-purple-30));
+    --kbq-code-block-hljs-meta-color: var(--kbq-plt-dark-blue-a-14, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-meta-string-color: var(--kbq-plt-dark-blue-a-14, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-name-color: var(--kbq-plt-dark-blue-a-14, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-number-color: var(--kbq-plt-dark-purple-a-14, var(--kbq-palette-purple-30));
+    --kbq-code-block-hljs-regexp-color: var(--kbq-plt-dark-green-a-14, var(--kbq-palette-green-25));
+    --kbq-code-block-hljs-selector-tag-color: var(--kbq-plt-dark-blue-a-14, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-string-color: var(--kbq-plt-dark-dark-green-a-14, var(--kbq-palette-green-25));
+    --kbq-code-block-hljs-symbol-color: var(--kbq-plt-dark-blue-a-14, var(--kbq-palette-blue-35));
+    --kbq-code-block-hljs-title-color: var(--kbq-plt-dark-blue-a-14, var(--kbq-palette-blue-35));
 }
