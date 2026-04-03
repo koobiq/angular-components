@@ -5,7 +5,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  * @title Radio size
  */
 @Component({
-    selector: 'radio-size-example',
+    selector: 'radio-overview-example',
     imports: [
         KbqRadioModule
     ],
@@ -45,4 +45,4 @@ import { KbqRadioModule } from '@koobiq/components/radio';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioSizeExample {}
+export class RadioOverviewExample {}

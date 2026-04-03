@@ -3,7 +3,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     IconButtonCustomSizeExample,
-    IconButtonExample,
+    IconButtonOverviewExample,
     IconButtonSizeExample,
     IconButtonStyleExample
 } from '../../docs-examples/components/icon-button';
@@ -11,13 +11,13 @@ import {
 @Component({
     selector: 'dev-examples',
     imports: [
-        IconButtonExample,
+        IconButtonOverviewExample,
         IconButtonSizeExample,
         IconButtonCustomSizeExample,
         IconButtonStyleExample
     ],
     template: `
-        <icon-button-example />
+        <icon-button-overview-example />
         <hr />
         <icon-button-size-example />
         <hr />

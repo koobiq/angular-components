@@ -7,7 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Empty-state default
  */
 @Component({
-    selector: 'empty-state-default-example',
+    selector: 'empty-state-overview-example',
     imports: [
         KbqEmptyStateModule,
         KbqButtonModule,
@@ -27,7 +27,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateDefaultExample {
+export class EmptyStateOverviewExample {
     buttonText = 'Создать группу';
     emptyStateText = 'Агенты можно объединить в группу и назначить им одни и те же политики';
 }

@@ -287,18 +287,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "alert-content-example.ts",
     "importPath": "components/alert"
   },
-  "alert-size": {
-    "packagePath": "components/alert/alert-size",
+  "alert-overview": {
+    "packagePath": "components/alert/alert-overview",
     "title": "Alert size",
-    "componentName": "AlertSizeExample",
+    "componentName": "AlertOverviewExample",
     "files": [
-      "alert-size-example.ts",
-      "alert-size-example.html",
-      "alert-size-example.css"
+      "alert-overview-example.ts",
+      "alert-overview-example.html",
+      "alert-overview-example.css"
     ],
-    "selector": "alert-size-example",
+    "selector": "alert-overview-example",
     "additionalComponents": [],
-    "primaryFile": "alert-size-example.ts",
+    "primaryFile": "alert-overview-example.ts",
     "importPath": "components/alert"
   },
   "alert-status": {
@@ -376,20 +376,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "badge-content-example.ts",
     "importPath": "components/badge"
   },
-  "badge-fill-and-style": {
-    "packagePath": "components/badge/badge-fill-and-style",
-    "title": "Badge fill and style",
-    "componentName": "BadgeFillAndStyleExample",
-    "files": [
-      "badge-fill-and-style-example.ts",
-      "badge-fill-and-style-example.html",
-      "badge-fill-and-style-example.css"
-    ],
-    "selector": "badge-fill-and-style-example",
-    "additionalComponents": [],
-    "primaryFile": "badge-fill-and-style-example.ts",
-    "importPath": "components/badge"
-  },
   "badge-list": {
     "packagePath": "components/badge/badge-list",
     "title": "Badge list",
@@ -401,6 +387,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "badge-list-example",
     "additionalComponents": [],
     "primaryFile": "badge-list-example.ts",
+    "importPath": "components/badge"
+  },
+  "badge-overview": {
+    "packagePath": "components/badge/badge-overview",
+    "title": "Badge fill and style",
+    "componentName": "BadgeOverviewExample",
+    "files": [
+      "badge-overview-example.ts",
+      "badge-overview-example.html",
+      "badge-overview-example.css"
+    ],
+    "selector": "badge-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "badge-overview-example.ts",
     "importPath": "components/badge"
   },
   "badge-size": {
@@ -867,16 +867,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "clamped-list-dotted-example.ts",
     "importPath": "components/clamped-text"
   },
-  "clamped-list-vertical": {
-    "packagePath": "components/clamped-text/clamped-list-vertical",
+  "clamped-list-overview": {
+    "packagePath": "components/clamped-text/clamped-list-overview",
     "title": "Clamped-list vertical",
-    "componentName": "ClampedListVerticalExample",
+    "componentName": "ClampedListOverviewExample",
     "files": [
-      "clamped-list-vertical-example.ts"
+      "clamped-list-overview-example.ts"
     ],
-    "selector": "clamped-list-vertical-example",
+    "selector": "clamped-list-overview-example",
     "additionalComponents": [],
-    "primaryFile": "clamped-list-vertical-example.ts",
+    "primaryFile": "clamped-list-overview-example.ts",
     "importPath": "components/clamped-text"
   },
   "clamped-list": {
@@ -1460,18 +1460,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "empty-state-content-example.ts",
     "importPath": "components/empty-state"
   },
-  "empty-state-default": {
-    "packagePath": "components/empty-state/empty-state-default",
-    "title": "Empty-state default",
-    "componentName": "EmptyStateDefaultExample",
-    "files": [
-      "empty-state-default-example.ts"
-    ],
-    "selector": "empty-state-default-example",
-    "additionalComponents": [],
-    "primaryFile": "empty-state-default-example.ts",
-    "importPath": "components/empty-state"
-  },
   "empty-state-error": {
     "packagePath": "components/empty-state/empty-state-error",
     "title": "Empty-state error",
@@ -1494,6 +1482,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-icon-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-icon-example.ts",
+    "importPath": "components/empty-state"
+  },
+  "empty-state-overview": {
+    "packagePath": "components/empty-state/empty-state-overview",
+    "title": "Empty-state default",
+    "componentName": "EmptyStateOverviewExample",
+    "files": [
+      "empty-state-overview-example.ts"
+    ],
+    "selector": "empty-state-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-overview-example.ts",
     "importPath": "components/empty-state"
   },
   "empty-state-size": {
@@ -2171,6 +2171,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
+  "form-field-overview": {
+    "packagePath": "components/form-field/form-field-overview",
+    "title": "Form field with kbq-label",
+    "componentName": "FormFieldOverviewExample",
+    "files": [
+      "form-field-overview-example.ts"
+    ],
+    "selector": "form-field-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "form-field-overview-example.ts",
+    "importPath": "components/form-field"
+  },
   "form-field-password-overview": {
     "packagePath": "components/form-field/form-field-password-overview",
     "title": "Form field password overview",
@@ -2241,18 +2253,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-hint-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-hint-example.ts",
-    "importPath": "components/form-field"
-  },
-  "form-field-with-label": {
-    "packagePath": "components/form-field/form-field-with-label",
-    "title": "Form field with kbq-label",
-    "componentName": "FormFieldWithLabelExample",
-    "files": [
-      "form-field-with-label-example.ts"
-    ],
-    "selector": "form-field-with-label-example",
-    "additionalComponents": [],
-    "primaryFile": "form-field-with-label-example.ts",
     "importPath": "components/form-field"
   },
   "form-field-with-prefix-and-suffix": {
@@ -2356,7 +2356,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "importPath": "components/forms"
   },
   "icon-button-custom-size": {
-    "packagePath": "components/icon-button/icon-button-custom size",
+    "packagePath": "components/icon/icon-button-custom size",
     "title": "Icon-button custom size",
     "componentName": "IconButtonCustomSizeExample",
     "files": [
@@ -2365,10 +2365,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-button-custom-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-custom-size-example.ts",
-    "importPath": "components/icon-button"
+    "importPath": "components/icon"
+  },
+  "icon-button-overview": {
+    "packagePath": "components/icon/icon-button-overview",
+    "title": "Icon-button",
+    "componentName": "IconButtonOverviewExample",
+    "files": [
+      "icon-button-overview-example.ts"
+    ],
+    "selector": "icon-button-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "icon-button-overview-example.ts",
+    "importPath": "components/icon"
   },
   "icon-button-size": {
-    "packagePath": "components/icon-button/icon-button-size",
+    "packagePath": "components/icon/icon-button-size",
     "title": "Icon-button size",
     "componentName": "IconButtonSizeExample",
     "files": [
@@ -2377,10 +2389,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-button-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-size-example.ts",
-    "importPath": "components/icon-button"
+    "importPath": "components/icon"
   },
   "icon-button-style": {
-    "packagePath": "components/icon-button/icon-button-style",
+    "packagePath": "components/icon/icon-button-style",
     "title": "Icon-button style",
     "componentName": "IconButtonStyleExample",
     "files": [
@@ -2389,22 +2401,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-button-style-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-style-example.ts",
-    "importPath": "components/icon-button"
-  },
-  "icon-button": {
-    "packagePath": "components/icon-button/icon-button",
-    "title": "Icon-button",
-    "componentName": "IconButtonExample",
-    "files": [
-      "icon-button-example.ts"
-    ],
-    "selector": "icon-button-example",
-    "additionalComponents": [],
-    "primaryFile": "icon-button-example.ts",
-    "importPath": "components/icon-button"
+    "importPath": "components/icon"
   },
   "icon-item-color": {
-    "packagePath": "components/icon-item/icon-item-color",
+    "packagePath": "components/icon/icon-item-color",
     "title": "Icon-item color",
     "componentName": "IconItemColorExample",
     "files": [
@@ -2414,23 +2414,23 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-color-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-color-example.ts",
-    "importPath": "components/icon-item"
+    "importPath": "components/icon"
   },
-  "icon-item-default": {
-    "packagePath": "components/icon-item/icon-item-default",
+  "icon-item-overview": {
+    "packagePath": "components/icon/icon-item-overview",
     "title": "Icon-item",
-    "componentName": "IconItemDefaultExample",
+    "componentName": "IconItemOverviewExample",
     "files": [
-      "icon-item-default-example.ts",
-      "icon-item-default-example.css"
+      "icon-item-overview-example.ts",
+      "icon-item-overview-example.css"
     ],
-    "selector": "icon-item-default-example",
+    "selector": "icon-item-overview-example",
     "additionalComponents": [],
-    "primaryFile": "icon-item-default-example.ts",
-    "importPath": "components/icon-item"
+    "primaryFile": "icon-item-overview-example.ts",
+    "importPath": "components/icon"
   },
   "icon-item-size": {
-    "packagePath": "components/icon-item/icon-item-size",
+    "packagePath": "components/icon/icon-item-size",
     "title": "Icon-item size",
     "componentName": "IconItemSizeExample",
     "files": [
@@ -2440,10 +2440,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-size-example.ts",
-    "importPath": "components/icon-item"
+    "importPath": "components/icon"
   },
   "icon-item-variant": {
-    "packagePath": "components/icon-item/icon-item-variant",
+    "packagePath": "components/icon/icon-item-variant",
     "title": "Icon Item Variant",
     "componentName": "IconItemVariantExample",
     "files": [
@@ -2453,7 +2453,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-variant-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-variant-example.ts",
-    "importPath": "components/icon-item"
+    "importPath": "components/icon"
   },
   "inline-edit-content-alignment": {
     "packagePath": "components/inline-edit/inline-edit-content-alignment",
@@ -3836,16 +3836,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "radio-multiline-example.ts",
     "importPath": "components/radio"
   },
-  "radio-size": {
-    "packagePath": "components/radio/radio-size",
+  "radio-overview": {
+    "packagePath": "components/radio/radio-overview",
     "title": "Radio size",
-    "componentName": "RadioSizeExample",
+    "componentName": "RadioOverviewExample",
     "files": [
-      "radio-size-example.ts"
+      "radio-overview-example.ts"
     ],
-    "selector": "radio-size-example",
+    "selector": "radio-overview-example",
     "additionalComponents": [],
-    "primaryFile": "radio-size-example.ts",
+    "primaryFile": "radio-overview-example.ts",
     "importPath": "components/radio"
   },
   "radio-style": {
@@ -5099,16 +5099,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "timepicker-field-validation-example.ts",
     "importPath": "components/timepicker"
   },
-  "timepicker-validation-symbols": {
-    "packagePath": "components/timepicker/timepicker-validation-symbols",
+  "timepicker-overview": {
+    "packagePath": "components/timepicker/timepicker-overview",
     "title": "Timepicker validation symbols",
-    "componentName": "TimepickerValidationSymbolsExample",
+    "componentName": "TimepickerOverviewExample",
     "files": [
-      "timepicker-validation-symbols-example.ts"
+      "timepicker-overview-example.ts"
     ],
-    "selector": "timepicker-validation-symbols-example",
+    "selector": "timepicker-overview-example",
     "additionalComponents": [],
-    "primaryFile": "timepicker-validation-symbols-example.ts",
+    "primaryFile": "timepicker-overview-example.ts",
     "importPath": "components/timepicker"
   },
   "timepicker-variations": {
@@ -6165,7 +6165,7 @@ return import('@koobiq/docs-examples/components/ag-grid');
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-content':
 return import('@koobiq/docs-examples/components/alert');
-  case 'alert-size':
+  case 'alert-overview':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-status':
 return import('@koobiq/docs-examples/components/alert');
@@ -6179,9 +6179,9 @@ return import('@koobiq/docs-examples/components/app-switcher');
 return import('@koobiq/docs-examples/components/autocomplete');
   case 'badge-content':
 return import('@koobiq/docs-examples/components/badge');
-  case 'badge-fill-and-style':
-return import('@koobiq/docs-examples/components/badge');
   case 'badge-list':
+return import('@koobiq/docs-examples/components/badge');
+  case 'badge-overview':
 return import('@koobiq/docs-examples/components/badge');
   case 'badge-size':
 return import('@koobiq/docs-examples/components/badge');
@@ -6257,7 +6257,7 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'clamped-list-dotted':
 return import('@koobiq/docs-examples/components/clamped-text');
-  case 'clamped-list-vertical':
+  case 'clamped-list-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-list':
 return import('@koobiq/docs-examples/components/clamped-text');
@@ -6353,11 +6353,11 @@ return import('@koobiq/docs-examples/components/empty-state');
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-content':
 return import('@koobiq/docs-examples/components/empty-state');
-  case 'empty-state-default':
-return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-error':
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-icon':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-overview':
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-size':
 return import('@koobiq/docs-examples/components/empty-state');
@@ -6471,6 +6471,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'form-field-overview':
+return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-password-overview':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-cleaner':
@@ -6482,8 +6484,6 @@ return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-error':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-hint':
-return import('@koobiq/docs-examples/components/form-field');
-  case 'form-field-with-label':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-prefix-and-suffix':
 return import('@koobiq/docs-examples/components/form-field');
@@ -6502,21 +6502,21 @@ return import('@koobiq/docs-examples/components/forms');
   case 'vertical-form':
 return import('@koobiq/docs-examples/components/forms');
   case 'icon-button-custom-size':
-return import('@koobiq/docs-examples/components/icon-button');
+return import('@koobiq/docs-examples/components/icon');
+  case 'icon-button-overview':
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-button-size':
-return import('@koobiq/docs-examples/components/icon-button');
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-button-style':
-return import('@koobiq/docs-examples/components/icon-button');
-  case 'icon-button':
-return import('@koobiq/docs-examples/components/icon-button');
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-item-color':
-return import('@koobiq/docs-examples/components/icon-item');
-  case 'icon-item-default':
-return import('@koobiq/docs-examples/components/icon-item');
+return import('@koobiq/docs-examples/components/icon');
+  case 'icon-item-overview':
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-item-size':
-return import('@koobiq/docs-examples/components/icon-item');
+return import('@koobiq/docs-examples/components/icon');
   case 'icon-item-variant':
-return import('@koobiq/docs-examples/components/icon-item');
+return import('@koobiq/docs-examples/components/icon');
   case 'inline-edit-content-alignment':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-controls':
@@ -6739,7 +6739,7 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-multiline':
 return import('@koobiq/docs-examples/components/radio');
-  case 'radio-size':
+  case 'radio-overview':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-style':
 return import('@koobiq/docs-examples/components/radio');
@@ -6947,7 +6947,7 @@ return import('@koobiq/docs-examples/components/time-range');
 return import('@koobiq/docs-examples/components/time-range');
   case 'timepicker-field-validation':
 return import('@koobiq/docs-examples/components/timepicker');
-  case 'timepicker-validation-symbols':
+  case 'timepicker-overview':
 return import('@koobiq/docs-examples/components/timepicker');
   case 'timepicker-variations':
 return import('@koobiq/docs-examples/components/timepicker');

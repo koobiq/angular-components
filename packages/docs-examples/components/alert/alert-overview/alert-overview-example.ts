@@ -9,13 +9,13 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Alert size
  */
 @Component({
-    selector: 'alert-size-example',
+    selector: 'alert-overview-example',
     imports: [
         KbqAlertModule,
         KbqLinkModule
     ],
-    templateUrl: 'alert-size-example.html',
-    styleUrls: ['alert-size-example.css'],
+    templateUrl: 'alert-overview-example.html',
+    styleUrls: ['alert-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('hideShowAnimator', [
@@ -26,7 +26,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         ])
     ]
 })
-export class AlertSizeExample {
+export class AlertOverviewExample {
     colors = KbqComponentColors;
     style = KbqButtonStyles;
     text =

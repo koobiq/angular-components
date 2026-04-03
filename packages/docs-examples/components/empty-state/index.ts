@@ -4,9 +4,9 @@ import { EmptyStateActions2Example } from './empty-state-actions2/empty-state-ac
 import { EmptyStateAlignExample } from './empty-state-align/empty-state-align-example';
 import { EmptyStateBigExample } from './empty-state-big/empty-state-big-example';
 import { EmptyStateContentExample } from './empty-state-content/empty-state-content-example';
-import { EmptyStateDefaultExample } from './empty-state-default/empty-state-default-example';
 import { EmptyStateErrorExample } from './empty-state-error/empty-state-error-example';
 import { EmptyStateIconExample } from './empty-state-icon/empty-state-icon-example';
+import { EmptyStateOverviewExample } from './empty-state-overview/empty-state-overview-example';
 import { EmptyStateSizeExample } from './empty-state-size/empty-state-size-example';
 import { EmptyStateTextOnlyExample } from './empty-state-text-only/empty-state-text-only-example';
 import { EmptyStateTitleExample } from './empty-state-title/empty-state-title-example';
@@ -17,9 +17,9 @@ export {
     EmptyStateAlignExample,
     EmptyStateBigExample,
     EmptyStateContentExample,
-    EmptyStateDefaultExample,
     EmptyStateErrorExample,
     EmptyStateIconExample,
+    EmptyStateOverviewExample,
     EmptyStateSizeExample,
     EmptyStateTextOnlyExample,
     EmptyStateTitleExample
@@ -34,7 +34,7 @@ const EXAMPLES = [
     EmptyStateContentExample,
     EmptyStateErrorExample,
     EmptyStateAlignExample,
-    EmptyStateDefaultExample,
+    EmptyStateOverviewExample,
     EmptyStateBigExample,
     EmptyStateSizeExample
 ];

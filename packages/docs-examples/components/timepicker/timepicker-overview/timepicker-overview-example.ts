@@ -12,7 +12,7 @@ import { DateTime } from 'luxon';
  * @title Timepicker validation symbols
  */
 @Component({
-    selector: 'timepicker-validation-symbols-example',
+    selector: 'timepicker-overview-example',
     imports: [KbqFormFieldModule, KbqToolTipModule, KbqIconModule, FormsModule, KbqTimepickerModule, LuxonDateModule],
     template: `
         <div class="docs-row">
@@ -24,7 +24,7 @@ import { DateTime } from 'luxon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimepickerValidationSymbolsExample {
+export class TimepickerOverviewExample {
     timeFormats = TimeFormats;
 
     time: DateTime;

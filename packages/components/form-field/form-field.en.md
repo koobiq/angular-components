@@ -14,7 +14,7 @@ The following components are intended to work inside the `<kbq-form-field>` comp
 
 ### Label
 
-<!-- example(form-field-with-label) -->
+<!-- example(form-field-overview) -->
 
 ### Hints
 

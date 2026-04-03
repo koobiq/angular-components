@@ -7,7 +7,7 @@ import { KbqLink } from '@koobiq/components/link';
  * @title Clamped-list vertical
  */
 @Component({
-    selector: 'clamped-list-vertical-example',
+    selector: 'clamped-list-overview-example',
     imports: [KbqClampedList, KbqClampedListTrigger, KbqIcon, KbqLink],
     template: `
         <!--@TODO update gap with paddings when link underline with text-decoration used (#DS-4778)-->
@@ -51,7 +51,7 @@ import { KbqLink } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClampedListVerticalExample {
+export class ClampedListOverviewExample {
     protected readonly collapsed = signal(true);
     protected readonly clampedListItems = viewChildren(KbqLink);
     protected items = [

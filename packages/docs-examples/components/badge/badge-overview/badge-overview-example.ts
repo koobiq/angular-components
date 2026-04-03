@@ -5,14 +5,14 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
  * @title Badge fill and style
  */
 @Component({
-    selector: 'badge-fill-and-style-example',
+    selector: 'badge-overview-example',
     imports: [
         KbqBadgeModule
     ],
-    templateUrl: 'badge-fill-and-style-example.html',
-    styleUrls: ['badge-fill-and-style-example.css'],
+    templateUrl: 'badge-overview-example.html',
+    styleUrls: ['badge-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeFillAndStyleExample {
+export class BadgeOverviewExample {
     colors = KbqBadgeColors;
 }

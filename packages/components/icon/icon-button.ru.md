@@ -1,6 +1,6 @@
 Для иконок-кнопок (кликабельных иконок).
 
-<!-- example(icon-button) -->
+<!-- example(icon-button-overview) -->
 
 ### Размер
 

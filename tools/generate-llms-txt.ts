@@ -32,7 +32,9 @@ try {
         DocsStructureItemId.Typography,
         DocsStructureItemId.DesignTokens,
         DocsStructureItemId.AgGrid,
-        DocsStructureItemId.LayoutFlex
+        DocsStructureItemId.LayoutFlex,
+        DocsStructureItemId.Core,
+        DocsStructureItemId.Icon
     ]);
 
     let content = '';
@@ -48,9 +50,7 @@ try {
 
                 const localPath = `docs/guides/${item.id}.en.md`;
 
-                if (!isFileExists(localPath)) {
-                    continue;
-                }
+                if (!isFileExists(localPath)) continue;
 
                 content += `- [${item.id}](${GITHUB_BASE}/${localPath})\n`;
             }
@@ -66,9 +66,7 @@ try {
 
                 const docLocalPath = `packages/components/${item.apiId}/${item.id}.en.md`;
 
-                if (!isFileExists(docLocalPath)) {
-                    continue;
-                }
+                if (!isFileExists(docLocalPath)) continue;
 
                 content += `- [${item.id} component](${GITHUB_BASE}/${docLocalPath})\n`;
 
@@ -80,12 +78,10 @@ try {
                     }
                 }
 
-                if (item.hasExamples) {
-                    const exampleLocalPath = `packages/docs-examples/components/${item.apiId}/${item.id}-overview/${item.id}-overview-example.ts`;
+                const exampleLocalPath = `packages/docs-examples/components/${item.apiId}/${item.id}-overview/${item.id}-overview-example.ts`;
 
-                    if (isFileExists(exampleLocalPath)) {
-                        content += `- [${item.id} component example](${GITHUB_BASE}/${exampleLocalPath})\n`;
-                    }
+                if (isFileExists(exampleLocalPath)) {
+                    content += `- [${item.id} component example](${GITHUB_BASE}/${exampleLocalPath})\n`;
                 }
 
                 content += '\n';

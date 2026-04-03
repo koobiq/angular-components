@@ -4,7 +4,7 @@
 
 #### Стиль
 
-<!-- example(badge-fill-and-style) -->
+<!-- example(badge-overview) -->
 
 #### Размер
 

@@ -4,7 +4,7 @@ Radio buttons allow users to select from a set of mutually exclusive, related op
 
 #### Size
 
-<!-- example(radio-size) -->
+<!-- example(radio-overview) -->
 
 #### Style
 

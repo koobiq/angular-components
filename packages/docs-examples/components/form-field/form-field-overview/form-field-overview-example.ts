@@ -5,7 +5,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field with kbq-label */
 @Component({
-    selector: 'form-field-with-label-example',
+    selector: 'form-field-overview-example',
     imports: [KbqFormFieldModule, KbqInputModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
@@ -16,4 +16,4 @@ import { KbqInputModule } from '@koobiq/components/input';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithLabelExample {}
+export class FormFieldOverviewExample {}

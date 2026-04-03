@@ -4,7 +4,7 @@
 
 #### Size
 
-<!-- example(radio-size) -->
+<!-- example(radio-overview) -->
 
 #### Style
 

@@ -21,7 +21,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <empty-state-content-example />
         <hr />
-        <empty-state-default-example />
+        <empty-state-overview-example />
         <hr />
         <empty-state-error-example />
         <hr />

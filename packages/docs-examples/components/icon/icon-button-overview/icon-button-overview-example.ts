@@ -8,7 +8,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
  * @title Icon-button
  */
 @Component({
-    selector: 'icon-button-example',
+    selector: 'icon-button-overview-example',
     imports: [KbqIconButton, KbqCheckbox, FormsModule],
     template: `
         <div class="layout-margin-bottom-l">
@@ -24,7 +24,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IconButtonExample {
+export class IconButtonOverviewExample {
     disabled = model(false);
     colors = KbqComponentColors;
 }
