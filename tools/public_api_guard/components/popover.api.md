@@ -203,6 +203,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     get header(): string | TemplateRef<any>;
     set header(value: string | TemplateRef<any>);
+    // (undocumented)
+    hide(delay?: number): void;
     readonly hideIfNotInViewPort: InputSignalWithTransform<boolean, unknown>;
     get instanceDestroyRef(): DestroyRef;
     leaveDelay: number;
