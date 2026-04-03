@@ -6,9 +6,9 @@
     --kbq-scrollbar-size-thumb-min-size: var(--kbq-size-xl);
     --kbq-scrollbar-size-thumb-border-radius: var(--kbq-size-s);
     /* THEME TOKENS */
-    --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-contrast-a-3, var(--kbq-palette-grey-50-a32));
-    --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-contrast-a-4, var(--kbq-palette-grey-50-a48));
-    --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-contrast-a-5, var(--kbq-palette-grey-20-a55));
+    --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-contrast-a3, var(--kbq-palette-grey-50-a32));
+    --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-contrast-a4, var(--kbq-palette-grey-50-a48));
+    --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-contrast-a5, var(--kbq-palette-grey-20-a55));
     --kbq-scrollbar-thumb-disabled-background: var(--kbq-states-icon-disabled);
     --kbq-scrollbar-track-default-border: transparent;
     --kbq-scrollbar-track-default-background: transparent;
@@ -19,7 +19,7 @@
 }
 
 :where(.kbq-dark .kbq-scrollbar) {
-    --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-dark-contrast-a-9, var(--kbq-palette-grey-50-a48));
-    --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-dark-contrast-a-10, var(--kbq-palette-grey-50-a60));
-    --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-dark-contrast-a-11, var(--kbq-palette-grey-50-a80));
+    --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-dark-contrast-a9, var(--kbq-palette-grey-50-a48));
+    --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-dark-contrast-a10, var(--kbq-palette-grey-50-a60));
+    --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-dark-contrast-a11, var(--kbq-palette-grey-50-a80));
 }
