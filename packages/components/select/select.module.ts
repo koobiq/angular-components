@@ -18,6 +18,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqOptionTooltip } from './select-option.directive';
 import { KbqSelect } from './select.component';
+import { kbqSelectError, KbqSelectLoading } from './select-common';
 
 @NgModule({
     imports: [
@@ -36,7 +37,9 @@ import { KbqSelect } from './select.component';
         NgTemplateOutlet,
         A11yModule,
         KbqSelect,
-        KbqOptionTooltip
+        KbqOptionTooltip,
+        KbqSelectLoading,
+        kbqSelectError
     ],
     exports: [
         KbqSelect,
@@ -48,7 +51,9 @@ import { KbqSelect } from './select.component';
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
         KbqSelectNoOptions,
-        KbqFormFieldModule
+        KbqSelectLoading,
+        KbqFormFieldModule,
+        kbqSelectError
     ],
     providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
 })

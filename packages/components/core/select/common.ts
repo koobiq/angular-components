@@ -27,6 +27,21 @@ export class KbqSelectMatcher {
 }
 
 @Directive({
+    selector: '[kbq-select-no-options]',
+    exportAs: 'kbqSelectNoOptions'
+})
+export class KbqSelectNoOptions {}
+
+@Directive({
+    selector: '[kbq-select-search-empty-result]',
+    exportAs: 'kbqSelectSearchEmptyResult',
+    host: {
+        class: 'kbq-select-search-empty-result kbq-select__no-options-message'
+    }
+})
+export class KbqSelectSearchEmptyResult {}
+
+@Directive({
     selector: 'kbq-select-footer, [kbq-select-footer]',
     host: { class: 'kbq-select__footer' }
 })
@@ -109,18 +124,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
         }
     }
 }
-
-@Directive({
-    selector: '[kbq-select-search-empty-result]',
-    exportAs: 'kbqSelectSearchEmptyResult'
-})
-export class KbqSelectSearchEmptyResult {}
-
-@Directive({
-    selector: '[kbq-select-no-options]',
-    exportAs: 'kbqSelectNoOptions'
-})
-export class KbqSelectNoOptions {}
 
 /**
  * Abstract class representing a customizable select component with an overlay.

@@ -4,7 +4,6 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
-import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -67,10 +66,6 @@ export class SelectFacade {
         this.search$.next(value);
     }
 
-    setDelay(delay: number) {
-        this.api.setDelay(delay);
-    }
-
     readonly state$ = this.search$.pipe(
         // for use in a real project
         // debounceTime(300),
@@ -108,19 +103,17 @@ export class SelectFacade {
                     })
                 )
             );
-        }),
-        startWith({ status: 'error', error: { message: 'error message' } } as const)
+        })
     )
 }
 
 /**
- * @title Select loading
+ * @title Select loading error
  */
 @Component({
-    selector: 'select-loading-example',
+    selector: 'select-loading-error-example',
     imports: [
         KbqSelectModule,
-        KbqButtonToggleModule,
         FormsModule,
         KbqIconModule,
         KbqInputModule,
@@ -132,21 +125,8 @@ export class SelectFacade {
     providers: [SelectFacade, OptionsApiService],
     template: `
         <div class="layout-column layout-align-center-start layout-gap-l">
-            <div class="layout-column layout-gap-xs">
-                Option Loading Time
-                <kbq-button-toggle-group
-                    [ngModel]="100"
-                    (ngModelChange)="facade.setDelay($event)">
-                    <kbq-button-toggle [value]="100">100 ms</kbq-button-toggle>
-                    <kbq-button-toggle [value]="250">250 ms</kbq-button-toggle>
-                    <kbq-button-toggle [value]="500">500 ms</kbq-button-toggle>
-                    <kbq-button-toggle [value]="3000000">3000 ms</kbq-button-toggle>
-                </kbq-button-toggle-group>
-            </div>
-
             <kbq-form-field>
                 <kbq-select
-                    [value]="selectedOption"
                     (beforeOpened)="loadOptions()"
                     (closed)="resetOptions()">
                     <kbq-form-field noBorders kbqSelectSearch>
@@ -165,7 +145,6 @@ export class SelectFacade {
                             }
                             @case ('error') {
                                 <kbq-select-error>
-<!--                                    {{ state.error.message }}-->
                                     <span [style.color]="'var(--kbq-foreground-error)'">Не удалось показать записи</span>
                                     <button kbq-button [kbqStyle]="'transparent'" [color]="'theme'" (click)="reloadOptions()">
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
@@ -175,7 +154,7 @@ export class SelectFacade {
                             }
                             @case ('success') {
                                 @for (option of state.data; track option) {
-                                    <kbq-option [value]="option.id">
+                                    <kbq-option [value]="option">
                                         <span [innerHTML]="option.label | mcHighlight: searchControl.value"></span>
                                     </kbq-option>
                                 }
@@ -196,10 +175,8 @@ export class SelectFacade {
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectLoadingExample {
+export class SelectLoadingErrorExample {
     protected readonly facade = inject(SelectFacade);
-
-    protected selectedOption: Option = { id: 0, label: `Option 0` };
 
     readonly state$ = this.facade.state$;
     readonly searchControl = new FormControl('');
@@ -211,7 +188,7 @@ export class SelectLoadingExample {
 
     protected loadOptions() {
         // used as an example to show loading every time the select is opened
-        this.searchControl.setValue('');
+        this.searchControl.setValue('error');
     }
 
     protected reloadOptions() {

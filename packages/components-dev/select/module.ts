@@ -1,6 +1,6 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { AsyncPipe } from '@angular/common';
+// import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -21,6 +21,9 @@ import { DEV_OPTIONS } from './mock';
     imports: [SelectExamplesModule],
     template: `
         <select-loading-example />
+        <hr />
+
+        <select-loading-error-example />
         <hr />
 
         <select-empty-example />
@@ -83,7 +86,7 @@ export class DevDocsExamples {}
 @Component({
     selector: 'dev-app',
     imports: [
-        AsyncPipe,
+        // AsyncPipe,
         FormsModule,
         ScrollingModule,
         KbqButtonModule,

@@ -39,10 +39,9 @@ import {
     inject,
     isDevMode,
     numberAttribute,
-    output,
-    signal
+    output
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import {
@@ -89,7 +88,8 @@ import {
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
     isUndefined,
-    kbqSelectAnimations
+    kbqSelectAnimations,
+    KbqSelectSearchEmptyResult
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -102,9 +102,7 @@ import {
     Subscription,
     defer,
     fromEvent,
-    merge,
-    timer,
-    of
+    merge
 } from 'rxjs';
 import {
     debounceTime,
@@ -117,7 +115,6 @@ import {
     take,
     takeUntil
 } from 'rxjs/operators';
-import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 
 let nextUniqueId = 0;
 
@@ -164,7 +161,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
     };
 };
 
-export const delayBeforeOpeningPanelWithoutOptions = 101;
+export const delayBeforeDisplayingResultWithoutOptions = 101;
 export const minimumTimeToDisplayLoading = 300;
 
 @Component({
@@ -176,8 +173,7 @@ export const minimumTimeToDisplayLoading = 300;
         CdkMonitorFocus,
         CdkConnectedOverlay,
         NgClass,
-        KbqIconModule,
-        KbqProgressSpinner
+        KbqIconModule
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
@@ -329,6 +325,8 @@ export class KbqSelect
     @ContentChildren(KbqOptgroup) optionGroups: QueryList<KbqOptgroup>;
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
+
+    @ContentChild(KbqSelectSearchEmptyResult, { static: false }) searchEmpty: KbqSelectSearchEmptyResult;
 
     @ContentChild(KbqSelectNoOptions, { static: false }) noOptionsContent: KbqSelectNoOptions;
 
@@ -687,44 +685,6 @@ export class KbqSelect
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
-    readonly isLoading = signal(false);
-
-    readonly loadingWithDelay = new Subject<boolean>();
-
-    protected isLoadingWithDelay = toSignal(
-        this.loadingWithDelay.pipe(
-            switchMap((value) => {
-                if (value) {
-                    return timer(delayBeforeOpeningPanelWithoutOptions).pipe(
-                        map(() => {
-                            this.lastTrueAt = Date.now();
-
-                            return true;
-                        })
-                    );
-                }
-
-                const elapsed = Date.now() - this.lastTrueAt;
-
-                if (!this.lastTrueAt) {
-                    return of(false);
-                }
-
-                const delay = elapsed >= minimumTimeToDisplayLoading ? 0 : minimumTimeToDisplayLoading - elapsed;
-
-                return delay === 0
-                    ? of(false)
-                    : timer(delay).pipe(map(() => false));
-            }),
-            distinctUntilChanged()
-        ),
-        { initialValue: false }
-    );
-
-    private lastTrueAt = 0;
-
-    protected loadingTimerId?: ReturnType<typeof setTimeout>;
-
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
         private readonly _ngZone: NgZone,
@@ -903,25 +863,9 @@ export class KbqSelect
         this.beforeOpened.emit();
 
         if (this.noOptions) {
-            setTimeout(() => this.openPanelAfterDelay(), delayBeforeOpeningPanelWithoutOptions);
+            setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
         } else {
             this.openPanel();
-        }
-    }
-
-    openPanelAfterDelay() {
-        this.openPanel();
-
-        if (this.noOptions) {
-            this.isLoading.set(true);
-
-            this.loadingTimerId = setTimeout(() => {
-                this.loadingTimerId = undefined;
-
-                if (!this.noOptions) {
-                    this.isLoading.set(false);
-                }
-            }, minimumTimeToDisplayLoading);
         }
     }
 
@@ -1095,13 +1039,7 @@ export class KbqSelect
             this.updateScrollSize();
         });
 
-        this.options.changes.pipe(delay(1)).subscribe(() => {
-            if (this.isLoading() && !this.loadingTimerId) {
-                this.isLoading.set(false);
-            }
-
-            this.setOverlayPosition();
-        });
+        this.options.changes.pipe(delay(1)).subscribe(() => this.setOverlayPosition());
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }
