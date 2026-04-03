@@ -255,7 +255,7 @@
     --kbq-code-block-tab-size: 4;
 }
 
-.kbq-dark .kbq-code-block {
+:where(.kbq-dark .kbq-code-block) {
     --kbq-code-block-hljs-addition-background: var(--kbq-plt-dark-green-a5, var(--kbq-palette-green-95));
     --kbq-code-block-hljs-addition-color: var(--kbq-plt-dark-green-a14, var(--kbq-palette-green-25));
     --kbq-code-block-hljs-built-in-color: var(--kbq-plt-dark-blue-a14, var(--kbq-palette-blue-35));
