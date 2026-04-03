@@ -1,8 +1,11 @@
+# Koobiq Angular
+
 ## main
 
 - [installation](https://github.com/koobiq/angular-components/blob/19.5.0/docs/guides/installation.en.md)
 - [versioning](https://github.com/koobiq/angular-components/blob/19.5.0/docs/guides/versioning.en.md)
 - [theming](https://github.com/koobiq/angular-components/blob/19.5.0/docs/guides/theming.en.md)
+- [typography](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/core/styles/typography/typography.en.md)
 - [schematics](https://github.com/koobiq/angular-components/blob/19.5.0/docs/guides/schematics.en.md)
 - [migration](https://github.com/koobiq/angular-components/blob/19.5.0/docs/guides/migration.en.md)
 
@@ -19,6 +22,11 @@
 - [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/actions-panel/actions-panel.en.md)
 - [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/actions-panel.api.md)
 - [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/actions-panel/actions-panel-overview/actions-panel-overview-example.ts)
+
+### ag-grid
+
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/docs/data-grid/ag-grid/ag-grid.en.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/ag-grid/ag-grid-overview/ag-grid-overview-example.ts)
 
 ### alert
 
@@ -98,6 +106,12 @@
 - [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/content-panel.api.md)
 - [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/content-panel/content-panel-overview/content-panel-overview-example.ts)
 
+### core
+
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/core/core.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/core.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/)
+
 ### datepicker
 
 - [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/datepicker/datepicker.en.md)
@@ -151,6 +165,12 @@
 - [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/form-field/form-field.en.md)
 - [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/form-field.api.md)
 - [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/form-field/form-field-overview/form-field-overview-example.ts)
+
+### icon
+
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/icon/icon.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/icon.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/)
 
 ### icon-button
 
@@ -409,9 +429,3 @@
 - [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/username/username.en.md)
 - [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/username.api.md)
 - [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/username/username-overview/username-overview-example.ts)
-
-## other
-
-## icons
-
-## cdk

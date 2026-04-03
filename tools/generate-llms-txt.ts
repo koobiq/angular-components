@@ -22,73 +22,96 @@ try {
 
     const GITHUB_BASE = `https://github.com/koobiq/angular-components/blob/${version}`;
 
-    const SKIP_CATEGORY_ITEM = new Set([
-        DocsStructureItemId.Typography,
-        DocsStructureItemId.DesignTokens,
-        DocsStructureItemId.AgGrid,
-        DocsStructureItemId.LayoutFlex,
-        DocsStructureItemId.Core,
-        DocsStructureItemId.Icon
-    ]);
+    const MAIN_CATEGORY_ITEM_OVERRIDES: Partial<
+        Record<
+            DocsStructureItemId,
+            Partial<{
+                skip: boolean;
+                overviewPath: string;
+            }>
+        >
+    > = {
+        [DocsStructureItemId.Typography]: {
+            overviewPath: `packages/components/core/styles/typography/typography.en.md`
+        },
+        [DocsStructureItemId.DesignTokens]: {
+            skip: true
+        }
+    };
 
-    let content = '';
+    const COMPONENT_OVERRIDES: Partial<
+        Record<
+            DocsStructureItemId,
+            Partial<{
+                skip: boolean;
+                overviewPath: string;
+                examplePath: string;
+            }>
+        >
+    > = {
+        [DocsStructureItemId.LayoutFlex]: { skip: true },
+        [DocsStructureItemId.AgGrid]: {
+            overviewPath: `docs/data-grid/ag-grid/ag-grid.en.md`,
+            examplePath: `packages/docs-examples/components/ag-grid/ag-grid-overview/ag-grid-overview-example.ts`
+        },
+        [DocsStructureItemId.Icon]: { examplePath: '' },
+        [DocsStructureItemId.Core]: { examplePath: '' }
+    };
+
+    let content = '# Koobiq Angular\n\n';
 
     for (const category of docsGetCategories()) {
+        if (
+            category.id === DocsStructureCategoryId.Other ||
+            category.id === DocsStructureCategoryId.Icons ||
+            category.id === DocsStructureCategoryId.CDK
+        ) {
+            continue;
+        }
+
         content += `## ${category.id}\n\n`;
 
-        switch (category.id) {
-            case DocsStructureCategoryId.Other:
-            case DocsStructureCategoryId.Icons:
-            case DocsStructureCategoryId.CDK: {
-                continue;
+        if (category.id === DocsStructureCategoryId.Main) {
+            for (const item of category.items) {
+                const override = MAIN_CATEGORY_ITEM_OVERRIDES[item.id];
+
+                if (override?.skip) continue;
+
+                const localPath = override?.overviewPath ?? `docs/guides/${item.id}.en.md`;
+
+                if (!isFileExists(localPath)) continue;
+
+                content += `- [${item.id}](${GITHUB_BASE}/${localPath})\n`;
             }
 
-            case DocsStructureCategoryId.Main: {
-                for (const item of category.items) {
-                    if (SKIP_CATEGORY_ITEM.has(item.id)) continue;
+            content += '\n';
+        }
 
-                    const localPath = `docs/guides/${item.id}.en.md`;
+        if (category.id === DocsStructureCategoryId.Components) {
+            for (const item of category.items) {
+                const override = COMPONENT_OVERRIDES[item.id];
 
-                    if (!isFileExists(localPath)) continue;
+                if (override?.skip) continue;
 
-                    content += `- [${item.id}](${GITHUB_BASE}/${localPath})\n`;
+                content += `### ${item.id}\n\n`;
+
+                const overviewPath = override?.overviewPath ?? `packages/components/${item.apiId}/${item.id}.en.md`;
+
+                if (isFileExists(overviewPath)) content += `- [overview](${GITHUB_BASE}/${overviewPath})\n`;
+
+                if (item.hasApi) {
+                    const apiPath = `tools/public_api_guard/components/${item.apiId}.api.md`;
+
+                    if (isFileExists(apiPath)) content += `- [api](${GITHUB_BASE}/${apiPath})\n`;
                 }
+
+                const examplePath =
+                    override?.examplePath ??
+                    `packages/docs-examples/components/${item.apiId}/${item.id}-overview/${item.id}-overview-example.ts`;
+
+                if (isFileExists(examplePath)) content += `- [example](${GITHUB_BASE}/${examplePath})\n`;
 
                 content += '\n';
-
-                break;
-            }
-
-            case DocsStructureCategoryId.Components: {
-                for (const item of category.items) {
-                    if (SKIP_CATEGORY_ITEM.has(item.id)) continue;
-
-                    content += `### ${item.id}\n\n`;
-
-                    const docLocalPath = `packages/components/${item.apiId}/${item.id}.en.md`;
-
-                    if (!isFileExists(docLocalPath)) continue;
-
-                    content += `- [overview](${GITHUB_BASE}/${docLocalPath})\n`;
-
-                    if (item.hasApi) {
-                        const apiLocalPath = `tools/public_api_guard/components/${item.apiId}.api.md`;
-
-                        if (isFileExists(apiLocalPath)) {
-                            content += `- [api](${GITHUB_BASE}/${apiLocalPath})\n`;
-                        }
-                    }
-
-                    const exampleLocalPath = `packages/docs-examples/components/${item.apiId}/${item.id}-overview/${item.id}-overview-example.ts`;
-
-                    if (isFileExists(exampleLocalPath)) {
-                        content += `- [example](${GITHUB_BASE}/${exampleLocalPath})\n`;
-                    }
-
-                    content += '\n';
-                }
-
-                break;
             }
         }
     }
