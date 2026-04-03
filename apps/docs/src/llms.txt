@@ -10,409 +10,408 @@
 
 ### accordion
 
-- [accordion component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/accordion/accordion.en.md)
-- [accordion component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/accordion.api.md)
-- [accordion component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/accordion/accordion-overview/accordion-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/accordion/accordion.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/accordion.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/accordion/accordion-overview/accordion-overview-example.ts)
 
 ### actions-panel
 
-- [actions-panel component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/actions-panel/actions-panel.en.md)
-- [actions-panel component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/actions-panel.api.md)
-- [actions-panel component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/actions-panel/actions-panel-overview/actions-panel-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/actions-panel/actions-panel.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/actions-panel.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/actions-panel/actions-panel-overview/actions-panel-overview-example.ts)
 
 ### alert
 
-- [alert component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/alert/alert.en.md)
-- [alert component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/alert.api.md)
-- [alert component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/alert/alert-overview/alert-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/alert/alert.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/alert.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/alert/alert-overview/alert-overview-example.ts)
 
 ### app-switcher
 
-- [app-switcher component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/app-switcher/app-switcher.en.md)
-- [app-switcher component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/app-switcher.api.md)
-- [app-switcher component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/app-switcher/app-switcher-overview/app-switcher-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/app-switcher/app-switcher.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/app-switcher.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/app-switcher/app-switcher-overview/app-switcher-overview-example.ts)
 
 ### autocomplete
 
-- [autocomplete component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/autocomplete/autocomplete.en.md)
-- [autocomplete component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/autocomplete.api.md)
-- [autocomplete component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/autocomplete/autocomplete-overview/autocomplete-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/autocomplete/autocomplete.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/autocomplete.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/autocomplete/autocomplete-overview/autocomplete-overview-example.ts)
 
 ### badge
 
-- [badge component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/badge/badge.en.md)
-- [badge component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/badge.api.md)
-- [badge component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/badge/badge-overview/badge-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/badge/badge.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/badge.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/badge/badge-overview/badge-overview-example.ts)
 
 ### breadcrumbs
 
-- [breadcrumbs component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/breadcrumbs/breadcrumbs.en.md)
-- [breadcrumbs component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/breadcrumbs.api.md)
-- [breadcrumbs component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/breadcrumbs/breadcrumbs-overview/breadcrumbs-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/breadcrumbs/breadcrumbs.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/breadcrumbs.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/breadcrumbs/breadcrumbs-overview/breadcrumbs-overview-example.ts)
 
 ### button
 
-- [button component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/button/button.en.md)
-- [button component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/button.api.md)
-- [button component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/button/button-overview/button-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/button/button.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/button.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/button/button-overview/button-overview-example.ts)
 
 ### button-group
 
-- [button-group component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/button/button-group.en.md)
-- [button-group component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/button.api.md)
-- [button-group component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/button/button-group-overview/button-group-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/button/button-group.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/button.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/button/button-group-overview/button-group-overview-example.ts)
 
 ### button-toggle
 
-- [button-toggle component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/button-toggle/button-toggle.en.md)
-- [button-toggle component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/button-toggle.api.md)
-- [button-toggle component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/button-toggle/button-toggle-overview/button-toggle-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/button-toggle/button-toggle.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/button-toggle.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/button-toggle/button-toggle-overview/button-toggle-overview-example.ts)
 
 ### checkbox
 
-- [checkbox component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/checkbox/checkbox.en.md)
-- [checkbox component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/checkbox.api.md)
-- [checkbox component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/checkbox/checkbox-overview/checkbox-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/checkbox/checkbox.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/checkbox.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/checkbox/checkbox-overview/checkbox-overview-example.ts)
 
 ### clamped-list
 
-- [clamped-list component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/clamped-text/clamped-list.en.md)
-- [clamped-list component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/clamped-text.api.md)
-- [clamped-list component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/clamped-text/clamped-list-overview/clamped-list-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/clamped-text/clamped-list.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/clamped-text.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/clamped-text/clamped-list-overview/clamped-list-overview-example.ts)
 
 ### clamped-text
 
-- [clamped-text component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/clamped-text/clamped-text.en.md)
-- [clamped-text component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/clamped-text.api.md)
-- [clamped-text component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/clamped-text/clamped-text-overview/clamped-text-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/clamped-text/clamped-text.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/clamped-text.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/clamped-text/clamped-text-overview/clamped-text-overview-example.ts)
 
 ### code-block
 
-- [code-block component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/code-block/code-block.en.md)
-- [code-block component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/code-block.api.md)
-- [code-block component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/code-block/code-block-overview/code-block-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/code-block/code-block.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/code-block.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/code-block/code-block-overview/code-block-overview-example.ts)
 
 ### content-panel
 
-- [content-panel component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/content-panel/content-panel.en.md)
-- [content-panel component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/content-panel.api.md)
-- [content-panel component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/content-panel/content-panel-overview/content-panel-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/content-panel/content-panel.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/content-panel.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/content-panel/content-panel-overview/content-panel-overview-example.ts)
 
 ### datepicker
 
-- [datepicker component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/datepicker/datepicker.en.md)
-- [datepicker component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/datepicker.api.md)
-- [datepicker component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/datepicker/datepicker-overview/datepicker-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/datepicker/datepicker.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/datepicker.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/datepicker/datepicker-overview/datepicker-overview-example.ts)
 
 ### dl
 
-- [dl component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/dl/dl.en.md)
-- [dl component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/dl.api.md)
-- [dl component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/dl/dl-overview/dl-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/dl/dl.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/dl.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/dl/dl-overview/dl-overview-example.ts)
 
 ### divider
 
-- [divider component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/divider/divider.en.md)
-- [divider component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/divider.api.md)
-- [divider component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/divider/divider-overview/divider-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/divider/divider.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/divider.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/divider/divider-overview/divider-overview-example.ts)
 
 ### dropdown
 
-- [dropdown component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/dropdown/dropdown.en.md)
-- [dropdown component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/dropdown.api.md)
-- [dropdown component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/dropdown/dropdown-overview/dropdown-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/dropdown/dropdown.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/dropdown.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/dropdown/dropdown-overview/dropdown-overview-example.ts)
 
 ### dynamic-translation
 
-- [dynamic-translation component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/dynamic-translation/dynamic-translation.en.md)
-- [dynamic-translation component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/dynamic-translation.api.md)
-- [dynamic-translation component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/dynamic-translation/dynamic-translation-overview/dynamic-translation-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/dynamic-translation/dynamic-translation.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/dynamic-translation.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/dynamic-translation/dynamic-translation-overview/dynamic-translation-overview-example.ts)
 
 ### empty-state
 
-- [empty-state component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/empty-state/empty-state.en.md)
-- [empty-state component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/empty-state.api.md)
-- [empty-state component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/empty-state/empty-state-overview/empty-state-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/empty-state/empty-state.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/empty-state.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/empty-state/empty-state-overview/empty-state-overview-example.ts)
 
 ### file-upload
 
-- [file-upload component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/file-upload/file-upload.en.md)
-- [file-upload component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/file-upload.api.md)
-- [file-upload component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/file-upload/file-upload-overview/file-upload-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/file-upload/file-upload.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/file-upload.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/file-upload/file-upload-overview/file-upload-overview-example.ts)
 
 ### filter-bar
 
-- [filter-bar component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/filter-bar/filter-bar.en.md)
-- [filter-bar component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/filter-bar.api.md)
-- [filter-bar component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/filter-bar/filter-bar-overview/filter-bar-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/filter-bar/filter-bar.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/filter-bar.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/filter-bar/filter-bar-overview/filter-bar-overview-example.ts)
 
 ### form-field
 
-- [form-field component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/form-field/form-field.en.md)
-- [form-field component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/form-field.api.md)
-- [form-field component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/form-field/form-field-overview/form-field-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/form-field/form-field.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/form-field.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/form-field/form-field-overview/form-field-overview-example.ts)
 
 ### icon-button
 
-- [icon-button component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/icon/icon-button.en.md)
-- [icon-button component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/icon.api.md)
-- [icon-button component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/icon/icon-button-overview/icon-button-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/icon/icon-button.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/icon.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/icon/icon-button-overview/icon-button-overview-example.ts)
 
 ### icon-item
 
-- [icon-item component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/icon/icon-item.en.md)
-- [icon-item component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/icon.api.md)
-- [icon-item component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/icon/icon-item-overview/icon-item-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/icon/icon-item.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/icon.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/icon/icon-item-overview/icon-item-overview-example.ts)
 
 ### inline-edit
 
-- [inline-edit component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/inline-edit/inline-edit.en.md)
-- [inline-edit component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/inline-edit.api.md)
-- [inline-edit component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/inline-edit/inline-edit-overview/inline-edit-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/inline-edit/inline-edit.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/inline-edit.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/inline-edit/inline-edit-overview/inline-edit-overview-example.ts)
 
 ### input
 
-- [input component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/input/input.en.md)
-- [input component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/input.api.md)
-- [input component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/input/input-overview/input-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/input/input.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/input.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/input/input-overview/input-overview-example.ts)
 
 ### link
 
-- [link component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/link/link.en.md)
-- [link component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/link.api.md)
-- [link component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/link/link-overview/link-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/link/link.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/link.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/link/link-overview/link-overview-example.ts)
 
 ### list
 
-- [list component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/list/list.en.md)
-- [list component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/list.api.md)
-- [list component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/list/list-overview/list-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/list/list.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/list.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/list/list-overview/list-overview-example.ts)
 
 ### markdown
 
-- [markdown component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/markdown/markdown.en.md)
-- [markdown component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/markdown.api.md)
-- [markdown component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/markdown/markdown-overview/markdown-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/markdown/markdown.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/markdown.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/markdown/markdown-overview/markdown-overview-example.ts)
 
 ### modal
 
-- [modal component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/modal/modal.en.md)
-- [modal component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/modal.api.md)
-- [modal component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/modal/modal-overview/modal-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/modal/modal.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/modal.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/modal/modal-overview/modal-overview-example.ts)
 
 ### navbar
 
-- [navbar component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/navbar/navbar.en.md)
-- [navbar component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/navbar.api.md)
-- [navbar component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/navbar/navbar-overview/navbar-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/navbar/navbar.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/navbar.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/navbar/navbar-overview/navbar-overview-example.ts)
 
 ### notification-center
 
-- [notification-center component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/notification-center/notification-center.en.md)
-- [notification-center component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/notification-center.api.md)
-- [notification-center component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/notification-center/notification-center-overview/notification-center-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/notification-center/notification-center.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/notification-center.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/notification-center/notification-center-overview/notification-center-overview-example.ts)
 
 ### overflow-items
 
-- [overflow-items component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/overflow-items/overflow-items.en.md)
-- [overflow-items component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/overflow-items.api.md)
-- [overflow-items component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/overflow-items/overflow-items-overview/overflow-items-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/overflow-items/overflow-items.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/overflow-items.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/overflow-items/overflow-items-overview/overflow-items-overview-example.ts)
 
 ### loader-overlay
 
-- [loader-overlay component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/loader-overlay/loader-overlay.en.md)
-- [loader-overlay component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/loader-overlay.api.md)
-- [loader-overlay component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/loader-overlay/loader-overlay-overview/loader-overlay-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/loader-overlay/loader-overlay.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/loader-overlay.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/loader-overlay/loader-overlay-overview/loader-overlay-overview-example.ts)
 
 ### popover
 
-- [popover component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/popover/popover.en.md)
-- [popover component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/popover.api.md)
-- [popover component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/popover/popover-overview/popover-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/popover/popover.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/popover.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/popover/popover-overview/popover-overview-example.ts)
 
 ### progress-bar
 
-- [progress-bar component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/progress-bar/progress-bar.en.md)
-- [progress-bar component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/progress-bar.api.md)
-- [progress-bar component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/progress-bar/progress-bar-overview/progress-bar-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/progress-bar/progress-bar.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/progress-bar.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/progress-bar/progress-bar-overview/progress-bar-overview-example.ts)
 
 ### progress-spinner
 
-- [progress-spinner component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/progress-spinner/progress-spinner.en.md)
-- [progress-spinner component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/progress-spinner.api.md)
-- [progress-spinner component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/progress-spinner/progress-spinner-overview/progress-spinner-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/progress-spinner/progress-spinner.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/progress-spinner.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/progress-spinner/progress-spinner-overview/progress-spinner-overview-example.ts)
 
 ### radio
 
-- [radio component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/radio/radio.en.md)
-- [radio component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/radio.api.md)
-- [radio component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/radio/radio-overview/radio-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/radio/radio.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/radio.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/radio/radio-overview/radio-overview-example.ts)
 
 ### resizer
 
-- [resizer component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/resizer/resizer.en.md)
-- [resizer component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/resizer.api.md)
-- [resizer component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/resizer/resizer-overview/resizer-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/resizer/resizer.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/resizer.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/resizer/resizer-overview/resizer-overview-example.ts)
 
 ### scrollbar
 
-- [scrollbar component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/scrollbar/scrollbar.en.md)
-- [scrollbar component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/scrollbar.api.md)
-- [scrollbar component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/scrollbar/scrollbar-overview/scrollbar-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/scrollbar/scrollbar.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/scrollbar.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/scrollbar/scrollbar-overview/scrollbar-overview-example.ts)
 
 ### search-expandable
 
-- [search-expandable component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/search-expandable/search-expandable.en.md)
-- [search-expandable component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/search-expandable.api.md)
-- [search-expandable component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/search-expandable/search-expandable-overview/search-expandable-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/search-expandable/search-expandable.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/search-expandable.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/search-expandable/search-expandable-overview/search-expandable-overview-example.ts)
 
 ### select
 
-- [select component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/select/select.en.md)
-- [select component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/select.api.md)
-- [select component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/select/select-overview/select-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/select/select.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/select.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/select/select-overview/select-overview-example.ts)
 
 ### sidebar
 
-- [sidebar component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/sidebar/sidebar.en.md)
-- [sidebar component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/sidebar.api.md)
-- [sidebar component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/sidebar/sidebar-overview/sidebar-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/sidebar/sidebar.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/sidebar.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/sidebar/sidebar-overview/sidebar-overview-example.ts)
 
 ### sidepanel
 
-- [sidepanel component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/sidepanel/sidepanel.en.md)
-- [sidepanel component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/sidepanel.api.md)
-- [sidepanel component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/sidepanel/sidepanel-overview/sidepanel-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/sidepanel/sidepanel.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/sidepanel.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/sidepanel/sidepanel-overview/sidepanel-overview-example.ts)
 
 ### skeleton
 
-- [skeleton component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/skeleton/skeleton.en.md)
-- [skeleton component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/skeleton.api.md)
-- [skeleton component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/skeleton/skeleton-overview/skeleton-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/skeleton/skeleton.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/skeleton.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/skeleton/skeleton-overview/skeleton-overview-example.ts)
 
 ### split-button
 
-- [split-button component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/split-button/split-button.en.md)
-- [split-button component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/split-button.api.md)
-- [split-button component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/split-button/split-button-overview/split-button-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/split-button/split-button.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/split-button.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/split-button/split-button-overview/split-button-overview-example.ts)
 
 ### splitter
 
-- [splitter component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/splitter/splitter.en.md)
-- [splitter component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/splitter.api.md)
-- [splitter component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/splitter/splitter-overview/splitter-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/splitter/splitter.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/splitter.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/splitter/splitter-overview/splitter-overview-example.ts)
 
 ### table
 
-- [table component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/table/table.en.md)
-- [table component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/table.api.md)
-- [table component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/table/table-overview/table-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/table/table.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/table.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/table/table-overview/table-overview-example.ts)
 
 ### tabs
 
-- [tabs component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tabs/tabs.en.md)
-- [tabs component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tabs.api.md)
-- [tabs component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tabs/tabs-overview/tabs-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tabs/tabs.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tabs.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tabs/tabs-overview/tabs-overview-example.ts)
 
 ### tag
 
-- [tag component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag.en.md)
-- [tag component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
-- [tag component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-overview/tag-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-overview/tag-overview-example.ts)
 
 ### tag-autocomplete
 
-- [tag-autocomplete component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag-autocomplete.en.md)
-- [tag-autocomplete component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
-- [tag-autocomplete component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-autocomplete-overview/tag-autocomplete-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag-autocomplete.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-autocomplete-overview/tag-autocomplete-overview-example.ts)
 
 ### tag-input
 
-- [tag-input component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag-input.en.md)
-- [tag-input component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
-- [tag-input component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-input-overview/tag-input-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag-input.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-input-overview/tag-input-overview-example.ts)
 
 ### tag-list
 
-- [tag-list component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag-list.en.md)
-- [tag-list component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
-- [tag-list component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-list-overview/tag-list-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tags/tag-list.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tags.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tags/tag-list-overview/tag-list-overview-example.ts)
 
 ### textarea
 
-- [textarea component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/textarea/textarea.en.md)
-- [textarea component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/textarea.api.md)
-- [textarea component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/textarea/textarea-overview/textarea-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/textarea/textarea.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/textarea.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/textarea/textarea-overview/textarea-overview-example.ts)
 
 ### time-range
 
-- [time-range component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/time-range/time-range.en.md)
-- [time-range component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/time-range.api.md)
-- [time-range component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/time-range/time-range-overview/time-range-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/time-range/time-range.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/time-range.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/time-range/time-range-overview/time-range-overview-example.ts)
 
 ### timepicker
 
-- [timepicker component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/timepicker/timepicker.en.md)
-- [timepicker component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/timepicker.api.md)
-- [timepicker component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/timepicker/timepicker-overview/timepicker-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/timepicker/timepicker.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/timepicker.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/timepicker/timepicker-overview/timepicker-overview-example.ts)
 
 ### timezone
 
-- [timezone component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/timezone/timezone.en.md)
-- [timezone component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/timezone.api.md)
-- [timezone component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/timezone/timezone-overview/timezone-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/timezone/timezone.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/timezone.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/timezone/timezone-overview/timezone-overview-example.ts)
 
 ### title
 
-- [title component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/title/title.en.md)
-- [title component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/title.api.md)
-- [title component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/title/title-overview/title-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/title/title.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/title.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/title/title-overview/title-overview-example.ts)
 
 ### toast
 
-- [toast component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/toast/toast.en.md)
-- [toast component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/toast.api.md)
-- [toast component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/toast/toast-overview/toast-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/toast/toast.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/toast.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/toast/toast-overview/toast-overview-example.ts)
 
 ### toggle
 
-- [toggle component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/toggle/toggle.en.md)
-- [toggle component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/toggle.api.md)
-- [toggle component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/toggle/toggle-overview/toggle-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/toggle/toggle.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/toggle.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/toggle/toggle-overview/toggle-overview-example.ts)
 
 ### tooltip
 
-- [tooltip component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tooltip/tooltip.en.md)
-- [tooltip component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tooltip.api.md)
-- [tooltip component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tooltip/tooltip-overview/tooltip-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tooltip/tooltip.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tooltip.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tooltip/tooltip-overview/tooltip-overview-example.ts)
 
 ### top-bar
 
-- [top-bar component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/top-bar/top-bar.en.md)
-- [top-bar component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/top-bar.api.md)
-- [top-bar component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/top-bar/top-bar-overview/top-bar-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/top-bar/top-bar.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/top-bar.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/top-bar/top-bar-overview/top-bar-overview-example.ts)
 
 ### tree
 
-- [tree component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tree/tree.en.md)
-- [tree component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tree.api.md)
-- [tree component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tree/tree-overview/tree-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tree/tree.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tree.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tree/tree-overview/tree-overview-example.ts)
 
 ### tree-select
 
-- [tree-select component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tree-select/tree-select.en.md)
-- [tree-select component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tree-select.api.md)
-- [tree-select component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tree-select/tree-select-overview/tree-select-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/tree-select/tree-select.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/tree-select.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/tree-select/tree-select-overview/tree-select-overview-example.ts)
 
 ### username
 
-- [username component](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/username/username.en.md)
-- [username component api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/username.api.md)
-- [username component example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/username/username-overview/username-overview-example.ts)
+- [overview](https://github.com/koobiq/angular-components/blob/19.5.0/packages/components/username/username.en.md)
+- [api](https://github.com/koobiq/angular-components/blob/19.5.0/tools/public_api_guard/components/username.api.md)
+- [example](https://github.com/koobiq/angular-components/blob/19.5.0/packages/docs-examples/components/username/username-overview/username-overview-example.ts)
 
 ## other
 
 ## icons
 
 ## cdk
-

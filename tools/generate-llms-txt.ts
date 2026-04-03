@@ -22,12 +22,6 @@ try {
 
     const GITHUB_BASE = `https://github.com/koobiq/angular-components/blob/${version}`;
 
-    const SKIP_CATEGORIES = new Set([
-        DocsStructureCategoryId.Other,
-        DocsStructureCategoryId.Icons,
-        DocsStructureCategoryId.CDK
-    ]);
-
     const SKIP_CATEGORY_ITEM = new Set([
         DocsStructureItemId.Typography,
         DocsStructureItemId.DesignTokens,
@@ -42,49 +36,59 @@ try {
     for (const category of docsGetCategories()) {
         content += `## ${category.id}\n\n`;
 
-        if (SKIP_CATEGORIES.has(category.id)) continue;
-
-        if (category.id === DocsStructureCategoryId.Main) {
-            for (const item of category.items) {
-                if (SKIP_CATEGORY_ITEM.has(item.id)) continue;
-
-                const localPath = `docs/guides/${item.id}.en.md`;
-
-                if (!isFileExists(localPath)) continue;
-
-                content += `- [${item.id}](${GITHUB_BASE}/${localPath})\n`;
+        switch (category.id) {
+            case DocsStructureCategoryId.Other:
+            case DocsStructureCategoryId.Icons:
+            case DocsStructureCategoryId.CDK: {
+                continue;
             }
 
-            content += '\n';
-        }
+            case DocsStructureCategoryId.Main: {
+                for (const item of category.items) {
+                    if (SKIP_CATEGORY_ITEM.has(item.id)) continue;
 
-        if (category.id === DocsStructureCategoryId.Components) {
-            for (const item of category.items) {
-                if (SKIP_CATEGORY_ITEM.has(item.id)) continue;
+                    const localPath = `docs/guides/${item.id}.en.md`;
 
-                content += `### ${item.id}\n\n`;
+                    if (!isFileExists(localPath)) continue;
 
-                const docLocalPath = `packages/components/${item.apiId}/${item.id}.en.md`;
-
-                if (!isFileExists(docLocalPath)) continue;
-
-                content += `- [${item.id} component](${GITHUB_BASE}/${docLocalPath})\n`;
-
-                if (item.hasApi) {
-                    const apiLocalPath = `tools/public_api_guard/components/${item.apiId}.api.md`;
-
-                    if (isFileExists(apiLocalPath)) {
-                        content += `- [${item.id} component api](${GITHUB_BASE}/${apiLocalPath})\n`;
-                    }
-                }
-
-                const exampleLocalPath = `packages/docs-examples/components/${item.apiId}/${item.id}-overview/${item.id}-overview-example.ts`;
-
-                if (isFileExists(exampleLocalPath)) {
-                    content += `- [${item.id} component example](${GITHUB_BASE}/${exampleLocalPath})\n`;
+                    content += `- [${item.id}](${GITHUB_BASE}/${localPath})\n`;
                 }
 
                 content += '\n';
+
+                break;
+            }
+
+            case DocsStructureCategoryId.Components: {
+                for (const item of category.items) {
+                    if (SKIP_CATEGORY_ITEM.has(item.id)) continue;
+
+                    content += `### ${item.id}\n\n`;
+
+                    const docLocalPath = `packages/components/${item.apiId}/${item.id}.en.md`;
+
+                    if (!isFileExists(docLocalPath)) continue;
+
+                    content += `- [overview](${GITHUB_BASE}/${docLocalPath})\n`;
+
+                    if (item.hasApi) {
+                        const apiLocalPath = `tools/public_api_guard/components/${item.apiId}.api.md`;
+
+                        if (isFileExists(apiLocalPath)) {
+                            content += `- [api](${GITHUB_BASE}/${apiLocalPath})\n`;
+                        }
+                    }
+
+                    const exampleLocalPath = `packages/docs-examples/components/${item.apiId}/${item.id}-overview/${item.id}-overview-example.ts`;
+
+                    if (isFileExists(exampleLocalPath)) {
+                        content += `- [example](${GITHUB_BASE}/${exampleLocalPath})\n`;
+                    }
+
+                    content += '\n';
+                }
+
+                break;
             }
         }
     }
