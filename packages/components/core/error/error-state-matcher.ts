@@ -29,6 +29,20 @@ export class ShowOnFormSubmitErrorStateMatcher implements ErrorStateMatcher {
     }
 }
 
+/**
+ * Error state matcher with split behavior based on error's type:
+ * - `required` errors are shown only after the form is submitted.
+ * - All other errors are shown as soon as the control is invalid and touched.
+ */
+@Injectable()
+export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return control?.hasError('required')
+            ? !!(control?.invalid && form?.submitted)
+            : !!(control?.invalid && control.touched);
+    }
+}
+
 /** Error state matcher that matches when a control is invalid and dirty or form is submitted. */
 @Injectable()
 export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {

@@ -3890,6 +3890,16 @@ export class ShowOnFormSubmitErrorStateMatcher implements ErrorStateMatcher {
     static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnFormSubmitErrorStateMatcher>;
 }
 
+// @public
+export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher {
+    // (undocumented)
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<ShowRequiredOnSubmitErrorStateMatcher, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<ShowRequiredOnSubmitErrorStateMatcher>;
+}
+
 // @public @deprecated (undocumented)
 export interface SizeUnitsConfig {
     // (undocumented)
