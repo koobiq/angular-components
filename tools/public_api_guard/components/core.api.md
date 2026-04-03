@@ -2720,7 +2720,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
     // (undocumented)
-    hide: (delay?: number) => void;
+    hide(delay?: number): void;
     protected hideWithTimeout: boolean;
     // (undocumented)
     protected readonly hostView: ViewContainerRef;

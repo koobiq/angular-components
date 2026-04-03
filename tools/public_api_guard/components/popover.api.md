@@ -20,6 +20,7 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@angular/cdk/observers';
 import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
@@ -202,6 +203,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     get header(): string | TemplateRef<any>;
     set header(value: string | TemplateRef<any>);
+    // (undocumented)
+    hide(delay?: number): void;
+    readonly hideIfNotInViewPort: InputSignalWithTransform<boolean, unknown>;
     get instanceDestroyRef(): DestroyRef;
     leaveDelay: number;
     // (undocumented)
@@ -238,6 +242,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     preventClose: boolean;
     // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;
+    show(delay?: number): void;
     // (undocumented)
     get size(): KbqPopUpSizeValues;
     set size(value: KbqPopUpSizeValues);
@@ -253,7 +258,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "stickToWindow": { "alias": "kbqPopoverStickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "hideIfNotInViewPort": { "alias": "hideIfNotInViewPort"; "required": false; "isSignal": true; }; "preventClose": { "alias": "kbqPopoverPreventClose"; "required": false; }; "defaultPaddings": { "alias": "defaultPaddings"; "required": false; }; "popoverVisible": { "alias": "kbqPopoverVisible"; "required": false; }; "popoverPlacement": { "alias": "kbqPopoverPlacement"; "required": false; }; "popoverPlacementPriority": { "alias": "kbqPopoverPlacementPriority"; "required": false; }; "stickToWindow": { "alias": "kbqPopoverStickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "header": { "alias": "kbqPopoverHeader"; "required": false; }; "content": { "alias": "kbqPopoverContent"; "required": false; }; "footer": { "alias": "kbqPopoverFooter"; "required": false; }; "disabled": { "alias": "kbqPopoverDisabled"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "size": { "alias": "kbqPopoverSize"; "required": false; }; "customClass": { "alias": "kbqPopoverClass"; "required": false; }; "context": { "alias": "kbqPopoverContext"; "required": false; }; "hasCloseButton": { "alias": "hasCloseButton"; "required": false; }; "closeOnScroll": { "alias": "closeOnScroll"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "arrow": { "alias": "kbqPopoverArrow"; "required": false; }; "offset": { "alias": "kbqPopoverOffset"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; }, { "placementChange": "kbqPopoverPlacementChange"; "visibleChange": "kbqPopoverVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverTrigger, never>;
 }

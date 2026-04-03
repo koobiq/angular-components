@@ -288,12 +288,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
                         filter(() => !this.hovered.getValue() && !this.instance?.hovered.getValue()),
                         takeUntilDestroyed(this.instance?.destroyRef)
                     )
-                    .subscribe(this.hide);
+                    .subscribe(() => this.hide());
             });
         }
     }
 
-    hide = (delay: number = this.leaveDelay) => {
+    hide(delay: number = this.leaveDelay) {
         if (this.preventClose) return;
 
         if (
@@ -302,7 +302,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         ) {
             this.ngZone.run(() => this.instance?.hide(delay));
         }
-    };
+    }
 
     detach = (): void => {
         if (this.overlayRef?.hasAttached()) {
@@ -411,7 +411,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     getMouseLeaveListener() {
         if (this.hideWithTimeout) {
-            return () => setTimeout(this.hide, this.leaveDelay);
+            return () => setTimeout(() => this.hide(), this.leaveDelay);
         }
 
         return this.hide;

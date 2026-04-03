@@ -1,8 +1,11 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/overlay';
 
 @use './navbar-theme' as *;
 
 .kbq-navbar {
+    z-index: overlay.$overlay-z-index;
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;

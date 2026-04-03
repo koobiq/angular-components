@@ -5,6 +5,7 @@ import {
     HorizontalConnectionPos,
     Overlay,
     OverlayConfig,
+    OverlayContainer,
     OverlayRef,
     ScrollStrategy,
     VerticalConnectionPos
@@ -25,6 +26,7 @@ import {
     OnDestroy,
     Optional,
     Output,
+    Renderer2,
     Self,
     ViewContainerRef
 } from '@angular/core';
@@ -75,6 +77,9 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
     }
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
+    private readonly overlayContainer = inject(OverlayContainer);
+    private readonly renderer = inject(Renderer2);
+
     protected readonly isBrowser = inject(Platform).isBrowser;
     private readonly window = inject(KBQ_WINDOW);
 
@@ -156,6 +161,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     private hoverSubscription = Subscription.EMPTY;
 
+    private classAddedToOverlayContainer: boolean = false;
+
     constructor(
         private overlay: Overlay,
         private elementRef: ElementRef<HTMLElement>,
@@ -234,11 +241,15 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         if (this.dropdown instanceof KbqDropdown) {
             this.dropdown.startAnimation();
         }
+
+        this.addClassToOverlayContainer();
     }
 
     /** Closes the dropdown. */
     close(): void {
         this.dropdown.closed.emit();
+
+        this.removeClassFromOverlayContainer();
     }
 
     /**
@@ -625,5 +636,21 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         const { width, borderRightWidth, borderLeftWidth } = this.window.getComputedStyle(nativeElement);
 
         return `${parseInt(width) - parseInt(borderRightWidth) - parseInt(borderLeftWidth)}px`;
+    }
+
+    private addClassToOverlayContainer() {
+        const overlayContainer = this.overlayContainer?.getContainerElement();
+
+        if (overlayContainer.childNodes.length === 1) {
+            this.classAddedToOverlayContainer = true;
+
+            this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
+        }
+    }
+
+    private removeClassFromOverlayContainer() {
+        if (this.classAddedToOverlayContainer) {
+            this.renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
+        }
     }
 }

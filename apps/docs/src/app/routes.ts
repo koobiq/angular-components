@@ -13,6 +13,8 @@ import { DocsTokensOverview } from './components/design-tokens-viewers/tokens-ov
 import { DocsTypographyTable } from './components/design-tokens-viewers/typography-overview';
 import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
 import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { DocsPopoverExample } from './components/popover-example/popover-example.component';
+import { DocsSelectExample } from './components/select-example/select-example.component';
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
@@ -181,6 +183,9 @@ export const DOCS_ROUTES: Routes = [
         ]
     },
 
+    // todo DS-4873
+    { path: 'examples/popover', component: DocsPopoverExample },
+    { path: 'examples/select', component: DocsSelectExample },
     /**
      * Error routes
      */

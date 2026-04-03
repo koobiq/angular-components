@@ -1,4 +1,8 @@
+@use '../dist/components/core/styles/common/overlay';
+
 .docs-navbar {
+    z-index: overlay.$overlay-z-index;
+
     position: sticky;
 
     display: flex;

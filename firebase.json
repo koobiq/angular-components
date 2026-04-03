@@ -120,12 +120,8 @@
                             "value": "1"
                         },
                         {
-                            "key": "X-Frame-Options",
-                            "value": "DENY"
-                        },
-                        {
                             "key": "Content-Security-Policy",
-                            "value": "upgrade-insecure-requests; default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' * data:; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://mc.yandex.com https://yastatic.net; frame-src 'self' https://mc.yandex.ru https://mc.yandex.com; child-src 'self' blob: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://koobiq.io https://*.koobiq.io https://mc.yandex.ru https://mc.yandex.com https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
+                            "value": "upgrade-insecure-requests; frame-ancestors 'self' https://*.web.app; default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' * data:; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://mc.yandex.com https://yastatic.net; frame-src 'self' https://mc.yandex.ru https://mc.yandex.com; child-src 'self' blob: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://koobiq.io https://*.koobiq.io https://mc.yandex.ru https://mc.yandex.com https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
                         }
                     ]
                 },
