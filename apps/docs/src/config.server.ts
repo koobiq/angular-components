@@ -40,7 +40,8 @@ const provideServerWindow = (): Provider => {
                     assign: () => {},
                     reload: () => {},
                     replace: () => {}
-                }
+                },
+                removeEventListener: () => {}
             } satisfies Partial<Window>;
         }
     };

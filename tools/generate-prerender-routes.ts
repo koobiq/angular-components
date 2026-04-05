@@ -14,7 +14,7 @@ const timeLabel = 'Runtime';
 console.time(timeLabel);
 
 try {
-    console.info('🚀 Generating sitemap.xml');
+    console.info('🚀 Generating prerender-routes.txt');
 
     const paths = docsGetItems()
         .map(({ categoryId, id, hasApi, hasExamples }) => {
@@ -35,22 +35,16 @@ try {
     // We should manually add the icons path, because it does not have any items.
     paths.push(`${DocsStructureCategoryId.Icons}`);
 
-    const routes = paths
-        .map((path) => {
-            return DOCS_SUPPORTED_LOCALES.map((locale) => `https://koobiq.io/${locale}/${path}`);
-        })
-        .flat();
+    const routes = DOCS_SUPPORTED_LOCALES.flatMap((locale) => [
+        `/${locale}`,
+        ...paths.map((path) => `/${locale}/${path}`)
+    ]);
 
-    const xmlUrlElements = routes.map((url) => `\t<url>\n\t\t<loc>${url}</loc>\n\t</url>\n`).join('');
+    writeFileSync(join(process.cwd(), 'apps/docs/src/prerender-routes.txt'), routes.join('\n') + '\n');
 
-    writeFileSync(
-        join(process.cwd(), 'apps/docs/src/sitemap.xml'),
-        `<?xml version="1.0" encoding="UTF-8" ?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${xmlUrlElements}</urlset>\n`
-    );
-
-    console.info('✅ sitemap.xml has been successfully generated!');
+    console.info('✅ prerender-routes.txt has been successfully generated!');
 } catch (error) {
-    console.info('❌ Error occurred while generating sitemap.xml! Details:\n', error);
+    console.info('❌ Error occurred while generating prerender-routes.txt! Details:\n', error);
 } finally {
     console.timeEnd(timeLabel);
 }

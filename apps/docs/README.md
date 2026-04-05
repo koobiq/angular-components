@@ -32,6 +32,9 @@ yarn run build:docs-examples
 # Generate sitemap
 yarn run docs:generate-sitemap
 
+# Generate prerender routes
+yarn run docs:generate-prerender-routes
+
 # Run application
 yarn run docs:start:dev
 # Then open http://localhost:4200
