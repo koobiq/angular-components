@@ -12,6 +12,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { map, skip } from 'rxjs';
 
+import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { docsData as borderRadius } from './data/border-radius';
 import { docsData as colors } from './data/colors';
 import { docsData as palette } from './data/palette';
@@ -155,7 +156,8 @@ export class DocsTokensTable extends DocsLocaleState {
     imports: [
         DocsComponentViewerWrapperComponent,
         DocsTokensTable,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        DocsAnchorsComponent
     ],
     template: `
         <docs-component-viewer-wrapper>
@@ -181,6 +183,10 @@ export class DocsTokensTable extends DocsLocaleState {
                 }
             }
         </ng-template>
+
+        <div class="docs-component-viewer__sticky-wrapper">
+            <docs-anchors [headerSelectors]="'.docs-header-link'" />
+        </div>
     `,
     host: {
         class: 'kbq-markdown'
@@ -188,6 +194,7 @@ export class DocsTokensTable extends DocsLocaleState {
 })
 export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit {
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
+    protected readonly anchors = viewChild.required(DocsAnchorsComponent);
 
     protected readonly themeService = inject(ThemeService);
     protected readonly window = inject(KBQ_WINDOW);
@@ -236,7 +243,11 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
             this.tokensInfo.set(this.calculateViewData());
         });
 
-        afterNextRender(() => this.tokensInfo.set(this.calculateViewData()));
+        afterNextRender(() => {
+            this.tokensInfo.set(this.calculateViewData());
+
+            this.anchors().setScrollPosition();
+        });
     }
 
     ngAfterViewInit() {
@@ -244,7 +255,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     }
 
     getClassName(text: string): string {
-        return `'docs-header-link kbq-markdown__h${text}`;
+        return `docs-header-link kbq-markdown__h${text}`;
     }
 
     protected calculateViewData(): DocsTokensInfo[] {

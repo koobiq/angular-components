@@ -37,13 +37,6 @@ module.exports = (StyleDictionary) => {
     StyleDictionary.registerFormat({
         name: 'docs/colors-ts',
         formatter: function ({ dictionary }) {
-            // filter duplicates (light/dark)
-            dictionary.allTokens = dictionary.allTokens.filter((token, pos, allTokens) => {
-                const foundIndex = allTokens.findIndex(({ name }) => name === token.name);
-
-                return foundIndex !== pos;
-            });
-
             // group tokens by types
             const groupedTokens = dictionary.allTokens.reduce((res, currentToken) => {
                 const section =
@@ -81,7 +74,13 @@ module.exports = (StyleDictionary) => {
                 (token, pos, allTokens) => allTokens.indexOf(token) === pos
             );
 
-            return getTokensOverviewData(dictionary);
+            const grouped = dictionary.allTokens.reduce((res, token) => {
+                return updateObject(res, token.attributes.type, token);
+            }, {});
+
+            const sections = Object.entries(grouped).map(simpleMapColors);
+
+            return `${CUSTOM_HEADER}\n\nexport const docsData = ${JSON.stringify(sections)};\n`;
         }
     });
 
