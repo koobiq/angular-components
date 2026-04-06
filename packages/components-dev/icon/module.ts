@@ -6,7 +6,7 @@ import {
     IconButtonOverviewExample,
     IconButtonSizeExample,
     IconButtonStyleExample
-} from '../../docs-examples/components/icon-button';
+} from '../../docs-examples/components/icon';
 
 @Component({
     selector: 'dev-examples',
