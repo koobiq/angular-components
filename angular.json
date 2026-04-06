@@ -84,6 +84,11 @@
                                 "glob": "llms.txt",
                                 "input": "apps/docs/src",
                                 "output": "/"
+                            },
+                            {
+                                "glob": "llms-full.txt",
+                                "input": "apps/docs/src",
+                                "output": "/"
                             }
                         ],
                         "stylePreprocessorOptions": {

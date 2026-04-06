@@ -1,11 +1,8 @@
+<!-- This file is auto-generated. Do not edit it manually! -->
+
 # Koobiq Angular
 
 > Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
-
-## Navigation
-
-- [GitHub](https://github.com/koobiq/angular-components/blob/19.5.0)
-- [Issues](https://github.com/koobiq/angular-components/issues)
 
 ## main
 

@@ -10,37 +10,22 @@ const isFileExists = (relativePath: string): boolean => {
     return exists;
 };
 
+const readFileContent = (relativePath: string): string => readFileSync(join(process.cwd(), relativePath), 'utf-8');
+
 const FILE_NAME = 'llms.txt';
+const FILE_NAME_FULL = 'llms-full.txt';
 const TIME_LABEL = 'Runtime';
-const GITHUB_REPO_URL = `https://github.com/koobiq/angular-components`;
 
 console.time(TIME_LABEL);
 
 try {
     const { version } = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
-    console.info(`🚀 Generating ${FILE_NAME} for ${version} version`);
+    console.info(`🚀 Generating ${FILE_NAME} / ${FILE_NAME_FULL} for ${version} version`);
 
     const GITHUB_RAW_CONTENT_URL = `https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/${version}`;
 
-    const MAIN_CATEGORY_ITEM_OVERRIDES: Partial<
-        Record<
-            DocsStructureItemId,
-            Partial<{
-                skip: boolean;
-                overviewPath: string;
-            }>
-        >
-    > = {
-        [DocsStructureItemId.Typography]: {
-            overviewPath: `packages/components/core/styles/typography/typography.en.md`
-        },
-        [DocsStructureItemId.DesignTokens]: {
-            skip: true
-        }
-    };
-
-    const COMPONENT_CATEGORY_ITEM_OVERRIDES: Partial<
+    const ITEM_OVERRIDES: Partial<
         Record<
             DocsStructureItemId,
             Partial<{
@@ -50,6 +35,12 @@ try {
             }>
         >
     > = {
+        [DocsStructureItemId.Typography]: {
+            overviewPath: `packages/components/core/styles/typography/typography.en.md`
+        },
+        [DocsStructureItemId.DesignTokens]: {
+            skip: true
+        },
         [DocsStructureItemId.LayoutFlex]: { skip: true },
         [DocsStructureItemId.AgGrid]: {
             overviewPath: `docs/data-grid/ag-grid/ag-grid.en.md`,
@@ -59,16 +50,15 @@ try {
         [DocsStructureItemId.Core]: { examplePath: '' }
     };
 
-    let content = `# Koobiq Angular
+    let content = `<!-- This file is auto-generated. Do not edit it manually! -->
+
+# Koobiq Angular
 
 > Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
 
-## Navigation
-
-- [GitHub](${GITHUB_REPO_URL}/blob/${version})
-- [Issues](${GITHUB_REPO_URL}/issues)
-
 `;
+
+    let contentFull = content;
 
     for (const category of docsGetCategories()) {
         if (
@@ -80,10 +70,11 @@ try {
         }
 
         content += `## ${category.id}\n\n`;
+        contentFull += `## ${category.id}\n\n`;
 
         if (category.id === DocsStructureCategoryId.Main) {
             for (const item of category.items) {
-                const override = MAIN_CATEGORY_ITEM_OVERRIDES[item.id];
+                const override = ITEM_OVERRIDES[item.id];
 
                 if (override?.skip) continue;
 
@@ -92,29 +83,42 @@ try {
                 if (path !== '' && !isFileExists(path)) continue;
 
                 content += `- [${item.id}](${GITHUB_RAW_CONTENT_URL}/${path})\n`;
+
+                contentFull += `### ${item.id}\n\n`;
+                contentFull += `\`\`\`markdown\n${readFileContent(path)}\n\`\`\`\n`;
             }
 
             content += '\n';
+            contentFull += '\n';
         }
 
         if (category.id === DocsStructureCategoryId.Components) {
             for (const item of category.items) {
-                const override = COMPONENT_CATEGORY_ITEM_OVERRIDES[item.id];
+                const override = ITEM_OVERRIDES[item.id];
 
                 if (override?.skip) continue;
 
                 content += `### ${item.id}\n\n`;
+                contentFull += `### ${item.id}\n\n`;
 
                 const overviewPath = override?.overviewPath ?? `packages/components/${item.apiId}/${item.id}.en.md`;
 
                 if (overviewPath !== '' && isFileExists(overviewPath)) {
                     content += `- [overview](${GITHUB_RAW_CONTENT_URL}/${overviewPath})\n`;
+
+                    contentFull += `#### overview\n\n`;
+                    contentFull += `\`\`\`markdown\n${readFileContent(overviewPath)}\n\`\`\`\n`;
                 }
 
                 if (item.hasApi) {
                     const apiPath = `tools/public_api_guard/components/${item.apiId}.api.md`;
 
-                    if (isFileExists(apiPath)) content += `- [api](${GITHUB_RAW_CONTENT_URL}/${apiPath})\n`;
+                    if (isFileExists(apiPath)) {
+                        content += `- [api](${GITHUB_RAW_CONTENT_URL}/${apiPath})\n`;
+
+                        contentFull += `#### api\n\n`;
+                        contentFull += `\`\`\`markdown\n${readFileContent(apiPath)}\n\`\`\`\n`;
+                    }
                 }
 
                 const examplePath =
@@ -123,18 +127,24 @@ try {
 
                 if (examplePath !== '' && isFileExists(examplePath)) {
                     content += `- [example](${GITHUB_RAW_CONTENT_URL}/${examplePath})\n`;
+
+                    contentFull += `#### example\n\n`;
+                    contentFull += `\`\`\`typescript\n${readFileContent(examplePath)}\n\`\`\`\n`;
                 }
 
                 content += '\n';
+                contentFull += '\n';
             }
         }
     }
 
     writeFileSync(join(process.cwd(), 'apps/docs/src', FILE_NAME), content);
-
     console.info(`✅ ${FILE_NAME} has been successfully generated!`);
+
+    writeFileSync(join(process.cwd(), 'apps/docs/src', FILE_NAME_FULL), contentFull);
+    console.info(`✅ ${FILE_NAME_FULL} has been successfully generated!`);
 } catch (error) {
-    console.info(`❌ Error occurred while generating ${FILE_NAME}! Details:\n`, error);
+    console.info(`❌ Error occurred while generating ${FILE_NAME} / ${FILE_NAME_FULL}! Details:\n`, error);
 } finally {
     console.timeEnd(TIME_LABEL);
 }
