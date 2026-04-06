@@ -66,6 +66,7 @@ export const DOCS_ROUTES: Routes = [
                     { path: DocsStructureTokensTab.Shadows, component: DocsTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.BorderRadius, component: DocsTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Sizes, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Semantic, component: DocsTokensOverview, pathMatch: 'full' },
                     { path: DocsStructureTokensTab.Palette, component: DocsTokensOverview, pathMatch: 'full' },
                     { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]

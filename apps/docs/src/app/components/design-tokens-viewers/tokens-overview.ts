@@ -15,6 +15,7 @@ import { map, skip } from 'rxjs';
 import { docsData as borderRadius } from './data/border-radius';
 import { docsData as colors } from './data/colors';
 import { docsData as palette } from './data/palette';
+import { docsData as sematic } from './data/semantic';
 import { docsData as shadows } from './data/shadows';
 import { docsData as sizes } from './data/sizes';
 
@@ -104,6 +105,7 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Colors]: 'dimensions',
         [DocsStructureTokensTab.BorderRadius]: 'dimensions',
         [DocsStructureTokensTab.Palette]: 'dimensions',
+        [DocsStructureTokensTab.Semantic]: 'dimensions',
         [DocsStructureTokensTab.Sizes]: 'sizes',
         [DocsStructureTokensTab.Shadows]: 'shadows'
     };
@@ -115,6 +117,7 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Colors]: 'background-color',
         [DocsStructureTokensTab.BorderRadius]: 'border-radius',
         [DocsStructureTokensTab.Palette]: 'background-color',
+        [DocsStructureTokensTab.Semantic]: 'background-color',
         [DocsStructureTokensTab.Sizes]: 'width',
         [DocsStructureTokensTab.Shadows]: 'box-shadow'
     };
@@ -223,7 +226,8 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         [DocsStructureTokensTab.Shadows]: shadows,
         [DocsStructureTokensTab.BorderRadius]: borderRadius,
         [DocsStructureTokensTab.Sizes]: sizes,
-        [DocsStructureTokensTab.Palette]: palette
+        [DocsStructureTokensTab.Palette]: palette,
+        [DocsStructureTokensTab.Semantic]: sematic
     };
 
     constructor() {
@@ -248,12 +252,12 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
 
         const getTokenValue = (token: string) => styles.getPropertyValue(token);
 
-        return this.tokenDataMap[this.activatedTab()].map(({ tokens, type, sections }) => {
+        return this.tokenDataMap[this.activatedTab()].map(({ tokens, type, sections }: DocsTokensInfoRaw) => {
             if (tokens && tokens.length > 0) {
                 return {
                     type,
                     tokens: tokens.map((token) => ({ token, value: getTokenValue(token) }))
-                };
+                } satisfies DocsTokensSectionInfo;
             }
 
             if (sections && sections.length > 0) {
@@ -267,7 +271,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
                                     token,
                                     value: getTokenValue(token)
                                 }))
-                            };
+                            } satisfies DocsTokensSectionInfo;
                         }
 
                         return { type, tokens: [] };

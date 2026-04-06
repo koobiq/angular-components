@@ -7,5 +7,5 @@ node ./tools/tokens/docs/index.js
 Alternatively, utilize the predefined script:
 
 ```bash
-yarn run build:design-tokens-page-md
+yarn run build:tokens:data
 ```
