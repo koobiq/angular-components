@@ -82,8 +82,8 @@ export class kbqSelectError implements AfterContentInit {
             align-items: center;
             justify-content: center;
 
-            margin-bottom: var(--kbq-size-4xl);
-            margin-top: var(--kbq-size-4xl);
+            padding-bottom: var(--kbq-size-3xl);
+            padding-top: var(--kbq-size-3xl);
 
             color: var(--kbq-foreground-contrast-secondary);
         }

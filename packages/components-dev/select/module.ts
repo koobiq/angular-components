@@ -20,10 +20,7 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
-        <select-scrolling-and-layering-example />
         <select-loading-error-custom-example />
-        <hr />
-
         <hr />
 
         <select-add-new-option-example />
@@ -41,6 +38,8 @@ import { DEV_OPTIONS } from './mock';
         <select-empty-example />
         <hr />
 
+        <!--        <select-scrolling-and-layering-example />-->
+        <!--        <hr />-->
         <!--        <select-with-multiline-matcher-example />-->
         <!--        <hr />-->
 
