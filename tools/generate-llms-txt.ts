@@ -10,17 +10,18 @@ const isFileExists = (relativePath: string): boolean => {
     return exists;
 };
 
-const fileName = 'llms.txt';
-const timeLabel = 'Runtime';
+const FILE_NAME = 'llms.txt';
+const TIME_LABEL = 'Runtime';
+const GITHUB_REPO_URL = `https://github.com/koobiq/angular-components`;
 
-console.time(timeLabel);
+console.time(TIME_LABEL);
 
 try {
     const { version } = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
-    console.info(`🚀 Generating ${fileName} for ${version} version`);
+    console.info(`🚀 Generating ${FILE_NAME} for ${version} version`);
 
-    const GITHUB_BASE = `https://github.com/koobiq/angular-components/blob/${version}`;
+    const GITHUB_RAW_CONTENT_URL = `https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/${version}`;
 
     const MAIN_CATEGORY_ITEM_OVERRIDES: Partial<
         Record<
@@ -39,7 +40,7 @@ try {
         }
     };
 
-    const COMPONENT_OVERRIDES: Partial<
+    const COMPONENT_CATEGORY_ITEM_OVERRIDES: Partial<
         Record<
             DocsStructureItemId,
             Partial<{
@@ -58,7 +59,16 @@ try {
         [DocsStructureItemId.Core]: { examplePath: '' }
     };
 
-    let content = '# Koobiq Angular\n\n';
+    let content = `# Koobiq Angular
+
+> Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
+
+## Navigation
+
+- [GitHub](${GITHUB_REPO_URL}/blob/${version})
+- [Issues](${GITHUB_REPO_URL}/issues)
+
+`;
 
     for (const category of docsGetCategories()) {
         if (
@@ -77,11 +87,11 @@ try {
 
                 if (override?.skip) continue;
 
-                const localPath = override?.overviewPath ?? `docs/guides/${item.id}.en.md`;
+                const path = override?.overviewPath ?? `docs/guides/${item.id}.en.md`;
 
-                if (!isFileExists(localPath)) continue;
+                if (path !== '' && !isFileExists(path)) continue;
 
-                content += `- [${item.id}](${GITHUB_BASE}/${localPath})\n`;
+                content += `- [${item.id}](${GITHUB_RAW_CONTENT_URL}/${path})\n`;
             }
 
             content += '\n';
@@ -89,7 +99,7 @@ try {
 
         if (category.id === DocsStructureCategoryId.Components) {
             for (const item of category.items) {
-                const override = COMPONENT_OVERRIDES[item.id];
+                const override = COMPONENT_CATEGORY_ITEM_OVERRIDES[item.id];
 
                 if (override?.skip) continue;
 
@@ -97,30 +107,34 @@ try {
 
                 const overviewPath = override?.overviewPath ?? `packages/components/${item.apiId}/${item.id}.en.md`;
 
-                if (isFileExists(overviewPath)) content += `- [overview](${GITHUB_BASE}/${overviewPath})\n`;
+                if (overviewPath !== '' && isFileExists(overviewPath)) {
+                    content += `- [overview](${GITHUB_RAW_CONTENT_URL}/${overviewPath})\n`;
+                }
 
                 if (item.hasApi) {
                     const apiPath = `tools/public_api_guard/components/${item.apiId}.api.md`;
 
-                    if (isFileExists(apiPath)) content += `- [api](${GITHUB_BASE}/${apiPath})\n`;
+                    if (isFileExists(apiPath)) content += `- [api](${GITHUB_RAW_CONTENT_URL}/${apiPath})\n`;
                 }
 
                 const examplePath =
                     override?.examplePath ??
                     `packages/docs-examples/components/${item.apiId}/${item.id}-overview/${item.id}-overview-example.ts`;
 
-                if (isFileExists(examplePath)) content += `- [example](${GITHUB_BASE}/${examplePath})\n`;
+                if (examplePath !== '' && isFileExists(examplePath)) {
+                    content += `- [example](${GITHUB_RAW_CONTENT_URL}/${examplePath})\n`;
+                }
 
                 content += '\n';
             }
         }
     }
 
-    writeFileSync(join(process.cwd(), 'apps/docs/src', fileName), content);
+    writeFileSync(join(process.cwd(), 'apps/docs/src', FILE_NAME), content);
 
-    console.info(`✅ ${fileName} has been successfully generated!`);
+    console.info(`✅ ${FILE_NAME} has been successfully generated!`);
 } catch (error) {
-    console.info(`❌ Error occurred while generating ${fileName}! Details:\n`, error);
+    console.info(`❌ Error occurred while generating ${FILE_NAME}! Details:\n`, error);
 } finally {
-    console.timeEnd(timeLabel);
+    console.timeEnd(TIME_LABEL);
 }
