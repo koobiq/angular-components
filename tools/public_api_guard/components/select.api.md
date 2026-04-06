@@ -23,7 +23,7 @@ import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
-import * as i10 from '@koobiq/components/form-field';
+import * as i11 from '@koobiq/components/form-field';
 import * as i2 from '@koobiq/components/core';
 import * as i3 from '@koobiq/components/icon';
 import * as i4 from '@koobiq/components/tags';
@@ -43,6 +43,7 @@ import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
+import { KbqSelectSearchEmptyResult } from '@koobiq/components/core';
 import { KbqSelectTrigger } from '@koobiq/components/core';
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -52,6 +53,7 @@ import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -59,6 +61,9 @@ import { Renderer2 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+
+// @public
+export const delayBeforeDisplayingResultWithoutOptions = 101;
 
 // @public
 export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
@@ -95,17 +100,12 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 // @public (undocumented)
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
     constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef<HTMLElement>, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
-    // (undocumented)
     backdropClass: string;
-    // (undocumented)
+    readonly beforeOpened: OutputEmitterRef<void>;
     calculateHiddenItems: () => void;
-    // (undocumented)
     get canShowCleaner(): boolean;
-    // (undocumented)
     cdkVirtualForOf?: CdkVirtualForOf<any>;
-    // (undocumented)
     cleaner: KbqCleaner;
-    // (undocumented)
     clearValue($event: any): void;
     close(): void;
     readonly closedStream: Observable<void>;
@@ -113,9 +113,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
     controlType: string;
-    // (undocumented)
     customMatcher: KbqSelectMatcher;
-    // (undocumented)
     customTagTemplateRef: TemplateRef<any>;
     customTrigger: KbqSelectTrigger;
     // (undocumented)
@@ -127,54 +125,39 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
         searchMinOptionsThreshold: "auto" | number;
     }> | null;
     protected readonly destroyRef: DestroyRef;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
     get empty(): boolean;
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
     get firstFiltered(): boolean;
-    // (undocumented)
     get firstSelected(): KbqOptionBase | null;
     focus(): void;
     get focused(): boolean;
     set focused(value: boolean);
-    // (undocumented)
     footer?: ElementRef;
-    // (undocumented)
     getItemHeight(): number;
     getPanelTheme(): string;
-    // (undocumented)
     handleClick($event: MouseEvent): void;
-    // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
-    // (undocumented)
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
     // (undocumented)
     hiddenItems: number;
-    // (undocumented)
     hiddenItemsText: string;
-    // (undocumented)
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string;
-    // (undocumented)
     get id(): string;
     set id(value: string);
     // (undocumented)
     protected readonly isBrowser: boolean;
-    // (undocumented)
     get isEmptySearchResult(): boolean;
-    // (undocumented)
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
     protected localeService?: KbqLocaleService | undefined;
     multiline: boolean;
-    // (undocumented)
     get multiple(): boolean;
     set multiple(value: boolean);
     get multiSelection(): boolean;
@@ -188,74 +171,62 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     static ngAcceptInputType_panelMinWidth: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngControl: NgControl;
-    // (undocumented)
     ngDoCheck(): void;
-    // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     ngOnInit(): void;
+    get noOptions(): boolean;
     offsetY: number;
     onAttached(): void;
     onBlur(): void;
     onChange: (value: any) => void;
     onContainerClick(): void;
-    // (undocumented)
     onFocus(): void;
     onRemoveMatcherItem(option: KbqOptionBase, $event: any): void;
     onTouched: () => void;
     open(): void;
     readonly openedChange: EventEmitter<boolean>;
     readonly openedStream: Observable<void>;
+    openPanel(): void;
     optionGroups: QueryList<KbqOptgroup>;
     options: QueryList<KbqOption>;
-    // (undocumented)
     optionsContainer: ElementRef;
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange>;
-    // (undocumented)
     overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
     protected overlayWidth: string | number;
-    // (undocumented)
     panel: ElementRef;
     panelClass: string | string[] | Set<string> | {
         [key: string]: any;
     };
     panelDoneAnimatingStream: Subject<string>;
     panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
-    // (undocumented)
     panelOpen: boolean;
     panelWidth: KbqSelectPanelWidth;
     // (undocumented)
     parentForm: NgForm;
     // (undocumented)
     parentFormGroup: FormGroupDirective;
-    // (undocumented)
     get placeholder(): string;
     set placeholder(value: string);
     positions: ConnectedPosition[];
-    // (undocumented)
     previousSelectionModelSelected: KbqOptionBase[];
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => {}): void;
-    // (undocumented)
     get required(): boolean;
     set required(value: boolean);
-    // (undocumented)
     resetSearch(): void;
     scrollStrategy: any;
-    // (undocumented)
     search: KbqSelectSearch;
+    searchEmpty: KbqSelectSearchEmptyResult;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);
     // (undocumented)
     get searchMinOptionsThreshold(): number | undefined;
     get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void);
-    // (undocumented)
     get selected(): KbqOptionBase | KbqOptionBase[];
     readonly selectionChange: EventEmitter<KbqSelectChange>;
     selectionModel: SelectionModel<KbqOptionBase>;
@@ -264,21 +235,16 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     protected shouldShowSearch(): boolean;
     sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
     readonly stateChanges: Subject<void>;
-    // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
-    // (undocumented)
     tags: QueryList<KbqTag>;
     toggle(): void;
     transformOrigin: string;
     trigger: ElementRef;
     triggerFontSize: number;
     triggerRect: DOMRect;
-    // (undocumented)
     get triggerValue(): string;
-    // (undocumented)
     get triggerValues(): KbqOptionBase[];
-    // (undocumented)
     updateErrorState(): void;
     get value(): any;
     set value(newValue: any);
@@ -286,7 +252,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "searchEmpty", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
@@ -301,6 +267,24 @@ export class KbqSelectChange {
 }
 
 // @public (undocumented)
+export class kbqSelectError implements AfterContentInit {
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<kbqSelectError, "kbq-select-error, [kbq-select-error]", ["kbqSelectError"], {}, {}, ["textElementRef"], ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<kbqSelectError, never>;
+}
+
+// @public (undocumented)
+export class KbqSelectLoading {
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelectLoading, "kbq-select-loading, [kbq-select-loading]", ["kbqSelectLoading"], {}, {}, never, ["kbq-progress-spinner"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectLoading, never>;
+}
+
+// @public (undocumented)
 export class KbqSelectModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectModule, never>;
@@ -308,9 +292,18 @@ export class KbqSelectModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSelectModule>;
     // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof i8.KbqSelect, typeof i9.KbqOptionTooltip], [typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i10.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i10.KbqSelectLoading, typeof i10.kbqSelectError, typeof i10.kbqSelectNoOptions], [typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i10.KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof i10.kbqSelectError, typeof i10.kbqSelectNoOptions]>;
+}
+
+// @public (undocumented)
+export class kbqSelectNoOptions {
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<kbqSelectNoOptions, "kbq-select-no-options, [kbq-select-no-options]", ["kbqSelectNoOptions"], {}, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<kbqSelectNoOptions, never>;
 }
 
 // @public
@@ -325,6 +318,9 @@ export const kbqSelectOptionsProvider: (options: KbqSelectOptions) => Provider;
 
 // @public
 export type KbqSelectPanelWidth = 'auto' | number | null;
+
+// @public
+export const minimumTimeToDisplayLoading = 300;
 
 // (No @packageDocumentation comment for this package)
 

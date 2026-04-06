@@ -3920,6 +3920,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "search-expandable-overview-example.ts",
     "importPath": "components/search-expandable"
   },
+  "select-add-new-option": {
+    "packagePath": "components/select/select-add-new-option",
+    "title": "Select add new option",
+    "componentName": "SelectAddNewOptionExample",
+    "files": [
+      "select-add-new-option-example.ts"
+    ],
+    "selector": "select-add-new-option-example",
+    "additionalComponents": [],
+    "primaryFile": "select-add-new-option-example.ts",
+    "importPath": "components/select"
+  },
   "select-cleaner": {
     "packagePath": "components/select/select-cleaner",
     "title": "Select cleaner",
@@ -3966,6 +3978,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-disabled-example",
     "additionalComponents": [],
     "primaryFile": "select-disabled-example.ts",
+    "importPath": "components/select"
+  },
+  "select-empty": {
+    "packagePath": "components/select/select-empty",
+    "title": "Select empty",
+    "componentName": "SelectEmptyExample",
+    "files": [
+      "select-empty-example.ts"
+    ],
+    "selector": "select-empty-example",
+    "additionalComponents": [],
+    "primaryFile": "select-empty-example.ts",
     "importPath": "components/select"
   },
   "select-footer": {
@@ -4016,6 +4040,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-icon-example.ts",
     "importPath": "components/select"
   },
+  "select-loading-error-custom": {
+    "packagePath": "components/select/select-loading-error-custom",
+    "title": "Select loading error (custom)",
+    "componentName": "SelectLoadingErrorCustomExample",
+    "files": [
+      "select-loading-error-custom-example.ts"
+    ],
+    "selector": "select-loading-error-custom-example",
+    "additionalComponents": [],
+    "primaryFile": "select-loading-error-custom-example.ts",
+    "importPath": "components/select"
+  },
+  "select-loading-error": {
+    "packagePath": "components/select/select-loading-error",
+    "title": "Select loading error",
+    "componentName": "SelectLoadingErrorExample",
+    "files": [
+      "select-loading-error-example.ts"
+    ],
+    "selector": "select-loading-error-example",
+    "additionalComponents": [],
+    "primaryFile": "select-loading-error-example.ts",
+    "importPath": "components/select"
+  },
   "select-loading": {
     "packagePath": "components/select/select-loading",
     "title": "Select loading",
@@ -4038,6 +4086,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-multiple-example",
     "additionalComponents": [],
     "primaryFile": "select-multiple-example.ts",
+    "importPath": "components/select"
+  },
+  "select-no-variants": {
+    "packagePath": "components/select/select-no-variants",
+    "title": "Select no variants",
+    "componentName": "SelectNoVariantsExample",
+    "files": [
+      "select-no-variants-example.ts"
+    ],
+    "selector": "select-no-variants-example",
+    "additionalComponents": [],
+    "primaryFile": "select-no-variants-example.ts",
     "importPath": "components/select"
   },
   "select-overview": {
@@ -6062,6 +6122,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "validation-on-open-example.ts",
     "importPath": "components/validation"
   },
+  "validation-on-submit-custom-matcher": {
+    "packagePath": "components/validation/validation-on-submit-custom-matcher",
+    "title": "Validation on submit with custom matcher",
+    "componentName": "ValidationOnSubmitCustomMatcherExample",
+    "files": [
+      "validation-on-submit-custom-matcher-example.ts"
+    ],
+    "selector": "validation-on-submit-custom-matcher-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-on-submit-custom-matcher-example.ts",
+    "importPath": "components/validation"
+  },
   "validation-on-submit": {
     "packagePath": "components/validation/validation-on-submit",
     "title": "Validation on submit",
@@ -6525,6 +6597,8 @@ return import('@koobiq/docs-examples/components/inline-edit');
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-customized-design':
 return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-date-time':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-disabled':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-editable-header':
@@ -6753,6 +6827,8 @@ return import('@koobiq/docs-examples/components/scrollbar');
 return import('@koobiq/docs-examples/components/search-expandable');
   case 'search-expandable-overview':
 return import('@koobiq/docs-examples/components/search-expandable');
+  case 'select-add-new-option':
+return import('@koobiq/docs-examples/components/select');
   case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');
   case 'select-custom-matcher':
@@ -6760,6 +6836,8 @@ return import('@koobiq/docs-examples/components/select');
   case 'select-custom-trigger':
 return import('@koobiq/docs-examples/components/select');
   case 'select-disabled':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-empty':
 return import('@koobiq/docs-examples/components/select');
   case 'select-footer':
 return import('@koobiq/docs-examples/components/select');
@@ -6769,9 +6847,15 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-icon':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-loading-error-custom':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-loading-error':
+return import('@koobiq/docs-examples/components/select');
   case 'select-loading':
 return import('@koobiq/docs-examples/components/select');
   case 'select-multiple':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-no-variants':
 return import('@koobiq/docs-examples/components/select');
   case 'select-overview':
 return import('@koobiq/docs-examples/components/select');
@@ -7104,6 +7188,8 @@ return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-blur':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-open':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-on-submit-custom-matcher':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-submit':
 return import('@koobiq/docs-examples/components/validation');
