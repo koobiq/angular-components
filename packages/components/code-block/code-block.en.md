@@ -17,7 +17,7 @@ npm install highlight.js@^11
 
 Numbering lines is useful for referencing a specific location in the document. Line numbers are disabled by default and can be enabled using the `lineNumbers` attribute.
 
-<!-- example(code-block-with-line-numbers) -->
+<!-- example(code-block-overview) -->
 
 ### Header with title
 

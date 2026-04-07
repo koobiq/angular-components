@@ -32,6 +32,9 @@ yarn run build:docs-examples
 # Generate sitemap
 yarn run docs:generate-sitemap
 
+# Generate llms.txt
+yarn run docs:generate-llms-txt
+
 # Run application
 yarn run docs:start:dev
 # Then open http://localhost:4200

@@ -10,7 +10,7 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [RadioExamplesModule],
     template: `
-        <radio-size-example />
+        <radio-overview-example />
         <hr />
         <radio-style-example />
         <hr />

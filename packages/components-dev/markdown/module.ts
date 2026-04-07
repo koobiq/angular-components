@@ -16,7 +16,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <markdown-headers-combinations-example />
         <hr />
-        <markdown-headers-example />
+        <markdown-overview-example />
         <hr />
         <markdown-image-example />
         <hr />

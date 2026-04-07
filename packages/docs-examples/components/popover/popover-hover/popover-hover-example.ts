@@ -29,7 +29,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
             #kbqPopover="kbqPopover"
             kbq-button
             kbqPopover
-            [kbqPopoverClass]="'popover-common-example'"
+            [kbqPopoverClass]="'popover-overview-example'"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqTrigger]="'hover'"
@@ -38,7 +38,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         </button>
     `,
     styles: `
-        ::ng-deep .kbq-popover.kbq-popover_medium.popover-common-example {
+        ::ng-deep .kbq-popover.kbq-popover_medium.popover-overview-example {
             width: 400px;
         }
     `,

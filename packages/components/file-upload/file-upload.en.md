@@ -1,6 +1,6 @@
 Allows the user to upload files to the product.
 
-<!-- example(file-upload-single-overview) -->
+<!-- example(file-upload-overview) -->
 
 ### Multiple upload
 

@@ -4,7 +4,7 @@ A badge is used to highlight the status, count, or other important characteristi
 
 #### Style
 
-<!-- example(badge-fill-and-style) -->
+<!-- example(badge-overview) -->
 
 #### Size
 

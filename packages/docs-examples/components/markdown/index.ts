@@ -4,12 +4,12 @@ import { MarkdownCodeBlockExample } from './markdown-code-block/markdown-code-bl
 import { MarkdownCodeExample } from './markdown-code/markdown-code-example';
 import { MarkdownDividerExample } from './markdown-divider/markdown-divider-example';
 import { MarkdownHeadersCombinationsExample } from './markdown-headers-combinations/markdown-headers-combinations-example';
-import { MarkdownHeadersExample } from './markdown-headers/markdown-headers-example';
 import { MarkdownImageExample } from './markdown-image/markdown-image-example';
 import { MarkdownLineBreakWithMarkdownTextInputExample } from './markdown-line-break-with-markdown-text-input/markdown-line-break-with-markdown-text-input-example';
 import { MarkdownLineBreakExample } from './markdown-line-break/markdown-line-break-example';
 import { MarkdownLinkExample } from './markdown-link/markdown-link-example';
 import { MarkdownListExample } from './markdown-list/markdown-list-example';
+import { MarkdownOverviewExample } from './markdown-overview/markdown-overview-example';
 import { MarkdownParagraphExample } from './markdown-paragraph/markdown-paragraph-example';
 import { MarkdownQuoteExample } from './markdown-quote/markdown-quote-example';
 import { MarkdownSelectionExample } from './markdown-selection/markdown-selection-example';
@@ -21,12 +21,12 @@ export {
     MarkdownCodeExample,
     MarkdownDividerExample,
     MarkdownHeadersCombinationsExample,
-    MarkdownHeadersExample,
     MarkdownImageExample,
     MarkdownLineBreakExample,
     MarkdownLineBreakWithMarkdownTextInputExample,
     MarkdownLinkExample,
     MarkdownListExample,
+    MarkdownOverviewExample,
     MarkdownParagraphExample,
     MarkdownQuoteExample,
     MarkdownSelectionExample,
@@ -39,7 +39,7 @@ const EXAMPLES = [
     MarkdownCodeExample,
     MarkdownDividerExample,
     MarkdownHeadersCombinationsExample,
-    MarkdownHeadersExample,
+    MarkdownOverviewExample,
     MarkdownImageExample,
     MarkdownLineBreakExample,
     MarkdownLineBreakWithMarkdownTextInputExample,

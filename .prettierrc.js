@@ -33,6 +33,12 @@ const config = {
             options: {
                 parser: 'angular'
             }
+        },
+        {
+            files: ['llms.txt', 'llms-full.txt'],
+            options: {
+                parser: 'markdown'
+            }
         }
     ]
 };

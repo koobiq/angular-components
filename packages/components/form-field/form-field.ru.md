@@ -15,7 +15,7 @@
 
 ### Лейбл
 
-<!-- example(form-field-with-label) -->
+<!-- example(form-field-overview) -->
 
 ### Подсказки
 

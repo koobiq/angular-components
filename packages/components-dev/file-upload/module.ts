@@ -104,7 +104,7 @@ export class DevCustomTextDirective {}
     selector: 'dev-examples',
     imports: [FileUploadExamplesModule],
     template: `
-        <file-upload-single-overview-example />
+        <file-upload-overview-example />
         <hr />
         <file-upload-multiple-default-overview-example />
         <hr />
