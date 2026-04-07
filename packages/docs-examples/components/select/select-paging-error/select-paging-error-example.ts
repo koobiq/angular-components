@@ -25,6 +25,7 @@ import {
     Subject,
     Subscription,
     switchMap,
+    throwError,
     timer
 } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -44,7 +45,7 @@ type SelectState =
     | { status: 'loading' }
     | { status: 'empty' }
     | { status: 'error'; error: any }
-    | { status: 'success'; data: Option[]; hasMore: boolean; loadingMore: boolean };
+    | { status: 'success'; data: Option[]; pageNotLoaded?: boolean; hasMore: boolean; loadingMore: boolean };
 
 const PAGE_SIZE = 20;
 const DELAY = 1000;
@@ -56,8 +57,13 @@ export class OptionsApiService {
         search: string,
         page: number = 0,
         delay: number = DELAY,
+        error: boolean = false,
         pageSize: number = PAGE_SIZE
     ): Observable<PagedResult> {
+        if (error) {
+            return timer(DELAY).pipe(switchMap(() => throwError(() => new Error('error'))));
+        }
+
         const term = search.toLowerCase().trim();
 
         const filtered = !term ? this.data : this.data.filter((option) => option.label.toLowerCase().includes(term));
@@ -146,7 +152,7 @@ export class SelectFacade {
                     this.currentPage++;
                     this.isLoadingMore = true;
 
-                    return this.api.getOptions(search, this.currentPage, DELAY).pipe(
+                    return this.api.getOptions(search, this.currentPage, DELAY, this.currentPage > 1).pipe(
                         map((result): SelectState => {
                             this.accumulated = [...this.accumulated, ...result.data];
                             this.currentHasMore = result.hasMore;
@@ -158,6 +164,19 @@ export class SelectFacade {
                                 hasMore: result.hasMore,
                                 loadingMore: false
                             };
+                        }),
+                        catchError(() => {
+                            this.currentPage--;
+                            this.isLoadingMore = false;
+                            this.currentHasMore = false;
+
+                            return of({
+                                status: 'success',
+                                data: this.accumulated,
+                                hasMore: this.currentHasMore,
+                                loadingMore: this.isLoadingMore,
+                                pageNotLoaded: true
+                            } as SelectState);
                         }),
                         startWith({
                             status: 'success',
@@ -184,10 +203,10 @@ export class SelectFacade {
 }
 
 /**
- * @title Select paging
+ * @title Select paging error
  */
 @Component({
-    selector: 'select-paging-example',
+    selector: 'select-paging-error-example',
     imports: [
         KbqSelectModule,
         KbqButtonToggleModule,
@@ -254,6 +273,23 @@ export class SelectFacade {
                                         </div>
                                     </kbq-option>
                                 }
+
+                                @if (state.pageNotLoaded) {
+                                    <kbq-select-error paging>
+                                        <span #errorText>Не удалось показать записи</span>
+                                        <div>
+                                            <button
+                                                kbq-button
+                                                [kbqStyle]="'transparent'"
+                                                [color]="'theme'"
+                                                (click)="reloadOptions()"
+                                            >
+                                                <i kbq-icon="kbq-arrow-rotate-left_16"></i>
+                                                Повторить
+                                            </button>
+                                        </div>
+                                    </kbq-select-error>
+                                }
                             }
                         }
                     }
@@ -271,7 +307,7 @@ export class SelectFacade {
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectPagingExample implements OnDestroy {
+export class SelectPagingErrorExample implements OnDestroy {
     protected readonly facade = inject(SelectFacade);
     private readonly ngZone = inject(NgZone);
 

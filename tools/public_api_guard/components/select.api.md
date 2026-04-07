@@ -31,6 +31,7 @@ import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/common';
 import * as i7 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -270,8 +271,9 @@ export class KbqSelectChange {
 export class kbqSelectError implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
+    paging: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<kbqSelectError, "kbq-select-error, [kbq-select-error]", ["kbqSelectError"], {}, {}, ["textElementRef"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<kbqSelectError, "kbq-select-error, [kbq-select-error]", ["kbqSelectError"], { "paging": { "alias": "paging"; "required": false; "isSignal": true; }; }, {}, ["textElementRef"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<kbqSelectError, never>;
 }

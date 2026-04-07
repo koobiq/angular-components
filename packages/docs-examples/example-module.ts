@@ -3980,18 +3980,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-disabled-example.ts",
     "importPath": "components/select"
   },
-  "select-empty": {
-    "packagePath": "components/select/select-empty",
-    "title": "Select empty",
-    "componentName": "SelectEmptyExample",
-    "files": [
-      "select-empty-example.ts"
-    ],
-    "selector": "select-empty-example",
-    "additionalComponents": [],
-    "primaryFile": "select-empty-example.ts",
-    "importPath": "components/select"
-  },
   "select-footer": {
     "packagePath": "components/select/select-footer",
     "title": "Select footer",
@@ -4110,6 +4098,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-overview-example",
     "additionalComponents": [],
     "primaryFile": "select-overview-example.ts",
+    "importPath": "components/select"
+  },
+  "select-paging-error": {
+    "packagePath": "components/select/select-paging-error",
+    "title": "Select paging error",
+    "componentName": "SelectPagingErrorExample",
+    "files": [
+      "select-paging-error-example.ts"
+    ],
+    "selector": "select-paging-error-example",
+    "additionalComponents": [],
+    "primaryFile": "select-paging-error-example.ts",
+    "importPath": "components/select"
+  },
+  "select-paging": {
+    "packagePath": "components/select/select-paging",
+    "title": "Select paging",
+    "componentName": "SelectPagingExample",
+    "files": [
+      "select-paging-example.ts"
+    ],
+    "selector": "select-paging-example",
+    "additionalComponents": [],
+    "primaryFile": "select-paging-example.ts",
     "importPath": "components/select"
   },
   "select-preselected-values": {
@@ -6837,8 +6849,6 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-disabled':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-empty':
-return import('@koobiq/docs-examples/components/select');
   case 'select-footer':
 return import('@koobiq/docs-examples/components/select');
   case 'select-groups':
@@ -6858,6 +6868,10 @@ return import('@koobiq/docs-examples/components/select');
   case 'select-no-variants':
 return import('@koobiq/docs-examples/components/select');
   case 'select-overview':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-paging-error':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-paging':
 return import('@koobiq/docs-examples/components/select');
   case 'select-preselected-values':
 return import('@koobiq/docs-examples/components/select');

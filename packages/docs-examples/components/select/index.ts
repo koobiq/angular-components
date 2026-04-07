@@ -14,6 +14,7 @@ import { SelectLoadingExample } from './select-loading/select-loading-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectNoVariantsExample } from './select-no-variants/select-no-variants-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
+import { SelectPagingErrorExample } from './select-paging-error/select-paging-error-example';
 import { SelectPagingExample } from './select-paging/select-paging-example';
 import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
@@ -43,6 +44,7 @@ export {
     SelectMultipleExample,
     SelectNoVariantsExample,
     SelectOverviewExample,
+    SelectPagingErrorExample,
     SelectPagingExample,
     SelectPreselectedValuesExample,
     SelectPrioritizedSelectedExample,
@@ -85,7 +87,8 @@ const EXAMPLES = [
     SelectNoVariantsExample,
     SelectAddNewOptionExample,
     SelectLoadingErrorCustomExample,
-    SelectPagingExample
+    SelectPagingExample,
+    SelectPagingErrorExample
 ];
 
 @NgModule({

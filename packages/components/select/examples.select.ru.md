@@ -12,11 +12,11 @@
 
 ## Постраничная загрузка
 
-<!-- example(select-loading) -->
+<!-- example(select-paging) -->
 
 ### Ошибка постраничной загрузки
 
-<!-- example(select-loading-error) -->
+<!-- example(select-paging-error) -->
 
 ## Нет вариантов выбора
 

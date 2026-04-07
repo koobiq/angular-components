@@ -1,10 +1,12 @@
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     contentChild,
     ElementRef,
     inject,
+    input,
     Renderer2
 } from '@angular/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
@@ -39,11 +41,21 @@ export class KbqSelectLoading {}
             display: flex;
             flex-direction: column;
 
-            align-items: center;
-            justify-content: center;
+            &.kbq-select-error_default {
+                align-items: center;
+                justify-content: center;
 
-            margin-bottom: var(--kbq-size-3xl);
-            margin-top: var(--kbq-size-3xl);
+                margin-bottom: var(--kbq-size-3xl);
+                margin-top: var(--kbq-size-3xl);
+            }
+
+            &.kbq-select-error_paging {
+                justify-content: start;
+
+                & ::ng-deep.kbq-select-error__text {
+                    padding-left: var(--kbq-size-l);
+                }
+            }
         }
 
         ::ng-deep .kbq-select-error__text {
@@ -55,12 +67,17 @@ export class KbqSelectLoading {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqSelectError',
     host: {
-        class: 'kbq-select-error'
+        class: 'kbq-select-error',
+        '[class.kbq-select-error_default]': '!paging()',
+        '[class.kbq-select-error_paging]': 'paging()'
     }
 })
 export class kbqSelectError implements AfterContentInit {
     private readonly renderer = inject(Renderer2);
     private readonly textElementRef = contentChild('errorText', { read: ElementRef });
+
+    /** Indicates whether styles for pagination controls should be used. */
+    paging = input(false, { transform: booleanAttribute });
 
     ngAfterContentInit(): void {
         if (this.textElementRef()) {
