@@ -23,7 +23,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <form novalidate class="kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Empty select</label>
+                <label class="kbq-form__label">Custom Error State</label>
                 <kbq-form-field>
                     <kbq-select>
                         @for (option of options; track option) {

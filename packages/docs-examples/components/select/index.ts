@@ -4,7 +4,6 @@ import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
 import { SelectCustomMatcherExample } from './select-custom-matcher/select-custom-matcher-example';
 import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
 import { SelectDisabledExample } from './select-disabled/select-disabled-example';
-import { SelectEmptyExample } from './select-empty/select-empty-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
 import { SelectHeightExample } from './select-height/select-height-example';
@@ -15,6 +14,7 @@ import { SelectLoadingExample } from './select-loading/select-loading-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectNoVariantsExample } from './select-no-variants/select-no-variants-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
+import { SelectPagingExample } from './select-paging/select-paging-example';
 import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
 import { SelectScrollingAndLayeringExample } from './select-scrolling-and-layering/select-scrolling-and-layering-example';
@@ -33,7 +33,6 @@ export {
     SelectCustomMatcherExample,
     SelectCustomTriggerExample,
     SelectDisabledExample,
-    SelectEmptyExample,
     SelectFooterExample,
     SelectGroupsExample,
     SelectHeightExample,
@@ -44,6 +43,7 @@ export {
     SelectMultipleExample,
     SelectNoVariantsExample,
     SelectOverviewExample,
+    SelectPagingExample,
     SelectPreselectedValuesExample,
     SelectPrioritizedSelectedExample,
     SelectScrollingAndLayeringExample,
@@ -81,11 +81,11 @@ const EXAMPLES = [
     SelectWithPanelMinWidthExample,
     SelectScrollingAndLayeringExample,
     SelectLoadingExample,
-    SelectEmptyExample,
     SelectLoadingErrorExample,
     SelectNoVariantsExample,
     SelectAddNewOptionExample,
-    SelectLoadingErrorCustomExample
+    SelectLoadingErrorCustomExample,
+    SelectPagingExample
 ];
 
 @NgModule({
