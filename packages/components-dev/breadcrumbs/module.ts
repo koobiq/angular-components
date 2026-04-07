@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadcrumbs';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
@@ -25,6 +26,8 @@ import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadc
         <breadcrumbs-truncate-by-abbrev-items-example />
         <hr />
         <breadcrumbs-truncate-center-items-example />
+        <hr />
+        <breadcrumbs-selectable-text-example />
         <hr />
         <breadcrumbs-routing-example />
     `,
@@ -63,7 +66,7 @@ export class DevAboutPage {}
 
 @Component({
     selector: 'dev-app',
-    imports: [RouterOutlet, RouterLink, DevDocsExamples],
+    imports: [RouterOutlet, RouterLink, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
