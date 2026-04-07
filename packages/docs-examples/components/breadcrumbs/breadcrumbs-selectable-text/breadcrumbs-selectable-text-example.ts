@@ -17,7 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqBreadcrumbsModule
     ],
     template: `
-        <nav kbq-breadcrumbs>
+        <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">
             @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
                     <a
