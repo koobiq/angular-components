@@ -8,10 +8,7 @@ import {
     ValidationErrors
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    kbqDisableLegacyValidationDirectiveProvider,
-    ShowOnFormSubmitErrorStateMatcher
-} from '@koobiq/components/core';
+import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -113,9 +110,6 @@ function maxLinesValidator(maxLines: number): AsyncValidatorFn {
             <button class="layout-margin-top-m" kbq-button type="submit" [disabled]="form.pending">Submit</button>
         </form>
     `,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleAsyncValidationExample {
