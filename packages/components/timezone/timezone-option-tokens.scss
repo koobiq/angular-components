@@ -2,8 +2,8 @@
 @use '../core/option/option-tokens';
 
 .kbq-timezone-select__panel {
-    --kbq-select-size-single-padding-left: var(--kbq-size-m);
-    --kbq-select-size-single-padding-right: var(--kbq-size-xxs);
+    --kbq-select-size-single-padding-left: 0;
+    --kbq-select-size-single-padding-right: 0;
     --kbq-select-size-single-padding-vertical: var(--kbq-size-xs);
     --kbq-select-size-single-content-gap: var(--kbq-size-xxs);
     --kbq-select-size-multiple-padding-left: var(--kbq-size-xxs);
