@@ -32,12 +32,7 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
         NgClass
     ],
     templateUrl: 'timezone-select.component.html',
-    styleUrls: [
-        '../select/select.scss',
-        '../select/select-tokens.scss',
-        'timezone-select.component.scss',
-        'timezone-option-tokens.scss'
-    ],
+    styleUrls: ['../select/select.scss', 'timezone-select.component.scss', 'timezone-option-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqTimezoneSelect',
