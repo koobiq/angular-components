@@ -71,6 +71,12 @@
 
 <!-- example(file-upload-multiple-mixed-validation) -->
 
+#### Асинхронная валидация
+
+- Пример проверки контента при загрузке одного файла с использование `Reactive Forms`.
+
+<!-- example(file-upload-single-async-validation) -->
+
 ### Примитивы
 
 Пример демонстрирует применение примитивов компонента загрузки файлов.

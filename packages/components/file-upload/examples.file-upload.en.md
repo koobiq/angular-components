@@ -69,6 +69,12 @@ The examples use [FileValidators](https://github.com/koobiq/angular-components/b
 
 <!-- example(file-upload-multiple-mixed-validation) -->
 
+#### Asynchronous validation
+
+- Example of content check while uploading a single file using `Reactive Forms`.
+
+<!-- example(file-upload-single-async-validation) -->
+
 ### Primitives
 
 This example demonstrates the use of file upload component primitives.
