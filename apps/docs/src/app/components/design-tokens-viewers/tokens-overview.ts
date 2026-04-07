@@ -143,7 +143,15 @@ export class DocsTokensTable extends DocsLocaleState {
     }
 
     getStyle(token: string) {
-        return { [this.mapTabToCssProp[this.tab()]]: `var(${token})` };
+        const cssProp = this.mapTabToCssProp[this.tab()];
+
+        if (cssProp === 'background-color') {
+            return {
+                background: `linear-gradient(var(${token}), var(${token})), repeating-conic-gradient(var(--kbq-background-bg-tertiary) 0% 25%, var(--kbq-background-bg) 0% 50%) 0 / 8px 8px`
+            };
+        }
+
+        return { [cssProp]: `var(${token})` };
     }
 
     getClassName(text: string): string {
