@@ -196,7 +196,10 @@ export class DocsStackblitzWriter {
     }
 
     private buildPackageJson(patterns: string[]) {
-        const ngVersion = `^${VERSION.full}`;
+        // Use only the major version (e.g. "^19") instead of the full version (e.g. "^19.2.4"),
+        // because StackBlitz WebContainer does not have all Angular patch versions available
+        // and would fall back to installing the latest Angular instead.
+        const ngVersion = `^${VERSION.major}`;
         const koobiqVersion = `^${docsKoobiqVersion}`;
         const dependencies = {
             '@angular/animations': ngVersion,
@@ -223,6 +226,14 @@ export class DocsStackblitzWriter {
             'zone.js': '~0.15.0'
         };
 
+        const devDependencies = {
+            '@angular-devkit/build-angular': ngVersion,
+            '@angular/cli': ngVersion,
+            '@angular/compiler-cli': ngVersion,
+            '@types/luxon': '^3.7.1',
+            typescript: '5.8.3'
+        };
+
         for (const pattern of patterns) {
             Object.assign(dependencies, OPTIONAL_PACKAGE_JSON_DEPENDENCIES[pattern]);
         }
@@ -239,13 +250,7 @@ export class DocsStackblitzWriter {
                 build: 'ng build'
             },
             dependencies,
-            devDependencies: {
-                '@angular-devkit/build-angular': ngVersion,
-                '@angular/cli': ngVersion,
-                '@angular/compiler-cli': ngVersion,
-                '@types/luxon': '^3.7.1',
-                typescript: '5.8.3'
-            }
+            devDependencies
         } as const;
     }
 
