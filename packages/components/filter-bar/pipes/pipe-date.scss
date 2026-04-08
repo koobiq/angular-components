@@ -75,7 +75,7 @@
                 display: flex;
 
                 & .kbq-date-period__date {
-                    min-width: 136px;
+                    flex: 1;
 
                     & .kbq-form-field__container {
                         border-top-right-radius: unset;
@@ -84,6 +84,7 @@
                 }
 
                 & .kbq-date-period__time.kbq-form-field-type-timepicker {
+                    flex: 1;
                     margin-left: -1px;
                     width: unset;
 
