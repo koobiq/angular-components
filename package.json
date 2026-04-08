@@ -63,7 +63,7 @@
         "@cspell/dict-markdown": "^2.0.16",
         "@cspell/dict-ru_ru": "^2.3.2",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.5.0",
-        "@koobiq/design-tokens": "^3.16.0",
+        "@koobiq/design-tokens": "^3.17.0",
         "@koobiq/luxon-date-adapter": "^3.4.0",
         "@koobiq/moment-date-adapter": "^3.4.0",
         "@koobiq/tokens-builder": "^3.16.0",
