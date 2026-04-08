@@ -7,6 +7,7 @@ import {
     Component,
     ContentChildren,
     DestroyRef,
+    Directive,
     ElementRef,
     EventEmitter,
     Host,
@@ -32,6 +33,13 @@ import { delay, filter } from 'rxjs/operators';
  * the component definition.
  */
 let uniqueAutocompleteIdCounter = 0;
+
+/** Footer that is rendered below the autocomplete options panel. */
+@Directive({
+    selector: '[kbqAutocompleteFooter], kbq-autocomplete-footer',
+    host: { class: 'kbq-autocomplete-footer' }
+})
+export class KbqAutocompleteFooter {}
 
 export class KbqAutocompleteSelectedEvent {
     constructor(

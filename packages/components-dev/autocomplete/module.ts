@@ -6,8 +6,24 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { AutocompleteOverviewExample } from 'packages/docs-examples/components/autocomplete';
+import { AutocompleteWithFooterExample } from 'packages/docs-examples/components/autocomplete/autocomplete-with-footer/autocomplete-with-footer-example';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { DevThemeToggle } from '../theme-toggle';
+
+@Component({
+    selector: 'dev-examples',
+    imports: [AutocompleteWithFooterExample, AutocompleteOverviewExample],
+    template: `
+        <autocomplete-with-footer-example />
+        <hr />
+        <autocomplete-overview-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -19,7 +35,9 @@ import { map, startWith } from 'rxjs/operators';
         KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
-        AsyncPipe
+        AsyncPipe,
+        DevDocsExamples,
+        DevThemeToggle
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

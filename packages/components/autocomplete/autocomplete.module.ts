@@ -7,7 +7,7 @@ import {
     KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER,
     KbqAutocompleteTrigger
 } from './autocomplete-trigger.directive';
-import { KbqAutocomplete } from './autocomplete.component';
+import { KbqAutocomplete, KbqAutocompleteFooter } from './autocomplete.component';
 
 @NgModule({
     imports: [
@@ -16,13 +16,15 @@ import { KbqAutocomplete } from './autocomplete.component';
         NgClass,
         KbqAutocomplete,
         KbqAutocompleteTrigger,
-        KbqAutocompleteOrigin
+        KbqAutocompleteOrigin,
+        KbqAutocompleteFooter
     ],
     exports: [
         KbqAutocomplete,
         KbqOptionModule,
         KbqAutocompleteTrigger,
-        KbqAutocompleteOrigin
+        KbqAutocompleteOrigin,
+        KbqAutocompleteFooter
     ],
     providers: [KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })
