@@ -93,17 +93,29 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
     @Input({ transform: numberAttribute }) emitValueTimeout = defaultEmitValueTimeout;
 
+    /** Tooltip text for the search button. When set, overrides localeData.tooltip */
+    @Input()
+    get tooltipText(): string {
+        return this._tooltipText ?? this.localeData?.tooltip;
+    }
+
+    set tooltipText(value: string | null) {
+        this._tooltipText = value;
+    }
+
+    private _tooltipText: string | null;
+
     /** Placeholder for input when expanded */
     @Input()
     get placeholder(): string {
         return this._placeholder ?? this.localeData?.placeholder;
     }
 
-    set placeholder(value: string) {
+    set placeholder(value: string | null) {
         this._placeholder = value;
     }
 
-    private _placeholder = this.localeData?.placeholder;
+    private _placeholder: string | null = this.localeData?.placeholder;
 
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {

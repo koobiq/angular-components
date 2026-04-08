@@ -1,9 +1,9 @@
 @if (!isOpened) {
     <button
-        kbqTooltip="{{ localeData.tooltip }}"
         type="button"
         kbq-button
         class="kbq-search-expandable__button"
+        [kbqTooltip]="tooltipText"
         [color]="'contrast'"
         [kbqStyle]="'transparent'"
         [kbqTooltipDisabled]="disabled"

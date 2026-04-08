@@ -254,8 +254,10 @@ export class KbqFilterBarRefresher {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarRefresher, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqFilterBarSearch implements AfterViewInit {
+    readonly customPlaceholder: InputSignal<string>;
+    readonly customTooltip: InputSignal<string>;
     readonly emitValueByEnter: InputSignalWithTransform<boolean, unknown>;
     readonly initialValue: InputSignal<unknown>;
     isSearchActive: boolean;
@@ -271,9 +273,11 @@ export class KbqFilterBarSearch implements AfterViewInit {
     readonly onSearchTimeout: InputSignalWithTransform<number, unknown>;
     // (undocumented)
     openSearch(): void;
+    get resolvedPlaceholder(): string;
+    get resolvedTooltip(): string;
     searchControl: UntypedFormControl;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-search, [kbq-filter-search]", never, { "onSearchTimeout": { "alias": "onSearchTimeout"; "required": false; "isSignal": true; }; "emitValueByEnter": { "alias": "emitValueByEnter"; "required": false; "isSignal": true; }; "initialValue": { "alias": "initialValue"; "required": false; "isSignal": true; }; }, { "onSearch": "onSearch"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-search, [kbq-filter-search]", never, { "onSearchTimeout": { "alias": "onSearchTimeout"; "required": false; "isSignal": true; }; "emitValueByEnter": { "alias": "emitValueByEnter"; "required": false; "isSignal": true; }; "initialValue": { "alias": "initialValue"; "required": false; "isSignal": true; }; "customTooltip": { "alias": "tooltip"; "required": false; "isSignal": true; }; "customPlaceholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; }, { "onSearch": "onSearch"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarSearch, never>;
 }

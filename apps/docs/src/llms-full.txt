@@ -13701,8 +13701,10 @@ export class KbqFilterBarRefresher {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarRefresher, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqFilterBarSearch implements AfterViewInit {
+    readonly customPlaceholder: InputSignal<string>;
+    readonly customTooltip: InputSignal<string>;
     readonly emitValueByEnter: InputSignalWithTransform<boolean, unknown>;
     readonly initialValue: InputSignal<unknown>;
     isSearchActive: boolean;
@@ -13718,6 +13720,8 @@ export class KbqFilterBarSearch implements AfterViewInit {
     readonly onSearchTimeout: InputSignalWithTransform<number, unknown>;
     // (undocumented)
     openSearch(): void;
+    get resolvedPlaceholder(): string;
+    get resolvedTooltip(): string;
     searchControl: UntypedFormControl;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<
@@ -13728,6 +13732,8 @@ export class KbqFilterBarSearch implements AfterViewInit {
             onSearchTimeout: { alias: 'onSearchTimeout'; required: false; isSignal: true };
             emitValueByEnter: { alias: 'emitValueByEnter'; required: false; isSignal: true };
             initialValue: { alias: 'initialValue'; required: false; isSignal: true };
+            customTooltip: { alias: 'tooltip'; required: false; isSignal: true };
+            customPlaceholder: { alias: 'placeholder'; required: false; isSignal: true };
         },
         { onSearch: 'onSearch' },
         never,
@@ -22014,7 +22020,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     onChange: (value: string) => void;
     onTouch: () => void;
     get placeholder(): string;
-    set placeholder(value: string);
+    set placeholder(value: string | null);
     registerOnChange(fn: (value: string) => void): void;
     registerOnTouched(fn: () => void): void;
     setDisabledState(isDisabled: boolean): void;
@@ -22023,6 +22029,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     set tabIndex(value: number);
     // (undocumented)
     toggle(): void;
+    get tooltipText(): string;
+    set tooltipText(value: string | null);
     value: BehaviorSubject<string>;
     writeValue(value: string): void;
     // (undocumented)
@@ -22034,6 +22042,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
             isOpened: { alias: 'isOpened'; required: false };
             isEmitValueByEnterEnabled: { alias: 'isEmitValueByEnterEnabled'; required: false };
             emitValueTimeout: { alias: 'emitValueTimeout'; required: false };
+            tooltipText: { alias: 'tooltipText'; required: false };
             placeholder: { alias: 'placeholder'; required: false };
             disabled: { alias: 'disabled'; required: false };
             tabIndex: { alias: 'tabIndex'; required: false };
