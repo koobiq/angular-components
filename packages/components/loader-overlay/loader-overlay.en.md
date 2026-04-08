@@ -62,3 +62,9 @@ When it is necessary to display the loading process on the entire page, an enlar
 The component size is set using the `size` attribute.
 
 <!-- example(loader-overlay-size) -->
+
+#### On card background
+
+When the loader overlay is placed inside a card or modal, use the `card` attribute. It applies a semi-transparent background using `--kbq-opacity-overlay` that blends naturally with the surface behind it.
+
+<!-- example(loader-overlay-on-background) -->

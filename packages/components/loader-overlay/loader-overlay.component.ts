@@ -1,4 +1,5 @@
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChild,
@@ -51,7 +52,8 @@ export class KbqLoaderOverlayCaption {}
         '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
         '[class.kbq-loader-overlay_transparent]': 'transparent',
-        '[class.kbq-loader-overlay_filled]': '!transparent'
+        '[class.kbq-loader-overlay_filled]': '!transparent',
+        '[class.kbq-loader-overlay_card]': 'card'
     }
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
@@ -60,6 +62,11 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @Input() caption: string;
     @Input() size: KbqDefaultSizes = 'big';
     @Input() transparent: boolean = true;
+    /**
+     * Uses a semi-transparent background to blend
+     * with the underlying card or modal surface. When enabled, overrides `transparent`.
+     */
+    @Input({ transform: booleanAttribute }) card: boolean = false;
 
     private parent: HTMLElement | null = null;
 

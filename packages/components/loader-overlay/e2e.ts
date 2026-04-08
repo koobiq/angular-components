@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
+import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
     selector: 'e2e-loader-overlay-states',
@@ -78,3 +80,45 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     }
 })
 export class E2eLoaderOverlayStates {}
+
+@Component({
+    selector: 'e2e-loader-overlay-on-background',
+    imports: [KbqButtonModule, KbqLoaderOverlayModule, KbqModalModule],
+    template: `
+        <button data-testid="e2eOpenModalWithLoader" (click)="open()">Open modal</button>
+
+        <ng-template #modalContent>
+            <div class="layout-padding-xl">
+                text text text text text text text text text text text text text text text text text text text text text
+                text text text text text text text text text text
+                <kbq-loader-overlay text="Loading data..." size="compact" [card]="true" />
+            </div>
+        </ng-template>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 350px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eLoaderOverlayOnBackground'
+    }
+})
+export class E2eLoaderOverlayCard {
+    @ViewChild('modalContent') private readonly modalContent: TemplateRef<any>;
+
+    private readonly modal = inject(KbqModalService);
+
+    protected open(): void {
+        this.modal.create({
+            kbqTitle: 'Loading data',
+            kbqContent: this.modalContent,
+            kbqOkText: 'Close',
+            kbqSize: ModalSize.Small
+        });
+    }
+}

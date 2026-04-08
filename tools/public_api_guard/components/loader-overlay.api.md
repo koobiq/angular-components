@@ -19,6 +19,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
     // (undocumented)
     caption: string;
+    card: boolean;
     // (undocumented)
     externalCaption: KbqLoaderOverlayCaption | null;
     // (undocumented)
@@ -35,6 +36,8 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     get isExternalText(): boolean;
     protected get loaderSizeClass(): string;
     // (undocumented)
+    static ngAcceptInputType_card: unknown;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
@@ -47,7 +50,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     transparent: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; "card": { "alias": "card"; "required": false; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
 }
