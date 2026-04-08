@@ -42,7 +42,7 @@
 
 При малом количестве опций поиск может автоматически скрываться. По умолчанию такая возможность отключена.
 
-Для настройки используйте атрибут `minOptionsThreshold` со значением:
+Для настройки используйте атрибут `searchMinOptionsThreshold` со значением:
 
 - `auto`. Поиск будет скрыт, если количество опций меньше 10. (поведение по умолчанию).
 - `<число>`. Выключение поиска, если количество опций меньше указанного числа.
@@ -54,7 +54,7 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 @NgModule({
     providers: [
-        kbqSelectOptionsProvider({ minOptionsThreshold: 'auto' })
+        kbqSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
     ]
 })
 ```

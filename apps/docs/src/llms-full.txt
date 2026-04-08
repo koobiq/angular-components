@@ -22208,7 +22208,7 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 ##### Search in Select for short lists
 
 You can configure a select so that the search is disabled when there is a small number of options. By default, this feature is turned off.
-Use the `minOptionsThreshold` attribute to configure it.
+Use the `searchMinOptionsThreshold` attribute to configure it.
 
 Possible values:
 

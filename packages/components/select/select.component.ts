@@ -335,7 +335,7 @@ export class KbqSelect
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
-     * Automatically enables search hiding if value provided, even if `defaultOptions.minOptionsThreshold` is provided.
+     * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
      * @default undefined
      */
     @Input()
