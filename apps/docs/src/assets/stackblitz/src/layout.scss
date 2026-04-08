@@ -1,36 +1,6 @@
 /* stylelint-disable selector-class-pattern */
 
-@use 'sass:list';
-
-@mixin rtl($prop, $ltr-value, $rtl-value) {
-    #{$prop}: $ltr-value;
-
-    [dir='rtl'] & {
-        #{$prop}: $rtl-value;
-    }
-}
-
-@mixin rtl-prop($ltr-prop, $rtl-prop, $value, $reset-value) {
-    #{$ltr-prop}: $value;
-
-    [dir='rtl'] & {
-        #{$ltr-prop}: $reset-value;
-        #{$rtl-prop}: $value;
-    }
-}
-
-// To reverse padding (top left bottom right) -> (top right bottom left)
-@function rtl-value($list) {
-    @if list.length($list) == 4 {
-        @return list.nth($list, 1) list.nth($list, 4) list.nth($list, 3) list.nth($list, 2);
-    }
-
-    @if list.length($list) == 5 {
-        @return list.nth($list, 1) list.nth($list, 4) list.nth($list, 3) list.nth($list, 2) list.nth($list, 5);
-    }
-
-    @return $list;
-}
+@use '@koobiq/components/core/styles/common/rtl';
 
 /*
 *  Responsive attributes
@@ -104,9 +74,9 @@
 
         #{$offsets} {
             @if $i != 0 {
-                @include rtl-prop(margin-left, margin-right, #{$i * 5 + '%'}, auto);
+                @include rtl.rtl-prop(margin-left, margin-right, #{$i * 5 + '%'}, auto);
             } @else {
-                @include rtl-prop(margin-left, margin-right, 0, auto);
+                @include rtl.rtl-prop(margin-left, margin-right, 0, auto);
             }
         }
     }
@@ -151,7 +121,7 @@
         }
 
         #{$offsets} {
-            @include rtl-prop(margin-left, margin-right, calc(200% / 3), auto);
+            @include rtl.rtl-prop(margin-left, margin-right, calc(200% / 3), auto);
         }
     }
 }
