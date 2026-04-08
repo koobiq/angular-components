@@ -24,6 +24,7 @@
         padding: var(--kbq-size-xxs);
         overflow-x: hidden;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .kbq-autocomplete-footer {
