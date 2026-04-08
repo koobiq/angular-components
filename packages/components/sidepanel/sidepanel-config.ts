@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, Injector } from '@angular/core';
 
 /** Injection token that can be used to access the data that was passed in to a sidepanel. */
 export const KBQ_SIDEPANEL_DATA = new InjectionToken<any>('KbqSidepanelData');
@@ -49,4 +49,10 @@ export class KbqSidepanelConfig<D = any> {
 
     /** Custom class for the overlay pane. */
     overlayPanelClass?: string | string[] = '';
+
+    /**
+     * Injector used for the instantiation of the component to be attached.
+     * Allows to pass a custom injector to provide a dependency injection hierarchy for the sidepanel content.
+     */
+    injector?: Injector;
 }

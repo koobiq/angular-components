@@ -19,6 +19,7 @@ import {
     SidepanelOverlayedExample,
     SidepanelOverviewExample,
     SidepanelSizesExample,
+    SidepanelWithCustomInjectorExample,
     SidepanelWithDynamicConfigUpdateExample
 } from '../../docs-examples/components/sidepanel';
 
@@ -29,7 +30,8 @@ import {
         SidepanelOverviewExample,
         SidepanelNormalModeExample,
         SidepanelOverlayedExample,
-        SidepanelSizesExample
+        SidepanelSizesExample,
+        SidepanelWithCustomInjectorExample
     ],
     template: `
         <sidepanel-overview-example />
@@ -41,6 +43,8 @@ import {
         <sidepanel-sizes-example />
         <hr />
         <sidepanel-with-dynamic-config-update-example />
+        <hr />
+        <sidepanel-with-custom-injector-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
