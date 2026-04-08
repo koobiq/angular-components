@@ -1172,7 +1172,11 @@ export class KbqTreeSelect
 
     /** @docs-private */
     protected shouldShowSearch(): boolean {
-        return isUndefined(this.searchMinOptionsThreshold) || this.options.length >= this.searchMinOptionsThreshold;
+        return (
+            isUndefined(this.searchMinOptionsThreshold) ||
+            !!this.search.value() ||
+            this.options.length >= this.searchMinOptionsThreshold
+        );
     }
 
     private updateLocaleParams = () => {

@@ -3038,7 +3038,7 @@ describe('KbqSelect', () => {
             expect(fixture.debugElement.query(By.css('input'))).toBeDefined();
         }));
 
-        it('should search filed should be focused after open', fakeAsync(() => {
+        it('should focus search field after open', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -3131,6 +3131,28 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
             flush();
 
+            expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        }));
+
+        it('should NOT hide search field if options filtered via search', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            componentInstance.minOptionsThreshold = 3;
+            fixture.detectChanges();
+            tick();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            componentInstance.searchCtrl.setValue(OPTIONS[0]);
+            fixture.detectChanges();
+            flush();
+            tick(1);
+
+            const options = fixture.debugElement.queryAll(By.css('kbq-option'));
+
+            expect(options.length).toBe(1);
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
         }));
     });

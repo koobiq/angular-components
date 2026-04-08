@@ -5,7 +5,7 @@ import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
 import { map, startWith } from 'rxjs/operators';
 
 /**
@@ -52,6 +52,9 @@ import { map, startWith } from 'rxjs/operators';
             width: 320px;
         }
     `,
+    providers: [
+        kbqSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectSearchExample {
