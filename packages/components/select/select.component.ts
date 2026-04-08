@@ -944,6 +944,8 @@ export class KbqSelect
      * Sets up the overlay dimensions based on trigger size and configured options.
      */
     openPanel() {
+        if (!this.trigger) return;
+
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
             this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
