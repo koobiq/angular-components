@@ -23,6 +23,12 @@
         height: var(--kbq-actions-panel-vertical-divider-height) !important;
         margin: var(--kbq-actions-panel-vertical-divider-margin);
     }
+
+    .kbq-button,
+    .kbq-button-icon {
+        --kbq-button-filled-contrast-fade-off-background: transparent;
+        --kbq-button-filled-contrast-fade-on-background: transparent;
+    }
 }
 
 .kbq-actions-panel-overlay {
