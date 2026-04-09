@@ -21,6 +21,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 @for (option of options; track $index) {
                     <kbq-option [disabled]="$index === 4" [value]="option">{{ option }}</kbq-option>
                 }
+                <kbq-autocomplete-footer>Footer</kbq-autocomplete-footer>
             </kbq-autocomplete>
         </kbq-form-field>
     `,
