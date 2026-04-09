@@ -91,8 +91,7 @@ export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirectiv
     exportAs: 'kbqTreeNodeToggle',
     host: {
         '[attr.disabled]': 'disabled || null',
-        '(click)': 'toggle($event)',
-        class: 'kbq-tree-node-toggle'
+        '(click)': 'toggle($event)'
     }
 })
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {}

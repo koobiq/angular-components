@@ -108,10 +108,9 @@ export const DATA_OBJECT = [
         >
             <kbq-tree-option
                 *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodeToggle
                 kbqTreeNodePadding
                 [selectable]="false"
-                (click)="treeControl.toggle(node)"
-                (keydown.enter)="treeControl.toggle(node)"
             >
                 <kbq-tree-node-toggle [node]="node" />
 
