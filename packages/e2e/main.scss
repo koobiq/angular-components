@@ -1,16 +1,26 @@
 @use '@koobiq/icons/fonts/kbq-icons';
 
+// Tokens
+@use '@koobiq/design-tokens/web/css-tokens';
+@use '@koobiq/design-tokens/web/css-tokens-light';
+@use '@koobiq/design-tokens/web/css-tokens-dark';
+
 @use '../components/core/styles/theming/prebuilt/theme';
-
 @use '../components/core/styles/visual/layout';
-
 @use '../components/core/styles/common/list';
-
-@use '../../apps/docs/src/styles/koobiq';
-
-@use '../../apps/docs/src/styles/fonts';
-
 @use '../components/core/styles/common/tokens';
+
+// Inter
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/400-italic.css';
+@import '@fontsource/inter/500-italic.css';
+
+// JetBrains Mono
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/700.css';
 
 @include layout.layouts-for-breakpoint();
 
