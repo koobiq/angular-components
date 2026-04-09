@@ -10,11 +10,12 @@
     --kbq-link-text: var(--kbq-foreground-theme);
     --kbq-link-border-bottom: var(--kbq-line-theme-fade);
     --kbq-link-state-visited-text: var(--kbq-foreground-visited);
-    --kbq-link-state-visited-border-bottom: var(--kbq-line-visited-fade);
+    /* @TODO (#DS-3002) */
+    --kbq-link-state-visited-border-bottom: var(--kbq-line-visited-fade, var(--kbq-line-visited));
     --kbq-link-state-visited-hover-text: var(--kbq-states-foreground-visited-hover);
-    --kbq-link-state-visited-hover-border-bottom: var(--kbq-line-visited-fade);
+    --kbq-link-state-visited-hover-border-bottomm: var(--kbq-line-visited-fade, var(--kbq-line-visited));
     --kbq-link-state-visited-active-text: var(--kbq-states-foreground-visited-active);
-    --kbq-link-state-visited-active-border-bottom: var(--kbq-line-visited-fade);
+    --kbq-link-state-visited-active-border-bottomm: var(--kbq-line-visited-fade, var(--kbq-line-visited));
     --kbq-link-state-hover-text: var(--kbq-states-foreground-theme-hover);
     --kbq-link-state-hover-border-bottom: var(--kbq-line-theme-fade);
     --kbq-link-state-active-text: var(--kbq-states-foreground-theme-active);
