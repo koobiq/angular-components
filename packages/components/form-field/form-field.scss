@@ -42,7 +42,7 @@
     .kbq-form-field__label {
         box-sizing: border-box;
         display: flex;
-        margin-bottom: var(---kbq-form-field-label-margin-bottom);
+        margin-bottom: var(--kbq-form-field-label-margin-bottom);
     }
 
     // We should override suffix spacing for select type, because it has custom suffix
