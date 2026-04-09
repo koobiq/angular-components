@@ -91,6 +91,7 @@ export class KbqSidepanelConfig<D = any> {
     disableClose?: boolean;
     hasBackdrop?: boolean;
     id?: string;
+    injector?: Injector;
     overlayPanelClass?: string | string[];
     // (undocumented)
     position?: KbqSidepanelPosition;
