@@ -16,6 +16,7 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -48,6 +49,9 @@ export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     noBorders: boolean;
     inOverlay: boolean;
+    horizontal: boolean;
+    labelClass: string | string[] | Set<string>;
+    contentClass: string | string[] | Set<string>;
 }>>;
 
 // @public
@@ -100,6 +104,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     cleaner: KbqCleaner | null;
     clearValue(event: Event): void;
     connectionContainerRef: ElementRef;
+    readonly contentClass: InputSignal<string | string[] | Set<string> | undefined>;
     control: KbqFormFieldControl<unknown>;
     get disabled(): boolean;
     readonly elementRef: ElementRef<HTMLElement>;
@@ -120,9 +125,11 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     get hasStepper(): boolean;
     get hasSuffix(): boolean;
     hint: QueryList<KbqHint>;
+    readonly horizontal: InputSignalWithTransform<boolean | undefined, unknown>;
     hovered: boolean;
     readonly inOverlay: ModelSignal<boolean | undefined>;
     get invalid(): boolean;
+    readonly labelClass: InputSignal<string | string[] | Set<string> | undefined>;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -145,7 +152,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     suffix: QueryList<KbqSuffix>;
     protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; "inOverlay": { "alias": "inOverlay"; "required": false; "isSignal": true; }; }, { "inOverlay": "inOverlayChange"; }, ["control", "stepper", "cleaner", "passwordToggle", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; "inOverlay": { "alias": "inOverlay"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "labelClass": { "alias": "labelClass"; "required": false; "isSignal": true; }; "contentClass": { "alias": "contentClass"; "required": false; "isSignal": true; }; }, { "inOverlay": "inOverlayChange"; }, ["control", "stepper", "cleaner", "passwordToggle", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
@@ -172,6 +179,9 @@ export abstract class KbqFormFieldControl<T> {
 export type KbqFormFieldDefaultOptions = Partial<{
     noBorders: boolean;
     inOverlay: boolean;
+    horizontal: boolean;
+    labelClass: string | string[] | Set<string>;
+    contentClass: string | string[] | Set<string>;
 }>;
 
 // @public

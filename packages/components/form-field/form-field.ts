@@ -1,5 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { NgClass } from '@angular/common';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -66,9 +67,9 @@ export type KbqFormFieldDefaultOptions = Partial<{
     /** Whether the form field is displayed horizontally. */
     horizontal: boolean;
     /** Additional CSS classes applied to the label element. */
-    labelClass: string;
+    labelClass: string | string[] | Set<string>;
     /** Additional CSS classes applied to the content wrapper element. */
-    contentClass: string;
+    contentClass: string | string[] | Set<string>;
 }>;
 
 /**
@@ -87,7 +88,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    exportAs: 'kbqFormField',
+    imports: [NgClass],
     templateUrl: 'form-field.html',
     styleUrls: [
         'form-field.scss',
@@ -101,6 +102,9 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '../textarea/textarea.scss',
         '../tags/tag-input-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqFormField',
     host: {
         class: 'kbq-form-field',
 
@@ -122,8 +126,6 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '(mouseenter)': 'onHoverChanged(true)',
         '(mouseleave)': 'onHoverChanged(false)'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
 export class KbqFormField

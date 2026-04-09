@@ -17,7 +17,7 @@
 }
 
 .kbq-form-field {
-    ---kbq-form-field-label-margin-bottom: var(--kbq-size-xs);
+    --kbq-form-field-label-margin-bottom: var(--kbq-size-xs);
 
     position: relative;
     display: inline-block;
@@ -29,7 +29,7 @@
         align-items: flex-start;
 
         .kbq-form-field__label {
-            ---kbq-form-field-label-margin-bottom: 0;
+            --kbq-form-field-label-margin-bottom: 0;
 
             padding: var(--kbq-size-xs) var(--kbq-size-l) 0 0;
         }
