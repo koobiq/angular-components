@@ -739,6 +739,8 @@ export class KbqSelect
     /** Flag indicating if the dropdown class has been added to the overlay container. */
     private classAddedToOverlayContainer: boolean = false;
 
+    private openPanelTimeout: ReturnType<typeof setTimeout>;
+
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
         private readonly _ngZone: NgZone,
@@ -851,6 +853,8 @@ export class KbqSelect
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
+
+        clearTimeout(this.openPanelTimeout);
     }
 
     /** Updates the error state based on the error state matcher. */
@@ -926,14 +930,22 @@ export class KbqSelect
         }
     }
 
-    /** Opens the overlay panel. */
+    /**
+     * Triggers the opening of the panel component.
+     * If the component is disabled or the panel is already open, the call is ignored.
+     * Otherwise, the (beforeOpened) event is emitted.
+     * When no options are available, the panel is opened after a short delay;
+     * if options exist, it opens immediately.
+     */
     open(): void {
         if (this.disabled || this.panelOpen) return;
 
         this.beforeOpened.emit();
 
         if (this.noOptions) {
-            setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
+            clearTimeout(this.openPanelTimeout);
+
+            this.openPanelTimeout = setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
         } else {
             this.openPanel();
         }

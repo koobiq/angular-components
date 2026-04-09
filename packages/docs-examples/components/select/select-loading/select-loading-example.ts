@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
@@ -120,7 +121,7 @@ export class SelectFacade {
                     <kbq-button-toggle [value]="100">100 ms</kbq-button-toggle>
                     <kbq-button-toggle [value]="250">250 ms</kbq-button-toggle>
                     <kbq-button-toggle [value]="500">500 ms</kbq-button-toggle>
-                    <kbq-button-toggle [value]="3000000">3000 ms</kbq-button-toggle>
+                    <kbq-button-toggle [value]="3000">3000 ms</kbq-button-toggle>
                 </kbq-button-toggle-group>
             </div>
 
@@ -143,7 +144,7 @@ export class SelectFacade {
                             @case ('error') {
                                 <!--{{ state.error.message }}-->
                                 <kbq-select-error>
-                                    <span #errorText>Не удалось показать записи</span>
+                                    <span kbq-select-error-text>Не удалось показать записи</span>
                                     <button
                                         kbq-button
                                         [kbqStyle]="'transparent'"
@@ -202,6 +203,8 @@ export class SelectLoadingExample {
     }
 
     constructor() {
-        this.searchControl.valueChanges.subscribe((value) => this.facade.setSearch(value ?? ''));
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe((value) => this.facade.setSearch(value ?? ''));
     }
 }

@@ -267,15 +267,21 @@ export class KbqSelectChange {
     value: any;
 }
 
-// @public (undocumented)
-export class kbqSelectError implements AfterContentInit {
-    // (undocumented)
-    ngAfterContentInit(): void;
+// @public
+export class KbqSelectError {
     paging: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<kbqSelectError, "kbq-select-error, [kbq-select-error]", ["kbqSelectError"], { "paging": { "alias": "paging"; "required": false; "isSignal": true; }; }, {}, ["textElementRef"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelectError, "kbq-select-error, [kbq-select-error]", ["kbqSelectError"], { "paging": { "alias": "paging"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<kbqSelectError, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectError, never>;
+}
+
+// @public
+export class KbqSelectErrorText {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectErrorText, "[kbq-select-error-text]", ["kbqSelectErrorText"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectErrorText, never>;
 }
 
 // @public (undocumented)
@@ -297,15 +303,15 @@ export class KbqSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i10.KbqSelectLoading, typeof i10.kbqSelectError, typeof i10.kbqSelectNoOptions], [typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i10.KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof i10.kbqSelectError, typeof i10.kbqSelectNoOptions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i10.KbqSelectLoading, typeof i10.KbqSelectError, typeof i10.KbqSelectNoOptions, typeof i10.KbqSelectErrorText], [typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i10.KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof i10.KbqSelectError, typeof i10.KbqSelectNoOptions, typeof i10.KbqSelectErrorText]>;
 }
 
-// @public (undocumented)
-export class kbqSelectNoOptions {
+// @public
+export class KbqSelectNoOptions {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<kbqSelectNoOptions, "kbq-select-no-options, [kbq-select-no-options]", ["kbqSelectNoOptions"], {}, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelectNoOptions, "kbq-select-no-options, [kbq-select-no-options]", ["kbqSelectNoOptions"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<kbqSelectNoOptions, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectNoOptions, never>;
 }
 
 // @public

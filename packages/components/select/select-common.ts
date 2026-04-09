@@ -1,14 +1,4 @@
-import {
-    AfterContentInit,
-    booleanAttribute,
-    ChangeDetectionStrategy,
-    Component,
-    contentChild,
-    ElementRef,
-    inject,
-    input,
-    Renderer2
-} from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, Directive, input } from '@angular/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 
 @Component({
@@ -31,6 +21,11 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 })
 export class KbqSelectLoading {}
 
+/**
+ * This component renders the error for a Select component.
+ * The error message can be displayed in two visual variants: a default centered layout (when [paging] is falsy)
+ * or a variant with left‑aligned text suitable for pagination controls (when [paging] is truthy).
+ */
 @Component({
     selector: 'kbq-select-error, [kbq-select-error]',
     template: `
@@ -72,20 +67,26 @@ export class KbqSelectLoading {}
         '[class.kbq-select-error_paging]': 'paging()'
     }
 })
-export class kbqSelectError implements AfterContentInit {
-    private readonly renderer = inject(Renderer2);
-    private readonly textElementRef = contentChild('errorText', { read: ElementRef });
-
+export class KbqSelectError {
     /** Indicates whether styles for pagination controls should be used. */
     paging = input(false, { transform: booleanAttribute });
-
-    ngAfterContentInit(): void {
-        if (this.textElementRef()) {
-            this.renderer.addClass(this.textElementRef()!.nativeElement, 'kbq-select-error__text');
-        }
-    }
 }
 
+/**
+ * Marks an element as the error text container for a *KbqSelect* component.
+ */
+@Directive({
+    selector: '[kbq-select-error-text]',
+    exportAs: 'kbqSelectErrorText',
+    host: {
+        class: 'kbq-select-error__text'
+    }
+})
+export class KbqSelectErrorText {}
+
+/**
+ * Component that represents the empty state of a select dropdown.
+ */
 @Component({
     selector: 'kbq-select-no-options, [kbq-select-no-options]',
     template: `
@@ -111,4 +112,4 @@ export class kbqSelectError implements AfterContentInit {
         class: 'kbq-select-no-options'
     }
 })
-export class kbqSelectNoOptions {}
+export class KbqSelectNoOptions {}

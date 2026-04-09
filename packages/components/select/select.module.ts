@@ -15,7 +15,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { kbqSelectError, KbqSelectLoading, kbqSelectNoOptions } from './select-common';
+import { KbqSelectError, KbqSelectErrorText, KbqSelectLoading, KbqSelectNoOptions } from './select-common';
 import { KbqOptionTooltip } from './select-option.directive';
 import { KbqSelect } from './select.component';
 
@@ -37,8 +37,9 @@ import { KbqSelect } from './select.component';
         KbqSelect,
         KbqOptionTooltip,
         KbqSelectLoading,
-        kbqSelectError,
-        kbqSelectNoOptions
+        KbqSelectError,
+        KbqSelectNoOptions,
+        KbqSelectErrorText
     ],
     exports: [
         KbqSelect,
@@ -51,8 +52,9 @@ import { KbqSelect } from './select.component';
         KbqSelectSearchEmptyResult,
         KbqSelectLoading,
         KbqFormFieldModule,
-        kbqSelectError,
-        kbqSelectNoOptions
+        KbqSelectError,
+        KbqSelectNoOptions,
+        KbqSelectErrorText
     ],
     providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
 })

@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, NgZone, OnDestroy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
@@ -246,7 +247,7 @@ export class SelectFacade {
                             }
                             @case ('error') {
                                 <kbq-select-error>
-                                    <span #errorText>Не удалось показать записи</span>
+                                    <span kbq-select-error-text>Не удалось показать записи</span>
                                     <button
                                         kbq-button
                                         [kbqStyle]="'transparent'"
@@ -276,7 +277,7 @@ export class SelectFacade {
 
                                 @if (state.pageNotLoaded) {
                                     <kbq-select-error paging>
-                                        <span #errorText>Не удалось показать записи</span>
+                                        <span kbq-select-error-text>Не удалось показать записи</span>
                                         <div>
                                             <button
                                                 kbq-button
@@ -349,6 +350,8 @@ export class SelectPagingErrorExample implements OnDestroy {
     }
 
     constructor() {
-        this.searchControl.valueChanges.subscribe((value) => this.facade.setSearch(value ?? ''));
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe((value) => this.facade.setSearch(value ?? ''));
     }
 }

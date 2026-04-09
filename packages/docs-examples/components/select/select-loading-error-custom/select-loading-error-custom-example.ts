@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+
+const delayBeforeShowError = 3000;
 
 /**
  * @title Select loading error (custom)
@@ -25,12 +27,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Custom Error State</label>
                 <kbq-form-field>
-                    <kbq-select>
-                        @for (option of options; track option) {
-                            <kbq-option [value]="option">{{ option }}</kbq-option>
+                    <kbq-select (opened)="loadOptions()" (closed)="reset()">
+                        @if (loading()) {
+                            <kbq-select-loading />
                         }
 
-                        @if (error) {
+                        @if (error()) {
                             <kbq-empty-state class="layout-margin-top-l layout-margin-bottom-3xl" [errorColor]="true">
                                 <i
                                     kbq-empty-state-icon
@@ -61,15 +63,18 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectLoadingErrorCustomExample {
-    options: string[];
-    error: boolean;
+    error = signal(false);
+    loading = signal(true);
 
-    constructor() {
-        this.loadOptions();
+    protected loadOptions() {
+        setTimeout(() => {
+            this.loading.set(false);
+            this.error.set(true);
+        }, delayBeforeShowError);
     }
 
-    loadOptions() {
-        this.options = [];
-        this.error = true;
+    protected reset() {
+        this.loading.set(true);
+        this.error.set(false);
     }
 }

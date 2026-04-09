@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightPipe } from '@koobiq/components/core';
@@ -19,7 +20,7 @@ type Option = {
 };
 
 export class OptionsApiService {
-    private delay: number = 250;
+    private delay: number = 3000;
 
     private data = Array.from({ length: 10 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
 
@@ -29,7 +30,7 @@ export class OptionsApiService {
 
     getOptions(search: string): Observable<Option[]> {
         if (search === 'error') {
-            return throwError(() => new Error('error'));
+            return timer(this.delay).pipe(switchMap(() => throwError(() => new Error('error'))));
         }
 
         const term = search.toLowerCase().trim();
@@ -125,7 +126,7 @@ export class SelectFacade {
                             }
                             @case ('error') {
                                 <kbq-select-error>
-                                    <span #errorText>Не удалось показать записи</span>
+                                    <span kbq-select-error-text>Не удалось показать записи</span>
                                     <button
                                         kbq-button
                                         [kbqStyle]="'transparent'"
@@ -182,6 +183,8 @@ export class SelectLoadingErrorExample {
     }
 
     constructor() {
-        this.searchControl.valueChanges.subscribe((value) => this.facade.setSearch(value ?? ''));
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe((value) => this.facade.setSearch(value ?? ''));
     }
 }
