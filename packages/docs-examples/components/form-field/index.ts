@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormFieldHorizontalExample } from './form-field-horizontal/form-field-horizontal-example';
 import { FormFieldOverviewExample } from './form-field-overview/form-field-overview-example';
 import { FormFieldPasswordOverviewExample } from './form-field-password-overview/form-field-password-overview-example';
 import { FormFieldWithCleanerExample } from './form-field-with-cleaner/form-field-with-cleaner-example';
@@ -10,6 +11,7 @@ import { FormFieldWithPrefixAndSuffixExample } from './form-field-with-prefix-an
 import { FormFieldWithoutBordersExample } from './form-field-without-borders/form-field-without-borders-example';
 
 export {
+    FormFieldHorizontalExample,
     FormFieldOverviewExample,
     FormFieldPasswordOverviewExample,
     FormFieldWithCleanerExample,
@@ -30,7 +32,8 @@ const EXAMPLES = [
     FormFieldWithHintExample,
     FormFieldOverviewExample,
     FormFieldWithoutBordersExample,
-    FormFieldWithPrefixAndSuffixExample
+    FormFieldWithPrefixAndSuffixExample,
+    FormFieldHorizontalExample
 ];
 
 @NgModule({

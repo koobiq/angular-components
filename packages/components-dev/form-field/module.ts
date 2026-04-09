@@ -12,26 +12,49 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
+    defaultCompareValues,
+    defaultCompareViewValues,
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule,
-    defaultCompareValues,
-    defaultCompareViewValues
+    KbqTreeModule
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { FormFieldExamplesModule } from 'packages/docs-examples/components/form-field';
-import { FormsExamplesModule } from '../../docs-examples/components/forms';
+import {
+    FormFieldHorizontalExample,
+    FormFieldOverviewExample,
+    FormFieldPasswordOverviewExample,
+    FormFieldWithCleanerExample,
+    FormFieldWithCustomErrorStateMatcherSetByAttributeExample,
+    FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
+    FormFieldWithErrorExample,
+    FormFieldWithHintExample,
+    FormFieldWithoutBordersExample,
+    FormFieldWithPrefixAndSuffixExample
+} from 'packages/docs-examples/components/form-field';
 import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
     selector: 'dev-examples',
-    imports: [FormFieldExamplesModule, FormsExamplesModule],
+    imports: [
+        FormFieldPasswordOverviewExample,
+        FormFieldWithCleanerExample,
+        FormFieldWithCustomErrorStateMatcherSetByAttributeExample,
+        FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
+        FormFieldWithErrorExample,
+        FormFieldWithHintExample,
+        FormFieldOverviewExample,
+        FormFieldWithoutBordersExample,
+        FormFieldWithPrefixAndSuffixExample,
+        FormFieldHorizontalExample
+    ],
     template: `
-        <form-field-with-hint-example />
+        <form-field-horizontal-example />
         <hr />
         <form-field-overview-example />
+        <hr />
+        <form-field-with-hint-example />
         <hr />
         <form-field-with-error-example />
         <hr />
@@ -47,11 +70,6 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
         <hr />
         <form-field-password-overview-example />
         <hr />
-        <form-fieldset-overview-example />
-        <hr />
-        <form-fieldset-invalid-example />
-        <hr />
-        <form-fieldset-with-button-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

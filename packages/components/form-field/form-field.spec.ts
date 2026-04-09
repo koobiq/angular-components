@@ -74,6 +74,10 @@ const getLabelNativeElement = (debugElement: DebugElement): HTMLLabelElement => 
     return debugElement.query(By.css('label')).nativeElement;
 };
 
+const getContentNativeElement = (debugElement: DebugElement): HTMLDivElement => {
+    return debugElement.query(By.css('.kbq-form-field__content')).nativeElement;
+};
+
 const getPrefixDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqPrefix));
 };
@@ -257,6 +261,37 @@ export class InputFormFieldWithLegacyValidationDirective {}
 })
 export class InputFormFieldInOverlay {
     inOverlay: boolean;
+}
+
+@Component({
+    selector: 'input-form-field-horizontal',
+    imports: [KbqFormFieldModule, KbqInputModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field [horizontal]="horizontal">
+            <kbq-label>Label</kbq-label>
+            <input kbqInput />
+        </kbq-form-field>
+    `
+})
+export class InputFormFieldHorizontal {
+    horizontal: boolean = false;
+}
+
+@Component({
+    selector: 'input-form-field-with-class-customization',
+    imports: [KbqFormFieldModule, KbqInputModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field [labelClass]="labelClass" [contentClass]="contentClass">
+            <kbq-label>Label</kbq-label>
+            <input kbqInput />
+        </kbq-form-field>
+    `
+})
+export class InputFormFieldWithClassCustomization {
+    labelClass: string | undefined;
+    contentClass: string | undefined;
 }
 
 @Component({
@@ -632,6 +667,51 @@ describe(KbqFormField.name, () => {
         ]);
 
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_in-overlay']).toBeTruthy();
+    });
+
+    it('should add kbq-form-field_horizontal selector when horizontal input is true', () => {
+        const fixture = createComponent(InputFormFieldHorizontal);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_horizontal']).toBeFalsy();
+        componentInstance.horizontal = true;
+        fixture.detectChanges();
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_horizontal']).toBeTruthy();
+    });
+
+    it('should add kbq-form-field_horizontal selector by KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
+        const { debugElement } = createComponent(InputFormFieldWithLabel, [
+            kbqFormFieldDefaultOptionsProvider({ horizontal: true })
+        ]);
+
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_horizontal']).toBeTruthy();
+    });
+
+    it('should apply labelClass to the label element', () => {
+        const fixture = createComponent(InputFormFieldWithClassCustomization);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.labelClass = 'test-label';
+        fixture.detectChanges();
+        expect(getLabelNativeElement(debugElement).classList.contains('test-label')).toBeTruthy();
+    });
+
+    it('should apply contentClass to the content wrapper element', () => {
+        const fixture = createComponent(InputFormFieldWithClassCustomization);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.contentClass = 'test-content';
+        fixture.detectChanges();
+        expect(getContentNativeElement(debugElement).classList.contains('test-content')).toBeTruthy();
+    });
+
+    it('should apply labelClass and contentClass by KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
+        const { debugElement } = createComponent(InputFormFieldWithLabel, [
+            kbqFormFieldDefaultOptionsProvider({ labelClass: 'test-label', contentClass: 'test-content' })
+        ]);
+
+        expect(getLabelNativeElement(debugElement).classList.contains('test-label')).toBeTruthy();
+        expect(getContentNativeElement(debugElement).classList.contains('test-content')).toBeTruthy();
     });
 
     describe(ShowRequiredOnSubmitErrorStateMatcher.name, () => {

@@ -16,6 +16,12 @@ The following components are intended to work inside the `<kbq-form-field>` comp
 
 <!-- example(form-field-overview) -->
 
+### Horizontal form
+
+To create a horizontal form, add the `horizontal` attribute to the `<kbq-form-field>` component.
+
+<!-- example(form-field-horizontal) -->
+
 ### Hints
 
 `<kbq-hint>` is a component used to add hints to form fields inside the `<kbq-form-field>` component.
