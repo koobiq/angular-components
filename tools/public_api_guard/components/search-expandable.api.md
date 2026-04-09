@@ -70,7 +70,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     onChange: (value: string) => void;
     onTouch: () => void;
     get placeholder(): string;
-    set placeholder(value: string);
+    set placeholder(value: string | null);
     registerOnChange(fn: (value: string) => void): void;
     registerOnTouched(fn: () => void): void;
     setDisabledState(isDisabled: boolean): void;
@@ -79,10 +79,12 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     set tabIndex(value: number);
     // (undocumented)
     toggle(): void;
+    get tooltipText(): string;
+    set tooltipText(value: string | null);
     value: BehaviorSubject<string>;
     writeValue(value: string): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }

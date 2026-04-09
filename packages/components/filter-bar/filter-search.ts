@@ -27,6 +27,7 @@ import { KbqFilterBar } from './filter-bar';
 
 export const defaultOnSearchTimeout = 0;
 
+/** @deprecated Will be removed in next major release. Use `kbq-search-expandable` instead. */
 @Component({
     selector: 'kbq-filter-search, [kbq-filter-search]',
     imports: [
@@ -40,8 +41,8 @@ export const defaultOnSearchTimeout = 0;
     ],
     template: `
         <button
-            kbqTooltip="{{ localeData.tooltip }}"
             kbq-button
+            [kbqTooltip]="resolvedTooltip"
             [class.kbq-filter_hidden]="isSearchActive"
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
@@ -54,9 +55,9 @@ export const defaultOnSearchTimeout = 0;
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
             <input
-                placeholder="{{ localeData.placeholder }}"
                 autocomplete="off"
                 kbqInput
+                [placeholder]="resolvedPlaceholder"
                 [formControl]="searchControl"
                 (blur)="onBlur()"
                 (keydown.escape)="onEscape()"
@@ -106,6 +107,22 @@ export class KbqFilterBarSearch implements AfterViewInit {
 
     /** Value of the field after initialization */
     readonly initialValue = input();
+
+    /** Custom tooltip text. When set, overrides localeData.tooltip */
+    readonly customTooltip = input<string>('', { alias: 'tooltip' });
+
+    /** Custom placeholder text. When set, overrides localeData.placeholder */
+    readonly customPlaceholder = input<string>('', { alias: 'placeholder' });
+
+    /** @docs-private */
+    get resolvedTooltip(): string {
+        return this.customTooltip() || this.localeData.tooltip;
+    }
+
+    /** @docs-private */
+    get resolvedPlaceholder(): string {
+        return this.customPlaceholder() || this.localeData.placeholder;
+    }
 
     /** event that is generated whenever a user performs a search. */
     @Output() readonly onSearch = new EventEmitter<string>();
