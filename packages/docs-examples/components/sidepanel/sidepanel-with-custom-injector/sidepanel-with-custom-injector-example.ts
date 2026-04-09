@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, InjectionToken, Injector } 
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
-export const SIDEPANEL_USER_TOKEN = new InjectionToken<{ name: string; role: string }>('SidepanelUser');
+export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: string }>('SidepanelUser');
 
 @Component({
     selector: 'example-sidepanel-with-custom-injector-content',
@@ -15,9 +15,7 @@ export const SIDEPANEL_USER_TOKEN = new InjectionToken<{ name: string; role: str
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button kbq-sidepanel-close>
-                    <span>Close</span>
-                </button>
+                <button kbq-button kbq-sidepanel-close>Close</button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
@@ -31,7 +29,7 @@ export const SIDEPANEL_USER_TOKEN = new InjectionToken<{ name: string; role: str
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelWithCustomInjectorContent {
-    protected readonly user = inject(SIDEPANEL_USER_TOKEN);
+    protected readonly user = inject(EXAMPLE_SIDEPANEL_TOKEN);
 }
 
 /**
@@ -52,18 +50,16 @@ export class SidepanelWithCustomInjectorExample {
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     open() {
-        const customInjector = Injector.create({
-            parent: this.injector,
-            providers: [
-                {
-                    provide: SIDEPANEL_USER_TOKEN,
-                    useValue: { name: 'John Doe', role: 'Administrator' }
-                }
-            ]
-        });
-
         this.sidepanelService.open(ExampleSidepanelWithCustomInjectorContent, {
-            injector: customInjector
+            injector: Injector.create({
+                parent: this.injector,
+                providers: [
+                    {
+                        provide: EXAMPLE_SIDEPANEL_TOKEN,
+                        useValue: { name: 'John Doe', role: 'Administrator' }
+                    }
+                ]
+            })
         });
     }
 }
