@@ -103,7 +103,7 @@ export class KbqAutocomplete implements AfterContentInit {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
 }
@@ -111,6 +111,14 @@ export class KbqAutocomplete implements AfterContentInit {
 // @public
 export interface KbqAutocompleteDefaultOptions {
     autoActiveFirstOption?: boolean;
+}
+
+// @public
+export class KbqAutocompleteFooter {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteFooter, "[kbqAutocompleteFooter], kbq-autocomplete-footer", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteFooter, never>;
 }
 
 // @public (undocumented)
@@ -124,7 +132,7 @@ export class KbqAutocompleteModule {
     // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof i4.KbqAutocomplete, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin], [typeof i4.KbqAutocomplete, typeof i1.KbqOptionModule, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof i4.KbqAutocomplete, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter], [typeof i4.KbqAutocomplete, typeof i1.KbqOptionModule, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter]>;
 }
 
 // @public

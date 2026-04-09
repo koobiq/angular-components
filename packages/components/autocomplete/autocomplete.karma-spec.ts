@@ -76,7 +76,9 @@ describe('KbqAutocomplete', () => {
 
             fixture.componentInstance.trigger.openPanel();
             fixture.detectChanges();
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
+            const scrollContainer = document.querySelector(
+                '.cdk-overlay-pane .kbq-autocomplete-panel .kbq-autocomplete-panel__content'
+            )!;
 
             trigger.handleKeydown(DOWN_ARROW_EVENT);
             fixture.detectChanges();

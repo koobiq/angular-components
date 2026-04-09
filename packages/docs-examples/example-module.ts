@@ -364,6 +364,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "autocomplete-overview-example.ts",
     "importPath": "components/autocomplete"
   },
+  "autocomplete-with-footer": {
+    "packagePath": "components/autocomplete/autocomplete-with-footer",
+    "title": "Autocomplete with footer",
+    "componentName": "AutocompleteWithFooterExample",
+    "files": [
+      "autocomplete-with-footer-example.ts"
+    ],
+    "selector": "autocomplete-with-footer-example",
+    "additionalComponents": [],
+    "primaryFile": "autocomplete-with-footer-example.ts",
+    "importPath": "components/autocomplete"
+  },
   "badge-content": {
     "packagePath": "components/badge/badge-content",
     "title": "Badge content",
@@ -487,6 +499,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "breadcrumbs-routing-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-routing-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-selectable-text": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-selectable-text",
+    "title": "Breadcrumbs selectable text",
+    "componentName": "BreadcrumbsSelectableTextExample",
+    "files": [
+      "breadcrumbs-selectable-text-example.ts"
+    ],
+    "selector": "breadcrumbs-selectable-text-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-selectable-text-example.ts",
     "importPath": "components/breadcrumbs"
   },
   "breadcrumbs-size": {
@@ -1902,6 +1926,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-single-accept-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-accept-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-single-async-validation": {
+    "packagePath": "components/file-upload/file-upload-single-async-validation",
+    "title": "File upload single async validation",
+    "componentName": "FileUploadSingleAsyncValidationExample",
+    "files": [
+      "file-upload-single-async-validation-example.ts"
+    ],
+    "selector": "file-upload-single-async-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-async-validation-example.ts",
     "importPath": "components/file-upload"
   },
   "file-upload-single-mixed-validation": {
@@ -6062,6 +6098,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "validation-on-open-example.ts",
     "importPath": "components/validation"
   },
+  "validation-on-submit-custom-matcher": {
+    "packagePath": "components/validation/validation-on-submit-custom-matcher",
+    "title": "Validation on submit with custom matcher",
+    "componentName": "ValidationOnSubmitCustomMatcherExample",
+    "files": [
+      "validation-on-submit-custom-matcher-example.ts"
+    ],
+    "selector": "validation-on-submit-custom-matcher-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-on-submit-custom-matcher-example.ts",
+    "importPath": "components/validation"
+  },
   "validation-on-submit": {
     "packagePath": "components/validation/validation-on-submit",
     "title": "Validation on submit",
@@ -6177,6 +6225,8 @@ return import('@koobiq/docs-examples/components/app-switcher');
 return import('@koobiq/docs-examples/components/app-switcher');
   case 'autocomplete-overview':
 return import('@koobiq/docs-examples/components/autocomplete');
+  case 'autocomplete-with-footer':
+return import('@koobiq/docs-examples/components/autocomplete');
   case 'badge-content':
 return import('@koobiq/docs-examples/components/badge');
   case 'badge-list':
@@ -6196,6 +6246,8 @@ return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-overview':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-routing':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-selectable-text':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-size':
 return import('@koobiq/docs-examples/components/breadcrumbs');
@@ -6426,6 +6478,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-primitive':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-accept-validation':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-async-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-mixed-validation':
 return import('@koobiq/docs-examples/components/file-upload');
@@ -7104,6 +7158,8 @@ return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-blur':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-open':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-on-submit-custom-matcher':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-submit':
 return import('@koobiq/docs-examples/components/validation');

@@ -8,8 +8,8 @@
 
     position: relative;
 
-    overflow: hidden auto;
-    -webkit-overflow-scrolling: touch; // for momentum scroll on mobile
+    display: flex;
+    flex-direction: column;
 
     box-sizing: border-box;
     min-width: 100%;
@@ -19,7 +19,18 @@
     border-radius: var(--kbq-autocomplete-size-panel-border-radius, var(--kbq-size-border-radius));
     max-height: var(--kbq-autocomplete-size-panel-max-height);
 
-    padding: var(--kbq-size-xxs);
+    .kbq-autocomplete-panel__content {
+        flex: 1;
+        padding: var(--kbq-size-xxs);
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .kbq-autocomplete-footer {
+        @extend %kbq-select-footer;
+        border-color: var(--kbq-line-contrast-less);
+    }
 
     &.kbq-autocomplete_visible {
         visibility: visible;
