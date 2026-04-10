@@ -38,7 +38,8 @@ import {
     booleanAttribute,
     inject,
     isDevMode,
-    numberAttribute
+    numberAttribute,
+    output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -79,6 +80,7 @@ import {
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
+    KbqSelectSearchEmptyResult,
     KbqSelectTrigger,
     KbqVirtualOption,
     defaultOffsetY,
@@ -149,6 +151,11 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         useValue: options
     };
 };
+
+/** Delay in milliseconds before displaying a result when there are no options. */
+export const delayBeforeDisplayingResultWithoutOptions = 101;
+/** Minimum time in milliseconds to display the loading state. */
+export const minimumTimeToDisplayLoading = 300;
 
 @Component({
     selector: 'kbq-select',
@@ -228,18 +235,19 @@ export class KbqSelect
     /** The last measured value for the trigger's client bounding rect. */
     triggerRect: DOMRect;
 
-    /** The cached font-size of the trigger element. */
+    /** The cached font-size of the trigger element in pixels. */
     triggerFontSize = 0;
 
-    /** Deals with the selection logic. */
+    /** Deals with the selection logic. Manages selected options and their states. */
     selectionModel: SelectionModel<KbqOptionBase>;
 
+    /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
 
     /** Manages keyboard events for options in the panel. */
     keyManager: ActiveDescendantKeyManager<KbqOption>;
 
-    /** The value of the select panel's transform-origin property. */
+    /** The value of the select panel's transform-origin property for animations. */
     transformOrigin: string = 'top';
 
     /** Emits when the panel element is finished transforming in. */
@@ -250,7 +258,7 @@ export class KbqSelect
 
     /**
      * The y-offset of the overlay panel in relation to the trigger's top start corner.
-     * This must be adjusted to align the selected option text over the trigger text.
+     * This must be adjusted to align the selected option text over the trigger text
      * when the panel opens. Will change based on the y-position of the selected option.
      */
     offsetY = defaultOffsetY;
@@ -283,25 +291,34 @@ export class KbqSelect
      */
     @ViewChild('trigger', { static: false }) trigger: ElementRef;
 
+    /** Reference to the overlay panel element. */
     @ViewChild('panel', { static: false }) panel: ElementRef;
 
+    /** Reference to the container element that holds the options. */
     @ViewChild('optionsContainer', { static: false }) optionsContainer: ElementRef;
 
+    /** Reference to the CDK connected overlay directive. */
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
+    /** Reference to the optional footer element in the panel. */
     @ContentChild(KbqSelectFooter, { static: false, read: ElementRef }) footer?: ElementRef;
 
+    /** Reference to the CDK virtual scroll directive for virtual scrolling support. */
     @ContentChild(CdkVirtualForOf, { static: false }) cdkVirtualForOf?: CdkVirtualForOf<any>;
 
+    /** Query list of tags displayed in multiple selection mode. */
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
-    /** User-supplied override of the trigger element. */
+    /** User-supplied override of the trigger element for custom rendering. */
     @ContentChild(KbqSelectTrigger, { static: false }) customTrigger: KbqSelectTrigger;
 
+    /** User-supplied matcher component for custom value matching logic. */
     @ContentChild(KbqSelectMatcher, { static: false }) customMatcher: KbqSelectMatcher;
 
+    /** Custom template reference for rendering tag content. */
     @ContentChild('kbqSelectTagContent', { static: false, read: TemplateRef }) customTagTemplateRef: TemplateRef<any>;
 
+    /** Reference to the optional cleaner element for clearing selection. */
     @ContentChild('kbqSelectCleaner', { static: true }) cleaner: KbqCleaner;
 
     /** All of the defined select options. */
@@ -310,13 +327,19 @@ export class KbqSelect
     /** All of the defined groups of options. */
     @ContentChildren(KbqOptgroup) optionGroups: QueryList<KbqOptgroup>;
 
+    /** Reference to the optional search component. */
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
+    /** Reference to the optional empty search result component. */
+    @ContentChild(KbqSelectSearchEmptyResult, { static: false }) searchEmpty: KbqSelectSearchEmptyResult;
+
+    /** Template string for hidden items text. Supports {{ number }} placeholder. */
     @Input() hiddenItemsText: string = '+{{ number }}';
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
     @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
 
+    /** Classes to be passed to the overlay backdrop. */
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Object used to control when error messages are shown. */
@@ -329,7 +352,8 @@ export class KbqSelect
     @Input() sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
 
     /**
-     * Whether to use a multiline matcher or not. Default is false
+     * Whether to use a multiline matcher or not. Default is false.
+     * When true, allows multiple lines of text in the selected value display.
      */
     @Input({ transform: booleanAttribute }) multiline: boolean = false;
     /**
@@ -371,8 +395,11 @@ export class KbqSelect
         );
     }) as Observable<KbqOptionSelectionChange>;
 
-    /** Event emitted when the select panel has been toggled. */
+    /** Event emitted when the select panel has been toggled. Emits true when opened, false when closed. */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** Event emitted before the select panel starts opening. */
+    readonly beforeOpened = output<void>();
 
     /** Event emitted when the select has been opened. */
     @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
@@ -396,6 +423,10 @@ export class KbqSelect
      */
     @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
+    /**
+     * Whether the overlay should have a backdrop.
+     * When true, clicking the backdrop will close the select.
+     */
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -407,6 +438,10 @@ export class KbqSelect
 
     private _hasBackdrop: boolean = false;
 
+    /**
+     * Placeholder text to be shown when no value is selected.
+     * Displayed in the trigger when the select is closed and no value is selected.
+     */
     @Input()
     get placeholder(): string {
         return this._placeholder;
@@ -420,6 +455,9 @@ export class KbqSelect
 
     private _placeholder: string;
 
+    /**
+     * Whether the select is required. Affects validation and display of placeholder.
+     */
     @Input()
     get required(): boolean {
         return this._required;
@@ -433,6 +471,10 @@ export class KbqSelect
 
     private _required: boolean = false;
 
+    /**
+     * Whether multiple options can be selected.
+     * Note: This cannot be changed dynamically after initialization.
+     */
     @Input({ transform: booleanAttribute })
     get multiple(): boolean {
         return this._multiple;
@@ -449,9 +491,11 @@ export class KbqSelect
     private _multiple: boolean = false;
 
     /**
-     * Function to compare the option values with the selected values. The first argument
-     * is a value from an option. The second is a value from the selection. A boolean
-     * should be returned.
+     * Function to compare the option values with the selected values.
+     * The first argument is a value from an option.
+     * The second is a value from the selection.
+     * Should return true if the values match.
+     * Defaults to strict equality comparison.
      */
     @Input()
     get compareWith() {
@@ -472,7 +516,10 @@ export class KbqSelect
     }
 
     /**
-     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
+     * Function for handling the Ctrl + A (select all) keyboard combination.
+     * By default, the internal handler selects all options.
+     * @param event The keyboard event that triggered the handler.
+     * @param select Reference to this select component.
      */
     @Input()
     get selectAllHandler() {
@@ -494,13 +541,13 @@ export class KbqSelect
     @Input() panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || null;
 
     /**
-     * Minimum width of the panel.
+     * Minimum width of the panel in pixels.
      * If minWidth is larger than window width, it will be ignored.
      */
     @Input({ transform: numberAttribute }) panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'> =
         this.defaultOptions?.panelMinWidth ?? 200;
 
-    /** Value of the select control. */
+    /** Value of the select control. Can be a single value or array of values for multiple selection. */
     @Input()
     get value(): any {
         return this._value;
@@ -515,6 +562,10 @@ export class KbqSelect
 
     private _value: any;
 
+    /**
+     * Unique identifier for the select component.
+     * Auto-generates an ID if not provided.
+     */
     @Input()
     get id(): string {
         return this._id;
@@ -527,6 +578,10 @@ export class KbqSelect
 
     private _id: string;
 
+    /**
+     * Sets the tabIndex of the select element.
+     * Automatically set to -1 when disabled.
+     */
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -538,6 +593,10 @@ export class KbqSelect
 
     private _tabIndex = 0;
 
+    /**
+     * Whether the select is disabled.
+     * When disabled, the select cannot be opened and its value cannot be changed.
+     */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -569,25 +628,30 @@ export class KbqSelect
         this._focused = value;
     }
 
+    /** Whether the select panel is currently open. */
     panelOpen = false;
 
-    /** true if virtual scrolling is used. */
+    /** Whether virtual scrolling is enabled for the options panel. */
     withVirtualScroll: boolean;
 
     private _focused = false;
 
+    /** Whether the search returned no results. */
     get isEmptySearchResult(): boolean {
         return this.search && this.options.filter((option) => option.selectable).length === 0 && !!this.search.value();
     }
 
+    /** Whether the cleaner (clear button) should be shown. */
     get canShowCleaner(): boolean {
         return !this.disabled && this.cleaner && this.selectionModel.hasValue();
     }
 
+    /** Returns the currently selected option(s). Single value or array for multiple selection. */
     get selected(): KbqOptionBase | KbqOptionBase[] {
         return this.multiSelection ? this.selectionModel.selected : this.selectionModel.selected[0];
     }
 
+    /** Returns the display value for the trigger element. */
     get triggerValue(): string {
         if (this.empty) return '';
 
@@ -598,6 +662,7 @@ export class KbqSelect
         return this.selectionModel.selected[0].viewValue;
     }
 
+    /** Returns all selected options in display order. */
     get triggerValues(): KbqOptionBase[] {
         if (this.empty) {
             return [];
@@ -612,14 +677,22 @@ export class KbqSelect
         return selectedOptions;
     }
 
+    /** Whether no option is currently selected. */
     get empty(): boolean {
         return !!this.selectionModel?.isEmpty();
     }
 
+    /** Whether there are no options available. */
+    get noOptions(): boolean {
+        return this.options?.length === 0;
+    }
+
+    /** Returns the first selected option that is not disabled. */
     get firstSelected(): KbqOptionBase | null {
         return this.selectionModel.selected.filter((option) => !option.disabled)[0] || null;
     }
 
+    /** Whether the first selected option is filtered (not visible in the list). */
     get firstFiltered(): boolean {
         return !this.options.find((option: KbqOption) => option === this.firstSelected);
     }
@@ -637,31 +710,36 @@ export class KbqSelect
             : KbqComponentColors.ContrastFade;
     }
 
-    /** Whether multiple choice is enabled or not. True if multiple or multiline */
+    /** Whether multiple choice is enabled. True if multiple or multiline mode is active. */
     get multiSelection(): boolean {
         return this.multiple || this.multiline;
     }
 
+    /** Subscription to the close event of the overlay. */
     private closeSubscription = Subscription.EMPTY;
 
     /** The scroll position of the overlay panel, calculated to center the selected option. */
     private scrollTop = 0;
 
-    /** Unique id for this input. */
+    /** Unique id for this input. Auto-incremented for each instance. */
     private readonly uid = `kbq-select-${nextUniqueId++}`;
 
+    /** Subject that emits when the component visibility changes. */
     private visibleChanges: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    /** Width of the overlay panel. */
+    /** Width of the overlay panel in pixels or as a string. */
     protected overlayWidth: string | number;
 
-    /** Min width of the overlay panel. */
+    /** Minimum width of the overlay panel in pixels. */
     protected overlayMinWidth: string | number;
 
-    /** Origin for the overlay panel. */
+    /** Origin element for the overlay panel positioning. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
+    /** Flag indicating if the dropdown class has been added to the overlay container. */
     private classAddedToOverlayContainer: boolean = false;
+
+    private openPanelTimeout: ReturnType<typeof setTimeout>;
 
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
@@ -700,6 +778,7 @@ export class KbqSelect
         });
     }
 
+    /** Lifecycle hook called after component initialization. Initializes selection model and subscriptions. */
     ngOnInit() {
         this.selectionModel = new SelectionModel(this.multiSelection);
         this.stateChanges.next();
@@ -737,6 +816,7 @@ export class KbqSelect
             );
     }
 
+    /** Lifecycle hook for change detection. Updates visibility and error state. */
     ngDoCheck() {
         this.visibleChanges.next(this.isVisible());
 
@@ -745,6 +825,7 @@ export class KbqSelect
         }
     }
 
+    /** Lifecycle hook after content initialization. Sets up key manager and option subscriptions. */
     ngAfterContentInit() {
         this.withVirtualScroll = !!this.cdkVirtualForOf;
         this.initKeyManager();
@@ -768,11 +849,15 @@ export class KbqSelect
             .subscribe(() => this.keyManager.updateActiveItem(0));
     }
 
+    /** Lifecycle hook when component is destroyed. Cleans up subscriptions. */
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
+
+        clearTimeout(this.openPanelTimeout);
     }
 
+    /** Updates the error state based on the error state matcher. */
     updateErrorState() {
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
@@ -786,11 +871,21 @@ export class KbqSelect
         }
     }
 
+    /**
+     * Formats the hidden items text with the number of hidden items.
+     * @param hiddenItemsText Template string with {{ number }} placeholder.
+     * @param hiddenItems Number of hidden items to display.
+     * @returns Formatted string with the number of hidden items.
+     */
     @Input()
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string {
         return hiddenItemsText.replace('{{ number }}', hiddenItems.toString());
     }
 
+    /**
+     * Clears the current selection.
+     * @param $event Mouse event to prevent default behavior.
+     */
     clearValue($event): void {
         // need to prevent opening
         $event.stopPropagation();
@@ -811,6 +906,7 @@ export class KbqSelect
     /** `View -> model callback called when select has been touched` */
     onTouched = () => {};
 
+    /** Resets the search component if present. */
     resetSearch(): void {
         if (!this.search) {
             return;
@@ -834,11 +930,33 @@ export class KbqSelect
         }
     }
 
-    /** Opens the overlay panel. */
+    /**
+     * Triggers the opening of the panel component.
+     * If the component is disabled or the panel is already open, the call is ignored.
+     * Otherwise, the (beforeOpened) event is emitted.
+     * When no options are available, the panel is opened after a short delay;
+     * if options exist, it opens immediately.
+     */
     open(): void {
-        if (this.disabled || !this.options?.length || this.panelOpen) {
-            return;
+        if (this.disabled || this.panelOpen) return;
+
+        this.beforeOpened.emit();
+
+        if (this.noOptions) {
+            clearTimeout(this.openPanelTimeout);
+
+            this.openPanelTimeout = setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
+        } else {
+            this.openPanel();
         }
+    }
+
+    /**
+     * Internal method to open the panel. Handles overlay positioning and sizing.
+     * Sets up the overlay dimensions based on trigger size and configured options.
+     */
+    openPanel() {
+        if (!this.trigger) return;
 
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
@@ -889,9 +1007,7 @@ export class KbqSelect
 
     /** Closes the overlay panel and focuses the host element. */
     close(): void {
-        if (!this.panelOpen) {
-            return;
-        }
+        if (!this.panelOpen) return;
 
         // the order of calls is important
         this.resetSearch();
@@ -951,14 +1067,21 @@ export class KbqSelect
         this.stateChanges.next();
     }
 
+    /**
+     * Checks if the current direction is RTL (right-to-left).
+     * @returns True if RTL mode is active, false otherwise.
+     */
     isRtl(): boolean {
         return this._dir ? this._dir.value === 'rtl' : false;
     }
 
+    /**
+     * Handles all keyboard events for the select.
+     * Delegates to appropriate handler based on panel state.
+     * @param event The keyboard event to handle.
+     */
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         if (this.panelOpen) {
             this.handleOpenKeydown(event);
@@ -967,6 +1090,7 @@ export class KbqSelect
         }
     }
 
+    /** Handles focus event on the select element. */
     onFocus() {
         if (!this.disabled) {
             this._focused = true;
@@ -998,6 +1122,7 @@ export class KbqSelect
 
     /**
      * Callback that is invoked when the overlay panel has been attached.
+     * Sets up position change subscription and closing actions.
      */
     onAttached(): void {
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
@@ -1013,7 +1138,7 @@ export class KbqSelect
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }
 
-    /** Returns the theme to be used on the panel. */
+    /** Returns the theme to be used on the panel based on parent form field color. */
     getPanelTheme(): string {
         return this.parentFormField ? `kbq-${this.parentFormField.color}` : '';
     }
@@ -1031,13 +1156,21 @@ export class KbqSelect
         this.focus();
     }
 
-    /** Invoked when an option is clicked. */
+    /**
+     * Handles removal of a matched item in the trigger.
+     * @param option The option to remove from selection.
+     * @param $event The mouse event that triggered the removal.
+     */
     onRemoveMatcherItem(option: KbqOptionBase, $event): void {
         $event.stopPropagation();
 
         option.deselect();
     }
 
+    /**
+     * Calculates the number of hidden items in multiple selection mode.
+     * Updates the hiddenItems property and triggers change detection.
+     */
     calculateHiddenItems = () => {
         if (
             !this.isBrowser ||
@@ -1083,10 +1216,19 @@ export class KbqSelect
         this._changeDetectorRef.markForCheck();
     };
 
+    /**
+     * Gets the height of a single option item.
+     * @returns The height in pixels of the first option, or 0 if no options exist.
+     */
     getItemHeight(): number {
         return this.options.first ? this.options.first.getHeight() : 0;
     }
 
+    /**
+     * Handles click events on the select.
+     * Closes the panel if click is inside the footer.
+     * @param $event The mouse event to handle.
+     */
     handleClick($event: MouseEvent) {
         if (this.footer?.nativeElement.contains($event.target)) {
             this.close();
@@ -1137,16 +1279,19 @@ export class KbqSelect
         );
     }
 
+    /** Updates locale parameters from the locale service. */
     private updateLocaleParams = () => {
         this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText;
 
         this._changeDetectorRef.markForCheck();
     };
 
+    /** Checks if the component is currently visible in the viewport. */
     private isVisible(): boolean {
         return this.elementRef.nativeElement.offsetTop < this.elementRef.nativeElement.offsetHeight;
     }
 
+    /** Gets the current overlay position index in the container. */
     private currentOverlayPosition(): number {
         const element = this.overlayDir.overlayRef.hostElement;
 
@@ -1155,12 +1300,17 @@ export class KbqSelect
         });
     }
 
+    /** Gets the position index of modal overlay in the container. */
     private modalOverlayPosition(): number {
         return Array.from(this.overlayContainer.getContainerElement().childNodes).findIndex((childNode) =>
             (childNode as HTMLElement).classList.contains('kbq-modal-overlay')
         );
     }
 
+    /**
+     * Creates an observable of actions that should close the select panel.
+     * Includes outside pointer events and overlay detachments.
+     */
     private closingActions() {
         // used for calling toggle on select from outside of component
         const outsidePointerEvents = this.overlayDir
@@ -1179,10 +1329,12 @@ export class KbqSelect
         return merge(outsidePointerEvents, this.overlayDir.overlayRef!.detachments());
     }
 
+    /** Gets the height of the options container element. */
     private getHeightOfOptionsContainer(): number {
         return this.optionsContainer.nativeElement.getClientRects()[0]?.height;
     }
 
+    /** Updates the keyboard manager scroll size based on options container height. */
     private updateScrollSize(): void {
         if (!this.options.first) {
             return;
@@ -1191,6 +1343,7 @@ export class KbqSelect
         this.keyManager.withScrollSize(Math.floor(this.getHeightOfOptionsContainer() / this.options.first.getHeight()));
     }
 
+    /** Calculates the total width of all selected items in the matcher. */
     private getTotalItemsWidthInMatcher(): number {
         const triggerClone = this.buildTriggerClone();
 
@@ -1207,6 +1360,11 @@ export class KbqSelect
         return totalItemsWidth;
     }
 
+    /**
+     * Calculates the width of a single item including margins.
+     * @param element The DOM element to measure.
+     * @returns Total width including margins and gap.
+     */
     private getItemWidth(element: HTMLElement): number {
         const computedStyle = this.window.getComputedStyle(element);
 
@@ -1232,7 +1390,7 @@ export class KbqSelect
         }
     }
 
-    /** Handles keyboard events when the selected is open. */
+    /** Handles keyboard events when the select is open. */
     private handleOpenKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
         const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
@@ -1288,6 +1446,10 @@ export class KbqSelect
         }
     }
 
+    /**
+     * Initializes the selection based on the current value.
+     * Defers execution to avoid change detection errors.
+     */
     private initializeSelection(): void {
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
@@ -1297,8 +1459,9 @@ export class KbqSelect
     }
 
     /**
-     * Sets the selected option based on a value. If no option can be
-     * found with the designated value, the select trigger is cleared.
+     * Sets the selected option based on a value.
+     * If no option can be found with the designated value, the select trigger is cleared.
+     * @param value The value to select. Can be a single value or array for multiple selection.
      */
     private setSelectionByValue(value: any | any[]): void {
         this.previousSelectionModelSelected = this.selectionModel.selected;
@@ -1325,6 +1488,11 @@ export class KbqSelect
         this._changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Finds the option that corresponds to the given value.
+     * @param value The value to find.
+     * @returns The matching option or undefined if not found.
+     */
     private getCorrespondOption(value: any): KbqOptionBase | undefined {
         return [
             ...this.options.toArray(),
@@ -1444,7 +1612,7 @@ export class KbqSelect
         this.stateChanges.next();
     }
 
-    /** Sorts the selected values in the selected based on their order in the panel. */
+    /** Sorts the selected values based on their order in the panel. */
     private sortValues() {
         if (this.multiSelection) {
             const options = this.options.toArray();
@@ -1521,6 +1689,10 @@ export class KbqSelect
         });
     }
 
+    /**
+     * Calculates the total width and count of visible items.
+     * @returns Tuple of [totalVisibleItemsWidth, visibleItemsCount].
+     */
     private getTotalVisibleItems(): [number, number] {
         const triggerClone = this.buildTriggerClone();
 
@@ -1542,6 +1714,10 @@ export class KbqSelect
         return [totalVisibleItemsWidth, visibleItemsCount];
     }
 
+    /**
+     * Creates a hidden clone of the trigger element for width calculations.
+     * @returns Clone of the trigger element positioned off-screen.
+     */
     private buildTriggerClone(): HTMLDivElement {
         const triggerClone = this.trigger.nativeElement.cloneNode(true);
 
@@ -1553,6 +1729,7 @@ export class KbqSelect
         return triggerClone;
     }
 
+    /** Adds the dropdown class to the overlay container when first select opens. */
     private addClassToOverlayContainer() {
         const overlayContainer = this.overlayContainer?.getContainerElement();
 
@@ -1563,6 +1740,7 @@ export class KbqSelect
         }
     }
 
+    /** Removes the dropdown class from the overlay container when select closes. */
     private removeClassFromOverlayContainer() {
         if (this.classAddedToOverlayContainer) {
             this._renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');

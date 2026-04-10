@@ -3968,6 +3968,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "search-expandable-overview-example.ts",
     "importPath": "components/search-expandable"
   },
+  "select-add-new-option": {
+    "packagePath": "components/select/select-add-new-option",
+    "title": "Select add new option",
+    "componentName": "SelectAddNewOptionExample",
+    "files": [
+      "select-add-new-option-example.ts"
+    ],
+    "selector": "select-add-new-option-example",
+    "additionalComponents": [],
+    "primaryFile": "select-add-new-option-example.ts",
+    "importPath": "components/select"
+  },
   "select-cleaner": {
     "packagePath": "components/select/select-cleaner",
     "title": "Select cleaner",
@@ -4064,6 +4076,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-icon-example.ts",
     "importPath": "components/select"
   },
+  "select-loading-error-custom": {
+    "packagePath": "components/select/select-loading-error-custom",
+    "title": "Select loading error (custom)",
+    "componentName": "SelectLoadingErrorCustomExample",
+    "files": [
+      "select-loading-error-custom-example.ts"
+    ],
+    "selector": "select-loading-error-custom-example",
+    "additionalComponents": [],
+    "primaryFile": "select-loading-error-custom-example.ts",
+    "importPath": "components/select"
+  },
+  "select-loading-error": {
+    "packagePath": "components/select/select-loading-error",
+    "title": "Select loading error",
+    "componentName": "SelectLoadingErrorExample",
+    "files": [
+      "select-loading-error-example.ts"
+    ],
+    "selector": "select-loading-error-example",
+    "additionalComponents": [],
+    "primaryFile": "select-loading-error-example.ts",
+    "importPath": "components/select"
+  },
+  "select-loading": {
+    "packagePath": "components/select/select-loading",
+    "title": "Select loading",
+    "componentName": "SelectLoadingExample",
+    "files": [
+      "select-loading-example.ts"
+    ],
+    "selector": "select-loading-example",
+    "additionalComponents": [],
+    "primaryFile": "select-loading-example.ts",
+    "importPath": "components/select"
+  },
   "select-multiple": {
     "packagePath": "components/select/select-multiple",
     "title": "Select multiple",
@@ -4076,6 +4124,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-multiple-example.ts",
     "importPath": "components/select"
   },
+  "select-no-variants": {
+    "packagePath": "components/select/select-no-variants",
+    "title": "Select no variants",
+    "componentName": "SelectNoVariantsExample",
+    "files": [
+      "select-no-variants-example.ts"
+    ],
+    "selector": "select-no-variants-example",
+    "additionalComponents": [],
+    "primaryFile": "select-no-variants-example.ts",
+    "importPath": "components/select"
+  },
   "select-overview": {
     "packagePath": "components/select/select-overview",
     "title": "Select",
@@ -4086,6 +4146,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-overview-example",
     "additionalComponents": [],
     "primaryFile": "select-overview-example.ts",
+    "importPath": "components/select"
+  },
+  "select-paging-error": {
+    "packagePath": "components/select/select-paging-error",
+    "title": "Select paging error",
+    "componentName": "SelectPagingErrorExample",
+    "files": [
+      "select-paging-error-example.ts"
+    ],
+    "selector": "select-paging-error-example",
+    "additionalComponents": [],
+    "primaryFile": "select-paging-error-example.ts",
+    "importPath": "components/select"
+  },
+  "select-paging": {
+    "packagePath": "components/select/select-paging",
+    "title": "Select paging",
+    "componentName": "SelectPagingExample",
+    "files": [
+      "select-paging-example.ts"
+    ],
+    "selector": "select-paging-example",
+    "additionalComponents": [],
+    "primaryFile": "select-paging-example.ts",
     "importPath": "components/select"
   },
   "select-preselected-values": {
@@ -6809,6 +6893,8 @@ return import('@koobiq/docs-examples/components/scrollbar');
 return import('@koobiq/docs-examples/components/search-expandable');
   case 'search-expandable-overview':
 return import('@koobiq/docs-examples/components/search-expandable');
+  case 'select-add-new-option':
+return import('@koobiq/docs-examples/components/select');
   case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');
   case 'select-custom-matcher':
@@ -6825,9 +6911,21 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-icon':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-loading-error-custom':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-loading-error':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-loading':
+return import('@koobiq/docs-examples/components/select');
   case 'select-multiple':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-no-variants':
+return import('@koobiq/docs-examples/components/select');
   case 'select-overview':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-paging-error':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-paging':
 return import('@koobiq/docs-examples/components/select');
   case 'select-preselected-values':
 return import('@koobiq/docs-examples/components/select');
