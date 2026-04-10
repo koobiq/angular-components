@@ -19,7 +19,7 @@ import { KbqPipeMultiTreeSelectComponent } from './pipe-multi-tree-select';
 const DEV_DATA_OBJECT = {
     'No roles': 'value 0',
     'Management and Configuration': {
-        Administrator: { value: 'value 1' },
+        Administrator: 'value 1',
         Operator: 'value 2',
         User: 'value 3'
     },
@@ -305,7 +305,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
         it('should return checked when all options selected', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'test', value: ALL_LEAF_VALUES, selectAll: true })
+                createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
@@ -315,9 +315,12 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.allOptionsSelected) {
-                expect(component.selectAllCheckboxState).toBe('checked');
-            }
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.selectAllCheckboxState).toBe('checked');
         }));
 
         it('should return indeterminate when some options selected', fakeAsync(() => {
@@ -332,9 +335,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.select.selected.length > 0 && !component.allOptionsSelected) {
-                expect(component.selectAllCheckboxState).toBe('indeterminate');
-            }
+            expect(component.select.selected.length).toBeGreaterThan(0);
+            expect(component.allOptionsSelected).toBe(false);
+            expect(component.selectAllCheckboxState).toBe('indeterminate');
         }));
     });
 
@@ -359,38 +362,36 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            const options = document.querySelectorAll('.kbq-tree-option');
+            const component = getPipeComponent();
 
-            if (options.length > 0) {
-                (options[0] as HTMLElement).click();
-                flush();
-                fixture.detectChanges();
+            component.onSelect({ value: { data: component.treeControl.dataNodes[0], selected: true } });
+            flush();
+            fixture.detectChanges();
 
-                expect(spy).toHaveBeenCalled();
-            }
+            expect(spy).toHaveBeenCalled();
         }));
 
         it('should set data.value to empty array when all selected and selectedAllEqualsSelectedNothing', fakeAsync(() => {
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'test', value: ALL_LEAF_VALUES })
+                createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
-
-            const component = getPipeComponent();
 
             openSelect();
             flush();
             fixture.detectChanges();
 
-            if (component.allOptionsSelected && component.selectedAllEqualsSelectedNothing) {
-                component.onSelect({ value: { data: component.treeControl.dataNodes[0], selected: true } });
-                flush();
+            const component = getPipeComponent();
 
-                if (component.allOptionsSelected) {
-                    expect(component.data.value).toEqual([]);
-                }
-            }
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.selectedAllEqualsSelectedNothing).toBe(true);
+
+            expect(component.data.value).toEqual([]);
         }));
     });
 
@@ -421,7 +422,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
         it('should deselect all nodes when all selected', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'test', value: ALL_LEAF_VALUES, selectAll: true })
+                createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
@@ -431,13 +432,17 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.allOptionsSelected) {
-                component.toggleSelectAllNode();
-                flush();
-                fixture.detectChanges();
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
 
-                expect(component.tree.selectionModel.selected.length).toBe(0);
-            }
+            expect(component.allOptionsSelected).toBe(true);
+
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.tree.selectionModel.selected.length).toBe(0);
         }));
 
         it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', fakeAsync(() => {
@@ -457,9 +462,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            if (component.allOptionsSelected && component.selectedAllEqualsSelectedNothing) {
-                expect(component.data.value).toEqual([]);
-            }
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.selectedAllEqualsSelectedNothing).toBe(true);
+            expect(component.data.value).toEqual([]);
         }));
     });
 

@@ -8,21 +8,20 @@ import {
     KbqFilterBarModule,
     KbqPipe,
     KbqPipeTemplate,
-    KbqPipeTypes,
-    KbqSelectValue
+    KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiSelectComponent } from './pipe-multi-select';
 
-const SELECT_VALUES: KbqSelectValue[] = [
-    { name: 'Option 1', value: 'value1' },
-    { name: 'Option 2', value: 'value2' },
-    { name: 'Option 3', value: 'value3' },
-    { name: 'Option 4', value: 'value4' },
-    { name: 'Option 5', value: 'value5' }
+const SELECT_VALUES = [
+    { id: 1, name: 'Option 1', value: 'value1' },
+    { id: 2, name: 'Option 2', value: 'value2' },
+    { id: 3, name: 'Option 3', value: 'value3' },
+    { id: 4, name: 'Option 4', value: 'value4' },
+    { id: 5, name: 'Option 5', value: 'value5' }
 ];
 
-const ALL_VALUES: KbqSelectValue[] = [...SELECT_VALUES];
+const ALL_VALUES = [...SELECT_VALUES];
 
 const PIPE_TEMPLATE_ID = 'TestMultiSelect';
 
@@ -248,9 +247,8 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.allOptionsSelected) {
-                expect(component.isEmpty).toBe(true);
-            }
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.isEmpty).toBe(true);
         }));
     });
 
@@ -313,9 +311,8 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.allOptionsSelected) {
-                expect(component.checkboxState).toBe('checked');
-            }
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.checkboxState).toBe('checked');
         }));
 
         it('should return indeterminate when some options selected', fakeAsync(() => {
@@ -330,9 +327,9 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.select.selectionModel.selected.length > 0 && !component.allOptionsSelected) {
-                expect(component.checkboxState).toBe('indeterminate');
-            }
+            expect(component.select.selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.allOptionsSelected).toBe(false);
+            expect(component.checkboxState).toBe('indeterminate');
         }));
     });
 
@@ -359,13 +356,13 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const options = document.querySelectorAll('.kbq-option');
 
-            if (options.length > 0) {
-                (options[0] as HTMLElement).click();
-                flush();
-                fixture.detectChanges();
+            expect(options.length).toBeGreaterThan(0);
 
-                expect(spy).toHaveBeenCalled();
-            }
+            (options[0] as HTMLElement).click();
+            flush();
+            fixture.detectChanges();
+
+            expect(spy).toHaveBeenCalled();
         }));
 
         it('should set data.value to empty array when all selected and selectedAllEqualsSelectedNothing', fakeAsync(() => {
@@ -381,14 +378,11 @@ describe('KbqPipeMultiSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            if (component.allOptionsSelected && component.selectedAllEqualsSelectedNothing) {
-                component.onSelect([...ALL_VALUES]);
-                flush();
-
-                if (component.allOptionsSelected) {
-                    expect(component.data.value).toEqual([]);
-                }
-            }
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.selectedAllEqualsSelectedNothing).toBe(true);
+            component.onSelect([...ALL_VALUES]);
+            flush();
+            expect(component.data.value).toEqual([]);
         }));
     });
 
@@ -429,13 +423,12 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.allOptionsSelected) {
-                component.toggleSelectionAll();
-                flush();
-                fixture.detectChanges();
+            expect(component.allOptionsSelected).toBe(true);
+            component.toggleSelectionAll();
+            flush();
+            fixture.detectChanges();
 
-                expect(component.select.selectionModel.selected.length).toBe(0);
-            }
+            expect(component.select.selectionModel.selected.length).toBe(0);
         }));
 
         it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', fakeAsync(() => {
@@ -455,9 +448,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            if (component.allOptionsSelected && component.selectedAllEqualsSelectedNothing) {
-                expect(component.data.value).toEqual([]);
-            }
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.selectedAllEqualsSelectedNothing).toBe(true);
+            expect(component.data.value).toEqual([]);
         }));
     });
 
@@ -719,9 +712,8 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (component.allOptionsSelected) {
-                expect(component.allVisibleOptionsSelected).toBe(true);
-            }
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.allVisibleOptionsSelected).toBe(true);
         }));
 
         it('should return false when some visible options are not selected', fakeAsync(() => {
@@ -736,9 +728,8 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            if (!component.allOptionsSelected) {
-                expect(component.allVisibleOptionsSelected).toBe(false);
-            }
+            expect(component.allOptionsSelected).toBe(false);
+            expect(component.allVisibleOptionsSelected).toBe(false);
         }));
     });
 
@@ -760,13 +751,7 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            component.toggleSelectionAll();
-            flush();
-            fixture.detectChanges();
-
-            if (component.select.triggerValues.length === SELECT_VALUES.length) {
-                expect(component.allOptionsSelected).toBe(true);
-            }
+            expect(component.allOptionsSelected).toBe(true);
         }));
 
         it('should return false when not all options selected', fakeAsync(() => {
