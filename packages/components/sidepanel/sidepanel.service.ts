@@ -154,7 +154,7 @@ export class KbqSidepanelService implements OnDestroy {
         // added to the injection tokens.
 
         return Injector.create({
-            parent: this.injector,
+            parent: config.injector ?? this.injector,
             providers: [
                 { provide: KbqSidepanelContainerComponent, useValue: sidepanelContainer },
                 { provide: KBQ_SIDEPANEL_DATA, useValue: config.data },

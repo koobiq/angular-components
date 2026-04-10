@@ -1,5 +1,14 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, Inject, NgModule, TemplateRef, ViewChild } from '@angular/core';
+import {
+    Component,
+    Inject,
+    InjectionToken,
+    Injector,
+    NgModule,
+    TemplateRef,
+    ViewChild,
+    inject as injectCore
+} from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -335,6 +344,23 @@ describe('KbqSidepanelService', () => {
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
     });
 
+    it('should be able to inject a token provided via custom injector', () => {
+        const customInjector = Injector.create({
+            parent: TestBed.inject(Injector),
+            providers: [{ provide: CUSTOM_TOKEN, useValue: 'custom-value' }]
+        });
+
+        const sidepanelRef = sidepanelService.open(SidepanelWithCustomToken, { injector: customInjector });
+
+        expect(sidepanelRef.instance.tokenValue).toBe('custom-value');
+    });
+
+    it('should fall back to the root injector when no custom injector is provided', () => {
+        const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
+
+        expect(sidepanelRef.instance).toBeTruthy();
+    });
+
     it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
         const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
         const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
@@ -410,6 +436,15 @@ class SidepanelFromDropdownComponent {
     }
 }
 
+const CUSTOM_TOKEN = new InjectionToken<string>('CustomToken');
+
+@Component({
+    template: '<div>Sidepanel with custom token</div>'
+})
+class SidepanelWithCustomToken {
+    readonly tokenValue = injectCore(CUSTOM_TOKEN);
+}
+
 @Component({
     template: '<div>Simple Sidepanel</div>'
 })
@@ -452,6 +487,7 @@ class RootComponent {}
 // https://github.com/angular/angular/issues/10760
 const TEST_COMPONENTS = [
     SimpleSidepanelExample,
+    SidepanelWithCustomToken,
     ComponentWithTemplateForSidepanel,
     RootComponent,
     SidepanelFromDropdownComponent
