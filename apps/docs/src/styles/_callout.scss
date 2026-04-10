@@ -53,7 +53,7 @@
     .kbq-callout__content {
         @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
 
-        border-radius: var(--kbq-size-border-radius) var(---kbq-size-border-radius) 0;
+        border-radius: var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0;
         padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-m);
     }
 
