@@ -125,6 +125,6 @@ When navigating the list, the selected item does not change along with the focus
 
 ### Expanding a branch on click
 
-Clicking an item selects it and expands the first level of child nodes.
+Clicking an element expands the first level of child nodes, only leaf elements can be selected.
 
 <!-- example(tree-toggle-on-click) -->
