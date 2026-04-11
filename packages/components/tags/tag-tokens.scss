@@ -83,11 +83,11 @@
     --kbq-tag-warning-fade-states-focus-text: var(--kbq-foreground-warning);
     --kbq-tag-warning-fade-states-focus-icon: var(--kbq-icon-warning);
     --kbq-tag-warning-fade-states-focus-close-button: var(--kbq-icon-warning);
-    --kbq-tag-warning-fade-states-focus-outline: var(--kbq-line-warning);
+    --kbq-tag-warning-fade-states-focus-outline: var(--kbq-states-line-focus-theme);
     --kbq-tag-warning-fade-states-selected-background: var(--kbq-background-warning);
-    --kbq-tag-warning-fade-states-selected-text: var(--kbq-foreground-contrast);
-    --kbq-tag-warning-fade-states-selected-icon: var(--kbq-icon-contrast);
-    --kbq-tag-warning-fade-states-selected-close-button: var(--kbq-icon-contrast);
+    --kbq-tag-warning-fade-states-selected-text: var(--kbq-foreground-white);
+    --kbq-tag-warning-fade-states-selected-icon: var(--kbq-icon-white);
+    --kbq-tag-warning-fade-states-selected-close-button: var(--kbq-icon-white);
     --kbq-tag-warning-fade-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-tag-warning-fade-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-tag-warning-fade-states-disabled-icon: var(--kbq-states-icon-disabled);
