@@ -6,7 +6,8 @@
 
         & .kbq-split-button_item {
             &.kbq-contrast.kbq-button_filled::before {
-                background: var(--kbq-foreground-on-contrast);
+                // @TODO (#DS-3002)
+                background: var(--kbq-line-on-contrast-fade, var(--kbq-foreground-on-contrast));
             }
 
             &.kbq-contrast.kbq-button_transparent,
