@@ -136,7 +136,7 @@ export class E2eInlineEditStates {
     `,
     styles: `
         :host {
-            max-width: 500px;
+            max-width: 100px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
