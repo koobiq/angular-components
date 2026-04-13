@@ -42,8 +42,8 @@ test.describe('KbqInlineEdit', () => {
         const getContainer = (page: Page) => page.getByTestId('e2eInlineEditMenuButtonContainer');
 
         test('menu button hover', async ({ page }) => {
-            test.use({ viewport: { width: 50, height: 32 } });
             await page.goto('/E2eInlineEditMenuButton');
+            await page.setViewportSize({ width: 50, height: 32 });
 
             const screenshotTarget = getContainer(page);
 
