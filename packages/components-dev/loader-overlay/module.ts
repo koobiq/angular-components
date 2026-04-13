@@ -20,7 +20,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <loader-overlay-size-example />
         <hr />
-        <loader-overlay-on-background-example />
+        <loader-overlay-card-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
