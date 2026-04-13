@@ -1,9 +1,9 @@
 @use '@koobiq/icons/fonts/kbq-icons';
 
 // Tokens
-@use '@koobiq/design-tokens/web/css-tokens';
-@use '@koobiq/design-tokens/web/css-tokens-light';
-@use '@koobiq/design-tokens/web/css-tokens-dark';
+@use '@koobiq/design-tokens/web/new/css-tokens';
+@use '@koobiq/design-tokens/web/new/css-tokens-light';
+@use '@koobiq/design-tokens/web/new/css-tokens-dark';
 
 @use '../components/core/styles/theming/prebuilt/theme';
 @use '../components/core/styles/visual/layout';

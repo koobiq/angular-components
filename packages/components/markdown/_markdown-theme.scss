@@ -30,7 +30,7 @@
         }
 
         .kbq-markdown__pre,
-        .kbq-markdown__code:not(.kbq-markdown__a .kbq-markdown__code) {
+        .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code, .kbq-markdown__a .kbq-markdown__code) {
             color: var(--kbq-markdown-code-text);
             background-color: var(--kbq-markdown-code-background);
         }
