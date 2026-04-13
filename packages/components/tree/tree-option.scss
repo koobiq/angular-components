@@ -36,6 +36,13 @@
 
     gap: var(--kbq-tree-size-container-content-gap-horizontal);
 
+    & > *[kbqtreenodetoggle],
+    & > .kbq-tree-node-toggle,
+    & > .kbq-pseudo-checkbox {
+        margin-top: var(--kbq-size-3xs);
+        align-self: flex-start;
+    }
+
     & .kbq-option-text {
         @include common.kbq-line-wrapper-base();
         display: inline-block;

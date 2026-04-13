@@ -66,7 +66,7 @@ import {
     E2eMultiTreeSelectStates,
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
-import { E2eTreeStates } from '../components/tree/e2e';
+import { E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
 import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 const components = [
@@ -138,7 +138,8 @@ const components = [
     E2eSelectWithSearchAndFooter,
     E2eInlineEditStates,
     E2eFormHorizontal,
-    E2eTypographyStyles
+    E2eTypographyStyles,
+    E2eTreeTwoLineNode
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {

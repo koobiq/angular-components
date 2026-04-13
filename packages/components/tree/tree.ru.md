@@ -55,6 +55,10 @@
 
 <!-- example(tree-action-button) -->
 
+#### Подпись в опциях
+
+<!-- example(tree-select-two-line-option) -->
+
 ### Варианты множественного выбора элементов
 
 Есть несколько вариантов множественного выбора элементов. [См. в примерах](/ru/components/tree/examples).

@@ -55,6 +55,10 @@ Sometimes an additional action button may be present for an item.
 
 <!-- example(tree-action-button) -->
 
+#### Caption in options
+
+<!-- example(tree-select-two-line-option) -->
+
 ### Multiple selection variants
 
 There are several variants for multiple item selection. [See in examples](/en/components/tree/examples).

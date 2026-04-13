@@ -20,6 +20,9 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
+        <select-two-line-option-example />
+        <hr />
+
         <select-paging-error-example />
         <hr />
 
@@ -41,57 +44,58 @@ import { DEV_OPTIONS } from './mock';
         <select-loading-error-example />
         <hr />
 
-        <!--        <select-scrolling-and-layering-example />-->
-        <!--        <hr />-->
-        <!--        <select-with-multiline-matcher-example />-->
-        <!--        <hr />-->
+        <select-scrolling-and-layering-example />
+        <hr />
 
-        <!--        <select-with-panel-width-default-example />-->
-        <!--        <hr />-->
+        <select-with-multiline-matcher-example />
+        <hr />
 
-        <!--        <select-with-panel-width-auto-example />-->
-        <!--        <hr />-->
+        <select-with-panel-width-default-example />
+        <hr />
 
-        <!--        <select-with-panel-width-fixed-example />-->
-        <!--        <hr />-->
+        <select-with-panel-width-auto-example />
+        <hr />
 
-        <!--        <select-with-panel-min-width-example />-->
-        <!--        <hr />-->
+        <select-with-panel-width-fixed-example />
+        <hr />
 
-        <!--        <select-virtual-scroll-example />-->
-        <!--        <hr />-->
+        <select-with-panel-min-width-example />
+        <hr />
 
-        <!--        <select-validation-example />-->
-        <!--        <hr />-->
+        <select-virtual-scroll-example />
+        <hr />
 
-        <!--        <select-search-example />-->
-        <!--        <hr />-->
+        <select-validation-example />
+        <hr />
 
-        <!--        <select-prioritized-selected-example />-->
-        <!--        <hr />-->
+        <select-search-example />
+        <hr />
 
-        <!--        <select-overview-example />-->
-        <!--        <hr />-->
+        <select-prioritized-selected-example />
+        <hr />
 
-        <!--        <select-multiple-example />-->
-        <!--        <hr />-->
+        <select-overview-example />
+        <hr />
 
-        <!--        <select-icon-example />-->
-        <!--        <hr />-->
+        <select-multiple-example />
+        <hr />
 
-        <!--        <select-height-example />-->
-        <!--        <hr />-->
+        <select-icon-example />
+        <hr />
 
-        <!--        <select-groups-example />-->
-        <!--        <hr />-->
+        <select-height-example />
+        <hr />
 
-        <!--        <select-cleaner-example />-->
-        <!--        <hr />-->
+        <select-groups-example />
+        <hr />
 
-        <!--        <select-disabled-example />-->
-        <!--        <hr />-->
+        <select-cleaner-example />
+        <hr />
 
-        <!--        <select-footer-example />-->
+        <select-disabled-example />
+        <hr />
+
+        <select-footer-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

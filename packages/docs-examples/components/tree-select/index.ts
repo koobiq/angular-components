@@ -8,6 +8,7 @@ import { TreeSelectLazyloadExample } from './tree-select-lazyload/tree-select-la
 import { TreeSelectMultipleOverviewExample } from './tree-select-multiple-overview/tree-select-multiple-overview-example';
 import { TreeSelectOverviewExample } from './tree-select-overview/tree-select-overview-example';
 import { TreeSelectSearchOverviewExample } from './tree-select-search-overview/tree-select-search-overview-example';
+import { TreeSelectTwoLineOptionExample } from './tree-select-two-line-option/tree-select-two-line-option-example';
 import { TreeSelectWithMultilineMatcherExample } from './tree-select-with-multiline-matcher-overview/tree-select-with-multiline-matcher-example';
 
 export {
@@ -20,6 +21,7 @@ export {
     TreeSelectMultipleOverviewExample,
     TreeSelectOverviewExample,
     TreeSelectSearchOverviewExample,
+    TreeSelectTwoLineOptionExample,
     TreeSelectWithMultilineMatcherExample
 };
 
@@ -33,7 +35,8 @@ const EXAMPLES = [
     TreeSelectCustomTriggerExample,
     TreeSelectCustomMatcherExample,
     TreeSelectWithMultilineMatcherExample,
-    TreeSelectCustomMatcherWithInputExample
+    TreeSelectCustomMatcherWithInputExample,
+    TreeSelectTwoLineOptionExample
 ];
 
 @NgModule({

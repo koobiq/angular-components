@@ -52,6 +52,10 @@ export class E2eSelectStates {}
             <kbq-select data-testid="e2eMultiSelect" [multiple]="true" [value]="['selected', 'default', 'default1']">
                 <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
                     <kbq-option [value]="'default'">default</kbq-option>
+                    <kbq-option [value]="'default'">
+                        <div>default + caption</div>
+                        <div class="kbq-option-caption">caption</div>
+                    </kbq-option>
                     <kbq-option [value]="'default1'">default1 long name long name long name</kbq-option>
                     <kbq-option class="kbq-hovered" [value]="'hovered'">hover</kbq-option>
                     <kbq-option [value]="'selected'">selected</kbq-option>

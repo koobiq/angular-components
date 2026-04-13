@@ -13,4 +13,16 @@ test.describe('KbqTreeModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eTreeTwoLineNode', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eTreeTwoLineNode');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eTreeTwoLineNode');
+
+            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
+        });
+    });
 });
