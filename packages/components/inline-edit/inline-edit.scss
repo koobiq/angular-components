@@ -29,7 +29,8 @@
 
         .kbq-mask__fade {
             background: var(--kbq-mask-background, transparent);
-            mask-image: linear-gradient(90deg, transparent, var(--kbq-black-default));
+            // @TODO remove fallback (#DS-3002)
+            mask-image: linear-gradient(90deg, transparent, var(--kbq-plt-black, var(--kbq-black-default)));
         }
 
         .kbq-mask__container {
@@ -146,14 +147,14 @@
 
     @include _mask(
         (
-            'top': 0,
-            'right': 0
+            'top': -1px,
+            'right': -1px
         )
     );
 
     .kbq-inline-edit__menu-mask {
         opacity: 0;
-        height: 100%;
+        height: calc(100% + 2 * var(--kbq-size-border-width));
         justify-content: flex-end;
         border-top-right-radius: var(--kbq-size-border-radius);
         border-bottom-right-radius: var(--kbq-size-border-radius);

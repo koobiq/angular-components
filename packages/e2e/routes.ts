@@ -22,7 +22,7 @@ import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eFilterBarStates } from '../components/filter-bar/e2e';
 import { E2eIconStateAndStyle } from '../components/icon/e2e';
-import { E2eInlineEditStates } from '../components/inline-edit/e2e';
+import { E2eInlineEditMenuButton, E2eInlineEditStates } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates } from '../components/link/e2e';
 import { E2eListStates } from '../components/list/e2e';
@@ -137,6 +137,7 @@ const components = [
     E2eMultilineTreeSelectStates,
     E2eSelectWithSearchAndFooter,
     E2eInlineEditStates,
+    E2eInlineEditMenuButton,
     E2eFormHorizontal,
     E2eTypographyStyles
 ];

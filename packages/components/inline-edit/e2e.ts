@@ -3,7 +3,9 @@ import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core'
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
@@ -100,3 +102,47 @@ export class E2eInlineEditStates {
             .forEach((focusContainer) => focusContainer.classList.add('cdk-focused', 'cdk-keyboard-focused'));
     }
 }
+
+@Component({
+    selector: 'e2e-inline-edit-menu-button',
+    imports: [
+        FormsModule,
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqDropdownModule,
+        KbqIconModule
+    ],
+    template: `
+        <div class="layout-column flex" data-testid="e2eInlineEditMenuButtonContainer">
+            <kbq-inline-edit>
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <button kbq-dropdown-item>Action 1</button>
+                    <button kbq-dropdown-item>Action 2</button>
+                </kbq-dropdown>
+                <i
+                    kbqInlineEditMenu
+                    kbq-icon-button="kbq-ellipsis-vertical_16"
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [color]="'contrast-fade'"
+                ></i>
+                <div class="example-inline-text" kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [value]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+        </div>
+    `,
+    styles: `
+        :host {
+            max-width: 500px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-row',
+        'data-testid': 'e2eInlineEditMenuButton'
+    }
+})
+export class E2eInlineEditMenuButton {}
