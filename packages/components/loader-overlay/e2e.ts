@@ -82,7 +82,7 @@ import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/m
 export class E2eLoaderOverlayStates {}
 
 @Component({
-    selector: 'e2e-loader-overlay-on-background',
+    selector: 'e2e-loader-overlay-card',
     imports: [KbqButtonModule, KbqLoaderOverlayModule, KbqModalModule],
     template: `
         <button data-testid="e2eOpenModalWithLoader" (click)="open()">Open modal</button>
@@ -105,7 +105,7 @@ export class E2eLoaderOverlayStates {}
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eLoaderOverlayOnBackground'
+        'data-testid': 'e2eLoaderOverlayCard'
     }
 })
 export class E2eLoaderOverlayCard {
