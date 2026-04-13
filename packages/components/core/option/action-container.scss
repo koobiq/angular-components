@@ -27,9 +27,9 @@
     width: var(--kbq-size-3xl);
     height: 100%;
 
-    background:
-        linear-gradient(to right, transparent 0%, var(--kbq-option-background) 70%),
-        linear-gradient(to right, transparent 0%, var(--kbq-background-bg) 80%);
+    background: linear-gradient(var(--kbq-option-background), var(--kbq-option-background)), var(--kbq-background-bg);
+
+    mask-image: linear-gradient(to right, transparent 0%, black var(--kbq-size-xxl));
 }
 
 .kbq-action-container__box {
@@ -39,7 +39,5 @@
     align-items: center;
     justify-content: center;
 
-    background:
-        linear-gradient(to right, var(--kbq-option-background) 0%, var(--kbq-option-background) 100%),
-        linear-gradient(to right, var(--kbq-background-bg) 0%, var(--kbq-background-bg) 100%);
+    background: linear-gradient(var(--kbq-option-background), var(--kbq-option-background)), var(--kbq-background-bg);
 }
