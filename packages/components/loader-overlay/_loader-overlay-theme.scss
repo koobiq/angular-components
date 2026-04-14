@@ -29,6 +29,18 @@
             color: var(--kbq-loader-overlay-transparent-caption-color);
         }
     }
+
+    .kbq-loader-overlay_card {
+        &.kbq-loader-overlay_filled,
+        &.kbq-loader-overlay_transparent {
+            background: color-mix(
+                in srgb,
+                var(--kbq-loader-overlay-card-overlay-background) /* color-mix only allows percentage value */
+                    calc(var(--kbq-opacity-overlay) * 100%),
+                transparent
+            );
+        }
+    }
 }
 
 @mixin kbq-loader-overlay-typography() {

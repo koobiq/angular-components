@@ -26,7 +26,7 @@ import { E2eInlineEditStates } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates } from '../components/link/e2e';
 import { E2eListStates } from '../components/list/e2e';
-import { E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
+import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eModalStates } from '../components/modal/e2e';
 import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
@@ -106,6 +106,7 @@ const components = [
     E2eModalStates,
     E2eListStates,
     E2eLoaderOverlayStates,
+    E2eLoaderOverlayCard,
     E2eAutocompleteStates,
     E2eCheckboxStateAndStyle,
     E2eDropdownStates,

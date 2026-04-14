@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { LoaderOverlayCardExample } from './loader-overlay-card/loader-overlay-card-example';
 import { LoaderOverlayDefaultExample } from './loader-overlay-default/loader-overlay-default-example';
 import { LoaderOverlayFixedTopExample } from './loader-overlay-fixed-top/loader-overlay-fixed-top-example';
 import { LoaderOverlayLargeExample } from './loader-overlay-large/loader-overlay-large-example';
@@ -6,6 +7,7 @@ import { LoaderOverlayOverviewExample } from './loader-overlay-overview/loader-o
 import { LoaderOverlaySizeExample } from './loader-overlay-size/loader-overlay-size-example';
 
 export {
+    LoaderOverlayCardExample,
     LoaderOverlayDefaultExample,
     LoaderOverlayFixedTopExample,
     LoaderOverlayLargeExample,
@@ -18,7 +20,8 @@ const EXAMPLES = [
     LoaderOverlayFixedTopExample,
     LoaderOverlayDefaultExample,
     LoaderOverlayLargeExample,
-    LoaderOverlaySizeExample
+    LoaderOverlaySizeExample,
+    LoaderOverlayCardExample
 ];
 
 @NgModule({
