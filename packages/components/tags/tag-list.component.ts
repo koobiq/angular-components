@@ -39,7 +39,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { filter, startWith } from 'rxjs/operators';
+import { filter, startWith, tap } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
 import {
     KbqTag,
@@ -162,6 +162,16 @@ export class KbqTagList
      */
     get tagRemoveChanges(): Observable<KbqTagEvent> {
         return merge(...this.tags.map((tag) => tag.destroyed));
+    }
+
+    /**
+     * `removed` fires only on user-initiated removal (click or keyboard).
+     * Set the pending flag so the subsequent `tags.changes` is treated as UI-initiated.
+     *
+     * @docs-private
+     */
+    protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent> {
+        return merge(...this.tags.map((tag) => tag.removed));
     }
 
     /**
@@ -324,7 +334,8 @@ export class KbqTagList
 
     /**
      * Whether to emit change events when tags are added/removed.
-     * Set to `false` to prevent the form control from being marked as dirty during programmatic updates.
+     *
+     * @deprecated No longer needed. Will be removed in the next major release.
      */
     @Input({ transform: booleanAttribute }) emitOnTagChanges = true;
 
@@ -431,6 +442,9 @@ export class KbqTagList
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
 
+    /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
+    private _pendingUIChange = false;
+
     /**
      * When a tag is destroyed, we store the index of the destroyed tag until the tags
      * query list notifies about the update. This is necessary because we cannot determine an
@@ -515,8 +529,8 @@ export class KbqTagList
                 Promise.resolve().then(() => {
                     this.stateChanges.next();
 
-                    // do not call on initial
-                    if (currentTags && this.emitOnTagChanges) {
+                    if (currentTags && this.emitOnTagChanges && this._pendingUIChange) {
+                        this._pendingUIChange = false;
                         this.propagateTagsChanges();
                     }
                 });
@@ -552,6 +566,11 @@ export class KbqTagList
 
     /** @docs-private */
     onChange: (value: any) => void = () => {};
+
+    /** Notifies that the next `tags.changes` emission is UI-initiated. */
+    notifyPendingTagChange(): void {
+        this._pendingUIChange = true;
+    }
 
     /**
      * Associates an HTML input element with this tag list.
@@ -865,17 +884,23 @@ export class KbqTagList
     }
 
     private listenToTagsRemoved(): void {
-        this.tagRemoveSubscription = this.tagRemoveChanges.subscribe((event) => {
-            const tag = event.tag;
-            const tagIndex = this.tags.toArray().indexOf(event.tag);
+        this.tagRemoveSubscription = merge(
+            this.tagBeforeRemoveChanges.pipe(tap(() => (this._pendingUIChange = true))),
+            // `destroyed` fires after the tag leaves the DOM.
+            this.tagRemoveChanges.pipe(
+                tap((event) => {
+                    const tag = event.tag;
+                    const tagIndex = this.tags.toArray().indexOf(event.tag);
 
-            // In case the tag that will be removed is currently focused, we temporarily store
-            // the index in order to be able to determine an appropriate sibling tag that will
-            // receive focus.
-            if (this.isValidIndex(tagIndex) && tag.hasFocus) {
-                this.lastDestroyedTagIndex = tagIndex;
-            }
-        });
+                    // In case the tag that will be removed is currently focused, we temporarily store
+                    // the index in order to be able to determine an appropriate sibling tag that will
+                    // receive focus.
+                    if (this.isValidIndex(tagIndex) && tag.hasFocus) {
+                        this.lastDestroyedTagIndex = tagIndex;
+                    }
+                })
+            )
+        ).subscribe();
     }
 
     private listenToTagsEdit(): void {
@@ -910,6 +935,8 @@ export class KbqTagList
         this.dropList.dropped
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(({ currentIndex, previousIndex, event, item }) => {
+                this._pendingUIChange = true;
+
                 const { tag }: KbqTagDragData = item.data;
 
                 this.dropped.emit({ currentIndex, previousIndex, event, tag });

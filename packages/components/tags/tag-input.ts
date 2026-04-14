@@ -224,6 +224,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         if (!this.hasControl() || (this.hasControl() && !this.ngControl.invalid)) {
             if (this.distinct && this.hasDuplicates) return;
 
+            this._tagList?.notifyPendingTagChange();
             this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
         }
     }
@@ -267,6 +268,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             const tagValues: string[] = this._tagList.tags.map(({ value }) => value);
 
             items = items.filter((item) => !tagValues.includes(item));
+        }
+
+        if (items.length > 0) {
+            this._tagList?.notifyPendingTagChange();
         }
 
         items.forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));
