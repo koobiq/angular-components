@@ -96,6 +96,13 @@ export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
                 en: 'Engineer palette'
             },
             value: DocsStructureTokensTab.Palette
+        },
+        {
+            title: {
+                ru: 'Семантическая палитра',
+                en: 'Semantic palette'
+            },
+            value: DocsStructureTokensTab.Semantic
         }
     ];
 }

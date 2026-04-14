@@ -1,7 +1,10 @@
 const { BASE_PATH, BUILD_PATH } = require('./config');
 
 module.exports = {
-    source: [`${BASE_PATH}/properties/*.json5`],
+    source: [
+        `${BASE_PATH}/properties/!(colors|shadows).json5`,
+        `${BASE_PATH}/tokens-new/*.json5`
+    ],
     platforms: {
         css: {
             buildPath: BUILD_PATH,
@@ -15,16 +18,23 @@ module.exports = {
                 },
                 {
                     filter: (token) =>
-                        ['light', 'dark'].includes(token.attributes.category) &&
+                        token.attributes.category === 'light' &&
                         token.attributes.item !== 'palette' &&
-                        !token.attributes.category.includes('palette'),
+                        !token.attributes.category.includes('plt') &&
+                        !token.deprecated,
                     destination: 'colors.ts',
                     format: 'docs/colors-ts',
                     prefix: 'kbq'
                 },
                 {
-                    filter: (token) => token.attributes.category === 'palette',
+                    filter: (token) => token.attributes.category === 'plt',
                     destination: 'palette.ts',
+                    format: 'docs/palette-ts',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) => token.attributes.category === 'semantic',
+                    destination: 'semantic.ts',
                     format: 'docs/palette-ts',
                     prefix: 'kbq'
                 },
@@ -43,7 +53,7 @@ module.exports = {
                     prefix: 'kbq'
                 },
                 {
-                    filter: (token) => token.attributes.category === 'shadow',
+                    filter: (token) => token.attributes.category === 'shadow' && token.attributes.type === 'light',
                     destination: 'shadows.ts',
                     format: 'docs/shadows-ts',
                     prefix: 'kbq'

@@ -12,9 +12,11 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { map, skip } from 'rxjs';
 
+import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { docsData as borderRadius } from './data/border-radius';
 import { docsData as colors } from './data/colors';
 import { docsData as palette } from './data/palette';
+import { docsData as sematic } from './data/semantic';
 import { docsData as shadows } from './data/shadows';
 import { docsData as sizes } from './data/sizes';
 
@@ -104,6 +106,7 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Colors]: 'dimensions',
         [DocsStructureTokensTab.BorderRadius]: 'dimensions',
         [DocsStructureTokensTab.Palette]: 'dimensions',
+        [DocsStructureTokensTab.Semantic]: 'dimensions',
         [DocsStructureTokensTab.Sizes]: 'sizes',
         [DocsStructureTokensTab.Shadows]: 'shadows'
     };
@@ -115,6 +118,7 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Colors]: 'background-color',
         [DocsStructureTokensTab.BorderRadius]: 'border-radius',
         [DocsStructureTokensTab.Palette]: 'background-color',
+        [DocsStructureTokensTab.Semantic]: 'background-color',
         [DocsStructureTokensTab.Sizes]: 'width',
         [DocsStructureTokensTab.Shadows]: 'box-shadow'
     };
@@ -139,7 +143,15 @@ export class DocsTokensTable extends DocsLocaleState {
     }
 
     getStyle(token: string) {
-        return { [this.mapTabToCssProp[this.tab()]]: `var(${token})` };
+        const cssProp = this.mapTabToCssProp[this.tab()];
+
+        if (cssProp === 'background-color') {
+            return {
+                background: `linear-gradient(var(${token}), var(${token})), repeating-conic-gradient(var(--kbq-background-bg-tertiary) 0% 25%, var(--kbq-background-bg) 0% 50%) 0 / 8px 8px`
+            };
+        }
+
+        return { [cssProp]: `var(${token})` };
     }
 
     getClassName(text: string): string {
@@ -152,7 +164,8 @@ export class DocsTokensTable extends DocsLocaleState {
     imports: [
         DocsComponentViewerWrapperComponent,
         DocsTokensTable,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        DocsAnchorsComponent
     ],
     template: `
         <docs-component-viewer-wrapper>
@@ -178,6 +191,10 @@ export class DocsTokensTable extends DocsLocaleState {
                 }
             }
         </ng-template>
+
+        <div class="docs-component-viewer__sticky-wrapper">
+            <docs-anchors [headerSelectors]="'.docs-header-link'" />
+        </div>
     `,
     host: {
         class: 'kbq-markdown'
@@ -185,6 +202,7 @@ export class DocsTokensTable extends DocsLocaleState {
 })
 export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit {
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
+    protected readonly anchors = viewChild.required(DocsAnchorsComponent);
 
     protected readonly themeService = inject(ThemeService);
     protected readonly window = inject(KBQ_WINDOW);
@@ -223,7 +241,8 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         [DocsStructureTokensTab.Shadows]: shadows,
         [DocsStructureTokensTab.BorderRadius]: borderRadius,
         [DocsStructureTokensTab.Sizes]: sizes,
-        [DocsStructureTokensTab.Palette]: palette
+        [DocsStructureTokensTab.Palette]: palette,
+        [DocsStructureTokensTab.Semantic]: sematic
     };
 
     constructor() {
@@ -232,7 +251,11 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
             this.tokensInfo.set(this.calculateViewData());
         });
 
-        afterNextRender(() => this.tokensInfo.set(this.calculateViewData()));
+        afterNextRender(() => {
+            this.tokensInfo.set(this.calculateViewData());
+
+            this.anchors().setScrollPosition();
+        });
     }
 
     ngAfterViewInit() {
@@ -240,7 +263,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     }
 
     getClassName(text: string): string {
-        return `'docs-header-link kbq-markdown__h${text}`;
+        return `docs-header-link kbq-markdown__h${text}`;
     }
 
     protected calculateViewData(): DocsTokensInfo[] {
@@ -248,12 +271,12 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
 
         const getTokenValue = (token: string) => styles.getPropertyValue(token);
 
-        return this.tokenDataMap[this.activatedTab()].map(({ tokens, type, sections }) => {
+        return this.tokenDataMap[this.activatedTab()].map(({ tokens, type, sections }: DocsTokensInfoRaw) => {
             if (tokens && tokens.length > 0) {
                 return {
                     type,
                     tokens: tokens.map((token) => ({ token, value: getTokenValue(token) }))
-                };
+                } satisfies DocsTokensSectionInfo;
             }
 
             if (sections && sections.length > 0) {
@@ -267,7 +290,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
                                     token,
                                     value: getTokenValue(token)
                                 }))
-                            };
+                            } satisfies DocsTokensSectionInfo;
                         }
 
                         return { type, tokens: [] };
