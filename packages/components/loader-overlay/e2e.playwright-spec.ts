@@ -18,7 +18,7 @@ test.describe('KbqLoaderOverlayModule', () => {
         const getOpenButton = (page: Page) => page.getByTestId('e2eOpenModalWithLoader');
 
         test('card', async ({ page }) => {
-            await page.setViewportSize({ width: 400, height: 350 });
+            await page.setViewportSize({ width: 400, height: 500 });
             await page.goto('/E2eLoaderOverlayCard');
             const component = getComponent(page);
 

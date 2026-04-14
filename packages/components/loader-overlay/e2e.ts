@@ -88,11 +88,9 @@ export class E2eLoaderOverlayStates {}
         <button data-testid="e2eOpenModalWithLoader" (click)="open()">Open modal</button>
 
         <ng-template #modalContent>
-            <div class="layout-padding-xl">
-                text text text text text text text text text text text text text text text text text text text text text
-                text text text text text text text text text text
-                <kbq-loader-overlay text="Loading data..." size="compact" [card]="true" />
-            </div>
+            text text text text text text text text text text text text text text text text text text text text text
+            text text text text text text text text text text
+            <kbq-loader-overlay text="Loading data..." size="compact" [card]="true" />
         </ng-template>
     `,
     styles: `
