@@ -150,6 +150,10 @@ To prevent the menu from overlapping a required element during scrolling and ins
 
 <!-- example(select-scrolling-and-layering) -->
 
+### Caption in options
+
+<!-- example(select-two-line-option) -->
+
 ### Recommendations
 
 - If you are using a select without a label, we suggest adding a placeholder to indicate what information the user should select. For example, “Country.”

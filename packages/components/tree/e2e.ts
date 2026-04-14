@@ -214,3 +214,156 @@ export class E2eTreeStates implements AfterViewInit {
     };
     protected readonly popUpPlacements = PopUpPlacements;
 }
+
+const DATA_OBJECT_FOR_TREE_TWO_LINE_NODE_EXAMPLE = {
+    rootNode_1_long_text_long_long_long_long_long_text: 'app',
+    States: {
+        Normal: ''
+    },
+    Documents: {
+        angular: {
+            src: {
+                core: {
+                    core: {
+                        compiler: 'ts'
+                    }
+                }
+            }
+        }
+    }
+};
+
+@Component({
+    selector: 'e2e-tree-two-line-node',
+    imports: [
+        FormsModule,
+        KbqIconModule,
+        KbqTreeModule,
+        KbqOptionActionComponent,
+        KbqToolTipModule
+    ],
+    template: `
+        <kbq-tree-selection
+            style="width: 300px"
+            class="cdk-keyboard-focused"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                <div>{{ treeControl.getViewValue(node) }}</div>
+                <div class="kbq-option-caption">caption</div>
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle [node]="node" />
+                <div>{{ treeControl.getViewValue(node) }}</div>
+                <div class="kbq-option-caption">caption</div>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <br />
+
+        <kbq-tree-selection
+            multiple
+            class="cdk-keyboard-focused"
+            style="width: 300px"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                <div>{{ treeControl.getViewValue(node) }}</div>
+                <div class="kbq-option-caption">caption</div>
+
+                <kbq-option-action [kbqTooltip]="'Tooltip text'" />
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle [node]="node" />
+                <div>{{ treeControl.getViewValue(node) }}</div>
+                <div class="kbq-option-caption">caption</div>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: row;
+
+            width: 650px;
+            gap: 16px;
+            padding: 8px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeTwoLineNode'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeTwoLineNode implements AfterViewInit {
+    treeControl: FlatTreeControl<FileFlatNode>;
+    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    constructor() {
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
+
+        this.treeControl = new FlatTreeControl<FileFlatNode>(
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
+            defaultCompareValues,
+            defaultCompareViewValues,
+            this.isDisabled
+        );
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+        this.dataSource.data = buildFileTree(DATA_OBJECT_FOR_TREE_TWO_LINE_NODE_EXAMPLE, 0);
+    }
+
+    ngAfterViewInit(): void {
+        this.treeControl.expandAll();
+    }
+
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
+
+    protected transformer = (node: FileNode, level: number, parent: any) => {
+        const flatNode = new FileFlatNode();
+
+        flatNode.name = node.name;
+        flatNode.parent = parent;
+        flatNode.type = node.type;
+        flatNode.level = level;
+        flatNode.expandable = !!node.children;
+
+        return flatNode;
+    };
+
+    protected getLevel = (node: FileFlatNode) => {
+        return node.level;
+    };
+
+    protected isExpandable = (node: FileFlatNode) => {
+        return node.expandable;
+    };
+
+    protected getChildren = (node: FileNode): FileNode[] => {
+        return node.children;
+    };
+
+    protected getValue = (node: FileFlatNode): string => {
+        return node.name;
+    };
+
+    protected getViewValue = (node: FileFlatNode): string => {
+        return `${node.name}`;
+    };
+
+    protected isDisabled = (node: FileFlatNode): boolean => {
+        return node.name === 'Disabled';
+    };
+    protected readonly popUpPlacements = PopUpPlacements;
+}

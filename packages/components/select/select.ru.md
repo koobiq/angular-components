@@ -147,6 +147,10 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 <!-- example(select-scrolling-and-layering) -->
 
+### Подпись в опциях
+
+<!-- example(select-two-line-option) -->
+
 ### Рекомендации
 
 - Если вы используете селект без лейбла, то советуем добавить placeholder для указания, какую информацию пользователь должен выбрать. Например, «Страна».

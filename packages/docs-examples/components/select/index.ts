@@ -20,6 +20,7 @@ import { SelectPreselectedValuesExample } from './select-preselected-values/sele
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
 import { SelectScrollingAndLayeringExample } from './select-scrolling-and-layering/select-scrolling-and-layering-example';
 import { SelectSearchExample } from './select-search/select-search-example';
+import { SelectTwoLineOptionExample } from './select-two-line-option/select-two-line-option-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
 import { SelectWithMultilineMatcherExample } from './select-with-multiline-matcher/select-with-multiline-matcher-example';
@@ -50,6 +51,7 @@ export {
     SelectPrioritizedSelectedExample,
     SelectScrollingAndLayeringExample,
     SelectSearchExample,
+    SelectTwoLineOptionExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
     SelectWithMultilineMatcherExample,
@@ -88,7 +90,8 @@ const EXAMPLES = [
     SelectAddNewOptionExample,
     SelectLoadingErrorCustomExample,
     SelectPagingExample,
-    SelectPagingErrorExample
+    SelectPagingErrorExample,
+    SelectTwoLineOptionExample
 ];
 
 @NgModule({

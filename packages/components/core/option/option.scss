@@ -6,6 +6,11 @@
     @include list.kbq-list-item-base();
     @include vendor-prefixes.user-select(none);
 
+    & > .kbq-pseudo-checkbox {
+        margin-top: var(--kbq-size-3xs);
+        align-self: baseline;
+    }
+
     border-radius: var(--kbq-option-border-radius);
 
     &:not(.kbq-disabled) {
