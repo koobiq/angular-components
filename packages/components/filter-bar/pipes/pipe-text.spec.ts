@@ -276,7 +276,7 @@ describe('KbqPipeTextComponent', () => {
             component.control.markAsDirty();
             component.onApply();
 
-            expect(component.control.dirty).toBe(false);
+            expect(component.control.pristine).toBe(true);
         });
 
         it('should call popover.hide()', () => {

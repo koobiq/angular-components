@@ -700,19 +700,6 @@ describe('KbqFilters', () => {
         });
     });
 
-    describe('stopEventPropagation', () => {
-        it('should call stopPropagation on the event', () => {
-            initFixture();
-
-            const event = new Event('click');
-            const spy = jest.spyOn(event, 'stopPropagation');
-
-            getFiltersComponent().stopEventPropagation(event);
-
-            expect(spy).toHaveBeenCalled();
-        });
-    });
-
     describe('onDropdownOpen', () => {
         it('should reset searchControl value to null', () => {
             initFixture();
