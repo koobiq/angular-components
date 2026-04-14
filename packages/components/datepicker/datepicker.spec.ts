@@ -1,8 +1,18 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, FactoryProvider, Type, ValueProvider, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { Component, FactoryProvider, Type, ValueProvider, viewChild, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import {
+    AsyncValidatorFn,
+    FormControl,
+    FormControlStatus,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+    ValidationErrors,
+    Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,14 +25,113 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
-import { DateAdapter, KBQ_DATE_FORMATS, KBQ_DATE_LOCALE } from '@koobiq/components/core';
+import {
+    DateAdapter,
+    ErrorStateMatcher,
+    KBQ_DATE_FORMATS,
+    KBQ_DATE_LOCALE,
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { DateTime } from 'luxon';
+import { map, Observable, timer } from 'rxjs';
 import { KbqInputModule } from '../input/index';
 import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
 import { KbqDatepickerToggle } from './datepicker-toggle.component';
 import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerIntl, KbqDatepickerModule } from './index';
+
+const getDatepickerInputElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
+    fixture.debugElement.query(By.directive(KbqDatepickerInput)).nativeElement;
+
+const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
+    fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+
+const customErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.untouched
+};
+
+@Component({
+    imports: [KbqDatepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <input formControlName="date" [kbqDatepicker]="d" [errorStateMatcher]="errorStateMatcher" />
+                <kbq-datepicker #d />
+            </kbq-form-field>
+            <button type="submit">Submit</button>
+        </form>
+    `
+})
+class DatepickerWithErrorStateMatcher {
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly form = new FormGroup({ date: new FormControl<DateTime | null>(null, Validators.required) });
+    errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
+}
+
+@Component({
+    imports: [KbqDatepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ],
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <input formControlName="date" [kbqDatepicker]="d" />
+                <kbq-datepicker #d />
+            </kbq-form-field>
+        </form>
+    `
+})
+class DatepickerWithDIErrorStateMatcher {
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly form = new FormGroup({ date: new FormControl<DateTime | null>(null, Validators.required) });
+}
+
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+
+@Component({
+    imports: [KbqDatepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input [kbqDatepicker]="d" [formControl]="control" />
+            <kbq-datepicker #d />
+        </kbq-form-field>
+    `
+})
+class LegacyDatepickerControlWithAsyncValidators {
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly control = new FormControl<DateTime | null>(null, {
+        asyncValidators: [getAsyncValidator()]
+    });
+}
+
+@Component({
+    imports: [KbqDatepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    template: `
+        <kbq-form-field>
+            <input [kbqDatepicker]="d" [formControl]="control" />
+            <kbq-datepicker #d />
+        </kbq-form-field>
+    `
+})
+class DatepickerControlWithAsyncValidators {
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly control = new FormControl<DateTime | null>(null, {
+        asyncValidators: [getAsyncValidator()]
+    });
+}
 
 describe('KbqDatepicker', () => {
     // Creates a test component fixture.
@@ -669,6 +778,231 @@ describe('KbqDatepicker', () => {
 
                 expect(testComponent.datepickerToggle.disabled).toBe(true);
             });
+        });
+
+        describe('ErrorStateMatcher', () => {
+            describe(ErrorStateMatcher.name, () => {
+                it('should not be in error state initially when invalid but untouched', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                });
+
+                it('should be in error state when invalid and touched', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.componentInstance.form.controls.date.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                });
+
+                it('should be in error state when form is submitted and control is invalid', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    getSubmitButton(fixture).click();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                });
+
+                it('should call errorStateMatcher and update errorState on blur', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.detectChanges();
+
+                    const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                    expect(spy).not.toHaveBeenCalled();
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+
+                    // focus first so that subsequent blur triggers focusChanged and marks control as touched
+                    getDatepickerInputElement(fixture).dispatchEvent(new Event('focus'));
+                    getDatepickerInputElement(fixture).dispatchEvent(new Event('blur'));
+                    fixture.detectChanges();
+
+                    expect(spy).toHaveBeenCalled();
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                });
+            });
+
+            describe(ShowOnFormSubmitErrorStateMatcher.name, () => {
+                it('should not be in error state when invalid and touched but form not submitted', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                    fixture.componentInstance.form.controls.date.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                });
+
+                it('should be in error state after form is submitted when invalid', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                    fixture.detectChanges();
+
+                    getSubmitButton(fixture).click();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                });
+
+                it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.detectChanges();
+
+                    fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                    fixture.detectChanges();
+
+                    const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                    expect(spy).not.toHaveBeenCalled();
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+
+                    getDatepickerInputElement(fixture).dispatchEvent(new Event('focus'));
+                    getDatepickerInputElement(fixture).dispatchEvent(new Event('blur'));
+                    fixture.detectChanges();
+
+                    expect(spy).toHaveBeenCalled();
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                });
+            });
+
+            describe(ShowOnControlDirtyErrorStateMatcher.name, () => {
+                it('should not be in error state when invalid but pristine', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                });
+
+                it('should be in error state when invalid and dirty', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                    fixture.componentInstance.form.controls.date.markAsDirty();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                });
+
+                it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.detectChanges();
+
+                    fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                    fixture.detectChanges();
+
+                    const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                    expect(spy).not.toHaveBeenCalled();
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+
+                    getDatepickerInputElement(fixture).dispatchEvent(new Event('focus'));
+                    getDatepickerInputElement(fixture).dispatchEvent(new Event('blur'));
+                    fixture.detectChanges();
+
+                    expect(spy).toHaveBeenCalled();
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                });
+            });
+
+            describe('custom ErrorStateMatcher', () => {
+                it('should override errorStateMatcher via kbqErrorStateMatcherProvider', () => {
+                    const fixture = createComponent(DatepickerWithDIErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+
+                    fixture.componentInstance.form.controls.date.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                });
+
+                it('should use custom errorStateMatcher', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+
+                    fixture.componentInstance.form.controls.date.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                });
+            });
+        });
+
+        describe('async validation', () => {
+            it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+                const fixture = createComponent(LegacyDatepickerControlWithAsyncValidators, [KbqLuxonDateModule]);
+
+                fixture.detectChanges();
+
+                const { datepickerInput, control } = fixture.componentInstance;
+                const statuses: FormControlStatus[] = [];
+
+                const subscription = control.statusChanges!.subscribe((status) => statuses.push(status));
+
+                control.setValue(DateTime.local(2020, 1, 1));
+
+                expect(control.status).toBe('PENDING');
+                expect(statuses).toEqual(['PENDING']);
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(control.status).toBe('VALID');
+                expect(statuses).toEqual(['PENDING', 'VALID']);
+
+                datepickerInput().onBlur();
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(control.status).toBe('VALID');
+                expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
+
+                subscription.unsubscribe();
+            }));
+
+            it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+                const fixture = createComponent(DatepickerControlWithAsyncValidators, [KbqLuxonDateModule]);
+
+                fixture.detectChanges();
+
+                const { datepickerInput, control } = fixture.componentInstance;
+                const statuses: FormControlStatus[] = [];
+
+                const subscription = control.statusChanges!.subscribe((status) => statuses.push(status));
+
+                control.setValue(DateTime.local(2020, 1, 1));
+
+                expect(control.status).toBe('PENDING');
+                expect(statuses).toEqual(['PENDING']);
+
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(control.status).toBe('VALID');
+                expect(statuses).toEqual(['PENDING', 'VALID']);
+
+                datepickerInput().onBlur();
+                tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+                expect(control.status).toBe('VALID');
+                expect(statuses).toEqual(['PENDING', 'VALID']);
+
+                subscription.unsubscribe();
+            }));
         });
 
         describe('datepicker with kbq-datepicker-toggle', () => {
