@@ -36,4 +36,23 @@ test.describe('KbqInlineEdit', () => {
             await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
         });
     });
+
+    test.describe('E2eInlineEditMenuButton', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eInlineEditMenuButton');
+        const getContainer = (page: Page) => page.getByTestId('e2eInlineEditMenuButtonContainer');
+
+        test('menu button hover', async ({ page }) => {
+            await page.goto('/E2eInlineEditMenuButton');
+            await page.setViewportSize({ width: 100, height: 32 });
+
+            const screenshotTarget = getContainer(page);
+
+            await getComponent(page).hover();
+
+            await expect(screenshotTarget).toHaveScreenshot('03-light.png');
+            await e2eEnableDarkTheme(page);
+            await getComponent(page).hover();
+            await expect(screenshotTarget).toHaveScreenshot('03-dark.png');
+        });
+    });
 });
