@@ -66,6 +66,12 @@ import { KbqListModule } from '@koobiq/components/list';
                     </div>
                     <kbq-option-action />
                 </kbq-list-option>
+                <kbq-list-option class="kbq-hovered">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">hovered</div>
+                    <kbq-option-action />
+                </kbq-list-option>
                 <kbq-list-option class="kbq-active">
                     <i kbq-icon="kbq-play_16"></i>
 
@@ -84,6 +90,12 @@ import { KbqListModule } from '@koobiq/components/list';
                     </div>
                     <kbq-option-action />
                 </kbq-list-option>
+                <kbq-list-option class="kbq-focused">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">focused</div>
+                    <kbq-option-action />
+                </kbq-list-option>
                 <kbq-list-option class="kbq-selected">
                     <i kbq-icon="kbq-play_16"></i>
 
@@ -91,6 +103,18 @@ import { KbqListModule } from '@koobiq/components/list';
                         selected
                         <kbq-badge style="align-self: center" badgeColor="theme" [compact]="true">badge</kbq-badge>
                     </div>
+                    <kbq-option-action />
+                </kbq-list-option>
+                <kbq-list-option class="kbq-selected kbq-hovered">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">selected + hovered</div>
+                    <kbq-option-action />
+                </kbq-list-option>
+                <kbq-list-option class="kbq-selected kbq-focused">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">selected + focused</div>
                     <kbq-option-action />
                 </kbq-list-option>
                 <kbq-list-option class="kbq-disabled">
@@ -125,6 +149,12 @@ import { KbqListModule } from '@koobiq/components/list';
                     </div>
                     <kbq-option-action />
                 </kbq-list-option>
+                <kbq-list-option class="kbq-hovered">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">hovered</div>
+                    <kbq-option-action />
+                </kbq-list-option>
                 <kbq-list-option class="kbq-active">
                     <i kbq-icon="kbq-play_16"></i>
 
@@ -143,6 +173,12 @@ import { KbqListModule } from '@koobiq/components/list';
                     </div>
                     <kbq-option-action />
                 </kbq-list-option>
+                <kbq-list-option class="kbq-focused">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">focused</div>
+                    <kbq-option-action />
+                </kbq-list-option>
                 <kbq-list-option class="kbq-selected">
                     <i kbq-icon="kbq-play_16"></i>
 
@@ -150,6 +186,18 @@ import { KbqListModule } from '@koobiq/components/list';
                         selected
                         <kbq-badge style="align-self: center" badgeColor="theme" [compact]="true">badge</kbq-badge>
                     </div>
+                    <kbq-option-action />
+                </kbq-list-option>
+                <kbq-list-option class="kbq-selected kbq-hovered">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">selected + hovered</div>
+                    <kbq-option-action />
+                </kbq-list-option>
+                <kbq-list-option class="kbq-selected kbq-focused">
+                    <i kbq-icon="kbq-play_16"></i>
+
+                    <div class="layout-row layout-align-space-between">selected + focused</div>
                     <kbq-option-action />
                 </kbq-list-option>
                 <kbq-list-option class="kbq-disabled">
