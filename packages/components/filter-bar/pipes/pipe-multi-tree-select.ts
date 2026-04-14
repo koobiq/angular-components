@@ -100,15 +100,13 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     get selectAllCheckboxState(): KbqPseudoCheckboxState {
         if (!this.select) return 'unchecked';
 
-        const arrayOfOptions = this.select.options.toArray().filter((option) => option.value !== kbqTreeSelectAllValue);
-
-        if (arrayOfOptions.every((option) => option.selected)) {
+        if (this.allOptionsSelected) {
             return 'checked';
-        } else if (arrayOfOptions.every((option) => !option.selected)) {
-            return 'unchecked';
+        } else if (this.select.selected.length > 0) {
+            return 'indeterminate';
         }
 
-        return 'indeterminate';
+        return 'unchecked';
     }
 
     get numberOfSelectedLeaves(): number {
