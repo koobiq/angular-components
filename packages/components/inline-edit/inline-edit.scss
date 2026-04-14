@@ -147,8 +147,8 @@
 
     @include _mask(
         (
-            'top': -1px,
-            'right': -1px
+            'top': calc(var(--kbq-size-border-width) * -1),
+            'right': calc(var(--kbq-size-border-width) * -1)
         )
     );
 
