@@ -6,11 +6,13 @@ import { KbqAccordion } from './accordion.component';
 @Directive({
     selector: '[kbqAccordionTrigger]',
     host: {
+        '[attr.id]': 'triggerId',
         '[attr.role]': '"button"',
         '[attr.aria-expanded]': 'item.expanded',
+        '[attr.aria-controls]': 'contentId',
+        '[attr.aria-disabled]': 'item.disabled',
         '[attr.data-state]': 'item.dataState',
         '[attr.data-disabled]': 'item.disabled',
-        '[attr.disabled]': 'item.disabled ? "" : null',
         '[attr.data-orientation]': 'item.orientation',
         '(click)': 'onClick()'
     }
@@ -22,6 +24,16 @@ export class KbqAccordionTriggerDirective {
     protected readonly accordion = inject(KbqAccordion);
     /** @docs-private */
     protected readonly item = inject(KbqAccordionItem);
+
+    /** @docs-private */
+    get triggerId(): string {
+        return `${this.item.id}-trigger`;
+    }
+
+    /** @docs-private */
+    get contentId(): string {
+        return `${this.item.id}-content`;
+    }
 
     /** Fires when trigger clicked */
     onClick(): void {

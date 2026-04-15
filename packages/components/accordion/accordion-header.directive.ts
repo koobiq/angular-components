@@ -4,6 +4,7 @@ import { KbqAccordionItem } from './accordion-item';
 @Directive({
     selector: '[kbqAccordionHeader]',
     host: {
+        '[attr.role]': '"heading"',
         '[attr.data-state]': 'item.dataState',
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation'
