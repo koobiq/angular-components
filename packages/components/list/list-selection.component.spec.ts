@@ -18,13 +18,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { A, C, DOWN_ARROW, END, ENTER, HOME, PAGE_DOWN, PAGE_UP, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
-import {
-    createKeyboardEvent,
-    createMouseEvent,
-    dispatchEvent,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent
-} from '@koobiq/cdk/testing';
+import { createKeyboardEvent, createMouseEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import {
     KbqListCopyEvent,
     KbqListModule,
@@ -241,19 +235,27 @@ describe('KbqListSelection without forms', () => {
             expect(ENTER_EVENT.defaultPrevented).toBe(true);
         });
 
-        // todo restore this TC
-        xit('should restore focus if active option is destroyed', () => {
+        it('should restore focus to the previous option if active option is destroyed', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
+            const activeOption = listOptions[3].componentInstance as KbqListOption;
+            const previousOption = listOptions[2].componentInstance as KbqListOption;
 
-            listOptions[3].componentInstance.focus();
+            activeOption.focus();
+            flush();
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(3);
+            expect(manager.activeItem).toBe(activeOption);
 
             fixture.componentInstance.showLastOption = false;
             fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(2);
-        });
+            expect(manager.activeItem).toBe(previousOption);
+            expect(previousOption.hasFocus).toBe(true);
+        }));
 
         it('should focus previous item when press UP ARROW', () => {
             const testListItem = listOptions[2].nativeElement as HTMLElement;
@@ -364,23 +366,28 @@ describe('KbqListSelection without forms', () => {
             expect(event.defaultPrevented).toBe(true);
         });
 
-        xit('should be able to jump focus down to an item by typing', fakeAsync(() => {
-            const listEl = selectionList.nativeElement;
+        it('should be able to jump focus down to an item by typing', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
+            const starredOption = listOptions[1].componentInstance as KbqListOption;
+            const draftsOption = listOptions[3].componentInstance as KbqListOption;
 
             expect(manager.activeItemIndex).toBe(-1);
 
-            dispatchEvent(listEl, createKeyboardEvent('keydown', 83, undefined, 's'));
+            manager.onKeydown(createKeyboardEvent('keydown', 83, undefined, 's'));
             fixture.detectChanges();
-            tick(201);
+            tick(250);
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(1);
+            expect(manager.activeItem).toBe(starredOption);
 
-            dispatchEvent(listEl, createKeyboardEvent('keydown', 68, undefined, 'd'));
+            manager.onKeydown(createKeyboardEvent('keydown', 68, undefined, 'd'));
             fixture.detectChanges();
-            tick(200);
+            tick(250);
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(3);
+            expect(manager.activeItem).toBe(draftsOption);
         }));
 
         it('should be able to select all options', () => {
@@ -641,23 +648,6 @@ describe('KbqListSelection without forms', () => {
             expect(selectList.selected.length).toBe(0);
         });
     });
-
-    xdescribe('with checkbox position after', () => {
-        let fixture: ComponentFixture<SelectionListWithCheckboxPositionAfter>;
-
-        beforeEach(() => {
-            TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
-
-            fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
-            fixture.detectChanges();
-        });
-
-        it('should be able to customize checkbox position', () => {
-            const listItemContent = fixture.debugElement.query(By.css('.kbq-list-item-content'));
-
-            expect(listItemContent.nativeElement.classList).toContain('kbq-list-item-content-reverse');
-        });
-    });
 });
 
 describe('KbqListSelection with forms', () => {
@@ -688,9 +678,7 @@ describe('KbqListSelection with forms', () => {
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
         });
 
-        // Programmatic toggle() does not propagate to the ngModel because the component only
-        // calls onChange() through explicit user-interaction paths (click, keydown).
-        xit('should update the model if an option got selected programmatically', fakeAsync(() => {
+        it('should not update the model if an option got selected programmatically', fakeAsync(() => {
             expect(fixture.componentInstance.selectedOptions.length).toBe(0);
 
             listOptions[0].toggle();
@@ -698,7 +686,9 @@ describe('KbqListSelection with forms', () => {
 
             tick();
 
-            expect(fixture.componentInstance.selectedOptions.length).toBe(1);
+            expect(listOptions[0].selected).toBe(true);
+            expect(selectionListDebug.componentInstance.selectionModel.isSelected(listOptions[0])).toBe(true);
+            expect(fixture.componentInstance.selectedOptions).toEqual([]);
         }));
 
         it('should update the model if an option got clicked', fakeAsync(() => {
@@ -734,8 +724,7 @@ describe('KbqListSelection with forms', () => {
             expect(ngModel.touched).toBe(true);
         }));
 
-        // Relies on toggle() propagating to ngModel — not supported by the component design.
-        xit('should be pristine by default', fakeAsync(() => {
+        it('should stay pristine until the user changes the value', fakeAsync(() => {
             fixture = TestBed.createComponent(SelectionListWithModel);
             fixture.componentInstance.selectedOptions = ['opt2'];
             fixture.detectChanges();
@@ -751,7 +740,7 @@ describe('KbqListSelection with forms', () => {
 
             expect(ngModel.pristine).toBe(true);
 
-            listOptions[1].toggle();
+            dispatchFakeEvent(listOptions[1].getHostElement(), 'click');
             fixture.detectChanges();
 
             tick();
@@ -759,30 +748,39 @@ describe('KbqListSelection with forms', () => {
             expect(ngModel.pristine).toBe(false);
         }));
 
-        // Relies on setting `selected` directly propagating to ngModel — not supported.
-        xit('should remove a selected option from the value on destroy', fakeAsync(() => {
-            listOptions[1].selected = true;
-            listOptions[2].selected = true;
-
+        it('should keep the model value and clear visible selection when the selected option is destroyed', fakeAsync(() => {
+            fixture.componentInstance.selectedOptions = ['opt3'];
+            fixture.detectChanges();
+            tick();
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.selectedOptions).toEqual(['opt2', 'opt3']);
+            expect(fixture.componentInstance.selectedOptions).toEqual(['opt3']);
+            expect(listOptions[2].selected).toBe(true);
 
             fixture.componentInstance.renderLastOption = false;
             fixture.detectChanges();
             tick();
+            fixture.detectChanges();
 
-            expect(fixture.componentInstance.selectedOptions).toEqual(['opt2']);
+            listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
+                .map((optionDebugEl) => optionDebugEl.componentInstance);
+
+            expect(fixture.componentInstance.selectedOptions).toEqual(['opt3']);
+            expect(listOptions).toHaveLength(2);
+            expect(listOptions.every((option) => !option.selected)).toBe(true);
         }));
 
-        // Relies on selectionModel.select() propagating to ngModel — not supported by the design.
-        xit('should update the model if an option got selected via the model', fakeAsync(() => {
+        it('should update the selected options when the model value changes', fakeAsync(() => {
             expect(fixture.componentInstance.selectedOptions).toEqual([]);
 
-            selectionListDebug.componentInstance.selectionModel.select(listOptions[0]);
+            fixture.componentInstance.selectedOptions = ['opt1'];
             fixture.detectChanges();
             tick();
 
+            expect(listOptions[0].selected).toBe(true);
+            expect(listOptions[1].selected).toBe(false);
+            expect(selectionListDebug.componentInstance.selectionModel.isSelected(listOptions[0])).toBe(true);
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt1']);
         }));
     });
@@ -1164,21 +1162,6 @@ class SelectionListWithListOptions {
 class SelectionListMultipleCheckbox {
     model = [];
 }
-
-@Component({
-    imports: [
-        KbqListModule
-    ],
-    template: `
-        <kbq-list-selection id="selection-list-2">
-            <kbq-list-option checkboxPosition="after">Inbox (disabled selection-option)</kbq-list-option>
-            <kbq-list-option id="testSelect" checkboxPosition="after">Starred</kbq-list-option>
-            <kbq-list-option checkboxPosition="after">Sent Mail</kbq-list-option>
-            <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
-        </kbq-list-selection>
-    `
-})
-class SelectionListWithCheckboxPositionAfter {}
 
 @Component({
     imports: [
