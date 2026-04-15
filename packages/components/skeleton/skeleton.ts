@@ -28,7 +28,7 @@ let count = 0;
 class SkeletonStyleLoader {}
 
 /**
- * Component representing a skeleton placeholder.
+ * Directive representing a skeleton placeholder.
  */
 @Directive({
     selector: 'kbq-skeleton, [kbqSkeleton]',
