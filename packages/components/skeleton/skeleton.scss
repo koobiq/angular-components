@@ -27,8 +27,8 @@
     clip-path: inset(0);
     user-select: none;
     pointer-events: none;
-    border: transparent;
-    outline: transparent;
+    border-color: transparent;
+    outline-color: transparent;
 
     &::before {
         content: '';
