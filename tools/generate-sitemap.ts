@@ -17,7 +17,7 @@ try {
     console.info('🚀 Generating sitemap.xml');
 
     const paths = docsGetItems()
-        .map(({ categoryId, id, hasApi, hasExamples }) => {
+        .map(({ categoryId, id, hasApi }) => {
             // We should manually handle /design-tokens page, because it has a different tab structure.
             if (id === DocsStructureItemId.DesignTokens) {
                 return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
@@ -26,7 +26,6 @@ try {
             const tabs = [`${categoryId}/${id}/${DocsStructureItemTab.Overview}`];
 
             if (hasApi) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Api}`);
-            if (hasExamples) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Examples}`);
 
             return tabs;
         })
