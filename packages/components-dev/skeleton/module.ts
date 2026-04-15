@@ -1,15 +1,22 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { SkeletonInSidepanelExample, SkeletonOverviewExample } from 'packages/docs-examples/components/skeleton';
+import {
+    SkeletonDirectiveExample,
+    SkeletonInSidepanelExample,
+    SkeletonOverviewExample
+} from 'packages/docs-examples/components/skeleton';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [SkeletonOverviewExample, SkeletonInSidepanelExample],
+    imports: [SkeletonOverviewExample, SkeletonInSidepanelExample, SkeletonDirectiveExample],
     template: `
         <skeleton-overview-example />
         <hr />
 
         <skeleton-in-sidepanel-example />
+        <hr />
+
+        <skeleton-directive-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

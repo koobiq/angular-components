@@ -2,6 +2,12 @@
 
 <!-- example(skeleton-overview) -->
 
+### Directive
+
+The `[kbqSkeleton]` directive is applied to an existing element.
+
+<!-- example(skeleton-directive) -->
+
 ### Usage examples
 
 #### Panel loading

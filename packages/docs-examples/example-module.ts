@@ -4394,6 +4394,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
     "importPath": "components/sidepanel"
   },
+  "skeleton-directive": {
+    "packagePath": "components/skeleton/skeleton-directive",
+    "title": "Skeleton directive",
+    "componentName": "SkeletonDirectiveExample",
+    "files": [
+      "skeleton-directive-example.ts"
+    ],
+    "selector": "skeleton-directive-example",
+    "additionalComponents": [],
+    "primaryFile": "skeleton-directive-example.ts",
+    "importPath": "components/skeleton"
+  },
   "skeleton-in-sidepanel": {
     "packagePath": "components/skeleton/skeleton-in-sidepanel",
     "title": "Skeleton in sidepanel",
@@ -6963,6 +6975,8 @@ return import('@koobiq/docs-examples/components/sidepanel');
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-with-dynamic-config-update':
 return import('@koobiq/docs-examples/components/sidepanel');
+  case 'skeleton-directive':
+return import('@koobiq/docs-examples/components/skeleton');
   case 'skeleton-in-sidepanel':
 return import('@koobiq/docs-examples/components/skeleton');
   case 'skeleton-overview':
