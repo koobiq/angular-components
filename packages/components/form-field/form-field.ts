@@ -1,5 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { NgClass } from '@angular/common';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -63,6 +64,12 @@ export type KbqFormFieldDefaultOptions = Partial<{
     noBorders: boolean;
     /** Use when KbqFormField is in an overlay container. */
     inOverlay: boolean;
+    /** Whether the form field is displayed horizontally. */
+    horizontal: boolean;
+    /** Additional CSS classes applied to the label element. */
+    labelClass: string | string[] | Set<string>;
+    /** Additional CSS classes applied to the content wrapper element. */
+    contentClass: string | string[] | Set<string>;
 }>;
 
 /**
@@ -81,7 +88,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    exportAs: 'kbqFormField',
+    imports: [NgClass],
     templateUrl: 'form-field.html',
     styleUrls: [
         'form-field.scss',
@@ -95,6 +102,9 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '../textarea/textarea.scss',
         '../tags/tag-input-tokens.scss'
     ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    exportAs: 'kbqFormField',
     host: {
         class: 'kbq-form-field',
 
@@ -102,6 +112,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-form-field_no-borders]': 'noBorders()',
         '[class.kbq-form-field_in-overlay]': 'inOverlay()',
+        '[class.kbq-form-field_horizontal]': 'horizontal()',
 
         '[class.ng-untouched]': 'shouldForward("untouched")',
         '[class.ng-touched]': 'shouldForward("touched")',
@@ -115,8 +126,6 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '(mouseenter)': 'onHoverChanged(true)',
         '(mouseleave)': 'onHoverChanged(false)'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
 export class KbqFormField
@@ -137,6 +146,15 @@ export class KbqFormField
 
     /** Use when KbqFormField is in an overlay container. */
     readonly inOverlay = model(this.defaultOptions?.inOverlay);
+
+    /** Whether the form field is displayed horizontally. */
+    readonly horizontal = input(this.defaultOptions?.horizontal, { transform: booleanAttribute });
+
+    /** Additional CSS classes applied to the label element. */
+    readonly labelClass = input(this.defaultOptions?.labelClass);
+
+    /** Additional CSS classes applied to the content wrapper element. */
+    readonly contentClass = input(this.defaultOptions?.contentClass);
 
     /**
      * The form field control.
