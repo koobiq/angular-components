@@ -17,7 +17,7 @@ import { KbqAccordionItem } from './accordion-item';
     host: {
         '[attr.id]': 'contentId',
         '[attr.role]': '"region"',
-        '[attr.hidden]': 'hidden().toString()',
+        '[attr.hidden]': 'hidden() ? "" : null',
         '[attr.aria-labelledby]': 'triggerId',
 
         '[attr.data-state]': 'item.dataState',

@@ -577,7 +577,7 @@ describe('KbqAccordion', () => {
             fixture.detectChanges();
 
             accordionContentDebugElement = fixture.debugElement.query(By.directive(KbqAccordionContent));
-            expect(accordionContentDebugElement.nativeElement.getAttribute('hidden')).toBe('true');
+            expect(accordionContentDebugElement.nativeElement.hasAttribute('hidden')).toBe(true);
         });
 
         it('hidden attribute should be "false" when open', () => {
@@ -591,7 +591,7 @@ describe('KbqAccordion', () => {
             trigger.nativeElement.click();
             fixture.detectChanges();
 
-            expect(accordionContentDebugElement.nativeElement.getAttribute('hidden')).toBe('false');
+            expect(accordionContentDebugElement.nativeElement.hasAttribute('hidden')).toBe(false);
         });
     });
 
