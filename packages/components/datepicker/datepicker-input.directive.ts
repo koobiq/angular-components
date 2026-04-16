@@ -8,13 +8,11 @@ import {
     forwardRef,
     inject,
     Inject,
-    Injectable,
     InjectionToken,
     Input,
     OnDestroy,
     Optional,
     Output,
-    Provider,
     Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -55,6 +53,7 @@ import {
     ErrorStateMatcher,
     KBQ_DATE_FORMATS,
     KBQ_LOCALE_SERVICE,
+    KBQ_VALIDATION,
     KbqDateFormats,
     KbqErrorStateTracker,
     ruRULocaleData,
@@ -195,27 +194,6 @@ export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = ruRULocaleData.datepicker;
 export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken('KbqDatepickerConfiguration');
 
 /**
- * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
- * Used to sync control's errorState and icon's errorState, since now datepicker-input is validating on initial.
- * After merging form-fields, default error-state matcher will be used
- */
-@Injectable()
-class KbqDatepickerErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: AbstractControl | null): boolean {
-        return !!control?.invalid;
-    }
-}
-
-/**
- * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
- * After merging form-fields, default error-state matcher will be used
- */
-const KBQ_DATEPICKER_ERROR_STATE_MATCHER: Provider = {
-    provide: ErrorStateMatcher,
-    useClass: KbqDatepickerErrorStateMatcher
-};
-
-/**
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
  * calendar popup. For consistency, we always use KbqDatepickerInputEvent instead.
@@ -253,7 +231,6 @@ interface DateTimeObject {
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
-        KBQ_DATEPICKER_ERROR_STATE_MATCHER,
         { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }],
     host: {
         class: 'kbq-input kbq-datepicker',
@@ -277,6 +254,8 @@ export class KbqDatepickerInput<D>
     protected readonly formField = inject(KbqFormField, { optional: true, host: true });
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
 
     /** @docs-private */
     protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
@@ -815,7 +794,7 @@ export class KbqDatepickerInput<D>
 
         this.onInput();
 
-        if (this.control) {
+        if (this.useLegacyValidation && this.control) {
             this.control.updateValueAndValidity({ emitEvent: false });
             (this.control.statusChanges as EventEmitter<string>).emit(this.control.status);
         }
