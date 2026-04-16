@@ -1,9 +1,10 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { PopUpTriggers } from '@koobiq/components/core';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
@@ -12,7 +13,7 @@ import { KbqTitleDirective } from './title.directive';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, BrowserAnimationsModule],
+        imports: [component, NoopAnimationsModule],
         providers: [KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER, ...providers]
     }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
@@ -24,6 +25,9 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
 
 const getTitleDirective = (de: DebugElement): KbqTitleDirective =>
     de.query(By.directive(KbqTitleDirective)).injector.get(KbqTitleDirective);
+
+const getTooltipElement = (): Element | null =>
+    TestBed.inject(OverlayContainer).getContainerElement().querySelector('.kbq-tooltip');
 
 describe('KbqTitleDirective', () => {
     describe('creation', () => {
@@ -373,6 +377,96 @@ describe('KbqTitleDirective', () => {
         });
     });
 
+    describe('tooltip integration', () => {
+        it('should open tooltip for overflown text', fakeAsync(() => {
+            const fixture = createComponent(OverflowTooltipTitleComponent);
+            const host = fixture.debugElement.query(By.css('#overflow-text')).nativeElement;
+
+            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()).not.toBeNull();
+        }));
+
+        it('should not open tooltip for wide parent with short text', fakeAsync(() => {
+            const fixture = createComponent(OverflowTooltipTitleComponent);
+            const host = fixture.debugElement.query(By.css('#wide-text')).nativeElement;
+
+            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(600);
+            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(100);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()).toBeNull();
+        }));
+
+        it('should open tooltip for overflown text with inline element', fakeAsync(() => {
+            const fixture = createComponent(OverflowTooltipTitleComponent);
+            const host = fixture.debugElement.query(By.css('#inline-overflow')).nativeElement;
+
+            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()).not.toBeNull();
+        }));
+
+        it('should open tooltip for overflown complex container', fakeAsync(() => {
+            const fixture = createComponent(ComplexTooltipTitleComponent);
+            const host = fixture.debugElement.query(By.css('#complex-overflow')).nativeElement;
+            const parent = fixture.debugElement.query(By.css('#complex-overflow .parent')).nativeElement;
+            const child = fixture.debugElement.query(By.css('#complex-overflow .child')).nativeElement;
+
+            jest.spyOn(parent, 'offsetWidth', 'get').mockReturnValue(150);
+            jest.spyOn(child, 'scrollWidth', 'get').mockReturnValue(300);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()).not.toBeNull();
+        }));
+
+        it('should not open tooltip for wide complex container with short text', fakeAsync(() => {
+            const fixture = createComponent(ComplexTooltipTitleComponent);
+            const host = fixture.debugElement.query(By.css('#complex-wide')).nativeElement;
+            const parent = fixture.debugElement.query(By.css('#complex-wide .parent')).nativeElement;
+            const child = fixture.debugElement.query(By.css('#complex-wide .child')).nativeElement;
+
+            jest.spyOn(parent, 'offsetWidth', 'get').mockReturnValue(600);
+            jest.spyOn(child, 'scrollWidth', 'get').mockReturnValue(100);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()).toBeNull();
+        }));
+
+        it('should open tooltip for vertical overflow', fakeAsync(() => {
+            const fixture = createComponent(VerticalOverflowTooltipTitleComponent);
+            const host = fixture.debugElement.query(By.css('.vertical-overflow')).nativeElement;
+
+            jest.spyOn(host, 'offsetHeight', 'get').mockReturnValue(40);
+            jest.spyOn(host, 'scrollHeight', 'get').mockReturnValue(80);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            expect(getTooltipElement()).not.toBeNull();
+        }));
+    });
+
     describe('ngOnDestroy', () => {
         it('should unsubscribe resizeSubscription', () => {
             const fixture = createComponent(SimpleTitleComponent);
@@ -466,4 +560,114 @@ class FocusTitleComponent {}
 })
 class ContentObserverTitleComponent {
     text = 'Initial';
+}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div class="parent" id="overflow-text" kbq-title>
+            {{ longValue }}
+        </div>
+        <div class="parent wide" id="wide-text" kbq-title>
+            {{ defaultValue }}
+        </div>
+        <div class="parent" id="inline-overflow" kbq-title>
+            <span>{{ longValue }}</span>
+        </div>
+    `,
+    styles: `
+        .parent {
+            display: inline-block;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .wide {
+            max-width: 600px;
+        }
+    `
+})
+class OverflowTooltipTitleComponent {
+    defaultValue = 'Just a text';
+    longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
+}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div id="complex-overflow" kbq-title>
+            <div #kbqTitleContainer class="parent">
+                <div #kbqTitleText class="child">
+                    {{ longValue }}
+                </div>
+            </div>
+        </div>
+
+        <div id="complex-wide" kbq-title>
+            <div #kbqTitleContainer class="parent wide">
+                <div #kbqTitleText class="child">
+                    {{ defaultValue }}
+                </div>
+            </div>
+        </div>
+    `,
+    styles: `
+        :host > div {
+            max-width: 150px;
+        }
+
+        .parent {
+            align-items: center;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            max-width: 100%;
+            position: relative;
+        }
+
+        .child {
+            display: inline-block;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .wide {
+            width: 600px;
+        }
+    `
+})
+class ComplexTooltipTitleComponent {
+    defaultValue = 'Just a text';
+    longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
+}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div kbq-title class="vertical-overflow">
+            {{ longValue }}
+        </div>
+    `,
+    styles: `
+        .vertical-overflow {
+            display: -webkit-box;
+            overflow: hidden;
+            overflow-wrap: break-word;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            width: 200px;
+        }
+    `
+})
+class VerticalOverflowTooltipTitleComponent {
+    defaultValue = 'Just a text';
+    longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
 }
