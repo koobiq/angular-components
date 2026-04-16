@@ -15,8 +15,10 @@ import { KbqAccordionItem } from './accordion-item';
     selector: '[kbqAccordionContent]',
     exportAs: 'kbqAccordionContent',
     host: {
+        '[attr.id]': 'contentId',
         '[attr.role]': '"region"',
-        '[attr.hidden]': 'hidden().toString()',
+        '[attr.hidden]': 'hidden() ? "" : null',
+        '[attr.aria-labelledby]': 'triggerId',
 
         '[attr.data-state]': 'item.dataState',
         '[attr.data-disabled]': 'item.disabled',
@@ -32,6 +34,16 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     protected readonly nativeElement = kbqInjectNativeElement();
     /** @docs-private */
     protected readonly item = inject(KbqAccordionItem);
+
+    /** @docs-private */
+    get contentId(): string {
+        return `${this.item.id}-content`;
+    }
+
+    /** @docs-private */
+    get triggerId(): string {
+        return `${this.item.id}-trigger`;
+    }
 
     /** @docs-private */
     protected readonly hidden = signal<boolean>(true);

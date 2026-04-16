@@ -82,6 +82,7 @@ export class KbqAccordionContent {
 // @public (undocumented)
 export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
     constructor();
+    get contentId(): string;
     // (undocumented)
     disableAnimation(): void;
     // (undocumented)
@@ -95,6 +96,7 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     ngAfterViewInit(): void;
     // (undocumented)
     toggle(): void;
+    get triggerId(): string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionContentDirective, "[kbqAccordionContent]", ["kbqAccordionContent"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -215,10 +217,12 @@ export class KbqAccordionTrigger implements AfterViewInit {
 // @public (undocumented)
 export class KbqAccordionTriggerDirective {
     protected readonly accordion: KbqAccordion;
+    get contentId(): string;
     focus(): void;
     protected readonly item: KbqAccordionItem;
     protected readonly nativeElement: HTMLElement;
     onClick(): void;
+    get triggerId(): string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionTriggerDirective, "[kbqAccordionTrigger]", never, {}, {}, never, never, true, never>;
     // (undocumented)
