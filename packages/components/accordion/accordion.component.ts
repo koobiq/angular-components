@@ -190,7 +190,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     ngOnDestroy(): void {
         this.focusMonitor.stopMonitoring(this.elementRef);
         this.openCloseAllActions.complete();
-        this.onValueChangeSubscription?.unsubscribe();
+        this.onValueChangeSubscription.unsubscribe();
     }
 
     /** @docs-private */

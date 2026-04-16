@@ -175,7 +175,7 @@ export class KbqAccordionItem implements OnDestroy {
         this.destroyed.emit();
         this.destroyed.complete();
         this.removeUniqueSelectionListener();
-        this.openCloseAllSubscription?.unsubscribe();
+        this.openCloseAllSubscription.unsubscribe();
     }
 
     focus(): void {

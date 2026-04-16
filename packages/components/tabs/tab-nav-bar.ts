@@ -249,11 +249,11 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
         if (icons.length === 1) {
             const COMMENT_NODE = 8;
 
-            if (firstIconElement?.nextSibling && firstIconElement.nextSibling.nodeType !== COMMENT_NODE) {
+            if (firstIconElement.nextSibling && firstIconElement.nextSibling.nodeType !== COMMENT_NODE) {
                 this.renderer.addClass(firstIconElement, 'kbq-icon_left');
             }
 
-            if (firstIconElement?.previousSibling && firstIconElement.previousSibling.nodeType !== COMMENT_NODE) {
+            if (firstIconElement.previousSibling && firstIconElement.previousSibling.nodeType !== COMMENT_NODE) {
                 this.renderer.addClass(firstIconElement, 'kbq-icon_right');
             }
         } else if (icons.length === twoIcons) {
