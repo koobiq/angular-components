@@ -2207,6 +2207,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
+  "form-field-horizontal": {
+    "packagePath": "components/form-field/form-field-horizontal",
+    "title": "Form field horizontal",
+    "componentName": "FormFieldHorizontalExample",
+    "files": [
+      "form-field-horizontal-example.ts"
+    ],
+    "selector": "form-field-horizontal-example",
+    "additionalComponents": [],
+    "primaryFile": "form-field-horizontal-example.ts",
+    "importPath": "components/form-field"
+  },
   "form-field-overview": {
     "packagePath": "components/form-field/form-field-overview",
     "title": "Form field with kbq-label",
@@ -3036,6 +3048,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "list-virtual-scroll-example.ts",
     "importPath": "components/list"
+  },
+  "loader-overlay-card": {
+    "packagePath": "components/loader-overlay/loader-overlay-card",
+    "title": "Loader-overlay card",
+    "componentName": "LoaderOverlayCardExample",
+    "files": [
+      "loader-overlay-card-example.ts"
+    ],
+    "selector": "loader-overlay-card-example",
+    "additionalComponents": [],
+    "primaryFile": "loader-overlay-card-example.ts",
+    "importPath": "components/loader-overlay"
   },
   "loader-overlay-default": {
     "packagePath": "components/loader-overlay/loader-overlay-default",
@@ -4220,6 +4244,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-search-example.ts",
     "importPath": "components/select"
   },
+  "select-two-line-option": {
+    "packagePath": "components/select/select-two-line-option",
+    "title": "select two line option",
+    "componentName": "SelectTwoLineOptionExample",
+    "files": [
+      "select-two-line-option-example.ts"
+    ],
+    "selector": "select-two-line-option-example",
+    "additionalComponents": [],
+    "primaryFile": "select-two-line-option-example.ts",
+    "importPath": "components/select"
+  },
   "select-validation": {
     "packagePath": "components/select/select-validation",
     "title": "Select validation",
@@ -4378,6 +4414,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-sizes-example.ts",
+    "importPath": "components/sidepanel"
+  },
+  "sidepanel-with-custom-injector": {
+    "packagePath": "components/sidepanel/sidepanel-with-custom-injector",
+    "title": "Sidepanel with custom injector",
+    "componentName": "SidepanelWithCustomInjectorExample",
+    "files": [
+      "sidepanel-with-custom-injector-example.ts"
+    ],
+    "selector": "sidepanel-with-custom-injector-example",
+    "additionalComponents": [
+      "ExampleSidepanelWithCustomInjectorContent"
+    ],
+    "primaryFile": "sidepanel-with-custom-injector-example.ts",
     "importPath": "components/sidepanel"
   },
   "sidepanel-with-dynamic-config-update": {
@@ -5879,6 +5929,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-search-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-two-line-option": {
+    "packagePath": "components/tree-select/tree-select-two-line-option",
+    "title": "tree-select-two-line-option",
+    "componentName": "TreeSelectTwoLineOptionExample",
+    "files": [
+      "tree-select-two-line-option-example.ts"
+    ],
+    "selector": "tree-select-two-line-option-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-two-line-option-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-with-multiline-matcher": {
     "packagePath": "components/tree-select/tree-select-with-multiline-matcher-overview",
     "title": "tree-select-with-multiline-matcher",
@@ -6621,6 +6683,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'form-field-horizontal':
+return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-overview':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-password-overview':
@@ -6757,6 +6821,8 @@ return import('@koobiq/docs-examples/components/list');
 return import('@koobiq/docs-examples/components/list');
   case 'list-virtual-scroll':
 return import('@koobiq/docs-examples/components/list');
+  case 'loader-overlay-card':
+return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-default':
 return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-fixed-top':
@@ -6947,6 +7013,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-search':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-two-line-option':
+return import('@koobiq/docs-examples/components/select');
   case 'select-validation':
 return import('@koobiq/docs-examples/components/select');
   case 'select-virtual-scroll':
@@ -6972,6 +7040,8 @@ return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-overview':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-sizes':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-with-custom-injector':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-with-dynamic-config-update':
 return import('@koobiq/docs-examples/components/sidepanel');
@@ -7218,6 +7288,8 @@ return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-search-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-two-line-option':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-with-multiline-matcher':
 return import('@koobiq/docs-examples/components/tree-select');

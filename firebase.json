@@ -1,5 +1,5 @@
 {
-    "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/v13.35.1/schema/firebase-config.json",
+    "$schema": "node_modules/firebase-tools/schema/firebase-config.json",
     "hosting": [
         {
             "target": "stable",
@@ -24,8 +24,21 @@
                     ]
                 },
                 {
+                    "source": "/**/*.html",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
                     "source": "/**",
                     "headers": [
+                        {
+                            "key": "X-Content-Type-Options",
+                            "value": "nosniff"
+                        },
                         {
                             "key": "X-XSS-Protection",
                             "value": "1"
@@ -37,6 +50,18 @@
                         {
                             "key": "Content-Security-Policy",
                             "value": "upgrade-insecure-requests; default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' * data:; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://mc.yandex.com https://yastatic.net; frame-src 'self' https://mc.yandex.ru https://mc.yandex.com; child-src 'self' blob: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://koobiq.io https://*.koobiq.io https://mc.yandex.ru https://mc.yandex.com https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
+                        }
+                    ]
+                },
+                {
+                    "source": "/docs-content/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // Docs content fragments are not hashed. Allow stale-while-revalidate
+                            // so SPA navigation reuses the cached version while fetching a fresh one.
+                            // Hard reloads always get fresh HTML with up-to-date ng-state transfer cache.
+                            "value": "public, max-age=0, stale-while-revalidate=86400"
                         }
                     ]
                 },
@@ -75,11 +100,12 @@
                     ]
                 },
                 {
-                    "source": "/*.@(js|css)",
+                    "source": "/**/*.@(js|css)",
                     "headers": [
                         {
                             "key": "Cache-Control",
-                            "value": "public, max-age=31536000"
+                            // Hashed JS/CSS bundles are immutable — cache forever.
+                            "value": "public, max-age=31536000, immutable"
                         }
                     ]
                 }
@@ -102,8 +128,19 @@
                     "headers": [
                         {
                             "key": "Cache-Control",
-                            // The `index.html` file (or when loaded as SPA), should never be cached. Older
-                            // JavaScript sources and assets would be loaded that might no longer be available.
+                            // Pre-rendered SSG pages and SPA fallback routes should never be cached.
+                            // Older JavaScript sources and assets would be loaded that might no longer be available.
+                            "value": "no-cache"
+                        }
+                    ]
+                },
+                {
+                    "source": "/**/*.html",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // HTML files (index.csr.html, pre-rendered index.html) must never be cached
+                            // as they reference hashed assets from the current deployment.
                             "value": "no-cache"
                         }
                     ]
@@ -112,8 +149,8 @@
                     "source": "/**",
                     "headers": [
                         {
-                            "key": "Access-Control-Allow-Origin",
-                            "value": "*"
+                            "key": "X-Content-Type-Options",
+                            "value": "nosniff"
                         },
                         {
                             "key": "X-XSS-Protection",
@@ -122,6 +159,22 @@
                         {
                             "key": "Content-Security-Policy",
                             "value": "upgrade-insecure-requests; frame-ancestors 'self' https://*.web.app; default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' * data:; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://mc.yandex.com https://yastatic.net; frame-src 'self' https://mc.yandex.ru https://mc.yandex.com; child-src 'self' blob: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://koobiq.io https://*.koobiq.io https://mc.yandex.ru https://mc.yandex.com https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
+                        }
+                    ]
+                },
+                {
+                    "source": "/docs-content/**",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // Docs content fragments are not hashed. Allow stale-while-revalidate
+                            // so SPA navigation reuses the cached version while fetching a fresh one.
+                            // Hard reloads always get fresh HTML with up-to-date ng-state transfer cache.
+                            "value": "public, max-age=0, stale-while-revalidate=86400"
+                        },
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
                         }
                     ]
                 },
@@ -160,11 +213,12 @@
                     ]
                 },
                 {
-                    "source": "/*.@(js|css)",
+                    "source": "/**/*.@(js|css)",
                     "headers": [
                         {
                             "key": "Cache-Control",
-                            "value": "public, max-age=31536000"
+                            // Hashed JS/CSS bundles are immutable — cache forever.
+                            "value": "public, max-age=31536000, immutable"
                         }
                     ]
                 }

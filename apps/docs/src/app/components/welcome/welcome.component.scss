@@ -39,13 +39,9 @@
     text-decoration: none;
 }
 
-.docs-welcome__category-item-preview {
-    width: 100%;
-    height: auto;
-}
-
 .docs-welcome__category-item-title {
     margin-top: var(--kbq-size-m);
+    min-height: var(--kbq-size-xxl);
 }
 
 @media (width < 768px) {
