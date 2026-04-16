@@ -8,10 +8,8 @@ const isCI = !!process.env.CI;
 /** @type {import('jest').Config} */
 const config = {
     rootDir: __dirname,
-    bail: 1,
     verbose: !isCI,
     silent: isCI,
-    resetModules: true,
     clearMocks: true,
     cacheDirectory: '<rootDir>/node_modules/.cache/jest',
     preset: 'jest-preset-angular',
