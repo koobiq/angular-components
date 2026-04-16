@@ -30,14 +30,19 @@ describe('KbqNavbar', () => {
         tick(FONT_RENDER_TIMEOUT_MS);
         fixture.detectChanges();
 
-        const items = fixture.debugElement.queryAll(By.css('kbq-navbar-item'));
-        const collapsedElements = items.filter(
-            (item) => item.nativeElement.querySelectorAll('.kbq-navbar-item_collapsed').length > 0
-        );
+        const collapsableItems = fixture.debugElement
+            .queryAll(By.directive(KbqNavbarItem))
+            .map((item) => item.componentInstance as KbqNavbarItem)
+            .filter((item) => item.title && item.collapsable);
 
-        const hasTitle = collapsedElements.reduce((acc, el) => acc && el.nativeElement.hasAttribute('title'), true);
+        collapsableItems.forEach((item) => (item.collapsed = true));
 
-        expect(hasTitle).toBeTruthy();
+        fixture.detectChanges();
+
+        const collapsedItems = collapsableItems.filter((item) => item.isCollapsed);
+
+        expect(collapsedItems.length).toBeGreaterThan(0);
+        expect(collapsedItems.every((item) => !!item.titleText && item.content === item.titleText)).toBe(true);
     }));
 
     it('items should allow click if not disable', () => {
