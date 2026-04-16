@@ -5,12 +5,17 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 
 // @public
-export class KbqSkeleton {
+export class KbqSkeleton implements OnDestroy {
     constructor();
+    readonly enabled: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSkeleton, "kbq-skeleton", ["kbqSkeleton"], {}, {}, never, never, true, never>;
+    ngOnDestroy(): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSkeleton, never>;
 }
