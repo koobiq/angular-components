@@ -19,11 +19,6 @@ import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherModule } from './app-switcher.module';
 import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
 
-// Polyfill structuredClone for jsdom test environment
-if (!globalThis.structuredClone) {
-    (globalThis as any).structuredClone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
-}
-
 const APP_1: KbqAppSwitcherApp = { id: 1, name: 'App One', type: 'TypeA', link: '/1', icon: '<svg></svg>' };
 const APP_2: KbqAppSwitcherApp = { id: 2, name: 'App Two', type: 'TypeA', link: '/2' };
 const APP_3: KbqAppSwitcherApp = { id: 3, name: 'App Three', type: 'TypeA', link: '/3' };
