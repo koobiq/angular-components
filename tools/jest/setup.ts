@@ -47,3 +47,7 @@ global.DragEvent = class extends MouseEvent {
 global.CSS = {
     supports: jest.fn().mockReturnValue(false) as typeof CSS.supports
 } as typeof CSS;
+
+if (!globalThis.structuredClone) {
+    globalThis.structuredClone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
+}
