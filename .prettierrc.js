@@ -35,7 +35,7 @@ const config = {
             }
         },
         {
-            files: ['llms.txt', 'llms-full.txt'],
+            files: ['llms.txt'],
             options: {
                 parser: 'markdown'
             }

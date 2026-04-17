@@ -85,7 +85,7 @@ try {
                 content += `- [${item.id}](${GITHUB_RAW_CONTENT_URL}/${path})\n`;
 
                 contentFull += `### ${item.id}\n\n`;
-                contentFull += `\`\`\`markdown\n${readFileContent(path)}\n\`\`\`\n`;
+                contentFull += `${readFileContent(path)}\n`;
             }
 
             content += '\n';
@@ -107,7 +107,7 @@ try {
                     content += `- [overview](${GITHUB_RAW_CONTENT_URL}/${overviewPath})\n`;
 
                     contentFull += `#### overview\n\n`;
-                    contentFull += `\`\`\`markdown\n${readFileContent(overviewPath)}\n\`\`\`\n`;
+                    contentFull += `${readFileContent(overviewPath)}\n`;
                 }
 
                 if (item.hasApi) {
@@ -117,7 +117,7 @@ try {
                         content += `- [api](${GITHUB_RAW_CONTENT_URL}/${apiPath})\n`;
 
                         contentFull += `#### api\n\n`;
-                        contentFull += `\`\`\`markdown\n${readFileContent(apiPath)}\n\`\`\`\n`;
+                        contentFull += `${readFileContent(apiPath)}\n`;
                     }
                 }
 
@@ -138,10 +138,10 @@ try {
         }
     }
 
-    writeFileSync(join(process.cwd(), 'apps/docs/src', FILE_NAME), content);
+    writeFileSync(join(process.cwd(), 'apps/docs/src', FILE_NAME), content.trimEnd() + '\n');
     console.info(`✅ ${FILE_NAME} has been successfully generated!`);
 
-    writeFileSync(join(process.cwd(), 'apps/docs/src', FILE_NAME_FULL), contentFull);
+    writeFileSync(join(process.cwd(), 'apps/docs/src', FILE_NAME_FULL), contentFull.trimEnd() + '\n');
     console.info(`✅ ${FILE_NAME_FULL} has been successfully generated!`);
 } catch (error) {
     console.info(`❌ Error occurred while generating ${FILE_NAME} / ${FILE_NAME_FULL}! Details:\n`, error);
