@@ -517,7 +517,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should throw when attempting to assign a non-array value', () => {
             expect(() => {
                 groupInstance.value = 'not-an-array';
-            }).toThrowError(/Value must be an array/);
+            }).toThrow(/Value must be an array/);
         });
     });
 

@@ -3263,7 +3263,7 @@ describe('KbqSelect', () => {
             // end up crashing the testing setup altogether.
             expect(() => {
                 TestBed.createComponent(SelectWithErrorSibling).detectChanges();
-            }).toThrowError(new RegExp('Oh no!', 'g'));
+            }).toThrow(new RegExp('Oh no!', 'g'));
             flush();
         }));
     });
@@ -3322,7 +3322,7 @@ describe('KbqSelect', () => {
             const fixture = TestBed.createComponent(InvalidSelectInForm);
 
             // The first change detection run will throw the "ngModel is missing a name" error.
-            expect(() => fixture.detectChanges()).toThrowError(/the name attribute must be set/g);
+            expect(() => fixture.detectChanges()).toThrow(/the name attribute must be set/g);
 
             // The second run shouldn't throw selection-model related errors.
             expect(() => fixture.detectChanges()).not.toThrow();
@@ -3396,7 +3396,7 @@ describe('KbqSelect', () => {
 
                 expect(() => {
                     fixture.detectChanges();
-                }).toThrowError(wrappedErrorMessage(getKbqSelectNonFunctionValueError()));
+                }).toThrow(wrappedErrorMessage(getKbqSelectNonFunctionValueError()));
             }));
         });
     });
@@ -4821,13 +4821,13 @@ describe('KbqSelect', () => {
         it('should throw an exception when trying to set a non-array value', fakeAsync(() => {
             expect(() => {
                 testInstance.control.setValue('not-an-array');
-            }).toThrowError(wrappedErrorMessage(getKbqSelectNonArrayValueError()));
+            }).toThrow(wrappedErrorMessage(getKbqSelectNonArrayValueError()));
         }));
 
         it('should throw an exception when trying to change multiple mode after init', fakeAsync(() => {
             expect(() => {
                 testInstance.select.multiple = false;
-            }).toThrowError(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
+            }).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
         }));
 
         it('should pass the `multiple` value to all of the option instances', fakeAsync(() => {

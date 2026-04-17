@@ -1,4 +1,4 @@
-import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
+import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
@@ -12,7 +12,7 @@ const SCHEMATIC_NAME = 'new-icons-pack';
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
-    let projects: ProjectDefinitionCollection;
+    let projects: workspaces.ProjectDefinitionCollection;
     const elementsWithDeprecatedIconPrefixes = [
         '<i kbq-icon="mc-word-wrap_16"></i>',
         '<i kbq-icon-item="mc-word-wrap_16"></i>',
@@ -28,7 +28,7 @@ describe(SCHEMATIC_NAME, () => {
 
         const workspace = await getWorkspace(appTree);
 
-        projects = workspace.projects as unknown as ProjectDefinitionCollection;
+        projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
         projects.forEach((project) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;
             const stylesPath = `/${project.root}/src/styles.scss`;

@@ -828,7 +828,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDate(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeShortDate (only startDate)', () => {
@@ -869,7 +869,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDateTime(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeShortDateTime (only startDate)', () => {
@@ -928,7 +928,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDate(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeLongDate (only startDate)', () => {
@@ -969,7 +969,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDateTime(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeLongDateTime (only startDate)', () => {
@@ -1722,7 +1722,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDate(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeShortDate (only startDate)', () => {
@@ -1763,7 +1763,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDateTime(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeShortDateTime (only startDate)', () => {
@@ -1822,7 +1822,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDate(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeLongDate (only startDate)', () => {
@@ -1863,7 +1863,7 @@ describe('Date formatter', () => {
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDateTime(null);
 
-                        expect(wrapper).toThrowError('Invalid date');
+                        expect(wrapper).toThrow('Invalid date');
                     });
 
                     it('rangeLongDateTime (only startDate)', () => {

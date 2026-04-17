@@ -268,6 +268,8 @@ describe('KbqNumberInput', () => {
     }));
 
     it('should throw error with stepper', fakeAsync(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
         const fixture = createComponent(KbqNumberInputWithCleaner);
 
         expect(() => {

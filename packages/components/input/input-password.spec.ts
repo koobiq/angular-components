@@ -211,6 +211,8 @@ describe('KbqPasswordInput', () => {
     });
 
     it('should throw Error if custom password rule selected and verification method not provided', fakeAsync(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
         const fixture = createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
 
         expect(() => {
@@ -220,7 +222,7 @@ describe('KbqPasswordInput', () => {
             } catch {
                 flush();
             }
-        }).toThrowError('You should set [regex] or [checkRule] for PasswordRules.Custom');
+        }).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
     }));
 
     it('should provide custom password rule via callback', fakeAsync(() => {

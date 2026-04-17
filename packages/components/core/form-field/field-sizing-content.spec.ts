@@ -28,6 +28,8 @@ export class TestFieldSizingContent {}
 
 describe(KbqFieldSizingContent.name, () => {
     it('should apply kbq-field-sizing-content class', () => {
+        jest.spyOn(CSS, 'supports').mockReturnValue(false);
+
         const fixture = createComponent(TestFieldSizingContent);
         const input = getInputNativeElement(fixture);
 
@@ -35,7 +37,7 @@ describe(KbqFieldSizingContent.name, () => {
     });
 
     it('should use native field-sizing when browser supports it', () => {
-        (CSS.supports as jest.Mock).mockReturnValue(true);
+        jest.spyOn(CSS, 'supports').mockReturnValue(true);
 
         const fixture = createComponent(TestFieldSizingContent);
         const input = getInputNativeElement(fixture);

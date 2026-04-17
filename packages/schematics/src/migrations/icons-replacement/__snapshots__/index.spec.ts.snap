@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`icons-replacement should run migration for external html: project app: after changes 1`] = `
 "<i kbq-icon="kbq-square-a_16"></i>

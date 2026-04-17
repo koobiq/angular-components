@@ -1,5 +1,4 @@
 import { workspaces } from '@angular-devkit/core';
-import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
@@ -22,7 +21,7 @@ const getProjectContent = (tree: UnitTestTree | Tree, project: workspaces.Projec
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
-    let projects: ProjectDefinitionCollection;
+    let projects: workspaces.ProjectDefinitionCollection;
 
     describe('icons mapping', () => {
         const elementsWithDeprecatedSelectors = iconsMapping.map(
@@ -49,7 +48,7 @@ class TestApp {
 
             const workspace = await getWorkspace(appTree);
 
-            projects = workspace.projects as unknown as ProjectDefinitionCollection;
+            projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
             projects.forEach((project) => {
                 const templatePath = `/${project.root}/src/app/app.component.html`;
                 const tsPath = `/${project.root}/src/app/app.component.ts`;

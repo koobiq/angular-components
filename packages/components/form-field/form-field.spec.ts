@@ -379,16 +379,11 @@ describe(KbqFormField.name, () => {
     });
 
     it('should throw Error for KbqFormField without KbqFormFieldControl', () => {
-        let caught = false;
+        jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        try {
-            createComponent(InputFormFieldWithoutFormFieldControl);
-        } catch (error) {
-            expect(error.message).toBe(getKbqFormFieldMissingControlError().message);
-            caught = true;
-        }
-
-        expect(caught).toBeTruthy();
+        expect(() => createComponent(InputFormFieldWithoutFormFieldControl)).toThrow(
+            getKbqFormFieldMissingControlError().message
+        );
     });
 
     it('should add ng-untouched selector for KbqFormField initially', () => {

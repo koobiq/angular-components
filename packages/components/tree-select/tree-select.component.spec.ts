@@ -3513,7 +3513,7 @@ describe('KbqTreeSelect', () => {
         it('should not crash the browser when a sibling throws an error on init', fakeAsync(() => {
             // Note that this test can be considered successful if the error being thrown didn't
             // end up crashing the testing setup altogether.
-            expect(() => TestBed.createComponent(SelectWithErrorSibling).detectChanges()).toThrowError(
+            expect(() => TestBed.createComponent(SelectWithErrorSibling).detectChanges()).toThrow(
                 new RegExp('Oh no!', 'g')
             );
         }));
@@ -3570,7 +3570,7 @@ describe('KbqTreeSelect', () => {
             const fixture = TestBed.createComponent(InvalidSelectInForm);
 
             // The first change detection run will throw the "ngModel is missing a name" error.
-            expect(() => fixture.detectChanges()).toThrowError(/the name attribute must be set/g);
+            expect(() => fixture.detectChanges()).toThrow(/the name attribute must be set/g);
 
             // The second run shouldn't throw selection-model related errors.
             expect(() => fixture.detectChanges()).not.toThrow();
@@ -4915,13 +4915,13 @@ describe('KbqTreeSelect', () => {
         it('should throw an exception when trying to set a non-array value', fakeAsync(() => {
             expect(() => {
                 testInstance.control.setValue('not-an-array');
-            }).toThrowError(wrappedErrorMessage(getKbqSelectNonArrayValueError()));
+            }).toThrow(wrappedErrorMessage(getKbqSelectNonArrayValueError()));
         }));
 
         it('should throw an exception when trying to change multiple mode after init', fakeAsync(() => {
             expect(() => {
                 testInstance.select.multiple = false;
-            }).toThrowError(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
+            }).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
         }));
 
         xit('should pass the `multiple` value to all of the option instances', fakeAsync(() => {
