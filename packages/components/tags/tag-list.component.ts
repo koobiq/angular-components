@@ -534,7 +534,7 @@ export class KbqTagList
     ngOnDestroy() {
         this.stateChanges.complete();
         this.focusMonitor.stopMonitoring(this.elementRef);
-        this.dropSubscriptions();
+        this.tagsSubscriptions$.next();
     }
 
     /** @docs-private */
