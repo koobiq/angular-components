@@ -962,7 +962,7 @@ describe(KbqTagList.name, () => {
             fixture.componentInstance.foods = [...fixture.componentInstance.foods, 'pizza-1'];
 
             fixture.detectChanges();
-            tick(100);
+            tick();
 
             expect(fixture.componentInstance.control.dirty).toEqual(false);
         }));
