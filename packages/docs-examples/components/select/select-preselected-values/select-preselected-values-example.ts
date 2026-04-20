@@ -11,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder" multiple [formControl]="control">
+            <kbq-select placeholder="Placeholder" multiple [showPreselectedValues]="true" [formControl]="control">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -35,7 +35,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectPreselectedValuesExample {
     options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
-    control = new FormControl([this.options.at(0)!, this.options.at(1)!]);
+    control = new FormControl(['Option #101', 'Option #102']);
 
     constructor() {}
 }
