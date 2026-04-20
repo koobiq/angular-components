@@ -270,7 +270,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             items = items.filter((item) => !tagValues.includes(item));
         }
 
-        if (items.length > 0) {
+        if (items.length) {
             this._tagList?.notifyPendingTagChange();
         }
 

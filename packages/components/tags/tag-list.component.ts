@@ -38,8 +38,8 @@ import {
     KbqOrientation
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { filter, startWith, tap } from 'rxjs/operators';
+import { merge, Observable, Subject } from 'rxjs';
+import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
 import {
     KbqTag,
@@ -165,7 +165,7 @@ export class KbqTagList
     }
 
     /**
-     * Combined stream of all of the child tags' remove events.
+     * Combined stream of all of the child tags' removal request events.
      *
      * @docs-private
      */
@@ -451,17 +451,8 @@ export class KbqTagList
      */
     private lastDestroyedTagIndex: number | null = null;
 
-    /** Subscription to focus changes in the tags. */
-    private tagFocusSubscription: Subscription | null;
-
-    /** Subscription to blur changes in the tags. */
-    private tagBlurSubscription: Subscription | null;
-
-    /** Subscription to remove changes in tags. */
-    private tagRemoveSubscription: Subscription | null;
-
-    /** Subscription to edit changes in tags. */
-    private tagEditSubscription: Subscription | null;
+    /** Triggers unsubscription from all per-tags streams when tags are reset. */
+    private readonly tagsSubscriptions$ = new Subject<void>();
 
     constructor(
         protected elementRef: ElementRef<HTMLElement>,
@@ -834,37 +825,15 @@ export class KbqTagList
     }
 
     private resetTags(): void {
-        this.dropSubscriptions();
+        this.tagsSubscriptions$.next();
         this.listenToTagsFocus();
         this.listenToTagsRemoved();
         this.listenToTagsEdit();
     }
 
-    private dropSubscriptions() {
-        if (this.tagFocusSubscription) {
-            this.tagFocusSubscription.unsubscribe();
-            this.tagFocusSubscription = null;
-        }
-
-        if (this.tagBlurSubscription) {
-            this.tagBlurSubscription.unsubscribe();
-            this.tagBlurSubscription = null;
-        }
-
-        if (this.tagRemoveSubscription) {
-            this.tagRemoveSubscription.unsubscribe();
-            this.tagRemoveSubscription = null;
-        }
-
-        if (this.tagEditSubscription) {
-            this.tagEditSubscription.unsubscribe();
-            this.tagEditSubscription = null;
-        }
-    }
-
     /** Listens to user-generated selection events on each tag. */
     private listenToTagsFocus(): void {
-        this.tagFocusSubscription = this.tagFocusChanges.subscribe(({ tag, origin }) => {
+        this.tagFocusChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(({ tag, origin }) => {
             const tagIndex = this.tags.toArray().indexOf(tag);
 
             if (this.isValidIndex(tagIndex)) {
@@ -875,7 +844,7 @@ export class KbqTagList
             this.stateChanges.next();
         });
 
-        this.tagBlurSubscription = this.tagBlurChanges.subscribe(() => {
+        this.tagBlurChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(() => {
             this.blur();
 
             this.stateChanges.next();
@@ -883,28 +852,30 @@ export class KbqTagList
     }
 
     private listenToTagsRemoved(): void {
-        this.tagRemoveSubscription = merge(
-            // Set the pending flag so the subsequent `tags.changes` is treated as UI-initiated.
-            this.tagBeforeRemoveChanges.pipe(tap(() => (this.pendingUIChange = true))),
-            this.tagRemoveChanges.pipe(
-                tap((event) => {
-                    const tag = event.tag;
-                    const tagIndex = this.tags.toArray().indexOf(event.tag);
+        this.tagRemoveChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe((event) => {
+            const tag = event.tag;
+            const tagIndex = this.tags.toArray().indexOf(event.tag);
 
-                    // In case the tag that will be removed is currently focused, we temporarily store
-                    // the index in order to be able to determine an appropriate sibling tag that will
-                    // receive focus.
-                    if (this.isValidIndex(tagIndex) && tag.hasFocus) {
-                        this.lastDestroyedTagIndex = tagIndex;
-                    }
-                })
-            )
-        ).subscribe();
+            // In case the tag that will be removed is currently focused, we temporarily store
+            // the index in order to be able to determine an appropriate sibling tag that will
+            // receive focus.
+            if (this.isValidIndex(tagIndex) && tag.hasFocus) {
+                this.lastDestroyedTagIndex = tagIndex;
+            }
+        });
+
+        // Set the pending flag so the subsequent `tags.changes` is treated as UI action.
+        this.tagBeforeRemoveChanges
+            .pipe(takeUntil(this.tagsSubscriptions$))
+            .subscribe(() => (this.pendingUIChange = true));
     }
 
     private listenToTagsEdit(): void {
-        this.tagEditSubscription = this.tagEditChanges
-            .pipe(filter(({ type }) => type === 'submit'))
+        this.tagEditChanges
+            .pipe(
+                filter(({ type }) => type === 'submit'),
+                takeUntil(this.tagsSubscriptions$)
+            )
             .subscribe(() => this.propagateTagsChanges());
     }
 

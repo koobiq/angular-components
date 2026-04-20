@@ -308,7 +308,7 @@ export class KbqTag
 
     /**
      * Emitted when a tag is to be removed.
-     * Fires on programmatic and user-initiated removal (click or keyboard).
+     * Fires on programmatic and UI removal (click or keyboard).
      */
     @Output() readonly removed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
 
