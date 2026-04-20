@@ -105,10 +105,7 @@ export class CustomModalComponent {
  */
 @Component({
     selector: 'modal-component-example',
-    imports: [
-        KbqModalModule,
-        KbqButtonModule
-    ],
+    imports: [KbqButtonModule],
     template: `
         <button kbq-button (click)="openModal()">Open Modal</button>
     `,

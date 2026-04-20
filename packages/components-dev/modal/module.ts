@@ -5,11 +5,25 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
+import { ModalComponentWithInjectorExample } from 'packages/docs-examples/components/modal/modal-component-with-injector/modal-component-with-injector-example';
+import { ModalComponentExample } from 'packages/docs-examples/components/modal/modal-component/modal-component-example';
+import { ModalMultipleExample } from 'packages/docs-examples/components/modal/modal-multiple/modal-multiple-example';
+import { ModalOverviewExample } from 'packages/docs-examples/components/modal/modal-overview/modal-overview-example';
+import { ModalScrollExample } from 'packages/docs-examples/components/modal/modal-scroll/modal-scroll-example';
+import { ModalSizesExample } from 'packages/docs-examples/components/modal/modal-sizes/modal-sizes-example';
+import { ModalTemplateExample } from 'packages/docs-examples/components/modal/modal-template/modal-template-example';
 
 @Component({
     selector: 'dev-examples',
-    imports: [ModalExamplesModule],
+    imports: [
+        ModalOverviewExample,
+        ModalComponentExample,
+        ModalComponentWithInjectorExample,
+        ModalTemplateExample,
+        ModalScrollExample,
+        ModalSizesExample,
+        ModalMultipleExample
+    ],
     template: `
         <modal-overview-example />
         <hr />

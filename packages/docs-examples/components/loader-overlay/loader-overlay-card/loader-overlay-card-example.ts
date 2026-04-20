@@ -3,14 +3,14 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqModalService } from '@koobiq/components/modal';
 
 /**
  * @title Loader-overlay card
  */
 @Component({
     selector: 'loader-overlay-card-example',
-    imports: [KbqButtonModule, KbqLoaderOverlayModule, KbqModalModule, KbqFormFieldModule, KbqInputModule],
+    imports: [KbqButtonModule, KbqLoaderOverlayModule, KbqFormFieldModule, KbqInputModule],
     template: `
         <button kbq-button (click)="openModal()">Open modal with loader</button>
 

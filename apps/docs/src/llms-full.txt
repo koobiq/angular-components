@@ -16161,37 +16161,30 @@ export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<
 ```typescript
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
  * @title Modal
  */
 @Component({
     selector: 'modal-overview-example',
-    imports: [
-        KbqModalModule,
-        KbqButtonModule
-    ],
+    imports: [KbqButtonModule],
     template: `
         <button kbq-button (click)="showConfirmModal()">Open Confirm Modal</button>
-
         <button kbq-button (click)="showSuccessModal()">Open Success Modal</button>
-
         <button kbq-button (click)="showDeleteModal()">Open Delete Modal</button>
     `,
-    styles: [
-        `
-            :host {
-                display: flex;
-                flex-direction: column;
-                width: 200px;
-            }
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+        }
 
-            button:not(:last-child) {
-                margin-bottom: var(--kbq-size-m);
-            }
-        `
-    ],
+        button:not(:last-child) {
+            margin-bottom: var(--kbq-size-m);
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalOverviewExample {

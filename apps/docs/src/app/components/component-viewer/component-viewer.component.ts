@@ -14,7 +14,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { filter } from 'rxjs';
@@ -41,9 +41,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
-        DocsRegisterHeaderDirective,
-        // Prevents: "NullInjectorError: No provider for KbqModalService!"
-        KbqModalModule
+        DocsRegisterHeaderDirective
     ],
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],
