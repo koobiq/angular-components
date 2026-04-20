@@ -14,7 +14,7 @@
     <div class="docs-live-example__footer">
         <span kbq-link pseudo (click)="toggleSourceView()" (keydown.enter)="toggleSourceView()">
             {{
-                isSourceShown
+                isSourceShown()
                     ? isRuLocale()
                         ? 'Скрыть пример кода'
                         : 'Hide example code'
@@ -43,7 +43,7 @@
 </div>
 
 @if (exampleData) {
-    @if (isSourceShown) {
+    @if (isSourceShown()) {
         <kbq-code-block [codeFiles]="files" [filled]="true" [lineNumbers]="true" />
     }
 } @else {
