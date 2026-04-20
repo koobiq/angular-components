@@ -157,6 +157,7 @@ export class KbqTagList
 
     /**
      * Combined stream of all of the child tags' remove change events.
+     * Fires after the tag leaves the DOM.
      *
      * @docs-private
      */
@@ -165,8 +166,7 @@ export class KbqTagList
     }
 
     /**
-     * `removed` fires only on user-initiated removal (click or keyboard).
-     * Set the pending flag so the subsequent `tags.changes` is treated as UI-initiated.
+     * `tag.removed` fires only on user-initiated removal (click or keyboard).
      *
      * @docs-private
      */
@@ -443,7 +443,7 @@ export class KbqTagList
     private tagInput: KbqTagTextControl;
 
     /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
-    private _pendingUIChange = false;
+    private pendingUIChange = false;
 
     /**
      * When a tag is destroyed, we store the index of the destroyed tag until the tags
@@ -529,8 +529,8 @@ export class KbqTagList
                 Promise.resolve().then(() => {
                     this.stateChanges.next();
 
-                    if (currentTags && this.emitOnTagChanges && this._pendingUIChange) {
-                        this._pendingUIChange = false;
+                    if (currentTags && this.emitOnTagChanges && this.pendingUIChange) {
+                        this.pendingUIChange = false;
                         this.propagateTagsChanges();
                     }
                 });
@@ -569,7 +569,7 @@ export class KbqTagList
 
     /** Notifies that the next `tags.changes` emission is UI-initiated. */
     notifyPendingTagChange(): void {
-        this._pendingUIChange = true;
+        this.pendingUIChange = true;
     }
 
     /**
@@ -885,8 +885,8 @@ export class KbqTagList
 
     private listenToTagsRemoved(): void {
         this.tagRemoveSubscription = merge(
-            this.tagBeforeRemoveChanges.pipe(tap(() => (this._pendingUIChange = true))),
-            // `destroyed` fires after the tag leaves the DOM.
+            // Set the pending flag so the subsequent `tags.changes` is treated as UI-initiated.
+            this.tagBeforeRemoveChanges.pipe(tap(() => (this.pendingUIChange = true))),
             this.tagRemoveChanges.pipe(
                 tap((event) => {
                     const tag = event.tag;
@@ -935,7 +935,7 @@ export class KbqTagList
         this.dropList.dropped
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(({ currentIndex, previousIndex, event, item }) => {
-                this._pendingUIChange = true;
+                this.pendingUIChange = true;
 
                 const { tag }: KbqTagDragData = item.data;
 
