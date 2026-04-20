@@ -303,10 +303,13 @@ export class KbqTag
     /** Emitted when the tag is selected or deselected. */
     @Output() readonly selectionChange: EventEmitter<KbqTagSelectionChange> = new EventEmitter<KbqTagSelectionChange>();
 
-    /** Emitted when the tag is destroyed. */
+    /** Emitted when the tag is destroyed and leaving the DOM. */
     @Output() readonly destroyed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
 
-    /** Emitted when a tag is to be removed. */
+    /**
+     * Emitted when a tag is to be removed.
+     * Fires on programmatic and user-initiated removal (click or keyboard).
+     */
     @Output() readonly removed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
 
     /** Whether the tag is selected. */

@@ -986,7 +986,6 @@ describe(KbqTagList.name, () => {
 
         it('should set the control to dirty when a tag is added via input', fakeAsync(() => {
             expect(fixture.componentInstance.control.dirty).toEqual(false);
-            jest.spyOn(fixture.componentInstance, 'add');
 
             const nativeInput: HTMLInputElement = fixture.nativeElement.querySelector('input');
 

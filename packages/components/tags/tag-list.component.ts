@@ -156,8 +156,7 @@ export class KbqTagList
     }
 
     /**
-     * Combined stream of all of the child tags' remove change events.
-     * Fires after the tag leaves the DOM.
+     * Combined stream of all of the child tags' destroyed events.
      *
      * @docs-private
      */
@@ -166,7 +165,7 @@ export class KbqTagList
     }
 
     /**
-     * `tag.removed` fires only on user-initiated removal (click or keyboard).
+     * Combined stream of all of the child tags' remove events.
      *
      * @docs-private
      */
@@ -529,7 +528,7 @@ export class KbqTagList
                 Promise.resolve().then(() => {
                     this.stateChanges.next();
 
-                    if (currentTags && this.emitOnTagChanges && this.pendingUIChange) {
+                    if (currentTags && this.pendingUIChange) {
                         this.pendingUIChange = false;
                         this.propagateTagsChanges();
                     }
