@@ -57,7 +57,7 @@ interface ExampleFileData {
     }
 })
 export class DocsLiveExampleViewerComponent extends DocsLocaleState {
-    isSourceShown: boolean = false;
+    protected readonly isSourceShown = signal(false);
 
     files: KbqCodeBlockFile[] = [];
 
@@ -107,7 +107,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly toastService = inject(KbqToastService, { optional: true });
 
     toggleSourceView() {
-        this.isSourceShown = !this.isSourceShown;
+        this.isSourceShown.update((isShown) => !isShown);
     }
 
     protected reload(): void {
