@@ -796,7 +796,7 @@ class MultiSelectWithTriggerValuesLimit {
         { value: 'eggs-5', viewValue: 'Eggs' }
     ];
     control = new UntypedFormControl();
-    triggerValuesLimit: number;
+    triggerValuesLimit?: number;
 
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 }
