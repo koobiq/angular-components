@@ -339,6 +339,11 @@ export class KbqSelect
     /** Determines whether preselected values are displayed. */
     @Input() showPreselectedValues: boolean = false;
 
+    /**
+     * The maximum allowed number of trigger values.
+     * This constant limits the size of the trigger values array to ensure performance
+     * and prevent excessive memory usage.
+     */
     @Input() triggerValuesLimit: number;
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
