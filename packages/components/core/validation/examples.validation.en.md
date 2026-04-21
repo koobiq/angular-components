@@ -41,13 +41,9 @@ providers: [kbqDisableLegacyValidationDirectiveProvider()];
 
 ### Single validator
 
-Place `<kbq-error>` directly inside `<kbq-form-field>` without any `@if`. The form-field controls visibility automatically — it shows the error content only when the control's `errorState` is `true`.
-
 <!-- example(validation-basic-single-validator) -->
 
 ### Multiple validators
-
-When a field has several validators, use `@if` / `@else if` on `control.hasError('key')` to display exactly one error message at a time. Angular returns the first error that matches, so order your conditions from highest to lowest priority (e.g., `required` first).
 
 <!-- example(validation-basic-multiple-validators) -->
 
