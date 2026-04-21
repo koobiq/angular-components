@@ -1617,9 +1617,16 @@ export class KbqSelect
         if (this.multiSelection) {
             const options = this.options.toArray();
 
-            this.selectionModel.sort((a, b) =>
-                this.sortComparator ? this.sortComparator(a, b, options) : a.value - b.value
-            );
+            this.selectionModel.sort((a, b) => {
+                if (this.sortComparator) {
+                    return this.sortComparator(a, b, options);
+                }
+
+                const ia = options.indexOf(a as KbqOption);
+                const ib = options.indexOf(b as KbqOption);
+
+                return ia < 0 || ib < 0 ? 0 : ia - ib;
+            });
             this.stateChanges.next();
         }
     }
