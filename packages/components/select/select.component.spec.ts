@@ -762,6 +762,46 @@ class MultiSelectNarrow {
 }
 
 @Component({
+    selector: 'multi-select-with-trigger-values-limit',
+    imports: [KbqSelectModule, KbqFormFieldModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple placeholder="Food" [formControl]="control" [triggerValuesLimit]="triggerValuesLimit">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                }
+                <ng-template #kbqSelectTagContent let-option let-select="select">
+                    <kbq-tag [selectable]="false">
+                        {{ option.viewValue }}
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                kbq-icon="kbq-xmark-s_16"
+                                kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                            ></i>
+                        }
+                    </kbq-tag>
+                </ng-template>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithTriggerValuesLimit {
+    foods: any[] = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'sandwich-3', viewValue: 'Sandwich' },
+        { value: 'chips-4', viewValue: 'Chips' },
+        { value: 'eggs-5', viewValue: 'Eggs' }
+    ];
+    control = new UntypedFormControl();
+    triggerValuesLimit: number;
+
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
+}
+
+@Component({
     selector: 'select-with-plain-tabindex',
     imports: [
         KbqFormFieldModule,
@@ -5168,6 +5208,103 @@ describe('KbqSelect', () => {
             tick();
             flush();
             expect(componentInstance.select.hiddenItems).toEqual(2);
+        }));
+    });
+
+    describe('with triggerValuesLimit', () => {
+        let fixture: ComponentFixture<MultiSelectWithTriggerValuesLimit>;
+        let testInstance: MultiSelectWithTriggerValuesLimit;
+        let trigger: HTMLElement;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithTriggerValuesLimit]);
+            fixture = TestBed.createComponent(MultiSelectWithTriggerValuesLimit);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            flush();
+        }));
+
+        it('should return all selected options when triggerValuesLimit is not set', fakeAsync(() => {
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(3);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
+        }));
+
+        it('should limit triggerValues to triggerValuesLimit when more items are selected', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 2;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
+        }));
+
+        it('should display all selected values when selected count is less than triggerValuesLimit', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 5;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
+        }));
+
+        it('should display only first N option tags when triggerValuesLimit is set', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 2;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            const tagTexts = Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim());
+
+            expect(tagTexts[0]).toContain('Steak');
+            expect(tagTexts[1]).toContain('Pizza');
+        }));
+
+        it('should update displayed tags when triggerValuesLimit changes dynamically', fakeAsync(() => {
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(4);
+
+            testInstance.triggerValuesLimit = 2;
+            fixture.detectChanges();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
+        }));
+
+        it('should show all tags when triggerValuesLimit is removed (set to undefined)', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 2;
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+
+            testInstance.triggerValuesLimit = undefined;
+            fixture.detectChanges();
+
+            expect(testInstance.select.triggerValues.length).toBe(3);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
         }));
     });
 
