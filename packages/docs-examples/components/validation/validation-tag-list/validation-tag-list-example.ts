@@ -35,7 +35,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             (ngSubmit)="onSubmitReactiveForm(reactiveForm)"
         >
             <kbq-form-field class="layout-margin-bottom-l">
-                <kbq-tag-list #inputTagList formControlName="reactiveTypeaheadValue" [emitOnTagChanges]="false">
+                <kbq-tag-list #inputTagList formControlName="reactiveTypeaheadValue">
                     @for (tag of reactiveForm.controls['reactiveTypeaheadValue'].value; track tag) {
                         <kbq-tag [value]="tag" (removed)="reactiveInputOnRemoveTag(tag)">
                             {{ tag }}

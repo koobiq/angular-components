@@ -253,6 +253,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
+    // @deprecated
     emitOnTagChanges: boolean;
     get empty(): boolean;
     errorState: boolean;
@@ -290,6 +291,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    notifyPendingTagChange(): void;
     onChange: (value: any) => void;
     onContainerClick(): void;
     onTouched: () => void;
@@ -320,6 +322,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly stateChanges: Subject<void>;
     get tabIndex(): number | null;
     set tabIndex(value: number);
+    protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent>;
     get tagBlurChanges(): Observable<KbqTagEvent>;
     // @deprecated
     tagChanges: EventEmitter<any>;

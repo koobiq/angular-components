@@ -38,8 +38,8 @@ import {
     KbqOrientation
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { filter, startWith } from 'rxjs/operators';
+import { merge, Observable, Subject } from 'rxjs';
+import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
 import {
     KbqTag,
@@ -156,12 +156,21 @@ export class KbqTagList
     }
 
     /**
-     * Combined stream of all of the child tags' remove change events.
+     * Combined stream of all of the child tags' destroyed events.
      *
      * @docs-private
      */
     get tagRemoveChanges(): Observable<KbqTagEvent> {
         return merge(...this.tags.map((tag) => tag.destroyed));
+    }
+
+    /**
+     * Combined stream of all of the child tags' removal request events.
+     *
+     * @docs-private
+     */
+    protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent> {
+        return merge(...this.tags.map((tag) => tag.removed));
     }
 
     /**
@@ -324,7 +333,8 @@ export class KbqTagList
 
     /**
      * Whether to emit change events when tags are added/removed.
-     * Set to `false` to prevent the form control from being marked as dirty during programmatic updates.
+     *
+     * @deprecated No longer needed. Will be removed in the next major release.
      */
     @Input({ transform: booleanAttribute }) emitOnTagChanges = true;
 
@@ -431,6 +441,9 @@ export class KbqTagList
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
 
+    /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
+    private pendingUIChange = false;
+
     /**
      * When a tag is destroyed, we store the index of the destroyed tag until the tags
      * query list notifies about the update. This is necessary because we cannot determine an
@@ -438,17 +451,8 @@ export class KbqTagList
      */
     private lastDestroyedTagIndex: number | null = null;
 
-    /** Subscription to focus changes in the tags. */
-    private tagFocusSubscription: Subscription | null;
-
-    /** Subscription to blur changes in the tags. */
-    private tagBlurSubscription: Subscription | null;
-
-    /** Subscription to remove changes in tags. */
-    private tagRemoveSubscription: Subscription | null;
-
-    /** Subscription to edit changes in tags. */
-    private tagEditSubscription: Subscription | null;
+    /** Triggers unsubscription from all per-tags streams when tags are reset. */
+    private readonly tagsSubscriptions$ = new Subject<void>();
 
     constructor(
         protected elementRef: ElementRef<HTMLElement>,
@@ -515,8 +519,8 @@ export class KbqTagList
                 Promise.resolve().then(() => {
                     this.stateChanges.next();
 
-                    // do not call on initial
-                    if (currentTags && this.emitOnTagChanges) {
+                    if (currentTags && this.pendingUIChange) {
+                        this.pendingUIChange = false;
                         this.propagateTagsChanges();
                     }
                 });
@@ -530,7 +534,7 @@ export class KbqTagList
     ngOnDestroy() {
         this.stateChanges.complete();
         this.focusMonitor.stopMonitoring(this.elementRef);
-        this.dropSubscriptions();
+        this.tagsSubscriptions$.next();
     }
 
     /** @docs-private */
@@ -552,6 +556,11 @@ export class KbqTagList
 
     /** @docs-private */
     onChange: (value: any) => void = () => {};
+
+    /** Notifies that the next `tags.changes` emission is UI-initiated. */
+    notifyPendingTagChange(): void {
+        this.pendingUIChange = true;
+    }
 
     /**
      * Associates an HTML input element with this tag list.
@@ -816,37 +825,15 @@ export class KbqTagList
     }
 
     private resetTags(): void {
-        this.dropSubscriptions();
+        this.tagsSubscriptions$.next();
         this.listenToTagsFocus();
         this.listenToTagsRemoved();
         this.listenToTagsEdit();
     }
 
-    private dropSubscriptions() {
-        if (this.tagFocusSubscription) {
-            this.tagFocusSubscription.unsubscribe();
-            this.tagFocusSubscription = null;
-        }
-
-        if (this.tagBlurSubscription) {
-            this.tagBlurSubscription.unsubscribe();
-            this.tagBlurSubscription = null;
-        }
-
-        if (this.tagRemoveSubscription) {
-            this.tagRemoveSubscription.unsubscribe();
-            this.tagRemoveSubscription = null;
-        }
-
-        if (this.tagEditSubscription) {
-            this.tagEditSubscription.unsubscribe();
-            this.tagEditSubscription = null;
-        }
-    }
-
     /** Listens to user-generated selection events on each tag. */
     private listenToTagsFocus(): void {
-        this.tagFocusSubscription = this.tagFocusChanges.subscribe(({ tag, origin }) => {
+        this.tagFocusChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(({ tag, origin }) => {
             const tagIndex = this.tags.toArray().indexOf(tag);
 
             if (this.isValidIndex(tagIndex)) {
@@ -857,7 +844,7 @@ export class KbqTagList
             this.stateChanges.next();
         });
 
-        this.tagBlurSubscription = this.tagBlurChanges.subscribe(() => {
+        this.tagBlurChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(() => {
             this.blur();
 
             this.stateChanges.next();
@@ -865,7 +852,7 @@ export class KbqTagList
     }
 
     private listenToTagsRemoved(): void {
-        this.tagRemoveSubscription = this.tagRemoveChanges.subscribe((event) => {
+        this.tagRemoveChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe((event) => {
             const tag = event.tag;
             const tagIndex = this.tags.toArray().indexOf(event.tag);
 
@@ -876,11 +863,19 @@ export class KbqTagList
                 this.lastDestroyedTagIndex = tagIndex;
             }
         });
+
+        // Set the pending flag so the subsequent `tags.changes` is treated as UI action.
+        this.tagBeforeRemoveChanges
+            .pipe(takeUntil(this.tagsSubscriptions$))
+            .subscribe(() => (this.pendingUIChange = true));
     }
 
     private listenToTagsEdit(): void {
-        this.tagEditSubscription = this.tagEditChanges
-            .pipe(filter(({ type }) => type === 'submit'))
+        this.tagEditChanges
+            .pipe(
+                filter(({ type }) => type === 'submit'),
+                takeUntil(this.tagsSubscriptions$)
+            )
             .subscribe(() => this.propagateTagsChanges());
     }
 
@@ -910,6 +905,8 @@ export class KbqTagList
         this.dropList.dropped
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(({ currentIndex, previousIndex, event, item }) => {
+                this.pendingUIChange = true;
+
                 const { tag }: KbqTagDragData = item.data;
 
                 this.dropped.emit({ currentIndex, previousIndex, event, tag });

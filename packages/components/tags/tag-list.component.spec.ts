@@ -959,14 +959,45 @@ describe(KbqTagList.name, () => {
         it('should not set the control to dirty when rendered tags changed programmatically', fakeAsync(() => {
             expect(fixture.componentInstance.control.dirty).toEqual(false);
 
-            fixture.componentInstance.emitOnTagChanges = false;
-            fixture.detectChanges();
             fixture.componentInstance.foods = [...fixture.componentInstance.foods, 'pizza-1'];
 
             fixture.detectChanges();
-            tick(100);
+            tick();
 
             expect(fixture.componentInstance.control.dirty).toEqual(false);
+        }));
+
+        it('should set the control to dirty when a tag is removed via UI (BACKSPACE)', fakeAsync(() => {
+            expect(fixture.componentInstance.control.dirty).toEqual(false);
+
+            const tagListDebugEl = fixture.debugElement.query(By.directive(KbqTagList));
+            const tagListInst: KbqTagList = tagListDebugEl.componentInstance;
+            const firstTag = tagListInst.tags.first;
+
+            firstTag.focus();
+            tick();
+
+            dispatchKeyboardEvent(firstTag.elementRef.nativeElement, 'keydown', BACKSPACE);
+            fixture.detectChanges();
+            tick(100);
+
+            expect(fixture.componentInstance.control.dirty).toEqual(true);
+        }));
+
+        it('should set the control to dirty when a tag is added via input', fakeAsync(() => {
+            expect(fixture.componentInstance.control.dirty).toEqual(false);
+
+            const nativeInput: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+            nativeInput.focus();
+            typeInElement('new-tag', nativeInput);
+            fixture.detectChanges();
+
+            nativeInput.dispatchEvent(createKeyboardEvent('keydown', ENTER, nativeInput, 'Enter'));
+            fixture.detectChanges();
+            tick(100);
+
+            expect(fixture.componentInstance.control.dirty).toEqual(true);
         }));
 
         xit('should set an asterisk after the placeholder if the control is required', () => {
