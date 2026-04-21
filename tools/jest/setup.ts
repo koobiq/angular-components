@@ -1,9 +1,20 @@
+/// <reference types="jest" />
+
 /** required to run tests without using @angular-builders/jest */
 if (!('Zone' in global)) {
     require('jest-preset-angular/setup-env/zone').setupZoneTestEnv();
 }
 
-global['__jest__'] = true;
+import failOnConsole from 'jest-fail-on-console';
+
+failOnConsole({
+    silenceMessage: (message) => {
+        // https://github.com/thymikee/jest-preset-angular/issues/2194
+        return !(message === 'Error: Could not parse CSS stylesheet');
+    }
+});
+
+Object.defineProperty(global, '__jest__', { value: true });
 
 global.open = jest.fn();
 

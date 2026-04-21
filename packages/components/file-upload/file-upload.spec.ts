@@ -1189,7 +1189,7 @@ describe('KbqLocalDropzone', () => {
 });
 
 @Component({
-    selector: '',
+    selector: 'basic-single-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
@@ -1221,7 +1221,7 @@ class BasicSingleFileUpload {
 }
 
 @Component({
-    selector: '',
+    selector: 'control-value-accessor-single-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
@@ -1250,7 +1250,7 @@ class ControlValueAccessorSingleFileUpload {
 }
 
 @Component({
-    selector: '',
+    selector: 'control-value-accessor-multiple-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
@@ -1283,7 +1283,7 @@ class BasicMultipleFileUpload {
 }
 
 @Component({
-    selector: '',
+    selector: 'control-value-accessor-multiple-file-upload',
     imports: [KbqFileUploadModule, FormsModule, ReactiveFormsModule],
     template: `
         <div style="max-width: 350px;">
@@ -1312,7 +1312,7 @@ class ControlValueAccessorMultipleFileUpload {
 }
 
 @Component({
-    selector: '',
+    selector: 'single-file-upload-with-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
     template: `
         <kbq-file-upload #fileUpload [formControl]="control" />
@@ -1328,7 +1328,7 @@ class SingleFileUploadWithAsyncValidator {
 }
 
 @Component({
-    selector: '',
+    selector: 'single-file-upload-with-invalid-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
     template: `
         <kbq-file-upload #fileUpload [formControl]="control" />
@@ -1344,7 +1344,7 @@ class SingleFileUploadWithInvalidAsyncValidator {
 }
 
 @Component({
-    selector: '',
+    selector: 'single-file-upload-with-file-reader-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
     template: `
         <kbq-file-upload #fileUpload [formControl]="control" />
@@ -1360,7 +1360,7 @@ class SingleFileUploadWithFileReaderValidator {
 }
 
 @Component({
-    selector: '',
+    selector: 'multiple-file-upload-with-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
     template: `
         <kbq-multiple-file-upload #fileUpload [formControl]="control" />
@@ -1376,7 +1376,7 @@ class MultipleFileUploadWithAsyncValidator {
 }
 
 @Component({
-    selector: '',
+    selector: 'multiple-file-upload-with-invalid-async-validator',
     imports: [KbqFileUploadModule, ReactiveFormsModule],
     template: `
         <kbq-multiple-file-upload #fileUpload [formControl]="control" />

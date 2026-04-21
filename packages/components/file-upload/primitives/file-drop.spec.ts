@@ -73,7 +73,7 @@ describe('FileDropDirective', () => {
         fixture.detectChanges();
 
         setTimeout(() => {
-            expect(component.onDrop).toHaveBeenCalledWith(expect.objectContaining({ length: fakeFiles.length }));
+            expect(component.onDrop).toHaveBeenCalledWith([{ fullPath: 'test.file', name: 'test.file', type: '' }]);
             expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
             done();
         });
@@ -117,7 +117,10 @@ describe('FileDropDirective', () => {
         fixture.detectChanges();
 
         setTimeout(() => {
-            expect(component.onDrop).toHaveBeenCalledWith(expect.objectContaining({ length: fakeFiles.length }));
+            expect(component.onDrop).toHaveBeenCalledWith([
+                { fullPath: 'test2', name: 'test2', type: '' },
+                { fullPath: 'test1', name: 'test1', type: '' }
+            ]);
             expect(component.files.length).toEqual(fakeFiles.length);
             done();
         });

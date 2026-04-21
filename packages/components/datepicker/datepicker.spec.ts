@@ -1535,7 +1535,7 @@ describe('KbqDatepicker', () => {
 
     describe('with missing DateAdapter and KBQ_DATE_FORMATS', () => {
         it('should throw when created', () => {
-            expect(() => createComponent(StandardDatepicker)).toThrowError(/KbqDatepicker: No provider found for .*/);
+            expect(() => createComponent(StandardDatepicker)).toThrow(/KbqDatepicker: No provider found for .*/);
         });
     });
 

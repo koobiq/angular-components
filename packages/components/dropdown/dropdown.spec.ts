@@ -96,7 +96,7 @@ describe('KbqDropdown', () => {
 
             expect(overlayContainerElement.textContent).toContain('Item');
             expect(overlayContainerElement.textContent).toContain('Disabled');
-        }).not.toThrowError();
+        }).not.toThrow();
     });
 
     it('should close the dropdown when a click occurs outside the dropdown', fakeAsync(() => {
@@ -366,7 +366,7 @@ describe('KbqDropdown', () => {
 
             expect(overlayContainerElement.textContent).toContain('Custom Dropdown header');
             expect(overlayContainerElement.textContent).toContain('Custom Content');
-        }).not.toThrowError();
+        }).not.toThrow();
     });
 
     it('should set the panel direction based on the trigger direction', () => {
@@ -557,7 +557,7 @@ describe('KbqDropdown', () => {
         expect(() => {
             fixture.componentInstance.trigger.open();
             fixture.detectChanges();
-        }).toThrowError(/must pass in an kbq-dropdown instance/);
+        }).toThrow(/must pass in an kbq-dropdown instance/);
     });
 
     it('should be able to swap out a dropdown after the first time it is opened', fakeAsync(() => {
@@ -1653,7 +1653,7 @@ describe('KbqDropdown default overrides', () => {
                 <i class="kbq-icon">unicorn</i>
                 Item with an icon
             </button>
-            @for (item of extraItems; track item) {
+            @for (item of extraItems; track $index) {
                 <button kbq-dropdown-item>
                     {{ item }}
                 </button>

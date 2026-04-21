@@ -181,7 +181,7 @@ describe('KbqSidepanelService', () => {
 
     it('should throw when trying to open a sidepanel with the same id as another', () => {
         sidepanelService.open(SimpleSidepanelExample, { id: 'example' });
-        expect(() => sidepanelService.open(SimpleSidepanelExample, { id: 'example' })).toThrowError();
+        expect(() => sidepanelService.open(SimpleSidepanelExample, { id: 'example' })).toThrow();
     });
 
     it('should set default config options', () => {
@@ -392,6 +392,7 @@ describe('KbqSidepanelService', () => {
 });
 
 @Component({
+    imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
         <kbq-sidepanel-header [closeable]="true">Sidepanel Component Content</kbq-sidepanel-header>
 

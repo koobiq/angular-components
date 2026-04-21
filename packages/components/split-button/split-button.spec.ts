@@ -46,9 +46,7 @@ describe('KbqSplitButton', () => {
         it('should throw when no kbq-button children are provided', () => {
             const errorFixture = TestBed.createComponent(TestAppNoButtons);
 
-            expect(() => errorFixture.detectChanges()).toThrowError(
-                'kbq-split-button must contain at least one button'
-            );
+            expect(() => errorFixture.detectChanges()).toThrow('kbq-split-button must contain at least one button');
         });
     });
 

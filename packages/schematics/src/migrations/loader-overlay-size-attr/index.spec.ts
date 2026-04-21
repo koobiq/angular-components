@@ -1,5 +1,4 @@
 import { workspaces } from '@angular-devkit/core';
-import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
@@ -21,7 +20,7 @@ const getProjectContentPaths = (project: workspaces.ProjectDefinition) => {
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
-    let projects: ProjectDefinitionCollection;
+    let projects: workspaces.ProjectDefinitionCollection;
 
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);

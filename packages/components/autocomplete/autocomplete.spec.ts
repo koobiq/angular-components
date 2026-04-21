@@ -1645,7 +1645,7 @@ describe('KbqAutocomplete', () => {
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
                 expect(options.length).toBe(1);
-            }).not.toThrowError();
+            }).not.toThrow();
         });
 
         it('should display an empty input when the value is undefined with ngModel', () => {
