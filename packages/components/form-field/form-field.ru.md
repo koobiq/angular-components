@@ -87,6 +87,8 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 <!-- example(form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
 
+Подробное описание обоих подходов и паттернов для конкретных компонентов (список тегов, загрузка файлов) — в руководстве [Валидация](/ru/components/validation).
+
 ### Очистка поля
 
 `<kbq-cleaner />` - это компонент, который добавляет кнопку очистки для **заполненного** поля формы внутри `<kbq-form-field>`
