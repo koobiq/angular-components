@@ -61,7 +61,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState {
 
     protected readonly iconItem: DocsIconItem = this.data.iconItem;
     protected readonly svgLink = `assets/SVGIcons/${this.iconItem.id}.svg`;
-    protected readonly unicode = `&#${this.iconItem.code}`;
+    protected readonly unicode = `&#${this.iconItem.code};`;
     protected readonly componentColors = KbqComponentColors;
     protected readonly themePalettes = [
         KbqComponentColors.Theme,
