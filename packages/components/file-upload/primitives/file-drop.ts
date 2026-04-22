@@ -1,5 +1,5 @@
 import { Platform } from '@angular/cdk/platform';
-import { DestroyRef, Directive, inject, model, NgZone, output, signal } from '@angular/core';
+import { DestroyRef, Directive, inject, isDevMode, model, NgZone, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
 import { filter, fromEvent } from 'rxjs';
@@ -24,7 +24,7 @@ export class KbqDrop {
 
     /** @docs-private */
     protected onDrop(event: DragEvent) {
-        if (!isFolderCanBeDragged()) {
+        if (!isFolderCanBeDragged() && isDevMode()) {
             // eslint-disable-next-line no-console
             console.warn('Drag-and-drop functionality for folders is not supported by this browser.');
         }

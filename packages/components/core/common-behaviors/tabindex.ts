@@ -1,4 +1,5 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { isDevMode } from '@angular/core';
 import { AbstractConstructor, Constructor } from './constructor';
 import { CanDisable } from './disabled';
 
@@ -33,8 +34,10 @@ export function mixinTabIndex<T extends Constructor<CanDisable>>(base: T, defaul
         constructor(...args: any[]) {
             super(...args);
 
-            // eslint-disable-next-line no-console
-            console.warn('mixinTabIndex deprecated and will be deleted in next major release');
+            if (isDevMode()) {
+                // eslint-disable-next-line no-console
+                console.warn('mixinTabIndex deprecated and will be deleted in next major release');
+            }
         }
     };
 }

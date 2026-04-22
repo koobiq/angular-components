@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, Injectable, InjectionToken, Injector } from '@angular/core';
+import { ComponentRef, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
@@ -137,7 +137,7 @@ export class KbqModalService {
         options: IModalOptionsForService<C> = {},
         confirmType: ConfirmType = 'confirm'
     ): KbqModalRef<C, R> {
-        if ('kbqFooter' in options) {
+        if ('kbqFooter' in options && isDevMode()) {
             // eslint-disable-next-line no-console
             console.warn(`The Confirm-Modal doesn't support "kbqFooter", this property will be ignored.`);
         }

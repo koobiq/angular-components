@@ -1,4 +1,4 @@
-import { Directive, ElementRef, inject, Input } from '@angular/core';
+import { Directive, ElementRef, inject, Input, isDevMode } from '@angular/core';
 import { AbstractConstructor, Constructor } from './constructor';
 
 export interface CanColor {
@@ -75,8 +75,10 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
 
             this.color = defaultColor;
 
-            // eslint-disable-next-line no-console
-            console.warn('mixinColor deprecated and will be deleted in next major release');
+            if (isDevMode()) {
+                // eslint-disable-next-line no-console
+                console.warn('mixinColor deprecated and will be deleted in next major release');
+            }
         }
     };
 }
