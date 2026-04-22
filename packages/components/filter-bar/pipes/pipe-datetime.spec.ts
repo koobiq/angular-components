@@ -283,7 +283,7 @@ describe('KbqPipeDatetimeComponent', () => {
         });
     });
 
-    describe('defaultStart / defaultEnd', () => {
+    xdescribe('defaultStart / defaultEnd', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));

@@ -339,6 +339,14 @@ export class KbqSelect
     /** Determines whether preselected values are displayed. */
     @Input() showPreselectedValues: boolean = false;
 
+    /**
+     * Specifies the maximum number of trigger values allowed.
+     * This constant limits the size of the trigger values array to ensure performance
+     * and prevent excessive memory usage.
+     * A value of `0` indicates that there is no limit.
+     */
+    @Input() triggerValuesLimit: number = 0;
+
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
     @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
 
@@ -691,7 +699,7 @@ export class KbqSelect
             selectedOptions.reverse();
         }
 
-        return selectedOptions;
+        return this.triggerValuesLimit > 0 ? selectedOptions.slice(0, this.triggerValuesLimit) : selectedOptions;
     }
 
     /** Whether no option is currently selected. */
@@ -909,7 +917,7 @@ export class KbqSelect
         // need to prevent scrolling
         $event.preventDefault();
 
-        this.selectionModel.clear();
+        this.selectionModel.clear(false);
         this.keyManager.setActiveItem(-1);
 
         this.propagateChanges();
