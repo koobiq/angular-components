@@ -32,7 +32,7 @@ export function entryPointGrouper(renderables: DocEntryRenderable[], moduleName:
     const packageDisplayName = moduleName === 'cdk' ? 'CDK' : 'Koobiq';
     const moduleImportPath = `@koobiq/${moduleName}/${packageName}`;
     const exportedNgModules = renderables.filter((renderable) => renderable.entryType === EntryType.NgModule);
-    const ngModuleExport = findBestPrimaryExport(exportedNgModules);
+    const ngModuleExport = packageName === 'core' ? null : findBestPrimaryExport(exportedNgModules);
 
     return {
         primaryExportName: ngModuleExport?.name || '',

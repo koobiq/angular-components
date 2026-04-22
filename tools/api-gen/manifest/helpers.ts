@@ -49,7 +49,7 @@ export function isPublic(entry: DocEntry) {
 
 /**
  * Computes an URL that refers to the given API document in the docs. Note that this logic
- * needs to be kept in sync with the routes from the material.angular.io CLI project.
+ * needs to be kept in sync with the routes
  */
 export function computeApiDocumentUrl(moduleName: string, packageName: string, entry: DocEntry): string {
     return `${moduleName}/${packageName}/api#${entry.name}`;
