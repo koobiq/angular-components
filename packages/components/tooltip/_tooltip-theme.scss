@@ -41,6 +41,12 @@
     .kbq-tooltip.kbq-error {
         @include kbq-tooltip-color(error-fade-off);
     }
+
+    .kbq-tooltip__inner {
+        &::after {
+            background: var(--kbq-background-bg);
+        }
+    }
 }
 
 @mixin kbq-tooltip-typography() {
