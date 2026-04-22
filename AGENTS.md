@@ -115,7 +115,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use strict type checking
 - Prefer type inference when the type is obvious
 - Avoid the `any` type; use `unknown` when type is uncertain
-- Prefer `readonly` where appropriate (e.g, signals, injections)
+- Prefer `readonly` where appropriate (e.g., signals, injections)
 - Use `protected` for template bindings
 
 ### Angular Best Practices
