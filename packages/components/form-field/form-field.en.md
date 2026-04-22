@@ -81,7 +81,7 @@ For all fields, using the `ErrorStateMatcher` token:
 
 <!-- example(form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
 
-For a full explanation of both approaches, built-in matchers, and component-specific patterns (tag list, file upload), see the [Validation](/en/components/validation) guide.
+For a full explanation of both approaches, built-in matchers, and component-specific patterns (tag list, file upload), see the [Validation](/en/other/validation) guide.
 
 ### Field cleaning
 
