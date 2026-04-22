@@ -247,6 +247,15 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     private mostRecentViewValue = '';
 
+    /**
+     * Flag that indicates whether the component is currently focused by a mouse interaction.
+     *
+     * When set to `true`, the component has focus resulting from a mouse click or
+     * other pointer event. It is automatically cleared when the component loses
+     * focus or if focus is obtained through keyboard navigation or programmatic means.
+     */
+    private isFocusedByMouse: boolean = false;
+
     constructor(
         private readonly elementRef: ElementRef<HTMLElement>,
         private readonly changeDetectorRef: ChangeDetectorRef,
@@ -308,7 +317,9 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         const element = this.getHostElement();
 
         if (typeof element.focus === 'function') {
-            element.focus();
+            element.focus({ preventScroll: this.isFocusedByMouse });
+
+            this.isFocusedByMouse = false;
         }
     }
 
@@ -387,6 +398,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     /** @docs-private */
     protected onMouseenter() {
         if (this.disabled) return;
+
+        this.isFocusedByMouse = true;
 
         this.parent?.keyManager?.setActiveItem(this);
     }

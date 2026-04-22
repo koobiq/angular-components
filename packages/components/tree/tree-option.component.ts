@@ -274,7 +274,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     focus(focusOrigin?: FocusOrigin) {
         if (focusOrigin === 'program' || this.disabled || this.actionButton?.hasFocus) return;
 
-        this.elementRef.nativeElement.focus();
+        this.elementRef.nativeElement.focus({ preventScroll: focusOrigin === 'mouse' });
 
         if (!this.hasFocus) {
             this.onFocus.next({ option: this });
