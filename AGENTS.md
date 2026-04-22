@@ -131,14 +131,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ### Form Validation
 
-When implementing form validation with Koobiq components:
-
 - Always add `kbqDisableLegacyValidationDirectiveProvider()` to component `providers`
 - Use `ErrorStateMatcher` to control **when** errors are shown — validators on `FormControl` control **what** is invalid; `ErrorStateMatcher` only controls visibility
-- Choose a built-in matcher or implement a custom one: `ShowOnFormSubmitErrorStateMatcher`, `ShowRequiredOnSubmitErrorStateMatcher`, `ShowOnControlDirtyErrorStateMatcher`
-- Use `<kbq-error>` inside `<kbq-form-field>` for error output — no `@if` needed for a single validator, `kbq-form-field` handles visibility automatically
-- For multiple validators use `@if (control.hasError('key'))` / `@else if` to show one message at a time
-- For file upload components (`kbq-file-upload`) use `<kbq-hint color="error">` instead of `<kbq-error>` — they do not use `kbq-form-field`
 
 ### State Management
 
