@@ -25,7 +25,10 @@ import { DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
-import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
+import {
+    DocsIconPreviewModalComponent,
+    DocsIconPreviewModalData
+} from './icon-preview-modal/icon-preview-modal.component';
 
 const SEARCH_DEBOUNCE_TIME = 300;
 
@@ -166,7 +169,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
         this.modalService
             .open({
                 kbqComponent: DocsIconPreviewModalComponent,
-                kbqComponentParams: { iconItem },
+                data: { iconItem } satisfies DocsIconPreviewModalData,
                 kbqClassName: 'docs-icon-preview-modal',
                 kbqMaskClosable: true,
                 kbqWidth: 400
