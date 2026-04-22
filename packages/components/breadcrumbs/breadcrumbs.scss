@@ -27,10 +27,6 @@
         flex-wrap: wrap;
     }
 
-    &:not(.kbq-breadcrumbs_wrap) {
-        overflow: hidden;
-    }
-
     &.kbq-breadcrumbs_compact {
         .kbq-breadcrumb-item {
             &.kbq-button,
