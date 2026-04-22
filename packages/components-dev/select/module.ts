@@ -20,6 +20,9 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
+        <select-preselected-values-example />
+        <hr />
+
         <select-two-line-option-example />
         <hr />
 

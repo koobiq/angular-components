@@ -94,7 +94,7 @@ import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/component
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { BehaviorSubject, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
 import {
     debounceTime,
     delay,
@@ -336,6 +336,9 @@ export class KbqSelect
     /** Template string for hidden items text. Supports {{ number }} placeholder. */
     @Input() hiddenItemsText: string = '+{{ number }}';
 
+    /** Determines whether preselected values are displayed. */
+    @Input() showPreselectedValues: boolean = false;
+
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
     @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
 
@@ -382,9 +385,23 @@ export class KbqSelect
         if (this.options) {
             return merge(
                 ...this.options.map((option) => option.onSelectionChange),
-                ...this.selectionModel.selected.map((option) => option.onSelectionChange),
                 this.options.changes.pipe(
-                    switchMap((list: QueryList<KbqOption>) => merge(...list.map((option) => option.onSelectionChange)))
+                    switchMap((list: QueryList<KbqOption>) =>
+                        list.length ? merge(...list.map((option) => option.onSelectionChange)) : EMPTY
+                    )
+                ),
+                this.selectionModel.changed.pipe(
+                    startWith(null as any),
+                    switchMap(() => {
+                        const optionsSet = new Set(this.options.toArray());
+                        const virtualSelected = this.selectionModel.selected.filter(
+                            (option) => !optionsSet.has(option as KbqOption)
+                        );
+
+                        return virtualSelected.length
+                            ? merge(...virtualSelected.map((option) => option.onSelectionChange))
+                            : EMPTY;
+                    })
                 )
             );
         }
@@ -1533,6 +1550,8 @@ export class KbqSelect
 
                 this.selectionModel.select(kbqVirtualOption);
             }
+        } else if (this.showPreselectedValues) {
+            this.selectionModel.select(new KbqVirtualOption(value));
         }
 
         return correspondingOption as KbqOption;
@@ -1573,7 +1592,7 @@ export class KbqSelect
 
         // Listen to changes in the internal state of the options and react accordingly.
         // Handles cases like the labels of the selected options changing.
-        merge(...this.options.map((option) => option.stateChanges))
+        (this.options.length ? merge(...this.options.map((option) => option.stateChanges)) : EMPTY)
             .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.options.changes))
             .subscribe(() => {
                 this._changeDetectorRef.markForCheck();

@@ -1598,6 +1598,42 @@ class SelectControlWithAsyncValidators {
     });
 }
 
+@Component({
+    selector: 'select-with-show-preselected-values-single',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [formControl]="control" [showPreselectedValues]="showPreselectedValues">
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-option value="pizza">Pizza</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithShowPreselectedValuesSingle {
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    showPreselectedValues = true;
+    control = new UntypedFormControl('unknown-value');
+}
+
+@Component({
+    selector: 'select-with-show-preselected-values-multiple',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple multiline [formControl]="control" [showPreselectedValues]="showPreselectedValues">
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-option value="pizza">Pizza</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithShowPreselectedValuesMultiple {
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    showPreselectedValues = true;
+    control = new UntypedFormControl(['unknown-value-1', 'pizza', 'unknown-value-2']);
+}
+
 describe('KbqSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -5336,6 +5372,111 @@ describe('KbqSelect', () => {
 
             expect(testInstance.select.hiddenItems).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
         }));
+    });
+
+    describe('with showPreselectedValues', () => {
+        describe('single select', () => {
+            let fixture: ComponentFixture<SelectWithShowPreselectedValuesSingle>;
+            let testInstance: SelectWithShowPreselectedValuesSingle;
+
+            beforeEach(fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithShowPreselectedValuesSingle]);
+                fixture = TestBed.createComponent(SelectWithShowPreselectedValuesSingle);
+                testInstance = fixture.componentInstance;
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+            }));
+
+            it('should add an unmatched value as KbqVirtualOption when showPreselectedValues is true', fakeAsync(() => {
+                const selected = testInstance.select.selected as KbqVirtualOption;
+
+                expect(selected).toBeInstanceOf(KbqVirtualOption);
+                expect(selected.value).toBe('unknown-value');
+            }));
+
+            it('should display the preselected value in the trigger', fakeAsync(() => {
+                const matcherText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement;
+
+                expect(matcherText.textContent).toContain('unknown-value');
+            }));
+
+            it('should not add an unmatched value to selection when showPreselectedValues is false', fakeAsync(() => {
+                testInstance.showPreselectedValues = false;
+                fixture.detectChanges();
+                testInstance.control.setValue('another-unknown');
+                flush();
+                fixture.detectChanges();
+
+                expect(testInstance.select.empty).toBe(true);
+            }));
+
+            it('should use KbqOption (not KbqVirtualOption) when value matches an existing option', fakeAsync(() => {
+                testInstance.control.setValue('pizza');
+                flush();
+                fixture.detectChanges();
+
+                const selected = testInstance.select.selected;
+
+                expect(selected).not.toBeInstanceOf(KbqVirtualOption);
+                expect((selected as KbqOption).viewValue).toBe('Pizza');
+            }));
+
+            it('should update preselected value when control value changes to another unmatched value', fakeAsync(() => {
+                testInstance.control.setValue('new-unknown');
+                flush();
+                fixture.detectChanges();
+
+                const selected = testInstance.select.selected as KbqVirtualOption;
+
+                expect(selected).toBeInstanceOf(KbqVirtualOption);
+                expect(selected.value).toBe('new-unknown');
+            }));
+        });
+
+        describe('multiple select', () => {
+            let fixture: ComponentFixture<SelectWithShowPreselectedValuesMultiple>;
+            let testInstance: SelectWithShowPreselectedValuesMultiple;
+
+            beforeEach(fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithShowPreselectedValuesMultiple]);
+                fixture = TestBed.createComponent(SelectWithShowPreselectedValuesMultiple);
+                testInstance = fixture.componentInstance;
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+            }));
+
+            it('should add unmatched values as KbqVirtualOption instances', fakeAsync(() => {
+                const selected = testInstance.select.selected as KbqVirtualOption[];
+
+                expect(selected.length).toBe(3);
+
+                const unknownOptions = selected.filter((o) => o instanceof KbqVirtualOption);
+
+                expect(unknownOptions.length).toBe(2);
+                expect(unknownOptions[0].value).toBe('unknown-value-1');
+                expect(unknownOptions[1].value).toBe('unknown-value-2');
+            }));
+
+            it('should use KbqOption for values that match existing options', fakeAsync(() => {
+                const selected = testInstance.select.selected as KbqVirtualOption[];
+                const matchedOption = selected.find((o) => o.value === 'pizza');
+
+                expect(matchedOption).not.toBeInstanceOf(KbqVirtualOption);
+                expect(matchedOption).toBeInstanceOf(KbqOption);
+            }));
+
+            it('should not add unmatched values to selection when showPreselectedValues is false', fakeAsync(() => {
+                testInstance.showPreselectedValues = false;
+                fixture.detectChanges();
+                testInstance.control.setValue(['unknown-value']);
+                flush();
+                fixture.detectChanges();
+
+                expect(testInstance.select.empty).toBe(true);
+            }));
+        });
     });
 
     describe('ErrorStateMatcher', () => {
