@@ -340,11 +340,12 @@ export class KbqSelect
     @Input() showPreselectedValues: boolean = false;
 
     /**
-     * The maximum allowed number of trigger values.
+     * Specifies the maximum number of trigger values allowed.
      * This constant limits the size of the trigger values array to ensure performance
      * and prevent excessive memory usage.
+     * A value of `0` indicates that there is no limit.
      */
-    @Input() triggerValuesLimit: number;
+    @Input() triggerValuesLimit: number = 0;
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
     @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
@@ -698,7 +699,7 @@ export class KbqSelect
             selectedOptions.reverse();
         }
 
-        return this.triggerValuesLimit ? selectedOptions.slice(0, this.triggerValuesLimit) : selectedOptions;
+        return this.triggerValuesLimit > 0 ? selectedOptions.slice(0, this.triggerValuesLimit) : selectedOptions;
     }
 
     /** Whether no option is currently selected. */
