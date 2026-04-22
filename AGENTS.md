@@ -78,7 +78,7 @@ There are three types of test files per component:
 yarn run unit:components           # Run component unit tests
 yarn run unit:cdk                  # Run CDK unit tests
 yarn run unit:schematics           # Run schematics tests
-npx jest <TEST_PATH_PATTERN>       # Run specific Jest tests (e.g., npx jest packages/components/button/button.spec.ts)
+npx jest <TEST_PATH_PATTERN>       # Run specific Jest tests (e.g., npx jest packages/components/button/button.component.spec.ts)
 
 # E2E tests (Playwright)
 yarn run e2e:setup                      # Install Playwright browsers (run once)
