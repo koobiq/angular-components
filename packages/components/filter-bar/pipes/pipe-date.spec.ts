@@ -300,15 +300,15 @@ describe('KbqPipeDateComponent', () => {
         });
 
         it('should build defaults from relative preset value', () => {
+            const today = adapter.today();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: PRESET_VALUES[0] })]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
-            expect(adapter.sameDate(component.defaultStart, adapter.today().plus(PRESET_VALUES[0].start as any))).toBe(
-                true
-            );
-            expect(adapter.sameDate(component.defaultEnd, adapter.today())).toBe(true);
+            expect(adapter.sameDate(component.defaultStart, today.plus(PRESET_VALUES[0].start as any))).toBe(true);
+            expect(adapter.sameDate(component.defaultEnd, today)).toBe(true);
         });
     });
 
