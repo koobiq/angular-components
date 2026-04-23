@@ -6,7 +6,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import {
-    KbqDateTimeValue,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -20,9 +19,9 @@ import { KbqPipeDatetimeComponent } from './pipe-datetime';
 
 const PIPE_TEMPLATE_ID = 'TestDatetime';
 
-const PRESET_VALUES: KbqDateTimeValue[] = [
-    { name: 'Last 24 hours', start: { days: -1 } as any, end: null as any },
-    { name: 'Last 7 days', start: { days: -7 } as any, end: null as any }
+const PRESET_VALUES = [
+    { name: 'Last 24 hours', start: { days: -1 }, end: null },
+    { name: 'Last 7 days', start: { days: -7 }, end: null }
 ];
 
 const createPipe = (overrides: Partial<KbqPipe>): KbqPipe => ({
@@ -283,30 +282,34 @@ describe('KbqPipeDatetimeComponent', () => {
         });
     });
 
-    xdescribe('defaultStart / defaultEnd', () => {
+    describe('defaultStart / defaultEnd', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
         it('should use start and end of today as defaults when pipe is empty', () => {
+            const today = adapter.today();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
-            expect(component.defaultStart.equals(adapter.today().startOf('day'))).toBe(true);
-            expect(component.defaultEnd.equals(adapter.today().endOf('day'))).toBe(true);
+            expect(component.defaultStart.equals(today.startOf('day'))).toBe(true);
+            expect(component.defaultEnd.equals(today.endOf('day'))).toBe(true);
         });
 
         it('should build defaults from relative preset value', () => {
+            const today = adapter.today();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: PRESET_VALUES[0] })]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
-            expect(component.defaultStart.equals(adapter.today().plus(PRESET_VALUES[0].start as any))).toBe(true);
-            expect(component.defaultEnd.equals(adapter.today())).toBe(true);
+            expect(adapter.sameDate(component.defaultStart, today.plus(PRESET_VALUES[0].start as any))).toBe(true);
+            expect(adapter.sameDate(component.defaultEnd, today)).toBe(true);
         });
     });
 
@@ -398,9 +401,9 @@ describe('KbqPipeDatetimeComponent', () => {
             asInternal(component).popover = { hide };
             filterBar.onChangePipe.subscribe(spy);
 
-            component.onSelect(PRESET_VALUES[1]);
+            component.onSelect({ name: 'test', start: '', end: '' });
 
-            expect(component.data.value).toEqual(PRESET_VALUES[1]);
+            expect(component.data.value).toEqual({ name: 'test', start: '', end: '' });
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
         });

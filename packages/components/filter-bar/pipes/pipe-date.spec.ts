@@ -6,7 +6,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import {
-    KbqDateTimeValue,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -20,9 +19,9 @@ import { KbqPipeDateComponent } from './pipe-date';
 
 const PIPE_TEMPLATE_ID = 'TestDate';
 
-const PRESET_VALUES: KbqDateTimeValue[] = [
-    { name: 'Last day', start: { days: -1 } as any, end: null as any },
-    { name: 'Last 7 days', start: { days: -7 } as any, end: null as any }
+const PRESET_VALUES = [
+    { name: 'Last day', start: { days: -1 }, end: null },
+    { name: 'Last 7 days', start: { days: -7 }, end: null }
 ];
 
 const createPipe = (overrides: Partial<KbqPipe>): KbqPipe => ({
@@ -290,13 +289,15 @@ describe('KbqPipeDateComponent', () => {
         });
 
         it('should use today as defaults when pipe is empty', () => {
+            const today = adapter.today();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
-            expect(adapter.sameDate(component.defaultStart, adapter.today())).toBe(true);
-            expect(adapter.sameDate(component.defaultEnd, adapter.today().plus({ days: 1 }))).toBe(true);
+            expect(adapter.sameDate(component.defaultStart, today)).toBe(true);
+            expect(adapter.sameDate(component.defaultEnd, today.plus({ days: 1 }))).toBe(true);
         });
 
         it('should build defaults from relative preset value', () => {
@@ -307,7 +308,7 @@ describe('KbqPipeDateComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(adapter.sameDate(component.defaultStart, today.plus(PRESET_VALUES[0].start as any))).toBe(true);
+            expect(adapter.sameDate(component.defaultStart, today.plus(PRESET_VALUES[0].start))).toBe(true);
             expect(adapter.sameDate(component.defaultEnd, today)).toBe(true);
         });
     });
@@ -400,9 +401,9 @@ describe('KbqPipeDateComponent', () => {
             asInternal(component).popover = { hide };
             filterBar.onChangePipe.subscribe(spy);
 
-            component.onSelect(PRESET_VALUES[1]);
+            component.onSelect({ name: 'test', start: '', end: '' });
 
-            expect(component.data.value).toEqual(PRESET_VALUES[1]);
+            expect(component.data.value).toEqual({ name: 'test', start: '', end: '' });
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
         });
