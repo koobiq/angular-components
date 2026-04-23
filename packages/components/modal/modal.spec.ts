@@ -2,16 +2,18 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, EventEmitter, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
+import { ModalSize } from './modal.type';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
@@ -451,6 +453,37 @@ describe('KbqModal', () => {
             flush();
         }));
 
+        it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
+            const fixtureComponent = TestBed.createComponent(ModalByServiceFromDropdownComponent);
+            const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
+
+            fixtureComponent.detectChanges();
+
+            expect(document.activeElement).not.toBe(buttonElement);
+
+            buttonElement.click();
+            fixtureComponent.detectChanges();
+            tick();
+
+            const dropdownItems = fixtureComponent.debugElement
+                .queryAll(By.directive(KbqDropdownItem))
+                .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
+
+            // Directly invoke showConfirm() to open the modal (simulating dropdown item click)
+            // without triggering the dropdown's focus restoration to the trigger.
+            fixtureComponent.componentInstance.showConfirm();
+            fixtureComponent.detectChanges();
+            tick();
+
+            const activeElement: HTMLButtonElement | null = document.activeElement as HTMLButtonElement;
+
+            expect(activeElement).not.toBe(buttonElement);
+            expect(dropdownItems.length).toBeGreaterThan(0);
+            expect(activeElement).not.toBe(dropdownItems[0]);
+            expect(activeElement).toBeTruthy();
+            expect(activeElement.textContent?.trim()).toEqual(fixtureComponent.componentInstance.kbqOkText);
+        }));
+
         it('should restore focus on previous element on close with correct focus origin', fakeAsync(() => {
             const testFocusRestoreFor = (origin: FocusOrigin) => {
                 expect(document.activeElement).toBe(buttonElement);
@@ -595,8 +628,44 @@ class ModalByServiceComponent {
     constructor(_modalControlService: KbqModalControlService) {}
 }
 
+@Component({
+    selector: 'kbq-modal-by-service-from-dropdown',
+    imports: [KbqModalModule, KbqDropdownModule, KbqButtonModule],
+    template: `
+        <kbq-modal kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__" [(kbqVisible)]="nonServiceModalVisible" />
+        <button class="template-button" kbq-button [kbqDropdownTriggerFor]="dropdown">Open modal from dropdown</button>
+        <kbq-dropdown #dropdown>
+            <ng-template kbqDropdownContent>
+                <button kbq-dropdown-item (click)="showConfirm()">open Component Modal</button>
+            </ng-template>
+        </kbq-dropdown>
+    `,
+    providers: [KbqModalControlService]
+})
+class ModalByServiceFromDropdownComponent {
+    nonServiceModalVisible = false;
+    kbqOkText = 'Save';
+
+    constructor(
+        public modalControlService: KbqModalControlService,
+        public modalService: KbqModalService
+    ) {}
+
+    showConfirm() {
+        this.modalService.success({
+            kbqSize: ModalSize.Small,
+            kbqRestoreFocus: false,
+            kbqMaskClosable: true,
+            kbqContent: 'Save all?',
+            kbqOkText: this.kbqOkText,
+            kbqCancelText: 'Cancel'
+        });
+    }
+}
+
 const TEST_DIRECTIVES = [
     ModalByServiceComponent,
+    ModalByServiceFromDropdownComponent,
     TestModalContentComponent
 ];
 
