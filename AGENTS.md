@@ -1,61 +1,14 @@
-## Architecture
+## Getting Started
 
-### Common Commands
+Use the Node.js version specified in [.nvmrc](.nvmrc).
 
-#### Build
-
-```bash
-yarn run build:components               # Build main components library
-yarn run build:cdk                      # Build CDK utilities
-yarn run build:components-experimental  # Build experimental components
-yarn run build:angular-luxon-adapter    # Build Luxon date adapter
-yarn run build:angular-moment-adapter   # Build Moment date adapter
-yarn run build:cli                      # Build release management CLI
-yarn run build:schematics               # Build Angular CLI schematics
-yarn run styles:build-all               # Build all SCSS bundles
-yarn run docs:build                     # Build docs app for production
-```
-
-#### Development
+Use yarn as the package manager. Install dependencies with:
 
 ```bash
-yarn run dev:<component>           # Start dev server for specific component (e.g., yarn run dev:button)
-yarn run dev:all                   # Start dev server with all components
-yarn run docs:start:dev            # Start docs dev server
+yarn install
 ```
 
-#### Testing
-
-```bash
-# Unit tests (Jest + Karma)
-yarn run unit:components           # Run component unit tests
-yarn run unit:cdk                  # Run CDK unit tests
-yarn run unit:schematics           # Run schematics tests
-npx jest <pattern>                 # Run specific unit (jest) tests (e.g., npx jest packages/components/button/button.component.spec.ts)
-
-# E2E tests (Playwright)
-yarn run e2e:setup                 # Install Playwright browsers (run once)
-yarn run e2e:components            # Run all E2E tests
-npx playwright test <pattern>      # Run specific E2E tests (e.g., npx playwright test packages/components/button/e2e.playwright-spec.ts)
-```
-
-#### Linting
-
-```bash
-yarn run eslint                                                         # Lint TypeScript/HTML
-yarn run stylelint                                                      # Lint SCSS
-yarn run prettier                                                       # Check formatting
-yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix  # Auto-fix all
-```
-
-#### API Management
-
-```bash
-yarn run check-api                 # Verify public API hasn't changed unexpectedly
-yarn run approve-api               # Approve API changes (updates tools/public_api_guard/**/*.api.md files)
-```
-
-### Package Structure
+## Package Structure
 
 ```
 packages/
@@ -71,16 +24,16 @@ packages/
 └── cli/                       # Release management CLI
 ```
 
-### Component Structure Pattern
+## Component Structure Pattern
 
-Each component follows this structure:
+Each component follows this structure, for example:
 
 ```
 packages/components/button/
-├── button.ts                  # Main component/directive
+├── button.ts                  # Main component
 ├── button.module.ts           # NgModule (for legacy support)
 ├── button.spec.ts             # Unit tests (Jest)
-├── button.karma-spec.ts       # Unit tests (Karma + Jasmine)
+├── button.karma-spec.ts       # Unit tests (Karma + Jasmine) - legacy, use Jest for new tests
 ├── e2e.ts                     # E2E test component setup
 ├── e2e.playwright-spec.ts     # Visual regression tests (Playwright)
 ├── button.scss                # Base styles
@@ -88,6 +41,67 @@ packages/components/button/
 ├── _button-theme.scss         # Theme mixins
 ├── public-api.ts              # Public exports
 └── index.ts                   # Entry point
+```
+
+## Common Commands
+
+### Build
+
+```bash
+yarn run build:components               # Build main components library
+yarn run build:cdk                      # Build CDK utilities
+yarn run build:components-experimental  # Build experimental components
+yarn run build:angular-luxon-adapter    # Build Luxon date adapter
+yarn run build:angular-moment-adapter   # Build Moment date adapter
+yarn run build:cli                      # Build release management CLI
+yarn run build:schematics               # Build Angular CLI schematics
+yarn run styles:build-all               # Build all SCSS bundles
+yarn run docs:build                     # Build docs app for production
+```
+
+### Development
+
+```bash
+yarn run dev:<COMPONENT_NAME>      # Start dev server for specific component (e.g., yarn run dev:button)
+```
+
+### Testing
+
+There are three types of test files per component:
+
+- `*.spec.ts` — Jest unit tests
+- `*.playwright-spec.ts` — Playwright E2E / visual regression tests
+- `*.karma-spec.ts` — Karma + Jasmine unit tests (legacy, use Jest for new tests)
+
+```bash
+# Unit tests (Jest / Karma + Jasmine)
+yarn run unit:components           # Run component unit tests
+yarn run unit:cdk                  # Run CDK unit tests
+yarn run unit:schematics           # Run schematics tests
+npx jest <TEST_PATH_PATTERN>       # Run specific Jest tests (e.g., npx jest packages/components/button/button.component.spec.ts)
+
+# E2E tests (Playwright)
+yarn run e2e:setup                      # Install Playwright browsers (run once)
+yarn run e2e:components                 # Run all E2E tests
+npx playwright test <TEST_PATH_PATTERN> # Run specific E2E tests (e.g., npx playwright test packages/components/button/e2e.playwright-spec.ts)
+```
+
+### Linting
+
+```bash
+yarn run eslint                                                         # Lint TypeScript/HTML
+yarn run stylelint                                                      # Lint SCSS
+yarn run prettier                                                       # Check formatting
+yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix  # Auto-fix all
+```
+
+### API Management
+
+After making changes to the package's public API, you must update the API snapshot files:
+
+```bash
+yarn run check-api                 # Verify public API hasn't changed unexpectedly
+yarn run approve-api               # Approve API changes (updates tools/public_api_guard/**/*.api.md files)
 ```
 
 ## Best Practices
@@ -101,11 +115,13 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use strict type checking
 - Prefer type inference when the type is obvious
 - Avoid the `any` type; use `unknown` when type is uncertain
+- Prefer `readonly` where appropriate (e.g., signals, injections)
+- Use `protected` for template bindings
 
 ### Angular Best Practices
 
 - Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
+- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v19+
 - Use signals for state management
 - Implement lazy loading for feature routes
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
