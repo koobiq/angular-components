@@ -37,18 +37,6 @@ $trigger-margin_without-arrow: 4px;
     border-radius: var(--kbq-tooltip-size-border-radius);
     /* stylelint-disable-next-line declaration-property-value-keyword-no-deprecated */
     word-break: break-word;
-    position: relative;
-
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: inherit;
-        z-index: -1;
-    }
 }
 
 .kbq-tooltip {

@@ -4,7 +4,11 @@
     & .kbq-tooltip__inner {
         color: var(--kbq-tooltip-#{$style-name}-text);
 
-        background-color: var(--kbq-tooltip-#{$style-name}-background);
+        background-image: linear-gradient(
+            var(--kbq-tooltip-#{$style-name}-background),
+            var(--kbq-tooltip-#{$style-name}-background)
+        );
+        background-color: var(--kbq-background-bg);
     }
 
     & .kbq-tooltip__arrow {
@@ -40,12 +44,6 @@
 
     .kbq-tooltip.kbq-error {
         @include kbq-tooltip-color(error-fade-off);
-    }
-
-    .kbq-tooltip__inner {
-        &::after {
-            background: var(--kbq-background-bg);
-        }
     }
 }
 
