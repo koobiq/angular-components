@@ -18,8 +18,8 @@
 <div class="kbq-markdown">
     <pre data-docs-code-language="typescript" class="kbq-markdown__pre docs-import">
         {%- highlight "typescript" -%}
-          const {$ item.name | safe $}: {$ item.returnType | safe $};
-            {%- end_highlight -%}
+          const {$ item.name | safe $}({% for param in item.params %}{% if not loop.first %}, {% endif %}{% if param.isRestParam %}...{% endif %}{$ param.name | safe $}{% if param.isOptional %}?{% endif %}: {$ param.type | safe $}{% endfor %}){%- if item.returnType %}: {$ item.returnType | safe $}{%- endif %};
+        {%- end_highlight -%}
     </pre>
 </div>
 

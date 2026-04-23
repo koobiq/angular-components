@@ -36,11 +36,11 @@
 {% endmacro %}
 
 <div class="kbq-markdown docs-api">
-<!--    <header class="kbq-markdown__h3">-->
-<!--        API reference for {$ doc.packageDisplayName $} {$ doc.displayName $}-->
-<!--    </header>-->
+    <!--  API reference for {$ doc.packageDisplayName $} {$ doc.displayName $}-->
 
+    {%- if doc.primaryExportName -%}
     <pre data-docs-code-language="typescript" class="kbq-markdown__pre docs-import">import { {$ doc.primaryExportName $} } from '{$ doc.moduleImportPath $}';</pre>
+    {%- endif -%}
 
     {%- if doc.services.length -%}
     <div id="services" class="kbq-markdown__h3 docs-header-link">

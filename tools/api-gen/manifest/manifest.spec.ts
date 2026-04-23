@@ -1,4 +1,5 @@
-import { DocEntry, EntryType } from '../rendering/entities';
+import { DocEntry, EntryType, FunctionEntry } from '../rendering/entities';
+import { getFunctionRenderable } from '../rendering/transforms/function-transforms';
 import { generateManifest } from './';
 
 describe('api manifest generation', () => {
@@ -801,6 +802,107 @@ describe('api manifest generation', () => {
                 }
             ])
         ).toMatchSnapshot();
+    });
+});
+
+describe('getFunctionRenderable', () => {
+    const baseFunction: FunctionEntry = {
+        name: 'testFn',
+        entryType: EntryType.Function,
+        description: '',
+        rawComment: '',
+        jsdocTags: [],
+        generics: [],
+        isNewType: false,
+        params: [],
+        returnType: ''
+    };
+
+    it('should use params and returnType directly when present on entry', () => {
+        const fn: FunctionEntry = {
+            ...baseFunction,
+            params: [{ name: 'event', type: 'KeyboardEvent', isOptional: false, isRestParam: false, description: '' }],
+            returnType: 'boolean'
+        };
+
+        const renderable = getFunctionRenderable(fn, 'cdk');
+
+        expect(renderable.params).toHaveLength(1);
+        expect(renderable.params[0].name).toBe('event');
+        expect(renderable.params[0].type).toBe('KeyboardEvent');
+        expect(renderable.returnType).toBe('boolean');
+    });
+
+    it('should normalize params and returnType from signatures[0] when not on entry directly', () => {
+        const fn = {
+            ...baseFunction,
+            params: undefined,
+            returnType: undefined,
+            signatures: [
+                {
+                    ...baseFunction,
+                    params: [
+                        {
+                            name: 'event',
+                            type: 'KeyboardEvent',
+                            isOptional: false,
+                            isRestParam: false,
+                            description: ''
+                        },
+                        {
+                            name: 'modifiers',
+                            type: 'ModifierKey[]',
+                            isOptional: false,
+                            isRestParam: true,
+                            description: ''
+                        }
+                    ],
+                    returnType: 'boolean'
+                }
+            ]
+        } as unknown as FunctionEntry;
+
+        const renderable = getFunctionRenderable(fn, 'cdk');
+
+        expect(renderable.params).toHaveLength(2);
+        expect(renderable.params[0].name).toBe('event');
+        expect(renderable.params[1].name).toBe('modifiers');
+        expect(renderable.params[1].isRestParam).toBe(true);
+        expect(renderable.returnType).toBe('boolean');
+    });
+
+    it('should fall back to empty params array when neither entry nor signatures provide them', () => {
+        const fn = {
+            ...baseFunction,
+            params: undefined,
+            returnType: undefined
+        } as unknown as FunctionEntry;
+
+        const renderable = getFunctionRenderable(fn, 'cdk');
+
+        expect(renderable.params).toEqual([]);
+        expect(renderable.returnType).toBe('');
+    });
+
+    it('should prefer direct params over signatures when both are present', () => {
+        const fn = {
+            ...baseFunction,
+            params: [{ name: 'direct', type: 'string', isOptional: false, isRestParam: false, description: '' }],
+            returnType: 'void',
+            signatures: [
+                {
+                    ...baseFunction,
+                    params: [
+                        { name: 'fromSig', type: 'number', isOptional: false, isRestParam: false, description: '' }],
+                    returnType: 'boolean'
+                }
+            ]
+        } as unknown as FunctionEntry;
+
+        const renderable = getFunctionRenderable(fn, 'cdk');
+
+        expect(renderable.params[0].name).toBe('direct');
+        expect(renderable.returnType).toBe('void');
     });
 });
 
