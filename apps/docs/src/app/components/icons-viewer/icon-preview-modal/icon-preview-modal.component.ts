@@ -96,7 +96,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
     }
 
     getHexColor(): string | null {
-        if (!this.iconPreview || typeof this.window.getComputedStyle !== 'function') {
+        if (!this.iconPreview) {
             return null;
         }
 

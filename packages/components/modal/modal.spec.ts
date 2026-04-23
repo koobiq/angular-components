@@ -1,7 +1,7 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, EventEmitter, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { Component, EventEmitter, inject, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, TestBed, inject as testingInject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, TAB } from '@koobiq/cdk/keycodes';
@@ -13,7 +13,9 @@ import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
-import { ModalSize } from './modal.type';
+import { MODAL_ANIMATE_DURATION, ModalSize } from './modal.type';
+
+const ANIMATION_DURATION = MODAL_ANIMATE_DURATION * 2;
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
@@ -39,11 +41,13 @@ describe('KbqModal', () => {
             }).compileComponents();
         });
 
-        beforeEach(inject([KbqModalService, OverlayContainer], (ms: KbqModalService, oc: OverlayContainer) => {
-            modalService = ms;
-            overlayContainer = oc;
-            overlayContainerElement = oc.getContainerElement();
-        }));
+        beforeEach(
+            testingInject([KbqModalService, OverlayContainer], (ms: KbqModalService, oc: OverlayContainer) => {
+                modalService = ms;
+                overlayContainer = oc;
+                overlayContainerElement = oc.getContainerElement();
+            })
+        );
 
         afterEach(() => {
             overlayContainer.ngOnDestroy();
@@ -58,7 +62,7 @@ describe('KbqModal', () => {
             // wait all openModals to be closed to clean up the ModalManager as it is globally static
             modalService.closeAll();
             fixture.detectChanges();
-            tick(1000);
+            tick(ANIMATION_DURATION * 2);
         }));
 
         it('should trigger both afterOpen/kbqAfterOpen and have the correct openModals length', fakeAsync(() => {
@@ -72,7 +76,7 @@ describe('KbqModal', () => {
             fixture.detectChanges();
             expect(spy).not.toHaveBeenCalled();
 
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(spy).toHaveBeenCalledTimes(2);
             expect(modalService.openModals.indexOf(modalRef)).toBeGreaterThan(-1);
             expect(modalService.openModals.length).toBe(1);
@@ -98,7 +102,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(spy).not.toHaveBeenCalled();
 
             const button = overlayContainerElement.querySelector('button.kbq-primary') as HTMLButtonElement;
@@ -118,12 +122,12 @@ describe('KbqModal', () => {
             kbqAfterClose.subscribe(spy);
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
             modalRef.close();
             fixture.detectChanges();
             expect(spy).not.toHaveBeenCalled();
 
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(spy).toHaveBeenCalledTimes(2);
             expect(modalService.openModals.indexOf(modalRef)).toBe(-1);
             expect(modalService.openModals.length).toBe(0);
@@ -135,10 +139,10 @@ describe('KbqModal', () => {
 
             modalRef.afterClose.subscribe(spy);
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
             modalRef.destroy();
             expect(spy).not.toHaveBeenCalled();
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(spy).toHaveBeenCalledWith(undefined);
         }));
 
@@ -148,11 +152,11 @@ describe('KbqModal', () => {
             const modalRef = modalService.delete();
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
             modalRef.destroy(result);
             modalRef.afterClose.subscribe(spy);
             expect(spy).not.toHaveBeenCalled();
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(spy).toHaveBeenCalledWith(result);
         }));
 
@@ -169,7 +173,7 @@ describe('KbqModal', () => {
             modalMethods.forEach((method) => modalService[method]({ kbqWrapClassName: uniqueId(method) })); // Service modals
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
             // Cover non-service modal for later checking
             modalMethods.concat('NON_SERVICE').forEach((method) => {
                 expect(queryOverlayElement(method).style.display).not.toBe('none');
@@ -179,7 +183,7 @@ describe('KbqModal', () => {
             modalService.closeAll();
             fixture.detectChanges();
             expect(spy).not.toHaveBeenCalled();
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(spy).toHaveBeenCalled();
             expect(modalService.openModals.length).toBe(0);
         }));
@@ -189,7 +193,7 @@ describe('KbqModal', () => {
 
             fixture.detectChanges();
             (modalService as any).modalControl.registerModal(modalRef);
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(modalService.openModals.length).toBe(1);
         }));
 
@@ -223,7 +227,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('.kbq-progress').length).toBe(1);
         }));
@@ -241,7 +245,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('.kbq-primary').length).toBe(0);
         }));
@@ -259,7 +263,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('[disabled]').length).toBe(1);
         }));
@@ -279,7 +283,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             const event = document.createEvent('KeyboardEvent') as any;
 
@@ -293,7 +297,7 @@ describe('KbqModal', () => {
             modalRef.getElement().dispatchEvent(event);
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
             expect(spyOk).toHaveBeenCalled();
         }));
 
@@ -334,7 +338,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('.kbq-modal-footer').length).toBe(1);
         }));
@@ -345,7 +349,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('.kbq-modal-footer').length).toBe(1);
         }));
@@ -356,7 +360,7 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('.kbq-modal-footer').length).toBe(1);
         }));
@@ -365,7 +369,7 @@ describe('KbqModal', () => {
             const modalRef = modalService.create();
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('.kbq-modal-footer').length).toBe(0);
         }));
@@ -407,14 +411,14 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(document.activeElement).not.toBe(buttonElement);
 
             modalRef.close();
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(document.activeElement).not.toBe(buttonElement);
 
@@ -439,14 +443,14 @@ describe('KbqModal', () => {
             });
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(document.activeElement).not.toBe(buttonElement);
 
             modalRef.close();
 
             fixture.detectChanges();
-            tick(600);
+            tick(ANIMATION_DURATION);
 
             expect(document.activeElement).toBe(buttonElement);
 
@@ -555,6 +559,41 @@ describe('KbqModal', () => {
             );
         });
     });
+
+    describe('KbqModalService providedIn root', () => {
+        it('should inject KbqModalService without importing KbqModalModule', () => {
+            expect(TestBed.inject(KbqModalService)).toBeTruthy();
+        });
+
+        it('should track openModals for modals created without KbqModalModule', fakeAsync(() => {
+            const fixture = createComponent(ModalWithoutModuleComponent);
+            const rootService = TestBed.inject(KbqModalService);
+
+            fixture.componentInstance.modal.create();
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            expect(rootService.openModals.length).toBe(1);
+        }));
+
+        it('should emit afterAllClose when modal created without KbqModalModule is closed', fakeAsync(() => {
+            const fixture = createComponent(ModalWithoutModuleComponent);
+            const spy = jest.fn();
+
+            TestBed.inject(KbqModalService).afterAllClose.subscribe(spy);
+
+            const ref = fixture.componentInstance.modal.create();
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            ref.close();
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+    });
 });
 
 @Injectable()
@@ -661,6 +700,16 @@ class ModalByServiceFromDropdownComponent {
             kbqCancelText: 'Cancel'
         });
     }
+}
+
+@Component({
+    selector: 'kbq-modal-no-module',
+    // Intentionally does NOT import KbqModalModule
+    imports: [],
+    template: ``
+})
+class ModalWithoutModuleComponent {
+    readonly modal = inject(KbqModalService);
 }
 
 const TEST_DIRECTIVES = [
