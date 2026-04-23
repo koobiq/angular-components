@@ -13453,58 +13453,46 @@ export class FormFieldOverviewExample {}
 
 #### overview
 
-### Installation
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Note that Koobiq Icons is an optional package and must be installed manually.
-
-#### Updated icon package
-
-We are excited to introduce the updated icon package!
-We want to keep the package name `@koobiq/icons` and allow a smooth migration (using both packages in a project simultaneously).
-
-The new version of icons is available on [GitHub](https://github.com/koobiq/icons) as `@koobiq/icons@9.0.0`.
-
-The old icon set will now be called `@koobiq/icons-lts`.
-
-#### NPM
+The component requires the [`@koobiq/icons`](https://github.com/koobiq/icons) dependency:
 
 ```bash
-npm install @koobiq/icons --save
+npm install @koobiq/icons
 ```
 
-Then import the styles:
+</div>
+</div>
 
-```scss
-@use '@koobiq/icons/fonts/kbq-icons.css';
+After installation, configure `angular.json`:
+
+```json
+"styles": [
+  "node_modules/@koobiq/icons/fonts/kbq-icons.css",
+  // ...
+]
 ```
 
-And import `KbqIconModule` into your module:
+Usage example:
 
 ```ts
-import { KbqIconModule } from '@koobiq/components';
+import { KbqIconModule } from '@koobiq/components/icon';
+
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="kbq-plus_16"></i>
+        <i kbq-icon="kbq-plus-s_24"></i>
+        <i kbq-icon="kbq-plus_32"></i>
+        <i kbq-icon="kbq-plus_64"></i>
+    `
+})
+export class AppComponent {}
 ```
 
-If `*.css` is not used in your project, you can also use one of these alternatives:
-
-- kbq-icons.less;
-- kbq-icons.scss;
-- kbq-icons-embed.css (includes embedded fonts)
-
-### Usage examples
-
-There are two ways to use icons:
-
-1. Add the `[color]` attribute using one of the following values: _theme_, _contrast_, _contrast-fade_, _error_, _warning_, _success_.
-
-```html
-<i kbq-icon="kbq-gear_16" [color]="'contrast'"></i>
-```
-
-2. The simpler way:
-
-```html
-<i class="kbq kbq-gear_16"></i>
-```
+Available icons: [Icons](/en/icons)
 
 #### api
 
@@ -19696,6 +19684,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     setDisabledState(isDisabled: boolean): void;
     setSelectedOptionsByClick(option: KbqOption): void;
     protected shouldShowSearch(): boolean;
+    showPreselectedValues: boolean;
     sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
     readonly stateChanges: Subject<void>;
     get tabIndex(): number;
@@ -19708,6 +19697,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     triggerRect: DOMRect;
     get triggerValue(): string;
     get triggerValues(): KbqOptionBase[];
+    triggerValuesLimit: number;
     updateErrorState(): void;
     get value(): any;
     set value(newValue: any);
@@ -19715,7 +19705,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "searchEmpty", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "searchEmpty", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
@@ -22057,6 +22047,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
+    // @deprecated
     emitOnTagChanges: boolean;
     get empty(): boolean;
     errorState: boolean;
@@ -22094,6 +22085,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    notifyPendingTagChange(): void;
     onChange: (value: any) => void;
     onContainerClick(): void;
     onTouched: () => void;
@@ -22124,6 +22116,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly stateChanges: Subject<void>;
     get tabIndex(): number | null;
     set tabIndex(value: number);
+    protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent>;
     get tagBlurChanges(): Observable<KbqTagEvent>;
     // @deprecated
     tagChanges: EventEmitter<any>;
@@ -22626,6 +22619,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
+    // @deprecated
     emitOnTagChanges: boolean;
     get empty(): boolean;
     errorState: boolean;
@@ -22663,6 +22657,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    notifyPendingTagChange(): void;
     onChange: (value: any) => void;
     onContainerClick(): void;
     onTouched: () => void;
@@ -22693,6 +22688,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly stateChanges: Subject<void>;
     get tabIndex(): number | null;
     set tabIndex(value: number);
+    protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent>;
     get tagBlurChanges(): Observable<KbqTagEvent>;
     // @deprecated
     tagChanges: EventEmitter<any>;
@@ -23277,6 +23273,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
+    // @deprecated
     emitOnTagChanges: boolean;
     get empty(): boolean;
     errorState: boolean;
@@ -23314,6 +23311,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    notifyPendingTagChange(): void;
     onChange: (value: any) => void;
     onContainerClick(): void;
     onTouched: () => void;
@@ -23344,6 +23342,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly stateChanges: Subject<void>;
     get tabIndex(): number | null;
     set tabIndex(value: number);
+    protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent>;
     get tagBlurChanges(): Observable<KbqTagEvent>;
     // @deprecated
     tagChanges: EventEmitter<any>;
@@ -23902,6 +23901,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
+    // @deprecated
     emitOnTagChanges: boolean;
     get empty(): boolean;
     errorState: boolean;
@@ -23939,6 +23939,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    notifyPendingTagChange(): void;
     onChange: (value: any) => void;
     onContainerClick(): void;
     onTouched: () => void;
@@ -23969,6 +23970,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly stateChanges: Subject<void>;
     get tabIndex(): number | null;
     set tabIndex(value: number);
+    protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent>;
     get tagBlurChanges(): Observable<KbqTagEvent>;
     // @deprecated
     tagChanges: EventEmitter<any>;
