@@ -46,13 +46,15 @@
             //https://css-tricks.com/almanac/selectors/a/autofill/
             &:-webkit-autofill,
             &:-webkit-autofill:hover,
-            &:-webkit-autofill:focus,
-            &:-internal-autofill-selected {
-                -webkit-box-shadow: inset 0 0 0 40rem var(--kbq-foreground-white);
+            &:-webkit-autofill:focus {
+                --kbq-form-field-states-autofill-background: var(--kbq-background-transparent);
+                -webkit-box-shadow: inset 0 0 0 40rem var(--kbq-form-field-states-autofill-background);
                 -webkit-text-fill-color: var(--kbq-form-field-states-autofill-text);
                 caret-color: var(--kbq-form-field-states-autofill-text);
-                position: relative;
-                z-index: -1;
+
+                /* hide browser default autofill background, no matter what background color set */
+                transition: background-color 5000s ease-in-out;
+                background-color: var(--kbq-background-transparent) !important;
             }
         }
 
@@ -75,7 +77,8 @@
                     @include _kbq-form-field-state(states-focused);
 
                     & .kbq-form-field__container {
-                        box-shadow: inset 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+                        box-shadow: inset 0 0 0.1px var(--kbq-form-field-size-focus-outline-width)
+                            var(--kbq-form-field-states-focused-focus-outline);
                     }
                 }
 
@@ -86,7 +89,8 @@
                     @include _kbq-form-field-state(states-error);
 
                     &.cdk-focused .kbq-form-field__container {
-                        box-shadow: inset 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
+                        box-shadow: inset 0 0 0.1px var(--kbq-form-field-size-focus-outline-width)
+                            var(--kbq-form-field-states-error-focused-focus-outline);
                     }
 
                     & .kbq-icon.kbq-empty {
