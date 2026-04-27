@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqTimezoneModule } from '@koobiq/components/timezone';
-import { TimezoneExamplesModule } from 'packages/docs-examples/components/timezone';
+import {
+    TimezoneOverviewExample,
+    TimezoneSearchOverviewExample,
+    TimezoneTriggerOverviewExample
+} from 'packages/docs-examples/components/timezone';
 
 @Component({
     selector: 'dev-examples',
-    imports: [TimezoneExamplesModule],
+    imports: [TimezoneOverviewExample, TimezoneSearchOverviewExample, TimezoneTriggerOverviewExample],
     template: `
         <timezone-overview-example />
         <hr />
