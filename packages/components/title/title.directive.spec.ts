@@ -1,12 +1,12 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, Type } from '@angular/core';
+import { Component, DebugElement, ElementRef, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchMouseEvent } from '@koobiq/cdk/testing';
-import { PopUpTriggers } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { KbqTitleDirective } from './title.directive';
@@ -308,6 +308,8 @@ describe('KbqTitleDirective', () => {
                 { provide: ContentObserver, useValue: fakeContentObserver }]);
             const directive = getTitleDirective(debugElement);
 
+            // throttleTime(100) leading-edge emits synchronously on the first next(),
+            // so tick(0) only flushes microtasks — no need for tick(100).
             contentObserverSubject.next([]);
             tick(0);
 
@@ -372,6 +374,22 @@ describe('KbqTitleDirective', () => {
 
             jest.spyOn(containerEl, 'offsetWidth', 'get').mockReturnValue(100);
             jest.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(200);
+
+            expect(directive.isHorizontalOverflown).toBe(true);
+        });
+    });
+
+    describe('KBQ_TITLE_TEXT_REF host component', () => {
+        it('should use componentInstance.textElement as child container', () => {
+            const fixture = createComponent(TitleTextRefHostWrapperComponent);
+            const directive = getTitleDirective(fixture.debugElement);
+            const hostEl = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const innerEl = fixture.debugElement.query(By.css('.text-ref-inner')).nativeElement;
+
+            // parentTextElement is not provided → parent falls back to host elementRef.
+            // textElement IS provided → child must be the inner span.
+            jest.spyOn(hostEl, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(innerEl, 'scrollWidth', 'get').mockReturnValue(200);
 
             expect(directive.isHorizontalOverflown).toBe(true);
         });
@@ -482,6 +500,16 @@ describe('KbqTitleDirective', () => {
             const fixture = createComponent(SimpleTitleComponent);
             const directive = getTitleDirective(fixture.debugElement);
             const spy = jest.spyOn(directive['contentObserverSubscription'], 'unsubscribe');
+
+            fixture.destroy();
+
+            expect(spy).toHaveBeenCalled();
+        });
+
+        it('should unsubscribe focusMonitorSubscription', () => {
+            const fixture = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(fixture.debugElement);
+            const spy = jest.spyOn(directive['focusMonitorSubscription'], 'unsubscribe');
 
             fixture.destroy();
 
@@ -671,3 +699,24 @@ class VerticalOverflowTooltipTitleComponent {
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
 }
+
+@Component({
+    selector: 'title-text-ref-host',
+    standalone: true,
+    template: `
+        <span #kbqTitleTextInner class="text-ref-inner">Inner ref text</span>
+    `,
+    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: TitleTextRefHostComponent }]
+})
+class TitleTextRefHostComponent implements KbqTitleTextRef {
+    @ViewChild('kbqTitleTextInner', { static: true }) textElement: ElementRef;
+}
+
+@Component({
+    imports: [KbqTitleDirective, TitleTextRefHostComponent],
+    standalone: true,
+    template: `
+        <title-text-ref-host kbq-title />
+    `
+})
+class TitleTextRefHostWrapperComponent {}
