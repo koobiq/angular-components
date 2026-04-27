@@ -772,46 +772,6 @@ class MultiSelectNarrow {
 }
 
 @Component({
-    selector: 'multi-select-with-trigger-values-limit',
-    imports: [KbqSelectModule, KbqFormFieldModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
-    template: `
-        <kbq-form-field>
-            <kbq-select multiple placeholder="Food" [formControl]="control" [triggerValuesLimit]="triggerValuesLimit">
-                @for (food of foods; track food) {
-                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
-                }
-                <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false">
-                        {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
-                            <i
-                                kbq-icon="kbq-xmark-s_16"
-                                kbqTagRemove
-                                (click)="select.onRemoveMatcherItem(option, $event)"
-                            ></i>
-                        }
-                    </kbq-tag>
-                </ng-template>
-            </kbq-select>
-        </kbq-form-field>
-    `
-})
-class MultiSelectWithTriggerValuesLimit {
-    foods: any[] = [
-        { value: 'steak-0', viewValue: 'Steak' },
-        { value: 'pizza-1', viewValue: 'Pizza' },
-        { value: 'tacos-2', viewValue: 'Tacos' },
-        { value: 'sandwich-3', viewValue: 'Sandwich' },
-        { value: 'chips-4', viewValue: 'Chips' },
-        { value: 'eggs-5', viewValue: 'Eggs' }
-    ];
-    control = new UntypedFormControl();
-    triggerValuesLimit?: number;
-
-    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
-}
-
-@Component({
     selector: 'select-with-plain-tabindex',
     imports: [
         KbqFormFieldModule,
@@ -1772,6 +1732,128 @@ class SelectWithPanelWidth {
     `
 })
 class BaseSelect {}
+
+@Component({
+    selector: 'select-with-show-preselected-values-single',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [formControl]="control" [showPreselectedValues]="showPreselectedValues">
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-option value="pizza">Pizza</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithShowPreselectedValuesSingle {
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    showPreselectedValues = true;
+    control = new UntypedFormControl('unknown-value');
+}
+
+@Component({
+    selector: 'select-with-show-preselected-values-multiple',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple multiline [formControl]="control" [showPreselectedValues]="showPreselectedValues">
+                <kbq-option value="steak">Steak</kbq-option>
+                <kbq-option value="pizza">Pizza</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithShowPreselectedValuesMultiple {
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    showPreselectedValues = true;
+    control = new UntypedFormControl(['unknown-value-1', 'pizza', 'unknown-value-2']);
+}
+
+@Component({
+    selector: 'multi-select-with-trigger-values-limit',
+    imports: [KbqSelectModule, KbqFormFieldModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple placeholder="Food" [formControl]="control" [triggerValuesLimit]="triggerValuesLimit">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                }
+                <ng-template #kbqSelectTagContent let-option let-select="select">
+                    <kbq-tag [selectable]="false">
+                        {{ option.viewValue }}
+                        @if (!option.disabled && !select.disabled) {
+                            <i
+                                kbq-icon="kbq-xmark-s_16"
+                                kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
+                            ></i>
+                        }
+                    </kbq-tag>
+                </ng-template>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithTriggerValuesLimit {
+    foods: any[] = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'sandwich-3', viewValue: 'Sandwich' },
+        { value: 'chips-4', viewValue: 'Chips' },
+        { value: 'eggs-5', viewValue: 'Eggs' }
+    ];
+    control = new UntypedFormControl();
+    triggerValuesLimit?: number;
+
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
+}
+
+@Component({
+    selector: 'multi-select-with-configurable-inputs',
+    imports: [KbqSelectModule, KbqFormFieldModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
+    template: `
+        <kbq-form-field style="width: 80px">
+            <kbq-select
+                multiple
+                placeholder="Food"
+                [formControl]="control"
+                [hasBackdrop]="hasBackdrop"
+                [backdropClass]="backdropClass"
+                [hiddenItemsText]="hiddenItemsText"
+                [multiline]="multiline"
+                (valueChange)="valueChangeListener($event)"
+            >
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                }
+                <ng-template #kbqSelectTagContent let-option let-select="select">
+                    <kbq-tag [selectable]="false">{{ option.viewValue }}</kbq-tag>
+                </ng-template>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithConfigurableInputs {
+    foods: any[] = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'tacos-2', viewValue: 'Tacos' },
+        { value: 'sandwich-3', viewValue: 'Sandwich' },
+        { value: 'chips-4', viewValue: 'Chips' },
+        { value: 'eggs-5', viewValue: 'Eggs' },
+        { value: 'pasta-6', viewValue: 'Pasta' },
+        { value: 'sushi-7', viewValue: 'Sushi' }
+    ];
+    control = new UntypedFormControl();
+    hasBackdrop = false;
+    backdropClass = 'cdk-overlay-transparent-backdrop';
+    hiddenItemsText = '+{{ number }}';
+    multiline = false;
+    valueChangeListener = jest.fn();
+
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
+}
 
 describe('KbqSelect', () => {
     let overlayContainer: OverlayContainer;
@@ -3281,7 +3363,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                expect(fixture.componentInstance.openedChangeListener).toHaveBeenCalled();
+                expect(fixture.componentInstance.openedChangeListener).toHaveBeenCalledWith(true);
             }));
 
             it('should fire openedChange event on close select', fakeAsync(() => {
@@ -3291,7 +3373,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                expect(fixture.componentInstance.openedChangeListener).toHaveBeenCalled();
+                expect(fixture.componentInstance.openedChangeListener).toHaveBeenNthCalledWith(1, true);
 
                 document.body.click();
                 tick(1);
@@ -3300,6 +3382,7 @@ describe('KbqSelect', () => {
                 flush();
 
                 expect(fixture.componentInstance.openedChangeListener).toHaveBeenCalledTimes(2);
+                expect(fixture.componentInstance.openedChangeListener).toHaveBeenNthCalledWith(2, false);
             }));
 
             it('should fire opened event on open select', fakeAsync(() => {
@@ -3483,7 +3566,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
             flush();
 
-            expect(fixture.debugElement.query(By.css('input'))).toBeDefined();
+            expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
         }));
 
         it('should focus search field after open', fakeAsync(() => {
@@ -5420,7 +5503,7 @@ describe('KbqSelect', () => {
             expect(testInstance.control.value.length).toBe(6);
         }));
 
-        it('should deselect options when pressing shift + click', fakeAsync(() => {
+        it('should deselect a range with shift + click when the active option is not selected', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -5429,21 +5512,31 @@ describe('KbqSelect', () => {
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
+            // Select options[0] and options[1].
             options[0].click();
             options[1].click();
             fixture.detectChanges();
             tick();
             flush();
 
-            expect(testInstance.control.value.length).toBe(2);
+            expect(testInstance.control.value).toEqual(['steak-0', 'pizza-1']);
 
+            // Toggle options[0] off so that the active (last-clicked) option is NOT selected.
             options[0].click();
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.control.value).toEqual(['pizza-1']);
+
+            // Shift+click: because the active option is unselected, the range 0..5 is forced to
+            // the unselected state, deselecting options[1] which was the only previously selected.
             options[5].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
             fixture.detectChanges();
             tick();
             flush();
 
-            expect(testInstance.control.value.length).toBe(0);
+            expect(testInstance.control.value).toEqual([]);
         }));
 
         it('should select all options when pressing ctrl + a', () => {
@@ -5644,103 +5737,6 @@ describe('KbqSelect', () => {
             tick();
             flush();
             expect(componentInstance.select.hiddenItems).toEqual(2);
-        }));
-    });
-
-    describe('with triggerValuesLimit', () => {
-        let fixture: ComponentFixture<MultiSelectWithTriggerValuesLimit>;
-        let testInstance: MultiSelectWithTriggerValuesLimit;
-        let trigger: HTMLElement;
-
-        beforeEach(fakeAsync(() => {
-            configureKbqSelectTestingModule([MultiSelectWithTriggerValuesLimit]);
-            fixture = TestBed.createComponent(MultiSelectWithTriggerValuesLimit);
-            testInstance = fixture.componentInstance;
-            fixture.detectChanges();
-            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
-
-        it('should return all selected options when triggerValuesLimit is not set', fakeAsync(() => {
-            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
-            fixture.detectChanges();
-            tick();
-            flush();
-
-            expect(testInstance.select.triggerValues.length).toBe(3);
-            expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
-        }));
-
-        it('should limit triggerValues to triggerValuesLimit when more items are selected', fakeAsync(() => {
-            testInstance.triggerValuesLimit = 2;
-            fixture.detectChanges();
-
-            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
-            fixture.detectChanges();
-            tick();
-            flush();
-
-            expect(testInstance.select.triggerValues.length).toBe(2);
-            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
-        }));
-
-        it('should display all selected values when selected count is less than triggerValuesLimit', fakeAsync(() => {
-            testInstance.triggerValuesLimit = 5;
-            fixture.detectChanges();
-
-            testInstance.control.setValue(['steak-0', 'pizza-1']);
-            fixture.detectChanges();
-            tick();
-            flush();
-
-            expect(testInstance.select.triggerValues.length).toBe(2);
-            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
-        }));
-
-        it('should display only first N option tags when triggerValuesLimit is set', fakeAsync(() => {
-            testInstance.triggerValuesLimit = 2;
-            fixture.detectChanges();
-
-            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
-            fixture.detectChanges();
-            tick();
-            flush();
-
-            const tagTexts = Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim());
-
-            expect(tagTexts[0]).toContain('Steak');
-            expect(tagTexts[1]).toContain('Pizza');
-        }));
-
-        it('should update displayed tags when triggerValuesLimit changes dynamically', fakeAsync(() => {
-            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
-            fixture.detectChanges();
-            tick();
-            flush();
-
-            expect(testInstance.select.triggerValues.length).toBe(4);
-
-            testInstance.triggerValuesLimit = 2;
-            fixture.detectChanges();
-
-            expect(testInstance.select.triggerValues.length).toBe(2);
-            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
-        }));
-
-        it('should show all tags when triggerValuesLimit is removed (set to undefined)', fakeAsync(() => {
-            testInstance.triggerValuesLimit = 2;
-            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
-            fixture.detectChanges();
-            tick();
-            flush();
-
-            expect(testInstance.select.triggerValues.length).toBe(2);
-
-            testInstance.triggerValuesLimit = undefined;
-            fixture.detectChanges();
-
-            expect(testInstance.select.triggerValues.length).toBe(3);
-            expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
         }));
     });
 
@@ -6036,80 +6032,6 @@ describe('KbqSelect', () => {
             flush();
             expect(testInstance.select.hiddenItems).toEqual(2);
         }));
-                fixture.detectChanges();
-                testInstance.control.setValue('another-unknown');
-                flush();
-                fixture.detectChanges();
-
-                expect(testInstance.select.empty).toBe(true);
-            }));
-
-            it('should use KbqOption (not KbqVirtualOption) when value matches an existing option', fakeAsync(() => {
-                testInstance.control.setValue('pizza');
-                flush();
-                fixture.detectChanges();
-
-                const selected = testInstance.select.selected;
-
-                expect(selected).not.toBeInstanceOf(KbqVirtualOption);
-                expect((selected as KbqOption).viewValue).toBe('Pizza');
-            }));
-
-            it('should update preselected value when control value changes to another unmatched value', fakeAsync(() => {
-                testInstance.control.setValue('new-unknown');
-                flush();
-                fixture.detectChanges();
-
-                const selected = testInstance.select.selected as KbqVirtualOption;
-
-                expect(selected).toBeInstanceOf(KbqVirtualOption);
-                expect(selected.value).toBe('new-unknown');
-            }));
-        });
-
-        describe('multiple select', () => {
-            let fixture: ComponentFixture<SelectWithShowPreselectedValuesMultiple>;
-            let testInstance: SelectWithShowPreselectedValuesMultiple;
-
-            beforeEach(fakeAsync(() => {
-                configureKbqSelectTestingModule([SelectWithShowPreselectedValuesMultiple]);
-                fixture = TestBed.createComponent(SelectWithShowPreselectedValuesMultiple);
-                testInstance = fixture.componentInstance;
-                fixture.detectChanges();
-                flush();
-                fixture.detectChanges();
-            }));
-
-            it('should add unmatched values as KbqVirtualOption instances', fakeAsync(() => {
-                const selected = testInstance.select.selected as KbqVirtualOption[];
-
-                expect(selected.length).toBe(3);
-
-                const unknownOptions = selected.filter((o) => o instanceof KbqVirtualOption);
-
-                expect(unknownOptions.length).toBe(2);
-                expect(unknownOptions[0].value).toBe('unknown-value-1');
-                expect(unknownOptions[1].value).toBe('unknown-value-2');
-            }));
-
-            it('should use KbqOption for values that match existing options', fakeAsync(() => {
-                const selected = testInstance.select.selected as KbqVirtualOption[];
-                const matchedOption = selected.find((o) => o.value === 'pizza');
-
-                expect(matchedOption).not.toBeInstanceOf(KbqVirtualOption);
-                expect(matchedOption).toBeInstanceOf(KbqOption);
-            }));
-
-            it('should not add unmatched values to selection when showPreselectedValues is false', fakeAsync(() => {
-                testInstance.showPreselectedValues = false;
-                fixture.detectChanges();
-                testInstance.control.setValue(['unknown-value']);
-                flush();
-                fixture.detectChanges();
-
-                expect(testInstance.select.empty).toBe(true);
-            }));
-        });
     });
 
     describe('ErrorStateMatcher', () => {
@@ -6268,6 +6190,208 @@ describe('KbqSelect', () => {
         });
     });
 
+    describe('with showPreselectedValues', () => {
+        describe('single select', () => {
+            let fixture: ComponentFixture<SelectWithShowPreselectedValuesSingle>;
+            let testInstance: SelectWithShowPreselectedValuesSingle;
+
+            beforeEach(fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithShowPreselectedValuesSingle]);
+                fixture = TestBed.createComponent(SelectWithShowPreselectedValuesSingle);
+                testInstance = fixture.componentInstance;
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+            }));
+
+            it('should add an unmatched value as KbqVirtualOption when showPreselectedValues is true', fakeAsync(() => {
+                const selected = testInstance.select.selected as KbqVirtualOption;
+
+                expect(selected).toBeInstanceOf(KbqVirtualOption);
+                expect(selected.value).toBe('unknown-value');
+            }));
+
+            it('should display the preselected value in the trigger', fakeAsync(() => {
+                const matcherText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement;
+
+                expect(matcherText.textContent).toContain('unknown-value');
+            }));
+
+            it('should not add an unmatched value to selection when showPreselectedValues is false', fakeAsync(() => {
+                testInstance.showPreselectedValues = false;
+                fixture.detectChanges();
+                testInstance.control.setValue('another-unknown');
+                flush();
+                fixture.detectChanges();
+
+                expect(testInstance.select.empty).toBe(true);
+            }));
+
+            it('should use KbqOption (not KbqVirtualOption) when value matches an existing option', fakeAsync(() => {
+                testInstance.control.setValue('pizza');
+                flush();
+                fixture.detectChanges();
+
+                const selected = testInstance.select.selected;
+
+                expect(selected).not.toBeInstanceOf(KbqVirtualOption);
+                expect((selected as KbqOption).viewValue).toBe('Pizza');
+            }));
+
+            it('should update preselected value when control value changes to another unmatched value', fakeAsync(() => {
+                testInstance.control.setValue('new-unknown');
+                flush();
+                fixture.detectChanges();
+
+                const selected = testInstance.select.selected as KbqVirtualOption;
+
+                expect(selected).toBeInstanceOf(KbqVirtualOption);
+                expect(selected.value).toBe('new-unknown');
+            }));
+        });
+
+        describe('multiple select', () => {
+            let fixture: ComponentFixture<SelectWithShowPreselectedValuesMultiple>;
+            let testInstance: SelectWithShowPreselectedValuesMultiple;
+
+            beforeEach(fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithShowPreselectedValuesMultiple]);
+                fixture = TestBed.createComponent(SelectWithShowPreselectedValuesMultiple);
+                testInstance = fixture.componentInstance;
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+            }));
+
+            it('should add unmatched values as KbqVirtualOption instances', fakeAsync(() => {
+                const selected = testInstance.select.selected as KbqVirtualOption[];
+
+                expect(selected.length).toBe(3);
+
+                const unknownOptions = selected.filter((o) => o instanceof KbqVirtualOption);
+
+                expect(unknownOptions.length).toBe(2);
+                expect(unknownOptions[0].value).toBe('unknown-value-1');
+                expect(unknownOptions[1].value).toBe('unknown-value-2');
+            }));
+
+            it('should use KbqOption for values that match existing options', fakeAsync(() => {
+                const selected = testInstance.select.selected as KbqVirtualOption[];
+                const matchedOption = selected.find((o) => o.value === 'pizza');
+
+                expect(matchedOption).not.toBeInstanceOf(KbqVirtualOption);
+                expect(matchedOption).toBeInstanceOf(KbqOption);
+            }));
+
+            it('should not add unmatched values to selection when showPreselectedValues is false', fakeAsync(() => {
+                testInstance.showPreselectedValues = false;
+                fixture.detectChanges();
+                testInstance.control.setValue(['unknown-value']);
+                flush();
+                fixture.detectChanges();
+
+                expect(testInstance.select.empty).toBe(true);
+            }));
+        });
+    });
+
+    describe('with triggerValuesLimit', () => {
+        let fixture: ComponentFixture<MultiSelectWithTriggerValuesLimit>;
+        let testInstance: MultiSelectWithTriggerValuesLimit;
+        let trigger: HTMLElement;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithTriggerValuesLimit]);
+            fixture = TestBed.createComponent(MultiSelectWithTriggerValuesLimit);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            flush();
+        }));
+
+        it('should return all selected options when triggerValuesLimit is not set', fakeAsync(() => {
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(3);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
+        }));
+
+        it('should limit triggerValues to triggerValuesLimit when more items are selected', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 2;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
+        }));
+
+        it('should display all selected values when selected count is less than triggerValuesLimit', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 5;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
+        }));
+
+        it('should display only first N option tags when triggerValuesLimit is set', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 2;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            const tagTexts = Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim());
+
+            expect(tagTexts[0]).toContain('Steak');
+            expect(tagTexts[1]).toContain('Pizza');
+        }));
+
+        it('should update displayed tags when triggerValuesLimit changes dynamically', fakeAsync(() => {
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(4);
+
+            testInstance.triggerValuesLimit = 2;
+            fixture.detectChanges();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
+        }));
+
+        it('should show all tags when triggerValuesLimit is removed (set to undefined)', fakeAsync(() => {
+            testInstance.triggerValuesLimit = 2;
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.select.triggerValues.length).toBe(2);
+
+            testInstance.triggerValuesLimit = undefined;
+            fixture.detectChanges();
+
+            expect(testInstance.select.triggerValues.length).toBe(3);
+            expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
+        }));
+    });
+
     describe('async validation', () => {
         it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacySelectControlWithAsyncValidators);
@@ -6412,6 +6536,263 @@ describe('KbqSelect', () => {
             expect((panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
                 '537px'
             );
+        });
+
+        it('should fall back to panelMinWidth when panelWidth is null', () => {
+            const fixture = createPanelWidthComponent(BaseSelect, [
+                kbqSelectOptionsProvider({ panelWidth: null, panelMinWidth: 412 })
+            ]);
+
+            getSelectDebugElement(fixture.debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            const pane = panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+            // panelWidth is falsy, so overlayMinWidth should be at least panelMinWidth.
+            expect(parseInt(pane.style.minWidth, 10)).toBeGreaterThanOrEqual(412);
+        });
+    });
+
+    describe('hasBackdrop', () => {
+        let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
+        let testInstance: MultiSelectWithConfigurableInputs;
+        let trigger: HTMLElement;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
+            fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            flush();
+        }));
+
+        it('should not render a backdrop by default', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeNull();
+        }));
+
+        it('should render a backdrop when hasBackdrop is true', fakeAsync(() => {
+            testInstance.hasBackdrop = true;
+            fixture.detectChanges();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).not.toBeNull();
+        }));
+
+        it('should apply a custom backdropClass to the backdrop element', fakeAsync(() => {
+            testInstance.hasBackdrop = true;
+            testInstance.backdropClass = 'custom-backdrop-class';
+            fixture.detectChanges();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+
+            expect(backdrop).not.toBeNull();
+            expect(backdrop.classList).toContain('custom-backdrop-class');
+        }));
+    });
+
+    describe('hiddenItemsText', () => {
+        let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
+        let testInstance: MultiSelectWithConfigurableInputs;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
+            fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        it('should format the hidden items text using the {{ number }} placeholder', () => {
+            expect(testInstance.select.hiddenItemsTextFormatter('+{{ number }}', 5)).toBe('+5');
+            expect(testInstance.select.hiddenItemsTextFormatter('{{ number }} more', 12)).toBe('12 more');
+        });
+
+        it('should leave the template unchanged when there is no placeholder', () => {
+            expect(testInstance.select.hiddenItemsTextFormatter('skрыто', 7)).toBe('skрыто');
+        });
+    });
+
+    describe('selectAllHandler', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+        let testInstance: MultiSelect;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelect]);
+            fixture = TestBed.createComponent(MultiSelect);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        it('should invoke a custom selectAllHandler on ctrl + a instead of the default', () => {
+            const handler = jest.fn();
+
+            testInstance.select.selectAllHandler = handler;
+
+            const selectElement = fixture.nativeElement.querySelector('kbq-select');
+
+            testInstance.select.open();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', A, selectElement);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            expect(handler).toHaveBeenCalledTimes(1);
+            expect(handler).toHaveBeenCalledWith(event, testInstance.select);
+
+            // Default handler did not run — control value stays empty.
+            expect(testInstance.control.value).toBeFalsy();
+        });
+
+        it('should throw if selectAllHandler is set to a non-function value', () => {
+            expect(() => {
+                (testInstance.select as any).selectAllHandler = 'not a function';
+            }).toThrow('`selectAllHandler` must be a function.');
+        });
+    });
+
+    describe('multiline', () => {
+        let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
+        let testInstance: MultiSelectWithConfigurableInputs;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
+            fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        it('should not add the multiline host class by default', () => {
+            const host: HTMLElement = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
+
+            expect(host.classList).not.toContain('kbq-select_multiline');
+        });
+
+        it('should add the multiline host class when multiline is true', () => {
+            testInstance.multiline = true;
+            fixture.detectChanges();
+
+            const host: HTMLElement = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
+
+            expect(host.classList).toContain('kbq-select_multiline');
+        });
+
+        it('should hide the hidden-items counter in multiline mode', fakeAsync(() => {
+            testInstance.multiline = true;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('.kbq-select__match-hidden-text'))).toBeNull();
+        }));
+
+        it('should render the hidden-items counter when multiline is false', fakeAsync(() => {
+            testInstance.multiline = false;
+            fixture.detectChanges();
+
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(fixture.debugElement.query(By.css('.kbq-select__match-hidden-text'))).not.toBeNull();
+        }));
+    });
+
+    describe('valueChange', () => {
+        let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
+        let testInstance: MultiSelectWithConfigurableInputs;
+        let trigger: HTMLElement;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
+            fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            flush();
+        }));
+
+        it('should not emit valueChange before any selection', () => {
+            expect(testInstance.valueChangeListener).not.toHaveBeenCalled();
+        });
+
+        it('should emit valueChange with the new value when selecting via UI', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            (overlayContainerElement.querySelectorAll('kbq-option')[0] as HTMLElement).click();
+            fixture.detectChanges();
+            tick();
+            flush();
+
+            expect(testInstance.valueChangeListener).toHaveBeenCalledTimes(1);
+            expect(testInstance.valueChangeListener).toHaveBeenCalledWith(['steak-0']);
+        }));
+
+        it('should not emit valueChange when value is set programmatically through the FormControl', fakeAsync(() => {
+            testInstance.control.setValue(['pizza-1']);
+            fixture.detectChanges();
+            flush();
+
+            // Programmatic writes go through writeValue() and do not call propagateChanges().
+            expect(testInstance.valueChangeListener).not.toHaveBeenCalled();
+        }));
+    });
+
+    describe('id', () => {
+        let fixture: ComponentFixture<BasicSelect>;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([BasicSelect]);
+            fixture = TestBed.createComponent(BasicSelect);
+            fixture.detectChanges();
+            flush();
+        }));
+
+        it('should auto-generate a unique id by default', () => {
+            const select = fixture.componentInstance.select;
+
+            expect(select.id).toMatch(/^kbq-select-\d+$/);
+        });
+
+        it('should accept a custom id', () => {
+            const select = fixture.componentInstance.select;
+
+            select.id = 'custom-select-id';
+
+            expect(select.id).toBe('custom-select-id');
+        });
+
+        it('should fall back to the auto-generated uid when id is set to a falsy value', () => {
+            const select = fixture.componentInstance.select;
+            const original = select.id;
+
+            select.id = 'temp-id';
+            expect(select.id).toBe('temp-id');
+
+            select.id = '';
+            expect(select.id).toBe(original);
         });
     });
 });
