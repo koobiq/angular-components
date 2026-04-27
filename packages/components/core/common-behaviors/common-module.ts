@@ -61,7 +61,7 @@ export class KbqCommonModule {
     }
 
     private checkDoctypeIsDefined(): void {
-        if (this.document && !this.document.doctype) {
+        if (this.document && !this.document.doctype && isDevMode()) {
             // eslint-disable-next-line no-console
             console.warn(
                 'Current document does not have a doctype. This may cause ' +

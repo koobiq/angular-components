@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import { AbstractControl, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ErrorStateMatcher } from '../error/error-state-matcher';
@@ -41,8 +42,10 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T): 
         constructor(...args: any[]) {
             super(...args);
 
-            // eslint-disable-next-line no-console
-            console.warn('mixinErrorState deprecated and will be deleted in next major release');
+            if (isDevMode()) {
+                // eslint-disable-next-line no-console
+                console.warn('mixinErrorState deprecated and will be deleted in next major release');
+            }
         }
 
         updateErrorState() {

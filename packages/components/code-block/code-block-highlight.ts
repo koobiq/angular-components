@@ -5,6 +5,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    isDevMode,
     numberAttribute,
     Provider,
     Renderer2,
@@ -55,11 +56,11 @@ export class KbqCodeBlockHighlight {
         let { language } = file;
 
         if (!language || !hljs.getLanguage(language)) {
-            // eslint-disable-next-line no-console
-            console.warn(
+            this.warn(
                 `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
                 file
             );
+
             language = this.fallbackFileLanguage;
         }
 
@@ -73,13 +74,11 @@ export class KbqCodeBlockHighlight {
         });
 
         if (illegal) {
-            // eslint-disable-next-line no-console
-            console.warn('[KbqCodeBlock] File content contains illegal characters.', file);
+            this.warn('[KbqCodeBlock] File content contains illegal characters.', file);
         }
 
         if (relevance === 0) {
-            // eslint-disable-next-line no-console
-            console.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
+            this.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 
         const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML);
@@ -100,6 +99,13 @@ export class KbqCodeBlockHighlight {
 
     constructor() {
         this.initLineNumbersPlugin();
+    }
+
+    private warn(...messages: unknown[]): void {
+        if (!isDevMode()) return;
+
+        // eslint-disable-next-line no-console
+        console.warn(...messages);
     }
 
     /**
