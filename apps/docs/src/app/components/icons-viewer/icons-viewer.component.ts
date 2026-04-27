@@ -18,7 +18,7 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
@@ -41,9 +41,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
         KbqHighlightModule,
         KbqEmptyStateModule,
         NgClass,
-        KbqToolTipModule,
-        // Prevents: "NullInjectorError: No provider for KbqModalService!"
-        KbqModalModule
+        KbqToolTipModule
     ],
     templateUrl: './icons-viewer.template.html',
     styleUrls: ['./icons-viewer.scss'],

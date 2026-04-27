@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { KbqModalModule } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { DocsLocale } from 'src/app/constants/locale';
@@ -15,10 +14,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
-        DocsRegisterHeaderDirective,
-
-        // Prevents: "NullInjectorError: No provider for KbqModalService!"
-        KbqModalModule
+        DocsRegisterHeaderDirective
     ],
     template: `
         <div class="docs-component-header">

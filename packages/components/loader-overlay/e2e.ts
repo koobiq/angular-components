@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
-import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
     selector: 'e2e-loader-overlay-states',
@@ -83,7 +83,7 @@ export class E2eLoaderOverlayStates {}
 
 @Component({
     selector: 'e2e-loader-overlay-card',
-    imports: [KbqButtonModule, KbqLoaderOverlayModule, KbqModalModule],
+    imports: [KbqButtonModule, KbqLoaderOverlayModule],
     template: `
         <button data-testid="e2eOpenModalWithLoader" (click)="open()">Open modal</button>
 

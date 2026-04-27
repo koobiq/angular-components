@@ -9,7 +9,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { take } from 'rxjs';
 
 type DocsFormData = {
@@ -85,7 +85,6 @@ export class DocsNameFormComponent {
         ReactiveFormsModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqModalModule,
         KbqButtonModule
     ],
     template: `
