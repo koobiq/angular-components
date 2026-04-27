@@ -17,15 +17,16 @@ import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { C, DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { A, C, DOWN_ARROW, END, ENTER, HOME, PAGE_DOWN, PAGE_UP, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { createKeyboardEvent, createMouseEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import {
-    createKeyboardEvent,
-    createMouseEvent,
-    dispatchEvent,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent
-} from '@koobiq/cdk/testing';
-import { KbqListModule, KbqListOption, KbqListSelection, KbqListSelectionChange } from './index';
+    KbqListCopyEvent,
+    KbqListModule,
+    KbqListOption,
+    KbqListSelectAllEvent,
+    KbqListSelection,
+    KbqListSelectionChange
+} from './index';
 
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);
 
@@ -234,19 +235,27 @@ describe('KbqListSelection without forms', () => {
             expect(ENTER_EVENT.defaultPrevented).toBe(true);
         });
 
-        // todo restore this TC
-        xit('should restore focus if active option is destroyed', () => {
+        it('should restore focus to the previous option if active option is destroyed', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
+            const activeOption = listOptions[3].componentInstance as KbqListOption;
+            const previousOption = listOptions[2].componentInstance as KbqListOption;
 
-            listOptions[3].componentInstance.focus();
+            activeOption.focus();
+            flush();
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(3);
+            expect(manager.activeItem).toBe(activeOption);
 
             fixture.componentInstance.showLastOption = false;
             fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(2);
-        });
+            expect(manager.activeItem).toBe(previousOption);
+            expect(previousOption.hasFocus).toBe(true);
+        }));
 
         it('should focus previous item when press UP ARROW', () => {
             const testListItem = listOptions[2].nativeElement as HTMLElement;
@@ -357,23 +366,28 @@ describe('KbqListSelection without forms', () => {
             expect(event.defaultPrevented).toBe(true);
         });
 
-        xit('should be able to jump focus down to an item by typing', fakeAsync(() => {
-            const listEl = selectionList.nativeElement;
+        it('should be able to jump focus down to an item by typing', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
+            const starredOption = listOptions[1].componentInstance as KbqListOption;
+            const draftsOption = listOptions[3].componentInstance as KbqListOption;
 
             expect(manager.activeItemIndex).toBe(-1);
 
-            dispatchEvent(listEl, createKeyboardEvent('keydown', 83, undefined, 's'));
+            manager.onKeydown(createKeyboardEvent('keydown', 83, undefined, 's'));
             fixture.detectChanges();
-            tick(201);
+            tick(250);
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(1);
+            expect(manager.activeItem).toBe(starredOption);
 
-            dispatchEvent(listEl, createKeyboardEvent('keydown', 68, undefined, 'd'));
+            manager.onKeydown(createKeyboardEvent('keydown', 68, undefined, 'd'));
             fixture.detectChanges();
-            tick(200);
+            tick(250);
+            fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(3);
+            expect(manager.activeItem).toBe(draftsOption);
         }));
 
         it('should be able to select all options', () => {
@@ -423,6 +437,71 @@ describe('KbqListSelection without forms', () => {
             fixture.detectChanges();
 
             expect(item.selected).toBe(true);
+        });
+
+        it('should select all non-disabled options when Ctrl+A is pressed', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+            const selectAllEvent = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(selectAllEvent, 'ctrlKey', { get: () => true });
+
+            list.onKeyDown(selectAllEvent);
+            fixture.detectChanges();
+
+            const enabledOptions = listOptions.filter(({ componentInstance: o }) => !o.disabled);
+            const disabledOptions = listOptions.filter(({ componentInstance: o }) => o.disabled);
+
+            expect(enabledOptions.every(({ componentInstance: o }) => o.selected)).toBe(true);
+            expect(disabledOptions.every(({ componentInstance: o }) => !o.selected)).toBe(true);
+        });
+
+        it('should emit onSelectAll event with non-disabled options when Ctrl+A is pressed', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+            const onSelectAllSpy = jest.fn();
+
+            list.onSelectAll.subscribe(onSelectAllSpy);
+
+            const selectAllEvent = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(selectAllEvent, 'ctrlKey', { get: () => true });
+
+            list.onKeyDown(selectAllEvent);
+            fixture.detectChanges();
+
+            expect(onSelectAllSpy).toHaveBeenCalledTimes(1);
+
+            const [event]: [KbqListSelectAllEvent<KbqListOption>] = onSelectAllSpy.mock.calls[0];
+
+            expect(event.source).toBe(list);
+            expect(event.options.every((o) => !o.disabled)).toBe(true);
+        });
+
+        it('should navigate to next page when PAGE_DOWN is pressed', () => {
+            const manager = selectionList.componentInstance.keyManager;
+
+            manager.withScrollSize(2);
+            manager.setActiveItem(1);
+
+            expect(manager.activeItemIndex).toBe(1);
+
+            dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', PAGE_DOWN);
+            fixture.detectChanges();
+
+            expect(manager.activeItemIndex).toBeGreaterThan(1);
+        });
+
+        it('should navigate to previous page when PAGE_UP is pressed', () => {
+            const manager = selectionList.componentInstance.keyManager;
+
+            manager.withScrollSize(2);
+            manager.setLastItemActive();
+
+            const lastIndex = manager.activeItemIndex;
+
+            dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', PAGE_UP);
+            fixture.detectChanges();
+
+            expect(manager.activeItemIndex).toBeLessThan(lastIndex);
         });
     });
 
@@ -569,26 +648,9 @@ describe('KbqListSelection without forms', () => {
             expect(selectList.selected.length).toBe(0);
         });
     });
-
-    xdescribe('with checkbox position after', () => {
-        let fixture: ComponentFixture<SelectionListWithCheckboxPositionAfter>;
-
-        beforeEach(() => {
-            TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
-
-            fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
-            fixture.detectChanges();
-        });
-
-        it('should be able to customize checkbox position', () => {
-            const listItemContent = fixture.debugElement.query(By.css('.kbq-list-item-content'));
-
-            expect(listItemContent.nativeElement.classList).toContain('kbq-list-item-content-reverse');
-        });
-    });
 });
 
-xdescribe('KbqListSelection with forms', () => {
+describe('KbqListSelection with forms', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -616,7 +678,7 @@ xdescribe('KbqListSelection with forms', () => {
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
         });
 
-        it('should update the model if an option got selected programmatically', fakeAsync(() => {
+        it('should not update the model if an option got selected programmatically', fakeAsync(() => {
             expect(fixture.componentInstance.selectedOptions.length).toBe(0);
 
             listOptions[0].toggle();
@@ -624,7 +686,9 @@ xdescribe('KbqListSelection with forms', () => {
 
             tick();
 
-            expect(fixture.componentInstance.selectedOptions.length).toBe(1);
+            expect(listOptions[0].selected).toBe(true);
+            expect(selectionListDebug.componentInstance.selectionModel.isSelected(listOptions[0])).toBe(true);
+            expect(fixture.componentInstance.selectedOptions).toEqual([]);
         }));
 
         it('should update the model if an option got clicked', fakeAsync(() => {
@@ -660,7 +724,7 @@ xdescribe('KbqListSelection with forms', () => {
             expect(ngModel.touched).toBe(true);
         }));
 
-        it('should be pristine by default', fakeAsync(() => {
+        it('should stay pristine until the user changes the value', fakeAsync(() => {
             fixture = TestBed.createComponent(SelectionListWithModel);
             fixture.componentInstance.selectedOptions = ['opt2'];
             fixture.detectChanges();
@@ -676,7 +740,7 @@ xdescribe('KbqListSelection with forms', () => {
 
             expect(ngModel.pristine).toBe(true);
 
-            listOptions[1].toggle();
+            dispatchFakeEvent(listOptions[1].getHostElement(), 'click');
             fixture.detectChanges();
 
             tick();
@@ -684,28 +748,39 @@ xdescribe('KbqListSelection with forms', () => {
             expect(ngModel.pristine).toBe(false);
         }));
 
-        it('should remove a selected option from the value on destroy', fakeAsync(() => {
-            listOptions[1].selected = true;
-            listOptions[2].selected = true;
-
+        it('should keep the model value and clear visible selection when the selected option is destroyed', fakeAsync(() => {
+            fixture.componentInstance.selectedOptions = ['opt3'];
+            fixture.detectChanges();
+            tick();
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.selectedOptions).toEqual(['opt2', 'opt3']);
+            expect(fixture.componentInstance.selectedOptions).toEqual(['opt3']);
+            expect(listOptions[2].selected).toBe(true);
 
             fixture.componentInstance.renderLastOption = false;
             fixture.detectChanges();
             tick();
+            fixture.detectChanges();
 
-            expect(fixture.componentInstance.selectedOptions).toEqual(['opt2']);
+            listOptions = fixture.debugElement
+                .queryAll(By.directive(KbqListOption))
+                .map((optionDebugEl) => optionDebugEl.componentInstance);
+
+            expect(fixture.componentInstance.selectedOptions).toEqual(['opt3']);
+            expect(listOptions).toHaveLength(2);
+            expect(listOptions.every((option) => !option.selected)).toBe(true);
         }));
 
-        it('should update the model if an option got selected via the model', fakeAsync(() => {
+        it('should update the selected options when the model value changes', fakeAsync(() => {
             expect(fixture.componentInstance.selectedOptions).toEqual([]);
 
-            selectionListDebug.componentInstance.selectionModel.select(listOptions[0]);
+            fixture.componentInstance.selectedOptions = ['opt1'];
             fixture.detectChanges();
             tick();
 
+            expect(listOptions[0].selected).toBe(true);
+            expect(listOptions[1].selected).toBe(false);
+            expect(selectionListDebug.componentInstance.selectionModel.isSelected(listOptions[0])).toBe(true);
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt1']);
         }));
     });
@@ -732,10 +807,12 @@ xdescribe('KbqListSelection with forms', () => {
             expect(listOptions.every((option) => option.disabled)).toBe(true);
         });
 
-        it('should be able to set the value through the form control', () => {
+        it('should be able to set the value through the form control', fakeAsync(() => {
             expect(listOptions.every((option) => !option.selected)).toBe(true);
 
             fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
+            fixture.detectChanges();
+            tick();
             fixture.detectChanges();
 
             expect(listOptions[1].selected).toBe(true);
@@ -744,15 +821,19 @@ xdescribe('KbqListSelection with forms', () => {
 
             fixture.componentInstance.formControl.setValue(null);
             fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
 
             expect(listOptions.every((option) => !option.selected)).toBe(true);
-        });
+        }));
 
-        it('should mark options as selected when the value is set before they are initialized', () => {
+        it('should mark options as selected when the value is set before they are initialized', fakeAsync(() => {
             fixture.destroy();
             fixture = TestBed.createComponent(SelectionListWithFormControl);
 
             fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
+            fixture.detectChanges();
+            tick();
             fixture.detectChanges();
 
             listOptions = fixture.debugElement
@@ -762,7 +843,7 @@ xdescribe('KbqListSelection with forms', () => {
             expect(listOptions[1].selected).toBe(true);
 
             expect(listOptions[2].selected).toBe(true);
-        });
+        }));
     });
 
     describe('preselected values', () => {
@@ -774,6 +855,7 @@ xdescribe('KbqListSelection with forms', () => {
 
             fixture.detectChanges();
             tick();
+            fixture.detectChanges();
 
             expect(listOptions[1].selected).toBe(true);
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt2']);
@@ -787,6 +869,7 @@ xdescribe('KbqListSelection with forms', () => {
 
             fixture.detectChanges();
             tick();
+            fixture.detectChanges();
 
             expect(listOptions[0].selected).toBe(true);
             expect(listOptions[1].selected).toBe(true);
@@ -813,61 +896,91 @@ xdescribe('KbqListSelection with forms', () => {
             const fixture = TestBed.createComponent(SelectionListWithCustomComparator);
             const testComponent = fixture.componentInstance;
 
-            testComponent.selectedOptions = [{ id: 2, label: 'Two' }];
+            // Initial value is set via formControl so writeValue fires synchronously
+            // before options' ngOnInit, allowing compareWith to be called
             fixture.detectChanges();
             tick();
+            fixture.detectChanges();
             expect(testComponent.compareWith).toHaveBeenCalled();
             expect(testComponent.optionInstances.toArray()[1].selected).toBe(true);
         }));
     });
-});
 
-// should be placed in 'KbqListSelection with forms' section when it will not be skipped
-describe('should update model after keyboard interaction with multiple mode = checkbox', () => {
-    let fixture: ComponentFixture<SelectionListMultipleCheckbox>;
-    let selectionList: DebugElement;
-    let ngModel: NgModel;
+    describe('should update model after keyboard interaction with multiple mode = checkbox', () => {
+        let fixture: ComponentFixture<SelectionListMultipleCheckbox>;
+        let selectionList: DebugElement;
+        let ngModel: NgModel;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({ imports: [KbqListModule, FormsModule] }).compileComponents();
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SelectionListMultipleCheckbox);
+            fixture.detectChanges();
 
-        fixture = TestBed.createComponent(SelectionListMultipleCheckbox);
-        fixture.detectChanges();
+            selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
+            ngModel = selectionList.injector.get<NgModel>(NgModel);
+        });
 
-        selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
-        ngModel = selectionList.injector.get<NgModel>(NgModel);
-    });
+        it('should update model when items selected with SPACE and ENTER', () => {
+            const manager = selectionList.componentInstance.keyManager;
 
-    it('should update model when items selected with SPACE and ENTER', () => {
-        const manager = selectionList.componentInstance.keyManager;
+            const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
+            const ENTER_EVENT: KeyboardEvent = createKeyboardEvent('keydown', ENTER);
+            const DOWN_EVENT: KeyboardEvent = createKeyboardEvent('keydown', DOWN_ARROW);
+            const UP_EVENT: KeyboardEvent = createKeyboardEvent('keydown', UP_ARROW);
 
-        const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
-        const ENTER_EVENT: KeyboardEvent = createKeyboardEvent('keydown', ENTER);
-        const DOWN_EVENT: KeyboardEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-        const UP_EVENT: KeyboardEvent = createKeyboardEvent('keydown', UP_ARROW);
+            expect(ngModel.value.length).toBe(0);
 
-        expect(ngModel.value.length).toBe(0);
+            manager.setFirstItemActive();
+            fixture.detectChanges();
 
-        manager.setFirstItemActive();
-        fixture.detectChanges();
+            selectionList.componentInstance.onKeyDown(SPACE_EVENT);
+            selectionList.componentInstance.onKeyDown(DOWN_EVENT);
+            selectionList.componentInstance.onKeyDown(ENTER_EVENT);
+            selectionList.componentInstance.onKeyDown(DOWN_EVENT);
+            selectionList.componentInstance.onKeyDown(SPACE_EVENT);
+            selectionList.componentInstance.onKeyDown(DOWN_EVENT);
 
-        selectionList.componentInstance.onKeyDown(SPACE_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
-        selectionList.componentInstance.onKeyDown(ENTER_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
-        selectionList.componentInstance.onKeyDown(SPACE_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
+            fixture.detectChanges();
 
-        fixture.detectChanges();
+            expect(ngModel.value.length).toBe(3);
 
-        expect(ngModel.value.length).toBe(3);
+            selectionList.componentInstance.onKeyDown(UP_EVENT);
+            selectionList.componentInstance.onKeyDown(ENTER_EVENT);
 
-        selectionList.componentInstance.onKeyDown(UP_EVENT);
-        selectionList.componentInstance.onKeyDown(ENTER_EVENT);
+            fixture.detectChanges();
 
-        fixture.detectChanges();
+            expect(ngModel.value.length).toBe(2);
+        });
 
-        expect(ngModel.value.length).toBe(2);
+        it('should update model when items selected by pressing SHIFT + arrows', fakeAsync(() => {
+            const manager = selectionList.componentInstance.keyManager;
+            const listEl = selectionList.nativeElement as HTMLElement;
+
+            const dispatchShift = (keyCode: number) => {
+                listEl.dispatchEvent(
+                    new KeyboardEvent('keydown', { keyCode, shiftKey: true, bubbles: true, cancelable: true })
+                );
+            };
+
+            expect(ngModel.value.length).toBe(0);
+
+            manager.setFirstItemActive();
+            fixture.detectChanges();
+
+            // Select first item with SPACE, then extend selection down with Shift
+            selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
+            dispatchShift(DOWN_ARROW);
+            dispatchShift(DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(ngModel.value.length).toBe(3);
+
+            // Deselect current item with SPACE, then contract selection up with Shift
+            selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
+            dispatchShift(UP_ARROW);
+            fixture.detectChanges();
+
+            expect(ngModel.value.length).toBe(1);
+        }));
     });
 });
 
@@ -926,13 +1039,56 @@ describe('KbqListSelection keyboard interaction', () => {
     });
 });
 
+describe('KbqListSelection onCopy event', () => {
+    it('should emit onCopy event instead of using clipboard when (onCopy) observer is attached', fakeAsync(() => {
+        const fixture = setup(SelectionListWithOnCopyHandler);
+        const selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
+        const listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption));
+        const manager = selectionList.componentInstance.keyManager;
+
+        manager.setActiveItem(0);
+
+        const copyEvent = createKeyboardEvent('keydown', C);
+
+        Object.defineProperty(copyEvent, 'ctrlKey', { get: () => true });
+
+        selectionList.componentInstance.onKeyDown(copyEvent);
+        fixture.detectChanges();
+        flush();
+
+        expect(fixture.componentInstance.copyEvent).not.toBeNull();
+        expect(fixture.componentInstance.copyEvent!.option).toBe(listOptions[0].componentInstance);
+        expect(fixture.componentInstance.copyEvent!.event).toBe(copyEvent);
+    }));
+
+    it('should not call clipboard.copy when (onCopy) observer is attached', fakeAsync(() => {
+        const clipboardSpy = jest.fn();
+        const fixture = setup(SelectionListWithOnCopyHandler, [
+            { provide: Clipboard, useValue: { copy: clipboardSpy } }]);
+        const selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
+        const manager = selectionList.componentInstance.keyManager;
+
+        manager.setActiveItem(0);
+
+        const copyEvent = createKeyboardEvent('keydown', C);
+
+        Object.defineProperty(copyEvent, 'ctrlKey', { get: () => true });
+
+        selectionList.componentInstance.onKeyDown(copyEvent);
+        fixture.detectChanges();
+        flush();
+
+        expect(clipboardSpy).not.toHaveBeenCalled();
+    }));
+});
+
 @Component({
     imports: [
         KbqListModule,
-        FormsModule
+        ReactiveFormsModule
     ],
     template: `
-        <kbq-list-selection [compareWith]="compareWith" [(ngModel)]="selectedOptions">
+        <kbq-list-selection multiple="checkbox" [compareWith]="compareWith" [formControl]="formControl">
             @for (option of options; track option) {
                 <kbq-list-option [value]="option">
                     {{ option.label }}
@@ -944,17 +1100,16 @@ describe('KbqListSelection keyboard interaction', () => {
 class SelectionListWithCustomComparator {
     @ViewChildren(KbqListOption) optionInstances: QueryList<KbqListOption>;
 
-    selectedOptions: { id: number; label: string }[] = [];
-
     options = [
         { id: 1, label: 'One' },
         { id: 2, label: 'Two' },
         { id: 3, label: 'Three' }
     ];
 
-    compareWith = jest.fn().mockReturnValue((o1: any, o2: any) => {
-        return o1 && o2 && o1.id === o2.id;
-    });
+    // Use same object reference so getOptionByValue (===) finds the match after initializeSelection
+    formControl = new UntypedFormControl([this.options[1]]);
+
+    compareWith = jest.fn((o1: any, o2: any) => o1 && o2 && o1.id === o2.id);
 }
 
 @Component({
@@ -1004,21 +1159,6 @@ class SelectionListWithListOptions {
 class SelectionListMultipleCheckbox {
     model = [];
 }
-
-@Component({
-    imports: [
-        KbqListModule
-    ],
-    template: `
-        <kbq-list-selection id="selection-list-2">
-            <kbq-list-option checkboxPosition="after">Inbox (disabled selection-option)</kbq-list-option>
-            <kbq-list-option id="testSelect" checkboxPosition="after">Starred</kbq-list-option>
-            <kbq-list-option checkboxPosition="after">Sent Mail</kbq-list-option>
-            <kbq-list-option checkboxPosition="after">Drafts</kbq-list-option>
-        </kbq-list-selection>
-    `
-})
-class SelectionListWithCheckboxPositionAfter {}
 
 @Component({
     imports: [
@@ -1115,7 +1255,7 @@ class SelectionListWithModel {
         ReactiveFormsModule
     ],
     template: `
-        <kbq-list-selection [formControl]="formControl">
+        <kbq-list-selection multiple="checkbox" [formControl]="formControl">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
             <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
             <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
@@ -1132,14 +1272,14 @@ class SelectionListWithFormControl {
         FormsModule
     ],
     template: `
-        <kbq-list-selection [(ngModel)]="selectedOptions">
+        <kbq-list-selection multiple="checkbox" [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
 class SelectionListWithPreselectedOption {
-    selectedOptions: string[];
+    selectedOptions = ['opt2'];
 }
 
 @Component({
@@ -1148,14 +1288,14 @@ class SelectionListWithPreselectedOption {
         FormsModule
     ],
     template: `
-        <kbq-list-selection [(ngModel)]="selectedOptions">
+        <kbq-list-selection multiple="checkbox" [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
 class SelectionListWithPreselectedOptionAndModel {
-    selectedOptions = ['opt1'];
+    selectedOptions = ['opt1', 'opt2'];
 }
 
 @Component({
@@ -1201,5 +1341,23 @@ class TestListSelectionWithDynamicList {
     remove(index: number) {
         this.opts.splice(index, 1);
         this.changeDetectorRef.detectChanges();
+    }
+}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection [autoSelect]="false" [noUnselectLast]="false" (onCopy)="handleCopy($event)">
+            <kbq-list-option [value]="'option1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'option2'">Option 2</kbq-list-option>
+            <kbq-list-option [value]="'option3'">Option 3</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListWithOnCopyHandler {
+    copyEvent: KbqListCopyEvent<KbqListOption> | null = null;
+
+    handleCopy(event: KbqListCopyEvent<KbqListOption>): void {
+        this.copyEvent = event;
     }
 }
