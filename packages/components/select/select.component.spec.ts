@@ -4550,6 +4550,17 @@ describe('KbqSelect', () => {
         }));
     });
 
+    /**
+     * Positioning tests below are kept as `xit` under Jest/JSDOM.
+     *
+     * Each test asserts a measured DOM coordinate (option vs trigger left/right, panel
+     * scrollTop, transformOrigin, etc.) that is produced by CDK overlay + the select's
+     * own offset math. JSDOM does not compute layout, so every involved element returns
+     * width=0/top=0 unless mocked. Mocking the option/panel rects to return the value
+     * we are about to assert would make the test tautological — it would verify the mock,
+     * not the implementation. These behaviours are validated through manual QA in real
+     * browsers and through the e2e suite (`e2e.playwright-spec.ts`).
+     */
     describe('positioning', () => {
         let fixture: ComponentFixture<BasicSelect>;
         let trigger: HTMLElement;
@@ -5707,36 +5718,119 @@ describe('KbqSelect', () => {
             expect(componentInstance.select.hiddenItems).not.toBeFalsy();
         }));
 
-        // todo need fix later
-        xit('should compute hidden items correctly', fakeAsync(() => {
-            const fixtureTest = TestBed.createComponent(MultiSelectNarrow);
-            const componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
-            const triggerEl = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+        it('should compute hidden items correctly', fakeAsync(() => {
+            // JSDOM does not compute layout. The hidden-items algorithm reads `offsetTop`,
+            // `offsetHeight`, `getBoundingClientRect()` and `getComputedStyle()` on tag clones
+            // and the matcher list. We patch these so that:
+            //   - exactly the first tag in its parent has offsetTop=0 (fits on the first line);
+            //   - subsequent tags wrap (offsetTop=20 > offsetHeight=16);
+            //   - tag width = 60px, matcher list width = 100px.
+            // That makes the algorithm consistently report `selected.length - 1` hidden items.
+            const restore: Array<() => void> = [];
 
-            fixtureTest.detectChanges();
+            const patchProto = (proto: any, prop: string, getter: (this: HTMLElement) => any) => {
+                const original = Object.getOwnPropertyDescriptor(proto, prop);
 
-            triggerEl.click();
-            fixtureTest.detectChanges();
+                Object.defineProperty(proto, prop, { configurable: true, get: getter });
+                restore.push(() => {
+                    if (original) {
+                        Object.defineProperty(proto, prop, original);
+                    } else {
+                        delete proto[prop];
+                    }
+                });
+            };
 
-            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            patchProto(HTMLElement.prototype, 'offsetHeight', function () {
+                return this.tagName === 'KBQ-TAG' ? 16 : 0;
+            });
+            patchProto(HTMLElement.prototype, 'offsetTop', function () {
+                if (this.tagName !== 'KBQ-TAG' || !this.parentElement) return 0;
+                const tags = this.parentElement.querySelectorAll('kbq-tag');
 
-            for (let step = 0; step < 2; step++) {
-                if (options.item(step)) {
-                    options.item(step).click();
+                return Array.from(tags).indexOf(this) === 0 ? 0 : 20;
+            });
+
+            const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+            const stubRect = (width: number): DOMRect =>
+                ({
+                    width,
+                    height: 16,
+                    top: 0,
+                    left: 0,
+                    right: width,
+                    bottom: 16,
+                    x: 0,
+                    y: 0,
+                    toJSON: () => ({})
+                }) as DOMRect;
+
+            HTMLElement.prototype.getBoundingClientRect = function () {
+                if (this.tagName === 'KBQ-TAG') return stubRect(60);
+                if (this.classList?.contains('kbq-select__match-list')) return stubRect(100);
+                if (this.classList?.contains('kbq-select__match-hidden-text')) return stubRect(20);
+
+                return originalGetBoundingClientRect.call(this);
+            };
+
+            restore.push(() => {
+                HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+            });
+
+            const originalGetComputedStyle = window.getComputedStyle;
+
+            (window as any).getComputedStyle = function (el: Element, ...rest: any[]) {
+                const style = originalGetComputedStyle.call(this, el as HTMLElement, ...rest);
+
+                if ((el as HTMLElement).tagName === 'KBQ-TAG') {
+                    return new Proxy(style, {
+                        get(target, prop) {
+                            if (prop === 'width') return '60px';
+                            if (prop === 'marginLeft' || prop === 'marginRight') return '0px';
+
+                            return Reflect.get(target, prop);
+                        }
+                    });
                 }
+
+                return style;
+            };
+
+            restore.push(() => {
+                (window as any).getComputedStyle = originalGetComputedStyle;
+            });
+
+            try {
+                const fixtureTest = TestBed.createComponent(MultiSelectNarrow);
+                const componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
+                const triggerEl = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
+                fixtureTest.detectChanges();
+
+                triggerEl.click();
+                fixtureTest.detectChanges();
+
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+                for (let step = 0; step < 2; step++) {
+                    options.item(step)?.click();
+                }
+
+                fixtureTest.detectChanges();
+                tick();
+                flush();
+
+                expect(componentInstance.select.hiddenItems).toEqual(1);
+
+                options.item(2).click();
+                fixtureTest.detectChanges();
+                tick();
+                flush();
+
+                expect(componentInstance.select.hiddenItems).toEqual(2);
+            } finally {
+                while (restore.length) restore.pop()!();
             }
-
-            fixtureTest.detectChanges();
-            tick();
-            flush();
-
-            expect(componentInstance.select.hiddenItems).toEqual(1);
-
-            options.item(2).click();
-            fixtureTest.detectChanges();
-            tick();
-            flush();
-            expect(componentInstance.select.hiddenItems).toEqual(2);
         }));
     });
 
@@ -5809,59 +5903,84 @@ describe('KbqSelect', () => {
             flush();
         }));
 
-        // JSDOM does not support overflow/ellipsis detection (scrollWidth, clientWidth are always 0),
-        // so this test cannot reliably run in JSDOM. It passes in real browsers via Karma.
-        xit('should display tooltip if ellipse applied', fakeAsync(() => {
+        /**
+         * Forces `KbqOptionTooltip.isOverflown` to true on the given option by mocking
+         * scrollWidth/clientWidth on its `.kbq-option-text` element. JSDOM does not
+         * compute layout, so the values are otherwise both 0.
+         */
+        function mockOverflow(option: HTMLElement): void {
+            const textEl = option.querySelector('.kbq-option-text') as HTMLElement;
+
+            Object.defineProperty(textEl, 'clientWidth', { configurable: true, value: 100 });
+            Object.defineProperty(textEl, 'scrollWidth', { configurable: true, value: 500 });
+        }
+
+        it('should display tooltip if ellipse applied', fakeAsync(() => {
             trigger.click();
-            fixture.autoDetectChanges();
+            fixture.detectChanges();
+            flush();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
+            mockOverflow(options[1]);
+
             dispatchMouseEvent(options[1], 'mouseenter');
-            fixture.autoDetectChanges();
+            fixture.detectChanges();
 
-            window.dispatchEvent(new Event('resize'));
-            fixture.autoDetectChanges();
-            flush();
-
-            discardPeriodicTasks();
+            // KbqTooltipTrigger uses an enterDelay of 400ms before showing.
+            tick(500);
+            fixture.detectChanges();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
 
             expect(tooltips.length).toEqual(1);
-            expect(tooltips[0].textContent).toEqual(options[1].textContent!.trim());
+            expect(tooltips[0].textContent!.trim()).toEqual(options[1].textContent!.trim());
+
+            dispatchMouseEvent(options[1], 'mouseleave');
+            tick(500);
+            fixture.detectChanges();
+            discardPeriodicTasks();
             flush();
         }));
 
+        // Reactive content updates rely on MutationObserver via @angular/cdk ContentObserver.
+        // Under fakeAsync + JSDOM, MutationObserver callbacks are not reliably flushed by
+        // tick/flush, so the tooltip's `content` setter is not invoked after the option's
+        // text changes. Mocking MutationObserverFactory would make the assertion tautological.
+        // Kept as xit to surface the gap; covered by manual QA in real browsers.
         xit('should change tooltip if option content changed', fakeAsync(() => {
             trigger.click();
-            tick();
             fixture.detectChanges();
-
-            window.dispatchEvent(new Event('resize'));
-            tick();
-            fixture.detectChanges();
+            flush();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
+            mockOverflow(options[2]);
+
             dispatchMouseEvent(options[2], 'mouseenter');
-            tick();
+            fixture.detectChanges();
+            tick(500);
             fixture.detectChanges();
 
             let tooltips = document.querySelectorAll('.kbq-tooltip__content');
 
             expect(tooltips.length).toEqual(1);
-            expect(tooltips[0].textContent).toEqual(options[2].textContent);
+            expect(tooltips[0].textContent!.trim()).toEqual(options[2].textContent!.trim());
 
             testInstance.changeLabel();
             fixture.detectChanges();
-
+            flush();
             tick(500);
+            fixture.detectChanges();
 
             tooltips = document.querySelectorAll('.kbq-tooltip__content');
             expect(tooltips.length).toEqual(1);
-            expect(tooltips[0].textContent).toEqual(options[2].textContent);
+            expect(tooltips[0].textContent!.trim()).toEqual(options[2].textContent!.trim());
 
+            dispatchMouseEvent(options[2], 'mouseleave');
+            tick(500);
+            fixture.detectChanges();
+            discardPeriodicTasks();
             flush();
         }));
     });
@@ -6002,35 +6121,111 @@ describe('KbqSelect', () => {
             expect(testInstance.select.hiddenItems).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
         }));
 
-        // JSDOM does not compute layout (offsetTop/offsetHeight = 0), so hidden items
-        // calculation always equals the total selection count rather than actual overflow count.
-        xit('should calculate hidden items with virtual options', fakeAsync(() => {
-            const triggerEl: HTMLElement = getSelectTriggerDebugElement(fixture).nativeElement;
+        it('should calculate hidden items with virtual options', fakeAsync(() => {
+            // Same JSDOM-layout patches as the non-virtual `should compute hidden items correctly`
+            // test — see that test for the rationale.
+            const restore: Array<() => void> = [];
 
-            testInstance.style = { width: '100px' };
+            const patchProto = (proto: any, prop: string, getter: (this: HTMLElement) => any) => {
+                const original = Object.getOwnPropertyDescriptor(proto, prop);
 
-            triggerEl.click();
-            fixture.detectChanges();
+                Object.defineProperty(proto, prop, { configurable: true, get: getter });
+                restore.push(() => {
+                    if (original) {
+                        Object.defineProperty(proto, prop, original);
+                    } else {
+                        delete proto[prop];
+                    }
+                });
+            };
 
-            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            patchProto(HTMLElement.prototype, 'offsetHeight', function () {
+                return this.tagName === 'KBQ-TAG' ? 16 : 0;
+            });
+            patchProto(HTMLElement.prototype, 'offsetTop', function () {
+                if (this.tagName !== 'KBQ-TAG' || !this.parentElement) return 0;
+                const tags = this.parentElement.querySelectorAll('kbq-tag');
 
-            for (let step = 0; step < 2; step++) {
-                if (options.item(step)) {
-                    options.item(step).click();
+                return Array.from(tags).indexOf(this) === 0 ? 0 : 20;
+            });
+
+            const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+            const stubRect = (width: number): DOMRect =>
+                ({
+                    width,
+                    height: 16,
+                    top: 0,
+                    left: 0,
+                    right: width,
+                    bottom: 16,
+                    x: 0,
+                    y: 0,
+                    toJSON: () => ({})
+                }) as DOMRect;
+
+            HTMLElement.prototype.getBoundingClientRect = function () {
+                if (this.tagName === 'KBQ-TAG') return stubRect(60);
+                if (this.classList?.contains('kbq-select__match-list')) return stubRect(100);
+                if (this.classList?.contains('kbq-select__match-hidden-text')) return stubRect(20);
+
+                return originalGetBoundingClientRect.call(this);
+            };
+
+            restore.push(() => {
+                HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+            });
+
+            const originalGetComputedStyle = window.getComputedStyle;
+
+            (window as any).getComputedStyle = function (el: Element, ...rest: any[]) {
+                const style = originalGetComputedStyle.call(this, el as HTMLElement, ...rest);
+
+                if ((el as HTMLElement).tagName === 'KBQ-TAG') {
+                    return new Proxy(style, {
+                        get(target, prop) {
+                            if (prop === 'width') return '60px';
+                            if (prop === 'marginLeft' || prop === 'marginRight') return '0px';
+
+                            return Reflect.get(target, prop);
+                        }
+                    });
+                }
+
+                return style;
+            };
+
+            restore.push(() => {
+                (window as any).getComputedStyle = originalGetComputedStyle;
+            });
+
+            try {
+                const triggerEl: HTMLElement = getSelectTriggerDebugElement(fixture).nativeElement;
+
+                testInstance.style = { width: '100px' };
+
+                triggerEl.click();
+                fixture.detectChanges();
+
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+                for (let step = 0; step < 2; step++) {
+                    options.item(step)?.click();
                     tick();
                 }
+
+                fixture.autoDetectChanges();
+                flush();
+
+                expect(testInstance.select.hiddenItems).toEqual(1);
+
+                options.item(2).click();
+                fixture.autoDetectChanges();
+                tick();
+                flush();
+                expect(testInstance.select.hiddenItems).toEqual(2);
+            } finally {
+                while (restore.length) restore.pop()!();
             }
-
-            fixture.autoDetectChanges();
-            flush();
-
-            expect(testInstance.select.hiddenItems).toEqual(1);
-
-            options.item(2).click();
-            fixture.autoDetectChanges();
-            tick();
-            flush();
-            expect(testInstance.select.hiddenItems).toEqual(2);
         }));
     });
 
