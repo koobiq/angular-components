@@ -905,86 +905,83 @@ describe('KbqListSelection with forms', () => {
             expect(testComponent.optionInstances.toArray()[1].selected).toBe(true);
         }));
     });
-});
 
-// should be placed in 'KbqListSelection with forms' section when it will not be skipped
-describe('should update model after keyboard interaction with multiple mode = checkbox', () => {
-    let fixture: ComponentFixture<SelectionListMultipleCheckbox>;
-    let selectionList: DebugElement;
-    let ngModel: NgModel;
+    describe('should update model after keyboard interaction with multiple mode = checkbox', () => {
+        let fixture: ComponentFixture<SelectionListMultipleCheckbox>;
+        let selectionList: DebugElement;
+        let ngModel: NgModel;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({ imports: [KbqListModule, FormsModule] }).compileComponents();
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SelectionListMultipleCheckbox);
+            fixture.detectChanges();
 
-        fixture = TestBed.createComponent(SelectionListMultipleCheckbox);
-        fixture.detectChanges();
+            selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
+            ngModel = selectionList.injector.get<NgModel>(NgModel);
+        });
 
-        selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
-        ngModel = selectionList.injector.get<NgModel>(NgModel);
+        it('should update model when items selected with SPACE and ENTER', () => {
+            const manager = selectionList.componentInstance.keyManager;
+
+            const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
+            const ENTER_EVENT: KeyboardEvent = createKeyboardEvent('keydown', ENTER);
+            const DOWN_EVENT: KeyboardEvent = createKeyboardEvent('keydown', DOWN_ARROW);
+            const UP_EVENT: KeyboardEvent = createKeyboardEvent('keydown', UP_ARROW);
+
+            expect(ngModel.value.length).toBe(0);
+
+            manager.setFirstItemActive();
+            fixture.detectChanges();
+
+            selectionList.componentInstance.onKeyDown(SPACE_EVENT);
+            selectionList.componentInstance.onKeyDown(DOWN_EVENT);
+            selectionList.componentInstance.onKeyDown(ENTER_EVENT);
+            selectionList.componentInstance.onKeyDown(DOWN_EVENT);
+            selectionList.componentInstance.onKeyDown(SPACE_EVENT);
+            selectionList.componentInstance.onKeyDown(DOWN_EVENT);
+
+            fixture.detectChanges();
+
+            expect(ngModel.value.length).toBe(3);
+
+            selectionList.componentInstance.onKeyDown(UP_EVENT);
+            selectionList.componentInstance.onKeyDown(ENTER_EVENT);
+
+            fixture.detectChanges();
+
+            expect(ngModel.value.length).toBe(2);
+        });
+
+        it('should update model when items selected by pressing SHIFT + arrows', fakeAsync(() => {
+            const manager = selectionList.componentInstance.keyManager;
+            const listEl = selectionList.nativeElement as HTMLElement;
+
+            const dispatchShift = (keyCode: number) => {
+                listEl.dispatchEvent(
+                    new KeyboardEvent('keydown', { keyCode, shiftKey: true, bubbles: true, cancelable: true })
+                );
+            };
+
+            expect(ngModel.value.length).toBe(0);
+
+            manager.setFirstItemActive();
+            fixture.detectChanges();
+
+            // Select first item with SPACE, then extend selection down with Shift
+            selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
+            dispatchShift(DOWN_ARROW);
+            dispatchShift(DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(ngModel.value.length).toBe(3);
+
+            // Deselect current item with SPACE, then contract selection up with Shift
+            selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
+            dispatchShift(UP_ARROW);
+            fixture.detectChanges();
+
+            expect(ngModel.value.length).toBe(1);
+        }));
     });
-
-    it('should update model when items selected with SPACE and ENTER', () => {
-        const manager = selectionList.componentInstance.keyManager;
-
-        const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
-        const ENTER_EVENT: KeyboardEvent = createKeyboardEvent('keydown', ENTER);
-        const DOWN_EVENT: KeyboardEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-        const UP_EVENT: KeyboardEvent = createKeyboardEvent('keydown', UP_ARROW);
-
-        expect(ngModel.value.length).toBe(0);
-
-        manager.setFirstItemActive();
-        fixture.detectChanges();
-
-        selectionList.componentInstance.onKeyDown(SPACE_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
-        selectionList.componentInstance.onKeyDown(ENTER_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
-        selectionList.componentInstance.onKeyDown(SPACE_EVENT);
-        selectionList.componentInstance.onKeyDown(DOWN_EVENT);
-
-        fixture.detectChanges();
-
-        expect(ngModel.value.length).toBe(3);
-
-        selectionList.componentInstance.onKeyDown(UP_EVENT);
-        selectionList.componentInstance.onKeyDown(ENTER_EVENT);
-
-        fixture.detectChanges();
-
-        expect(ngModel.value.length).toBe(2);
-    });
-
-    it('should update model when items selected by pressing SHIFT + arrows', fakeAsync(() => {
-        const manager = selectionList.componentInstance.keyManager;
-        const listEl = selectionList.nativeElement as HTMLElement;
-
-        const dispatchShift = (keyCode: number) => {
-            listEl.dispatchEvent(
-                new KeyboardEvent('keydown', { keyCode, shiftKey: true, bubbles: true, cancelable: true })
-            );
-        };
-
-        expect(ngModel.value.length).toBe(0);
-
-        manager.setFirstItemActive();
-        fixture.detectChanges();
-
-        // Select first item with SPACE, then extend selection down with Shift
-        selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
-        dispatchShift(DOWN_ARROW);
-        dispatchShift(DOWN_ARROW);
-        fixture.detectChanges();
-
-        expect(ngModel.value.length).toBe(3);
-
-        // Deselect current item with SPACE, then contract selection up with Shift
-        selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
-        dispatchShift(UP_ARROW);
-        fixture.detectChanges();
-
-        expect(ngModel.value.length).toBe(1);
-    }));
 });
 
 describe('KbqListSelection keyboard interaction', () => {
