@@ -17,6 +17,8 @@ import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/
 })
 ```
 
+Explained it better [in the examples](/en/other/validation/examples).
+
 ### Summary
 
 - The submit button is never disabled
