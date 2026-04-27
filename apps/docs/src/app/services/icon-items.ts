@@ -7,7 +7,7 @@ export interface DocsIconItem {
     code: number;
     description: string;
     size: number;
-    tags: string | string[];
+    tags: string[];
 }
 
 @Injectable({ providedIn: 'root' })
