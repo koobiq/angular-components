@@ -126,7 +126,7 @@ test.describe('KbqSelectModule', () => {
     /*  under Jest/JSDOM.                                                     */
     /* ---------------------------------------------------------------------- */
 
-    test.describe('multi-select focus restoration', () => {
+    test.describe('multi-select option click', () => {
         test('should keep panel open and not throw on option click in multi-select mode', async ({ page }) => {
             await page.goto('/E2eMultiSelectPositioning');
 
@@ -176,24 +176,23 @@ test.describe('KbqSelectModule', () => {
         test('should align a selected option too high to be centered with the trigger text', async ({ page }) => {
             await open(page);
 
-            // Programmatically pre-select "Pizza" so the panel cannot scroll up further.
-            await page.evaluate(() => {
-                (document.querySelector('kbq-form-field') as any)?.dispatchEvent(new Event('focus'));
-            });
-            await page.getByTestId('e2eSelect').click();
-
-            // Use keyboard to navigate to second option deterministically.
-            await page.keyboard.press('Escape');
-            await page.keyboard.press('ArrowDown');
-            await page.keyboard.press('ArrowDown');
+            // Pre-select Pizza (index 1) — too close to the top of the list to be centered.
             await page.getByTestId('e2eSelect').click();
             await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
+            await page.getByTestId('e2eOption-pizza-1').click();
+
+            await page.getByTestId('e2eSelect').click();
+            await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
+
+            const selected = page.locator('.cdk-overlay-pane kbq-option.kbq-selected');
+
+            await expect(selected).toContainText('Pizza');
 
             // Cannot centre a near-top option, so scroll stays at 0.
             expect(await panelScrollTop(page)).toBe(0);
         });
 
-        test('should align a selected option in the middle with the trigger text', async ({ page }) => {
+        test('should keep the selected middle option visible inside the panel viewport', async ({ page }) => {
             await open(page);
 
             // Pre-select Chips (index 4).
@@ -204,8 +203,6 @@ test.describe('KbqSelectModule', () => {
             await page.getByTestId('e2eSelect').click();
             await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
 
-            // The current panel sizing renders all 8 options without overflow, so scrollTop
-            // stays at 0. Lock-in: the selected option is visible inside the panel viewport.
             const selected = page.locator('.cdk-overlay-pane kbq-option.kbq-selected');
 
             await expect(selected).toBeVisible();
@@ -326,8 +323,8 @@ test.describe('KbqSelectModule', () => {
             const triggerBox = await box(page.getByTestId('e2eSelect'));
             const overlayBox = await box(page.locator('.cdk-overlay-pane'));
 
-            // Lock-in: overlay opens at-or-below the trigger top (does not flip above).
-            expect(Math.floor(overlayBox.y)).toBeGreaterThanOrEqual(Math.floor(triggerBox.y) - 2);
+            // Overlay's top is anchored to the trigger's top — panel opens below the trigger.
+            expect(Math.abs(Math.floor(overlayBox.y) - Math.floor(triggerBox.y))).toBeLessThan(2);
         });
     });
 
@@ -396,7 +393,7 @@ test.describe('KbqSelectModule', () => {
     const X_AXIS_TOLERANCE = 4;
 
     test.describe('positioning — x-axis', () => {
-        test('should align the trigger and the selected option on the x-axis in ltr', async ({ page }) => {
+        test('should align the trigger and the first option on the x-axis in ltr', async ({ page }) => {
             await page.goto('/E2eSelectPositioning');
             await pinFormField(page, { top: 285, left: 30 });
 
@@ -411,7 +408,7 @@ test.describe('KbqSelectModule', () => {
             expect(Math.abs(observedOffset - LTR_OPTION_BOX_OFFSET)).toBeLessThanOrEqual(X_AXIS_TOLERANCE);
         });
 
-        test('should align the trigger and the selected option on the x-axis in rtl', async ({ page }) => {
+        test('should align the trigger and the first option on the x-axis in rtl', async ({ page }) => {
             await page.goto('/E2eSelectRtlPositioning');
             await pinFormField(page, { top: 285, left: 30 });
 
@@ -531,7 +528,7 @@ test.describe('KbqSelectModule', () => {
             expect(Math.abs(observedOffset - LTR_OPTION_BOX_OFFSET)).toBeLessThanOrEqual(X_AXIS_TOLERANCE);
         });
 
-        test('should align the first option to the trigger, if nothing is selected', async ({ page }) => {
+        test('should open the panel below the trigger when nothing is selected', async ({ page }) => {
             await page.goto('/E2eSelectWithGroupsPositioning');
             await pinFormField(page, { top: 100, left: 60 });
 
