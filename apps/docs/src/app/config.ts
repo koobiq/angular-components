@@ -4,6 +4,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService, kbqLocaleServiceLangAttrNameProvider } from '@koobiq/components/core';
+import { provideKoobiqIcons } from '@koobiq/components/icon';
 import { DOCS_ROUTES } from './routes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -11,6 +12,7 @@ export const appConfig: ApplicationConfig = {
     providers: [
         { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
         kbqLocaleServiceLangAttrNameProvider('examples-lang'),
+        provideKoobiqIcons({ spriteUrl: '/assets/SVGIcons/sprite.symbol.svg', namespace: '' }),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(DOCS_ROUTES),
         provideHttpClient(withFetch()),

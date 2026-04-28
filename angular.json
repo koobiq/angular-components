@@ -57,6 +57,11 @@
                             },
                             {
                                 "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/symbol/svg",
+                                "output": "/assets/SVGIcons"
+                            },
+                            {
+                                "glob": "**/*",
                                 "input": "apps/docs/src/assets",
                                 "output": "/assets"
                             },
@@ -1287,6 +1292,13 @@
                         "outputPath": {
                             "base": "dist/components-dev/icon"
                         },
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/symbol/svg",
+                                "output": "/assets/svg-icons"
+                            }
+                        ],
                         "tsConfig": "packages/components-dev/icon/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],

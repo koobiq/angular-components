@@ -154,3 +154,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.kbq-icon svg {
+    color: var(--kbq-foreground-error) !important;
+    fill: var(--kbq-foreground-contrast);
+}
