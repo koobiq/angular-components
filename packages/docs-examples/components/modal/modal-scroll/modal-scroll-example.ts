@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
     selector: 'custom-modal',
@@ -20,10 +20,7 @@ export class CustomModalComponent {
  */
 @Component({
     selector: 'modal-scroll-example',
-    imports: [
-        KbqModalModule,
-        KbqButtonModule
-    ],
+    imports: [KbqButtonModule],
     template: `
         <button kbq-button (click)="createLongModal()">Open Modal</button>
     `,

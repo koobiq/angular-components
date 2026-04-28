@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqSplitButton } from '@koobiq/components/split-button';
 
 /**
@@ -11,7 +11,6 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
 @Component({
     selector: 'modal-template-example',
     imports: [
-        KbqModalModule,
         KbqButtonModule,
         KbqSplitButton,
         KbqIcon,

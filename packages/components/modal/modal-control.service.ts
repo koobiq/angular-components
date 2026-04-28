@@ -10,7 +10,7 @@ interface IRegisteredMeta {
     afterCloseSubscription: Subscription;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class KbqModalControlService {
     // Track singleton afterAllClose through over the injection tree
     get afterAllClose(): Subject<void> {

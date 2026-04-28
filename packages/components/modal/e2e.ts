@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqModalService } from '@koobiq/components/modal';
 
 @Component({
     selector: 'e2e-modal-states',
-    imports: [KbqModalModule],
     template: `
         <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
         <button data-testid="e2eMultipleModals" (click)="openMultiple()">Open multiple modals</button>
