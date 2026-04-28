@@ -53,7 +53,7 @@ test.describe('KbqOverflowItems', () => {
         });
 
         test('should hide items if not fit in cross axis', async ({ page }) => {
-            // hidden = ceil(resultHeight / itemSize) + ceil((itemsCount * marginRight) / itemSize)
+            // 2 rows of 30px fit in max-height=70; row 3 (items 14..19) overflows → 6 hidden
             const { navigate, block } = horizontal(page, 'overflowItems_wrapNotFit');
 
             await navigate();
@@ -99,7 +99,8 @@ test.describe('KbqOverflowItems', () => {
         });
 
         test('should hide items if not fit in cross axis', async ({ page }) => {
-            // hidden = ceil(resultHeight / itemSize) + ceil((itemsCount * marginBottom) / itemSize)
+            // itemWidth(50) + resultWidth(50) = 100 fits in max-width=122; 2 columns of 8 slots
+            // accommodate 15 items + result → 5 hidden
             const { navigate, block } = vertical(page, 'overflowItemsVertical_wrapNotFit');
 
             await navigate();
@@ -117,7 +118,7 @@ test.describe('KbqOverflowItems', () => {
         await expect(hiddenItems(block)).toHaveCount(12);
     });
 
-    test('should recalculate hidden items on container width change', async ({ page }) => {
+    test('should hide overflown items at custom container width', async ({ page }) => {
         // hidden = 20 - floor((600 - 100) / 50) = 10
         const { navigate, block } = horizontal(page, 'overflowItems_widthChanged');
 
@@ -126,7 +127,7 @@ test.describe('KbqOverflowItems', () => {
         await expect(hiddenItems(block)).toHaveCount(10);
     });
 
-    test('should recalculate hidden items on container width change (vertical orientation)', async ({ page }) => {
+    test('should hide overflown items at custom container height (vertical orientation)', async ({ page }) => {
         // hidden = 20 - floor((600 - 50) / 50) = 9
         const { navigate, block } = vertical(page, 'overflowItemsVertical_heightChanged');
 
@@ -135,7 +136,8 @@ test.describe('KbqOverflowItems', () => {
         await expect(hiddenItems(block)).toHaveCount(9);
     });
 
-    test('should recalculate hidden items on container width change with justify-content end', async ({ page }) => {
+    test('should hide overflown items at custom container width with justify-content end', async ({ page }) => {
+        // hidden = 20 - floor((600 - 100) / 50) = 10
         const { navigate, block } = horizontal(page, 'overflowItems_widthChangedJustifyEnd');
 
         await navigate();
@@ -143,7 +145,8 @@ test.describe('KbqOverflowItems', () => {
         await expect(hiddenItems(block)).toHaveCount(10);
     });
 
-    test('should recalculate hidden items on `reverseOverflowOrder` attribute change', async ({ page }) => {
+    test('should keep last items visible when reverseOverflowOrder is enabled', async ({ page }) => {
+        // reverseOverflowOrder hides items from the start, so Item19 stays as the last visible
         const { navigate, block } = horizontal(page, 'overflowItems_reverseOrder');
 
         await navigate();
@@ -151,7 +154,7 @@ test.describe('KbqOverflowItems', () => {
         await expect(visibleItems(block).last()).toHaveText('Item19');
     });
 
-    test('should recalculate hidden items on `reverseOverflowOrder` attribute change (vertical orientation)', async ({
+    test('should keep last items visible when reverseOverflowOrder is enabled (vertical orientation)', async ({
         page
     }) => {
         // Karma version had a copy-paste bug — used the horizontal fixture. Fixed here to use the vertical one.
@@ -162,7 +165,7 @@ test.describe('KbqOverflowItems', () => {
         await expect(visibleItems(block).last()).toHaveText('Item19');
     });
 
-    test('should recalculate hidden items on `reverseOverflowOrder` attribute change with justify-content end', async ({
+    test('should keep last items visible when reverseOverflowOrder is enabled with justify-content end', async ({
         page
     }) => {
         const { navigate, block } = horizontal(page, 'overflowItems_reverseOrderJustifyEnd');
@@ -238,7 +241,8 @@ test.describe('KbqOverflowItems', () => {
         await expect(visibleItems(block).first()).toHaveText('Item5');
     });
 
-    test('should hide last ordered item when no space is available', async ({ page }) => {
+    test('should hide every item including the lowest-order one when no space is available', async ({ page }) => {
+        // containerWidth=49 < itemWidth=50, so even Item5 (forced to lowest order) cannot fit
         const { navigate, block } = ordered(page, 'overflowItemsOrdered_noSpace');
 
         await navigate();
