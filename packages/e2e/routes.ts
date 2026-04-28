@@ -31,6 +31,11 @@ import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eModalStates } from '../components/modal/e2e';
 import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
 import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
+import {
+    E2eOverflowItemsHorizontal,
+    E2eOverflowItemsOrdered,
+    E2eOverflowItemsVertical
+} from '../components/overflow-items/e2e';
 import { E2ePopoverStates } from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
@@ -141,7 +146,10 @@ const components = [
     E2eInlineEditMenuButton,
     E2eFormHorizontal,
     E2eTypographyStyles,
-    E2eTreeTwoLineNode
+    E2eTreeTwoLineNode,
+    E2eOverflowItemsHorizontal,
+    E2eOverflowItemsVertical,
+    E2eOverflowItemsOrdered
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {
