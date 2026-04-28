@@ -12,7 +12,7 @@ import {
     Self
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
+import { COMMA, ENTER, hasModifierKey, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { KbqFieldSizingContent } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
@@ -179,14 +179,20 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     /** @docs-private */
     onKeydown(event: KeyboardEvent) {
+        const isSeparatorKey = this.isSeparatorKey(event);
+
         if (!this.inputElement.value) {
+            if (isSeparatorKey) {
+                event.preventDefault();
+            }
+
             this._tagList.keydown(event);
             event.stopPropagation();
 
             return;
         }
 
-        if (this.isSeparatorKey(event) && this.inputElement.value) {
+        if (isSeparatorKey) {
             this.emitTagEnd();
 
             event.preventDefault();
@@ -325,6 +331,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     /** Checks whether a keycode is one of the configured separators. */
     private isSeparatorKey(event: KeyboardEvent) {
-        return this.separators.some((separator) => separator.key === event.key && !event.shiftKey);
+        return this.separators.some((separator) => separator.key === event.key && !hasModifierKey(event));
     }
 }

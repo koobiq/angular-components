@@ -587,17 +587,33 @@ describe('KbqTagInput', () => {
             expect(addSpyFn).toHaveBeenCalled();
         });
 
-        it('should not emit the tagEnd event if a separator is pressed with a modifier key', () => {
-            const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
+        it.each(['shiftKey', 'ctrlKey', 'altKey', 'metaKey'])(
+            'should not emit tagEnd when %s is pressed with separator',
+            (modifierKey) => {
+                const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
 
-            Object.defineProperty(ENTER_EVENT, 'shiftKey', { get: () => true });
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+                Object.defineProperty(ENTER_EVENT, modifierKey, { get: () => true });
+                const addSpyFn = jest.spyOn(testTagInput, 'add');
 
-            tagInputDirective.separatorKeyCodes = [ENTER];
+                tagInputDirective.separatorKeyCodes = [ENTER];
+                (inputNativeElement as HTMLInputElement).value = 'tag-value';
+                fixture.detectChanges();
+
+                tagInputDirective.onKeydown(ENTER_EVENT);
+                expect(addSpyFn).not.toHaveBeenCalled();
+            }
+        );
+
+        it('should prevent default when a separator key is pressed with empty input', () => {
+            const SPACE_EVENT = createKeyboardEvent('keydown', SPACE, inputNativeElement, ' ');
+            const preventDefaultSpy = jest.spyOn(SPACE_EVENT, 'preventDefault');
+
+            tagInputDirective.separatorKeyCodes = [SPACE];
+            (inputNativeElement as HTMLInputElement).value = '';
             fixture.detectChanges();
 
-            tagInputDirective.onKeydown(ENTER_EVENT);
-            expect(addSpyFn).not.toHaveBeenCalled();
+            tagInputDirective.onKeydown(SPACE_EVENT);
+            expect(preventDefaultSpy).toHaveBeenCalled();
         });
     });
 });
