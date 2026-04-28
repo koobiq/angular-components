@@ -205,6 +205,7 @@ const POSITIONING_FOODS = [
         <kbq-form-field [attr.data-testid]="'e2eFormField'">
             <kbq-select data-testid="e2eSelect" placeholder="Food" [formControl]="control">
                 @for (food of foods; track food.value) {
+                    <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                     <kbq-option [attr.data-testid]="'e2eOption-' + food.value" [value]="food.value">
                         {{ food.viewValue }}
                     </kbq-option>
@@ -238,6 +239,7 @@ export class E2eSelectPositioning {
         <kbq-form-field [attr.data-testid]="'e2eFormField'">
             <kbq-select data-testid="e2eSelect" placeholder="Food" [multiple]="true" [formControl]="control">
                 @for (food of foods; track food.value) {
+                    <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                     <kbq-option [attr.data-testid]="'e2eOption-' + food.value" [value]="food.value">
                         {{ food.viewValue }}
                     </kbq-option>
@@ -273,6 +275,7 @@ export class E2eMultiSelectPositioning {
                 @for (group of pokemonTypes; track group.name) {
                     <kbq-optgroup [label]="group.name" [disabled]="!!group.disabled">
                         @for (pokemon of group.pokemon; track pokemon.value) {
+                            <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                             <kbq-option [attr.data-testid]="'e2eOption-' + pokemon.value" [value]="pokemon.value">
                                 {{ pokemon.viewValue }}
                             </kbq-option>
@@ -340,6 +343,7 @@ export class E2eSelectWithGroupsPositioning {
             <kbq-form-field [attr.data-testid]="'e2eFormField'">
                 <kbq-select data-testid="e2eSelect" placeholder="Food" [formControl]="control">
                     @for (food of foods; track food.value) {
+                        <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                         <kbq-option [attr.data-testid]="'e2eOption-' + food.value" [value]="food.value">
                             {{ food.viewValue }}
                         </kbq-option>
@@ -373,6 +377,7 @@ export class E2eSelectRtlPositioning {
             <kbq-form-field [attr.data-testid]="'e2eFormField'">
                 <kbq-select data-testid="e2eSelect" placeholder="Food" [multiple]="true" [formControl]="control">
                     @for (food of foods; track food.value) {
+                        <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                         <kbq-option [attr.data-testid]="'e2eOption-' + food.value" [value]="food.value">
                             {{ food.viewValue }}
                         </kbq-option>
@@ -411,6 +416,7 @@ export class E2eMultiSelectRtlPositioning {
                     @for (group of pokemonTypes; track group.name) {
                         <kbq-optgroup [label]="group.name">
                             @for (pokemon of group.pokemon; track pokemon.value) {
+                                <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                                 <kbq-option [attr.data-testid]="'e2eOption-' + pokemon.value" [value]="pokemon.value">
                                     {{ pokemon.viewValue }}
                                 </kbq-option>
@@ -466,6 +472,7 @@ export class E2eSelectWithGroupsRtlPositioning {
                 [formControl]="control"
             >
                 @for (food of foods; track food.value) {
+                    <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                     <kbq-option [attr.data-testid]="'e2eOption-' + food.value" [value]="food.value">
                         {{ food.viewValue }}
                     </kbq-option>
@@ -500,11 +507,13 @@ export class E2eMultiSelectNarrow {
         <kbq-form-field>
             <kbq-select data-testid="e2eSelect" [multiple]="true" [style]="{ width: '100px' }" [(value)]="values">
                 <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
+                    <!-- eslint-disable @angular-eslint/template/prefer-template-literal -->
                     <kbq-option
                         *cdkVirtualFor="let option of options; templateCacheSize: 0"
                         [attr.data-testid]="'e2eOption-' + option"
                         [value]="option"
                     >
+                        <!-- eslint-enable -->
                         {{ option }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
