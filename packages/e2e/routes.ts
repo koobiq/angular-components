@@ -39,9 +39,18 @@ import { E2eScrollbarStateAndStyle } from '../components/scrollbar/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import {
     E2eMultilineSelectStates,
+    E2eMultiSelectNarrow,
+    E2eMultiSelectPositioning,
+    E2eMultiSelectRtlPositioning,
     E2eMultiSelectStates,
+    E2eSelectLongOptionText,
+    E2eSelectPositioning,
+    E2eSelectRtlPositioning,
     E2eSelectStates,
-    E2eSelectWithSearchAndFooter
+    E2eSelectWithGroupsPositioning,
+    E2eSelectWithGroupsRtlPositioning,
+    E2eSelectWithSearchAndFooter,
+    E2eVirtualScrollMultiSelectNarrow
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
@@ -137,6 +146,15 @@ const components = [
     E2eMultiTreeSelectStates,
     E2eMultilineTreeSelectStates,
     E2eSelectWithSearchAndFooter,
+    E2eSelectPositioning,
+    E2eMultiSelectPositioning,
+    E2eSelectWithGroupsPositioning,
+    E2eSelectRtlPositioning,
+    E2eMultiSelectRtlPositioning,
+    E2eSelectWithGroupsRtlPositioning,
+    E2eMultiSelectNarrow,
+    E2eVirtualScrollMultiSelectNarrow,
+    E2eSelectLongOptionText,
     E2eInlineEditStates,
     E2eInlineEditMenuButton,
     E2eFormHorizontal,
