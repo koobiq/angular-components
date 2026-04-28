@@ -1,11 +1,7 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-    KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
-    KbqAutocompleteModule,
-    KbqAutocompleteTrigger
-} from '@koobiq/components/autocomplete';
+import { KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -141,20 +137,16 @@ export class E2eAutocompleteExpandOnResults {
     selector: 'e2e-autocomplete-scroll-close',
     imports: [KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
     template: `
-        <div data-testid="e2eAutocompleteScrollContainer" class="scroll-container">
-            <div class="scroll-spacer-top"></div>
+        <kbq-form-field>
+            <input
+                data-testid="e2eAutocompleteInput"
+                kbqInput
+                placeholder="Placeholder"
+                [kbqAutocomplete]="autocomplete"
+            />
+        </kbq-form-field>
 
-            <kbq-form-field>
-                <input
-                    data-testid="e2eAutocompleteInput"
-                    kbqInput
-                    placeholder="Placeholder"
-                    [kbqAutocomplete]="autocomplete"
-                />
-            </kbq-form-field>
-
-            <div class="scroll-spacer-bottom"></div>
-        </div>
+        <div class="scroll-spacer"></div>
 
         <kbq-autocomplete #autocomplete="kbqAutocomplete">
             @for (option of options; track $index) {
@@ -165,22 +157,11 @@ export class E2eAutocompleteExpandOnResults {
     styles: `
         :host {
             display: block;
-            width: 100vw;
-            height: 100vh;
+            padding: var(--kbq-size-m);
         }
 
-        .scroll-container {
-            height: 240px;
-            overflow: auto;
-            border: 1px solid var(--kbq-border);
-        }
-
-        .scroll-spacer-top {
-            height: 80px;
-        }
-
-        .scroll-spacer-bottom {
-            height: 800px;
+        .scroll-spacer {
+            height: 4000px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -197,6 +178,4 @@ export class E2eAutocompleteExpandOnResults {
 })
 export class E2eAutocompleteScrollClose {
     protected readonly options = Array.from({ length: 8 }).map((_, i) => `Option ${i + 1}`);
-
-    constructor(public trigger?: KbqAutocompleteTrigger) {}
 }

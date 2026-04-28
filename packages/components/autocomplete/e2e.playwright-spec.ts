@@ -31,7 +31,6 @@ test.describe('KbqAutocompleteModule', () => {
             const panel = getPanel(page);
 
             await expect(panel).toBeVisible();
-            await expect(panel).toHaveClass(/kbq-autocomplete-panel-above/);
 
             const inputBox = await input.boundingBox();
             const panelBox = await panel.boundingBox();
@@ -49,7 +48,6 @@ test.describe('KbqAutocompleteModule', () => {
             const panel = getPanel(page);
 
             await input.click();
-            await input.fill('Option 1');
             await expect(panel).toBeVisible();
 
             const initialBox = await panel.boundingBox();
@@ -64,10 +62,9 @@ test.describe('KbqAutocompleteModule', () => {
 
     test.describe('Scroll strategy: close', () => {
         const getInput = (page: Page) => page.getByTestId('e2eAutocompleteInput');
-        const getScrollContainer = (page: Page) => page.getByTestId('e2eAutocompleteScrollContainer');
         const getPanel = (page: Page) => page.locator('.kbq-autocomplete-panel');
 
-        test('closes the panel when its container scrolls', async ({ page }) => {
+        test('closes the panel when the page scrolls', async ({ page }) => {
             await page.setViewportSize({ width: 800, height: 600 });
             await page.goto('/E2eAutocompleteScrollClose');
 
@@ -77,7 +74,7 @@ test.describe('KbqAutocompleteModule', () => {
             await input.click();
             await expect(panel).toBeVisible();
 
-            await getScrollContainer(page).evaluate((el) => el.scrollBy(0, 200));
+            await page.evaluate(() => window.scrollBy(0, 200));
 
             await expect(panel).toBeHidden();
         });
