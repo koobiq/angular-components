@@ -1,52 +1,40 @@
-### Установка
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Обратите внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Обратите внимание, что Koobiq Icons - это необязательный пакет, и его следует установить вручную.
-
-#### Обновленный пакет иконок
-
-Рады представить обновлённый пакет иконок!
-Мы очень хотим сохранить именование пакета `@koobiq/icons` и дать возможность плавной миграции (использовать оба пакета в проекте).
-
-Новая версия иконок доступна на [GitHub](https://github.com/koobiq/icons) под версией `@koobiq/icons@9.0.0`.
-
-Старый набор иконок теперь будет называться `@koobiq/icons-lts`.
-
-#### NPM
+Для работы компонента необходима зависимость [`@koobiq/icons`](https://github.com/koobiq/icons):
 
 ```bash
-npm install @koobiq/icons --save
+npm install @koobiq/icons
 ```
 
-Затем вы должны импортировать стили:
+</div>
+</div>
 
-```scss
-@use '@koobiq/icons/fonts/kbq-icons.css';
+После установки настройте `angular.json`:
+
+```json
+"styles": [
+  "node_modules/@koobiq/icons/fonts/kbq-icons.css",
+  // ...
+]
 ```
 
-И импортируйте KbqIconModule в ваш модуль.
+Пример использования:
 
 ```ts
-import { KbqIconModule } from '@koobiq/components';
+import { KbqIconModule } from '@koobiq/components/icon';
+
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="kbq-plus_16"></i>
+        <i kbq-icon="kbq-plus-s_24"></i>
+        <i kbq-icon="kbq-plus_32"></i>
+        <i kbq-icon="kbq-plus_64"></i>
+    `
+})
+export class AppComponent {}
 ```
 
-Если \*.css не используется вашем проекте, вы также можете добавить:
-
-- kbq-icons.less;
-- kbq-icons.scss;
-- kbq-icons-embed.css (включает встроенные шрифты)
-
-### Примеры использования
-
-Есть два варианта использования иконок:
-
-1. Добавить атрибут `[color]`, используя следующие значения: _theme_, _contrast_, _contrast-fade_, _error_, _warning_, _success_.
-
-```html
-<i kbq-icon="kbq-gear_16" [color]="'contrast'"></i>
-```
-
-2. Более простой способ
-
-```html
-<i class="kbq kbq-gear_16"></i>
-```
+Список доступных иконок: [Иконки](/ru/icons)
