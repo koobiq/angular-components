@@ -109,6 +109,25 @@
     &.cdk-focused,
     &.kbq-focused {
         z-index: 3;
+
+        .kbq-input {
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus {
+                min-height: calc(
+                    var(--kbq-form-field-size-height) - var(--kbq-form-field-size-border-width) *
+                        2 - var(--kbq-form-field-size-focus-outline-width) * 2
+                );
+
+                --kbq-input-size-padding-vertical: calc(
+                    var(--kbq-size-xs) - var(--kbq-form-field-size-border-width) - var(
+                            --kbq-form-field-size-focus-outline-width
+                        )
+                );
+
+                margin: var(--kbq-form-field-size-border-width) 0;
+            }
+        }
     }
 
     &.kbq-form-field_without-borders .kbq-form-field__container,
