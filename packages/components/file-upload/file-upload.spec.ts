@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TAB } from '@koobiq/cdk/keycodes';
+import { DELETE, TAB } from '@koobiq/cdk/keycodes';
 import {
     createFakeEvent,
     createMouseEvent,
@@ -29,6 +29,7 @@ import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from 
 import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
+import { KbqFileDropDirective } from './primitives/file-drop';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
 export const dispatchDragEvent = (type: string, { target }: { target: HTMLElement }) => {
@@ -43,6 +44,35 @@ export const dispatchDragEvent = (type: string, { target }: { target: HTMLElemen
 
     return dropEvent;
 };
+
+const createFSFile = (name: string, type = '') => {
+    const file: Partial<File> = { name, type, size: 0 };
+
+    return {
+        name,
+        fullPath: name,
+        isDirectory: false,
+        isFile: true,
+        file: (cb: (f: Partial<File>) => void) => cb(file)
+    };
+};
+
+const createFakeFileItem = (
+    name: string,
+    type?: string
+): { kind: string; webkitGetAsEntry(): Partial<FileSystemFileEntry> } => ({
+    kind: 'file',
+    webkitGetAsEntry: () => createFSFile(name, type) as Partial<FileSystemFileEntry>
+});
+
+function dispatchDropEventWithEntry<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME, type?: string) {
+    const fakeDropEvent = createFakeEvent('drop');
+
+    (fakeDropEvent as any).dataTransfer = { items: [createFakeFileItem(fileName, type)] };
+
+    dispatchEvent(fixture.debugElement.query(By.directive(KbqFileDropDirective)).nativeElement, fakeDropEvent);
+    fixture.detectChanges();
+}
 
 const FILE_NAME = 'test.file';
 
@@ -72,6 +102,8 @@ const getMockedChangeEvent = (fileNameOrFakeFile: string | Partial<File>) => {
 };
 
 const fileItemActionCssClass = 'kbq-file-upload__action';
+
+const fileItemRowCssClass = 'kbq-file-upload__item';
 
 const fileItemTextCssClass = 'kbq-file-item__text';
 
@@ -135,7 +167,7 @@ const maxFileExceeded = (file: File): string | null => {
     const maxMbytes = 5;
     const maxSize = maxMbytes * mega;
 
-    return (file?.size ?? 0 > maxSize) ? `Exceeded with (${maxSize / mega} Mb)` : null;
+    return (file?.size ?? 0) > maxSize ? `Exceeded with (${maxSize / mega} Mb)` : null;
 };
 
 describe(KbqMultipleFileUploadComponent.name, () => {
@@ -199,6 +231,30 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
         }));
+
+        it('should remove file via button keydown.delete in a row', () => {
+            component.disabled = false;
+            fixture.detectChanges();
+
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            fixture.detectChanges();
+
+            const filesChangeSpy = jest.fn();
+            const subscription = component.fileUpload.filesChange.subscribe(filesChangeSpy);
+
+            fixture.debugElement
+                .query(By.css(`.${fileItemRowCssClass}`))
+                .nativeElement.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: 'Delete', keyCode: DELETE, bubbles: true })
+                );
+            fixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(filesChangeSpy).toHaveBeenCalledTimes(1);
+            expect(filesChangeSpy.mock.calls[0][0]).toHaveLength(0);
+            expect(component.files).toHaveLength(0);
+        });
     });
 
     describe('with file queue change', () => {
@@ -439,6 +495,138 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             }));
         });
     });
+
+    describe('with file-drop', () => {
+        // NOTE: KbqFileDropDirective handles drops via Promise.all + then chains scheduled inside
+        // ngZone.run() reached through ngZone.runOutsideAngular(...). NgZone's outer zone is
+        // captured at module bootstrap (before any fakeAsync test runs), so those microtasks
+        // bypass fakeAsync's task queue. Tests use done()/setTimeout to wait — the same pattern
+        // primitives/file-drop.spec.ts uses for this directive.
+        it('should add files via drag-n-drop', (done) => {
+            expect(component.files).toBeUndefined();
+
+            component.disabled = false;
+            fixture.detectChanges();
+
+            dispatchDropEventWithEntry(fixture);
+
+            setTimeout(() => {
+                fixture.detectChanges();
+                expect(component.onChange).toHaveBeenCalledTimes(1);
+                expect(component.files.length).toEqual(1);
+                expect(component.files[0].file.name).toBe(FILE_NAME);
+                done();
+            });
+        });
+
+        it('should NOT add files via drag-n-drop if disabled', (done) => {
+            component.disabled = true;
+            component.fileUpload.setDisabledState(true);
+            fixture.detectChanges();
+
+            dispatchDropEventWithEntry(fixture);
+
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(0);
+                done();
+            });
+        });
+
+        describe('with ControlValueAccessor', () => {
+            let cvaFixture: ComponentFixture<ControlValueAccessorMultipleFileUpload>;
+            let cvaComponent: ControlValueAccessorMultipleFileUpload;
+
+            beforeEach(() => {
+                cvaFixture = TestBed.createComponent(ControlValueAccessorMultipleFileUpload);
+                cvaComponent = cvaFixture.componentInstance;
+                cvaFixture.detectChanges();
+            });
+
+            it('should update form control touched on file dropped', (done) => {
+                expect(cvaComponent.control.touched).toBeFalsy();
+
+                dispatchDropEventWithEntry(cvaFixture);
+
+                setTimeout(() => {
+                    cvaFixture.detectChanges();
+                    expect(cvaComponent.control.touched).toBeTruthy();
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('with fullscreen dropzone', () => {
+        let dropzoneService: KbqFullScreenDropzoneService;
+
+        beforeEach(() => {
+            dropzoneService = fixture.debugElement
+                .query(By.directive(KbqMultipleFileUploadComponent))
+                .injector.get(KbqFullScreenDropzoneService);
+        });
+
+        it('should disable fileDrop directive', fakeAsync(() => {
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            dispatchDropEventWithEntry(fixture);
+
+            expect(component.onChange).not.toHaveBeenCalled();
+        }));
+
+        it('should init dropzone service with provided config', fakeAsync(() => {
+            jest.spyOn(dropzoneService, 'init');
+
+            const config: KbqDropzoneData = {
+                title: 'TITLE',
+                caption: 'CAPTION',
+                size: 'compact'
+            };
+
+            component.fullScreenDropZone.set(config);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith(config);
+        }));
+
+        it('should init dropzone service with empty config when boolean true is provided', fakeAsync(() => {
+            jest.spyOn(dropzoneService, 'init');
+
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith({});
+        }));
+
+        it('should stop dropzone service if fullScreen dropzone input changed to false', fakeAsync(() => {
+            const stopSpy = jest.spyOn(dropzoneService, 'stop');
+
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            stopSpy.mockClear();
+
+            component.fullScreenDropZone.set(false);
+            fixture.detectChanges();
+
+            expect(dropzoneService.stop).toHaveBeenCalled();
+        }));
+
+        it('should listen to filesDropped via dropzoneService', () => {
+            const mockFiles = [
+                { ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' },
+                { ...createMockFile('test2.txt', { type: 'text/plain' }), fullPath: 'test2.txt' }
+            ];
+
+            dropzoneService.filesDropped.emit(mockFiles);
+
+            expect(component.files.length).toEqual(mockFiles.length);
+        });
+    });
 });
 
 describe(KbqSingleFileUploadComponent.name, () => {
@@ -503,6 +691,27 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
         }));
+
+        it('should remove file via button keydown.delete', () => {
+            component.disabled = false;
+            fixture.detectChanges();
+            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            fixture.detectChanges();
+
+            const fileChangeSpy = jest.fn();
+            const subscription = component.fileUpload.fileChange.subscribe(fileChangeSpy);
+
+            component.elementRef.nativeElement
+                .querySelector(`.${fileItemActionCssClass}`)
+                .dispatchEvent(new KeyboardEvent('keydown', { key: 'Delete', keyCode: DELETE, bubbles: true }));
+            fixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(fileChangeSpy).toHaveBeenCalledTimes(1);
+            expect(fileChangeSpy.mock.calls[0][0]).toBeNull();
+            expect(component.file).toBeNull();
+        });
     });
 
     describe('with file queue change', () => {
@@ -826,6 +1035,166 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 expect(asyncComponent.control.status).toBe('INVALID');
                 expect(asyncComponent.control.errors).toEqual({ fileReadError: true });
             }));
+        });
+    });
+
+    describe('with file-drop', () => {
+        // see note in the multi-component `with file-drop` block — same constraint applies here.
+        it('should add file via drag-n-drop', (done) => {
+            expect(component.file).toBeUndefined();
+
+            component.disabled = false;
+            fixture.detectChanges();
+
+            dispatchDropEventWithEntry(fixture);
+
+            setTimeout(() => {
+                fixture.detectChanges();
+                expect(component.onChange).toHaveBeenCalledTimes(1);
+                expect(component.file?.file.name).toBe(FILE_NAME);
+                done();
+            });
+        });
+
+        it('should NOT add file via drag-n-drop if disabled', (done) => {
+            component.disabled = true;
+            component.fileUpload.setDisabledState(true);
+            fixture.detectChanges();
+
+            dispatchDropEventWithEntry(fixture);
+
+            setTimeout(() => {
+                expect(component.onChange).toHaveBeenCalledTimes(0);
+                expect(component.file).toBeUndefined();
+                done();
+            });
+        });
+
+        describe('with ControlValueAccessor', () => {
+            let cvaFixture: ComponentFixture<ControlValueAccessorSingleFileUpload>;
+            let cvaComponent: ControlValueAccessorSingleFileUpload;
+
+            beforeEach(() => {
+                cvaFixture = TestBed.createComponent(ControlValueAccessorSingleFileUpload);
+                cvaComponent = cvaFixture.componentInstance;
+                cvaFixture.detectChanges();
+            });
+
+            it('should update form control touched on file dropped', (done) => {
+                expect(cvaComponent.control.touched).toBeFalsy();
+
+                dispatchDropEventWithEntry(cvaFixture);
+
+                setTimeout(() => {
+                    cvaFixture.detectChanges();
+                    expect(cvaComponent.control.touched).toBeTruthy();
+                    done();
+                });
+            });
+        });
+
+        // TODO: real-life scenario & test results with the same data are different (#DS-4300)
+        xdescribe('with accepted files list', () => {
+            it('should filter files via drag-n-drop with extensions', (done) => {
+                component.disabled = false;
+                component.accept = ['.pdf', '.png'];
+                fixture.detectChanges();
+
+                dispatchDropEventWithEntry(fixture, 'test.test');
+                dispatchDropEventWithEntry(fixture, 'test.pdf');
+                dispatchDropEventWithEntry(fixture, 'test.png');
+
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    expect(component.onChange).toHaveBeenCalledTimes(2);
+                    done();
+                });
+            });
+
+            it('should filter files via drag-n-drop with mimeType', (done) => {
+                component.disabled = false;
+                component.accept = ['application/pdf'];
+                fixture.detectChanges();
+
+                dispatchDropEventWithEntry(fixture, 'test.test');
+                // in file system file type will be automatically provided
+                dispatchDropEventWithEntry(fixture, 'test.pdf', 'application/pdf');
+
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    expect(component.onChange).toHaveBeenCalledTimes(1);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('with fullscreen dropzone', () => {
+        let dropzoneService: KbqFullScreenDropzoneService;
+
+        beforeEach(() => {
+            dropzoneService = fixture.debugElement
+                .query(By.directive(KbqSingleFileUploadComponent))
+                .injector.get(KbqFullScreenDropzoneService);
+        });
+
+        it('should disable fileDrop directive', fakeAsync(() => {
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            dispatchDropEventWithEntry(fixture);
+
+            expect(component.onChange).not.toHaveBeenCalled();
+        }));
+
+        it('should init dropzone service with provided config', fakeAsync(() => {
+            jest.spyOn(dropzoneService, 'init');
+
+            const config: KbqDropzoneData = {
+                title: 'TITLE',
+                caption: 'CAPTION',
+                size: 'compact'
+            };
+
+            component.fullScreenDropZone.set(config);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith(config);
+        }));
+
+        it('should init dropzone service with empty config when boolean true is provided', fakeAsync(() => {
+            jest.spyOn(dropzoneService, 'init');
+
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropzoneService.init).toHaveBeenCalledWith({});
+        }));
+
+        it('should stop dropzone service if fullScreen dropzone input changed to false', fakeAsync(() => {
+            const stopSpy = jest.spyOn(dropzoneService, 'stop');
+
+            component.fullScreenDropZone.set(true);
+            fixture.detectChanges();
+            tick();
+
+            stopSpy.mockClear();
+
+            component.fullScreenDropZone.set(false);
+            fixture.detectChanges();
+
+            expect(dropzoneService.stop).toHaveBeenCalled();
+        }));
+
+        it('should listen to filesDropped via dropzoneService', () => {
+            const mockFiles = [{ ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' }];
+
+            dropzoneService.filesDropped.emit(mockFiles);
+
+            expect(component.file?.file).toEqual(mockFiles[0]);
         });
     });
 });
@@ -1198,6 +1567,7 @@ describe('KbqLocalDropzone', () => {
                 [accept]="accept"
                 [customValidation]="validation"
                 [disabled]="disabled"
+                [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
                 (fileQueueChange)="onChange($event)"
             />
@@ -1210,6 +1580,7 @@ class BasicSingleFileUpload {
     file: KbqFileItem | null;
     accept: string[] = [];
     validation: KbqFileValidatorFn[] = [];
+    fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
@@ -1258,6 +1629,7 @@ class ControlValueAccessorSingleFileUpload {
                 #fileUpload
                 [disabled]="disabled"
                 [customValidation]="validation"
+                [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
                 (fileQueueChanged)="onChange($event)"
             />
@@ -1269,6 +1641,7 @@ class BasicMultipleFileUpload {
     disabled: boolean;
     files: KbqFileItem[];
     validation: KbqFileValidatorFn[] = [];
+    fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
