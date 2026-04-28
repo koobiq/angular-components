@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/f
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
+import { EMPTY } from 'rxjs';
 import { KbqSelect } from './select.component';
 import { KbqSelectModule } from './select.module';
 
@@ -361,7 +362,7 @@ export class E2eSelectWithGroupsPositioning {
     host: {
         'data-testid': 'e2eSelectRtlPositioning'
     },
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: { subscribe() {}, pipe() {} } } }],
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eSelectRtlPositioning {
@@ -398,7 +399,7 @@ export class E2eSelectRtlPositioning {
     host: {
         'data-testid': 'e2eMultiSelectRtlPositioning'
     },
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: { subscribe() {}, pipe() {} } } }],
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eMultiSelectRtlPositioning {
@@ -436,7 +437,7 @@ export class E2eMultiSelectRtlPositioning {
     host: {
         'data-testid': 'e2eSelectWithGroupsRtlPositioning'
     },
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: { subscribe() {}, pipe() {} } } }],
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eSelectWithGroupsRtlPositioning {
