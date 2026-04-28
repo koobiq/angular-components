@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import { Overlay } from '@angular/cdk/overlay';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+    KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
+    KbqAutocompleteModule,
+    KbqAutocompleteTrigger
+} from '@koobiq/components/autocomplete';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -40,4 +46,157 @@ import { KbqInputModule } from '@koobiq/components/input';
 })
 export class E2eAutocompleteStates {
     protected readonly options = Array.from({ length: 20 }).map((_, i) => `Option ${i + 1}`);
+}
+
+@Component({
+    selector: 'e2e-autocomplete-fallback-position',
+    imports: [KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <div class="bottom-anchored">
+            <kbq-form-field>
+                <input
+                    data-testid="e2eAutocompleteInput"
+                    kbqInput
+                    placeholder="Placeholder"
+                    [kbqAutocomplete]="autocomplete"
+                />
+            </kbq-form-field>
+        </div>
+
+        <kbq-autocomplete #autocomplete="kbqAutocomplete">
+            @for (option of options; track $index) {
+                <kbq-option [value]="option">{{ option }}</kbq-option>
+            }
+        </kbq-autocomplete>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .bottom-anchored {
+            position: fixed;
+            left: 16px;
+            right: 16px;
+            bottom: 0;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eAutocompleteFallbackPosition'
+    }
+})
+export class E2eAutocompleteFallbackPosition {
+    protected readonly options = Array.from({ length: 8 }).map((_, i) => `Option ${i + 1}`);
+}
+
+@Component({
+    selector: 'e2e-autocomplete-expand-on-results',
+    imports: [FormsModule, KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input
+                data-testid="e2eAutocompleteInput"
+                kbqInput
+                placeholder="Placeholder"
+                [kbqAutocomplete]="autocomplete"
+                [(ngModel)]="query"
+                (ngModelChange)="onQueryChange($event)"
+            />
+        </kbq-form-field>
+
+        <kbq-autocomplete #autocomplete="kbqAutocomplete">
+            @for (option of filtered(); track option) {
+                <kbq-option [value]="option">{{ option }}</kbq-option>
+            }
+        </kbq-autocomplete>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-m);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eAutocompleteExpandOnResults'
+    }
+})
+export class E2eAutocompleteExpandOnResults {
+    private readonly all = Array.from({ length: 20 }).map((_, i) => `Option ${i + 1}`);
+
+    protected query = '';
+    protected readonly filtered = signal<string[]>(this.all.slice(0, 1));
+
+    protected onQueryChange(value: string): void {
+        const trimmed = value.trim().toLowerCase();
+
+        this.filtered.set(trimmed ? this.all.filter((opt) => opt.toLowerCase().includes(trimmed)) : this.all.slice());
+    }
+}
+
+@Component({
+    selector: 'e2e-autocomplete-scroll-close',
+    imports: [KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <div data-testid="e2eAutocompleteScrollContainer" class="scroll-container">
+            <div class="scroll-spacer-top"></div>
+
+            <kbq-form-field>
+                <input
+                    data-testid="e2eAutocompleteInput"
+                    kbqInput
+                    placeholder="Placeholder"
+                    [kbqAutocomplete]="autocomplete"
+                />
+            </kbq-form-field>
+
+            <div class="scroll-spacer-bottom"></div>
+        </div>
+
+        <kbq-autocomplete #autocomplete="kbqAutocomplete">
+            @for (option of options; track $index) {
+                <kbq-option [value]="option">{{ option }}</kbq-option>
+            }
+        </kbq-autocomplete>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .scroll-container {
+            height: 240px;
+            overflow: auto;
+            border: 1px solid var(--kbq-border);
+        }
+
+        .scroll-spacer-top {
+            height: 80px;
+        }
+
+        .scroll-spacer-bottom {
+            height: 800px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
+            useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
+            deps: [Overlay]
+        }
+    ],
+    host: {
+        'data-testid': 'e2eAutocompleteScrollClose'
+    }
+})
+export class E2eAutocompleteScrollClose {
+    protected readonly options = Array.from({ length: 8 }).map((_, i) => `Option ${i + 1}`);
+
+    constructor(public trigger?: KbqAutocompleteTrigger) {}
 }
