@@ -2351,7 +2351,7 @@ describe('KbqSelect', () => {
 
                     dispatchEvent(select, event);
                     flush();
-                    expect(multiFixture.componentInstance.select.value).toEqual(['sandwich-3', 'chips-4']);
+                    expect(multiFixture.componentInstance.select.value).toEqual(['chips-4', 'sandwich-3']);
                 }));
 
                 it('should prevent the default action when pressing space', fakeAsync(() => {
@@ -4421,12 +4421,12 @@ describe('KbqSelect', () => {
             tick();
             flush();
 
-            expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
-            expect(fixture.componentInstance.select.value).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
+            expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'sandwich-2', 'pizza-1']);
+            expect(fixture.componentInstance.select.value).toEqual(['steak-0', 'sandwich-2', 'pizza-1']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak',
-                'Pizza',
-                'Sandwich'
+                'Sandwich',
+                'Pizza'
             ]);
         }));
 
@@ -4671,11 +4671,11 @@ describe('KbqSelect', () => {
             flush();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
+                'Tacos',
                 'Steak',
-                'Pizza',
-                'Tacos'
+                'Pizza'
             ]);
-            expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
+            expect(fixture.componentInstance.control.value).toEqual(['tacos-2', 'steak-0', 'pizza-1']);
         }));
 
         it('should sort the selected options in reverse in rtl', fakeAsync(() => {
@@ -4694,11 +4694,11 @@ describe('KbqSelect', () => {
             flush();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
-                'Tacos',
                 'Pizza',
-                'Steak'
+                'Steak',
+                'Tacos'
             ]);
-            expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
+            expect(fixture.componentInstance.control.value).toEqual(['tacos-2', 'steak-0', 'pizza-1']);
         }));
 
         it('should be able to customize the value sorting logic', fakeAsync(() => {
@@ -4742,9 +4742,9 @@ describe('KbqSelect', () => {
             flush();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
+                'Tacos',
                 'Steak',
-                'Pizza',
-                'Tacos'
+                'Pizza'
             ]);
         }));
 
@@ -4760,9 +4760,9 @@ describe('KbqSelect', () => {
             flush();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
-                'Tacos',
                 'Pizza',
-                'Steak'
+                'Steak',
+                'Tacos'
             ]);
         }));
 
