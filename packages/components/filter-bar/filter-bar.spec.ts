@@ -88,6 +88,18 @@ describe('KbqFilterBar', () => {
         return filterBarDebugElement.componentInstance;
     };
 
+    describe('host element', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.detectChanges();
+        });
+
+        it('should have kbq-filter-bar class', () => {
+            expect(filterBarDebugElement.nativeElement.classList).toContain('kbq-filter-bar');
+        });
+    });
+
     describe('filter getter/setter', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
