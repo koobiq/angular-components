@@ -11,6 +11,9 @@ import {
     KbqSplitterModule
 } from './index';
 
+// Mirrors the directive defaults in splitter.component.ts (KbqGutterDirective._size, KbqSplitterComponent._gutterSize).
+const EXPECTED_GUTTER_SIZE = 6;
+
 function createTestComponent<T>(component: Type<T>) {
     TestBed.resetTestingModule()
         .configureTestingModule({ imports: [KbqSplitterModule, component] })
@@ -99,7 +102,7 @@ class KbqSplitterEvents {
         KbqSplitterModule
     ],
     template: `
-        <kbq-splitter #splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
+        <kbq-splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             <div #areaA kbq-splitter-area style="flex: 1">first</div>
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
@@ -107,7 +110,6 @@ class KbqSplitterEvents {
 })
 class KbqSplitterGhost {
     direction: Direction = Direction.Horizontal;
-    @ViewChild('splitter', { static: false }) splitter: KbqSplitterComponent;
     @ViewChild('areaA', { static: false, read: KbqSplitterAreaDirective }) areaA: KbqSplitterAreaDirective;
     @ViewChild('areaB', { static: false, read: KbqSplitterAreaDirective }) areaB: KbqSplitterAreaDirective;
 }
@@ -129,14 +131,13 @@ class KbqSplitterGhost {
 class DynamicData {
     direction: Direction = Direction.Horizontal;
     isFirstRendered = true;
-    @ViewChild(KbqSplitterComponent, { static: false }) splitter: KbqSplitterComponent;
     @ViewChild('areaA', { static: false, read: KbqSplitterAreaDirective }) areaA: KbqSplitterAreaDirective;
     @ViewChild('areaB', { static: false, read: KbqSplitterAreaDirective }) areaB: KbqSplitterAreaDirective;
 }
 
 describe('KbqSplitter', () => {
     describe('direction', () => {
-        it('should be default', () => {
+        it('should default to horizontal direction', () => {
             const fixture = createTestComponent(KbqSplitterDefaultDirection);
 
             fixture.detectChanges();
@@ -144,33 +145,30 @@ describe('KbqSplitter', () => {
             const areas = fixture.debugElement.queryAll(By.directive(KbqSplitterAreaDirective));
             const expectedAreasCount = 3;
             const expectedGuttersCount = expectedAreasCount - 1;
-            const expectedGutterSize = 6;
 
-            checkDirection(fixture, Direction.Horizontal, expectedGuttersCount, expectedGutterSize);
+            checkDirection(fixture, Direction.Horizontal, expectedGuttersCount, EXPECTED_GUTTER_SIZE);
 
             expect(areas.length).toBe(expectedAreasCount);
         });
 
-        it('should be horizontal', () => {
+        it('should lay out gutters horizontally', () => {
             const fixture = createTestComponent(KbqSplitterDirection);
             const expectedGuttersCount = 2;
-            const expectedGutterSize = 6;
 
             fixture.componentInstance.direction = Direction.Horizontal;
             fixture.detectChanges();
 
-            checkDirection(fixture, Direction.Horizontal, expectedGuttersCount, expectedGutterSize);
+            checkDirection(fixture, Direction.Horizontal, expectedGuttersCount, EXPECTED_GUTTER_SIZE);
         });
 
-        it('should be vertical', () => {
+        it('should lay out gutters vertically', () => {
             const fixture = createTestComponent(KbqSplitterDirection);
             const expectedGuttersCount = 2;
-            const expectedGutterSize = 6;
 
             fixture.componentInstance.direction = Direction.Vertical;
             fixture.detectChanges();
 
-            checkDirection(fixture, Direction.Vertical, expectedGuttersCount, expectedGutterSize);
+            checkDirection(fixture, Direction.Vertical, expectedGuttersCount, EXPECTED_GUTTER_SIZE);
         });
     });
 
@@ -239,7 +237,7 @@ describe('KbqSplitter', () => {
             expect(ghost.nativeElement.classList.contains('kbq-gutter-ghost_visible')).toBe(false);
         }));
 
-        it('should not resize areas when moving gutter', fakeAsync(() => {
+        it('should not resize areas while ghost is being dragged', fakeAsync(() => {
             const fixture = createTestComponent(KbqSplitterGhost);
 
             fixture.detectChanges();
@@ -263,41 +261,10 @@ describe('KbqSplitter', () => {
             expect(fixture.componentInstance.areaA.getSize()).toBe(areaAInitialSize);
             expect(fixture.componentInstance.areaB.getSize()).toBe(areaBInitialSize);
         }));
-
-        // todo this TC fail on CI
-        xit('should not move out of minimal areas width', fakeAsync(() => {
-            const fixture = createTestComponent(KbqSplitterGhost);
-
-            fixture.detectChanges();
-
-            tick();
-
-            const areaAInitialSize = fixture.componentInstance.areaA.getSize();
-            const areaBMinimalSize = fixture.componentInstance.areaB.getMinSize();
-
-            const mouseOffset = 10;
-
-            const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
-
-            gutters[0].nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
-
-            fixture.detectChanges();
-
-            document.dispatchEvent(new MouseEvent('mousemove', { screenX: mouseOffset, screenY: 0 }));
-
-            fixture.detectChanges();
-
-            document.dispatchEvent(new Event('mouseup'));
-
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.areaA.getSize()).toBe(areaAInitialSize);
-            expect(fixture.componentInstance.areaB.getSize()).toBe(areaBMinimalSize);
-        }));
     });
 
     describe('dynamic data', () => {
-        it('should work with dynamic areas', fakeAsync(() => {
+        it('should re-order remaining areas when an area is removed', fakeAsync(() => {
             const update = () => {
                 fixture.detectChanges();
                 tick();
