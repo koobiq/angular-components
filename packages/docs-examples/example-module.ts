@@ -6169,6 +6169,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "username-playground-example.ts",
     "importPath": "components/username"
   },
+  "validation-basic-multiple-validators": {
+    "packagePath": "components/validation/validation-basic-multiple-validators",
+    "title": "Validation: multiple validators",
+    "componentName": "ValidationBasicMultipleValidatorsExample",
+    "files": [
+      "validation-basic-multiple-validators-example.ts"
+    ],
+    "selector": "validation-basic-multiple-validators-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-basic-multiple-validators-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-basic-single-validator": {
+    "packagePath": "components/validation/validation-basic-single-validator",
+    "title": "Validation: single validator",
+    "componentName": "ValidationBasicSingleValidatorExample",
+    "files": [
+      "validation-basic-single-validator-example.ts"
+    ],
+    "selector": "validation-basic-single-validator-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-basic-single-validator-example.ts",
+    "importPath": "components/validation"
+  },
   "validation-message-for-specific-field": {
     "packagePath": "components/validation/validation-message-for-specific-field",
     "title": "Validation message for specific field",
@@ -7329,6 +7353,10 @@ return import('@koobiq/docs-examples/components/username');
 return import('@koobiq/docs-examples/components/username');
   case 'username-playground':
 return import('@koobiq/docs-examples/components/username');
+  case 'validation-basic-multiple-validators':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-basic-single-validator':
+return import('@koobiq/docs-examples/components/validation');
   case 'validation-message-for-specific-field':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-message-global-with-links':

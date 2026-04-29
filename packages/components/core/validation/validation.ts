@@ -31,7 +31,7 @@ export const KBQ_VALIDATION = new InjectionToken<KbqValidationOptions>('KbqUseVa
 /**
  * Utility provider which disables legacy validation directive.
  *
- * Will be removed in next major release.
+ * Will be removed in next major release, so legacy validation will be disabled by default.
  */
 export const kbqDisableLegacyValidationDirectiveProvider = (): Provider => ({
     provide: KBQ_VALIDATION,
