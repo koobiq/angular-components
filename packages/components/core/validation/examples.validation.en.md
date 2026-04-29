@@ -15,10 +15,12 @@ Validators and the `FormControl` remain unchanged — `ErrorStateMatcher` never 
 Apply a matcher to all controls inside a component via providers:
 
 ```ts
-providers: [
-    kbqDisableLegacyValidationDirectiveProvider(),
-    kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
-];
+@Component({
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ]
+})
 ```
 
 Override for a single control using the `[errorStateMatcher]` input (supported by `kbq-tag-list`, `kbq-file-upload`, and similar):

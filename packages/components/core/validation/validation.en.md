@@ -17,7 +17,7 @@ import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/
 })
 ```
 
-Explained it better [in the examples](/en/other/validation/examples).
+See the [examples](/en/other/validation/examples) for a more detailed explanation.
 
 ### Summary
 

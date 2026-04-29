@@ -17,10 +17,12 @@
 Применить матчер ко всем элементам управления внутри компонента через `providers`:
 
 ```ts
-providers: [
-    kbqDisableLegacyValidationDirectiveProvider(),
-    kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
-];
+@Component({
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+    ]
+})
 ```
 
 Переопределить для конкретного элемента управления через input `[errorStateMatcher]` (поддерживается в `kbq-tag-list`, `kbq-file-upload` и других):
