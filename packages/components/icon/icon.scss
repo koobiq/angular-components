@@ -1,5 +1,11 @@
 @use './icon-theme' as *;
 
+.kbq-icon {
+    svg {
+        fill: currentColor;
+    }
+}
+
 .kbq-icon-rotate_90 {
     transform: rotate(90deg);
 }

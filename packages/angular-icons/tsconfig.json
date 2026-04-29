@@ -1,0 +1,13 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "types": ["node", "jest"]
+    },
+    "angularCompilerOptions": {
+        "annotateForClosureCompiler": true,
+        "flatModuleId": "@koobiq/angular-icons",
+        "compilationMode": "partial"
+    },
+    "include": ["./**/*.ts"],
+    "exclude": ["scripts/**"]
+}
