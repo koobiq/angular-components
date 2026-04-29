@@ -22,7 +22,12 @@ import { E2eContentPanelState } from '../components/content-panel/e2e';
 import { E2eDatepickerStates } from '../components/datepicker/e2e';
 import { E2eDividerStateAndStyle } from '../components/divider/e2e';
 import { E2eDlStates } from '../components/dl/e2e';
-import { E2eDropdownStates } from '../components/dropdown/e2e';
+import {
+    E2eDropdownNestedLtr,
+    E2eDropdownNestedRtl,
+    E2eDropdownStates,
+    E2eDropdownTitleOverflow
+} from '../components/dropdown/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eFilterBarStates } from '../components/filter-bar/e2e';
@@ -127,6 +132,9 @@ const components = [
     E2eAutocompleteScrollClose,
     E2eCheckboxStateAndStyle,
     E2eDropdownStates,
+    E2eDropdownNestedLtr,
+    E2eDropdownNestedRtl,
+    E2eDropdownTitleOverflow,
     E2eCheckboxWithTextAndCaption,
     E2eMarkdownStates,
     E2eSearchExpandableStates,
