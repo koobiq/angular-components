@@ -5,7 +5,12 @@ import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
 import { E2eAppSwitcherStates, E2eAppSwitcherWithSitesStates } from '../components/app-switcher/e2e';
-import { E2eAutocompleteStates } from '../components/autocomplete/e2e';
+import {
+    E2eAutocompleteExpandOnResults,
+    E2eAutocompleteFallbackPosition,
+    E2eAutocompleteScrollClose,
+    E2eAutocompleteStates
+} from '../components/autocomplete/e2e';
 import { E2eBadgeStyles } from '../components/badge/e2e';
 import { E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
 import { E2eButtonToggleStates } from '../components/button-toggle/e2e';
@@ -108,6 +113,9 @@ const components = [
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,
+    E2eAutocompleteFallbackPosition,
+    E2eAutocompleteExpandOnResults,
+    E2eAutocompleteScrollClose,
     E2eCheckboxStateAndStyle,
     E2eDropdownStates,
     E2eCheckboxWithTextAndCaption,
