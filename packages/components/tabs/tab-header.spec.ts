@@ -200,6 +200,36 @@ describe('KbqTabHeader', () => {
                 appComponent = fixture.componentInstance;
             });
 
+            it('should not show pagination when tab list fits container', () => {
+                const header = appComponent.tabHeader;
+
+                Object.defineProperty(header.tabList.nativeElement, 'scrollWidth', { configurable: true, value: 60 });
+                Object.defineProperty(header.elementRef.nativeElement, 'offsetWidth', {
+                    configurable: true,
+                    value: 130
+                });
+
+                header.checkPaginationEnabled();
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(false);
+            });
+
+            it('should show pagination when tab list exceeds container', () => {
+                const header = appComponent.tabHeader;
+
+                Object.defineProperty(header.tabList.nativeElement, 'scrollWidth', { configurable: true, value: 240 });
+                Object.defineProperty(header.elementRef.nativeElement, 'offsetWidth', {
+                    configurable: true,
+                    value: 130
+                });
+
+                header.checkPaginationEnabled();
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(true);
+            });
+
             it('should scroll to show the focused tab label', () => {
                 appComponent.addTabsForScrolling();
                 fixture.detectChanges();
