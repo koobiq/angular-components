@@ -1,3 +1,21 @@
+# 19.7.0 (2026-04-29)
+
+### Koobiq
+
+ * bug fix  allow iframe for examples in stable documentation ([3c2fd9c](https://github.com/koobiq/angular-components/commit/3c2fd9c1ce89258b19116e96e0888d4e5895c182))
+ * bug fix  **breadcrumbs:** overflow handling to include margin ([#DS-4909](https://github.com/koobiq/angular-components/issues/issue/DS-4909)) ([#1514](https://github.com/koobiq/angular-components/issues/1514)) ([6b9246c](https://github.com/koobiq/angular-components/commit/6b9246c021342195451be1572355eb21b36b93f6))
+ * bug fix  **docs:** icon preview modal download colored SVG ([#DS-4892](https://github.com/koobiq/angular-components/issues/issue/DS-4892)) ([#1508](https://github.com/koobiq/angular-components/issues/1508)) ([5cb21c3](https://github.com/koobiq/angular-components/commit/5cb21c37ace16afe7f8fad1aa5fabcf101cd8eda))
+ * bug fix  **docs:** show example source ([#DS-5008](https://github.com/koobiq/angular-components/issues/issue/DS-5008)) ([#1503](https://github.com/koobiq/angular-components/issues/1503)) ([03a2432](https://github.com/koobiq/angular-components/commit/03a24326e250e08fe1321f5ed5be1b8a716825fe))
+ * bug fix  **input:** autofill bg overlap on focus border ([#DS-4950](https://github.com/koobiq/angular-components/issues/issue/DS-4950)) ([#1518](https://github.com/koobiq/angular-components/issues/1518)) ([ed90e11](https://github.com/koobiq/angular-components/commit/ed90e11378b4cb3396ada5e25d8247ee2ed11275))
+ * bug fix  **option:** prevent scroll on hover ([#DS-4907](https://github.com/koobiq/angular-components/issues/issue/DS-4907)) ([#1507](https://github.com/koobiq/angular-components/issues/1507)) ([f215c25](https://github.com/koobiq/angular-components/commit/f215c2561137a98892c1f9a5539b6b47072e7980))
+ * bug fix  **select:** added triggerValuesLimit ([#DS-4993](https://github.com/koobiq/angular-components/issues/issue/DS-4993)) ([#1505](https://github.com/koobiq/angular-components/issues/1505)) ([856a759](https://github.com/koobiq/angular-components/commit/856a7595f431d6c0716b400547cbffb55d75bc9b))
+ * bug fix  **select:** preselected values ([#DS-4994](https://github.com/koobiq/angular-components/issues/issue/DS-4994)) ([#1504](https://github.com/koobiq/angular-components/issues/1504)) ([cf1c736](https://github.com/koobiq/angular-components/commit/cf1c73612cb5e1a26eb02b984c3b31eb40cc4b91))
+ * bug fix  **tags:** separator handling on empty input value ([#DS-5009](https://github.com/koobiq/angular-components/issues/issue/DS-5009)) ([#1519](https://github.com/koobiq/angular-components/issues/1519)) ([41d253f](https://github.com/koobiq/angular-components/commit/41d253fdd5762a4bae020c04e4f3504bd084d996))
+ * bug fix  **timezone:** use select tokens ([#DS-4901](https://github.com/koobiq/angular-components/issues/issue/DS-4901)) ([#1516](https://github.com/koobiq/angular-components/issues/1516)) ([52140a9](https://github.com/koobiq/angular-components/commit/52140a98e795af1ab8d32ef0ef6ae66117c98d55))
+ * bug fix  **visual:** add background to tooltip inner element ([#DS-4956](https://github.com/koobiq/angular-components/issues/issue/DS-4956)) ([#1513](https://github.com/koobiq/angular-components/issues/1513)) ([21dd545](https://github.com/koobiq/angular-components/commit/21dd54518a661ae5427450a11337e664a86195ab))
+ * feature  **modal:** make `KbqModalService` and `KbqModalControlService` providedIn root ([#DS-3287](https://github.com/koobiq/angular-components/issues/issue/DS-3287)) ([#1502](https://github.com/koobiq/angular-components/issues/1502)) ([4c304d7](https://github.com/koobiq/angular-components/commit/4c304d713a793bf4e13fad3809f64905bb2bd5a2))
+ * feature  **tags:** call onChange only on UI-initiated changes ([#DS-4742](https://github.com/koobiq/angular-components/issues/issue/DS-4742)) ([#1488](https://github.com/koobiq/angular-components/issues/1488)) ([c20500e](https://github.com/koobiq/angular-components/commit/c20500eb5b0d57257683986a4e41993b87217611))
+
 # 19.6.0 (2026-04-16)
 
 ### Koobiq
