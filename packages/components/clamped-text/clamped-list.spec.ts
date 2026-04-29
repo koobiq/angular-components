@@ -102,7 +102,7 @@ describe('KbqClampedList', () => {
     });
 
     it('should not render trigger if items do not exceed threshold', () => {
-        fixture.componentInstance.items.set(Array.from({ length: 9 }, (_, i) => `Item ${i + 1}`)); // 3 items
+        fixture.componentInstance.items.set(Array.from({ length: 9 }, (_, i) => `Item ${i + 1}`));
         fixture.detectChanges();
 
         expect(getTrigger(debugElement)).toBeNull();
