@@ -100,6 +100,45 @@ describe('KbqPipeAdd', () => {
         return filterBarDebugElement.componentInstance;
     };
 
+    describe('UI integration', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.detectChanges();
+        });
+
+        it('should have kbq-pipe-add class on the host', () => {
+            const pipeAddDebug = fixture.debugElement.query(By.directive(KbqPipeAdd));
+
+            expect(pipeAddDebug.nativeElement.classList).toContain('kbq-pipe-add');
+        });
+
+        it('should open the template select on trigger click', () => {
+            const pipeAdd = getPipeAdd();
+            const pipeAddDebug = fixture.debugElement.query(By.directive(KbqPipeAdd));
+
+            expect(pipeAdd.select.panelOpen).toBe(false);
+
+            pipeAddDebug.query(By.css('.kbq-select')).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(pipeAdd.select.panelOpen).toBe(true);
+        });
+
+        it('should render one option per pipeTemplate', fakeAsync(() => {
+            getPipeAdd().select.open();
+            flush();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            expect(options.length).toBe(fixture.componentInstance.pipeTemplates.length);
+            fixture.componentInstance.pipeTemplates.forEach((template, index) => {
+                expect(options[index].textContent).toContain(template.name);
+            });
+        }));
+    });
+
     describe('addedPipes', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);

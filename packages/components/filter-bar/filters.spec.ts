@@ -956,6 +956,51 @@ describe('KbqFilters', () => {
         }));
     });
 
+    describe('UI integration', () => {
+        it('should have kbq-filters class on the host', () => {
+            initFixture();
+
+            expect(filtersDebugElement.nativeElement.classList).toContain('kbq-filters');
+        });
+
+        it('should open dropdown when trigger is clicked', fakeAsync(() => {
+            initFixture(null, [createFilter([], { name: 'Alpha' })]);
+
+            expect(getFiltersComponent().opened).toBeFalsy();
+
+            filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
+            flush();
+            fixture.detectChanges();
+
+            expect(getFiltersComponent().opened).toBeTruthy();
+        }));
+
+        it('should focus search input after opening dropdown', fakeAsync(() => {
+            initFixture(null, [createFilter([], { name: 'Alpha' })]);
+
+            filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
+            flush();
+            fixture.detectChanges();
+
+            expect(document.activeElement?.classList.contains('kbq-input')).toBe(true);
+        }));
+
+        it('should list filters and the saveAsNewFilter action in the dropdown', fakeAsync(() => {
+            const filtersList = Array.from({ length: 9 }, (_, i) => createFilter([], { name: `Filter ${i + 1}` }));
+
+            initFixture(null, filtersList);
+
+            filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
+            flush();
+            fixture.detectChanges();
+
+            const items = document.querySelectorAll('.kbq-dropdown-item');
+
+            expect(items.length).toBe(filtersList.length + 1);
+            expect(items[items.length - 1].textContent).toContain(getFiltersComponent().localeData.saveAsNew);
+        }));
+    });
+
     describe('Template integration', () => {
         it('should show filter name in main button when filter is set', () => {
             initFixture(createFilter([], { name: 'MyFilter' }));
