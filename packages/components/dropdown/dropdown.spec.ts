@@ -368,22 +368,6 @@ describe('KbqDropdown', () => {
         }).not.toThrow();
     });
 
-    it('should set the panel direction based on the trigger direction', () => {
-        const fixture = createComponent(
-            SimpleDropdown,
-            [{ provide: Directionality, useFactory: () => ({ value: 'rtl' }) }],
-            []
-        );
-
-        fixture.detectChanges();
-        fixture.componentInstance.trigger.open();
-        fixture.detectChanges();
-
-        const boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
-
-        expect(boundingBox.getAttribute('dir')).toEqual('rtl');
-    });
-
     it('should set the initial panel direction from Directionality', () => {
         const dirProvider = { value: 'rtl' };
         const fixture = createComponent(
