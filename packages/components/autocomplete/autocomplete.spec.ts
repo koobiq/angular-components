@@ -1082,9 +1082,6 @@ describe('KbqAutocomplete', () => {
             window.scroll(0, 0);
         });
 
-        // Layout-dependent fallback positioning (panel-above, expand-on-results) can't be exercised
-        // in jsdom and is covered by Playwright in e2e.playwright-spec.ts → "Fallback positions".
-
         it('should align panel properly when filtering in "above" position', fakeAsync(() => {
             const fixture = createComponent(SimpleAutocomplete);
 
