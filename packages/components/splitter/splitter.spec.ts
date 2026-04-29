@@ -214,6 +214,31 @@ describe('KbqSplitter', () => {
             expect(ghostGutters.length).toBe(1);
         }));
 
+        it('should toggle ghost visibility class on mousedown / mouseup', fakeAsync(() => {
+            const fixture = createTestComponent(KbqSplitterGhost);
+
+            fixture.detectChanges();
+
+            tick();
+
+            const gutter = fixture.debugElement.query(By.directive(KbqGutterDirective));
+            const ghost = fixture.debugElement.query(By.directive(KbqGutterGhostDirective));
+
+            expect(ghost.nativeElement.classList.contains('kbq-gutter-ghost_visible')).toBe(false);
+
+            gutter.nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
+
+            fixture.detectChanges();
+
+            expect(ghost.nativeElement.classList.contains('kbq-gutter-ghost_visible')).toBe(true);
+
+            document.dispatchEvent(new Event('mouseup'));
+
+            fixture.detectChanges();
+
+            expect(ghost.nativeElement.classList.contains('kbq-gutter-ghost_visible')).toBe(false);
+        }));
+
         it('should not resize areas when moving gutter', fakeAsync(() => {
             const fixture = createTestComponent(KbqSplitterGhost);
 
