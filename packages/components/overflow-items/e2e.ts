@@ -38,6 +38,41 @@ type OrderedScenario = {
     lastItemOrder: number;
 };
 
+const HORIZONTAL_DEFAULTS: Omit<HorizontalScenario, 'testid'> = {
+    containerWidth: 500,
+    containerPadding: 0,
+    containerMaxHeight: 24,
+    itemWidth: 50,
+    itemHeight: null,
+    itemMarginRight: 0,
+    resultWidth: 100,
+    resultHeight: null,
+    justifyContent: 'start',
+    flexWrap: 'nowrap',
+    reverseOverflowOrder: false
+};
+
+const VERTICAL_DEFAULTS: Omit<VerticalScenario, 'testid'> = {
+    containerHeight: 500,
+    containerPadding: 0,
+    containerMaxWidth: null,
+    itemHeight: 50,
+    itemWidth: null,
+    itemMarginBottom: 0,
+    resultHeight: 50,
+    resultWidth: null,
+    flexWrap: 'nowrap',
+    reverseOverflowOrder: false
+};
+
+function scenarioH(testid: string, overrides: Partial<HorizontalScenario> = {}): HorizontalScenario {
+    return { ...HORIZONTAL_DEFAULTS, ...overrides, testid };
+}
+
+function scenarioV(testid: string, overrides: Partial<VerticalScenario> = {}): VerticalScenario {
+    return { ...VERTICAL_DEFAULTS, ...overrides, testid };
+}
+
 @Component({
     selector: 'e2e-overflow-items-horizontal',
     imports: [KbqOverflowItemsModule],
@@ -260,39 +295,4 @@ export class E2eOverflowItemsOrdered {
             lastItemOrder: -Infinity
         }
     ];
-}
-
-const HORIZONTAL_DEFAULTS: Omit<HorizontalScenario, 'testid'> = {
-    containerWidth: 500,
-    containerPadding: 0,
-    containerMaxHeight: 24,
-    itemWidth: 50,
-    itemHeight: null,
-    itemMarginRight: 0,
-    resultWidth: 100,
-    resultHeight: null,
-    justifyContent: 'start',
-    flexWrap: 'nowrap',
-    reverseOverflowOrder: false
-};
-
-const VERTICAL_DEFAULTS: Omit<VerticalScenario, 'testid'> = {
-    containerHeight: 500,
-    containerPadding: 0,
-    containerMaxWidth: null,
-    itemHeight: 50,
-    itemWidth: null,
-    itemMarginBottom: 0,
-    resultHeight: 50,
-    resultWidth: null,
-    flexWrap: 'nowrap',
-    reverseOverflowOrder: false
-};
-
-function scenarioH(testid: string, overrides: Partial<HorizontalScenario> = {}): HorizontalScenario {
-    return { ...HORIZONTAL_DEFAULTS, ...overrides, testid };
-}
-
-function scenarioV(testid: string, overrides: Partial<VerticalScenario> = {}): VerticalScenario {
-    return { ...VERTICAL_DEFAULTS, ...overrides, testid };
 }
