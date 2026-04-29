@@ -12,7 +12,8 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { ESCAPE } from '@koobiq/cdk/keycodes';
+import { createMouseEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     ErrorStateMatcher,
@@ -93,6 +94,24 @@ class KbqInputForBehaviors {
     value: string = 'test';
     placeholder: string;
     disabled: boolean = false;
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqIconModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [(ngModel)]="value" />
+            <kbq-cleaner />
+        </kbq-form-field>
+    `
+})
+class KbqFormFieldWithCleaner {
+    value: string;
 }
 
 @Component({
@@ -352,6 +371,58 @@ describe('KbqInput', () => {
 
             expect(inputElement.getAttribute('placeholder')).toBe('');
         }));
+
+        describe('cleaner', () => {
+            it('should has cleaner', fakeAsync(() => {
+                const fixture = createComponent(KbqFormFieldWithCleaner);
+
+                fixture.detectChanges();
+
+                const testComponent = fixture.debugElement.componentInstance;
+                const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+                const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);
+
+                inputElement.value = 'test';
+                dispatchFakeEvent(inputElement, 'input');
+                fixture.detectChanges();
+
+                expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(1);
+
+                const cleanerElement = fixture.debugElement.query(By.css('.kbq-form-field__cleaner')).nativeElement;
+
+                cleanerElement.click();
+                fixture.detectChanges();
+
+                expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);
+                expect(testComponent.value).toBe(null);
+            }));
+
+            it('with cleaner on keydown "ESC" should clear field', fakeAsync(() => {
+                const fixture = createComponent(KbqFormFieldWithCleaner);
+                const formFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
+                const formFieldElement = formFieldDebug.nativeElement;
+                const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                fixture.detectChanges();
+
+                const testComponent = fixture.debugElement.componentInstance;
+
+                inputElement.value = 'test';
+                dispatchFakeEvent(inputElement, 'input');
+                dispatchFakeEvent(inputElement, 'focus');
+                fixture.detectChanges();
+
+                expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(1);
+
+                dispatchKeyboardEvent(formFieldDebug.nativeElement, 'keydown', ESCAPE);
+                fixture.detectChanges();
+
+                expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);
+                expect(testComponent.value).toBe(null);
+            }));
+        });
     });
 
     describe('validation', () => {
