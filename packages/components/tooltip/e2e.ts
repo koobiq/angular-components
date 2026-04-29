@@ -3,6 +3,42 @@ import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 @Component({
+    selector: 'e2e-tooltip-arrow-offset',
+    imports: [KbqToolTipModule],
+    template: `
+        <div
+            data-testid="tooltipWithArrow"
+            [kbqTooltip]="'with-arrow'"
+            [kbqTooltipArrow]="true"
+            [kbqPlacement]="'bottom'"
+        >
+            trigger-with-arrow
+        </div>
+        <div
+            data-testid="tooltipWithoutArrow"
+            [kbqTooltip]="'without-arrow'"
+            [kbqTooltipArrow]="false"
+            [kbqPlacement]="'bottom'"
+        >
+            trigger-without-arrow
+        </div>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTooltipArrowOffset'
+    }
+})
+export class E2eTooltipArrowOffset {}
+
+@Component({
     selector: 'e2e-tooltip-states',
     imports: [KbqToolTipModule],
     template: `
