@@ -131,3 +131,32 @@ export class E2eBreadcrumbsStateAndStyle {
         ]
     ];
 }
+
+@Component({
+    selector: 'e2e-breadcrumbs-overflow-max',
+    imports: [
+        KbqBreadcrumbsModule,
+        RouterLink
+    ],
+    template: `
+        <nav kbq-breadcrumbs data-testid="e2eBreadcrumbsOverflowMax" [max]="max">
+            @for (breadcrumb of items; track breadcrumb) {
+                <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
+            }
+        </nav>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eBreadcrumbsOverflowMaxHost'
+    }
+})
+export class E2eBreadcrumbsOverflowMax {
+    readonly max = 4;
+    readonly items = Array.from({ length: 5 }, (_, i) => `Item #${i}`);
+}
