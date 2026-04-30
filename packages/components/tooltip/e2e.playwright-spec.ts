@@ -15,4 +15,25 @@ test.describe('KbqTooltipModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eTooltipArrowOffset', () => {
+        test('should change offset for arrowless tooltip', async ({ page }) => {
+            await page.goto('/E2eTooltipArrowOffset');
+
+            await page.getByTestId('tooltipWithArrow').hover();
+            const tooltipWithArrow = page.locator('.kbq-tooltip:not(.kbq-tooltip_arrowless)');
+
+            await expect(tooltipWithArrow).toBeVisible();
+            await expect(tooltipWithArrow).toHaveCSS('margin-top', '8px');
+
+            await page.mouse.move(0, 0);
+            await expect(tooltipWithArrow).toBeHidden();
+
+            await page.getByTestId('tooltipWithoutArrow').hover();
+            const tooltipWithoutArrow = page.locator('.kbq-tooltip.kbq-tooltip_arrowless');
+
+            await expect(tooltipWithoutArrow).toBeVisible();
+            await expect(tooltipWithoutArrow).toHaveCSS('margin-top', '4px');
+        });
+    });
 });
