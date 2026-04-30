@@ -21,14 +21,14 @@ class TimezoneOptionComponent {
     };
 }
 
-describe('KbqTimezoneOption component', () => {
+describe('KbqTimezoneOption', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTimezoneModule, TimezoneOptionComponent]
+            imports: [TimezoneOptionComponent]
         }).compileComponents();
     });
 
-    it('TimezoneOptionComponent: viewValue', () => {
+    it('should compute viewValue from offset, city, and cities', () => {
         const fixture = TestBed.createComponent(TimezoneOptionComponent);
 
         fixture.detectChanges();

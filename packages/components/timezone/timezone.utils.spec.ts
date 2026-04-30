@@ -28,35 +28,38 @@ const thirdTimezone: KbqTimezoneZone = {
 
 describe('KbqTimezone utils', () => {
     describe('parseOffset', () => {
-        it('positive offset', () => {
+        it('should parse a positive offset to minutes', () => {
             expect(parseOffset('03:00:00')).toBe(180);
         });
 
-        it('negative offset', () => {
+        it('should parse a negative offset to minutes', () => {
             expect(parseOffset('-03:00:00')).toBe(-180);
         });
     });
 
     describe('offsetFormatter', () => {
-        it('positive offset', () => {
+        it('should format a positive offset as "UTC +HH:MM"', () => {
             expect(offsetFormatter('03:00:00')).toBe('UTC +03:00');
         });
 
-        it('negative offset', () => {
+        it('should format a negative offset with a minus sign', () => {
             expect(offsetFormatter('-03:00:00')).toBe('UTC −03:00');
         });
     });
 
     describe('timezonesSortComparator', () => {
-        it('comparing timezone', () => {
+        it('should sort by offset when offsets differ', () => {
             expect(timezonesSortComparator(thirdTimezone, firstTimezone)).toBeLessThan(0);
             expect(timezonesSortComparator(firstTimezone, secondTimezone)).toBeGreaterThan(0);
+        });
+
+        it('should sort by countryName when offsets are equal', () => {
             expect(timezonesSortComparator(secondTimezone, thirdTimezone)).toBeLessThan(0);
         });
     });
 
     describe('getZonesGroupedByCountry', () => {
-        it('group timezones', () => {
+        it('should group timezones by country', () => {
             const source: KbqTimezoneZone[] = [firstTimezone, secondTimezone];
             const result: KbqTimezoneGroup[] = [
                 {
