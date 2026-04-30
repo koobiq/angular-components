@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Directionality } from '@angular/cdk/bidi';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -10,6 +11,7 @@ import {
     KbqTreeFlattener,
     KbqTreeModule
 } from '@koobiq/components/tree';
+import { EMPTY } from 'rxjs';
 import { KbqTreeSelectModule } from './tree-select.module';
 
 class FileNode {
@@ -334,3 +336,361 @@ export class E2eMultiTreeSelectStates extends BaseTreeSelectStates {}
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eMultilineTreeSelectStates extends BaseTreeSelectStates {}
+
+/* -------------------------------------------------------------------------- */
+/*  E2E fixtures for layout-dependent tree-select tests migrated from         */
+/*  tree-select.component.karma-spec.ts and from xit blocks in                */
+/*  tree-select.component.spec.ts. They rely on real layout (bounding boxes,  */
+/*  cursor styles from .scss, CDK overlay flexible-position math) and so     */
+/*  cannot run under Jest/JSDOM.                                              */
+/* -------------------------------------------------------------------------- */
+
+@Component({
+    selector: 'e2e-tree-select-positioning',
+    imports: [KbqTreeModule, KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <button data-testid="preselectRoot" type="button" (click)="control.setValue('rootNode_1_long_text_long_text')">
+            Preselect root
+        </button>
+        <button data-testid="preselectPictures" type="button" (click)="control.setValue('Pictures')">
+            Preselect Pictures
+        </button>
+        <button data-testid="preselectApplications" type="button" (click)="control.setValue('Applications')">
+            Preselect Applications
+        </button>
+        <button data-testid="clearSelection" type="button" (click)="control.setValue(null)">Clear</button>
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select
+                data-testid="e2eTreeSelect"
+                placeholder="Food"
+                [formControl]="control"
+                [panelClass]="panelClass"
+            >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectPositioning'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectPositioning extends BaseTreeSelectStates {
+    readonly control = new UntypedFormControl();
+    readonly panelClass = ['custom-one', 'custom-two'];
+}
+
+@Component({
+    selector: 'e2e-tree-select-multi-behavior',
+    imports: [KbqTreeModule, KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <button
+            data-testid="setOrderedValue"
+            type="button"
+            (click)="control.setValue(['Pictures', 'rootNode_1_long_text_long_text', 'Documents'])"
+        >
+            Set ordered value
+        </button>
+        <button data-testid="clearValue" type="button" (click)="control.setValue([])">Clear</button>
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect" placeholder="Food" [multiple]="true" [formControl]="control">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectMultiBehavior'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectMultiBehavior extends BaseTreeSelectStates {
+    readonly control = new UntypedFormControl([]);
+}
+
+@Component({
+    selector: 'e2e-tree-select-data-mutation',
+    imports: [KbqTreeModule, KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <button data-testid="clearData" type="button" (click)="clearData()">Clear data</button>
+        <button data-testid="restoreData" type="button" (click)="restoreData()">Restore data</button>
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect" placeholder="Food" [formControl]="control">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectDataMutation'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectDataMutation extends BaseTreeSelectStates {
+    readonly control = new UntypedFormControl('rootNode_1_long_text_long_text');
+    private readonly originalData = this.dataSource.data;
+
+    clearData(): void {
+        this.dataSource.data = [];
+    }
+
+    restoreData(): void {
+        this.dataSource.data = this.originalData;
+    }
+}
+
+@Component({
+    selector: 'e2e-tree-select-rtl-positioning',
+    imports: [KbqTreeModule, KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <div dir="rtl">
+            <kbq-form-field [attr.data-testid]="'e2eFormField'">
+                <kbq-tree-select data-testid="e2eTreeSelect" placeholder="Food" [formControl]="control">
+                    <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                        <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                            <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                        </kbq-tree-option>
+
+                        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                            <kbq-tree-node-toggle [node]="node" />
+                            <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                        </kbq-tree-option>
+                    </kbq-tree-selection>
+                </kbq-tree-select>
+            </kbq-form-field>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectRtlPositioning'
+    },
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectRtlPositioning extends BaseTreeSelectStates {
+    readonly control = new UntypedFormControl();
+}
+
+@Component({
+    selector: 'e2e-tree-select-form-control-disabled',
+    imports: [KbqTreeModule, KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <button data-testid="toggleDisabled" type="button" (click)="toggle()">Toggle disabled</button>
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect" placeholder="Food" [formControl]="control">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectFormControlDisabled'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectFormControlDisabled extends BaseTreeSelectStates {
+    readonly control = new UntypedFormControl({ value: null, disabled: true });
+
+    toggle(): void {
+        if (this.control.disabled) {
+            this.control.enable();
+        } else {
+            this.control.disable();
+        }
+    }
+}
+
+@Component({
+    selector: 'e2e-tree-select-property-disabled',
+    imports: [FormsModule, KbqTreeModule, KbqTreeSelectModule],
+    template: `
+        <button data-testid="toggleDisabled" type="button" (click)="isDisabled.set(!isDisabled())">
+            Toggle disabled
+        </button>
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect" placeholder="Food" ngModel [disabled]="isDisabled()">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectPropertyDisabled'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectPropertyDisabled extends BaseTreeSelectStates {
+    readonly isDisabled = signal(true);
+}
+
+@Component({
+    selector: 'e2e-tree-select-initially-hidden',
+    imports: [KbqTreeModule, KbqTreeSelectModule],
+    template: `
+        <button data-testid="toggleVisibility" type="button" (click)="isVisible.set(!isVisible())">
+            Toggle visibility
+        </button>
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect" [style.display]="isVisible() ? 'block' : 'none'">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectInitiallyHidden'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectInitiallyHidden extends BaseTreeSelectStates {
+    readonly isVisible = signal(false);
+}
+
+@Component({
+    selector: 'e2e-tree-select-no-placeholder',
+    imports: [KbqTreeModule, KbqTreeSelectModule],
+    template: `
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectNoPlaceholder'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectNoPlaceholder extends BaseTreeSelectStates {}
+
+@Component({
+    selector: 'e2e-tree-select-panel-width-auto',
+    imports: [KbqTreeModule, KbqTreeSelectModule],
+    template: `
+        <kbq-form-field style="width: 300px;" [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect" [panelWidth]="'auto'">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    host: {
+        'data-testid': 'e2eTreeSelectPanelWidthAuto'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eTreeSelectPanelWidthAuto extends BaseTreeSelectStates {}
