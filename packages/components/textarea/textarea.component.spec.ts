@@ -1,4 +1,4 @@
-import { Component, Provider, Type, ViewChild, viewChild } from '@angular/core';
+import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -6,13 +6,12 @@ import {
     FormControlStatus,
     FormGroup,
     FormsModule,
-    NgForm,
     ReactiveFormsModule,
     ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { createMouseEvent, dispatchEvent } from '@koobiq/cdk/testing';
+import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable, map, timer } from 'rxjs';
@@ -85,7 +84,7 @@ class KbqTextareaInvalid {
         FormsModule
     ],
     template: `
-        <form #form="ngForm">
+        <form>
             <kbq-form-field>
                 <textarea kbqTextarea name="control" required [(ngModel)]="value"></textarea>
             </kbq-form-field>
@@ -95,25 +94,7 @@ class KbqTextareaInvalid {
     `
 })
 class KbqFormFieldWithNgModelInForm {
-    @ViewChild('form', { static: false }) form: NgForm;
-
     value: string = '';
-}
-
-@Component({
-    imports: [
-        KbqFormFieldModule,
-        KbqTextareaModule,
-        FormsModule
-    ],
-    template: `
-        <kbq-form-field>
-            <textarea class="kbq-textarea_monospace" kbqTextarea [(ngModel)]="value"></textarea>
-        </kbq-form-field>
-    `
-})
-class KbqTextareaWithMonospace {
-    value: string = 'test';
 }
 
 @Component({
@@ -132,6 +113,22 @@ class KbqTextareaForBehaviors {
     value: string = 'test\ntest\ntest';
     placeholder: string;
     disabled: boolean = false;
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea [canGrow]="false" [(ngModel)]="value"></textarea>
+        </kbq-form-field>
+    `
+})
+class KbqTextareaGrowOff {
+    value: string = 'test\ntest\ntest';
 }
 
 @Component({
@@ -219,12 +216,10 @@ class TextareaWithErrorStateMatcher {
 
 describe('KbqTextarea', () => {
     describe('basic behaviors', () => {
-        it('should change state "disable"', fakeAsync(() => {
+        it('should change "disabled" state', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
-
-            tick();
 
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
             const textareaElement = fixture.debugElement.query(By.directive(KbqTextarea)).nativeElement;
@@ -234,14 +229,13 @@ describe('KbqTextarea', () => {
 
             fixture.componentInstance.disabled = true;
             fixture.detectChanges();
+            flush();
 
-            fixture.whenStable().then(() => {
-                expect(formFieldElement.classList.contains('kbq-disabled')).toBe(true);
-                expect(textareaElement.disabled).toBe(true);
-            });
+            expect(formFieldElement.classList.contains('kbq-disabled')).toBe(true);
+            expect(textareaElement.disabled).toBe(true);
         }));
 
-        it('should has placeholder', fakeAsync(() => {
+        it('should have a placeholder', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
@@ -267,17 +261,6 @@ describe('KbqTextarea', () => {
     });
 
     describe('appearance', () => {
-        it('should change font to monospace', () => {
-            const fixture = createComponent(KbqTextareaWithMonospace);
-
-            fixture.detectChanges();
-
-            const kbqTextareaDebug = fixture.debugElement.query(By.directive(KbqTextarea));
-            const textareaElement = kbqTextareaDebug.nativeElement;
-
-            expect(textareaElement.classList).toContain('kbq-textarea_monospace');
-        });
-
         it('should run validation (required)', () => {
             const fixture = createComponent(KbqTextareaInvalid);
 
@@ -331,6 +314,24 @@ describe('KbqTextarea', () => {
         });
     });
 
+    describe('grow class', () => {
+        it('should have kbq-textarea-resizable class when canGrow is false', () => {
+            const fixture = createComponent(KbqTextareaGrowOff);
+
+            fixture.detectChanges();
+
+            expect(getTextareaElement(fixture).classList.contains('kbq-textarea-resizable')).toBe(true);
+        });
+
+        it('should not have kbq-textarea-resizable class when canGrow is true (default)', () => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+
+            fixture.detectChanges();
+
+            expect(getTextareaElement(fixture).classList.contains('kbq-textarea-resizable')).toBe(false);
+        });
+    });
+
     describe('ErrorStateMatcher', () => {
         describe(ErrorStateMatcher.name, () => {
             it('should not be in error state initially when invalid but untouched', () => {
@@ -364,7 +365,7 @@ describe('KbqTextarea', () => {
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.textarea().errorState).toBe(false);
 
-                getTextareaElement(fixture).dispatchEvent(new Event('blur'));
+                dispatchFakeEvent(getTextareaElement(fixture), 'blur');
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
@@ -406,7 +407,7 @@ describe('KbqTextarea', () => {
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.textarea().errorState).toBe(false);
 
-                getTextareaElement(fixture).dispatchEvent(new Event('blur'));
+                dispatchFakeEvent(getTextareaElement(fixture), 'blur');
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
@@ -445,7 +446,7 @@ describe('KbqTextarea', () => {
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.textarea().errorState).toBe(false);
 
-                getTextareaElement(fixture).dispatchEvent(new Event('blur'));
+                dispatchFakeEvent(getTextareaElement(fixture), 'blur');
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();

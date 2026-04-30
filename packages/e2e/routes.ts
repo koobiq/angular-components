@@ -68,7 +68,7 @@ import {
     E2eTagListStates,
     E2eTagStateAndStyle
 } from '../components/tags/e2e';
-import { E2eTextareaStates } from '../components/textarea/e2e';
+import { E2eTextareaGrowBehavior, E2eTextareaScrollOnFocus, E2eTextareaStates } from '../components/textarea/e2e';
 import { E2eTimepickerStates } from '../components/timepicker/e2e';
 import { E2eTimezoneStates } from '../components/timezone/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
@@ -105,6 +105,8 @@ const components = [
     E2eClampedTextStateAndStyle,
     E2eAccordionStates,
     E2eTextareaStates,
+    E2eTextareaGrowBehavior,
+    E2eTextareaScrollOnFocus,
     E2eDatepickerStates,
     E2eTableStates,
     E2eAppSwitcherStates,
