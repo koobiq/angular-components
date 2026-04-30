@@ -1,5 +1,5 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
@@ -13,7 +13,7 @@ describe(KbqTabNavBar.name, () => {
     beforeEach(() => {
         dirChange = new Subject();
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithNgIf, TabLinkWithTabIndexBinding],
+            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithTabIndexBinding],
             providers: [
                 {
                     provide: Directionality,
@@ -37,13 +37,11 @@ describe(KbqTabNavBar.name, () => {
         });
 
         it('should change active index on click', () => {
-            // select the second link
             let tabLink = fixture.debugElement.queryAll(By.css('a'))[1];
 
             tabLink.nativeElement.click();
             expect(component.activeIndex).toBe(1);
 
-            // select the third link
             tabLink = fixture.debugElement.queryAll(By.css('a'))[2];
             tabLink.nativeElement.click();
             expect(component.activeIndex).toBe(2);
@@ -118,35 +116,16 @@ describe(KbqTabNavBar.name, () => {
         <nav kbqTabNavBar>
             @for (tab of tabs; track tab) {
                 <a kbqTabLink [active]="activeIndex === $index" [disabled]="disabled" (click)="activeIndex = $index">
-                    Tab link {{ label }}
+                    Tab link
                 </a>
             }
         </nav>
     `
 })
 class SimpleTabNavBarTestApp {
-    @ViewChild(KbqTabNavBar, { static: false }) tabNavBar: KbqTabNavBar;
-    @ViewChildren(KbqTabLink) tabLinks: QueryList<KbqTabLink>;
-
-    label = '';
     disabled = false;
     tabs = [0, 1, 2];
-
     activeIndex = 0;
-}
-
-@Component({
-    imports: [KbqTabsModule],
-    template: `
-        <nav kbqTabNavBar>
-            @if (!isDestroyed) {
-                <a kbqTabLink>Link</a>
-            }
-        </nav>
-    `
-})
-class TabLinkWithNgIf {
-    isDestroyed = false;
 }
 
 @Component({
