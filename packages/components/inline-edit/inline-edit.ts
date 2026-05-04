@@ -3,7 +3,7 @@ import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkConnectedOverlay, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgClass } from '@angular/common';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -120,6 +120,7 @@ export class KbqInlineEditMenu {
     selector: 'kbq-inline-edit',
     imports: [
         CdkConnectedOverlay,
+        NgClass,
         KbqButtonModule,
         KbqIcon,
         KbqTooltipTrigger,
@@ -175,6 +176,10 @@ export class KbqInlineEdit {
     readonly editModeWidth = input(undefined, { transform: numberAttribute });
     /** User-defined tooltip placement */
     readonly tooltipPlacement = input<PopUpPlacements>();
+    /** Classes to be passed to the inline edit panel. */
+    readonly panelClass = input<string | string[]>('');
+    /** Classes to be passed to the inline edit panel. */
+    readonly overlayPanelClass = input<string | string[]>('');
     /** Handler function to retrieve the current value */
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */
