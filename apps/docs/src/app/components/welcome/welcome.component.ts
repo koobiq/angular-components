@@ -31,8 +31,8 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     protected structureCategories: DocsStructureCategory[];
     readonly currentTheme = toSignal(
-        this.themeService.current.pipe(map((theme) => theme?.className.replace('kbq-', '') ?? '')),
-        { initialValue: '' }
+        this.themeService.current.pipe(map((theme) => theme?.className.replace('kbq-', '') ?? 'light')),
+        { initialValue: 'light' }
     );
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
