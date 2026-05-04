@@ -17,6 +17,6 @@ import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
 })
 export class TagSelectableExample {
     protected onSelectionChange(event: KbqTagSelectionChange): void {
-        console.log('SelectionC change: ', event);
+        console.log('Selection changed:', event);
     }
 }
