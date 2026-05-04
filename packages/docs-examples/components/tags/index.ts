@@ -17,7 +17,6 @@ import { TagListDraggableExample } from './tag-list-draggable/tag-list-draggable
 import { TagListEditableExample } from './tag-list-editable/tag-list-editable-example';
 import { TagListOverviewExample } from './tag-list-overview/tag-list-overview-example';
 import { TagListRemovableExample } from './tag-list-removable/tag-list-removable-example';
-import { TagListSelectableExample } from './tag-list-selectable/tag-list-selectable-example';
 import { TagLongTextExample } from './tag-long-text/tag-long-text-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
 import { TagRemovableExample } from './tag-removable/tag-removable-example';
@@ -45,7 +44,6 @@ export {
     TagListEditableExample,
     TagListOverviewExample,
     TagListRemovableExample,
-    TagListSelectableExample,
     TagLongTextExample,
     TagOverviewExample,
     TagRemovableExample,
@@ -80,8 +78,7 @@ const EXAMPLES = [
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
     TagAutocompleteRemovableExample,
-    TagSelectableExample,
-    TagListSelectableExample
+    TagSelectableExample
 ];
 
 @NgModule({

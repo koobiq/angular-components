@@ -34,7 +34,6 @@ import {
     TagListEditableExample,
     TagListOverviewExample,
     TagListRemovableExample,
-    TagListSelectableExample,
     TagLongTextExample,
     TagOverviewExample,
     TagRemovableExample,
@@ -74,12 +73,9 @@ import { DevThemeToggle } from '../theme-toggle';
         TagAutocompleteDraggableExample,
         TagAutocompleteEditableExample,
         TagAutocompleteRemovableExample,
-        TagSelectableExample,
-        TagListSelectableExample
+        TagSelectableExample
     ],
     template: `
-        <tag-list-selectable-example />
-        <hr />
         <tag-selectable-example />
         <hr />
         <tag-list-draggable-example />
