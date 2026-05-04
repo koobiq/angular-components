@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, NgZone, VERSION } from '@angular/core';
+import { inject, Injectable, VERSION } from '@angular/core';
 import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
 import StackBlitzSDK, { Project, ProjectFiles } from '@stackblitz/sdk';
-import { firstValueFrom, Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { docsKoobiqVersion } from '../../version';
 import { docsNormalizePath } from './normalize-path';
 
@@ -62,31 +61,33 @@ export const DOCS_TEMPLATE_FILES = [
 @Injectable({ providedIn: 'root' })
 export class DocsStackblitzWriter {
     private readonly http = inject(HttpClient);
-    private readonly ngZone = inject(NgZone);
-    private readonly fileCache = new Map<string, Observable<string>>();
+    private readonly cache = new Map<string, Promise<() => void>>();
 
     /**
      * Returns an HTMLFormElement that will open a new stackblitz template with the example data when
      * called with submit().
      */
     createStackBlitzForExample(exampleId: string, data: ExampleData): Promise<() => void> {
-        return this.ngZone.runOutsideAngular(async () => {
-            const { files, dependencies } = await this.buildInMemoryProject(data, exampleId);
+        if (!this.cache.has(exampleId)) {
+            this.cache.set(
+                exampleId,
+                this.buildInMemoryProject(data, exampleId).then(({ files, dependencies }) => () => {
+                    StackBlitzSDK.openProject(
+                        {
+                            title: `Angular Components - ${data.description}`,
+                            tags: ['angular', 'components', 'koobiq', 'example'],
+                            description: `${data.description}\n\nAuto-generated from: https://koobiq.io`,
+                            template: 'angular-cli',
+                            dependencies,
+                            files
+                        },
+                        { openFile: `src/example/${data.indexFilename}` }
+                    );
+                })
+            );
+        }
 
-            return () => {
-                StackBlitzSDK.openProject(
-                    {
-                        title: `Angular Components - ${data.description}`,
-                        tags: ['angular', 'components', 'koobiq', 'example'],
-                        description: `${data.description}\n\nAuto-generated from: https://koobiq.io`,
-                        template: 'angular-cli',
-                        dependencies,
-                        files
-                    },
-                    { openFile: `src/example/${data.indexFilename}` }
-                );
-            };
-        });
+        return this.cache.get(exampleId)!;
     }
 
     /**
@@ -277,13 +278,6 @@ export class DocsStackblitzWriter {
     }
 
     private loadFile(fileUrl: string): Promise<string> {
-        let stream = this.fileCache.get(fileUrl);
-
-        if (!stream) {
-            stream = this.http.get(fileUrl, { responseType: 'text' }).pipe(shareReplay(1));
-            this.fileCache.set(fileUrl, stream);
-        }
-
-        return firstValueFrom(stream);
+        return firstValueFrom(this.http.get(fileUrl, { responseType: 'text' }));
     }
 }

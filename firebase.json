@@ -71,6 +71,18 @@
                     ]
                 },
                 {
+                    "source": "/**/*.@(png|svg|jpg|jpeg|gif|webp|ico|woff|woff2)",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // Images/fonts are not content-hashed, so we use stale-while-revalidate:
+                            // serves cached version instantly and revalidates in the background.
+                            // A hard reload always bypasses the cache and fetches fresh content.
+                            "value": "public, max-age=0, stale-while-revalidate=86400"
+                        }
+                    ]
+                },
+                {
                     "source": "/assets/versions.json",
                     "headers": [
                         {
@@ -180,6 +192,18 @@
                         {
                             "key": "Cache-Control",
                             "value": "public, max-age=15811200, s-maxage=31536000"
+                        }
+                    ]
+                },
+                {
+                    "source": "/**/*.@(png|svg|jpg|jpeg|gif|webp|ico|woff|woff2)",
+                    "headers": [
+                        {
+                            "key": "Cache-Control",
+                            // Images/fonts are not content-hashed, so we use stale-while-revalidate:
+                            // serves cached version instantly and revalidates in the background.
+                            // A hard reload always bypasses the cache and fetches fresh content.
+                            "value": "public, max-age=0, stale-while-revalidate=86400"
                         }
                     ]
                 },

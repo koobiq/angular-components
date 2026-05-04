@@ -1,5 +1,4 @@
 import { NgComponentOutlet } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import {
     ChangeDetectorRef,
     Component,
@@ -25,6 +24,7 @@ import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examp
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
 
 /** Preferred order for files of an example displayed in the viewer. */
@@ -99,7 +99,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     @ViewChild('exampleElement') exampleElement: ElementRef<HTMLElement>;
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly httpClient = inject(HttpClient);
+    private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly window = inject(KBQ_WINDOW);
     private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
@@ -191,13 +191,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         }
     }
 
-    /**
-     * Fetches file content from a specified path using an HTTP GET request.
-     * @param importPath The path from which to fetch the file content.
-     * @returns Observable emitting the text content of the file.
-     */
+    /** Fetches the content of a file from the specified import path. */
     private fetchCode(importPath: string): Observable<string> {
-        return this.httpClient.get(importPath, { responseType: 'text' });
+        return this.documentLoader.get(importPath);
     }
 
     private async loadExampleComponent() {
