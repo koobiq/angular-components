@@ -17,9 +17,11 @@ import { TagListDraggableExample } from './tag-list-draggable/tag-list-draggable
 import { TagListEditableExample } from './tag-list-editable/tag-list-editable-example';
 import { TagListOverviewExample } from './tag-list-overview/tag-list-overview-example';
 import { TagListRemovableExample } from './tag-list-removable/tag-list-removable-example';
+import { TagListSelectableExample } from './tag-list-selectable/tag-list-selectable-example';
 import { TagLongTextExample } from './tag-long-text/tag-long-text-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
 import { TagRemovableExample } from './tag-removable/tag-removable-example';
+import { TagSelectableExample } from './tag-selectable/tag-selectable-example';
 import { TagWithIconExample } from './tag-with-icon/tag-with-icon-example';
 import { TagsAutocompleteOnpasteOffExample } from './tags-autocomplete-onpaste-off/tags-autocomplete-onpaste-off-example';
 import { TagsInputOnpasteOffExample } from './tags-input-onpaste-off/tags-input-onpaste-off-example';
@@ -43,10 +45,12 @@ export {
     TagListEditableExample,
     TagListOverviewExample,
     TagListRemovableExample,
+    TagListSelectableExample,
     TagLongTextExample,
     TagOverviewExample,
     TagRemovableExample,
     TagsAutocompleteOnpasteOffExample,
+    TagSelectableExample,
     TagsInputOnpasteOffExample,
     TagWithIconExample
 };
@@ -75,7 +79,9 @@ const EXAMPLES = [
     TagInputDraggableExample,
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
-    TagAutocompleteRemovableExample
+    TagAutocompleteRemovableExample,
+    TagSelectableExample,
+    TagListSelectableExample
 ];
 
 @NgModule({
