@@ -3,7 +3,7 @@ import { InlineEditContentAlignmentExample } from './inline-edit-content-alignme
 import { InlineEditControlsExample } from './inline-edit-controls/inline-edit-controls-example';
 import { InlineEditCustomHandlerExample } from './inline-edit-custom-handler/inline-edit-custom-handler-example';
 import { InlineEditCustomizedDesignExample } from './inline-edit-customized-design/inline-edit-customized-design-example';
-import { InlineEditCustomizedPanelExample } from './inline-edit-customized-panel/inline-edit-customized-panel';
+import { InlineEditCustomizedPanelExample } from './inline-edit-customized-panel/inline-edit-customized-panel-example';
 import { InlineEditDateTimeExample } from './inline-edit-date-time/inline-edit-date-time-example';
 import { InlineEditDisabledExample } from './inline-edit-disabled/inline-edit-disabled-example';
 import { InlineEditEditableHeaderExample } from './inline-edit-editable-header/inline-edit-editable-header-example';
