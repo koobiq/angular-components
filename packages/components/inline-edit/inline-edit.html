@@ -35,7 +35,7 @@
             (overlayKeydown)="onOverlayKeydown($event)"
         >
             <div class="cdk-visually-hidden" aria-hidden="true" kbqFocusRegionItem tabindex="0"></div>
-            <div class="kbq-inline-edit__panel" cdkTrapFocusAutoCapture [ngClass]="panelClass()" [cdkTrapFocus]="false">
+            <div class="kbq-inline-edit__panel" cdkTrapFocusAutoCapture [cdkTrapFocus]="false">
                 <div
                     class="kbq-inline-edit__control-container"
                     [kbqTooltipColor]="colors.Error"

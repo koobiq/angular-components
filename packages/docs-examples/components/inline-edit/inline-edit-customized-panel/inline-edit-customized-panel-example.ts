@@ -20,7 +20,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqBadgeModule
     ],
     template: `
-        <kbq-inline-edit showActions panelClass="custom-inline-edit-panel" (saved)="update()">
+        <kbq-inline-edit showActions overlayPanelClass="example-custom-inline-edit-panel" (saved)="update()">
             <kbq-label>Label</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
@@ -41,8 +41,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-inline-edit>
     `,
     styles: `
-        ::ng-deep .custom-inline-edit-panel {
-            width: 150px;
+        ::ng-deep .example-custom-inline-edit-panel {
+            width: 150px !important;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

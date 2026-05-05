@@ -534,6 +534,18 @@ describe('KbqInlineEdit', () => {
 
             expect(componentInstance.update).toHaveBeenCalled();
         });
+
+        it('should pass overlayPanelClass to panel', () => {
+            const fixture = setup(TestComponent);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+
+            const overlay = getOverlayElement();
+
+            expect(overlay?.classList.contains('test-custom-inline-edit-panel')).toBeTruthy();
+        });
     });
 });
 
@@ -565,6 +577,7 @@ export class BaseTestComponent {
             [disabled]="disabled()"
             [editModeWidth]="editModeWidth()"
             [tooltipPlacement]="tooltipPlacement()"
+            [overlayPanelClass]="'test-custom-inline-edit-panel'"
             (saved)="update()"
             (canceled)="cancel()"
             (modeChange)="onModeChange($event)"

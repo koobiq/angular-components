@@ -25,3 +25,7 @@ If action menus are available, they remain accessible even in this state.
 ### Date time input
 
 <!-- example(inline-edit-date-time) -->
+
+### Custom panel css class
+
+<!-- example(inline-edit-customized-panel) -->
