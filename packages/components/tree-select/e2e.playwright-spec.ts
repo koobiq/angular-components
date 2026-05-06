@@ -113,7 +113,7 @@ test.describe('KbqTreeSelectModule', () => {
             const minWidth = await paneInlineStyle(page, 'minWidth');
             const formField = await box(page.getByTestId('e2eFormField'));
 
-            expect(parseInt(minWidth)).toBe(Math.round(formField.width));
+            expect(Math.round(parseFloat(minWidth))).toBe(Math.round(formField.width));
         });
 
         test('should set the width of the overlay if the element was hidden initially', async ({ page }) => {
@@ -127,7 +127,7 @@ test.describe('KbqTreeSelectModule', () => {
             const minWidth = await paneInlineStyle(page, 'minWidth');
             const formField = await box(page.getByTestId('e2eFormField'));
 
-            expect(parseInt(minWidth)).toBe(Math.round(formField.width));
+            expect(Math.round(parseFloat(minWidth))).toBe(Math.round(formField.width));
         });
 
         test('should set the width of the overlay if there is no placeholder', async ({ page }) => {
