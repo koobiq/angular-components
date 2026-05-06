@@ -7,12 +7,10 @@ import { KbqSplitterModule } from './splitter.module';
         KbqSplitterModule
     ],
     template: `
-        <div data-testid="splitter_ghost_horizontal">
-            <kbq-splitter style="width: 500px; height: 200px;" [useGhost]="true">
-                <div kbq-splitter-area style="flex: 1">first</div>
-                <div kbq-splitter-area style="min-width: 50px">second</div>
-            </kbq-splitter>
-        </div>
+        <kbq-splitter style="width: 500px; height: 200px;" [useGhost]="true">
+            <div kbq-splitter-area style="flex: 1">first</div>
+            <div kbq-splitter-area style="min-width: 50px">second</div>
+        </kbq-splitter>
     `,
     styles: `
         :host {

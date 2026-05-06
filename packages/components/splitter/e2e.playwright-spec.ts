@@ -2,7 +2,7 @@ import { expect, Locator, Page, test } from '@playwright/test';
 
 test.describe('KbqSplitter', () => {
     test.describe('ghost', () => {
-        const getBlock = (page: Page) => page.getByTestId('splitter_ghost_horizontal');
+        const getBlock = (page: Page) => page.getByTestId('e2eSplitterGhost');
         const getGutter = (block: Locator) => block.locator('.kbq-gutter');
         const getGhost = (block: Locator) => block.locator('.kbq-gutter-ghost');
         const getAreaByText = (block: Locator, text: string) => block.locator('.kbq-splitter-area', { hasText: text });
