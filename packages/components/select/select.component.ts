@@ -1807,6 +1807,7 @@ export class KbqSelect
         this._renderer.setStyle(triggerClone, 'visibility', 'hidden');
         this._renderer.setStyle(triggerClone, 'top', '-100%');
         this._renderer.setStyle(triggerClone, 'left', '0');
+        this._renderer.setStyle(triggerClone, 'max-width', '100%');
 
         return triggerClone;
     }
