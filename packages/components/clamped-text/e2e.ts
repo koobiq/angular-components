@@ -62,11 +62,11 @@ export class E2eClampedTextStateAndStyle {
     imports: [KbqClampedText],
     template: `
         <div data-testid="auto_collapsed" style="max-width: 200px;">
-            <kbq-clamped-text>{{ text }}</kbq-clamped-text>
+            <kbq-clamped-text [rows]="2">{{ text }}</kbq-clamped-text>
         </div>
 
         <div data-testid="resize_persistence" [style.max-width.px]="resizeWidth()">
-            <kbq-clamped-text>{{ text }}</kbq-clamped-text>
+            <kbq-clamped-text [rows]="2">{{ text }}</kbq-clamped-text>
         </div>
         <button data-testid="resize_persistence_widen" type="button" (click)="widen()">Widen</button>
     `,

@@ -18,29 +18,29 @@ test.describe('KbqClampedText', () => {
     });
 
     test.describe('E2eClampedTextStates', () => {
-        const collapsedClass = /(?:^|\s)kbq-clamped-text__content_collapsed(?:\s|$)/;
+        const collapsedClass = 'kbq-clamped-text__content_collapsed';
         const content = (block: Locator) => block.locator('.kbq-clamped-text__content');
         const toggle = (block: Locator) => block.locator('.kbq-clamped-text__toggle');
 
-        test('should collapse by default when rows exceed maxRows', async ({ page }) => {
+        test('should auto-collapse when rendered rows exceed rows + 1', async ({ page }) => {
             await page.goto('/E2eClampedTextStates');
             const block = page.getByTestId('auto_collapsed');
 
             await expect(toggle(block)).toBeVisible();
-            await expect(content(block)).toHaveClass(collapsedClass);
+            await expect(content(block)).toContainClass(collapsedClass);
         });
 
         test('should preserve expanded state when container widens', async ({ page }) => {
             await page.goto('/E2eClampedTextStates');
             const block = page.getByTestId('resize_persistence');
 
-            await expect(content(block)).toHaveClass(collapsedClass);
+            await expect(content(block)).toContainClass(collapsedClass);
 
             await toggle(block).click();
-            await expect(content(block)).not.toHaveClass(collapsedClass);
+            await expect(content(block)).not.toContainClass(collapsedClass);
 
             await page.getByTestId('resize_persistence_widen').click();
-            await expect(content(block)).not.toHaveClass(collapsedClass);
+            await expect(content(block)).not.toContainClass(collapsedClass);
         });
     });
 });

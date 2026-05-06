@@ -59,7 +59,7 @@ describe('KbqClampedText', () => {
         expect(componentInstance.onCollapseChanged).toHaveBeenCalled();
     });
 
-    it('should set collapsed by default on init', async () => {
+    it('should default to expanded state on init', async () => {
         const fixture = createComponent(TestClampedTextDefault);
         const { componentInstance } = fixture;
 
