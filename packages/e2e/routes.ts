@@ -69,6 +69,7 @@ import {
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
+import { E2eSplitterGhost } from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabsStates } from '../components/tabs/e2e';
 import {
@@ -106,6 +107,7 @@ const components = [
     E2eButtonStateAndStyle,
     E2eButtonGroup,
     E2eSplitButtonStateAndStyle,
+    E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
     E2eActionsPanelWithOverlayContainer,
