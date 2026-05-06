@@ -303,7 +303,7 @@ describe(KbqTag.name, () => {
                 expect(event.defaultPrevented).toBe(true);
             });
 
-            it('should not dispatch `selectionChange` event when deselecting a non-selected chip', () => {
+            it('should not dispatch `selectionChange` event when deselecting a non-selected tag', () => {
                 tagInstance.deselect();
 
                 const spy = jest.fn();
@@ -315,7 +315,7 @@ describe(KbqTag.name, () => {
                 subscription.unsubscribe();
             });
 
-            it('should not dispatch `selectionChange` event when selecting a selected chip', () => {
+            it('should not dispatch `selectionChange` event when selecting a selected tag', () => {
                 tagInstance.select();
 
                 const spy = jest.fn();
@@ -364,7 +364,7 @@ describe(KbqTag.name, () => {
 
                     const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
-                    // Use the delete to remove the chip
+                    // Use the delete to remove the tag
                     tagInstance.handleKeydown(DELETE_EVENT);
                     fixture.detectChanges();
 
@@ -376,7 +376,7 @@ describe(KbqTag.name, () => {
 
                     const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
-                    // Use the delete to remove the chip
+                    // Use the delete to remove the tag
                     tagInstance.handleKeydown(BACKSPACE_EVENT);
                     fixture.detectChanges();
 
@@ -395,7 +395,7 @@ describe(KbqTag.name, () => {
 
                     const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
-                    // Use the delete to remove the chip
+                    // Use the delete to remove the tag
                     tagInstance.handleKeydown(DELETE_EVENT);
                     fixture.detectChanges();
 
@@ -407,7 +407,7 @@ describe(KbqTag.name, () => {
 
                     const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
 
-                    // Use the delete to remove the chip
+                    // Use the delete to remove the tag
                     tagInstance.handleKeydown(BACKSPACE_EVENT);
                     fixture.detectChanges();
 
@@ -415,7 +415,7 @@ describe(KbqTag.name, () => {
                 });
             });
 
-            it('should make disabled chips non-focusable', () => {
+            it('should make disabled tags non-focusable', () => {
                 expect(tagNativeElement.getAttribute('tabindex')).toBe('-1');
 
                 testComponent.disabled = true;
@@ -941,6 +941,51 @@ describe(KbqTag.name, () => {
         const { debugElement } = createComponent(TestTagInsideTagList);
 
         expect(isTagSelectable(debugElement)).toBeTruthy();
+    });
+
+    it('should have tabindex="0" when selectable', () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('-1');
+
+        componentInstance.selectable.set(true);
+        fixture.detectChanges();
+
+        expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should have tabindex="-1" by default', () => {
+        const { debugElement } = createComponent(TestTag);
+
+        expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should keep tabindex="-1" inside tag-list', () => {
+        const { debugElement } = createComponent(TestTagInsideTagList);
+
+        expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should respect manually set tabindex when selectable', () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('-1');
+
+        componentInstance.selectable.set(true);
+        fixture.detectChanges();
+
+        expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('0');
+
+        const tag = componentInstance.tag();
+
+        tag.tabindex = 2;
+        tag.changeDetectorRef.markForCheck();
+
+        fixture.detectChanges();
+
+        expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('2');
     });
 });
 

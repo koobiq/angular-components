@@ -366,7 +366,10 @@ export class KbqTag
 
     @Input()
     get tabindex() {
-        return this.disabled ? null : this._tabindex;
+        if (this.disabled) return null;
+        if (this._tabindex === -1 && this.selectable && !this.tagList) return 0;
+
+        return this._tabindex;
     }
 
     set tabindex(value: any) {

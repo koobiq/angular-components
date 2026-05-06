@@ -8,7 +8,7 @@ import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
     selector: 'tag-selectable-example',
     imports: [KbqTagsModule],
     template: `
-        <kbq-tag selectable selected (selectionChange)="onSelectionChange($event)">Selectable tag</kbq-tag>
+        <kbq-tag selectable (selectionChange)="onSelectionChange($event)">Selectable tag</kbq-tag>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
