@@ -44,7 +44,8 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         '[attr.tabindex]': 'getTabIndex()'
     },
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }]
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }
+    ]
 })
 export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
     @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;

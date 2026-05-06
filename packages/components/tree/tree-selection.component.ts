@@ -125,7 +125,8 @@ interface SelectionModelOption {
     providers: [
         KBQ_SELECTION_TREE_VALUE_ACCESSOR,
         { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
-        { provide: KbqTreeBase, useExisting: KbqTreeSelection }]
+        { provide: KbqTreeBase, useExisting: KbqTreeSelection }
+    ]
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>

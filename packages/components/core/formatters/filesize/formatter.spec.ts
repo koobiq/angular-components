@@ -104,7 +104,8 @@ describe('Filesize formatter', () => {
                     imports: [KbqFormattersModule, KbqLocaleServiceModule],
                     providers: [
                         KbqDataSizePipe,
-                        { provide: KBQ_LOCALE_ID, useValue: 'en-US' }]
+                        { provide: KBQ_LOCALE_ID, useValue: 'en-US' }
+                    ]
                 }).compileComponents();
             });
 
@@ -214,7 +215,8 @@ describe('Filesize formatter', () => {
                 TestBed.configureTestingModule({
                     providers: [
                         KbqDataSizePipe,
-                        { provide: KbqDecimalPipe, useValue: null }]
+                        { provide: KbqDecimalPipe, useValue: null }
+                    ]
                 }).compileComponents();
             });
 

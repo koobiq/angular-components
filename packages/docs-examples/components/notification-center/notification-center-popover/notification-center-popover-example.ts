@@ -72,7 +72,8 @@ enum NavbarIcItems {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
+        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }
+    ]
 })
 export class NotificationCenterPopoverExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);

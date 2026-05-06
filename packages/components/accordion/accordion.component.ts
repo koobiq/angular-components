@@ -56,7 +56,8 @@ interface KbqAccordionState {
         '(keydown)': 'keydownHandler($event)'
     },
     providers: [
-        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }]
+        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }
+    ]
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     private readonly isBrowser = inject(Platform).isBrowser;

@@ -35,7 +35,8 @@ export class ExampleBreadcrumbs {
         { label: 'Standards' },
         { label: 'Advanced Encryption Standard' },
         { label: 'Edit' },
-        { label: 'Test' }];
+        { label: 'Test' }
+    ];
 }
 
 /**

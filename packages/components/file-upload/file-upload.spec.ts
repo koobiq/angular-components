@@ -1429,7 +1429,8 @@ describe('KbqLocalDropzone', () => {
             fixture.detectChanges();
 
             const mockFiles = [
-                { ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' }];
+                { ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' }
+            ];
 
             expect(() => directive.filesDropped.emit(mockFiles)).not.toThrow();
         });

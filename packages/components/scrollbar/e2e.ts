@@ -68,5 +68,6 @@ export class E2eScrollbarStateAndStyle {
     readonly states: ScrollbarState[] = [
         { state: 'default' },
         { state: 'hover' },
-        { state: 'active' }];
+        { state: 'active' }
+    ];
 }

@@ -109,13 +109,15 @@ export class E2eButtonToggleStates {
         { title: 'hover', hover: true },
         { title: 'active', active: true },
         { title: 'focus', focused: true },
-        { title: 'progress', progress: true }];
+        { title: 'progress', progress: true }
+    ];
 
     private readonly orientation: E2eButtonOrientation[] = [
         { vertical: false },
         { multiple: true },
         { vertical: true },
-        { vertical: true, multiple: true }];
+        { vertical: true, multiple: true }
+    ];
 
     readonly rows: DevButton[][] = this.orientation.map((style) =>
         this.states.map((state) => ({ ...state, ...style }))

@@ -61,7 +61,8 @@ enum NavbarIcItems {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }]
+        { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }
+    ]
 })
 export class NotificationCenterErrorExample {
     notificationService = inject(KbqNotificationCenterService);

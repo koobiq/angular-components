@@ -346,7 +346,8 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.openedSpy).not.toHaveBeenCalled();
 
             fixture.componentInstance.filteredStates = fixture.componentInstance.states = [
-                { name: 'California', code: 'CA' }];
+                { name: 'California', code: 'CA' }
+            ];
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -416,7 +417,8 @@ describe('KbqAutocomplete', () => {
 
     it('should have the correct text direction in RTL', () => {
         const rtlFixture = createComponent(SimpleAutocomplete, [
-            { provide: Directionality, useFactory: () => ({ value: 'rtl', change: EMPTY }) }]);
+            { provide: Directionality, useFactory: () => ({ value: 'rtl', change: EMPTY }) }
+        ]);
 
         rtlFixture.detectChanges();
         rtlFixture.componentInstance.trigger.openPanel();
@@ -430,7 +432,8 @@ describe('KbqAutocomplete', () => {
     it('should update the panel direction if it changes for the trigger', () => {
         const dirProvider = { value: 'rtl', change: EMPTY };
         const rtlFixture = createComponent(SimpleAutocomplete, [
-            { provide: Directionality, useFactory: () => dirProvider }]);
+            { provide: Directionality, useFactory: () => dirProvider }
+        ]);
 
         rtlFixture.detectChanges();
         rtlFixture.componentInstance.trigger.openPanel();
@@ -1233,7 +1236,8 @@ describe('KbqAutocomplete', () => {
             fixture.destroy();
             TestBed.resetTestingModule();
             fixture = createComponent(SimpleAutocomplete, [
-                { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: { autoActiveFirstOption: true } }]);
+                { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: { autoActiveFirstOption: true } }
+            ]);
 
             fixture.detectChanges();
             fixture.componentInstance.trigger.openPanel();

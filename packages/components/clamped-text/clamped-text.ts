@@ -68,7 +68,8 @@ import {
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
     },
     providers: [
-        { provide: KbqClampedRoot, useExisting: KbqClampedText }],
+        { provide: KbqClampedRoot, useExisting: KbqClampedText }
+    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

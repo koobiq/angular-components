@@ -9,7 +9,8 @@ import { KbqClamped, KbqClampedRoot, kbqInjectKbqClampedLocaleConfiguration } fr
         '[attr.aria-expanded]': 'isCollapsed() && hasToggle() ? "false" : "true"'
     },
     providers: [
-        { provide: KbqClampedRoot, useExisting: KbqClampedList }]
+        { provide: KbqClampedRoot, useExisting: KbqClampedList }
+    ]
 })
 export class KbqClampedList<T> implements KbqClamped {
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */

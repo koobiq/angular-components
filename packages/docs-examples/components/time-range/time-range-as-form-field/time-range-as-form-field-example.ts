@@ -38,7 +38,8 @@ import { KbqTimeRangeModule } from '@koobiq/components/time-range';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ],
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

@@ -21,6 +21,7 @@ import { KbqNotificationCenterService } from './notification-center.service';
         KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
         { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy },
-        { provide: KbqNotificationCenterService, deps: [DateAdapter, DateFormatter] }]
+        { provide: KbqNotificationCenterService, deps: [DateAdapter, DateFormatter] }
+    ]
 })
 export class KbqNotificationCenterModule {}

@@ -455,7 +455,8 @@ describe('KbqAppSwitcher', () => {
         beforeEach(() => {
             testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(ListItemHost, [
-                { provide: IMAGE_LOADER, useValue: (config: ImageLoaderConfig) => config.src }]);
+                { provide: IMAGE_LOADER, useValue: (config: ImageLoaderConfig) => config.src }
+            ]);
         });
 
         beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {

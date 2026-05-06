@@ -128,7 +128,8 @@ const fullFormatSize: number = 8;
         KBQ_TIMEPICKER_VALIDATORS,
         KBQ_TIMEPICKER_VALUE_ACCESSOR,
         KBQ_TIMEPICKER_ERROR_STATE_MATCHER,
-        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }]
+        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }
+    ]
 })
 export class KbqTimepicker<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit

@@ -305,7 +305,8 @@ describe('KbqTitleDirective', () => {
 
         it('should set disabled=true when content changes and there is no overflow', fakeAsync(() => {
             const { debugElement } = createComponent(ContentObserverTitleComponent, [
-                { provide: ContentObserver, useValue: fakeContentObserver }]);
+                { provide: ContentObserver, useValue: fakeContentObserver }
+            ]);
             const directive = getTitleDirective(debugElement);
 
             // throttleTime(100) leading-edge emits synchronously on the first next(),
@@ -318,7 +319,8 @@ describe('KbqTitleDirective', () => {
 
         it('should update content to viewValue when content changes', fakeAsync(() => {
             const { debugElement } = createComponent(ContentObserverTitleComponent, [
-                { provide: ContentObserver, useValue: fakeContentObserver }]);
+                { provide: ContentObserver, useValue: fakeContentObserver }
+            ]);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 

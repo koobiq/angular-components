@@ -20,7 +20,8 @@ describe('KbqTabBody', () => {
         TestBed.configureTestingModule({
             imports: [PortalModule, NoopAnimationsModule, KbqTabBody, KbqTabBodyPortal, SimpleTabBodyApp],
             providers: [
-                { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }]
+                { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }
+            ]
         }).compileComponents();
     });
 

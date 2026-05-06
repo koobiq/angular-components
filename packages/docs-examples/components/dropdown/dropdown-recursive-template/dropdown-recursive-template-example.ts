@@ -34,7 +34,8 @@ export class ExampleDropdownPortal implements OnInit {
                 // - It binds `KBQ_DROPDOWN_PANEL` to the existing `KbqDropdown` instance,
                 //   ensuring that any injected `KBQ_DROPDOWN_PANEL` token resolves to closest `KbqDropdown`.
                 providers: [
-                    { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }]
+                    { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
+                ]
             })
         });
     }
@@ -102,7 +103,8 @@ export class DropdownRecursiveTemplateExample {
                             children: [
                                 { label: 'Level 4 - Public Key Infrastructure (PKI)' },
                                 { label: 'Level 4 - Symmetric Key Management' },
-                                { label: 'Level 4 - Key Exchange Algorithms' }]
+                                { label: 'Level 4 - Key Exchange Algorithms' }
+                            ]
                         },
                         { label: 'Level 3 - Encryption Standards' }
                     ]
@@ -115,7 +117,8 @@ export class DropdownRecursiveTemplateExample {
             children: [
                 { label: 'Level 2 - Role-Based Access Control (RBAC)' },
                 { label: 'Level 2 - Multi-Factor Authentication (MFA)' },
-                { label: 'Level 2 - Least Privilege Principle' }]
+                { label: 'Level 2 - Least Privilege Principle' }
+            ]
         }
     ];
 }

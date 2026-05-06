@@ -18,7 +18,8 @@ describe('KbqCalendar', () => {
             providers: [
                 KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
-                { provide: LOCALE_ID, useValue: 'ru-RU' }]
+                { provide: LOCALE_ID, useValue: 'ru-RU' }
+            ]
         }).compileComponents();
     });
 

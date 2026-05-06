@@ -861,7 +861,8 @@ class ResetValuesSelect {
         { value: 'tacos-2', viewValue: 'Tacos' },
         { value: false, viewValue: 'Falsy' },
         { viewValue: 'Undefined' },
-        { value: null, viewValue: 'Null' }];
+        { value: null, viewValue: 'Null' }
+    ];
     control = new UntypedFormControl();
 
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;

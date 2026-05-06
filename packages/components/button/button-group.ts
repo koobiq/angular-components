@@ -119,7 +119,8 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
         '[attr.aria-orientation]': 'orientation()'
     },
     hostDirectives: [
-        { directive: KbqButtonGroupRoot, inputs: ['color', 'kbqStyle', 'disabled'] }]
+        { directive: KbqButtonGroupRoot, inputs: ['color', 'kbqStyle', 'disabled'] }
+    ]
 })
 export class KbqButtonGroup {
     /**

@@ -133,7 +133,8 @@ export class KbqButtonCssStyler implements AfterContentInit {
         '(blur)': 'onBlur()'
     },
     providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
+    ]
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
