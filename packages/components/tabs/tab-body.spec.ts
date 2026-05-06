@@ -94,7 +94,7 @@ describe('KbqTabBody', () => {
         });
     });
 
-    describe('should properly set the position in LTR', () => {
+    describe('position in LTR', () => {
         let fixture: ComponentFixture<SimpleTabBodyApp>;
 
         beforeEach(() => {
@@ -103,21 +103,21 @@ describe('KbqTabBody', () => {
             fixture.detectChanges();
         });
 
-        it('to be left position with negative position', () => {
+        it('should be left position with negative position', () => {
             fixture.componentInstance.position = -1;
             fixture.detectChanges();
 
             expect(fixture.componentInstance.tabBody.bodyPosition).toBe('left');
         });
 
-        it('to be center position with zero position', () => {
+        it('should be center position with zero position', () => {
             fixture.componentInstance.position = 0;
             fixture.detectChanges();
 
             expect(fixture.componentInstance.tabBody.bodyPosition).toBe('center');
         });
 
-        it('to be left position with positive position', () => {
+        it('should be right position with positive position', () => {
             fixture.componentInstance.position = 1;
             fixture.detectChanges();
 
@@ -125,7 +125,7 @@ describe('KbqTabBody', () => {
         });
     });
 
-    describe('should properly set the position in RTL', () => {
+    describe('position in RTL', () => {
         let fixture: ComponentFixture<SimpleTabBodyApp>;
 
         beforeEach(() => {
@@ -134,21 +134,21 @@ describe('KbqTabBody', () => {
             fixture.detectChanges();
         });
 
-        it('to be right position with negative position', () => {
+        it('should be right position with negative position', () => {
             fixture.componentInstance.position = -1;
             fixture.detectChanges();
 
             expect(fixture.componentInstance.tabBody.bodyPosition).toBe('right');
         });
 
-        it('to be center position with zero position', () => {
+        it('should be center position with zero position', () => {
             fixture.componentInstance.position = 0;
             fixture.detectChanges();
 
             expect(fixture.componentInstance.tabBody.bodyPosition).toBe('center');
         });
 
-        it('to be left position with positive position', () => {
+        it('should be left position with positive position', () => {
             fixture.componentInstance.position = 1;
             fixture.detectChanges();
 

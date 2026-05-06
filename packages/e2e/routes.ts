@@ -71,7 +71,7 @@ import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
 import { E2eSplitterGhost } from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
-import { E2eTabsStates } from '../components/tabs/e2e';
+import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
 import {
     E2eTagAutocompleteStates,
     E2eTagEditable,
@@ -124,6 +124,7 @@ const components = [
     E2eDividerStateAndStyle,
     E2eButtonToggleStates,
     E2eTabsStates,
+    E2eTabNavBar,
     E2eClampedTextStateAndStyle,
     E2eAccordionStates,
     E2eTextareaStates,

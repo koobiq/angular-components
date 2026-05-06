@@ -120,3 +120,37 @@ export class E2eTabsStates {
         'Phishing'
     ] as const;
 }
+
+type TabNavBarScenario = { testid: string; disabled: boolean };
+
+@Component({
+    selector: 'e2e-tab-nav-bar',
+    imports: [KbqTabsModule],
+    template: `
+        @for (s of scenarios; track s.testid) {
+            <div [attr.data-testid]="s.testid">
+                <nav kbqTabNavBar>
+                    <a kbqTabLink [disabled]="s.disabled">Tab link</a>
+                </nav>
+            </div>
+        }
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTabNavBar'
+    }
+})
+export class E2eTabNavBar {
+    protected readonly scenarios: TabNavBarScenario[] = [
+        { testid: 'tabNavBar_default', disabled: false },
+        { testid: 'tabNavBar_disabled', disabled: true }
+    ];
+}

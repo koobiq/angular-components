@@ -18,7 +18,6 @@ describe('KbqTabGroup', () => {
                 NoopAnimationsModule,
                 SimpleTabsTestApp,
                 SimpleDynamicTabsTestApp,
-                BindedTabsTestApp,
                 AsyncTabsTestApp,
                 DisabledTabsTestApp,
                 TabGroupWithSimpleApi,
@@ -55,13 +54,11 @@ describe('KbqTabGroup', () => {
             tick();
             checkSelectedIndex(0, fixture);
 
-            // select the second tab
             fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1].nativeElement.click();
             fixture.detectChanges();
             tick();
             checkSelectedIndex(1, fixture);
 
-            // select the third tab
             fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[2].nativeElement.click();
             fixture.detectChanges();
             tick();
@@ -129,14 +126,12 @@ describe('KbqTabGroup', () => {
             expect(tabs[1].position).toBe(0);
             expect(tabs[2].position).toBeGreaterThan(0);
 
-            // Move to third tab
             component.selectedIndex = 2;
             fixture.detectChanges();
             expect(tabs[0].position).toBeLessThan(0);
             expect(tabs[1].position).toBeLessThan(0);
             expect(tabs[2].position).toBe(0);
 
-            // Move to the first tab
             component.selectedIndex = 0;
             fixture.detectChanges();
             expect(tabs[0].position).toBe(0);
@@ -148,12 +143,10 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
             const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
-            // Set the index to be negative, expect first tab selected
             fixture.componentInstance.selectedIndex = -1;
             fixture.detectChanges();
             expect(component.selectedIndex).toBe(0);
 
-            // Set the index beyond the size of the tabs, expect last tab selected
             fixture.componentInstance.selectedIndex = 3;
             fixture.detectChanges();
             expect(component.selectedIndex).toBe(2);
@@ -294,7 +287,6 @@ describe('KbqTabGroup', () => {
             expect(tabs[1].origin).toBe(0);
             expect(tabs[2].origin).toBe(null);
 
-            // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
             fixture.componentInstance.tabs.push({ label: 'New tab', content: 'to right of index' });
             fixture.componentInstance.selectedIndex = 4;
             fixture.detectChanges();
@@ -303,7 +295,6 @@ describe('KbqTabGroup', () => {
             tabs = component.tabs.toArray();
             expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
 
-            // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
             fixture.componentInstance.selectedIndex = 0;
             fixture.detectChanges();
             tick();
@@ -325,7 +316,6 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
             tick();
 
-            // Remove last tab while last tab is selected, expect next tab over to be selected
             fixture.componentInstance.tabs.pop();
             fixture.detectChanges();
             tick();
@@ -340,7 +330,6 @@ describe('KbqTabGroup', () => {
             fixture.componentInstance.selectedIndex = 1;
             fixture.detectChanges();
 
-            // Add a new tab at the beginning.
             fixture.componentInstance.tabs.unshift({ label: 'New tab', content: 'at the start' });
             fixture.detectChanges();
 
@@ -349,18 +338,14 @@ describe('KbqTabGroup', () => {
         });
 
         it('should maintain the selected tab if a tab is removed', () => {
-            // Select the second tab.
             fixture.componentInstance.selectedIndex = 1;
             fixture.detectChanges();
 
             const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
-            // Remove the first tab that is right before the selected one.
             fixture.componentInstance.tabs.splice(0, 1);
             fixture.detectChanges();
 
-            // Since the first tab has been removed and the second one was selected before, the selected
-            // tab moved one position to the right. Meaning that the tab is now the first tab.
             expect(component.selectedIndex).toBe(0);
             expect(component.tabs.toArray()[0].isActive).toBe(true);
         });
@@ -384,7 +369,6 @@ describe('KbqTabGroup', () => {
             fixture.componentInstance.selectedIndex = 1;
             fixture.detectChanges();
 
-            // Add a new tab at the beginning.
             const handleSelectionSpyFn = jest.spyOn(fixture.componentInstance, 'handleSelection');
 
             fixture.componentInstance.tabs.unshift({ label: 'New tab', content: 'at the start' });
@@ -536,7 +520,6 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
             checkSelectedIndex(indexToSelect, fixture);
 
-            // check selection by click
             const tabLabels: DebugElement[] = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
 
             dispatchMouseEvent(tabLabels[tabLabels.length - 1].nativeElement, 'click');
@@ -631,13 +614,10 @@ describe('nested KbqTabGroup with enabled animations', () => {
 class SimpleTabsTestApp {
     @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
     selectedIndex: number = 1;
-    focusEvent: any;
     selectEvent: any;
     headerPosition: KbqTabHeaderPosition = 'above';
 
-    handleFocus(event: any) {
-        this.focusEvent = event;
-    }
+    handleFocus(_event: any) {}
 
     handleSelection(event: any) {
         this.selectEvent = event;
@@ -671,44 +651,10 @@ class SimpleDynamicTabsTestApp {
         { label: 'Label 3', content: 'Content 3' }
     ];
     selectedIndex: number = 1;
-    focusEvent: any;
-    selectEvent: any;
 
-    handleFocus(event: any) {
-        this.focusEvent = event;
-    }
+    handleFocus(_event: any) {}
 
-    handleSelection(event: any) {
-        this.selectEvent = event;
-    }
-}
-
-@Component({
-    imports: [KbqTabsModule],
-    template: `
-        <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
-            @for (tab of tabs; track tab) {
-                <kbq-tab label="{{ tab.label }}">
-                    {{ tab.content }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
-    `
-})
-class BindedTabsTestApp {
-    tabs = [
-        { label: 'one', content: 'one' },
-        { label: 'two', content: 'two' }
-    ];
-    selectedIndex = 0;
-
-    addNewActiveTab(): void {
-        this.tabs.push({
-            label: 'new tab',
-            content: 'new content'
-        });
-        this.selectedIndex = this.tabs.length - 1;
-    }
+    handleSelection(_event: any) {}
 }
 
 @Component({

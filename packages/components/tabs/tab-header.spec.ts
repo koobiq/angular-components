@@ -55,18 +55,17 @@ describe('KbqTabHeader', () => {
             expect(appComponent.tabHeader.focusIndex).toBe(appComponent.selectedIndex);
         });
 
-        it('should send focus change event', () => {
+        it('should update focusIndex when set', () => {
             appComponent.tabHeader.focusIndex = 2;
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(2);
         });
 
-        it('should not set focus a disabled tab', () => {
+        it('should not set focus to a disabled tab', () => {
             appComponent.tabHeader.focusIndex = 0;
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(0);
 
-            // Set focus on the disabled tab, but focus should remain 0
             appComponent.tabHeader.focusIndex = appComponent.disabledTabIndex;
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(0);
@@ -77,13 +76,11 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(0);
 
-            // Move focus right, verify that the disabled tab is 1 and should be skipped
             expect(appComponent.disabledTabIndex).toBe(1);
             dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(2);
 
-            // Move focus right to index 3
             dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(3);
@@ -94,12 +91,10 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(3);
 
-            // Move focus left to index 3
             dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(2);
 
-            // Move focus left, verify that the disabled tab is 1 and should be skipped
             expect(appComponent.disabledTabIndex).toBe(1);
             dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
             fixture.detectChanges();
@@ -111,12 +106,10 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(0);
 
-            // Move focus right to 2
             dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(2);
 
-            // Select the focused index 2
             expect(appComponent.selectedIndex).toBe(0);
             const enterEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', ENTER);
 
@@ -124,12 +117,10 @@ describe('KbqTabHeader', () => {
             expect(appComponent.selectedIndex).toBe(2);
             expect(enterEvent.defaultPrevented).toBe(true);
 
-            // Move focus right to 0
             dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
             fixture.detectChanges();
             expect(appComponent.tabHeader.focusIndex).toBe(0);
 
-            // Select the focused 0 using space.
             expect(appComponent.selectedIndex).toBe(2);
             const spaceEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', SPACE);
 
@@ -191,7 +182,7 @@ describe('KbqTabHeader', () => {
     });
 
     describe('pagination', () => {
-        describe('ltr', () => {
+        describe('in LTR direction', () => {
             beforeEach(() => {
                 dir = 'ltr';
                 fixture = TestBed.createComponent(SimpleTabHeaderApp);
@@ -235,12 +226,10 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
                 expect(appComponent.tabHeader.scrollDistance).toBe(0);
 
-                // Focus on the last tab, expect this to be the maximum scroll distance.
                 appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
                 fixture.detectChanges();
                 expect(appComponent.tabHeader.scrollDistance).toBe(appComponent.tabHeader.getMaxScrollDistance());
 
-                // Focus on the first tab, expect this to be the maximum scroll distance.
                 appComponent.tabHeader.focusIndex = 0;
                 fixture.detectChanges();
                 expect(appComponent.tabHeader.scrollDistance).toBe(0);
@@ -257,7 +246,6 @@ describe('KbqTabHeader', () => {
 
                 expect(appComponent.tabHeader.scrollDistance).toBe(previousMaxScrollDistance);
 
-                // Focus on the first tab, expect this to be the maximum scroll distance.
                 appComponent.tabs.pop();
                 fixture.detectChanges();
                 tick(1000);
@@ -271,7 +259,7 @@ describe('KbqTabHeader', () => {
             }));
         });
 
-        describe('rtl', () => {
+        describe('in RTL direction', () => {
             beforeEach(() => {
                 dir = 'rtl';
                 fixture = TestBed.createComponent(SimpleTabHeaderApp);
@@ -286,12 +274,10 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
                 expect(appComponent.tabHeader.scrollDistance).toBe(0);
 
-                // Focus on the last tab, expect this to be the maximum scroll distance.
                 appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
                 fixture.detectChanges();
                 expect(appComponent.tabHeader.scrollDistance).toBe(appComponent.tabHeader.getMaxScrollDistance());
 
-                // Focus on the first tab, expect this to be the maximum scroll distance.
                 appComponent.tabHeader.focusIndex = 0;
                 fixture.detectChanges();
                 expect(appComponent.tabHeader.scrollDistance).toBe(0);
@@ -324,11 +310,7 @@ interface ITab {
     imports: [PortalModule, ScrollingModule, KbqTabHeader, KbqTabLabelWrapper],
     template: `
         <div [dir]="dir">
-            <kbq-tab-header
-                [selectedIndex]="selectedIndex"
-                (indexFocused)="focusedIndex = $event"
-                (selectFocusedIndex)="selectedIndex = $event"
-            >
+            <kbq-tab-header [selectedIndex]="selectedIndex" (selectFocusedIndex)="selectedIndex = $event">
                 @for (tab of tabs; track tab) {
                     <div
                         class="label-content"
@@ -353,7 +335,6 @@ interface ITab {
 })
 class SimpleTabHeaderApp {
     selectedIndex: number = 0;
-    focusedIndex: number;
     disabledTabIndex = 1;
     tabs: ITab[] = [
         { label: 'tab one' },
