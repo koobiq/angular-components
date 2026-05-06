@@ -4,7 +4,7 @@ import { inject, Injectable, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, finalize, map, share } from 'rxjs/operators';
-import { KBQ_ICONS_CONFIG } from './icon-registry-providers';
+import { KBQ_ICON_RESOLVER, KBQ_ICONS_CONFIG } from './icon-registry-providers';
 
 export interface KbqIconOptions {
     viewBox?: string;
@@ -33,6 +33,7 @@ export class KbqIconRegistry {
     private readonly document = inject<Document>(DOCUMENT);
     private readonly httpClient = inject(HttpClient, { optional: true });
     private readonly iconsConfig = inject(KBQ_ICONS_CONFIG, { optional: true });
+    private readonly resolvers = inject(KBQ_ICON_RESOLVER, { optional: true }) ?? [];
 
     /** Individual icon configs, keyed by "namespace:name". */
     private readonly iconConfigs = new Map<string, KbqSvgIconConfig>();
@@ -50,26 +51,26 @@ export class KbqIconRegistry {
         this.registerIconSet();
     }
 
-    addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): this {
-        return this.addSvgIconInNamespace('', name, url, options);
+    addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): void {
+        this.addSvgIconInNamespace('', name, url, options);
     }
 
-    addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): this {
-        return this.addSvgIconLiteralInNamespace('', name, literal, options);
+    addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): void {
+        this.addSvgIconLiteralInNamespace('', name, literal, options);
     }
 
-    addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): this {
-        return this.cacheIcon(namespace, name, { url, svgText: null, options, svgElement: null });
+    addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): void {
+        this.cacheIcon(namespace, name, { url, svgText: null, options, svgElement: null });
     }
 
-    addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): this {
+    addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void {
         const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, literal);
 
         if (!sanitized) {
             throw Error(`KbqIconRegistry: literal for icon "${iconKey(namespace, name)}" sanitized to empty string.`);
         }
 
-        return this.cacheIcon(namespace, name, {
+        this.cacheIcon(namespace, name, {
             url: null,
             svgText: this.sanitizer.bypassSecurityTrustHtml(sanitized),
             options,
@@ -77,27 +78,23 @@ export class KbqIconRegistry {
         });
     }
 
-    addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): this {
-        return this.addSvgIconSetInNamespace('', url, options);
+    addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void {
+        this.addSvgIconSetInNamespace('', url, options);
     }
 
-    addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): this {
+    addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void {
         const urlStr = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, url) ?? '';
         const sets = this.iconSetConfigs.get(namespace) ?? [];
         const alreadyRegistered = sets.some(
             (set) => this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, set.url!) === urlStr
         );
 
-        if (alreadyRegistered) {
-            return this;
-        }
+        if (alreadyRegistered) return;
 
         const config: KbqSvgIconConfig = { url, svgText: null, options, svgElement: null };
 
         sets.push(config);
         this.iconSetConfigs.set(namespace, sets);
-
-        return this;
     }
 
     /**
@@ -108,6 +105,10 @@ export class KbqIconRegistry {
         let resolvedNs = namespace;
         let resolvedName = name;
 
+        if (resolvedName.trimStart().startsWith('<')) {
+            return of(this.svgElementFromText(resolvedName));
+        }
+
         const colonIndex = name.indexOf(':');
 
         if (colonIndex !== -1) {
@@ -116,12 +117,37 @@ export class KbqIconRegistry {
         }
 
         const key = iconKey(resolvedNs, resolvedName);
-        const config = this.iconSetConfigs.get(key);
 
-        if (config) {
-            return this.loadIcon(config[0], resolvedName);
+        const iconConfig = this.iconConfigs.get(key);
+
+        if (iconConfig) {
+            return this.loadIcon(iconConfig, resolvedName);
         }
 
+        for (const resolver of this.resolvers) {
+            const result = resolver(resolvedName);
+
+            if (result == null) continue;
+
+            const config: KbqSvgIconConfig = {
+                url: null,
+                svgText: null,
+                svgElement: null,
+                options: undefined
+            };
+
+            if (result.trimStart().startsWith('<')) {
+                config.svgText = this.sanitizer.bypassSecurityTrustHtml(result);
+            } else {
+                config.url = this.sanitizer.bypassSecurityTrustResourceUrl(result);
+            }
+
+            this.iconConfigs.set(key, config);
+
+            return this.loadIcon(config, resolvedName);
+        }
+
+        // 3. Sprite sets.
         const sets = this.iconSetConfigs.get(resolvedNs);
 
         if (sets?.length) {
@@ -168,12 +194,14 @@ export class KbqIconRegistry {
     private registerIconSet(): void {
         if (!this.iconsConfig) return;
 
-        const url = this.sanitizer.bypassSecurityTrustResourceUrl(this.iconsConfig.spriteUrl);
+        for (const config of this.iconsConfig) {
+            const url = this.sanitizer.bypassSecurityTrustResourceUrl(config.spriteUrl);
 
-        if (this.iconsConfig.namespace) {
-            this.addSvgIconSetInNamespace(this.iconsConfig.namespace, url);
-        } else {
-            this.addSvgIconSet(url);
+            if (config.namespace) {
+                this.addSvgIconSetInNamespace(config.namespace, url);
+            } else {
+                this.addSvgIconSet(url);
+            }
         }
     }
 
@@ -239,11 +267,9 @@ export class KbqIconRegistry {
     }
 
     private extractIconFromSet(name: string, setElement: SVGElement): SVGElement | null {
-        const symbol = setElement.querySelector(`#${name}`) ?? setElement.querySelector(`#${name.replace('kbq-', '')}`);
+        const symbol = setElement.querySelector(`#${name}`);
 
-        if (!symbol) {
-            return null;
-        }
+        if (!symbol) return null;
 
         const svg = this.document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         const viewBox = symbol.getAttribute('viewBox') || setElement.getAttribute('viewBox') || '0 0 24 24';
@@ -296,17 +322,15 @@ export class KbqIconRegistry {
 
         const inProgress = this.inProgressUrlFetches.get(urlStr);
 
-        if (inProgress) {
-            return inProgress;
-        }
+        if (inProgress) return inProgress;
 
-        const fetch$ = this.httpClient.get(urlStr, { responseType: 'text', withCredentials }).pipe(
+        const fetch = this.httpClient.get(urlStr, { responseType: 'text', withCredentials }).pipe(
             share(),
             finalize(() => this.inProgressUrlFetches.delete(urlStr))
         );
 
-        this.inProgressUrlFetches.set(urlStr, fetch$);
+        this.inProgressUrlFetches.set(urlStr, fetch);
 
-        return fetch$;
+        return fetch;
     }
 }

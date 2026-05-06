@@ -57,11 +57,6 @@
                             },
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/symbol/svg",
-                                "output": "/assets/SVGIcons"
-                            },
-                            {
-                                "glob": "**/*",
                                 "input": "apps/docs/src/assets",
                                 "output": "/assets"
                             },
@@ -1326,6 +1321,11 @@
                             {
                                 "glob": "**/*",
                                 "input": "node_modules/@koobiq/icons/symbol/svg",
+                                "output": "/assets/svg-icons/sprite"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/svg",
                                 "output": "/assets/svg-icons"
                             }
                         ],

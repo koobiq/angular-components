@@ -8,7 +8,8 @@
         "paths": {
             "@koobiq/cdk/*": ["./dist/cdk/*"],
             "@koobiq/angular-luxon-adapter/*": ["./dist/angular-luxon-adapter/*"],
-            "@koobiq/angular-moment-adapter/*": ["./dist/angular-moment-adapter/*"]
+            "@koobiq/angular-moment-adapter/*": ["./dist/angular-moment-adapter/*"],
+            "@koobiq/angular-icons/*": ["./dist/angular-icons/*"]
         }
     }
 }

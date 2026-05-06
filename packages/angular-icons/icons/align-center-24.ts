@@ -2,17 +2,21 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqSvgIcon } from '../svg-icon';
 
 @Component({
-    selector: 'kbq-align-center-24,[kbqAlignCenter24]',
+    selector: 'svg[kbqAlignCenter24]',
     template: `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g>
-                <path
-                    d="M4.5 20.7a.3.3 0 0 0 .3.3h14.4a.3.3 0 0 0 .3-.3V18.9a.3.3 0 0 0-.3-.3H4.8a.3.3 0 0 0-.3.3zM4.2 10.3a.3.3 0 0 0 .3.3h15a.3.3 0 0 0 .3-.3V8.5a.3.3 0 0 0-.3-.3h-15a.3.3 0 0 0-.3.3zM0 15.5a.3.3 0 0 0 .3.3h23.4a.3.3 0 0 0 .3-.3v-1.8a.3.3 0 0 0-.3-.3H.3a.3.3 0 0 0-.3.3zM0 5.099V3.3A.3.3 0 0 1 .3 3h23.4a.3.3 0 0 1 .3.3v1.799a.3.3 0 0 1-.3.3H.3a.3.3 0 0 1-.3-.3"
-                />
-            </g>
-        </svg>
+        <svg:g>
+            <svg:path
+                d="M4.5 20.7a.3.3 0 0 0 .3.3h14.4a.3.3 0 0 0 .3-.3V18.9a.3.3 0 0 0-.3-.3H4.8a.3.3 0 0 0-.3.3zM4.2 10.3a.3.3 0 0 0 .3.3h15a.3.3 0 0 0 .3-.3V8.5a.3.3 0 0 0-.3-.3h-15a.3.3 0 0 0-.3.3zM0 15.5a.3.3 0 0 0 .3.3h23.4a.3.3 0 0 0 .3-.3v-1.8a.3.3 0 0 0-.3-.3H.3a.3.3 0 0 0-.3.3zM0 5.099V3.3A.3.3 0 0 1 .3 3h23.4a.3.3 0 0 1 .3.3v1.799a.3.3 0 0 1-.3.3H.3a.3.3 0 0 1-.3-.3"
+            />
+        </svg:g>
     `,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        xmlns: 'http://www.w3.org/2000/svg',
+        viewBox: '0 0 24 24',
+        width: '24',
+        height: '24'
+    }
 })
 export class KbqAlignCenter24 extends KbqSvgIcon {}

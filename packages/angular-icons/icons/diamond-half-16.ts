@@ -2,15 +2,19 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqSvgIcon } from '../svg-icon';
 
 @Component({
-    selector: 'kbq-diamond-half-16,[kbqDiamondHalf16]',
+    selector: 'svg[kbqDiamondHalf16]',
     template: `
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-            <path
-                d="M2.766 8 8 2.766 13.234 8zM.645 7.859a.2.2 0 0 0 0 .282l7.214 7.214a.2.2 0 0 0 .282 0l7.214-7.214a.2.2 0 0 0 0-.282L8.141.645a.2.2 0 0 0-.282 0z"
-            />
-        </svg>
+        <svg:path
+            d="M2.766 8 8 2.766 13.234 8zM.645 7.859a.2.2 0 0 0 0 .282l7.214 7.214a.2.2 0 0 0 .282 0l7.214-7.214a.2.2 0 0 0 0-.282L8.141.645a.2.2 0 0 0-.282 0z"
+        />
     `,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        xmlns: 'http://www.w3.org/2000/svg',
+        viewBox: '0 0 16 16',
+        width: '16',
+        height: '16'
+    }
 })
 export class KbqDiamondHalf16 extends KbqSvgIcon {}

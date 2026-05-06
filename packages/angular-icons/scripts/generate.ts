@@ -7,18 +7,27 @@ const OUTPUT_DIR = path.resolve(__dirname, '../icons');
 const PUBLIC_API_PATH = path.resolve(__dirname, '../public-api.ts');
 
 const componentTemplate = ({
-    elementSelector,
     attrSelector,
-    escapedSvg,
-    className
+    escapedInner,
+    className,
+    viewBox,
+    width,
+    height
 }) => `import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqSvgIcon } from '../svg-icon';
 
 @Component({
-    selector: '${elementSelector},[${attrSelector}]',
-    template: \`${escapedSvg}\`,
+    standalone: true,
+    selector: 'svg[${attrSelector}]',
+    template: \`${escapedInner}\`,
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    host: {
+        xmlns: 'http://www.w3.org/2000/svg',
+        viewBox: '${viewBox}',
+        width: '${width}',
+        height: '${height}'
+    }
 })
 export class ${className} extends KbqSvgIcon {}
 `;
@@ -36,23 +45,34 @@ function toPascalCase(kebab: string): string {
         .join('');
 }
 
+function extractSvgParts(svg: string): { viewBox: string; width: string; height: string; inner: string } {
+    const viewBox = svg.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 16 16';
+    const width = svg.match(/\bwidth="([^"]+)"/)?.[1] ?? '16';
+    const height = svg.match(/\bheight="([^"]+)"/)?.[1] ?? width;
+    const inner = svg
+        .replace(/^[\s\S]*?<svg[^>]*>/, '')
+        .replace(/<\/svg>[\s\S]*$/, '')
+        .trim();
+
+    return { viewBox, width, height, inner };
+}
+
+function addSvgNamespace(inner: string): string {
+    return inner.replace(/<([a-zA-Z])/g, '<svg:$1').replace(/<\/([a-zA-Z])/g, '</svg:$1');
+}
+
 function generateComponent(filename: string, svgContent: string): string {
     const name = filename.replace('.svg', '');
     const kebab = toKebab(name);
     const pascal = toPascalCase(kebab);
 
     const className = `Kbq${pascal}`;
-    const elementSelector = `kbq-${kebab}`;
     const attrSelector = `kbq${pascal}`;
 
-    const escapedSvg = svgContent.trim().replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    const { viewBox, width, height, inner } = extractSvgParts(svgContent);
+    const escapedInner = addSvgNamespace(inner).replace(/`/g, '\\`').replace(/\$/g, '\\$');
 
-    return componentTemplate({
-        elementSelector,
-        attrSelector,
-        escapedSvg,
-        className
-    });
+    return componentTemplate({ attrSelector, escapedInner, className, viewBox, width, height });
 }
 
 function run(): void {

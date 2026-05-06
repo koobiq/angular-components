@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqChevronDownS16 } from '@koobiq/angular-icons';
+import { KbqChevronUp16 } from '@koobiq/angular-icons';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -32,7 +32,7 @@ export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqIconModule, DevDocsExamples, KbqChevronDownS16],
+    imports: [KbqIconModule, DevDocsExamples, KbqChevronUp16],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,

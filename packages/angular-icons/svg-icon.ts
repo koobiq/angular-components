@@ -1,4 +1,5 @@
-import { Directive } from '@angular/core';
+import { Directive, input } from '@angular/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 
 @Directive({
     host: {
@@ -7,4 +8,6 @@ import { Directive } from '@angular/core';
         class: 'kbq-svg-icon'
     }
 })
-export class KbqSvgIcon {}
+export class KbqSvgIcon {
+    readonly color = input<KbqComponentColors>();
+}

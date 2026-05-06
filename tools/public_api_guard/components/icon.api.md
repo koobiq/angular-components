@@ -7,20 +7,36 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldRef } from '@koobiq/components/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { WritableSignal } from '@angular/core';
 
+// @public
+export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
+
 // @public (undocumented)
-export class KbqIcon extends KbqColorDirective implements AfterContentInit {
+export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
+
+// @public (undocumented)
+export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     // (undocumented)
     autoColor: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -35,7 +51,14 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngOnChanges(): void;
+    // (undocumented)
+    protected readonly registry: KbqIconRegistry | null;
+    // (undocumented)
+    protected readonly sanitizer: DomSanitizer;
+    // (undocumented)
     small: boolean;
+    protected svgIcon: boolean;
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
@@ -100,6 +123,54 @@ export class KbqIconModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
 }
+
+// @public (undocumented)
+export interface KbqIconOptions {
+    // (undocumented)
+    viewBox?: string;
+    // (undocumented)
+    withCredentials?: boolean;
+}
+
+// @public (undocumented)
+export class KbqIconRegistry {
+    constructor();
+    // (undocumented)
+    addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    // (undocumented)
+    addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    // (undocumented)
+    addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    // (undocumented)
+    addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    // (undocumented)
+    addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void;
+    // (undocumented)
+    addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    getNamedSvgIcon(name: string, namespace?: string): Observable<SVGElement>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconRegistry, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqIconRegistry>;
+}
+
+// @public
+export type KbqIconResolver = (name: string) => string | null;
+
+// @public (undocumented)
+export interface KbqIconsConfig {
+    namespace?: string;
+    spriteUrl: string;
+}
+
+// @public
+export function provideKoobiqIcons(...sprites: KbqIconsConfig[]): Provider;
+
+// @public
+export function provideKoobiqIconsDict(dict: Record<string, string>): Provider;
+
+// @public
+export function provideKoobiqIconsResolver(resolver: KbqIconResolver): Provider;
 
 // (No @packageDocumentation comment for this package)
 
