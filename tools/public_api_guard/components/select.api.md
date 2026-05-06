@@ -11,6 +11,7 @@ import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
@@ -171,6 +172,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     static ngAcceptInputType_panelMinWidth: unknown;
     // (undocumented)
+    static ngAcceptInputType_scrolledToBottomOffset: unknown;
+    // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
     ngAfterContentInit(): void;
     // (undocumented)
@@ -220,6 +223,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get required(): boolean;
     set required(value: boolean);
     resetSearch(): void;
+    readonly scrolledToBottom: EventEmitter<void>;
+    scrolledToBottomOffset: number;
     scrollStrategy: any;
     search: KbqSelectSearch;
     searchEmpty: KbqSelectSearchEmptyResult;
@@ -252,10 +257,11 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get value(): any;
     set value(newValue: any);
     readonly valueChange: EventEmitter<any>;
+    virtualScrollViewport?: CdkVirtualScrollViewport;
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "searchEmpty", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "searchEmpty", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
