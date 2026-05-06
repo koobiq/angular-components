@@ -1,6 +1,6 @@
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     afterNextRender,
     ApplicationRef,
@@ -9,7 +9,6 @@ import {
     ElementRef,
     EventEmitter,
     inject,
-    Injectable,
     Injector,
     Input,
     NgZone,
@@ -22,27 +21,11 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { Observable, Subscription } from 'rxjs';
-import { shareReplay, take, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
-
-@Injectable({ providedIn: 'root' })
-export class DocsDocFetcher {
-    private cache: Record<string, Observable<string>> = {};
-
-    constructor(private http: HttpClient) {}
-
-    fetchDocument(url: string): Observable<string> {
-        if (this.cache[url]) {
-            return this.cache[url];
-        }
-
-        const stream = this.http.get(url, { responseType: 'text' }).pipe(shareReplay(1));
-
-        return stream.pipe(tap(() => (this.cache[url] = stream)));
-    }
-}
 
 @Component({
     selector: 'docs-example-viewer',
@@ -71,7 +54,7 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
         }
 
         this.clearLiveExamples();
-        this.fetchDocument(url);
+        this.getDocument(url);
     }
 
     @Output() readonly contentRendered = new EventEmitter<HTMLElement>();
@@ -86,6 +69,9 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
         exampleViewerComponent.example = example;
     }
 
+    private readonly documentLoader = inject(DocsDocumentLoader);
+    private readonly platformId = inject(PLATFORM_ID);
+
     constructor(
         private appRef: ApplicationRef,
         private componentFactoryResolver: ComponentFactoryResolver,
@@ -93,13 +79,10 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
         private injector: Injector,
         private viewContainerRef: ViewContainerRef,
         private ngZone: NgZone,
-        private domSanitizer: DomSanitizer,
-        private docFetcher: DocsDocFetcher
+        private domSanitizer: DomSanitizer
     ) {
         super();
     }
-
-    private readonly platformId = inject(PLATFORM_ID);
 
     ngOnDestroy() {
         this.clearLiveExamples();
@@ -107,10 +90,10 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     }
 
     /** Fetch a document by URL. */
-    private fetchDocument(url: string) {
+    private getDocument(url: string) {
         this.documentFetchSubscription?.unsubscribe();
 
-        this.documentFetchSubscription = this.docFetcher.fetchDocument(url).subscribe(
+        this.documentFetchSubscription = this.documentLoader.get(url).subscribe(
             (document) => this.updateDocument(document),
             (error) => this.showError(url, error)
         );

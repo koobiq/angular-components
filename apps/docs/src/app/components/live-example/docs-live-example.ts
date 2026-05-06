@@ -1,6 +1,6 @@
 import { CdkPortal, ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     afterNextRender,
     ApplicationRef,
@@ -26,9 +26,10 @@ import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { Observable, Subscription } from 'rxjs';
-import { shareReplay, take, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
@@ -90,8 +91,6 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
     readonly documentContent = signal<SafeHtml | null>(null);
 
-    private cache: Record<string, Observable<string>> = {};
-
     private portalHosts: DomPortalOutlet[] = [];
     private documentFetchSubscription: Subscription;
 
@@ -103,29 +102,19 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly ngZone = inject(NgZone);
     private readonly domSanitizer = inject(DomSanitizer);
-    private readonly httpClient = inject(HttpClient);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly documentLoader = inject(DocsDocumentLoader);
 
     ngOnDestroy() {
         this.clearLiveExamples();
         this.documentFetchSubscription?.unsubscribe();
     }
 
-    private fetchDocument(url: string): Observable<string> {
-        if (this.cache[url]) {
-            return this.cache[url];
-        }
-
-        const stream = this.httpClient.get(url, { responseType: 'text' }).pipe(shareReplay(1));
-
-        return stream.pipe(tap(() => (this.cache[url] = stream)));
-    }
-
     /** Fetch a document by URL. */
     private getDocument(url: string) {
         this.documentFetchSubscription?.unsubscribe();
 
-        this.documentFetchSubscription = this.fetchDocument(url).subscribe({
+        this.documentFetchSubscription = this.documentLoader.get(url).subscribe({
             next: (document) => this.updateDocument(document),
             error: (error) => this.showError(url, error)
         });
