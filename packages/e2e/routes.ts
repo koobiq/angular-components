@@ -88,6 +88,15 @@ import { E2eTopBarStates } from '../components/top-bar/e2e';
 import {
     E2eMultilineTreeSelectStates,
     E2eMultiTreeSelectStates,
+    E2eTreeSelectDataMutation,
+    E2eTreeSelectFormControlDisabled,
+    E2eTreeSelectInitiallyHidden,
+    E2eTreeSelectMultiBehavior,
+    E2eTreeSelectNoPlaceholder,
+    E2eTreeSelectPanelWidthAuto,
+    E2eTreeSelectPositioning,
+    E2eTreeSelectPropertyDisabled,
+    E2eTreeSelectRtlPositioning,
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
 import { E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
@@ -168,6 +177,15 @@ const components = [
     E2eTreeSelectStates,
     E2eMultiTreeSelectStates,
     E2eMultilineTreeSelectStates,
+    E2eTreeSelectPositioning,
+    E2eTreeSelectRtlPositioning,
+    E2eTreeSelectFormControlDisabled,
+    E2eTreeSelectPropertyDisabled,
+    E2eTreeSelectInitiallyHidden,
+    E2eTreeSelectMultiBehavior,
+    E2eTreeSelectDataMutation,
+    E2eTreeSelectNoPlaceholder,
+    E2eTreeSelectPanelWidthAuto,
     E2eSelectWithSearchAndFooter,
     E2eSelectPositioning,
     E2eMultiSelectPositioning,
