@@ -4,7 +4,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
-import { CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
@@ -96,6 +96,7 @@ import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, defer, fromEvent, merge } from 'rxjs';
 import {
+    auditTime,
     debounceTime,
     delay,
     distinctUntilChanged,
@@ -108,6 +109,8 @@ import {
 } from 'rxjs/operators';
 
 let nextUniqueId = 0;
+
+const SCROLLED_TO_BOTTOM_THROTTLE_TIME = 100;
 
 /** Change event object that is emitted when the select value has changed. */
 export class KbqSelectChange {
@@ -306,6 +309,9 @@ export class KbqSelect
     /** Reference to the CDK virtual scroll directive for virtual scrolling support. */
     @ContentChild(CdkVirtualForOf, { static: false }) cdkVirtualForOf?: CdkVirtualForOf<any>;
 
+    /** Reference to the CDK virtual scroll viewport for tracking scroll position in virtual mode. */
+    @ContentChild(CdkVirtualScrollViewport, { static: false }) virtualScrollViewport?: CdkVirtualScrollViewport;
+
     /** Query list of tags displayed in multiple selection mode. */
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
@@ -447,6 +453,15 @@ export class KbqSelect
      * @docs-private
      */
     @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
+
+    /**
+     * Distance in pixels from the bottom of the options panel at which `scrolledToBottom` fires.
+     * Default `0` — emits only when the panel is fully scrolled to the bottom.
+     */
+    @Input({ transform: numberAttribute }) scrolledToBottomOffset: number = 0;
+
+    /** Emits when the options panel is scrolled to (or within `scrolledToBottomOffset` of) the bottom. */
+    @Output() readonly scrolledToBottom: EventEmitter<void> = new EventEmitter<void>();
 
     /**
      * Whether the overlay should have a backdrop.
@@ -742,6 +757,9 @@ export class KbqSelect
 
     /** Subscription to the close event of the overlay. */
     private closeSubscription = Subscription.EMPTY;
+
+    /** Subscription to the options panel scroll event used by `scrolledToBottom`. */
+    private scrollSubscription = Subscription.EMPTY;
 
     /** The scroll position of the overlay panel, calculated to center the selected option. */
     private scrollTop = 0;
@@ -1156,6 +1174,7 @@ export class KbqSelect
             this.optionsContainer.nativeElement.scrollTop = this.scrollTop;
 
             this.updateScrollSize();
+            this.subscribeToScrolledToBottom();
         });
 
         this.options.changes.pipe(delay(1)).subscribe(() => this.setOverlayPosition());
@@ -1366,6 +1385,42 @@ export class KbqSelect
         }
 
         this.keyManager.withScrollSize(Math.floor(this.getHeightOfOptionsContainer() / this.options.first.getHeight()));
+    }
+
+    /**
+     * Subscribes to scroll events of the options panel and emits `scrolledToBottom`
+     * when the panel reaches `scrolledToBottomOffset` pixels from the bottom.
+     * Re-subscribes on every panel attach; auto-unsubscribes when the panel closes
+     * or the component is destroyed.
+     */
+    private subscribeToScrolledToBottom(): void {
+        this.scrollSubscription.unsubscribe();
+
+        const distance =
+            this.withVirtualScroll && this.virtualScrollViewport
+                ? this.virtualScrollViewport
+                      .elementScrolled()
+                      .pipe(map(() => this.virtualScrollViewport!.measureScrollOffset('bottom')))
+                : fromEvent(this.optionsContainer.nativeElement, 'scroll').pipe(
+                      map(() => {
+                          const element = this.optionsContainer.nativeElement;
+
+                          return element.scrollHeight - element.scrollTop - element.clientHeight;
+                      })
+                  );
+
+        this._ngZone.runOutsideAngular(() => {
+            this.scrollSubscription = distance
+                .pipe(
+                    auditTime(SCROLLED_TO_BOTTOM_THROTTLE_TIME),
+                    map((distance) => distance <= this.scrolledToBottomOffset),
+                    distinctUntilChanged(),
+                    filter(Boolean),
+                    takeUntilDestroyed(this.destroyRef),
+                    takeUntil(this.closedStream)
+                )
+                .subscribe(() => this._ngZone.run(() => this.scrolledToBottom.emit()));
+        });
     }
 
     /** Calculates the total width of all selected items in the matcher. */

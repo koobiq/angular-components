@@ -36,6 +36,4 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class SelectPreselectedValuesExample {
     options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
     control = new FormControl(['Option #101', 'Option #102']);
-
-    constructor() {}
 }
