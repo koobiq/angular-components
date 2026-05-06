@@ -1,26 +1,18 @@
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Обратите внимание</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+## Шрифтовые иконки (по умолчанию)
 
-Для работы компонента необходима зависимость [`@koobiq/icons`](https://github.com/koobiq/icons):
+Использует CSS-шрифт `@koobiq/icons`. Провайдеры не требуются — достаточно подключить стили.
+
+Установите зависимость и настройте `angular.json`:
 
 ```bash
 npm install @koobiq/icons
 ```
 
-</div>
-</div>
-
-После установки настройте `angular.json`:
-
 ```json
 "styles": [
-  "node_modules/@koobiq/icons/fonts/kbq-icons.css",
-  // ...
+  "node_modules/@koobiq/icons/fonts/kbq-icons.css"
 ]
 ```
-
-Пример использования:
 
 ```ts
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -29,12 +21,74 @@ import { KbqIconModule } from '@koobiq/components/icon';
     imports: [KbqIconModule],
     template: `
         <i kbq-icon="kbq-plus_16"></i>
-        <i kbq-icon="kbq-plus-s_24"></i>
-        <i kbq-icon="kbq-plus_32"></i>
-        <i kbq-icon="kbq-plus_64"></i>
     `
 })
 export class AppComponent {}
 ```
 
 Список доступных иконок: [Иконки](/ru/icons)
+
+---
+
+### SVG-иконки
+
+#### Спрайт-файл
+
+Подходит, если у вас готовый SVG-спрайт и все иконки нужно загрузить одним HTTP-запросом.
+
+```ts
+import { provideKoobiqIcons } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideKoobiqIcons(
+            { spriteUrl: '/assets/icons/sprite.symbol.svg' },
+            { spriteUrl: '/assets/brand/sprite.symbol.svg', namespace: 'brand' }
+        )
+    ]
+});
+```
+
+```html
+<i kbq-icon="plus_16"></i>
+<i kbq-icon="brand:logo_24"></i>
+```
+
+#### Обработка URL
+
+Подходит, если иконки расположены по предсказуемым URL и должны загружаться по требованию (без спрайта).
+
+```ts
+import { provideKoobiqIconsResolver } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideKoobiqIconsResolver((name) => `/assets/icons/${name}.svg`)
+    ]
+});
+```
+
+```html
+<i kbq-icon="plus_16"></i>
+```
+
+#### Встроенные компоненты (`@koobiq/angular-icons`)
+
+Подходит, когда нужен tree-shaking.
+
+```bash
+npm install @koobiq/angular-icons
+```
+
+```ts
+import { KbqPlus16 } from '@koobiq/angular-icons';
+
+@Component({
+    standalone: true,
+    imports: [KbqPlus16],
+    template: `
+        <svg kbqPlus16></svg>
+    `
+})
+export class AppComponent {}
+```
