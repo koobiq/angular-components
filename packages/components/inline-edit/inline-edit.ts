@@ -175,6 +175,8 @@ export class KbqInlineEdit {
     readonly editModeWidth = input(undefined, { transform: numberAttribute });
     /** User-defined tooltip placement */
     readonly tooltipPlacement = input<PopUpPlacements>();
+    /** Classes to be passed to the inline edit panel. */
+    readonly overlayPanelClass = input<string | string[]>('');
     /** Handler function to retrieve the current value */
     readonly getValueHandler = input<() => unknown>();
     /** Handler function to update the value */

@@ -22,6 +22,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <inline-edit-customized-design-example />
         <inline-edit-date-time-example />
         <inline-edit-content-alignment-example />
+        <inline-edit-customized-panel-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
