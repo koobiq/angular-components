@@ -39,9 +39,3 @@ export const kbqDatepickerAnimations: {
         transition('void => *', animate('120ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2)'))
     ])
 };
-
-// todo should be put into polyfills
-// https://github.com/angular/angular/issues/24769
-if (!Element.prototype.matches) {
-    Element.prototype.matches = (Element.prototype as any).msMatchesSelector;
-}
