@@ -16,7 +16,7 @@ import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../compo
 import { E2eButtonToggleStates } from '../components/button-toggle/e2e';
 import { E2eButtonGroup, E2eButtonStateAndStyle } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
-import { E2eClampedTextStateAndStyle } from '../components/clamped-text/e2e';
+import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
 import { E2eContentPanelState } from '../components/content-panel/e2e';
 import { E2eDatepickerStates } from '../components/datepicker/e2e';
@@ -126,6 +126,7 @@ const components = [
     E2eTabsStates,
     E2eTabNavBar,
     E2eClampedTextStateAndStyle,
+    E2eClampedTextStates,
     E2eAccordionStates,
     E2eTextareaStates,
     E2eDatepickerStates,
