@@ -30,7 +30,7 @@ const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
     imports: [KbqClampedText],
     template: `
         <div style="max-width: 1000px; width: 1000px; overflow: auto; min-width: 150px;">
-            <kbq-clamped-text (isCollapsedChange)="onCollapseChanged($event)">
+            <kbq-clamped-text [isCollapsed]="isCollapsed()" (isCollapsedChange)="onCollapseChanged($event)">
                 {{ text }}
             </kbq-clamped-text>
         </div>
@@ -40,6 +40,7 @@ const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
 class TestClampedTextDefault {
     protected readonly text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
 
+    readonly isCollapsed = signal<boolean | undefined>(undefined);
     readonly collapsed = signal<boolean | undefined>(undefined);
 
     onCollapseChanged($event: boolean): void {
@@ -69,5 +70,24 @@ describe('KbqClampedText', () => {
 
         expect(componentInstance.collapsed()).not.toEqual(previousCollapsedState);
         expect(componentInstance.collapsed()).toBe(false);
+    });
+
+    it('should emit isCollapsedChange when isCollapsed input changes', async () => {
+        const fixture = createComponent(TestClampedTextDefault);
+        const { componentInstance } = fixture;
+
+        await fixture.whenStable();
+
+        jest.spyOn(componentInstance, 'onCollapseChanged');
+
+        componentInstance.isCollapsed.set(true);
+        await fixture.whenStable();
+
+        expect(componentInstance.onCollapseChanged).toHaveBeenCalledWith(true);
+
+        componentInstance.isCollapsed.set(false);
+        await fixture.whenStable();
+
+        expect(componentInstance.onCollapseChanged).toHaveBeenCalledWith(false);
     });
 });
