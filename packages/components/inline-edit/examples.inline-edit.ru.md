@@ -22,7 +22,3 @@
 ### Ввод даты и времени
 
 <!-- example(inline-edit-date-time) -->
-
-### Кастомный класс панели
-
-<!-- example(inline-edit-customized-panel) -->
