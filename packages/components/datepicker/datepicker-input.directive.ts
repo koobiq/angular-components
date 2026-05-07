@@ -231,7 +231,8 @@ interface DateTimeObject {
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
-        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }],
+        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }
+    ],
     host: {
         class: 'kbq-input kbq-datepicker',
         '[attr.placeholder]': 'placeholder',

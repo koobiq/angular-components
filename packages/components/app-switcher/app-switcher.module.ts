@@ -24,6 +24,7 @@ import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
     providers: [
         KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
-        { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy }]
+        { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy }
+    ]
 })
 export class KbqAppSwitcherModule {}

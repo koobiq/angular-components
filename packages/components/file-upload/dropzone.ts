@@ -339,7 +339,8 @@ export class KbqLocalDropzone extends KbqDrop {
                 .flexibleConnectedTo(this.elementRef)
                 .withFlexibleDimensions(false)
                 .withPositions([
-                    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top' }])
+                    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top' }
+                ])
         });
     }
 

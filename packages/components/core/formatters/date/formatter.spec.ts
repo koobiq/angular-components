@@ -2274,7 +2274,8 @@ describe('Date formatter (imports and providing)', () => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
-                    { provide: KBQ_LOCALE_ID, useValue: 'en-US' }]
+                    { provide: KBQ_LOCALE_ID, useValue: 'en-US' }
+                ]
             }).compileComponents();
         });
 

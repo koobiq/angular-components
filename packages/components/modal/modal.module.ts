@@ -38,6 +38,7 @@ import { KbqModalService } from './modal.service';
     providers: [
         KbqModalControlService,
         KbqModalService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
+    ]
 })
 export class KbqModalModule {}

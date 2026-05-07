@@ -893,7 +893,8 @@ describe('getFunctionRenderable', () => {
                 {
                     ...baseFunction,
                     params: [
-                        { name: 'fromSig', type: 'number', isOptional: false, isRestParam: false, description: '' }],
+                        { name: 'fromSig', type: 'number', isOptional: false, isRestParam: false, description: '' }
+                    ],
                     returnType: 'boolean'
                 }
             ]

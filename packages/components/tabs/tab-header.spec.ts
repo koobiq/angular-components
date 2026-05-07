@@ -340,7 +340,8 @@ class SimpleTabHeaderApp {
         { label: 'tab one' },
         { label: 'tab one' },
         { label: 'tab one' },
-        { label: 'tab one' }];
+        { label: 'tab one' }
+    ];
     dir: Direction = 'ltr';
 
     @ViewChild(KbqTabHeader, { static: true })

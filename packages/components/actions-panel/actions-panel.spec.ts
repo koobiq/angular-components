@@ -391,7 +391,8 @@ describe(KbqActionsPanelModule.name, () => {
             }
         };
         const { componentInstance } = createComponent(ActionsPanelController, [
-            { provide: OverlayContainer, useClass: testOverlayContainer }]);
+            { provide: OverlayContainer, useClass: testOverlayContainer }
+        ]);
 
         componentInstance.openFromTemplate();
 

@@ -74,7 +74,8 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }]
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ]
 })
 export class InlineEditDateTimeExample {
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);

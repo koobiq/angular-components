@@ -1064,7 +1064,8 @@ describe('KbqListSelection onCopy event', () => {
     it('should not call clipboard.copy when (onCopy) observer is attached', fakeAsync(() => {
         const clipboardSpy = jest.fn();
         const fixture = setup(SelectionListWithOnCopyHandler, [
-            { provide: Clipboard, useValue: { copy: clipboardSpy } }]);
+            { provide: Clipboard, useValue: { copy: clipboardSpy } }
+        ]);
         const selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
         const manager = selectionList.componentInstance.keyManager;
 

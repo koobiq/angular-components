@@ -537,7 +537,8 @@ describe('KbqToggle', () => {
     describe('when clickAction input overrides KBQ_CHECKBOX_CLICK_ACTION token', () => {
         it('should use clickAction input value instead of token when explicitly set', () => {
             const fixture = createComponent(SingleToggle, [
-                { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }]);
+                { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }
+            ]);
             const toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             const toggleInstance: KbqToggleComponent = toggleDebugElement.componentInstance;
             const inputElement = toggleDebugElement.nativeElement.querySelector('input') as HTMLInputElement;

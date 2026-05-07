@@ -24,5 +24,6 @@ export class BreadcrumbsWithWrapExample {
         { label: 'Standards' },
         { label: 'Advanced Encryption Standard' },
         { label: 'Edit' },
-        { label: 'Test' }];
+        { label: 'Test' }
+    ];
 }

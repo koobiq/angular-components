@@ -102,7 +102,8 @@ export class E2eButtonStateAndStyle {
         { title: 'hover', hover: true },
         { title: 'active', active: true },
         { title: 'focus', focused: true },
-        { title: 'progress', progress: true }];
+        { title: 'progress', progress: true }
+    ];
 
     private readonly styles: DevButtonStyle[] = [
         {},
@@ -110,7 +111,8 @@ export class E2eButtonStateAndStyle {
         { color: KbqComponentColors.ThemeFade, style: KbqButtonStyles.Outline },
         { style: KbqButtonStyles.Outline },
         { color: KbqComponentColors.Theme, style: KbqButtonStyles.Transparent },
-        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }];
+        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }
+    ];
 
     readonly rows: DevButton[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
 

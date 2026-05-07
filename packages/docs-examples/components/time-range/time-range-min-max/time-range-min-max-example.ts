@@ -23,7 +23,8 @@ import { DateTime } from 'luxon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ],
     host: {
         class: 'layout-flex layout-column layout-align-center-center layout-gap-xs'
     }

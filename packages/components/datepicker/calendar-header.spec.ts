@@ -20,7 +20,8 @@ describe('KbqCalendarHeader', () => {
             ],
             providers: [
                 KbqDatepickerIntl,
-                { provide: DateAdapter, useClass: LuxonDateAdapter }]
+                { provide: DateAdapter, useClass: LuxonDateAdapter }
+            ]
         }).compileComponents();
     });
 

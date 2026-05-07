@@ -46,5 +46,6 @@ export class FileUploadMultipleWithFixedHeightExample {
         { file: createMockFile('Name', { size: 2 }) },
         { file: createMockFile('meeting_notes.txt', { size: 3 }) },
         { file: createMockFile('presentation_slide.pptx', { size: 4 }) },
-        { file: createMockFile('research_paper.pdf', { size: 5 }) }];
+        { file: createMockFile('research_paper.pdf', { size: 5 }) }
+    ];
 }

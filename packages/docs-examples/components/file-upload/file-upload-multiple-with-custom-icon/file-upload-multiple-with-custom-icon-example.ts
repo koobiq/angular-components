@@ -36,5 +36,6 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
 export class FileUploadMultipleWithCustomIconExample {
     files: KbqFileItem[] = [
         { file: createMockFile('image.jpg') },
-        { file: createMockFile('file.txt') }];
+        { file: createMockFile('file.txt') }
+    ];
 }

@@ -409,7 +409,8 @@ describe('KbqCheckbox', () => {
                 TestBed.configureTestingModule({
                     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
                     providers: [
-                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'check' }]
+                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'check' }
+                    ]
                 });
 
                 fixture = TestBed.createComponent(SingleCheckbox);
@@ -444,7 +445,8 @@ describe('KbqCheckbox', () => {
                 TestBed.configureTestingModule({
                     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
                     providers: [
-                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }]
+                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }
+                    ]
                 });
 
                 fixture = TestBed.createComponent(SingleCheckbox);
@@ -483,7 +485,8 @@ describe('KbqCheckbox', () => {
                 TestBed.configureTestingModule({
                     imports: [KbqCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
                     providers: [
-                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }]
+                        { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'noop' }
+                    ]
                 });
 
                 fixture = TestBed.createComponent(SingleCheckbox);

@@ -120,7 +120,8 @@ export class E2eFileUploadStateAndStyle {
             { file: null },
             { file: null, disabled: true },
             { file: null, icon: this.iconClass.error, error: true },
-            { file: null, dragover: true }],
+            { file: null, dragover: true }
+        ],
 
         // File picker allowed types
         [
@@ -133,7 +134,8 @@ export class E2eFileUploadStateAndStyle {
             { file: this.testKbqFileItem },
             { file: this.testKbqFileItem, disabled: true },
             { file: this.testKbqFileItem, icon: this.iconClass.error, error: true },
-            { file: this.testKbqFileItem, dragover: true }],
+            { file: this.testKbqFileItem, dragover: true }
+        ],
 
         // File selected, fileSize hidden
         [
@@ -166,7 +168,8 @@ export class E2eFileUploadStateAndStyle {
             { files: [] },
             { files: [], disabled: true },
             { files: [], icon: this.iconClass.error, error: true },
-            { files: [], dragover: true }],
+            { files: [], dragover: true }
+        ],
         [
             { files: [], allowed: KbqFileUploadAllowedType.Folder },
             { files: [], allowed: KbqFileUploadAllowedType.Mixed },
@@ -177,7 +180,8 @@ export class E2eFileUploadStateAndStyle {
             { files: [this.testKbqFileItem] },
             { files: [this.testKbqFileItem], disabled: true },
             { files: [this.testKbqFileItem], type: 'error' },
-            { files: [this.testKbqFileItem], dragover: true }],
+            { files: [this.testKbqFileItem], dragover: true }
+        ],
         // Row 3: Compact, no file selected
         [
             { files: [], size: 'compact' },

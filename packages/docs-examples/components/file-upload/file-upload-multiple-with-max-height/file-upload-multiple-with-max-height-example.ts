@@ -44,5 +44,6 @@ export class FileUploadMultipleWithMaxHeightExample {
         { file: createMockFile('report_final.docx', { size: 2 }) },
         { file: createMockFile('presentation_overview.pptx', { size: 3 }) },
         { file: createMockFile('data_analysis.csv', { size: 4 }) },
-        { file: createMockFile('summary_notes.pdf', { size: 5 }) }];
+        { file: createMockFile('summary_notes.pdf', { size: 5 }) }
+    ];
 }

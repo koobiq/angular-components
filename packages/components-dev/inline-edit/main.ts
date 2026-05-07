@@ -6,5 +6,6 @@ import { DevApp } from './module';
 bootstrapApplication(DevApp, {
     providers: [
         provideAnimations(),
-        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
+        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+    ]
 }).catch((error) => console.error(error));

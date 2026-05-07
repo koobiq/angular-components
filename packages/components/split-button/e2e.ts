@@ -116,7 +116,8 @@ export class E2eSplitButtonStateAndStyle {
         { title: 'focusSecond', focusedSecond: true },
         { title: 'progress', progress: true },
         { title: 'progressSecond', progressSecond: true },
-        { title: 'progressAll', progress: true, progressSecond: true }];
+        { title: 'progressAll', progress: true, progressSecond: true }
+    ];
 
     private readonly styles: DevButtonStyle[] = [
         {},
@@ -124,7 +125,8 @@ export class E2eSplitButtonStateAndStyle {
         { color: KbqComponentColors.ThemeFade, style: KbqButtonStyles.Outline },
         { color: KbqComponentColors.ContrastFade, style: KbqButtonStyles.Outline },
         { color: KbqComponentColors.Theme, style: KbqButtonStyles.Transparent },
-        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }];
+        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }
+    ];
 
     readonly rows: DevButton[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
 

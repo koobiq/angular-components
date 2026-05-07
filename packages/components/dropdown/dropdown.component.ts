@@ -63,7 +63,8 @@ export class KbqDropdownStaticContent {}
         kbqDropdownAnimations.fadeInItems
     ],
     providers: [
-        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }]
+        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
+    ]
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     @ContentChild(KbqFormField) private search?: KbqFormField;
