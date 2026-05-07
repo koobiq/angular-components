@@ -30,6 +30,13 @@
         &:active {
             background: var(--kbq-states-background-transparent-active);
         }
+
+        & .kbq-icon {
+            svg {
+                color: var(--kbq-icon-error-color) !important;
+                fill: var(--kbq-icon-contrast-color);
+            }
+        }
     }
 
     .docs-icon-preview-modal__preview-area {
