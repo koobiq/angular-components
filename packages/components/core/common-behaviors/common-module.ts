@@ -57,7 +57,7 @@ export class KbqCommonModule {
 
     // Whether the code is running in tests.
     private isTestEnv(): boolean {
-        return !!(this.window && (this.window['__karma__'] || this.window['jasmine'] || this.window['__jest__']));
+        return !!(this.window && this.window['__jest__']);
     }
 
     private checkDoctypeIsDefined(): void {

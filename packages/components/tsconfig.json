@@ -13,8 +13,5 @@
     },
     "include": [
         "**/*.ts"
-    ],
-    "exclude": [
-        "**/*.karma-spec.ts"
     ]
 }

@@ -414,7 +414,7 @@ const appDocsRules = {
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const specRules = {
-    files: ['*.spec.ts', '*.karma-spec.ts'],
+    files: ['*.spec.ts'],
     rules: {
         // plugin:eslint
         // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
