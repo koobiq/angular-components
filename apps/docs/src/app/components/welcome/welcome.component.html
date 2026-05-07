@@ -14,13 +14,15 @@
     <div class="docs-welcome__category">
         <div class="docs-welcome__category-title">{{ category.name[locale()] }}</div>
         <div class="docs-welcome__category-items layout-row layout-margin-top-l">
+            @let theme = currentTheme();
+
             @for (item of category.items; track item) {
                 <a class="docs-welcome__category-item" [routerLink]="[category.id, item.id]">
                     <img
                         class="docs-welcome__category-item-preview"
                         width="200"
                         height="140"
-                        [ngSrc]="`/assets/images/welcome/${item.svgPreview || 'generic'}-${currentTheme()}.png`"
+                        [ngSrc]="`/assets/images/welcome/${item.svgPreview || 'generic'}-${theme}.png`"
                         [alt]="item.id"
                     />
                     <div class="docs-welcome__category-item-title">{{ item.name[locale()] }}</div>
