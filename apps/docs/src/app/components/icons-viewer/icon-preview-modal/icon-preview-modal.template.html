@@ -1,7 +1,7 @@
 <kbq-modal-title>
     {{ iconItem.name }}
     <button kbq-button class="kbq-modal-close kbq-button_transparent" [color]="'contrast'" (click)="modal.close()">
-        <i kbq-icon="xmark_16" [color]="componentColors.Contrast"></i>
+        <i kbq-icon="kbq-xmark_16" [color]="componentColors.Contrast"></i>
     </button>
 </kbq-modal-title>
 
@@ -13,14 +13,14 @@
         <kbq-form-field>
             <kbq-select [placeholder]="isRuLocale() ? 'Цвет' : 'Color'" [(value)]="color">
                 <kbq-select-trigger>
-                    <i kbq-icon="circle-xs_16" class="docs-icon-preview-modal__palette-icon" [color]="color()"></i>
+                    <i kbq-icon="kbq-circle-xs_16" class="docs-icon-preview-modal__palette-icon" [color]="color()"></i>
                     {{ color() | titlecase }}
                 </kbq-select-trigger>
 
                 @for (paletteName of themePalettes; track paletteName) {
                     <kbq-option class="docs-icon-preview-modal__select-option" [value]="paletteName">
                         <i
-                            kbq-icon="circle-xs_16"
+                            kbq-icon="kbq-circle-xs_16"
                             class="docs-icon-preview-modal__palette-icon"
                             [color]="paletteName"
                         ></i>
@@ -32,12 +32,12 @@
 
         <div class="docs-icon-preview-modal__buttons">
             <button kbq-button (click)="downloadSVG()">
-                <i kbq-icon="arrow-down-to-line_16"></i>
+                <i kbq-icon="kbq-arrow-down-to-line_16"></i>
                 {{ isRuLocale() ? 'Скачать SVG' : 'Download SVG' }}
             </button>
 
             <button kbq-button (click)="copySVG()">
-                <i kbq-icon="file-multiple-o_16"></i>
+                <i kbq-icon="kbq-file-multiple-o_16"></i>
                 {{ isRuLocale() ? 'Скопировать SVG' : 'Copy SVG' }}
             </button>
         </div>
