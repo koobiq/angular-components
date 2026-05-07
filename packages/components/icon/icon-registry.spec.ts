@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { KbqIconRegistry } from './icon-registry';
 
 const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z"/></svg>';
@@ -172,6 +172,62 @@ describe('KbqIconRegistry', () => {
                     done();
                 }
             });
+        });
+    });
+
+    describe('XSS prevention for raw SVG literals', () => {
+        /**
+         * Cast plain strings as SafeHtml to exercise the sanitizer.sanitize(SecurityContext.HTML, ...)
+         * path inside addSvgIconLiteralInNamespace. Angular sanitizes plain strings but returns
+         * trusted SafeHtml values as-is, so this cast simulates a caller bypassing the type system
+         * (e.g. a dynamic value that loses its type at runtime).
+         */
+        const unsafe = (html: string) => html as unknown as SafeHtml;
+
+        it('throws when input sanitizes to empty (script-only literal)', () => {
+            expect(() => registry.addSvgIconLiteral('evil', unsafe('<script>alert(1)</script>'))).toThrow(
+                /sanitized to empty string/
+            );
+        });
+
+        it('strips <script> elements embedded in the SVG', () => {
+            expect(() => {
+                registry.addSvgIconLiteral(
+                    'check',
+                    unsafe(
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">' +
+                            '<script>window.__xss = true</script>' +
+                            '<path d="M0 0h16v16H0z"/>' +
+                            '</svg>'
+                    )
+                );
+            }).toThrow();
+        });
+
+        it('strips inline event-handler attributes from the SVG root', () => {
+            expect(() => {
+                registry.addSvgIconLiteral(
+                    'check',
+                    unsafe(
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" onload="window.__xss=true">' +
+                            '<path d="M0 0h16v16H0z"/>' +
+                            '</svg>'
+                    )
+                );
+            }).toThrow();
+        });
+
+        it('strips event-handler attributes from nested SVG children', () => {
+            expect(() => {
+                registry.addSvgIconLiteral(
+                    'check',
+                    unsafe(
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">' +
+                            '<path d="M0 0h16v16H0z" onclick="window.__xss=true"/>' +
+                            '</svg>'
+                    )
+                );
+            }).toThrow();
         });
     });
 });

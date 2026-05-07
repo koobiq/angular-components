@@ -39,11 +39,11 @@ SVG icons render inline and support CSS color theming via `currentColor`. Choose
 Best when you have a pre-built SVG sprite and want all icons in a single HTTP request.
 
 ```ts
-import { provideKoobiqIcons } from '@koobiq/components/icon';
+import { kbqIconsProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
-        provideKoobiqIcons(
+        kbqIconsProvider(
             { spriteUrl: '/assets/icons/sprite.symbol.svg' },
             { spriteUrl: '/assets/brand/sprite.symbol.svg', namespace: 'brand' }
         )
@@ -61,11 +61,11 @@ bootstrapApplication(AppComponent, {
 Best when icons live at predictable URLs and you want them fetched on demand (no sprite required).
 
 ```ts
-import { provideKoobiqIconsResolver } from '@koobiq/components/icon';
+import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
-        provideKoobiqIconsResolver((name) => `/assets/icons/${name}.svg`)
+        kbqIconsResolverProvider((name) => `/assets/icons/${name}.svg`)
     ]
 });
 ```

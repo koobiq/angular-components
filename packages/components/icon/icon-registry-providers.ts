@@ -22,7 +22,7 @@ export type KbqIconResolver = (name: string) => string | null;
 export const KBQ_ICON_RESOLVER = new InjectionToken<KbqIconResolver[]>('KBQ_ICON_RESOLVER');
 
 /** Configures the icon registry to load icons from one or more SVG sprite assets. */
-export function provideKoobiqIcons(...sprites: KbqIconsConfig[]): Provider {
+export function kbqIconsProvider(...sprites: KbqIconsConfig[]): Provider {
     return { provide: KBQ_ICONS_CONFIG, useValue: sprites };
 }
 
@@ -30,7 +30,7 @@ export function provideKoobiqIcons(...sprites: KbqIconsConfig[]): Provider {
  * Registers a resolver function that maps icon names to SVG strings or URLs.
  * Multiple resolvers can be registered; they are tried in registration order.
  */
-export function provideKoobiqIconsResolver(resolver: KbqIconResolver): Provider {
+export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider {
     return { provide: KBQ_ICON_RESOLVER, useValue: resolver, multi: true };
 }
 
@@ -40,8 +40,8 @@ export function provideKoobiqIconsResolver(resolver: KbqIconResolver): Provider 
  * All other values are treated as URLs and fetched at runtime.
  *
  * @example
- * provideKoobiqIconsDict({ 'chevron-down-s_16': '<svg>...</svg>' })
+ * kbqIconsDictProvider({ 'chevron-down-s_16': '<svg>...</svg>' })
  */
-export function provideKoobiqIconsDict(dict: Record<string, string>): Provider {
-    return provideKoobiqIconsResolver((name) => dict[name] ?? null);
+export function kbqIconsDictProvider(dict: Record<string, string>): Provider {
+    return kbqIconsResolverProvider((name) => dict[name] ?? null);
 }

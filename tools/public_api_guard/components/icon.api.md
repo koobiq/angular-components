@@ -164,13 +164,13 @@ export interface KbqIconsConfig {
 }
 
 // @public
-export function provideKoobiqIcons(...sprites: KbqIconsConfig[]): Provider;
+export function kbqIconsDictProvider(dict: Record<string, string>): Provider;
 
 // @public
-export function provideKoobiqIconsDict(dict: Record<string, string>): Provider;
+export function kbqIconsProvider(...sprites: KbqIconsConfig[]): Provider;
 
 // @public
-export function provideKoobiqIconsResolver(resolver: KbqIconResolver): Provider;
+export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider;
 
 // (No @packageDocumentation comment for this package)
 

@@ -59,11 +59,11 @@ bootstrapApplication(AppComponent, {
 Подходит, если иконки расположены по предсказуемым URL и должны загружаться по требованию (без спрайта).
 
 ```ts
-import { provideKoobiqIconsResolver } from '@koobiq/components/icon';
+import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
-        provideKoobiqIconsResolver((name) => `/assets/icons/${name}.svg`)
+        kbqIconsResolverProvider((name) => `/assets/icons/${name}.svg`)
     ]
 });
 ```
