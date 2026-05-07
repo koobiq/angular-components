@@ -17,6 +17,7 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
+    forwardRef,
     inject,
     Input,
     OnDestroy,
@@ -424,7 +425,7 @@ export class KbqTagList
      *
      * @docs-private
      */
-    @ContentChildren(KbqTag, {
+    @ContentChildren(forwardRef(() => KbqTag), {
         // Need to use `descendants: true`,
         // Ivy will no longer match indirect descendants if it's left as false.
         descendants: true

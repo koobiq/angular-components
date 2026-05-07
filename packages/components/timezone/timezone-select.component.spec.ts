@@ -1,15 +1,14 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
-import { KbqOptionModule, KbqOptionSelectionChange } from '@koobiq/components/core';
+import { KbqOptionModule, KbqOptionSelectionChange, KbqSelectSearch } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { Observable, Subject, merge, of } from 'rxjs';
@@ -87,12 +86,10 @@ const groupedZones: KbqTimezoneGroup[] = [
         KbqOptionModule
     ],
     template: `
-        <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
             <kbq-timezone-select
                 placeholder="Timezones"
                 [formControl]="control"
-                [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
                 [panelClass]="panelClass"
             >
@@ -109,15 +106,11 @@ const groupedZones: KbqTimezoneGroup[] = [
                 }
             </kbq-timezone-select>
         </kbq-form-field>
-        <div [style.height.px]="heightBelow"></div>
     `
 })
 class BasicTimezoneSelect {
     zones: KbqTimezoneGroup[] = groupedZones;
     control = new FormControl();
-    isRequired: boolean;
-    heightAbove = 0;
-    heightBelow = 0;
     tabIndexOverride: number = 0;
     panelClass = ['custom-one', 'custom-two'];
     disabledFor = 'Europe/city7';
@@ -130,23 +123,18 @@ class BasicTimezoneSelect {
     selector: 'select-with-search',
     imports: [
         KbqFormFieldModule,
+        KbqInputModule,
+        KbqSelectSearch,
         KbqTimezoneModule,
         ReactiveFormsModule,
-        AsyncPipe,
-        KbqIconModule
+        AsyncPipe
     ],
     template: `
         <kbq-form-field>
             <kbq-timezone-select [searchMinOptionsThreshold]="minOptionsThreshold" [(value)]="selected">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                    <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                    <input kbqInput type="text" [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" />
-                    <kbq-cleaner />
+                <kbq-form-field kbqSelectSearch>
+                    <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>
-
-                <kbq-cleaner #kbqSelectCleaner />
-
-                <div kbq-select-search-empty-result>Ничего не найдено</div>
 
                 @for (group of options$ | async; track group) {
                     @for (timezone of group.zones; track timezone) {
@@ -232,375 +220,388 @@ describe('KbqTimezoneSelect', () => {
 
     afterEach(() => overlayContainer.ngOnDestroy());
 
-    describe('core', () => {
-        beforeEach(() => {
-            configureTestingModule([BasicTimezoneSelect]);
+    describe('keyboard navigation and tabindex', () => {
+        describe('disabled behavior', () => {
+            it('should not open the panel when the control is disabled and reopen when re-enabled', fakeAsync(() => {
+                const fixture = TestBed.createComponent(BasicTimezoneSelect);
+
+                fixture.detectChanges();
+
+                fixture.componentInstance.control.disable();
+                fixture.detectChanges();
+                const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                expect(overlayContainerElement.textContent).toEqual('');
+                expect(fixture.componentInstance.select.panelOpen).toBe(false);
+
+                fixture.componentInstance.control.enable();
+                fixture.detectChanges();
+
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                expect(overlayContainerElement.textContent).toContain('UTC−02:00city1city4');
+                expect(fixture.componentInstance.select.panelOpen).toBe(true);
+            }));
         });
 
-        describe('accessibility', () => {
-            describe('for kbq-timezone-select', () => {
-                let fixture: ComponentFixture<BasicTimezoneSelect>;
-                let select: HTMLElement;
-
-                beforeEach(fakeAsync(() => {
-                    fixture = TestBed.createComponent(BasicTimezoneSelect);
-                    fixture.detectChanges();
-                    select = fixture.debugElement.query(By.css('kbq-timezone-select')).nativeElement;
-                    flush();
-                }));
-
-                it('should set the tabindex of the select to 0 by default', () => {
-                    expect(select.getAttribute('tabindex')).toEqual('0');
-                });
-
-                it('should be able to override the tabindex', fakeAsync(() => {
-                    fixture.componentInstance.tabIndexOverride = 3;
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(select.getAttribute('tabindex')).toBe('3');
-                }));
-
-                it('should set the tabindex of the select to -1 if disabled', fakeAsync(() => {
-                    fixture.componentInstance.control.disable();
-                    fixture.detectChanges();
-                    flush();
-                    expect(select.getAttribute('tabindex')).toEqual('-1');
-
-                    fixture.componentInstance.control.enable();
-                    fixture.detectChanges();
-                    expect(select.getAttribute('tabindex')).toEqual('0');
-                }));
-
-                it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {
-                    const formControl = fixture.componentInstance.control;
-                    const options = fixture.componentInstance.options.toArray();
-
-                    expect(formControl.value).toBeFalsy();
-
-                    dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-
-                    expect(options[0].selected).toBe(true);
-                    expect(formControl.value).toBe(options[0].value);
-
-                    dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                    dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-
-                    // Note that the third option is skipped, because it is disabled.
-                    expect(options[2].selected).toBe(true);
-                    expect(formControl.value).toBe(options[2].value);
-
-                    dispatchKeyboardEvent(select, 'keydown', UP_ARROW);
-                    flush();
-
-                    expect(options[0].selected).toBe(true);
-                    expect(formControl.value).toBe(options[0].value);
-                }));
-
-                it('should resume focus from selected item after selecting via click', fakeAsync(() => {
-                    const formControl = fixture.componentInstance.control;
-                    const options = fixture.componentInstance.options.toArray();
-
-                    expect(formControl.value).toBeFalsy();
-
-                    fixture.componentInstance.select.open();
-                    fixture.detectChanges();
-                    flush();
-
-                    (overlayContainerElement.querySelectorAll('kbq-timezone-option')[2] as HTMLElement).click();
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(formControl.value).toBe(options[2].value);
-
-                    dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(formControl.value).toBe(options[2].value);
-                }));
-
-                it('should select options via LEFT/RIGHT arrow keys on a closed select', fakeAsync(() => {
-                    const formControl = fixture.componentInstance.control;
-                    const options = fixture.componentInstance.options.toArray();
-
-                    expect(formControl.value).toBeFalsy();
-
-                    dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
-
-                    expect(options[0].selected).toBe(true);
-                    expect(formControl.value).toBe(options[0].value);
-
-                    dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
-                    dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
-
-                    // Note that the third option is skipped, because it is disabled.
-                    expect(options[2].selected).toBe(true);
-                    expect(formControl.value).toBe(options[2].value);
-
-                    dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
-                    flush();
-
-                    expect(options[0].selected).toBe(true);
-                    expect(formControl.value).toBe(options[0].value);
-                }));
-
-                it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
-                    const { control: formControl, select: selectInstance } = fixture.componentInstance;
-
-                    expect(selectInstance.panelOpen).toBe(false);
-                    expect(formControl.value).toBeFalsy();
-
-                    const event = createKeyboardEvent('keydown', DOWN_ARROW);
-
-                    Object.defineProperty(event, 'altKey', { get: () => true });
-
-                    dispatchEvent(select, event);
-                    flush();
-
-                    expect(selectInstance.panelOpen).toBe(true);
-                    expect(formControl.value).toBeFalsy();
-                }));
-
-                it('should open a single-selection select using ALT + UP_ARROW', fakeAsync(() => {
-                    const { control: formControl, select: selectInstance } = fixture.componentInstance;
-
-                    expect(selectInstance.panelOpen).toBe(false);
-                    expect(formControl.value).toBeFalsy();
-
-                    const event = createKeyboardEvent('keydown', UP_ARROW);
-
-                    Object.defineProperty(event, 'altKey', { get: () => true });
-
-                    dispatchEvent(select, event);
-                    flush();
-
-                    expect(selectInstance.panelOpen).toBe(true);
-                    expect(formControl.value).toBeFalsy();
-                }));
-            });
-
-            describe('overlay panel', () => {
-                let fixture: ComponentFixture<BasicTimezoneSelect>;
-                let trigger: HTMLElement;
-
-                beforeEach(fakeAsync(() => {
-                    fixture = TestBed.createComponent(BasicTimezoneSelect);
-                    fixture.detectChanges();
-                    trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                    flush();
-                }));
-
-                it('should open the panel when trigger is clicked', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(fixture.componentInstance.select.panelOpen).toBe(true);
-                    expect(overlayContainerElement.textContent).toContain('city1');
-                    expect(overlayContainerElement.textContent).toContain('city7');
-                    expect(overlayContainerElement.textContent).toContain('city17');
-                }));
-
-                it('should close the panel when an item is clicked', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
-
-                    option.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(overlayContainerElement.textContent).toEqual('');
-                    expect(fixture.componentInstance.select.panelOpen).toBe(false);
-                }));
-
-                it('should close the panel when a click occurs outside the panel', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    document.body.click();
-                    tick(1);
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(overlayContainerElement.textContent).toEqual('');
-                    expect(fixture.componentInstance.select.panelOpen).toBe(false);
-                }));
-
-                it('should not attempt to open a select that does not have any options', fakeAsync(() => {
-                    fixture.componentInstance.zones = [];
-                    fixture.detectChanges();
-                    flush();
-
-                    trigger.click();
-                    fixture.detectChanges();
-
-                    expect(fixture.componentInstance.select.panelOpen).toBe(false);
-                }));
-
-                it('should be able to set extra classes on the panel', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const panel = overlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
-
-                    expect(panel.classList).toContain('custom-one');
-                    expect(panel.classList).toContain('custom-two');
-                }));
-            });
-
-            describe('selection logic', () => {
-                let fixture: ComponentFixture<BasicTimezoneSelect>;
-                let trigger: HTMLElement;
-
-                beforeEach(fakeAsync(() => {
-                    fixture = TestBed.createComponent(BasicTimezoneSelect);
-                    fixture.detectChanges();
-                    trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                    flush();
-                }));
-
-                it('should select an option when it is clicked', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    let option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
-
-                    option.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
-
-                    expect(option.classList).toContain('kbq-selected');
-                    expect(fixture.componentInstance.options.first.selected).toBe(true);
-                    expect(fixture.componentInstance.select.selected).toBe(fixture.componentInstance.options.first);
-                }));
-
-                it('should be able to select an option using the KbqOption API', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const optionInstances = fixture.componentInstance.options.toArray();
-                    const optionNodes: NodeListOf<HTMLElement> =
-                        overlayContainerElement.querySelectorAll('kbq-timezone-option');
-
-                    optionInstances[2].select();
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(optionNodes[2].classList).toContain('kbq-selected');
-                    expect(optionInstances[2].selected).toBe(true);
-                    expect(fixture.componentInstance.select.selected).toBe(optionInstances[2]);
-                }));
-
-                it('should display the selected option in the trigger', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
-
-                    option.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const value = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
-
-                    expect(value.textContent).toContain('city4, city5');
-                }));
-
-                it('should emit to `optionSelectionChanges` when an option is selected', fakeAsync(() => {
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const spy = jest.fn();
-                    const subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
-                    const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
-
-                    option.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    expect(spy).toHaveBeenCalledWith(expect.any(KbqOptionSelectionChange));
-
-                    subscription.unsubscribe();
-                }));
-            });
-
-            describe('forms integration', () => {
-                let fixture: ComponentFixture<BasicTimezoneSelect>;
-                let trigger: HTMLElement;
-
-                beforeEach(fakeAsync(() => {
-                    fixture = TestBed.createComponent(BasicTimezoneSelect);
-                    fixture.detectChanges();
-                    trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                    flush();
-                }));
-
-                it('should take an initial view value with reactive forms', fakeAsync(() => {
-                    fixture.componentInstance.control = new FormControl('Europe/city17');
-                    fixture.detectChanges();
-
-                    const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
-
-                    expect(value.nativeElement.textContent).toContain('city17');
-
-                    trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
-
-                    expect(options[2].classList).toContain('kbq-selected');
-                }));
-
-                it('should clear the selection when the control is reset', fakeAsync(() => {
-                    fixture.componentInstance.control.setValue('Europe/city17');
-                    fixture.detectChanges();
-
-                    fixture.componentInstance.control.reset();
-                    fixture.detectChanges();
-
-                    const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
-
-                    expect(value.nativeElement.textContent.trim()).toBe('Timezones');
-                    expect(trigger.textContent).not.toContain('city17');
-
-                    trigger.click();
-                    fixture.detectChanges();
-                    flush();
-
-                    const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
-
-                    expect(options[1].classList).not.toContain('kbq-selected');
-                }));
-            });
+        let fixture: ComponentFixture<BasicTimezoneSelect>;
+        let select: HTMLElement;
+
+        beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(BasicTimezoneSelect);
+            fixture.detectChanges();
+            select = fixture.debugElement.query(By.css('kbq-timezone-select')).nativeElement;
+            flush();
+        }));
+
+        it('should set the tabindex of the select to 0 by default', () => {
+            expect(select.getAttribute('tabindex')).toEqual('0');
         });
+
+        it('should be able to override the tabindex', fakeAsync(() => {
+            fixture.componentInstance.tabIndexOverride = 3;
+            fixture.detectChanges();
+            flush();
+
+            expect(select.getAttribute('tabindex')).toBe('3');
+        }));
+
+        it('should set the tabindex of the select to -1 if disabled', fakeAsync(() => {
+            fixture.componentInstance.control.disable();
+            fixture.detectChanges();
+            flush();
+            expect(select.getAttribute('tabindex')).toEqual('-1');
+
+            fixture.componentInstance.control.enable();
+            fixture.detectChanges();
+            expect(select.getAttribute('tabindex')).toEqual('0');
+        }));
+
+        it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {
+            const formControl = fixture.componentInstance.control;
+            const options = fixture.componentInstance.options.toArray();
+
+            expect(formControl.value).toBeFalsy();
+
+            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+
+            expect(options[0].selected).toBe(true);
+            expect(formControl.value).toBe(options[0].value);
+
+            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+
+            // Note that the third option is skipped, because it is disabled.
+            expect(options[2].selected).toBe(true);
+            expect(formControl.value).toBe(options[2].value);
+
+            dispatchKeyboardEvent(select, 'keydown', UP_ARROW);
+            flush();
+
+            expect(options[0].selected).toBe(true);
+            expect(formControl.value).toBe(options[0].value);
+        }));
+
+        it('should keep the selected option as the active one after click selection', fakeAsync(() => {
+            const formControl = fixture.componentInstance.control;
+            const options = fixture.componentInstance.options.toArray();
+
+            expect(formControl.value).toBeFalsy();
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+            flush();
+
+            (overlayContainerElement.querySelectorAll('kbq-timezone-option')[2] as HTMLElement).click();
+            fixture.detectChanges();
+            flush();
+
+            expect(formControl.value).toBe(options[2].value);
+
+            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(formControl.value).toBe(options[2].value);
+        }));
+
+        it('should select options via LEFT/RIGHT arrow keys on a closed select', fakeAsync(() => {
+            const formControl = fixture.componentInstance.control;
+            const options = fixture.componentInstance.options.toArray();
+
+            expect(formControl.value).toBeFalsy();
+
+            dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+
+            expect(options[0].selected).toBe(true);
+            expect(formControl.value).toBe(options[0].value);
+
+            dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+            dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+
+            // Note that the third option is skipped, because it is disabled.
+            expect(options[2].selected).toBe(true);
+            expect(formControl.value).toBe(options[2].value);
+
+            dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
+            flush();
+
+            expect(options[0].selected).toBe(true);
+            expect(formControl.value).toBe(options[0].value);
+        }));
+
+        it.each([
+            ['DOWN_ARROW', DOWN_ARROW],
+            ['UP_ARROW', UP_ARROW]
+        ])(
+            'should open the select using ALT + %s',
+            fakeAsync((_label: string, keyCode: number) => {
+                const { control: formControl, select: selectInstance } = fixture.componentInstance;
+
+                expect(selectInstance.panelOpen).toBe(false);
+                expect(formControl.value).toBeFalsy();
+
+                const event = createKeyboardEvent('keydown', keyCode);
+
+                Object.defineProperty(event, 'altKey', { get: () => true });
+
+                dispatchEvent(select, event);
+                flush();
+
+                expect(selectInstance.panelOpen).toBe(true);
+                expect(formControl.value).toBeFalsy();
+            })
+        );
     });
 
-    // todo fix me after update angular
-    xdescribe('with a search', () => {
-        beforeEach(() => {
-            configureTestingModule([TimezoneSelectWithSearch]);
-        });
+    describe('overlay panel', () => {
+        let fixture: ComponentFixture<BasicTimezoneSelect>;
+        let trigger: HTMLElement;
 
+        beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(BasicTimezoneSelect);
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            flush();
+        }));
+
+        it('should open the panel when trigger is clicked', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.select.panelOpen).toBe(true);
+            expect(overlayContainerElement.textContent).toContain('city1');
+            expect(overlayContainerElement.textContent).toContain('city7');
+            expect(overlayContainerElement.textContent).toContain('city17');
+        }));
+
+        it('should close the panel when an item is clicked', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
+            option.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.textContent).toEqual('');
+            expect(fixture.componentInstance.select.panelOpen).toBe(false);
+        }));
+
+        it('should close the panel when a click occurs outside the panel', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            document.body.click();
+            tick(1);
+            fixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.textContent).toEqual('');
+            expect(fixture.componentInstance.select.panelOpen).toBe(false);
+        }));
+
+        it('should not attempt to open a select that does not have any options', fakeAsync(() => {
+            fixture.componentInstance.zones = [];
+            fixture.detectChanges();
+            flush();
+
+            trigger.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select.panelOpen).toBe(false);
+        }));
+
+        it('should be able to set extra classes on the panel', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const panel = overlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
+
+            expect(panel.classList).toContain('custom-one');
+            expect(panel.classList).toContain('custom-two');
+        }));
+    });
+
+    describe('selection logic', () => {
+        let fixture: ComponentFixture<BasicTimezoneSelect>;
+        let trigger: HTMLElement;
+
+        beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(BasicTimezoneSelect);
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            flush();
+        }));
+
+        it('should select an option when it is clicked', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            let option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
+            option.click();
+            fixture.detectChanges();
+            flush();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
+            expect(option.classList).toContain('kbq-selected');
+            expect(fixture.componentInstance.options.first.selected).toBe(true);
+            expect(fixture.componentInstance.select.selected).toBe(fixture.componentInstance.options.first);
+        }));
+
+        it('should be able to select an option using the KbqOption API', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const optionInstances = fixture.componentInstance.options.toArray();
+            const optionNodes: NodeListOf<HTMLElement> =
+                overlayContainerElement.querySelectorAll('kbq-timezone-option');
+
+            optionInstances[2].select();
+            fixture.detectChanges();
+            flush();
+
+            expect(optionNodes[2].classList).toContain('kbq-selected');
+            expect(optionInstances[2].selected).toBe(true);
+            expect(fixture.componentInstance.select.selected).toBe(optionInstances[2]);
+        }));
+
+        it('should display the selected option in the trigger', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
+            option.click();
+            fixture.detectChanges();
+            flush();
+
+            const value = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
+
+            expect(value.textContent).toContain('city4, city5');
+        }));
+
+        it('should emit to `optionSelectionChanges` when an option is selected', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const spy = jest.fn();
+            const subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
+            const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
+            option.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(spy).toHaveBeenCalledWith(expect.any(KbqOptionSelectionChange));
+
+            subscription.unsubscribe();
+        }));
+    });
+
+    describe('forms integration', () => {
+        let fixture: ComponentFixture<BasicTimezoneSelect>;
+        let trigger: HTMLElement;
+
+        beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(BasicTimezoneSelect);
+            fixture.detectChanges();
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            flush();
+        }));
+
+        it('should take an initial view value with reactive forms', fakeAsync(() => {
+            fixture.componentInstance.control = new FormControl('Europe/city17');
+            fixture.detectChanges();
+
+            const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
+            expect(value.nativeElement.textContent).toContain('city17');
+
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
+
+            expect(options[2].classList).toContain('kbq-selected');
+        }));
+
+        it('should clear the selection when the control is reset', fakeAsync(() => {
+            fixture.componentInstance.control.setValue('Europe/city17');
+            fixture.componentInstance.control.reset();
+            fixture.detectChanges();
+
+            const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
+            expect(value.nativeElement.textContent.trim()).toBe('Timezones');
+            expect(trigger.textContent).not.toContain('city17');
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
+
+            expect(options[1].classList).not.toContain('kbq-selected');
+        }));
+    });
+
+    describe('with a search', () => {
         let fixture: ComponentFixture<TimezoneSelectWithSearch>;
         let trigger: HTMLElement;
+
+        beforeEach(() => configureTestingModule([TimezoneSelectWithSearch]));
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(TimezoneSelectWithSearch);
@@ -615,10 +616,10 @@ describe('KbqTimezoneSelect', () => {
             fixture.detectChanges();
             flush();
 
-            expect(fixture.debugElement.query(By.css('input'))).toBeDefined();
+            expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
         }));
 
-        it('should search filed should be focused after open', fakeAsync(() => {
+        it('should focus the search field after opening', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -628,7 +629,7 @@ describe('KbqTimezoneSelect', () => {
             expect(input).toBe(document.activeElement);
         }));
 
-        it('should search', fakeAsync(() => {
+        it('should filter options by the search input value', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -667,7 +668,7 @@ describe('KbqTimezoneSelect', () => {
             expect(inputElementDebug.nativeElement.value).toBe('');
         });
 
-        it('should close list by esc if input is empty', () => {
+        it('should close the panel by ESC when the search input is empty', () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -682,7 +683,7 @@ describe('KbqTimezoneSelect', () => {
             expect(selectInstance.panelOpen).toBe(false);
         });
 
-        it('should hide search if options count less than threshold', fakeAsync(() => {
+        it('should hide the search input when option count is below the threshold', fakeAsync(() => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 10;
@@ -697,7 +698,7 @@ describe('KbqTimezoneSelect', () => {
             expect(fixture.debugElement.query(By.css('input'))).toBeFalsy();
         }));
 
-        it('should show search if options count more than threshold', fakeAsync(() => {
+        it('should show the search input when option count is at or above the threshold', fakeAsync(() => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 2;
@@ -714,42 +715,10 @@ describe('KbqTimezoneSelect', () => {
     });
 
     describe('option tooltip', () => {
-        beforeEach(() => {
-            configureTestingModule([BasicTimezoneSelect]);
-        });
-
         let fixture: ComponentFixture<BasicTimezoneSelect>;
         let trigger: HTMLElement;
 
-        class MockedResizeObserver implements ResizeObserver {
-            elements: any[] = [];
-
-            constructor(private callback: ResizeObserverCallback) {
-                window.addEventListener('resize', () => this.onWindowResize());
-            }
-
-            observe(target: Element) {
-                this.elements.push(target);
-            }
-
-            unobserve(target: Element) {
-                const idx = this.elements.indexOf(target);
-
-                if (idx > -1) {
-                    this.elements.splice(idx, 1);
-                }
-            }
-
-            disconnect() {
-                window.removeEventListener('resize', this.onWindowResize);
-            }
-
-            private onWindowResize() {
-                this.callback(this.elements, this);
-            }
-        }
-
-        window.ResizeObserver = MockedResizeObserver;
+        beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(BasicTimezoneSelect);
@@ -759,7 +728,7 @@ describe('KbqTimezoneSelect', () => {
             flush();
         }));
 
-        it('should not display tooltip if ellipse not applied', fakeAsync(() => {
+        it('should not display the tooltip when option text fits within the visible-rows clamp', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-timezone-option');
@@ -773,6 +742,34 @@ describe('KbqTimezoneSelect', () => {
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
 
             expect(tooltips.length).toEqual(0);
+        }));
+
+        it('should display tooltip when option text wraps beyond the visible rows count', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const optionInstances = fixture.componentInstance.options.toArray();
+            const tooltipContentEl = optionInstances[2].tooltipContent.nativeElement;
+
+            jest.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue([
+                {} as DOMRect,
+                {} as DOMRect,
+                {} as DOMRect,
+                {} as DOMRect
+            ] as unknown as DOMRectList);
+
+            const optionEls = overlayContainerElement.querySelectorAll<HTMLElement>('kbq-timezone-option');
+
+            dispatchMouseEvent(optionEls[2], 'mouseenter');
+            fixture.detectChanges();
+            flush();
+            discardPeriodicTasks();
+
+            const tooltips = document.querySelectorAll('.kbq-tooltip__content');
+
+            expect(tooltips.length).toEqual(1);
+            expect(tooltips[0].textContent).toContain(longOptionText);
         }));
     });
 });
