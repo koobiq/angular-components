@@ -2,7 +2,7 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
 import { AccordionOverviewExample } from 'packages/docs-examples/components/accordion';
-import { ActionsPanelOverviewExample } from 'packages/docs-examples/components/actions-panel';
+import { ActionsPanelAdaptiveExample } from 'packages/docs-examples/components/actions-panel';
 import { AlertStatusExample } from 'packages/docs-examples/components/alert';
 import { AppSwitcherOverviewExample } from 'packages/docs-examples/components/app-switcher';
 import { AutocompleteOverviewExample } from 'packages/docs-examples/components/autocomplete';
@@ -77,7 +77,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
     selector: 'dev-examples',
     imports: [
         AccordionOverviewExample,
-        ActionsPanelOverviewExample,
+        ActionsPanelAdaptiveExample,
         AlertStatusExample,
         AppSwitcherOverviewExample,
         AutocompleteOverviewExample,
@@ -144,7 +144,7 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
     template: `
         <accordion-overview-example />
         <hr />
-        <actions-panel-overview-example />
+        <actions-panel-adaptive-example />
         <hr />
         <app-switcher-overview-example />
         <hr />
