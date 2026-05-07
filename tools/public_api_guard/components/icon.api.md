@@ -135,17 +135,11 @@ export interface KbqIconOptions {
 // @public (undocumented)
 export class KbqIconRegistry {
     constructor();
-    // (undocumented)
     addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
-    // (undocumented)
     addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
-    // (undocumented)
     addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): void;
-    // (undocumented)
     addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void;
-    // (undocumented)
     addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void;
-    // (undocumented)
     addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
     getNamedSvgIcon(name: string, namespace?: string): Observable<SVGElement>;
     // (undocumented)

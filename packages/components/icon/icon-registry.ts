@@ -51,18 +51,22 @@ export class KbqIconRegistry {
         this.registerIconSet();
     }
 
+    /** Registers an SVG icon by URL in the default namespace. */
     addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): void {
         this.addSvgIconInNamespace('', name, url, options);
     }
 
+    /** Registers an SVG icon from an inline HTML string in the default namespace. */
     addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): void {
         this.addSvgIconLiteralInNamespace('', name, literal, options);
     }
 
+    /** Registers an SVG icon by URL under the given namespace. */
     addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): void {
         this.cacheIcon(namespace, name, { url, svgText: null, options, svgElement: null });
     }
 
+    /** Registers an SVG icon from an inline HTML string under the given namespace. */
     addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void {
         const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, literal);
 
@@ -78,10 +82,12 @@ export class KbqIconRegistry {
         });
     }
 
+    /** Registers an SVG sprite file in the default namespace. Icons are looked up by their `<symbol id>`. */
     addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void {
         this.addSvgIconSetInNamespace('', url, options);
     }
 
+    /** Registers an SVG sprite file under the given namespace. Duplicate URLs are silently ignored. */
     addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void {
         const urlStr = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, url) ?? '';
         const sets = this.iconSetConfigs.get(namespace) ?? [];
@@ -147,7 +153,6 @@ export class KbqIconRegistry {
             return this.loadIcon(config, resolvedName);
         }
 
-        // 3. Sprite sets.
         const sets = this.iconSetConfigs.get(resolvedNs);
 
         if (sets?.length) {
