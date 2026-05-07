@@ -1855,6 +1855,55 @@ class MultiSelectWithConfigurableInputs {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 }
 
+@Component({
+    selector: 'select-with-scrolled-to-bottom',
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [scrolledToBottomOffset]="scrolledToBottomOffset" (scrolledToBottom)="onScrolledToBottom()">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithScrolledToBottom {
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    options: string[] = Array.from({ length: 50 }, (_, i) => `Option ${i + 1}`);
+    scrolledToBottomOffset = 0;
+    emitCount = 0;
+    onScrolledToBottom() {
+        this.emitCount += 1;
+    }
+}
+
+@Component({
+    selector: 'virtual-select-with-scrolled-to-bottom',
+    imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [scrolledToBottomOffset]="scrolledToBottomOffset" (scrolledToBottom)="onScrolledToBottom()">
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="400">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
+                        {{ option }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class VirtualSelectWithScrolledToBottom {
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+    options: string[] = Array.from({ length: 100 }, (_, i) => `Option ${i + 1}`);
+    scrolledToBottomOffset = 0;
+    emitCount = 0;
+    onScrolledToBottom() {
+        this.emitCount += 1;
+    }
+}
+
 describe('KbqSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -6290,6 +6339,181 @@ describe('KbqSelect', () => {
 
             select.id = '';
             expect(select.id).toBe(original);
+        });
+    });
+
+    describe('with scrolledToBottom', () => {
+        describe('plain list', () => {
+            beforeEach(() => {
+                configureKbqSelectTestingModule([SelectWithScrolledToBottom]);
+            });
+
+            let fixture: ComponentFixture<SelectWithScrolledToBottom>;
+            let testInstance: SelectWithScrolledToBottom;
+            let optionsContainer: HTMLElement;
+
+            function fakeDimensions(scrollHeight: number, clientHeight: number): void {
+                Object.defineProperty(optionsContainer, 'scrollHeight', { configurable: true, value: scrollHeight });
+                Object.defineProperty(optionsContainer, 'clientHeight', { configurable: true, value: clientHeight });
+            }
+
+            function setScroll(top: number): void {
+                Object.defineProperty(optionsContainer, 'scrollTop', { configurable: true, value: top });
+                dispatchFakeEvent(optionsContainer, 'scroll');
+            }
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(SelectWithScrolledToBottom);
+                testInstance = fixture.componentInstance;
+                fixture.detectChanges();
+
+                testInstance.select.open();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                optionsContainer = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
+                fakeDimensions(1000, 200);
+            }));
+
+            afterEach(fakeAsync(() => flush()));
+
+            it('emits when scrolled to the bottom', fakeAsync(() => {
+                setScroll(800);
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(1);
+            }));
+
+            it('does not emit while there is room left to scroll', fakeAsync(() => {
+                setScroll(100);
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(0);
+            }));
+
+            it('respects scrolledToBottomOffset', fakeAsync(() => {
+                testInstance.scrolledToBottomOffset = 64;
+                fixture.detectChanges();
+
+                // 50px from the actual bottom — within the 64px threshold
+                setScroll(750);
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(1);
+            }));
+
+            it('does not emit when distance exceeds scrolledToBottomOffset', fakeAsync(() => {
+                testInstance.scrolledToBottomOffset = 32;
+                fixture.detectChanges();
+
+                // 100px from the bottom — outside the 32px threshold
+                setScroll(700);
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(0);
+            }));
+
+            it('emits only once per crossing while staying at the bottom', fakeAsync(() => {
+                setScroll(800);
+                tick(150);
+
+                setScroll(800);
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(1);
+            }));
+
+            it('re-emits after scrolling away from the bottom and back', fakeAsync(() => {
+                setScroll(800);
+                tick(150);
+
+                setScroll(0);
+                tick(150);
+
+                setScroll(800);
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(2);
+            }));
+
+            it('does not emit after the panel is closed', fakeAsync(() => {
+                testInstance.select.close();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                setScroll(800);
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(0);
+            }));
+        });
+
+        describe('cdk-virtual-scroll-viewport', () => {
+            beforeEach(() => {
+                TestBed.configureTestingModule({
+                    imports: [
+                        KbqFormFieldModule,
+                        KbqSelectModule,
+                        NoopAnimationsModule,
+                        ScrollingModule,
+                        VirtualSelectWithScrolledToBottom
+                    ]
+                }).compileComponents();
+
+                inject([OverlayContainer], (oc: OverlayContainer) => {
+                    overlayContainer = oc;
+                    overlayContainerElement = oc.getContainerElement();
+                })();
+            });
+
+            let fixture: ComponentFixture<VirtualSelectWithScrolledToBottom>;
+            let testInstance: VirtualSelectWithScrolledToBottom;
+            let viewportEl: HTMLElement;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(VirtualSelectWithScrolledToBottom);
+                testInstance = fixture.componentInstance;
+                finishInit(fixture);
+
+                testInstance.select.open();
+                finishInit(fixture);
+
+                viewportEl = overlayContainerElement.querySelector('cdk-virtual-scroll-viewport') as HTMLElement;
+            }));
+
+            afterEach(fakeAsync(() => flush()));
+
+            it('emits when the viewport reaches the bottom', fakeAsync(() => {
+                jest.spyOn(testInstance.select.virtualScrollViewport!, 'measureScrollOffset').mockReturnValue(0);
+
+                dispatchFakeEvent(viewportEl, 'scroll');
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(1);
+            }));
+
+            it('does not emit while the viewport has room to scroll', fakeAsync(() => {
+                jest.spyOn(testInstance.select.virtualScrollViewport!, 'measureScrollOffset').mockReturnValue(500);
+
+                dispatchFakeEvent(viewportEl, 'scroll');
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(0);
+            }));
+
+            it('respects scrolledToBottomOffset', fakeAsync(() => {
+                testInstance.scrolledToBottomOffset = 64;
+                fixture.detectChanges();
+
+                jest.spyOn(testInstance.select.virtualScrollViewport!, 'measureScrollOffset').mockReturnValue(50);
+
+                dispatchFakeEvent(viewportEl, 'scroll');
+                tick(150);
+
+                expect(testInstance.emitCount).toBe(1);
+            }));
         });
     });
 });
