@@ -7,6 +7,7 @@ import {
     DestroyRef,
     ElementRef,
     inject,
+    Injector,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,7 +17,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { KbqHighlightModule, ThemePalette } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqIconModule, KbqIconRegistry, kbqIconsResolverProvider } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -50,6 +51,10 @@ const SEARCH_DEBOUNCE_TIME = 300;
     styleUrls: ['./icons-viewer.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: KbqIconRegistry, useClass: KbqIconRegistry },
+        kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`)
+    ],
     host: {
         class: 'docs-icons-viewer kbq-scrollbar'
     }
@@ -65,6 +70,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
 
     readonly themePalette = ThemePalette;
 
@@ -170,7 +176,8 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
                 data: { iconItem } satisfies DocsIconPreviewModalData,
                 kbqClassName: 'docs-icon-preview-modal',
                 kbqMaskClosable: true,
-                kbqWidth: 400
+                kbqWidth: 400,
+                injector: this.injector
             })
             .afterClose.subscribe((result) => {
                 if (typeof result === 'string') {

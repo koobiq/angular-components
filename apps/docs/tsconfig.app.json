@@ -7,7 +7,6 @@
             "@koobiq/components-experimental/*": ["../../dist/components-experimental/*"],
             "@koobiq/angular-moment-adapter/*": ["../../dist/angular-moment-adapter/*"],
             "@koobiq/angular-luxon-adapter/*": ["../../dist/angular-luxon-adapter/*"],
-            "@koobiq/angular-icons/*": ["../../dist/angular-icons/*"],
             "@koobiq/docs-examples": ["../../dist/docs-examples"]
         },
         "types": [

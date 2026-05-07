@@ -73,24 +73,3 @@ bootstrapApplication(AppComponent, {
 ```html
 <i kbq-icon="plus_16"></i>
 ```
-
-#### Bundled components (`@koobiq/angular-icons`)
-
-Best when you need zero HTTP requests and full tree-shaking — only the icons you import are included in the bundle.
-
-```bash
-npm install @koobiq/angular-icons
-```
-
-```ts
-import { KbqPlus16 } from '@koobiq/angular-icons';
-
-@Component({
-    standalone: true,
-    imports: [KbqPlus16],
-    template: `
-        <svg kbqPlus16></svg>
-    `
-})
-export class AppComponent {}
-```

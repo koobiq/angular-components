@@ -158,8 +158,6 @@
         "prepare": "husky",
         "clean": "playwright clear-cache && jest --clearCache && ng cache clean && rimraf .angular dist playwright-report .playwright-mcp test-results --verbose",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
-        "generate:angular-icons": "ts-node packages/angular-icons/scripts/generate.ts",
-        "build:angular-icons": "ng build angular-icons",
         "build:cdk": "ng build cdk",
         "build:angular-moment-adapter": "ng build angular-moment-adapter",
         "build:angular-luxon-adapter": "ng build angular-luxon-adapter",

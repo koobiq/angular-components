@@ -71,24 +71,3 @@ bootstrapApplication(AppComponent, {
 ```html
 <i kbq-icon="plus_16"></i>
 ```
-
-#### Встроенные компоненты (`@koobiq/angular-icons`)
-
-Подходит, когда нужен tree-shaking.
-
-```bash
-npm install @koobiq/angular-icons
-```
-
-```ts
-import { KbqPlus16 } from '@koobiq/angular-icons';
-
-@Component({
-    standalone: true,
-    imports: [KbqPlus16],
-    template: `
-        <svg kbqPlus16></svg>
-    `
-})
-export class AppComponent {}
-```

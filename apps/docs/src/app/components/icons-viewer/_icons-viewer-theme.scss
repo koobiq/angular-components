@@ -18,8 +18,9 @@
             color: var(--kbq-foreground-contrast-secondary);
         }
 
-        &:focus {
-            outline: 2px solid var(--kbq-theme-default);
+        &:focus-visible {
+            outline: 1px solid var(--kbq-states-line-focus-theme) !important;
+            border-color: var(--kbq-states-line-focus-theme);
         }
 
         &:hover {
@@ -42,7 +43,6 @@
     }
 
     .docs-icons-viewer__header .kbq-input,
-    .docs-icons-viewer__table-cell-name,
     .docs-icon-preview-modal__content .kbq-select,
     .docs-icon-preview-modal__buttons .kbq-button,
     .kbq-select-overlay .docs-icon-preview-modal__select-option,

@@ -176,36 +176,6 @@
                 }
             }
         },
-        "angular-icons": {
-            "projectType": "library",
-            "root": "packages/angular-icons",
-            "sourceRoot": "packages/angular-icons",
-            "architect": {
-                "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "tsConfig": "packages/angular-icons/tsconfig.json",
-                        "project": "packages/angular-icons/ng-package.json"
-                    }
-                },
-                "build": {
-                    "builder": "@koobiq/builders:packager",
-                    "options": {
-                        "buildTarget": "packagr",
-                        "versionPlaceholder": "{{VERSION}}",
-                        "ngVersionPlaceholder": "{{NG_VERSION}}"
-                    }
-                },
-                "jest-test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "roots": ["packages/components"],
-                        "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
-                    }
-                }
-            }
-        },
         "components": {
             "projectType": "library",
             "root": "packages/components",
