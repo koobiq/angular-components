@@ -18,7 +18,7 @@
     --kbq-scrollbar-track-active-background: transparent;
 }
 
-:where(.kbq-dark .kbq-scrollbar) {
+:where(.kbq-dark .kbq-scrollbar-component) {
     --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-dark-contrast-a9, var(--kbq-palette-grey-50-a48));
     --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-dark-contrast-a10, var(--kbq-palette-grey-50-a60));
     --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-dark-contrast-a11, var(--kbq-palette-grey-50-a80));
