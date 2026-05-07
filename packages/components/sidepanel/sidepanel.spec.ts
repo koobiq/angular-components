@@ -361,6 +361,22 @@ describe('KbqSidepanelService', () => {
         expect(sidepanelRef.instance).toBeTruthy();
     });
 
+    it('should not trigger form submission when close button is clicked inside a form', fakeAsync(() => {
+        const sidepanelRef = sidepanelService.open(SidepanelWithFormComponent);
+        const submitSpy = jest.spyOn(sidepanelRef.instance, 'onSubmit');
+
+        rootComponentFixture.detectChanges();
+        flush();
+
+        const closeButton = overlayContainerElement.querySelector<HTMLButtonElement>('button[kbq-sidepanel-close]')!;
+
+        closeButton.click();
+        rootComponentFixture.detectChanges();
+        flush();
+
+        expect(submitSpy).not.toHaveBeenCalled();
+    }));
+
     it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
         const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
         const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
@@ -408,6 +424,21 @@ describe('KbqSidepanelService', () => {
     `
 })
 class ComponentForSidepanel {}
+
+@Component({
+    imports: [KbqSidepanelModule, KbqButtonModule],
+    template: `
+        <form (ngSubmit)="onSubmit()">
+            <kbq-sidepanel-body>Form content</kbq-sidepanel-body>
+            <kbq-sidepanel-footer>
+                <button kbq-button kbq-sidepanel-close>Close</button>
+            </kbq-sidepanel-footer>
+        </form>
+    `
+})
+class SidepanelWithFormComponent {
+    onSubmit() {}
+}
 
 @Component({
     selector: 'kbq-sidepanel-from-dropdown',
@@ -489,6 +520,7 @@ class RootComponent {}
 const TEST_COMPONENTS = [
     SimpleSidepanelExample,
     SidepanelWithCustomToken,
+    SidepanelWithFormComponent,
     ComponentWithTemplateForSidepanel,
     RootComponent,
     SidepanelFromDropdownComponent
