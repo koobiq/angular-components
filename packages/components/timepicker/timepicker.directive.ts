@@ -8,12 +8,10 @@ import {
     forwardRef,
     inject,
     Inject,
-    Injectable,
     Input,
     OnDestroy,
     Optional,
     Output,
-    Provider,
     Renderer2
 } from '@angular/core';
 import {
@@ -51,6 +49,7 @@ import {
     DateAdapter,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
+    KBQ_VALIDATION,
     KbqErrorStateTracker,
     KbqLocaleService,
     validationTooltipHideDelay,
@@ -89,18 +88,6 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
     multi: true
 };
 
-@Injectable()
-class KbqTimepickerErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: AbstractControl | null): boolean {
-        return !!control?.invalid;
-    }
-}
-
-const KBQ_TIMEPICKER_ERROR_STATE_MATCHER: Provider = {
-    provide: ErrorStateMatcher,
-    useClass: KbqTimepickerErrorStateMatcher
-};
-
 let uniqueComponentIdSuffix: number = 0;
 
 const shortFormatSize: number = 5;
@@ -127,7 +114,6 @@ const fullFormatSize: number = 8;
     providers: [
         KBQ_TIMEPICKER_VALIDATORS,
         KBQ_TIMEPICKER_VALUE_ACCESSOR,
-        KBQ_TIMEPICKER_ERROR_STATE_MATCHER,
         { provide: KbqFormFieldControl, useExisting: KbqTimepicker }
     ]
 })
@@ -374,6 +360,8 @@ export class KbqTimepicker<D>
         this.errorStateTracker.errorState = value;
     }
 
+    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
+
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
     private readonly validator: ValidatorFn | null;
@@ -498,7 +486,7 @@ export class KbqTimepicker<D>
         if (!newTimeObj) {
             if (!this.viewValue) {
                 this.onChange(null);
-            } else {
+            } else if (this.useLegacyValidation) {
                 this.control?.updateValueAndValidity();
             }
 
