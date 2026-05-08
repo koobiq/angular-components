@@ -31,6 +31,7 @@ import {
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
 import { E2eFilterBarStates } from '../components/filter-bar/e2e';
+import { E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e';
 import { E2eIconStateAndStyle } from '../components/icon/e2e';
 import { E2eInlineEditMenuButton, E2eInlineEditStates } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
@@ -110,6 +111,8 @@ const components = [
     E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
+    E2eFormFieldGroup,
+    E2eFormFieldset,
     E2eActionsPanelWithOverlayContainer,
     E2eTagStateAndStyle,
     E2eTagEditable,
