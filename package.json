@@ -120,6 +120,7 @@
         "husky": "^9.1.7",
         "inquirer": "^7.3.3",
         "jest": "^30.4.1",
+        "jest-environment-jsdom": "^30.4.1",
         "jest-fail-on-console": "^3.3.4",
         "jest-preset-angular": "^16.1.5",
         "license-checker": "^25.0.1",
