@@ -325,7 +325,7 @@ describe(KbqTimepicker.name, () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+        it('should emit VALID via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacyTimepickerControlWithAsyncValidators);
 
             fixture.detectChanges();
