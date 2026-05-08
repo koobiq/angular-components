@@ -1,3 +1,4 @@
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     afterNextRender,
@@ -29,6 +30,7 @@ import { KbqAccordionItem } from './accordion-item';
 })
 export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
     private readonly renderer: Renderer2 = inject(Renderer2);
+    private readonly platform = inject(Platform);
 
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
@@ -64,6 +66,8 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     }
 
     ngAfterContentInit(): void {
+        if (!this.platform.isBrowser) return;
+
         const { height, width } = this.nativeElement.getBoundingClientRect();
 
         this.renderer.setProperty(
