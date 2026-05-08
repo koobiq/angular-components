@@ -3,7 +3,7 @@
 ## Unit tests
 
 Unit tests check individual modules and components of the application in isolation. They are run using
-[jest](https://jestjs.io/) and [Karma](https://karma-runner.github.io/).
+[jest](https://jestjs.io/).
 
 ### Setup
 

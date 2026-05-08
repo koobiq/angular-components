@@ -33,7 +33,6 @@ packages/components/button/
 ├── button.ts                  # Main component
 ├── button.module.ts           # NgModule (for legacy support)
 ├── button.spec.ts             # Unit tests (Jest)
-├── button.karma-spec.ts       # Unit tests (Karma + Jasmine) - legacy, use Jest for new tests
 ├── e2e.ts                     # E2E test component setup
 ├── e2e.playwright-spec.ts     # Visual regression tests (Playwright)
 ├── button.scss                # Base styles
@@ -67,14 +66,13 @@ yarn run dev:<COMPONENT_NAME>      # Start dev server for specific component (e.
 
 ### Testing
 
-There are three types of test files per component:
+There are two types of test files per component:
 
 - `*.spec.ts` — Jest unit tests
 - `*.playwright-spec.ts` — Playwright E2E / visual regression tests
-- `*.karma-spec.ts` — Karma + Jasmine unit tests (legacy, use Jest for new tests)
 
 ```bash
-# Unit tests (Jest / Karma + Jasmine)
+# Unit tests (Jest)
 yarn run unit:components           # Run component unit tests
 yarn run unit:cdk                  # Run CDK unit tests
 yarn run unit:schematics           # Run schematics tests
