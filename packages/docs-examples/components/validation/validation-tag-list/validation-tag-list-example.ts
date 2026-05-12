@@ -43,6 +43,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         </kbq-tag>
                     }
                     <input
+                        autocomplete="off"
                         formControlName="tagInputFormControl"
                         placeholder="New tag..."
                         [kbqTagInputFor]="inputTagList"
