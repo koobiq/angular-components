@@ -1,8 +1,9 @@
 @use './icon-theme' as *;
 
 .kbq-icon {
-    svg {
+    > svg {
         fill: currentColor;
+        vertical-align: middle;
     }
 }
 

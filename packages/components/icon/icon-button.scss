@@ -16,6 +16,11 @@
     &.kbq-disabled {
         pointer-events: none;
     }
+
+    > svg {
+        fill: currentColor;
+        vertical-align: middle;
+    }
 }
 
 button.kbq-icon-button {

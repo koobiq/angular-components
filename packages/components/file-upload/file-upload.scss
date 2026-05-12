@@ -14,7 +14,7 @@
 
     .kbq-file-dropzone {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         gap: var(--dropzone-gap, var(--kbq-file-upload-size-dropzone-content-gap-horizontal));
     }
 

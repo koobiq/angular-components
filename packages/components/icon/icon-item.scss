@@ -14,6 +14,11 @@
     &.kbq-icon-item_big {
         padding: var(--kbq-icon-item-size-big-vertical-padding) var(--kbq-icon-item-size-big-horizontal-padding);
     }
+
+    > svg {
+        fill: currentColor;
+        vertical-align: middle;
+    }
 }
 
 @include kbq-icon-item-theme();
