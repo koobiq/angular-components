@@ -104,6 +104,76 @@ export class E2eInlineEditStates {
 }
 
 @Component({
+    selector: 'e2e-inline-edit-truncation',
+    imports: [
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqDropdownModule,
+        KbqIconModule
+    ],
+    template: `
+        <div class="layout-column layout-gap-xxl" data-testid="e2eInlineEditTruncationList">
+            <kbq-inline-edit>
+                <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit>
+                <kbq-label>Label</kbq-label>
+                <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit data-testid="e2eInlineEditTruncationWithMenu">
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <button kbq-dropdown-item>Action</button>
+                </kbq-dropdown>
+                <i
+                    kbqInlineEditMenu
+                    kbq-icon-button="kbq-ellipsis-vertical_16"
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [color]="'contrast-fade'"
+                ></i>
+                <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit disabled>
+                <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+        </div>
+    `,
+    styles: `
+        :host {
+            max-width: 200px;
+        }
+
+        .truncated-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-row',
+        'data-testid': 'e2eInlineEditTruncation'
+    }
+})
+export class E2eInlineEditTruncation {}
+
+@Component({
     selector: 'e2e-inline-edit-menu-button',
     imports: [
         FormsModule,

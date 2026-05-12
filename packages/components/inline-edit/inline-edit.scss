@@ -78,11 +78,6 @@
     .kbq-label {
         color: var(--kbq-inline-edit-label-color);
     }
-
-    .kbq-inline-edit__focus_container {
-        display: flex;
-        flex-direction: column;
-    }
 }
 
 @mixin _inline-edit-typography {
@@ -123,13 +118,8 @@
     }
 
     &.kbq-inline-edit_view {
-        .kbq-inline-edit__view-container {
-            display: flex;
-            text-overflow: ellipsis;
-        }
-
+        .kbq-inline-edit__view-container,
         .kbq-inline-edit__view-content {
-            display: inline-block;
             text-overflow: ellipsis;
         }
     }

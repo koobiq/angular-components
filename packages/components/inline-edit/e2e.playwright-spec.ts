@@ -37,6 +37,33 @@ test.describe('KbqInlineEdit', () => {
         });
     });
 
+    test.describe('E2eInlineEditTruncation', () => {
+        const getList = (page: Page) => page.getByTestId('e2eInlineEditTruncationList');
+
+        test('text truncation', async ({ page }) => {
+            await page.goto('/E2eInlineEditTruncation');
+
+            const screenshotTarget = getList(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('04-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('04-dark.png');
+        });
+
+        test('text truncation hover with menu', async ({ page }) => {
+            await page.goto('/E2eInlineEditTruncation');
+
+            const screenshotTarget = getList(page);
+
+            await page.getByTestId('e2eInlineEditTruncationWithMenu').hover();
+
+            await expect(screenshotTarget).toHaveScreenshot('05-light.png');
+            await e2eEnableDarkTheme(page);
+            await page.getByTestId('e2eInlineEditTruncationWithMenu').hover();
+            await expect(screenshotTarget).toHaveScreenshot('05-dark.png');
+        });
+    });
+
     test.describe('E2eInlineEditMenuButton', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eInlineEditMenuButton');
         const getContainer = (page: Page) => page.getByTestId('e2eInlineEditMenuButtonContainer');
