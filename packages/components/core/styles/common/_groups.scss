@@ -32,19 +32,19 @@
     @include groups-mixins.group();
 
     & > .kbq-group-item:first-child:not(:last-child) {
-        > .kbq-form-field__container {
+        .kbq-form-field__container {
             @include border-right-radius(0);
         }
     }
 
     & > .kbq-group-item:last-child:not(:first-child) {
-        > .kbq-form-field__container {
+        .kbq-form-field__container {
             @include border-left-radius(0);
         }
     }
 
     & > .kbq-group-item:not(:first-child):not(:last-child) {
-        > .kbq-form-field__container {
+        .kbq-form-field__container {
             border-radius: 0;
         }
     }
@@ -55,19 +55,19 @@
 
     > .kbq-group-item {
         &:first-child:not(:last-child) {
-            > .kbq-form-field__container {
+            .kbq-form-field__container {
                 @include border-bottom-radius(0);
             }
         }
 
         &:last-child:not(:first-child) {
-            > .kbq-form-field__container {
+            .kbq-form-field__container {
                 @include border-top-radius(0);
             }
         }
 
         &:not(:first-child):not(:last-child) {
-            > .kbq-form-field__container {
+            .kbq-form-field__container {
                 border-radius: 0;
             }
         }
