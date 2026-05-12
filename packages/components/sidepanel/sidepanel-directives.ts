@@ -78,7 +78,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
         </div>
 
         @if (closeable) {
-            <button kbq-button kbq-sidepanel-close [color]="'contrast'" [kbqStyle]="'transparent'">
+            <button kbq-button kbq-sidepanel-close type="button" [color]="'contrast'" [kbqStyle]="'transparent'">
                 <i kbq-icon="kbq-xmark_16" [color]="'contrast'"></i>
             </button>
         }
