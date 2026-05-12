@@ -29,8 +29,15 @@
         box-decoration-break: clone;
     }
 
-    &.kbq-text-with-icon .kbq-icon {
-        vertical-align: baseline;
+    &.kbq-text-with-icon {
+        .kbq-icon {
+            vertical-align: baseline;
+
+            &:has(> svg) {
+                vertical-align: text-top;
+                line-height: 0;
+            }
+        }
     }
 
     &.kbq-text-with-icon .kbq-link__text {

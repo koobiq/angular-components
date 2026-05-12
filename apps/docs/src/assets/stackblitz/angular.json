@@ -31,8 +31,14 @@
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "tsConfig": "tsconfig.json",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/svg",
+                                "output": "/assets/SVGIcons"
+                            }
+                        ],
                         "styles": [
-                            "node_modules/@koobiq/icons/fonts/kbq-icons.css",
                             "node_modules/@koobiq/design-tokens/web/css-tokens.css",
                             "node_modules/@koobiq/design-tokens/web/css-tokens-light.css",
                             "node_modules/@koobiq/design-tokens/web/css-tokens-dark.css",
