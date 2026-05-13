@@ -49,9 +49,8 @@ bootstrapApplication(AppComponent, {
         )
     ]
 });
-```
 
-```html
+// html
 <i kbq-icon="plus_16"></i>
 <i kbq-icon="brand:logo_24"></i>
 ```
@@ -68,8 +67,7 @@ bootstrapApplication(AppComponent, {
         kbqIconsResolverProvider((name) => `/assets/icons/${name}.svg`)
     ]
 });
-```
 
-```html
-<i kbq-icon="plus_16"></i>
+// html
+<!-- <i kbq-icon="plus_16"></i> -->
 ```
