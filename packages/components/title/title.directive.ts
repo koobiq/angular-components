@@ -44,7 +44,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         /** For special cases where the difference is a fraction of a pixel */
         if (
             !this.isVerticalOverflown &&
-            (this.child.scrollWidth === 0 || this.parent.offsetWidth === this.child.scrollWidth)
+            (this.child.scrollWidth === 0 || this.parent?.offsetWidth === this.child.scrollWidth)
         ) {
             if (this.hasOnlyText) {
                 const wrapper = this.renderer.createElement('span');
@@ -66,7 +66,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     }
 
     get isHorizontalOverflown(): boolean {
-        return this.parent.offsetWidth < this.child.scrollWidth;
+        return this.parent?.offsetWidth < this.child.scrollWidth;
     }
 
     get isVerticalOverflown(): boolean {
