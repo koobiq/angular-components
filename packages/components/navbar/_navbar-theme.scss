@@ -15,10 +15,6 @@
     & > .kbq-icon.kbq-empty {
         color: var(--kbq-navbar-item-#{$state-name}-content-icon-left) !important;
     }
-
-    .kbq-navbar-item__arrow-icon {
-        color: var(--kbq-navbar-item-#{$state-name}-content-icon-right) !important;
-    }
 }
 
 button {
