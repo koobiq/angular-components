@@ -475,7 +475,7 @@ class SelectWithChangeEvent {
     ],
     template: `
         <kbq-form-field>
-            <kbq-select #select [searchMinOptionsThreshold]="minOptionsThreshold" [(value)]="singleSelectedWithSearch">
+            <kbq-select #select [searchMinOptionsThreshold]="minOptionsThreshold">
                 <kbq-form-field kbqSelectSearch>
                     <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>
@@ -504,8 +504,6 @@ class SelectWithChangeEvent {
 class SelectWithSearch implements OnInit {
     @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 
-    singleSelectedWithSearch = 'Moscow';
-
     searchCtrl: UntypedFormControl = new UntypedFormControl();
     options$: Observable<string[]>;
     minOptionsThreshold: number;
@@ -519,11 +517,9 @@ class SelectWithSearch implements OnInit {
         );
     }
 
-    private getFilteredOptions(value): string[] {
-        const searchFilter = value && value.new ? value.value : value;
-
-        return searchFilter
-            ? this.options.filter((option) => option.toLowerCase().includes(searchFilter.toLowerCase()))
+    private getFilteredOptions(value: string | null): string[] {
+        return value
+            ? this.options.filter((option) => option.toLowerCase().includes(value.toLowerCase()))
             : this.options;
     }
 }
@@ -1717,6 +1713,29 @@ class BasicSelectNoPlaceholder {}
 })
 class SelectWithPanelWidth {
     panelWidth: KbqSelectPanelWidth;
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-select [panelWidth]="panelWidth">
+                <kbq-form-field kbqSelectSearch>
+                    <input kbqInput type="text" [formControl]="searchCtrl" />
+                </kbq-form-field>
+                <kbq-option [value]="'option1'">
+                    Long long long long long long long long long long long long long long long long option
+                </kbq-option>
+                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option [value]="'option3'">Option3</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class SelectWithSearchAndPanelWidth {
+    panelWidth: KbqSelectPanelWidth | null = null;
+    searchCtrl = new UntypedFormControl();
 }
 
 @Component({
@@ -3568,7 +3587,7 @@ describe('KbqSelect', () => {
         }));
     });
 
-    describe('with a search', () => {
+    describe('with search', () => {
         beforeEach(() => {
             configureKbqSelectTestingModule([SelectWithSearch]);
         });
@@ -3606,14 +3625,9 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const inputElementDebug = fixture.debugElement.query(By.css('input'));
-
-            inputElementDebug.nativeElement.value = 'lu';
-
-            inputElementDebug.triggerEventHandler('input', { target: inputElementDebug.nativeElement });
+            fixture.componentInstance.searchCtrl.setValue('lu');
             fixture.detectChanges();
             flush();
-            tick(1);
 
             const optionsTexts = fixture.debugElement
                 .queryAll(By.css('kbq-option'))
@@ -3626,18 +3640,15 @@ describe('KbqSelect', () => {
             trigger.click();
             fixture.detectChanges();
 
-            const inputElementDebug = fixture.debugElement.query(By.css('input'));
-
-            inputElementDebug.nativeElement.value = 'lu';
-
-            inputElementDebug.triggerEventHandler('input', { target: inputElementDebug.nativeElement });
+            fixture.componentInstance.searchCtrl.setValue('lu');
             fixture.detectChanges();
 
-            dispatchKeyboardEvent(inputElementDebug.nativeElement, 'keydown', ESCAPE);
+            const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
+            dispatchKeyboardEvent(inputElement, 'keydown', ESCAPE);
             fixture.detectChanges();
 
-            expect(inputElementDebug.nativeElement.value).toBe('');
+            expect(inputElement.value).toBe('');
         });
 
         it('should close list by esc if input is empty', () => {
@@ -3662,8 +3673,6 @@ describe('KbqSelect', () => {
             componentInstance.options$ = of(Array.from({ length: 3 }).map((_, i) => `Text ${i}`));
             fixture.detectChanges();
 
-            tick();
-
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -3678,8 +3687,6 @@ describe('KbqSelect', () => {
             componentInstance.options$ = of(Array.from({ length: 3 }).map((_, i) => `Text ${i}`));
             fixture.detectChanges();
 
-            tick();
-
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -3687,12 +3694,11 @@ describe('KbqSelect', () => {
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
         }));
 
-        it('should NOT hide search field if options filtered via search', fakeAsync(() => {
+        it('should not hide search field if options filtered via search', fakeAsync(() => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 3;
             fixture.detectChanges();
-            tick();
 
             trigger.click();
             fixture.detectChanges();
@@ -3701,7 +3707,6 @@ describe('KbqSelect', () => {
             componentInstance.searchCtrl.setValue(OPTIONS[0]);
             fixture.detectChanges();
             flush();
-            tick(1);
 
             const options = fixture.debugElement.queryAll(By.css('kbq-option'));
 
@@ -5996,7 +6001,11 @@ describe('KbqSelect', () => {
         let panelOverlayContainer: OverlayContainer;
         let panelOverlayContainerElement: HTMLElement;
 
-        function createPanelWidthComponent<T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> {
+        function createPanelWidthComponent<T>(
+            component: Type<T>,
+            providers: any[] = [],
+            { autoDetect = true }: { autoDetect?: boolean } = {}
+        ): ComponentFixture<T> {
             TestBed.configureTestingModule({
                 imports: [component, NoopAnimationsModule],
                 providers
@@ -6005,7 +6014,11 @@ describe('KbqSelect', () => {
             panelOverlayContainerElement = panelOverlayContainer.getContainerElement();
             const fixture = TestBed.createComponent<T>(component);
 
-            fixture.autoDetectChanges();
+            if (autoDetect) {
+                fixture.autoDetectChanges();
+            } else {
+                fixture.detectChanges();
+            }
 
             return fixture;
         }
@@ -6096,6 +6109,125 @@ describe('KbqSelect', () => {
 
             // panelWidth is falsy, so overlayMinWidth should be at least panelMinWidth.
             expect(parseInt(pane.style.minWidth, 10)).toBeGreaterThanOrEqual(412);
+        });
+
+        describe('with search', () => {
+            function mockPanelBoundingRect(width: number) {
+                return jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+                    this: Element
+                ): DOMRect {
+                    const w = this.classList?.contains('kbq-select__panel') ? width : 0;
+
+                    return {
+                        width: w,
+                        height: 0,
+                        top: 0,
+                        left: 0,
+                        right: w,
+                        bottom: 0,
+                        x: 0,
+                        y: 0,
+                        toJSON: () => {}
+                    } as DOMRect;
+                });
+            }
+
+            function getPane(): HTMLElement {
+                return panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+            }
+
+            it('should lock panel width to the measured panel width when panelWidth is null', fakeAsync(() => {
+                const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth, [], { autoDetect: false });
+                const spy = mockPanelBoundingRect(412);
+
+                getSelectDebugElement(fixture.debugElement).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('412px');
+
+                spy.mockRestore();
+            }));
+
+            it('should not override explicitly provided numeric panelWidth', () => {
+                const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth);
+
+                fixture.componentInstance.panelWidth = 344;
+                fixture.detectChanges();
+
+                const spy = mockPanelBoundingRect(412);
+
+                getSelectDebugElement(fixture.debugElement).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('344px');
+
+                spy.mockRestore();
+            });
+
+            it("should not override panelWidth='auto'", () => {
+                const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth);
+
+                fixture.componentInstance.panelWidth = 'auto';
+                fixture.detectChanges();
+
+                const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container'))
+                    .nativeElement as HTMLElement;
+                const triggerSpy = jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+                    width: 300,
+                    height: 40,
+                    top: 0,
+                    left: 0,
+                    right: 300,
+                    bottom: 40,
+                    x: 0,
+                    y: 0,
+                    toJSON: () => {}
+                } as DOMRect);
+                const panelSpy = mockPanelBoundingRect(412);
+
+                getSelectDebugElement(fixture.debugElement).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('300px');
+
+                triggerSpy.mockRestore();
+                panelSpy.mockRestore();
+            });
+
+            it('should not lock panel width when search is not projected', () => {
+                const fixture = createPanelWidthComponent(BaseSelect);
+                const spy = mockPanelBoundingRect(412);
+
+                getSelectDebugElement(fixture.debugElement).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('');
+
+                spy.mockRestore();
+            });
+
+            it('should keep the captured overlayWidth stable when options change after open', fakeAsync(() => {
+                const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth, [], { autoDetect: false });
+                const spy = mockPanelBoundingRect(412);
+
+                getSelectDebugElement(fixture.debugElement).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+                expect(getPane().style.width).toBe('412px');
+
+                spy.mockRestore();
+                const shrinkSpy = mockPanelBoundingRect(120);
+
+                fixture.componentInstance.searchCtrl.setValue('Long');
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('412px');
+
+                shrinkSpy.mockRestore();
+            }));
         });
     });
 

@@ -1045,6 +1045,14 @@ export class KbqSelect
                 }
 
                 this.addClassToOverlayContainer();
+
+                if (this.search && !this.overlayWidth) {
+                    const measuredPanelWidth = this.panel?.nativeElement.getBoundingClientRect().width;
+
+                    if (measuredPanelWidth) {
+                        this.overlayWidth = measuredPanelWidth;
+                    }
+                }
             });
     }
 
