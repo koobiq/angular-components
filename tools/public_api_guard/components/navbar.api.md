@@ -268,6 +268,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     get trigger(): string;
     set trigger(value: string);
     // (undocumented)
+    updateDropdown(): void;
+    // (undocumented)
     updateTooltip(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "collapsable": { "alias": "collapsable"; "required": false; }; }, {}, ["title", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "*"], true, never>;
