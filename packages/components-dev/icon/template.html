@@ -4,7 +4,7 @@
 
 <h3>SVG icon provisioning approaches</h3>
 
-<p>Approach A — Sprite (provideKoobiqIcons): one HTTP request, all icons available via kbq- prefix</p>
+<p>Approach A — Sprite (kbqIconsProvider): one HTTP request, all icons available via kbq- prefix</p>
 <i kbq-icon="kbq:chevron-down-s_16" [color]="colors.Theme"></i>
 <i kbq-icon="kbq:plus_16" [color]="colors.Theme"></i>
 
@@ -30,9 +30,7 @@ icon
     </thead>
     <tr>
         <td>
-            <i kbq-icon [color]="colors.Theme">
-                <span kbqChevronDownS16></span>
-            </i>
+            <i kbq-icon="kbq-chevron-down-s_16" [color]="colors.Contrast"></i>
         </td>
         <td>
             <i kbq-icon="kbq-chevron-down-s_16" [color]="colors.ContrastFade"></i>
