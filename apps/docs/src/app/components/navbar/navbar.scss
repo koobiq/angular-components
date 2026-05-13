@@ -2,29 +2,20 @@
 
 .docs-navbar {
     z-index: overlay.$overlay-z-index;
-
     position: sticky;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    padding: var(--kbq-size-l) var(--kbq-size-xxl);
 }
 
-.docs-navbar-show-small {
-    display: none !important;
-}
-
-.docs-navbar__left {
+.docs-navbar__logo {
     display: flex;
     align-items: center;
 }
 
-.docs-navbar__right {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.docs-navbar__anchor {
+    align-self: center;
+}
+
+.docs-navbar__links {
+    gap: var(--kbq-size-l);
 
     .docs-navbar__github-icon {
         display: flex;
@@ -37,11 +28,6 @@
             width: var(--kbq-size-l);
             height: var(--kbq-size-l);
         }
-    }
-
-    .docs-navbar__links {
-        margin-left: var(--kbq-size-l);
-        gap: var(--kbq-size-l);
     }
 }
 
@@ -56,27 +42,23 @@
         display: block !important;
     }
 
-    .docs-navbar {
-        padding: var(--kbq-size-s) var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-l);
+    .docs-navbar__links {
+        gap: var(--kbq-size-xxs);
+    }
 
-        .docs-navbar__links {
-            margin-left: var(--kbq-size-xxs);
-            gap: var(--kbq-size-xxs);
-        }
+    .kbq-top-bar {
+        --kbq-top-bar-padding-vertical: var(--kbq-size-s);
+        --kbq-top-bar-padding-horizontal: var(--kbq-size-l);
+    }
 
-        .DocSearch-Button,
-        .kbq-button-icon {
-            width: var(--kbq-size-5xl);
-            height: var(--kbq-size-5xl);
-        }
+    .DocSearch-Button,
+    .kbq-button-icon {
+        width: var(--kbq-size-5xl);
+        height: var(--kbq-size-5xl);
+    }
 
-        .docs-navbar__right {
-            justify-content: end;
-
-            .docs-navbar__anchor {
-                display: none;
-            }
-        }
+    .docs-navbar__anchor {
+        display: none;
     }
 }
 

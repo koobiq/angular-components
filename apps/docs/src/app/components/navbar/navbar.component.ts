@@ -6,8 +6,8 @@ import { KBQ_WINDOW, KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/co
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map, Observable } from 'rxjs';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
@@ -24,7 +24,7 @@ import { DocsNavbarProperty } from './navbar-property';
         KbqLinkModule,
         KbqIconModule,
         KbqSelectModule,
-        KbqNavbarModule,
+        KbqTopBarModule,
         DocsDocsearchDirective,
         AsyncPipe
     ],
