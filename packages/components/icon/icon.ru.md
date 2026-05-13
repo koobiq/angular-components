@@ -37,20 +37,26 @@ export class AppComponent {}
 Подходит, если у вас готовый SVG-спрайт и все иконки нужно загрузить одним HTTP-запросом.
 
 ```ts
-import { provideKoobiqIcons } from '@koobiq/components/icon';
+import { provideHttpClient } from '@angular/common/http';
+import { kbqIconsProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
-        provideKoobiqIcons(
+        kbqIconsProvider(
             { spriteUrl: '/assets/icons/sprite.symbol.svg' },
             { spriteUrl: '/assets/brand/sprite.symbol.svg', namespace: 'brand' }
         )
     ]
 });
 
-//html
-<i kbq-icon="plus_16"></i>
-<i kbq-icon="brand:logo_24"></i>
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="plus_16"></i>
+        <i kbq-icon="brand:logo_24"></i>
+    `
+})
+export class AppComponent {}
 ```
 
 #### Обработка URL
@@ -58,6 +64,7 @@ bootstrapApplication(AppComponent, {
 Подходит, если иконки расположены по предсказуемым URL и должны загружаться по требованию (без спрайта).
 
 ```ts
+import { provideHttpClient } from '@angular/common/http';
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
@@ -66,6 +73,11 @@ bootstrapApplication(AppComponent, {
     ]
 });
 
-//html
-<!-- <i kbq-icon="plus_16"></i> -->
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="plus_16"></i>
+    `
+})
+export class AppComponent {}
 ```

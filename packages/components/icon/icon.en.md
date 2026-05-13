@@ -39,6 +39,7 @@ SVG icons render inline and support CSS color theming via `currentColor`. Choose
 Best when you have a pre-built SVG sprite and want all icons in a single HTTP request.
 
 ```ts
+import { provideHttpClient } from '@angular/common/http';
 import { kbqIconsProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
@@ -50,9 +51,14 @@ bootstrapApplication(AppComponent, {
     ]
 });
 
-// html
-<i kbq-icon="plus_16"></i>
-<i kbq-icon="brand:logo_24"></i>
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="plus_16"></i>
+        <i kbq-icon="brand:logo_24"></i>
+    `
+})
+export class AppComponent {}
 ```
 
 #### URL resolver
@@ -60,14 +66,21 @@ bootstrapApplication(AppComponent, {
 Best when icons live at predictable URLs and you want them fetched on demand (no sprite required).
 
 ```ts
+import { provideHttpClient } from '@angular/common/http';
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideHttpClient(),
         kbqIconsResolverProvider((name) => `/assets/icons/${name}.svg`)
     ]
 });
 
-// html
-<!-- <i kbq-icon="plus_16"></i> -->
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="plus_16"></i>
+    `
+})
+export class AppComponent {}
 ```

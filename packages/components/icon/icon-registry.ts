@@ -112,7 +112,9 @@ export class KbqIconRegistry {
         let resolvedName = name;
 
         if (resolvedName.trimStart().startsWith('<')) {
-            return of(this.svgElementFromText(resolvedName));
+            const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, resolvedName) ?? '';
+
+            return of(this.svgElementFromText(sanitized));
         }
 
         const colonIndex = name.indexOf(':');
@@ -143,7 +145,9 @@ export class KbqIconRegistry {
             };
 
             if (result.trimStart().startsWith('<')) {
-                config.svgText = this.sanitizer.bypassSecurityTrustHtml(result);
+                const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, result) ?? '';
+
+                config.svgText = this.sanitizer.bypassSecurityTrustHtml(sanitized);
             } else {
                 config.url = this.sanitizer.bypassSecurityTrustResourceUrl(result);
             }

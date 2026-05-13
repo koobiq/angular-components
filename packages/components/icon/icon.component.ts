@@ -8,11 +8,13 @@ import {
     inject,
     Input,
     OnChanges,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DomSanitizer } from '@angular/platform-browser';
 import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
+import { EMPTY, ReplaySubject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { KbqIconRegistry } from './icon-registry';
 
 @Component({
@@ -33,7 +35,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly registry = inject(KbqIconRegistry, { optional: true });
-    protected readonly sanitizer = inject(DomSanitizer);
     protected readonly destroyRef = inject(DestroyRef);
 
     @Input() small = false;
@@ -49,6 +50,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     /** True when icon is being rendered as inline SVG. */
     protected svgIcon = false;
 
+    private readonly svgIconName = new ReplaySubject<string | undefined>(1);
+
     getHostElement() {
         return this.elementRef.nativeElement;
     }
@@ -58,16 +61,17 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
             return;
         }
 
-        const iconName = this.iconName?.includes(':') ? this.iconName.split(':')[1] : this.iconName;
-        const size = parseInt(iconName?.split('_')[1]);
+        const size = this.parseIconSize();
 
         if (size) {
             this.getHostElement().style.maxHeight = `${size}px`;
         }
     }
 
-    ngOnChanges(): void {
-        this.renderSvgIcon();
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.iconName) {
+            this.svgIconName.next(changes['iconName'].currentValue);
+        }
     }
 
     ngAfterContentInit(): void {
@@ -77,18 +81,20 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         }
 
         this.updateMaxHeight();
-    }
 
-    private renderSvgIcon(): void {
-        if (!this.registry || !this.iconName) {
-            this.svgIcon = false;
+        this.svgIconName
+            .pipe(
+                switchMap((name) => {
+                    if (!this.registry || !name) {
+                        this.svgIcon = false;
 
-            return;
-        }
+                        return EMPTY;
+                    }
 
-        this.registry
-            .getNamedSvgIcon(this.iconName)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+                    return this.registry.getNamedSvgIcon(name);
+                }),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe({
                 next: (svg) => {
                     this.svgIcon = true;
@@ -101,7 +107,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
                         host.removeChild(existing);
                     }
 
-                    const size = parseInt(this.iconName?.split('_').pop() ?? '');
+                    const size = this.parseIconSize();
 
                     if (size) {
                         svg.setAttribute('width', `${size}`);
@@ -125,4 +131,10 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
         this.changeDetectorRef.markForCheck();
     };
+
+    private parseIconSize(): number {
+        const baseName = this.iconName?.includes(':') ? this.iconName.split(':')[1] : this.iconName;
+
+        return parseInt(baseName?.split('_').pop() ?? '');
+    }
 }
