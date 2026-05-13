@@ -42,7 +42,8 @@
     .kbq-form-field {
         @include _kbq-form-field-state(default);
 
-        & .kbq-input {
+        & .kbq-input,
+        & .kbq-tag-input {
             //https://css-tricks.com/almanac/selectors/a/autofill/
             &:-webkit-autofill,
             &:-webkit-autofill:hover,
@@ -103,9 +104,9 @@
         }
 
         // todo quick fix for bug DS-4060. Technical debt DS-4096
-        & .kbq-form-field__container:has(.kbq-input:-webkit-autofill),
-        & .kbq-form-field__container:has(.kbq-input:-webkit-autofill:hover),
-        & .kbq-form-field__container:has(.kbq-input:-webkit-autofill:focus) {
+        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input):-webkit-autofill),
+        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input):-webkit-autofill:hover),
+        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input):-webkit-autofill:focus) {
             background-color: var(--kbq-form-field-states-autofill-background) !important;
         }
 
