@@ -219,15 +219,19 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         }
 
         if (this.nestedElement) {
-            this.nestedElement.focusViaKeyboard();
+            if (origin === 'keyboard') {
+                this.nestedElement.focusViaKeyboard();
+            }
 
             this.changeDetector.markForCheck();
 
             return;
         }
 
-        this.tooltip?.show();
-        this.onFocusHandler();
+        if (origin === 'keyboard') {
+            this.tooltip?.show();
+            this.onFocusHandler();
+        }
     }
 
     blur(): void {

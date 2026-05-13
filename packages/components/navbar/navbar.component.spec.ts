@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -11,7 +12,8 @@ import {
     KbqNavbarItem,
     KbqNavbarModule,
     KbqNavbarRectangleElement,
-    KbqNavbarTitle
+    KbqNavbarTitle,
+    KbqVerticalNavbar
 } from './index';
 
 const FONT_RENDER_TIMEOUT_MS = 10;
@@ -19,7 +21,7 @@ const FONT_RENDER_TIMEOUT_MS = 10;
 describe('KbqNavbar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqNavbarModule, KbqIconModule, TestApp, TestItemApp, TestTitleApp]
+            imports: [KbqNavbarModule, KbqIconModule, TestApp, TestItemApp, TestTitleApp, TestVerticalApp]
         }).compileComponents();
     });
 
@@ -461,6 +463,138 @@ describe('KbqNavbar', () => {
 
             expect(emitCount).toBe(0);
         }));
+
+        it('focus(mouse) should not call nestedElement.focusViaKeyboard()', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const focusableItem = fixture.debugElement
+                .query(By.directive(KbqNavbarFocusableItem))
+                .injector.get(KbqNavbarFocusableItem);
+
+            const fakeButton = { focusViaKeyboard: jest.fn(), hasFocus: false } as any;
+
+            jest.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+
+            focusableItem.focus('mouse');
+
+            expect(fakeButton.focusViaKeyboard).not.toHaveBeenCalled();
+        }));
+
+        it('focus(keyboard) should call nestedElement.focusViaKeyboard()', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const focusableItem = fixture.debugElement
+                .query(By.directive(KbqNavbarFocusableItem))
+                .injector.get(KbqNavbarFocusableItem);
+
+            const fakeButton = { focusViaKeyboard: jest.fn(), hasFocus: false } as any;
+
+            jest.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+
+            focusableItem.focus('keyboard');
+
+            expect(fakeButton.focusViaKeyboard).toHaveBeenCalled();
+        }));
+    });
+
+    describe('KbqFocusableComponent focus origin gating', () => {
+        it('mouse-origin focus on KbqNavbar host should not activate first item', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
+            const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+
+            focusMonitor.focusVia(navbarDebugEl.nativeElement, 'mouse');
+            tick();
+
+            expect(spy).not.toHaveBeenCalled();
+        }));
+
+        it('keyboard-origin focus on KbqNavbar host should activate first item', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
+            const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+
+            focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
+            tick();
+
+            expect(spy).toHaveBeenCalled();
+        }));
+
+        it('touch-origin focus on KbqNavbar host should not activate first item', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
+            const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+
+            focusMonitor.focusVia(navbarDebugEl.nativeElement, 'touch');
+            tick();
+
+            expect(spy).not.toHaveBeenCalled();
+        }));
+
+        it('mouse-origin focus on KbqVerticalNavbar host should not activate first item', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqVerticalNavbar));
+            const navbarInstance = navbarDebugEl.componentInstance as KbqVerticalNavbar;
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+
+            focusMonitor.focusVia(navbarDebugEl.nativeElement, 'mouse');
+            tick();
+
+            expect(spy).not.toHaveBeenCalled();
+        }));
+
+        it('keyboard-origin focus on KbqVerticalNavbar host should activate first item', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqVerticalNavbar));
+            const navbarInstance = navbarDebugEl.componentInstance as KbqVerticalNavbar;
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+
+            focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
+            tick();
+
+            expect(spy).toHaveBeenCalled();
+        }));
     });
 });
 
@@ -514,3 +648,23 @@ class TestItemApp {
 class TestTitleApp {
     titleText: string = '';
 }
+
+@Component({
+    selector: 'test-vertical-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>First item</kbq-navbar-title>
+                </kbq-navbar-item>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-play_16"></i>
+                    <kbq-navbar-title>Second item</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-vertical-navbar>
+    `
+})
+class TestVerticalApp {}
