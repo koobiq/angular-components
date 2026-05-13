@@ -23,8 +23,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
             <kbq-file-upload class="layout-margin-bottom-s" formControlName="fileControl">
                 @if (!formGroup.get('fileControl')?.errors) {
                     <i kbq-icon="kbq-file-o_16"></i>
-                }
-                @if (formGroup.get('fileControl')?.errors) {
+                } @else {
                     <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
 

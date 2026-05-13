@@ -35,8 +35,8 @@ const MAX_DASH_ARRAY = 295;
     imports: [NgStyle],
     templateUrl: './progress-spinner.component.html',
     styleUrls: ['./progress-spinner.scss', './progress-spinner-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-progress-spinner',
         '[class.kbq-progress-spinner_big]': `size === 'big'`,

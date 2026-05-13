@@ -28,10 +28,10 @@ export class KbqSelectMatcher {
 
 @Directive({
     selector: '[kbq-select-search-empty-result]',
-    exportAs: 'kbqSelectSearchEmptyResult',
     host: {
         class: 'kbq-select-search-empty-result kbq-select__no-options-message'
-    }
+    },
+    exportAs: 'kbqSelectSearchEmptyResult'
 })
 export class KbqSelectSearchEmptyResult {}
 
@@ -43,10 +43,10 @@ export class KbqSelectFooter {}
 
 @Directive({
     selector: '[kbqSelectSearch]',
-    exportAs: 'kbqSelectSearch',
     host: {
         '(keydown)': 'handleKeydown($event)'
-    }
+    },
+    exportAs: 'kbqSelectSearch'
 })
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     readonly changes: EventEmitter<string> = new EventEmitter<string>();

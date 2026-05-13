@@ -227,7 +227,6 @@ interface DateTimeObject {
 /** Directive used to connect an input to a KbqDatepicker. */
 @Directive({
     selector: 'input[kbqDatepicker], input[kbqCalendar]',
-    exportAs: 'kbqDatepickerInput',
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
@@ -246,7 +245,8 @@ interface DateTimeObject {
         '(focus)': 'focusChanged(true)',
         '(blur)': 'onBlur()',
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    exportAs: 'kbqDatepickerInput'
 })
 export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit

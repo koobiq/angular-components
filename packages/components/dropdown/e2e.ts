@@ -186,7 +186,6 @@ export class E2eDropdownNestedLtr {}
 @Component({
     selector: 'e2e-dropdown-nested-rtl',
     imports: [KbqDropdownModule],
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: new EventEmitter() } }],
     template: `
         <div data-testid="dropdown_nested_rtl_default">
             <button
@@ -246,6 +245,7 @@ export class E2eDropdownNestedLtr {}
             height: 720px;
         }
     `,
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: new EventEmitter() } }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eDropdownNestedRtl',

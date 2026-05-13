@@ -23,8 +23,8 @@ import { KbqToastData } from './toast.type';
     selector: 'kbq-toast-container',
     template: '<ng-container #container />',
     styleUrls: ['./toast-container.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-toast-container'
     }

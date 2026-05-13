@@ -153,13 +153,13 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     ],
     templateUrl: './app-switcher.html',
     styleUrls: ['./app-switcher.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher'
     },
-    animations: [kbqAppSwitcherAnimations.state]
+    animations: [kbqAppSwitcherAnimations.state],
+    preserveWhitespaces: false
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
@@ -284,13 +284,13 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
 
 @Directive({
     selector: '[kbqAppSwitcher]',
-    exportAs: 'kbqAppSwitcher',
     host: {
         '[class.kbq-app-switcher_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqAppSwitcher'
 })
 export class KbqAppSwitcherTrigger
     extends KbqPopUpTrigger<KbqAppSwitcherComponent>

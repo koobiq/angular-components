@@ -10,11 +10,11 @@ import { kbqInjectNativeElement } from '../utils';
  */
 @Directive({
     selector: '[kbqHover]',
-    exportAs: 'kbqHover',
     host: {
         class: 'kbq-hover',
         '[class.kbq-hovered]': 'hovered()'
-    }
+    },
+    exportAs: 'kbqHover'
 })
 export class KbqHover {
     private readonly element = kbqInjectNativeElement();

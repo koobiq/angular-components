@@ -1,4 +1,4 @@
-import { workspaces } from '@angular-devkit/core';
+﻿import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
@@ -11,8 +11,8 @@ const SCHEMATIC_NAME = 'empty-state-size-attr';
 
 const getProjectContentPaths = (project: workspaces.ProjectDefinition) => {
     return {
-        templatePath: `/${project.root}/src/app/app.component.html`,
-        tsPath: `/${project.root}/src/app/app.component.ts`,
+        templatePath: `/${project.root}/src/app/app.html`,
+        tsPath: `/${project.root}/src/app/app.ts`,
         stylesPath: `/${project.root}/src/styles.scss`
     };
 };

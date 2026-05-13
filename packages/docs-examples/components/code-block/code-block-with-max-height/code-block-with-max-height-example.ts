@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     KbqCodeBlockFile,

@@ -50,8 +50,7 @@
         >
             @if (isTemplateRef(data.title)) {
                 <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="{ $implicit }" />
-            }
-            @if (!isTemplateRef(data.title)) {
+            } @else {
                 <p>{{ data.title }}</p>
             }
 
@@ -70,8 +69,7 @@
         >
             @if (isTemplateRef(data.caption)) {
                 <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="{ $implicit }" />
-            }
-            @if (!isTemplateRef(data.caption)) {
+            } @else {
                 {{ data.caption }}
             }
         </div>
@@ -81,8 +79,7 @@
         <div class="kbq-notification-item__content">
             @if (isTemplateRef(data.content)) {
                 <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="{ $implicit }" />
-            }
-            @if (!isTemplateRef(data.content)) {
+            } @else {
                 {{ data.content }}
             }
         </div>
@@ -92,8 +89,7 @@
         <div class="kbq-notification-item__actions">
             @if (isTemplateRef(data.actions)) {
                 <ng-container [ngTemplateOutlet]="$any(data.actions)" [ngTemplateOutletContext]="{ $implicit }" />
-            }
-            @if (!isTemplateRef(data.actions)) {
+            } @else {
                 {{ data.actions }}
             }
         </div>

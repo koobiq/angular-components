@@ -73,10 +73,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
             width: 500px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eContentPanelState'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eContentPanelState {
     protected readonly componentColors = KbqComponentColors;

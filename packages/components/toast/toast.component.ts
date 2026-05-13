@@ -44,8 +44,8 @@ let id = 0;
     ],
     templateUrl: './toast.component.html',
     styleUrls: ['./toast.component.scss', './toast-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-toast',
         '[class]': 'toastStyle',
@@ -57,8 +57,8 @@ let id = 0;
         '(mouseleave)': 'hovered.next(false)',
         '(keydown.esc)': 'close()'
     },
-    animations: [kbqToastAnimations.toastState],
-    hostDirectives: [KbqReadStateDirective]
+    hostDirectives: [KbqReadStateDirective],
+    animations: [kbqToastAnimations.toastState]
 })
 export class KbqToastComponent implements OnDestroy {
     protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });

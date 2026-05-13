@@ -71,11 +71,6 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
         KbqIcon
     ],
     templateUrl: './time-range-editor.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'kbq-time-range__editor'
-    },
     providers: [
         {
             multi: true,
@@ -87,7 +82,12 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
             provide: NG_VALIDATORS,
             useExisting: KbqTimeRangeEditor
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-time-range__editor'
+    }
 })
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     private readonly timeRangeService = inject(KbqTimeRangeService);

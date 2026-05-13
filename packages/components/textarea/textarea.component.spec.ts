@@ -162,12 +162,12 @@ class LegacyTextareaControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [formControl]="control"></textarea>
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class TextareaControlWithAsyncValidators {
     readonly textarea = viewChild.required(KbqTextarea);
@@ -179,17 +179,17 @@ class TextareaControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
                 <textarea kbqTextarea formControlName="textarea"></textarea>
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class TextareaWithDIErrorStateMatcher {
     readonly textarea = viewChild.required(KbqTextarea);
@@ -198,7 +198,6 @@ class TextareaWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -206,7 +205,8 @@ class TextareaWithDIErrorStateMatcher {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class TextareaWithErrorStateMatcher {
     readonly textarea = viewChild.required(KbqTextarea);

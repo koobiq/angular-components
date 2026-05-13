@@ -156,10 +156,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             white-space: pre-wrap;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditControlsExample {
     protected readonly maxRows = 20;

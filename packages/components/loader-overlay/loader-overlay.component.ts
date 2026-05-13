@@ -45,8 +45,8 @@ export class KbqLoaderOverlayCaption {}
     imports: [KbqProgressSpinner],
     templateUrl: './loader-overlay.component.html',
     styleUrls: ['./loader-overlay.scss', 'loader-overlay-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-loader-overlay',
         '[class]': 'loaderSizeClass',

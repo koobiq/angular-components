@@ -273,12 +273,12 @@ class LegacyInputControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class InputControlWithAsyncValidators {
     readonly input = viewChild.required(KbqInput);
@@ -290,17 +290,17 @@ class InputControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
                 <input kbqInput formControlName="input" />
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class InputWithDIErrorStateMatcher {
     readonly input = viewChild.required(KbqInput);
@@ -309,7 +309,6 @@ class InputWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -317,7 +316,8 @@ class InputWithDIErrorStateMatcher {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class InputWithErrorStateMatcher {
     readonly input = viewChild.required(KbqInput);

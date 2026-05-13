@@ -31,14 +31,14 @@ import { KBQ_TAB_LABEL, KbqTabLabel } from './tab-label.directive';
     // TemplateRef and use it in a Portal to render the tab content in the appropriate place in the
     // tab-group.
     template: '<ng-template><ng-content /></ng-template>',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTab',
     providers: [
         ...[KBQ_SELECT_SCROLL_STRATEGY, KBQ_DROPDOWN_SCROLL_STRATEGY].map((token) =>
             KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER(token, (overlay) => () => overlay.scrollStrategies.close())
         )
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    exportAs: 'kbqTab'
 })
 export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** @docs-private */

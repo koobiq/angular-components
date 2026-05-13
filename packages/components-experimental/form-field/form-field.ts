@@ -61,7 +61,6 @@ export const getKbqFormFieldMissingControlError = (): Error => {
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    exportAs: 'kbqFormField',
     templateUrl: './form-field.html',
     styleUrls: [
         './form-field.scss',
@@ -79,6 +78,9 @@ export const getKbqFormFieldMissingControlError = (): Error => {
         './../../components/textarea/textarea.scss',
         './../../components/textarea/textarea-tokens.scss'
     ],
+    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-form-field___EXPERIMENTAL',
         '[class.kbq-form-field_invalid]': 'invalid',
@@ -97,9 +99,7 @@ export const getKbqFormFieldMissingControlError = (): Error => {
         '(mouseenter)': 'mouseenter($event)',
         '(mouseleave)': 'mouseleave($event)'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
+    exportAs: 'kbqFormField'
 })
 export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);

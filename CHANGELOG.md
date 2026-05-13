@@ -1,3 +1,42 @@
+# 20.0.0 (2026-05-13)
+
+### BREAKING CHANGES — Angular 20
+
+* **angular:** bump to Angular 20.3.21. `requiredAngularVersion` is now `^20.0.0`. All `peerDependencies` of published packages target `^20.0.0`. Consumers must upgrade to Angular 20+.
+* **node:** minimum supported Node.js is now **20.19** (added `"engines": { "node": ">=20.19" }`).
+* **zone.js:** downgraded to `~0.15.1` to match Angular 20 peer requirement.
+* **components:** `KbqPopUpTrigger` (base of tooltip / popover / notification-center / app-switcher) refactored to use `Signal<T>` for `enterDelay`, `leaveDelay`, `stickToWindow`, `container`, `hideWithTimeout`, `preventClose`, and `arrow` so the existing signal-input overrides in subclasses now type-check. Consumers reading these from the trigger instance must call them as signals (`.enterDelay()`, etc.).
+* **popover:** the runtime-broken `set trigger(value)` mutation of `hideWithTimeout`/`leaveDelay` (added in DS-3677 #851 and silently broken since DS-4749 #1442) is replaced by writable backing signals; `leaveDelay` is now a `computed` signal combining the user input and the hover-mode fallback default of `500ms`.
+* **form-field:** `KbqInput.placeholder`, `KbqInput.errorStateMatcher`, `KbqInputPassword.placeholder`, `KbqInputPassword.errorStateMatcher`, `KbqTextarea.placeholder`, `KbqTextarea.errorStateMatcher`, `KbqSelect.errorStateMatcher`, `KbqTagList.errorStateMatcher`, `KbqTreeSelect.errorStateMatcher`, `KbqSingleFileUploadComponent.errorStateMatcher`, `KbqMultipleFileUploadComponent.errorStateMatcher`, `KbqTagInput.placeholder`/`id` reverted to `@Input` primitives — they conflict with interface types (`CanUpdateErrorState`, `KbqFormFieldControl`, `KbqTagTextControl`) that expect raw values. Template bindings via aliases stay the same.
+* **code-block:** `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` are now `model()` signals (writable + bindable). Bare attribute shorthand `<kbq-code-block canDownload>` no longer coerces — use `[canDownload]="true"`, `[activeFileIndex]="1"`, etc.
+* **textarea:** `freeRowsHeight` is now a `model()` signal; bare attribute shorthand is not supported, use `[freeRowsHeight]="160"`.
+* **search-expandable / dl / radio / checkbox / toggle / sidepanel:** `isOpened` / `vertical` / `name` / `id` / `sidepanelResult` are now `model()` signals (use `.set()` / `.update()` internally; two-way binding `[(x)]` works externally).
+* **modal:** `kbqOkText`, `kbqOkType`, `kbqRestoreFocus`, `kbqCancelText`, `kbqModalType`, `kbqComponent`, `kbqContent`, `kbqComponentParams`, `kbqFooter`, `kbqWidth`, `kbqSize`, `kbqWrapClassName`, `kbqClassName`, `kbqStyle`, `kbqTitle`, `kbqCloseByESC`, `kbqOnOk`, `kbqOnCancel` reverted to plain `@Input`/`@Output` to match `ModalOptions`. Programmatic API (consumed via `KbqModalService`) stays the same.
+* **notification-center / app-switcher:** removed `placement` signal-input overrides (which conflicted with `KbqPopUpTrigger.placement`) — placement is again configured via `@Input('kbqNotificationCenterPlacement')` / `@Input('kbqAppSwitcherPlacement')` getter/setter pattern delegating to `super.updatePlacement(...)`. `arrow` in both is now a `Signal<boolean>` (matches the new base contract).
+* **tabs:** `KbqPaginatedTabHeader.disablePagination` is now a `computed` that combines the user input with a writable fallback set by the `vertical` setter. `KbqTabGroupComponent.animationDuration` is a `computed` that resolves user input → `KBQ_TABS_CONFIG` default → `'0ms'`. `KbqTabLink.disabled` reverted to plain `@Input` (matches `FocusableOption.disabled`).
+* **dropdown:** `KbqDropdown.backdropClass` reverted to `@Input` to match the `KbqDropdownPanel` interface. `KbqDropdownContent` constructor no longer accepts `ComponentFactoryResolver` (removed in Angular 20).
+* **input-number:** dropped `@Attribute('step' | 'big-step' | 'min' | 'max')` constructor coercion; the same defaults are now provided by `input(..., { transform: numberAttribute })`. Template bindings `[step]="..."` still work; bare HTML attributes are coerced through the transform.
+* **breadcrumbs:** `RdxRovingFocusGroupDirective.orientation` is a `computed` signal combining an `orientation` input alias and an internal `setOrientation()` override called by `KbqBreadcrumbs` (replaces the broken `inject(...).orientation = 'horizontal'` assignment).
+* **navbar / navbar-ic / filter-bar / datepicker / timepicker / splitter:** direct assignments to readonly signal inputs (`this.arrow = false`, `this.offset = 0`, `this.popover.preventClose = true`, `tooltip.enterDelay = ...`, `this.ghost.visible = ...`, etc.) cast to `any` to preserve current runtime behavior. The underlying state migration to writable signals is tracked as a follow-up.
+
+### Tooling
+
+* `ng-packagr` → `^20.3.2`.
+* `@angular-builders/jest` → `20.0.0`.
+* `@angular-eslint/*` → `^20.7.0`.
+* `@typescript-eslint/*` → `^8.59.3` (ESLint stays on `8.57.1`).
+* `@schematics/angular` → `20.3.21` (was stuck on `18.2.21`).
+* `@angular-devkit/architect` → `0.2003.21`.
+* Per-project `tsconfig.spec.json` files added under each library/app root that extend the workspace-root config; `angular.json` `test.options.tsConfig` paths now resolve from the project root (required by v20 schematic migrations).
+* Schematics unit tests updated for the v20 `@schematics/angular:application` output (file names changed from `app.component.html` → `app.html`).
+
+### Known follow-ups
+
+* Refactor remaining `(instance as any).x = value` assignments in navbar / navbar-ic / filter-bar / datepicker / timepicker / splitter to use writable signal backing fields.
+* Refactor `KbqAppSwitcherComponent.trigger` and `KbqAppSwitcherComponent.selectAppInSite` to use the proper component-instance back-reference (currently uses `declare trigger: KbqAppSwitcherTrigger` instead of signal input).
+* Update Jest tests that mutate signal inputs directly (~306 select/option/model-input-related tests need `instance.foo.set(value)` instead of `instance.foo = value`).
+* Run signal-input / signal-queries / output migrations from `@angular/core:ng-generate/*` on the remaining `@Input` getter/setter pairs that survived this PR.
+
 # 19.8.0 (2026-05-26)
 
 ### Koobiq

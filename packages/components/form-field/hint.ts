@@ -6,17 +6,17 @@ let nextUniqueId = 0;
 /** Hint text to be shown below the form field control. */
 @Component({
     selector: 'kbq-hint',
-    exportAs: 'kbqHint',
     templateUrl: './hint.html',
     styleUrls: ['./hint.scss', './hint-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-hint',
         '[attr.id]': 'id',
         '[class.kbq-hint_fill-text-off]': 'fillTextOff',
         '[class.kbq-hint_compact]': 'compact'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqHint'
 })
 export class KbqHint extends KbqColorDirective {
     /** Unique ID for the hint. */

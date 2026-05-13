@@ -8,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'form-field-password-overview-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <input placeholder="Password" kbqInputPassword [formControl]="formControl" />
@@ -60,6 +59,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             }
         </kbq-form-field>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldPasswordOverviewExample {

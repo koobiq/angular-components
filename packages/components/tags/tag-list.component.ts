@@ -68,7 +68,6 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 
 @Component({
     selector: 'kbq-tag-list',
-    exportAs: 'kbqTagList',
     template: `
         <div class="kbq-tags-list__list-container">
             <ng-content />
@@ -81,6 +80,9 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         }
     `,
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
@@ -95,10 +97,8 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '(blur)': 'blur()',
         '(keydown)': 'keydown($event)'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
-    hostDirectives: [CdkDropList]
+    hostDirectives: [CdkDropList],
+    exportAs: 'kbqTagList'
 })
 export class KbqTagList
     implements

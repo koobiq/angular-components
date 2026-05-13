@@ -36,18 +36,18 @@ import { KbqAppSwitcherApp } from './app-switcher';
         }
     `,
     styleUrls: ['kbq-app-switcher-list-item.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherListItem },
+        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherListItem }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqAppSwitcherApp',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher-list-item',
         '[class.kbq-dropdown-item]': 'false',
         '(click)': 'clickHandler($event)'
     },
-    providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherListItem },
-        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherListItem }
-    ]
+    exportAs: 'kbqAppSwitcherApp'
 })
 export class KbqAppSwitcherListItem extends KbqDropdownItem {
     private sanitizer = inject(DomSanitizer);

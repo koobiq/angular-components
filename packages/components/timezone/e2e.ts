@@ -133,13 +133,13 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             --kbq-select-panel-size-max-height: 308px;
         }
     `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTimezoneStates'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class E2eTimezoneStates {
     control = model('');

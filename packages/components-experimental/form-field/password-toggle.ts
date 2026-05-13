@@ -17,9 +17,8 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         <i color="contrast-fade" kbq-icon-button="" [ngClass]="icon" [autoColor]="true"></i>
     `,
     styleUrl: './password-toggle.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqPasswordToggle',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-password-toggle___EXPERIMENTAL',
         '[style.visibility]': 'visible ? "visible" : "hidden"',
@@ -27,7 +26,8 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         '(click)': 'toggleType($event)',
         '(keydown.ENTER)': 'toggleType($event)',
         '(keydown.SPACE)': 'toggleType($event)'
-    }
+    },
+    exportAs: 'kbqPasswordToggle'
 })
 export class KbqPasswordToggle {
     // @TODO fix types (#DS-2915)

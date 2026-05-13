@@ -50,11 +50,11 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
             padding: 1px;
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ValidationOnTypeExample {
     @ViewChild('tooltip', { static: false }) tooltip: KbqTooltipTrigger;

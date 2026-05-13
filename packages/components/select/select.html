@@ -43,8 +43,7 @@
                                             }
                                         </kbq-tag>
                                     }
-                                }
-                                @if (customTagTemplateRef) {
+                                } @else {
                                     @for (option of triggerValues; track option) {
                                         <ng-container
                                             [ngTemplateOutlet]="$any(customTagTemplateRef)"

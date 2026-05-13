@@ -164,7 +164,6 @@ export class E2eAutocompleteExpandOnResults {
             height: 4000px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
@@ -172,6 +171,7 @@ export class E2eAutocompleteExpandOnResults {
             deps: [Overlay]
         }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eAutocompleteScrollClose'
     }

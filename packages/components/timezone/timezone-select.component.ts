@@ -38,13 +38,13 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
         'timezone-select.component.scss',
         'timezone-option-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTimezoneSelect',
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    exportAs: 'kbqTimezoneSelect'
 })
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     @ContentChild(KbqTimezoneSelectTrigger, { static: false }) customTrigger: KbqTimezoneSelectTrigger;

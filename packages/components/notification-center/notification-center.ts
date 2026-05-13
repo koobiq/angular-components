@@ -91,15 +91,15 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     ],
     templateUrl: './notification-center.html',
     styleUrls: ['./notification-center.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-notification-center',
         '[class.kbq-notification-center_popover]': 'popoverMode',
         '(keydown.escape)': 'escapeHandler()'
     },
-    animations: [KbqNotificationCenterAnimations.state]
+    animations: [KbqNotificationCenterAnimations.state],
+    preserveWhitespaces: false
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
@@ -223,11 +223,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
 @Directive({
     selector: '[kbqNotificationCenterTrigger]',
-    exportAs: 'kbqNotificationCenterTrigger',
     host: {
         '[class.kbq-notification-center_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen'
-    }
+    },
+    exportAs: 'kbqNotificationCenterTrigger'
 })
 export class KbqNotificationCenterTrigger
     extends KbqPopUpTrigger<KbqNotificationCenterComponent>

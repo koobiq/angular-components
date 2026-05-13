@@ -70,10 +70,10 @@ enum NavbarIcItems {
             min-height: 480px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterPopoverExample implements AfterViewInit {
     notificationService = inject(KbqNotificationCenterService);

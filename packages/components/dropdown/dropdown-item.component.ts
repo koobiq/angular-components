@@ -31,9 +31,11 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
     ],
     templateUrl: 'dropdown-item.html',
     styleUrls: ['dropdown-item.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqDropdownItem',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dropdown-item',
         '[class.kbq-dropdown-item_with-icon]': 'icon',
@@ -43,9 +45,7 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'getTabIndex()'
     },
-    providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }
-    ]
+    exportAs: 'kbqDropdownItem'
 })
 export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
     @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;

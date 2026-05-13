@@ -38,8 +38,8 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
         <div #outputWrapper class="kbq-markdown__output" [innerHtml]="resultHtml()"></div>
     `,
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-markdown'
     }

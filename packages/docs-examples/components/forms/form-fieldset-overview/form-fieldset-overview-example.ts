@@ -49,8 +49,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
             width: 320px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-row'
     }

@@ -32,9 +32,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             border-radius: var(--kbq-size-border-radius);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-align-center-center layout-row layout-margin-top-l layout-margin-bottom-l'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ToggleMultilineExample {}

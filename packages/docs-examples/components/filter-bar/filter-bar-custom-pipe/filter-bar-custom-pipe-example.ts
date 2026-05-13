@@ -83,14 +83,14 @@ import { KbqTitleModule } from '@koobiq/components/title';
         </ng-template>
     `,
     styleUrls: ['../../../../components/filter-bar/pipes/base-pipe.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class ColorPipeComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;
@@ -155,13 +155,13 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
             }
         </kbq-filter-bar>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILTER_BAR_PIPES,
             useValue: new Map([...defaultFilterBarPipes, ['colorPipe', ColorPipeComponent]])
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarCustomPipeExample {
     filters: KbqFilter[] = [];

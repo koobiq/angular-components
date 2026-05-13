@@ -25,13 +25,13 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
     `,
     styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
-    hostDirectives: [KbqAccordionTriggerDirective],
     host: {
         class: 'kbq-accordion-trigger',
         '[class.kbq-accordion-trigger_fill]': 'isFill',
         '[class.kbq-accordion-trigger_hug]': 'isHug',
         '[class.kbq-accordion-trigger_hug-space-between]': 'isHugSpaceBetween'
-    }
+    },
+    hostDirectives: [KbqAccordionTriggerDirective]
 })
 export class KbqAccordionTrigger implements AfterViewInit {
     /** @docs-private */

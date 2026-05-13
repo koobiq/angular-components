@@ -8,15 +8,15 @@ let uniqueOptgroupIdCounter = 0;
  */
 @Component({
     selector: 'kbq-optgroup',
-    exportAs: 'kbqOptgroup',
     templateUrl: 'optgroup.html',
     styleUrls: ['./optgroup.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-optgroup',
         '[class.kbq-disabled]': 'disabled'
-    }
+    },
+    exportAs: 'kbqOptgroup'
 })
 export class KbqOptgroup {
     @Input() label: string;

@@ -82,8 +82,8 @@ export class ActionsPanelComponent {
             <button id="actionsPanel-action2" (click)="actionsPanelRef.close()">Action2</button>
         </ng-template>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [KbqActionsPanel]
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelController {
     readonly actionsPanel = inject(KbqActionsPanel, { self: true });

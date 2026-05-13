@@ -47,10 +47,6 @@ type ScrollbarState = {
             </table>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'data-testid': 'e2eScrollbarStateAndStyle'
-    },
     providers: [
         {
             provide: KBQ_SCROLLBAR_CONFIG,
@@ -60,7 +56,11 @@ type ScrollbarState = {
                 }
             } satisfies KbqScrollbarOptions
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarStateAndStyle'
+    }
 })
 export class E2eScrollbarStateAndStyle {
     readonly items = Array.from({ length: 25 }).map((_, i) => `Item #${i}`);

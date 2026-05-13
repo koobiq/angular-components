@@ -22,7 +22,12 @@ let nextUniqueId = 0;
 
 @Directive({
     selector: `input[kbqInputPassword]`,
-    exportAs: 'kbqInputPassword',
+    providers: [
+        {
+            provide: KbqFormFieldControl,
+            useExisting: KbqInputPassword
+        }
+    ],
     host: {
         class: 'kbq-input kbq-input-password',
         // Native input properties that are overwritten by Angular inputs need to be synced with
@@ -36,12 +41,7 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(input)': 'onInput()'
     },
-    providers: [
-        {
-            provide: KbqFormFieldControl,
-            useExisting: KbqInputPassword
-        }
-    ]
+    exportAs: 'kbqInputPassword'
 })
 export class KbqInputPassword
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState

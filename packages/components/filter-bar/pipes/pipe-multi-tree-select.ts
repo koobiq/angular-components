@@ -51,14 +51,14 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-multi-tree-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit, AfterViewInit {
     /** control for search options */

@@ -5,7 +5,7 @@ import {
     Directive,
     EventEmitter,
     inject,
-    Input,
+    input,
     Output,
     ViewEncapsulation
 } from '@angular/core';
@@ -173,9 +173,9 @@ export class DevDocsExamples {}
     template: `
         <kbq-multiple-file-upload
             size="compact"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             [inputId]="'test-compact'"
-            [files]="files"
+            [files]="files()"
             (fileQueueChanged)="addedFiles($event)"
         >
             <ng-template #kbqFileIcon>
@@ -184,7 +184,6 @@ export class DevDocsExamples {}
             <kbq-hint>{{ hintMessage }}</kbq-hint>
         </kbq-multiple-file-upload>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -193,11 +192,12 @@ export class DevDocsExamples {}
                 captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize
             }
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevMultipleFileUploadCompact {
-    @Input() disabled: boolean;
-    @Input() files: KbqFileItem[] = [];
+    readonly disabled = input<boolean>(undefined!);
+    readonly files = input<KbqFileItem[]>([]);
     @Output() readonly addedFile: EventEmitter<any> = new EventEmitter<any>();
 
     hintMessage = hintMessage;
@@ -230,8 +230,8 @@ export class DevMultipleFileUploadCompact {
     ],
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     disabled = false;

@@ -56,10 +56,10 @@ import { KbqIcon } from '@koobiq/components/icon';
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column layout-align-center-center layout-gap-l'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ButtonGroupContentExample {
     protected readonly data = [

@@ -19,13 +19,13 @@ import { KbqAutocomplete, KbqAutocompleteFooter } from './autocomplete.component
         KbqAutocompleteOrigin,
         KbqAutocompleteFooter
     ],
+    providers: [KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER],
     exports: [
         KbqAutocomplete,
         KbqOptionModule,
         KbqAutocompleteTrigger,
         KbqAutocompleteOrigin,
         KbqAutocompleteFooter
-    ],
-    providers: [KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER]
+    ]
 })
 export class KbqAutocompleteModule {}

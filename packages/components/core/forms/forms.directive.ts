@@ -2,10 +2,10 @@ import { AfterContentInit, ContentChildren, Directive, ElementRef, QueryList } f
 
 @Directive({
     selector: '.kbq-form__row, .kbq-form__fieldset, .kbq-form__legend',
-    exportAs: 'kbqFormElement',
     host: {
         '[class.kbq-form-row_margin]': 'margin'
-    }
+    },
+    exportAs: 'kbqFormElement'
 })
 export class KbqFormElement implements AfterContentInit {
     margin = false;
@@ -35,10 +35,10 @@ export class KbqFormElement implements AfterContentInit {
 
 @Directive({
     selector: '.kbq-form-vertical, .kbq-form-horizontal',
-    exportAs: 'kbqForm',
     host: {
         class: 'kbq-form'
-    }
+    },
+    exportAs: 'kbqForm'
 })
 export class KbqForm implements AfterContentInit {
     @ContentChildren(KbqFormElement) elements: QueryList<KbqFormElement>;

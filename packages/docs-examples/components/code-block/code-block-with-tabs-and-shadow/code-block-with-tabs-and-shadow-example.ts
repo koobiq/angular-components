@@ -24,10 +24,10 @@ import {
     ],
     template: `
         <kbq-code-block
-            activeFileIndex="2"
-            lineNumbers
+            [lineNumbers
             canToggleSoftWrap
-            softWrap
+            [activeFileIndex]="2"
+            [softWrap]="true"
             [files]="files"
             [style.height.px]="350"
         />

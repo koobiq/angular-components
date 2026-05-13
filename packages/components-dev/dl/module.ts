@@ -7,8 +7,8 @@ import { KbqDlModule } from '@koobiq/components/dl';
     imports: [KbqDlModule],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     readonly themePalette = ThemePalette;

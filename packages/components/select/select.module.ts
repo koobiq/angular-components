@@ -41,6 +41,7 @@ import { KbqSelect } from './select.component';
         KbqSelectNoOptions,
         KbqSelectErrorText
     ],
+    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER],
     exports: [
         KbqSelect,
         KbqOptionTooltip,
@@ -55,7 +56,6 @@ import { KbqSelect } from './select.component';
         KbqSelectError,
         KbqSelectNoOptions,
         KbqSelectErrorText
-    ],
-    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
+    ]
 })
 export class KbqSelectModule {}

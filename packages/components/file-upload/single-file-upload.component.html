@@ -20,8 +20,7 @@
                     @if ({ loading: file.loading | async, progress: file.progress | async }; as asyncData) {
                         @if (!asyncData.loading) {
                             <ng-content select="[kbq-icon]" />
-                        }
-                        @if (asyncData.loading) {
+                        } @else {
                             <kbq-progress-spinner [mode]="progressMode" [value]="asyncData.progress || 0" />
                         }
                     }

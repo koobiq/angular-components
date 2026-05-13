@@ -9,7 +9,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'form-field-with-prefix-and-suffix-example',
     imports: [KbqFormFieldModule, KbqInputModule, KbqIconModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
@@ -18,6 +17,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             <kbq-cleaner />
         </kbq-form-field>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithPrefixAndSuffixExample {

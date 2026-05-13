@@ -74,24 +74,24 @@ export class KbqTreeNodeToggleBaseDirective<T> {
         </ng-content>
     `,
     styleUrls: ['./toggle.scss', './tree-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTreeNodeToggle',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-node-toggle',
         '[class.kbq-expanded]': 'iconState',
         '[attr.disabled]': 'disabled || null',
         '(click)': 'toggle($event)'
-    }
+    },
+    exportAs: 'kbqTreeNodeToggle'
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
 
 @Directive({
     selector: '[kbq-tree-node-toggle], [kbqTreeNodeToggle]',
-    exportAs: 'kbqTreeNodeToggle',
     host: {
         '[attr.disabled]': 'disabled || null',
         '(click)': 'toggle($event)'
-    }
+    },
+    exportAs: 'kbqTreeNodeToggle'
 })
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {}

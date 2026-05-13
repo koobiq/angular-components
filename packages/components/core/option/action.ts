@@ -35,13 +35,14 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
 
 @Component({
     selector: 'kbq-option-action',
-    exportAs: 'kbqOptionAction',
     template: `
         <ng-content select="[kbq-icon]">
             <i class="kbq kbq-icon kbq-contrast-fade kbq-ellipsis-vertical_16"></i>
         </ng-content>
     `,
     styleUrls: ['./action.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-option-action',
         '[class.kbq-expanded]': 'false',
@@ -51,8 +52,7 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqOptionAction'
 })
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();

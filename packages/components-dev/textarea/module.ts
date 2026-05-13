@@ -40,8 +40,8 @@ export class DevDocsExamples {}
     imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     value: string;

@@ -50,8 +50,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
         </div>
     `,
     styleUrls: ['tabs-vertical-example.css'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class TabsVerticalExample {
     readonly tabs = [

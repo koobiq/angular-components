@@ -14,7 +14,7 @@ const EXAMPLES = [
 
 @NgModule({
     imports: EXAMPLES,
-    exports: EXAMPLES,
-    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER]
+    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER],
+    exports: EXAMPLES
 })
 export class ScrollbarExamplesModule {}

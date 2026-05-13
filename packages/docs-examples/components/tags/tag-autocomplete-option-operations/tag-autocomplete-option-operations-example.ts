@@ -76,8 +76,8 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag $
             margin: var(--kbq-size-5xl);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     protected readonly allTags = getAutocompleteOptions();
@@ -140,7 +140,7 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        this.selectedTags.push(autocompleteValueCoercion(option.value));
+        this.selectedTags.push(autocompleteValueCoercion(option.value()));
         this.control.setValue(null);
         this.tagInput.nativeElement.value = '';
     }

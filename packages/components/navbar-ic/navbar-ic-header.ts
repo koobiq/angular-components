@@ -32,14 +32,14 @@ import { toggleNavbarIcItemAnimation } from './navbar-ic.animation';
         </div>
     `,
     styleUrl: './navbar-ic-header.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqNavbarIcHeader',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-ic-header',
         '[class.kbq-navbar-ic-header_interactive]': 'isLink'
     },
-    animations: [toggleNavbarIcItemAnimation()]
+    animations: [toggleNavbarIcItemAnimation()],
+    exportAs: 'kbqNavbarIcHeader'
 })
 export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContentInit {
     protected readonly navbar = inject(KbqNavbarIc);

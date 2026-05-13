@@ -22,8 +22,7 @@
             >
                 @if (isTemplateRef(header)) {
                     <ng-container [ngTemplateOutlet]="$any(header)" [ngTemplateOutletContext]="context" />
-                }
-                @if (!isTemplateRef(header)) {
+                } @else {
                     <div class="kbq-popover__header-text">{{ header }}</div>
                 }
             </div>
@@ -43,8 +42,7 @@
                 }
                 @if (isTemplateRef(content)) {
                     <ng-container [ngTemplateOutlet]="$any(content)" [ngTemplateOutletContext]="context" />
-                }
-                @if (!isTemplateRef(content)) {
+                } @else {
                     <div>{{ content }}</div>
                 }
             </div>
@@ -58,8 +56,7 @@
             >
                 @if (isTemplateRef(footer)) {
                     <ng-container [ngTemplateOutlet]="$any(footer)" [ngTemplateOutletContext]="context" />
-                }
-                @if (!isTemplateRef(footer)) {
+                } @else {
                     <div>{{ footer }}</div>
                 }
             </div>

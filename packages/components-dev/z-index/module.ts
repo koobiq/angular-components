@@ -29,8 +29,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 @Component({
     selector: 'dev-toast-component',
     template: '<div>DevToastComponent</div>',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'dev-toast-component'
     }
@@ -69,8 +69,8 @@ export class DevToastComponent extends KbqToastComponent {
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     themePalette = ThemePalette;

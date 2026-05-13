@@ -30,7 +30,6 @@ export const baseURLRegex = /^http(s)?:\/\//;
 
 @Directive({
     selector: '[kbq-link]',
-    exportAs: 'kbqLink',
     host: {
         class: 'kbq-link',
         '[class.kbq-link_no-underline]': 'noUnderline',
@@ -46,7 +45,8 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
         '[attr.print]': 'printUrl'
-    }
+    },
+    exportAs: 'kbqLink'
 })
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly renderer = inject(Renderer2);

@@ -58,8 +58,8 @@ import { getId } from './pipes/base-pipe';
         </kbq-select>
     `,
     styleUrl: 'pipe-add.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pipe-add'
     }

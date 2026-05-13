@@ -45,9 +45,8 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         </ng-content>
     `,
     styleUrls: ['password-toggle.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqPasswordToggle',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-password-toggle',
         // legacy style for backward compatibility
@@ -57,7 +56,8 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         '(click)': 'toggle($event)',
         '(keydown.ENTER)': 'toggle($event)',
         '(keydown.SPACE)': 'toggle($event)'
-    }
+    },
+    exportAs: 'kbqPasswordToggle'
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
     protected readonly nativeElement = kbqInjectNativeElement();

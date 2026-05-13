@@ -112,13 +112,13 @@ export class KbqTagTrailingIcon {}
  */
 @Directive({
     selector: '[kbqTagEditSubmit]',
-    exportAs: 'kbqTagEditSubmit',
     host: {
         class: 'kbq-tag-edit-submit',
         '[attr.tabindex]': '-1',
 
         '(click)': 'tag.submitEditing("click")'
-    }
+    },
+    exportAs: 'kbqTagEditSubmit'
 })
 export class KbqTagEditSubmit {
     /** @docs-private */
@@ -130,14 +130,14 @@ export class KbqTagEditSubmit {
  */
 @Directive({
     selector: '[kbqTagEditInput]',
-    exportAs: 'kbqTagEditInput',
     host: {
         class: 'kbq-tag-edit-input',
 
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
     },
-    hostDirectives: [KbqFieldSizingContent]
+    hostDirectives: [KbqFieldSizingContent],
+    exportAs: 'kbqTagEditInput'
 })
 export class KbqTagEditInput {
     private readonly tag = inject(KbqTag);
@@ -196,10 +196,9 @@ export class KbqTagEditInput {
         </div>
     `,
     styleUrls: ['./tag.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTag',
-    hostDirectives: [CdkDrag],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag',
         '[attr.tabindex]': 'tabindex',
@@ -218,7 +217,8 @@ export class KbqTagEditInput {
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
-    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
+    hostDirectives: [CdkDrag],
+    exportAs: 'kbqTag'
 })
 export class KbqTag
     extends KbqColorDirective

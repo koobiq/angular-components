@@ -42,10 +42,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </kbq-form-field>
         </kbq-inline-edit>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditOverviewExample {
     protected readonly placeholder = 'Placeholder';

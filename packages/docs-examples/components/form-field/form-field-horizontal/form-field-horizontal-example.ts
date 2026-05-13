@@ -7,7 +7,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'form-field-horizontal-example',
     imports: [KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field horizontal labelClass="flex-15" contentClass="flex-85">
             <kbq-label>Field name</kbq-label>
@@ -46,6 +45,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             width: 320px;
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldHorizontalExample {}

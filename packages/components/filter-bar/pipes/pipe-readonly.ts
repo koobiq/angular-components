@@ -34,14 +34,14 @@ import { KbqPipeTitleDirective } from './pipe-title';
         </ng-template>
     `,
     styleUrls: ['base-pipe.scss', 'pipe-readonly.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
     open(): void {}

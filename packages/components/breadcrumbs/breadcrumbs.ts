@@ -154,8 +154,8 @@ export class KbqBreadcrumbItem {
     ],
     templateUrl: './breadcrumbs.html',
     styleUrls: ['./breadcrumbs.scss', './breadcrumbs-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-breadcrumbs',
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',

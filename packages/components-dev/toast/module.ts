@@ -58,16 +58,16 @@ import { ToastExamplesModule } from '../../docs-examples/components/toast';
         <br />
         <toast-types-overview-example />
     `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-toast-component',
     template: '<div>DevToastComponent</div>',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'dev-toast-component'
     }
@@ -102,8 +102,8 @@ export class DevToastComponent extends KbqToastComponent {
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     themePalette = ThemePalette;

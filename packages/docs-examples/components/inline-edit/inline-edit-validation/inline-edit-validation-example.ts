@@ -137,13 +137,13 @@ class ExampleResetTouchedOnFirstInput {
             white-space: nowrap;
         }
     `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class InlineEditValidationExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);

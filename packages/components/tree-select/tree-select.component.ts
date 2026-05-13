@@ -153,9 +153,13 @@ export class KbqTreeSelectChange {
     ],
     templateUrl: 'tree-select.html',
     styleUrls: ['./tree-select.scss', './tree-select-tokens.scss', '../select/select-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
+        { provide: KbqTree, useExisting: KbqTreeSelect },
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTreeSelect',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
@@ -173,11 +177,7 @@ export class KbqTreeSelectChange {
         kbqSelectAnimations.transformPanel,
         kbqSelectAnimations.fadeInContent
     ],
-    providers: [
-        { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
-        { provide: KbqTree, useExisting: KbqTreeSelect },
-        { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
-    ]
+    exportAs: 'kbqTreeSelect'
 })
 export class KbqTreeSelect
     extends KbqAbstractSelect

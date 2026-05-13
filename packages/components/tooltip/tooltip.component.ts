@@ -67,10 +67,10 @@ export const MIN_TIME_FOR_DELAY = 2000;
     ],
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqTooltipAnimations.tooltipState],
-    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER]
+    encapsulation: ViewEncapsulation.None,
+    animations: [kbqTooltipAnimations.tooltipState]
 })
 export class KbqTooltipComponent extends KbqPopUp {
     prefix = 'kbq-tooltip';
@@ -125,13 +125,13 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 @Directive({
     selector: '[kbqTooltip]',
-    exportAs: 'kbqTooltip',
     host: {
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqTooltip'
 })
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnDestroy {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
@@ -440,13 +440,13 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
  */
 @Directive({
     selector: '[kbqWarningTooltip]',
-    exportAs: 'kbqWarningTooltip',
     host: {
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqWarningTooltip'
 })
 export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
     @Input('kbqWarningTooltip')
@@ -469,13 +469,13 @@ export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
  */
 @Directive({
     selector: '[kbqExtendedTooltip]',
-    exportAs: 'kbqExtendedTooltip',
     host: {
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqExtendedTooltip'
 })
 export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
     @Input('kbqExtendedTooltip')

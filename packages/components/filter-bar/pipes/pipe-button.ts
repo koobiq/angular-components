@@ -38,8 +38,8 @@ import { KbqPipeState } from './pipe-state';
         </button>
     `,
     styleUrl: 'pipe-button.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pipe-button'
     }

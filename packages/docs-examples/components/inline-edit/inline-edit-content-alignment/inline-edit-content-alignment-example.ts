@@ -104,13 +104,13 @@ import { KbqInputModule } from '@koobiq/components/input';
             white-space: nowrap;
         }
     `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class InlineEditContentAlignmentExample {
     protected readonly placeholder = 'Placeholder';

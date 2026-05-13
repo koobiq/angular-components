@@ -7,7 +7,6 @@ import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } fro
 
 @Component({
     selector: 'kbq-navbar-brand, [kbq-navbar-brand]',
-    exportAs: 'kbqNavbarBrand',
     template: `
         <ng-content />
     `,
@@ -18,7 +17,8 @@ import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } fro
         class: 'kbq-navbar-brand',
         '[class.kbq-navbar-brand_long-title]': 'longTitle',
         '[class.kbq-navbar-brand_link]': 'isLink'
-    }
+    },
+    exportAs: 'kbqNavbarBrand'
 })
 export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentInit {
     /** @docs-private */

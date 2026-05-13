@@ -7,11 +7,11 @@ import { kbqMarkdownMarkedOptionsProvider, KbqMarkdownModule } from '@koobiq/com
 @Component({
     selector: 'markdown-line-break-with-markdown-text-input-example',
     imports: [KbqMarkdownModule],
-    providers: [kbqMarkdownMarkedOptionsProvider({ breaks: true })],
     // prettier-ignore
     template: `
         <kbq-markdown markdownText="First line\nSecond line" />
     `,
+    providers: [kbqMarkdownMarkedOptionsProvider({ breaks: true })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkdownLineBreakWithMarkdownTextInputExample {}

@@ -42,16 +42,16 @@ import { KbqToastStyle } from './toast.type';
         </div>
     `,
     styleUrls: ['../toast/toast-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'data-testid': 'e2eToastStates'
-    },
     providers: [
         {
             provide: KBQ_TOAST_FACTORY,
             useFactory: () => KbqToastComponent
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eToastStates'
+    }
 })
 export class E2eToastStates implements AfterViewInit {
     @ViewChild('toastContainer') toastContainer: KbqToastContainerComponent;

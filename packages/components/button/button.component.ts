@@ -122,8 +122,11 @@ export class KbqButtonCssStyler implements AfterContentInit {
     ],
     templateUrl: './button.component.html',
     styleUrls: ['./button.scss', './button-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.disabled]': 'disabled || null',
         '[class.kbq-disabled]': 'disabled',
@@ -131,10 +134,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
         '[class]': 'kbqStyle',
         '(focus)': 'onFocus($event)',
         '(blur)': 'onBlur()'
-    },
-    providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
-    ]
+    }
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);

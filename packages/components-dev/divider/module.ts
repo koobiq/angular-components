@@ -6,7 +6,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
     imports: [KbqDividerModule],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {}

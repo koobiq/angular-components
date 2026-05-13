@@ -41,8 +41,8 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
             }
         }
     `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbsTruncateHeadItemsExample {
     breadcrumbs = [

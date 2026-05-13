@@ -20,8 +20,8 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
     selector: 'kbq-pseudo-checkbox',
     templateUrl: 'pseudo-checkbox.partial.html',
     styleUrls: ['pseudo-checkbox.scss', 'pseudo-checkbox-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pseudo-checkbox',
         '[class.kbq-checkbox_big]': 'big',

@@ -16,7 +16,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Remov
 @Component({
     selector: 'tag-autocomplete-removable-example',
     imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" removable>
@@ -58,6 +57,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Remov
             margin: var(--kbq-size-5xl);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteRemovableExample {
@@ -92,7 +92,7 @@ export class TagAutocompleteRemovableExample {
     }
 
     protected selected({ option }: KbqAutocompleteSelectedEvent, input: HTMLInputElement): void {
-        this.tags.update((tags) => [...tags, option.value]);
+        this.tags.update((tags) => [...tags, option.value()]);
         input.value = '';
         this.tagInputModel.set('');
         option.deselect();

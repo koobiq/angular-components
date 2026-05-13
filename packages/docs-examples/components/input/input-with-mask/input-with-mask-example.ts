@@ -20,7 +20,6 @@ import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/
  */
 @Component({
     selector: 'input-with-mask-example',
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     imports: [
         ReactiveFormsModule,
         MaskitoDirective,
@@ -90,6 +89,7 @@ import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/
             width: 320px;
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputWithMaskExample {

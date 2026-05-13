@@ -62,8 +62,8 @@ type AnimationState = 'enter' | 'leave' | null;
     ],
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.scss', 'modal-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-modal',
         '(keydown)': 'onKeyDown($event)'

@@ -117,13 +117,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             gap: var(--kbq-size-xs);
         }
     `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class InlineEditCustomizedDesignExample {
     protected readonly placeholder = 'Placeholder';

@@ -8,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'form-field-with-error-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-label>Email</kbq-label>
@@ -23,6 +22,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             </kbq-error>
         </kbq-form-field>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithErrorExample {

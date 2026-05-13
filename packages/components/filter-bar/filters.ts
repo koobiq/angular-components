@@ -55,12 +55,12 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
     ],
     templateUrl: 'filters.html',
     styleUrls: ['filters.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqFilters',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-filters'
-    }
+    },
+    exportAs: 'kbqFilters'
 })
 export class KbqFilters implements OnInit {
     /** @docs-private */

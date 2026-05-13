@@ -7,7 +7,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 @Component({
     selector: 'e2e-textarea-states',
     imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-label>Label | empty</kbq-label>
@@ -79,6 +78,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             padding: var(--kbq-size-xxs);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTextareaStates'

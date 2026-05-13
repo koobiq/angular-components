@@ -263,16 +263,16 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     imports: [KbqIcon],
     templateUrl: './navbar-ic-item.html',
     styleUrl: './navbar-ic-item.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqNavbarIcItem',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-ic-item',
         '[class.kbq-navbar-ic-item_with-title]': '!!title',
         '(keydown)': 'onKeyDown($event)'
     },
     hostDirectives: [KbqRectangleItem],
-    animations: [toggleNavbarIcItemAnimation()]
+    animations: [toggleNavbarIcItemAnimation()],
+    exportAs: 'kbqNavbarIcItem'
 })
 export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentInit {
     readonly rectangleElement = inject(KbqRectangleItem);
@@ -424,8 +424,8 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         </div>
     `,
     styleUrls: ['./navbar-ic.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-ic-item kbq-navbar-ic-toggle',
         '[class.kbq-collapsed]': '!navbar.expanded',

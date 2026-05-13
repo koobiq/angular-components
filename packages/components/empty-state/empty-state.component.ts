@@ -57,8 +57,8 @@ export class KbqEmptyStateActions {}
     selector: 'kbq-empty-state',
     templateUrl: './empty-state.component.html',
     styleUrls: ['./empty-state.scss', 'empty-state-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-empty-state',
         '[class]': 'emptyStateSizeClass',

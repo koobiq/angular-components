@@ -1,4 +1,4 @@
-import { workspaces } from '@angular-devkit/core';
+﻿import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
@@ -12,8 +12,8 @@ const DEPRECATED_SCOPE = 'pt-icons';
 
 const getProjectContent = (tree: UnitTestTree | Tree, project: workspaces.ProjectDefinition) => {
     return [
-        tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
-        tree.read(`/${project.root}/src/app/app.component.ts`)?.toString() || '',
+        tree.read(`/${project.root}/src/app/app.html`)?.toString() || '',
+        tree.read(`/${project.root}/src/app/app.ts`)?.toString() || '',
         tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
     ].filter(Boolean);
 };
@@ -50,8 +50,8 @@ class TestApp {
 
             projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
             projects.forEach((project) => {
-                const templatePath = `/${project.root}/src/app/app.component.html`;
-                const tsPath = `/${project.root}/src/app/app.component.ts`;
+                const templatePath = `/${project.root}/src/app/app.html`;
+                const tsPath = `/${project.root}/src/app/app.ts`;
                 const stylesPath = `/${project.root}/src/styles.scss`;
 
                 appTree.overwrite(templatePath, elementsWithDeprecatedSelectors.join('\n'));
@@ -119,8 +119,8 @@ class TestApp {
             project: workspaces.ProjectDefinition;
             tree: Tree;
         }) => {
-            const templatePath = `/${project.root}/src/app/app.component.html`;
-            const tsPath = `/${project.root}/src/app/app.component.ts`;
+            const templatePath = `/${project.root}/src/app/app.html`;
+            const tsPath = `/${project.root}/src/app/app.ts`;
             const stylesPath = `/${project.root}/src/styles.scss`;
 
             tree.overwrite(templatePath, html || '');

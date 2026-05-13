@@ -31,8 +31,8 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     readonly tabs = new Array(50).fill(0).map((_, index) => `Tab ${index}`);

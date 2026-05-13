@@ -22,8 +22,8 @@ import { delay } from 'rxjs/operators';
         <ng-content select="[kbq-button]" />
     `,
     styleUrls: ['./split-button.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-split-button',
         '[class]': 'kbqStyle',

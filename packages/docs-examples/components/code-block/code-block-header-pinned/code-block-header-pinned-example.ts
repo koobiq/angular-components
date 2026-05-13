@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     KbqCodeBlockFile,
@@ -30,9 +30,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     template: `
         <kbq-code-block
             canToggleSoftWrap
-            canDownload
-            lineNumbers
+            [lineNumbers
             filled
+            [canDownload]="true"
             [files]="files"
             [softWrap]="true"
             [hideTabs]="false"
@@ -40,7 +40,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             <ng-template let-file let-fallback="fallbackFileName" kbqCodeBlockTabLinkContent>data</ng-template>
         </kbq-code-block>
 
-        <kbq-code-block canToggleSoftWrap canDownload lineNumbers [softWrap]="true" [files]="files" [hideTabs]="false">
+        <kbq-code-block
+            canToggleSoftWrap
+            [lineNumbers
+            [canDownload]="true"
+            [softWrap]="true"
+            [files]="files"
+            [hideTabs]="false"
+        >
             <ng-template let-file let-fallback="fallbackFileName" kbqCodeBlockTabLinkContent>
                 <i kbq-icon="kbq-diamond_16" class="layout-margin-right-xs"></i>
                 <span class="kbq-caps-normal-strong">

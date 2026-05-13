@@ -39,12 +39,12 @@ export class KbqCalendarCell {
     ],
     templateUrl: 'calendar-body.html',
     styleUrls: ['calendar-body.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCalendarBody',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-calendar__body'
-    }
+    },
+    exportAs: 'kbqCalendarBody'
 })
 export class KbqCalendarBody implements OnChanges {
     /** The cells to display in the table. */

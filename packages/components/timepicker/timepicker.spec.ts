@@ -57,7 +57,6 @@ const customErrorStateMatcher: ErrorStateMatcher = {
 
 @Component({
     imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -65,7 +64,8 @@ const customErrorStateMatcher: ErrorStateMatcher = {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class TimepickerWithErrorStateMatcher {
     readonly timepickerInput = viewChild.required(KbqTimepicker);
@@ -75,17 +75,17 @@ class TimepickerWithErrorStateMatcher {
 
 @Component({
     imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
                 <input formControlName="time" kbqTimepicker />
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class TimepickerWithDIErrorStateMatcher {
     readonly timepickerInput = viewChild.required(KbqTimepicker);
@@ -116,12 +116,12 @@ class LegacyTimepickerControlWithAsyncValidators {
 
 @Component({
     imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <input kbqTimepicker [formControl]="control" />
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class TimepickerControlWithAsyncValidators {
     readonly timepickerInput = viewChild.required(KbqTimepicker);

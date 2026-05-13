@@ -47,9 +47,8 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'KbqVerticalNavbar',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-vertical-navbar',
         '[class.kbq-vertical-navbar_open-over]': 'openOver',
@@ -61,7 +60,8 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
 
         '(keydown)': 'onKeyDown($event)'
     },
-    hostDirectives: [CdkMonitorFocus]
+    hostDirectives: [CdkMonitorFocus],
+    exportAs: 'KbqVerticalNavbar'
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     /** @docs-private */

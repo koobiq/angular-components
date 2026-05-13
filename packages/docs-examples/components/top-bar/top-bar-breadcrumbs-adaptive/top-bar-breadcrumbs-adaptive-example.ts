@@ -50,7 +50,6 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
 
 @Component({
     selector: 'example-top-bar-breadcrumbs',
-    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     imports: [
         KbqTopBarModule,
         KbqButtonModule,
@@ -169,6 +168,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
             display: inline-flex;
         }
     `,
+    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleTopBarBreadcrumbs {

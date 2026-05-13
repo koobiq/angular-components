@@ -7,6 +7,14 @@ import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@
 @Component({
     selector: 'scrollbar-with-custom-config-example',
     imports: [KbqScrollbarModule],
+    template: `
+        <div kbq-scrollbar style="width: 200px; height: 200px;">
+            @for (item of items; track item) {
+                <div>{{ item }}</div>
+                <hr />
+            }
+        </div>
+    `,
     providers: [
         {
             provide: KBQ_SCROLLBAR_CONFIG,
@@ -17,14 +25,6 @@ import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@
             } satisfies KbqScrollbarOptions
         }
     ],
-    template: `
-        <div kbq-scrollbar style="width: 200px; height: 200px;">
-            @for (item of items; track item) {
-                <div>{{ item }}</div>
-                <hr />
-            }
-        </div>
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScrollbarWithCustomConfigExample {

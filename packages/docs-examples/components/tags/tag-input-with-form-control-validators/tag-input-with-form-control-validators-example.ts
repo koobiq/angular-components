@@ -63,8 +63,8 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
             </kbq-error>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputWithFormControlValidatorsExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });

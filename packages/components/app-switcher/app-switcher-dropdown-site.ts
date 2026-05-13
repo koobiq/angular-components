@@ -28,17 +28,17 @@ import { KbqAppSwitcherSite } from './app-switcher';
         }
     `,
     styleUrls: ['app-switcher-dropdown-site.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownSite },
+        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownSite }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqAppSwitcherDropdownSite',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher-dropdown-site',
         '[class.kbq-dropdown-item]': 'false'
     },
-    providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownSite },
-        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownSite }
-    ]
+    exportAs: 'kbqAppSwitcherDropdownSite'
 })
 export class KbqAppSwitcherDropdownSite extends KbqDropdownItem {
     @Input('kbq-app-switcher-dropdown-site') site: KbqAppSwitcherSite;

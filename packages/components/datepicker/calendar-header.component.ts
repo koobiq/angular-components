@@ -35,12 +35,12 @@ export type MonthName = {
     ],
     templateUrl: 'calendar-header.html',
     styleUrls: ['calendar-header.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCalendarHeader',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-calendar-header'
-    }
+    },
+    exportAs: 'kbqCalendarHeader'
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
     monthNames: MonthName[];

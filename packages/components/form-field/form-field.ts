@@ -102,9 +102,9 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '../textarea/textarea.scss',
         '../tags/tag-input-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqFormField',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-form-field',
 
@@ -126,7 +126,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '(mouseenter)': 'onHoverChanged(true)',
         '(mouseleave)': 'onHoverChanged(false)'
     },
-    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
+    exportAs: 'kbqFormField'
 })
 export class KbqFormField
     extends KbqColorDirective
@@ -531,8 +531,8 @@ export class KbqFormField
  */
 @Directive({
     selector: 'kbq-form-field[kbqFormFieldWithoutBorders]',
-    exportAs: 'kbqFormFieldWithoutBorders',
-    host: { class: 'kbq-form-field_without-borders' }
+    host: { class: 'kbq-form-field_without-borders' },
+    exportAs: 'kbqFormFieldWithoutBorders'
 })
 export class KbqFormFieldWithoutBorders {}
 
@@ -541,8 +541,8 @@ export class KbqFormFieldWithoutBorders {}
  */
 @Directive({
     selector: '[kbqInput], [kbqTextarea]',
-    exportAs: 'KbqTrim',
-    host: { class: 'kbq-trim' }
+    host: { class: 'kbq-trim' },
+    exportAs: 'KbqTrim'
 })
 export class KbqTrim {
     private original: (fn: any) => void;

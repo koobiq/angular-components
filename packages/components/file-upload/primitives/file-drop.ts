@@ -46,11 +46,11 @@ export class KbqDrop {
 
 @Directive({
     selector: '[kbqFileDrop]',
-    exportAs: 'kbqFileDrop',
     host: {
         class: 'kbq-file-drop',
         '[class.kbq-file-drop_dragover]': 'dragover()'
-    }
+    },
+    exportAs: 'kbqFileDrop'
 })
 export class KbqFileDropDirective extends KbqDrop {
     /** Flag that controls css-class modifications on drag events. */

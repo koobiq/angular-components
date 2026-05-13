@@ -19,12 +19,12 @@ import { debounceTime } from 'rxjs/operators';
 // todo DS-3672
 @Directive({
     selector: '[kbqPipeTitle]',
-    exportAs: 'kbqPipeTitle',
     host: {
         '(mouseenter)': 'handleElementEnter()',
         '(mouseleave)': 'hideTooltip()',
         '(window:resize)': 'resizeStream.next($event)'
-    }
+    },
+    exportAs: 'kbqPipeTitle'
 })
 export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private componentInstance = inject<KbqTitleTextRef>(KBQ_TITLE_TEXT_REF, { optional: true, host: true });

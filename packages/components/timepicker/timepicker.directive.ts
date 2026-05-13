@@ -95,7 +95,11 @@ const fullFormatSize: number = 8;
 
 @Directive({
     selector: 'input[kbqTimepicker]',
-    exportAs: 'kbqTimepicker',
+    providers: [
+        KBQ_TIMEPICKER_VALIDATORS,
+        KBQ_TIMEPICKER_VALUE_ACCESSOR,
+        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }
+    ],
     host: {
         class: 'kbq-input kbq-timepicker',
         // Native input properties that are overwritten by Angular inputs need to be synced with
@@ -111,11 +115,7 @@ const fullFormatSize: number = 8;
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)'
     },
-    providers: [
-        KBQ_TIMEPICKER_VALIDATORS,
-        KBQ_TIMEPICKER_VALUE_ACCESSOR,
-        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }
-    ]
+    exportAs: 'kbqTimepicker'
 })
 export class KbqTimepicker<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit

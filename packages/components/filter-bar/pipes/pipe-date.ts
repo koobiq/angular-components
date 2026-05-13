@@ -57,15 +57,15 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-date.html',
     styleUrls: ['base-pipe.scss', 'pipe-date.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
     private readonly adapter = inject(DateAdapter);

@@ -279,8 +279,8 @@ export class DevDocsExamples {}
     imports: [DevDocsExamples, DevThemeToggle, DevLocaleSelector, DevBreadcrumbsHydration],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     hostDirectives: [
         // Required for components with overlays that use scrolling strategies
         CdkScrollable

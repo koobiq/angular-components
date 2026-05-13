@@ -99,14 +99,14 @@ class ExampleResetTouchedOnFirstInput {
             <kbq-cleaner />
         </kbq-form-field>
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ValidationOnBlurFilledExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);

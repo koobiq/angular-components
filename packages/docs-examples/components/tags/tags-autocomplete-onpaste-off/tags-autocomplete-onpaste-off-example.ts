@@ -33,14 +33,14 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         AsyncPipe
     ],
     templateUrl: 'tags-autocomplete-onpaste-off-example.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     // turn off tag add on paste with InjectionToken
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
@@ -115,7 +115,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        this.selectedTags.push(autocompleteValueCoercion(option.value));
+        this.selectedTags.push(autocompleteValueCoercion(option.value()));
         this.tagInput.nativeElement.value = '';
         this.control.setValue(null);
     }

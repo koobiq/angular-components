@@ -14,23 +14,23 @@ import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
     selector: 'kbq-list',
     template: '<ng-content />',
     styleUrls: ['./list.scss', 'list-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: { class: 'kbq-list' }
 })
 export class KbqList {}
 
 @Component({
     selector: 'kbq-list-item, a[kbq-list-item]',
+    templateUrl: './list-item.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-list-item',
         '(focus)': 'handleFocus()',
         '(blur)': 'handleBlur()'
     },
-    templateUrl: './list-item.html',
-    encapsulation: ViewEncapsulation.None,
-    preserveWhitespaces: false,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    preserveWhitespaces: false
 })
 export class KbqListItem implements AfterContentInit {
     @ContentChildren(KbqLine) lines: QueryList<KbqLine>;

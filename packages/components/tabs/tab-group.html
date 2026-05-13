@@ -32,7 +32,7 @@
                     <ng-template [cdkPortalOutlet]="tab.templateLabel" />
                 }
                 <!-- If there is not a label template, fall back to the text label. -->
-                @if (!tab.templateLabel) {
+                @else {
                     {{ tab.textLabel }}
                 }
             </div>

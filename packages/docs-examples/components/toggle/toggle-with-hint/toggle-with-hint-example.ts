@@ -36,9 +36,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             max-width: 320px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-align-center-center layout-row layout-padding-top-l layout-padding-bottom-3xl'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ToggleWithHintExample {}

@@ -94,6 +94,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
 
 @Directive({
     selector: `input[kbqAutocomplete], textarea[kbqAutocomplete]`,
+    providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR],
     host: {
         class: 'kbq-autocomplete-trigger',
         '[attr.autocomplete]': 'autocompleteAttribute',
@@ -105,8 +106,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
     },
-    exportAs: 'kbqAutocompleteTrigger',
-    providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR]
+    exportAs: 'kbqAutocompleteTrigger'
 })
 export class KbqAutocompleteTrigger
     implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler
@@ -329,13 +329,13 @@ export class KbqAutocompleteTrigger
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line
     registerOnChange(fn: (value: any) => {}): void {
         this.onChange = fn;
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }

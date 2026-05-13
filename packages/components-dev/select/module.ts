@@ -123,13 +123,13 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqSelectOptionsProvider({
             // panelWidth: 200
         })
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements OnInit {
     singleSelected = '';

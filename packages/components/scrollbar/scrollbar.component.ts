@@ -58,13 +58,13 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
         </div>
     `,
     styleUrls: ['./scrollbar.component.scss', 'scrollbar-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqScrollbar',
+    encapsulation: ViewEncapsulation.None,
     host: {
         'data-overlayscrollbars-initialize': '',
         class: 'kbq-scrollbar-component'
-    }
+    },
+    exportAs: 'kbqScrollbar'
 })
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Element that is being overflowed */

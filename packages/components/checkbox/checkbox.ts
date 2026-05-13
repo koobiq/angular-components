@@ -72,9 +72,9 @@ export class KbqCheckboxChange {
     ],
     templateUrl: 'checkbox.html',
     styleUrls: ['checkbox.scss', 'checkbox-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCheckbox',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-checkbox',
         '[id]': 'id',
@@ -86,7 +86,7 @@ export class KbqCheckboxChange {
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-checkbox_label-before]': 'labelPosition == "before"'
     },
-    providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR]
+    exportAs: 'kbqCheckbox'
 })
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     @Input() big: boolean = false;

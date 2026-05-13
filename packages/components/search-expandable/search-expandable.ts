@@ -52,8 +52,8 @@ export const defaultEmitValueTimeout = 200;
     ],
     templateUrl: './search-expandable.html',
     styleUrls: ['./search-expandable.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-search-expandable',
         '[class.kbq-search-expandable_opened]': 'isOpened'

@@ -25,8 +25,8 @@ let id = 0;
     ],
     templateUrl: './notification-item.html',
     styleUrls: ['./notification-item.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-notification-item',
         '[class]': 'style'

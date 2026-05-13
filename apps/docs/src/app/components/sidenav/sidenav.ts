@@ -89,8 +89,8 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
     ],
     templateUrl: './sidenav.html',
     styleUrl: './sidenav.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-sidenav'
     }

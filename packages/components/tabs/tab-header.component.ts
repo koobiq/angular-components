@@ -33,16 +33,16 @@ export type ScrollDirection = 'after' | 'before';
     imports: [KbqIconModule, CdkObserveContent],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
-    outputs: ['selectFocusedIndex', 'indexFocused'],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-header',
         '[class.kbq-tab-header_vertical]': 'vertical',
         '[class.kbq-tab-header_underlined]': 'underlined',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
-    }
+    },
+    outputs: ['selectFocusedIndex', 'indexFocused']
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {
     /** Whether the tabs are underlined. */

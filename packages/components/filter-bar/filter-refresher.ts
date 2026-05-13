@@ -17,8 +17,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </button>
     `,
     styleUrls: ['filter-refresher.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-filter-refresher'
     }

@@ -110,8 +110,8 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
         <ng-content />
     `,
     styleUrls: ['./button-group.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         role: 'group',
         class: 'kbq-button-group',

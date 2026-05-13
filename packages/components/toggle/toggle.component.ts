@@ -38,9 +38,15 @@ export class KbqToggleChange {
     ],
     templateUrl: './toggle.component.html',
     styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => KbqToggleComponent),
+            multi: true
+        }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqToggle',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-toggle',
         '[class.kbq-toggle_big]': 'big',
@@ -70,13 +76,7 @@ export class KbqToggleChange {
             )
         ])
     ],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => KbqToggleComponent),
-            multi: true
-        }
-    ]
+    exportAs: 'kbqToggle'
 })
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     @Input() big: boolean = false;

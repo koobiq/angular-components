@@ -24,18 +24,18 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
     ],
     templateUrl: 'timezone-option.component.html',
     styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss', 'timezone-option-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTimezoneOption',
-    host: {
-        class: 'kbq-timezone-option'
-    },
     providers: [
         {
             provide: KbqOption,
             useExisting: forwardRef(() => KbqTimezoneOption)
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-timezone-option'
+    },
+    exportAs: 'kbqTimezoneOption'
 })
 export class KbqTimezoneOption extends KbqOption {
     @ViewChild('tooltipContentWrapper', { static: false }) tooltipContentWrapper: ElementRef<HTMLElement>;

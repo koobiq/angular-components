@@ -32,16 +32,16 @@ import {
         KbqPopoverConfirmComponent,
         KbqPopoverConfirmTrigger
     ],
+    providers: [
+        KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
+        { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy }
+    ],
     exports: [
         KbqPopoverComponent,
         KbqPopoverTrigger,
         KbqPopoverConfirmComponent,
         KbqPopoverConfirmTrigger
-    ],
-    providers: [
-        KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
-        { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy }
     ]
 })
 export class KbqPopoverModule {}

@@ -36,14 +36,14 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-text.html',
     styleUrls: ['base-pipe.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;

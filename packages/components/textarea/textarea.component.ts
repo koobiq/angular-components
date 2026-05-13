@@ -38,7 +38,7 @@ let nextUniqueId = 0;
 
 @Directive({
     selector: 'textarea[kbqTextarea]',
-    exportAs: 'kbqTextarea',
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }],
     host: {
         class: 'kbq-textarea kbq-scrollbar',
         '[class.kbq-textarea-resizable]': '!canGrow',
@@ -52,7 +52,7 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(paste)': 'stateChanges.next()'
     },
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }]
+    exportAs: 'kbqTextarea'
 })
 export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState

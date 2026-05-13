@@ -68,9 +68,8 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     ],
     templateUrl: 'datepicker-content.html',
     styleUrls: ['datepicker-content.scss', 'datepicker-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqDatepickerContent',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker__content',
         '[@transformPanel]': 'animationState',
@@ -79,7 +78,8 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     animations: [
         kbqDatepickerAnimations.transformPanel,
         kbqDatepickerAnimations.fadeInCalendar
-    ]
+    ],
+    exportAs: 'kbqDatepickerContent'
 })
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     /** Emits when an animation has finished. */
@@ -124,10 +124,10 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 @Component({
     selector: 'kbq-datepicker',
     template: '',
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqDatepicker',
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }]
+    encapsulation: ViewEncapsulation.None,
+    exportAs: 'kbqDatepicker'
 })
 export class KbqDatepicker<D> implements OnDestroy {
     protected readonly document = inject<Document>(DOCUMENT);

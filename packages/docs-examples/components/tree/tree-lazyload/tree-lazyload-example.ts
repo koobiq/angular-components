@@ -187,8 +187,8 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
             </kbq-tree-option>
         </kbq-tree-selection>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [LazyLoadDataService]
+    providers: [LazyLoadDataService],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeLazyloadExample {
     treeControl: FlatTreeControl<LazyLoadFlatNode>;

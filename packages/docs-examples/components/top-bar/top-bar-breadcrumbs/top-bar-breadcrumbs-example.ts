@@ -100,8 +100,8 @@ import { map } from 'rxjs/operators';
             }
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })]
+    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarBreadcrumbsExample {
     readonly isDesktop = toSignal(

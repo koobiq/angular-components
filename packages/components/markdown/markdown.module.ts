@@ -8,7 +8,7 @@ const COMPONENTS = [
 
 @NgModule({
     imports: COMPONENTS,
-    exports: COMPONENTS,
-    providers: [KbqMarkdownService]
+    providers: [KbqMarkdownService],
+    exports: COMPONENTS
 })
 export class KbqMarkdownModule {}

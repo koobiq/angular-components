@@ -44,8 +44,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
             width: 50%;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectValidationExample {
     readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);

@@ -50,8 +50,8 @@ import { KbqInputModule } from '@koobiq/components/input';
         </div>
     `,
     styleUrls: ['../core/styles/common/_groups.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         'data-testid': 'e2eFormFieldGroup'
     }

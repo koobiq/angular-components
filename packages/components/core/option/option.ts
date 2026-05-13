@@ -138,9 +138,14 @@ export class KbqVirtualOption extends KbqOptionBase {
     templateUrl: 'option.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['option.scss', 'option-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: KBQ_TITLE_TEXT_REF,
+            useExisting: KbqOption
+        }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqOption',
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'getTabIndex()',
         class: 'kbq-option',
@@ -154,12 +159,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         '(mouseenter)': 'onMouseenter()',
         '(keydown)': 'handleKeydown($event)'
     },
-    providers: [
-        {
-            provide: KBQ_TITLE_TEXT_REF,
-            useExisting: KbqOption
-        }
-    ]
+    exportAs: 'kbqOption'
 })
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;

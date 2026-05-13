@@ -33,8 +33,8 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         </span>
     `,
     styleUrls: ['./navbar-toggle.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-toggle kbq-vertical',
         '[class.kbq-collapsed]': '!navbar.expanded',

@@ -75,18 +75,18 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     ],
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqAutocomplete',
-    host: {
-        class: 'kbq-autocomplete'
-    },
     providers: [
         {
             provide: KBQ_OPTION_PARENT_COMPONENT,
             useExisting: KbqAutocomplete
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-autocomplete'
+    },
+    exportAs: 'kbqAutocomplete'
 })
 export class KbqAutocomplete implements AfterContentInit {
     private readonly destroyRef = inject(DestroyRef);

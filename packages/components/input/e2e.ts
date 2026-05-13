@@ -168,14 +168,14 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             }
         }
     `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
         'data-testid': 'e2eInputStateAndStyle'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class E2eInputStateAndStyle {
     inputValue = signal('Input Value');

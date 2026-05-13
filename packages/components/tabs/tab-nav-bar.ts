@@ -44,9 +44,8 @@ let nextUniqueId = 0;
         // KbqTabLink is a directive and can't have self styles, so we need to include its styles here.
         './tab-link.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTabNavBar',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-nav-bar',
         '[class.kbq-tab-nav-bar_filled]': '!transparent',
@@ -56,7 +55,8 @@ let nextUniqueId = 0;
         '[class.kbq-tab-header_underlined]': 'underlined',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[attr.role]': 'role'
-    }
+    },
+    exportAs: 'kbqTabNavBar'
 })
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
     @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
@@ -132,7 +132,6 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
  */
 @Directive({
     selector: '[kbqTabLink], [kbq-tab-link]',
-    exportAs: 'kbqTabLink',
     host: {
         class: 'kbq-tab-link',
         '[class.kbq-selected]': 'active',
@@ -152,7 +151,8 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
 
         '(focus)': 'handleFocus()',
         '(keydown)': 'handleKeydown($event)'
-    }
+    },
+    exportAs: 'kbqTabLink'
 })
 export class KbqTabLink implements OnDestroy, AfterViewInit {
     /** Unique id for the link. */
@@ -297,7 +297,6 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
  */
 @Directive({
     selector: '[kbqTabNavPanel]',
-    exportAs: 'kbqTabNavPanel',
     host: {
         class: 'kbq-tab-nav-panel',
 
@@ -305,7 +304,8 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
         '[attr.aria-labelledby]': 'activeTabId',
 
         role: 'tabpanel'
-    }
+    },
+    exportAs: 'kbqTabNavPanel'
 })
 export class KbqTabNavPanel {
     /** Unique id for the tab panel. */

@@ -39,7 +39,6 @@ export class KbqFileUploadContext {
  */
 @Component({
     selector: '[kbqFileLoader]',
-    exportAs: 'kbqFileLoader',
     template: `
         <ng-content />
         <input
@@ -58,7 +57,8 @@ export class KbqFileUploadContext {
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-file-loader'
-    }
+    },
+    exportAs: 'kbqFileLoader'
 })
 export class KbqFileLoader {
     private fileUploadContext = inject(KbqFileUploadContext, { optional: true });
@@ -103,10 +103,10 @@ export class KbqFileLoader {
  */
 @Directive({
     selector: '[kbqFileList]',
-    exportAs: 'kbqFileList',
     host: {
         class: 'kbq-file-list'
-    }
+    },
+    exportAs: 'kbqFileList'
 })
 export class KbqFileList<T> {
     /** Current list of items. */

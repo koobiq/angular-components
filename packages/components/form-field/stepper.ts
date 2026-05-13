@@ -60,12 +60,12 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
         ></i>
     `,
     styleUrls: ['stepper.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqStepper',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-stepper'
-    }
+    },
+    exportAs: 'kbqStepper'
 })
 export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });

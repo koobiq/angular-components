@@ -82,11 +82,11 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
             </div>
         </form>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(RequiredErrorStateMatcher)
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputChangePasswordExample {
     protected readonly destroyRef = inject(DestroyRef);

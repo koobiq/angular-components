@@ -43,8 +43,8 @@ export class KbqTopBarContainer {
         './top-bar.scss',
         './top-bar-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-top-bar',
         '[class.kbq-top-bar_with-shadow]': 'withShadow'

@@ -21,8 +21,8 @@ import { KbqIconRegistry } from './icon-registry';
     selector: '[kbq-icon]',
     template: '<ng-content />',
     styleUrls: ['icon.scss', 'icon-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'svgIcon ? null : iconName',

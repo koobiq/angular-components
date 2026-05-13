@@ -45,8 +45,8 @@ export type DocsIconPreviewModalData = {
     ],
     templateUrl: './icon-preview-modal.template.html',
     styleUrls: ['./icon-preview-modal.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DocsIconPreviewModalComponent extends DocsLocaleState {
     private readonly icon = viewChild.required('iconPreview', { read: KbqIcon });

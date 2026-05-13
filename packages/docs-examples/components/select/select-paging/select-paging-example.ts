@@ -201,7 +201,6 @@ export class SelectFacade {
         KbqButtonModule,
         KbqProgressSpinnerModule
     ],
-    providers: [SelectFacade, OptionsApiService],
     template: `
         <div class="layout-column layout-align-center-start layout-gap-l">
             <kbq-form-field>
@@ -267,10 +266,11 @@ export class SelectFacade {
             width: 320px;
         }
     `,
+    providers: [SelectFacade, OptionsApiService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class SelectPagingExample implements OnDestroy {
     protected readonly facade = inject(SelectFacade);

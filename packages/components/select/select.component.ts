@@ -173,9 +173,13 @@ export const minimumTimeToDisplayLoading = 300;
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KbqFormFieldControl, useExisting: KbqSelect },
+        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqSelect',
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
@@ -193,11 +197,7 @@ export const minimumTimeToDisplayLoading = 300;
         kbqSelectAnimations.transformPanel,
         kbqSelectAnimations.fadeInContent
     ],
-    providers: [
-        { provide: KbqFormFieldControl, useExisting: KbqSelect },
-        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
-        { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
-    ]
+    exportAs: 'kbqSelect'
 })
 export class KbqSelect
     extends KbqAbstractSelect

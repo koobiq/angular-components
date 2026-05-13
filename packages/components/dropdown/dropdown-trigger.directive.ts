@@ -96,14 +96,14 @@ const positionMap = {
  */
 @Directive({
     selector: `[kbqDropdownTriggerFor]`,
-    exportAs: 'kbqDropdownTrigger',
     host: {
         class: 'kbq-dropdown-trigger',
         '[class.kbq-pressed]': 'opened',
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
-    }
+    },
+    exportAs: 'kbqDropdownTrigger'
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private readonly overlayContainer = inject(OverlayContainer);

@@ -44,14 +44,14 @@ export class KbqDatepickerToggleIcon {}
         </ng-content>
     `,
     styleUrls: ['./datepicker-toggle.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker-toggle-icon',
         '[attr.aria-expanded]': 'datepicker.opened',
         '[attr.aria-disabled]': 'disabled',
         '(click)': 'open($event)'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
     /** Whether the toggle button is disabled. */
@@ -118,13 +118,13 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     selector: 'kbq-datepicker-toggle',
     templateUrl: 'datepicker-toggle.html',
     styleUrls: ['datepicker-toggle.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker-toggle',
         '[class.kbq-active]': 'datepicker && datepicker.opened'
     },
-    exportAs: 'kbqDatepickerToggle',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqDatepickerToggle'
 })
 export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     /** Whether the toggle button is disabled. */

@@ -28,17 +28,17 @@ import { KbqModalService } from './modal.service';
         CssUnitPipe,
         KbqModalMainAction
     ],
+    providers: [
+        KbqModalControlService,
+        KbqModalService,
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
+    ],
     exports: [
         KbqModalComponent,
         KbqModalTitle,
         KbqModalBody,
         KbqModalFooter,
         KbqModalMainAction
-    ],
-    providers: [
-        KbqModalControlService,
-        KbqModalService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
     ]
 })
 export class KbqModalModule {}

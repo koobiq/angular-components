@@ -11,10 +11,10 @@ import { timer } from 'rxjs';
     template: `
         <kbq-toggle [checked]="checked()" [loading]="loading" (change)="handleToggle($event)" />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ToggleLoadingExample {
     protected readonly checked = signal(false);

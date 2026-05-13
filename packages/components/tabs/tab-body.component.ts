@@ -54,12 +54,12 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)],
     templateUrl: './tab-body.html',
     styleUrl: './tab-body.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqTabsAnimations.translateTab],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-body'
-    }
+    },
+    animations: [kbqTabsAnimations.translateTab]
 })
 export class KbqTabBody implements OnInit, OnDestroy {
     /** The shifted index position of the tab body, where zero represents the active center tab. */

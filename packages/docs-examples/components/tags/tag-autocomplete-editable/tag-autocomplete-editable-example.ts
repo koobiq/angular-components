@@ -25,7 +25,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
         KbqInputModule,
         KbqTitleModule
     ],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" editable>
@@ -78,6 +77,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
             margin: var(--kbq-size-5xl);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteEditableExample {
@@ -114,7 +114,7 @@ export class TagAutocompleteEditableExample {
     }
 
     protected selected({ option }: KbqAutocompleteSelectedEvent, input: HTMLInputElement): void {
-        this.tags.update((tags) => [...tags, option.value]);
+        this.tags.update((tags) => [...tags, option.value()]);
         input.value = '';
         this.tagInputModel.set('');
         option.deselect();

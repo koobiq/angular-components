@@ -619,13 +619,13 @@ export class CustomModalComponent {
 
 @Component({
     selector: 'custom-component',
-    providers: [
-        TestComponentLevelService
-    ],
     imports: [KbqModalModule, KbqButtonModule],
     template: `
         <button kbq-button (click)="open()">Button</button>
-    `
+    `,
+    providers: [
+        TestComponentLevelService
+    ]
 })
 export class CustomComponent {
     constructor(

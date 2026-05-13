@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     KbqCodeBlockFile,
@@ -8,7 +8,7 @@ import {
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
- * @title Code-block with softWrap attribute
+ * @title Code-block with [softWrap]="true" attribute
  */
 @Component({
     selector: 'code-block-with-soft-wrap-example',

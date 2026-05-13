@@ -177,17 +177,16 @@ export class E2eTagEditable {
             padding: var(--kbq-size-xs);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTagListStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTagListStates {}
 
 @Component({
     selector: 'e2e-tag-input-states',
     imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -271,17 +270,17 @@ export class E2eTagListStates {}
             padding: var(--kbq-size-xs);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTagInputStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTagInputStates {}
 
 @Component({
     selector: 'e2e-tag-autocomplete-states',
     imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -350,9 +349,10 @@ export class E2eTagInputStates {}
             height: 300px;
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTagAutocompleteStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTagAutocompleteStates {}

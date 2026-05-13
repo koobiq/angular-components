@@ -11,7 +11,6 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'timepicker-field-validation-example',
     imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqIconModule, LuxonDateModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
@@ -29,6 +28,7 @@ import { DateTime } from 'luxon';
             }
         </kbq-form-field>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerFieldValidationExample {

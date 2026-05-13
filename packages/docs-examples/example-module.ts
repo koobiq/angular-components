@@ -1061,7 +1061,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-with-soft-wrap": {
     "packagePath": "components/code-block/code-block-with-soft-wrap",
-    "title": "Code-block with softWrap attribute",
+    "title": "Code-block with [softWrap]=\"true\" attribute",
     "componentName": "CodeBlockWithSoftWrapExample",
     "files": [
       "code-block-with-soft-wrap-example.ts"

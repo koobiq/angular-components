@@ -30,6 +30,10 @@ import { KbqSidepanelService } from './sidepanel.service';
         KbqSidepanelFooter,
         KbqSidepanelActions
     ],
+    providers: [
+        KbqSidepanelService,
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
+    ],
     exports: [
         KbqSidepanelContainerComponent,
         KbqSidepanelClose,
@@ -37,10 +41,6 @@ import { KbqSidepanelService } from './sidepanel.service';
         KbqSidepanelBody,
         KbqSidepanelFooter,
         KbqSidepanelActions
-    ],
-    providers: [
-        KbqSidepanelService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
     ]
 })
 export class KbqSidepanelModule {}

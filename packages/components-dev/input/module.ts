@@ -80,8 +80,8 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'layout-column layout-align-center-center'
     }

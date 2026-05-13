@@ -122,14 +122,14 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             padding: 1px;
         }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ValidationRequiredLabelExample {
     protected readonly docsReasons = [

@@ -47,10 +47,10 @@ import { KbqInputModule } from '@koobiq/components/input';
             width: 320px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-row'
     }

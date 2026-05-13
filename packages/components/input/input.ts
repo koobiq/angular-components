@@ -37,7 +37,12 @@ let nextUniqueId = 0;
 
 @Directive({
     selector: `input[kbqInput],input[kbqNumberInput]`,
-    exportAs: 'kbqInput',
+    providers: [
+        {
+            provide: KbqFormFieldControl,
+            useExisting: KbqInput
+        }
+    ],
     host: {
         class: 'kbq-input',
         // Native input properties that are overwritten by Angular inputs need to be synced with
@@ -49,12 +54,7 @@ let nextUniqueId = 0;
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)'
     },
-    providers: [
-        {
-            provide: KbqFormFieldControl,
-            useExisting: KbqInput
-        }
-    ]
+    exportAs: 'kbqInput'
 })
 export class KbqInput
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
@@ -322,7 +322,7 @@ export class KbqInput
 
 @Directive({
     selector: 'input[kbqInputMonospace]',
-    exportAs: 'KbqInputMonospace',
-    host: { class: 'kbq-input_monospace' }
+    host: { class: 'kbq-input_monospace' },
+    exportAs: 'KbqInputMonospace'
 })
 export class KbqInputMono {}

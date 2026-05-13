@@ -33,12 +33,12 @@ import { KbqHint } from './hint';
         './hint.scss',
         './hint-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqReactivePasswordHint',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-reactive-password-hint'
-    }
+    },
+    exportAs: 'kbqReactivePasswordHint'
 })
 export class KbqReactivePasswordHint extends KbqHint {
     // @TODO fix types (#DS-2915)

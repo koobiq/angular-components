@@ -40,8 +40,7 @@
                                             [ngTemplateOutlet]="$any(customFileIcon)"
                                             [ngTemplateOutletContext]="{ $implicit: file }"
                                         />
-                                    }
-                                    @if (asyncData.loading) {
+                                    } @else {
                                         <kbq-progress-spinner
                                             class="kbq-file-upload-name-cell__icon"
                                             [mode]="progressMode"

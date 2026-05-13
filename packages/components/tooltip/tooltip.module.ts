@@ -17,10 +17,10 @@ const COMPONENTS = [
 
 @NgModule({
     imports: COMPONENTS,
-    exports: COMPONENTS,
     providers: [
         KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
         KBQ_TOOLTIP_OPEN_TIME_PROVIDER
-    ]
+    ],
+    exports: COMPONENTS
 })
 export class KbqToolTipModule {}

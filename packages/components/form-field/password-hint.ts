@@ -49,8 +49,8 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
         </span>
     `,
     styleUrls: ['hint.scss', 'hint-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.id]': 'id',
         class: 'kbq-hint kbq-password-hint',

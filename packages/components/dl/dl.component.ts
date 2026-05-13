@@ -15,13 +15,13 @@ import { debounceTime, startWith } from 'rxjs/operators';
     selector: 'kbq-dl',
     template: '<ng-content />',
     styleUrls: ['dl.scss', 'dl-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dl',
         '[class.kbq-dl_vertical]': 'vertical',
         '[class.kbq-dl_wide]': 'wide',
         '(window:resize)': 'resizeStream.next($event)'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
     @Input() minWidth: number = 400;
@@ -63,19 +63,19 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
 @Component({
     selector: 'kbq-dt',
     template: '<ng-content />',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dt'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqDtComponent {}
 
 @Component({
     selector: 'kbq-dd',
     template: '<ng-content />',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dd'
-    },
-    encapsulation: ViewEncapsulation.None
+    }
 })
 export class KbqDdComponent {}

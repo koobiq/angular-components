@@ -222,12 +222,12 @@ export class KbqGutterGhostDirective {
     imports: [KbqGutterDirective, KbqGutterGhostDirective],
     templateUrl: './splitter.component.html',
     styleUrls: ['splitter.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqSplitter',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-splitter'
     },
+    exportAs: 'kbqSplitter',
     preserveWhitespaces: false
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {

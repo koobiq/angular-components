@@ -16,7 +16,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
 @Component({
     selector: 'tag-input-editable-example',
     imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, FormsModule, KbqInputModule, KbqTitleModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" editable>
@@ -60,6 +59,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
             margin: var(--kbq-size-xl);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputEditableExample {

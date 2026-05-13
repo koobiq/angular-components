@@ -45,14 +45,14 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     ],
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [KbqSidepanelService],
-    hostDirectives: [CdkScrollable],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-viewer kbq-scrollbar',
         '[attr.data-docsearch-category]': 'structureCategoryId'
-    }
+    },
+    hostDirectives: [CdkScrollable]
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;
@@ -158,8 +158,8 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
         KbqLinkModule
     ],
     templateUrl: './component-overview.template.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-overview'
     }
@@ -183,8 +183,8 @@ export class DocsCdkOverviewComponent extends DocsOverviewComponentBase {
         KbqLinkModule
     ],
     templateUrl: './component-overview.template.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-overview'
     }
@@ -208,8 +208,8 @@ export class DocsComponentOverviewComponent extends DocsOverviewComponentBase {
         KbqLinkModule
     ],
     templateUrl: './component-overview.template.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-overview'
     }
@@ -233,8 +233,8 @@ export class DocsComponentApiComponent extends DocsOverviewComponentBase {
         KbqLinkModule
     ],
     templateUrl: './component-overview.template.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-overview'
     }
@@ -268,8 +268,8 @@ export class DocsCdkApiComponent extends DocsOverviewComponentBase {
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
         </div>
     `,
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-overview'
     }

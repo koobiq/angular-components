@@ -8,13 +8,13 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'form-field-without-borders-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field noBorders>
             <input placeholder="Form field without borders" kbqInput [formControl]="formControl" />
             <kbq-error>Should enter a value</kbq-error>
         </kbq-form-field>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithoutBordersExample {

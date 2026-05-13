@@ -31,7 +31,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 @Component({
     selector: 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule, KbqButtonModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
@@ -50,6 +49,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             <button class="layout-margin-top-l" kbq-button type="submit">Submit form</button>
         </form>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample {

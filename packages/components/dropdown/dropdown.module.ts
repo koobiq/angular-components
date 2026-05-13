@@ -18,13 +18,13 @@ import { KbqDropdown, KbqDropdownStaticContent } from './dropdown.component';
         KbqDropdownTrigger,
         KbqDropdownContent
     ],
+    providers: [KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER],
     exports: [
         KbqDropdown,
         KbqDropdownItem,
         KbqDropdownTrigger,
         KbqDropdownContent,
         KbqDropdownStaticContent
-    ],
-    providers: [KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER]
+    ]
 })
 export class KbqDropdownModule {}

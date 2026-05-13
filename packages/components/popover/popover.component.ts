@@ -66,13 +66,13 @@ export const defaultOffsetYWithArrow = 8;
     ],
     templateUrl: './popover.component.html',
     styleUrls: ['./popover.scss', './popover-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
+    encapsulation: ViewEncapsulation.None,
     host: {
         '(keydown.esc)': 'onEscape()'
     },
-    animations: [kbqPopoverAnimations.popoverState]
+    animations: [kbqPopoverAnimations.popoverState],
+    preserveWhitespaces: false
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-popover';
@@ -171,13 +171,13 @@ export function getKbqPopoverInvalidPositionError(position: string) {
 
 @Directive({
     selector: '[kbqPopover]',
-    exportAs: 'kbqPopover',
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqPopover'
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
     private overlayContainer = inject(OverlayContainer);

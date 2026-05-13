@@ -10,7 +10,7 @@ const COMPONENTS = [
 
 @NgModule({
     imports: COMPONENTS,
-    exports: COMPONENTS,
-    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER]
+    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER],
+    exports: COMPONENTS
 })
 export class KbqScrollbarModule {}

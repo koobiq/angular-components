@@ -71,11 +71,11 @@ import { DateTime } from 'luxon';
             flex-grow: 1;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditDateTimeExample {
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);

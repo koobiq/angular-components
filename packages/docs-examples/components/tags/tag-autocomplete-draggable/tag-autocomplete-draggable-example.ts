@@ -23,7 +23,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Dragg
 @Component({
     selector: 'tag-autocomplete-draggable-example',
     imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" draggable (dropped)="dropped($event)">
@@ -65,6 +64,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Dragg
             margin: var(--kbq-size-5xl);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteDraggableExample {
@@ -103,7 +103,7 @@ export class TagAutocompleteDraggableExample {
     }
 
     protected selected({ option }: KbqAutocompleteSelectedEvent, input: HTMLInputElement): void {
-        this.tags.update((tags) => [...tags, option.value]);
+        this.tags.update((tags) => [...tags, option.value()]);
         input.value = '';
         this.tagInputModel.set('');
         option.deselect();

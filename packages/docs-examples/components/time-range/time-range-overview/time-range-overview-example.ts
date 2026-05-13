@@ -17,10 +17,10 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
     template: `
         <kbq-time-range [formControl]="control" [availableTimeRangeTypes]="availableTimeRangeTypes" />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

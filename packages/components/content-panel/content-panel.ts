@@ -55,30 +55,30 @@ const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
         <ng-content />
     `,
     styleUrl: './content-panel-aside.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqContentPanelAside',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-content-panel-aside'
-    }
+    },
+    exportAs: 'kbqContentPanelAside'
 })
 export class KbqContentPanelAside {}
 
 @Directive({
     selector: '[kbqContentPanelHeaderTitle]',
-    exportAs: 'kbqContentPanelHeaderTitle',
     host: {
         class: 'kbq-content-panel-header-title'
-    }
+    },
+    exportAs: 'kbqContentPanelHeaderTitle'
 })
 export class KbqContentPanelHeaderTitle {}
 
 @Directive({
     selector: '[kbqContentPanelHeaderActions]',
-    exportAs: 'kbqContentPanelHeaderActions',
     host: {
         class: 'kbq-content-panel-header-actions'
-    }
+    },
+    exportAs: 'kbqContentPanelHeaderActions'
 })
 export class KbqContentPanelHeaderActions {}
 
@@ -107,8 +107,8 @@ export class KbqContentPanelHeaderActions {}
         <ng-content />
     `,
     styleUrl: './content-panel-header.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-content-panel-header'
     }
@@ -137,12 +137,12 @@ export class KbqContentPanelHeader {
         </kbq-scrollbar>
     `,
     styleUrl: './content-panel-body.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqContentPanelBody',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-content-panel-body'
-    }
+    },
+    exportAs: 'kbqContentPanelBody'
 })
 export class KbqContentPanelBody {
     /**
@@ -157,8 +157,8 @@ export class KbqContentPanelBody {
         <ng-content />
     `,
     styleUrl: './content-panel-footer.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-content-panel-footer'
     }
@@ -167,9 +167,6 @@ export class KbqContentPanelFooter {}
 
 @Component({
     selector: 'kbq-content-panel',
-    host: {
-        class: 'kbq-content-panel'
-    },
     template: `
         <ng-content select="kbq-content-panel-aside" />
         <div class="kbq-content-panel__content">
@@ -182,8 +179,11 @@ export class KbqContentPanelFooter {}
         './content-panel-tokens.scss',
         './content-panel.scss'
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    host: {
+        class: 'kbq-content-panel'
+    }
 })
 export class KbqContentPanel {
     private readonly destroyRef = inject(DestroyRef);
@@ -261,9 +261,8 @@ export class KbqContentPanel {
         }
     `,
     styleUrl: './content-panel-container.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqContentPanelContainer',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-content-panel-container',
         '[class.kbq-content-panel-container__opened]': 'openedState()',
@@ -272,7 +271,8 @@ export class KbqContentPanel {
     animations: [
         KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION,
         KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION
-    ]
+    ],
+    exportAs: 'kbqContentPanelContainer'
 })
 export class KbqContentPanelContainer {
     /**

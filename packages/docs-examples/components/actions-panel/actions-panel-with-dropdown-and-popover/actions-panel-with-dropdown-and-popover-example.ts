@@ -70,8 +70,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
             gap: var(--kbq-size-s);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [KbqActionsPanel]
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelWithDropdownAndPopoverExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });

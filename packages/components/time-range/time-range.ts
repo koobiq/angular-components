@@ -104,12 +104,12 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
         </ng-template>
     `,
     styleUrls: ['./time-range.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KbqTimeRangeService],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-time-range'
-    },
-    providers: [KbqTimeRangeService]
+    }
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);

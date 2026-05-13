@@ -110,9 +110,13 @@ interface SelectionModelOption {
     ],
     template: '<ng-container kbqTreeNodeOutlet />',
     styleUrls: ['./tree-selection.scss', 'tree-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        KBQ_SELECTION_TREE_VALUE_ACCESSOR,
+        { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
+        { provide: KbqTreeBase, useExisting: KbqTreeSelection }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTreeSelection',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-selection',
         '[attr.tabindex]': 'tabIndex',
@@ -122,11 +126,7 @@ interface SelectionModelOption {
         '(keydown)': 'onKeyDown($event)',
         '(window:resize)': 'updateScrollSize()'
     },
-    providers: [
-        KBQ_SELECTION_TREE_VALUE_ACCESSOR,
-        { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
-        { provide: KbqTreeBase, useExisting: KbqTreeSelection }
-    ]
+    exportAs: 'kbqTreeSelection'
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>

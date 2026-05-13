@@ -38,17 +38,17 @@ import { KbqAppSwitcherApp } from './app-switcher';
         </div>
     `,
     styleUrls: ['app-switcher-dropdown-app.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownApp },
+        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownApp }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqAppSwitcherDropdownApp',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher-dropdown-app',
         '[class.kbq-dropdown-item]': 'false'
     },
-    providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownApp },
-        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownApp }
-    ]
+    exportAs: 'kbqAppSwitcherDropdownApp'
 })
 export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     private sanitizer = inject(DomSanitizer);

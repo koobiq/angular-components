@@ -39,11 +39,11 @@ import { KbqLinkModule } from '@koobiq/components/link';
             opacity: var(--kbq-opacity-disabled);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-column'
-    },
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ValidationMessageGlobalWithLinksExample {
     protected readonly inProgress = signal(false);

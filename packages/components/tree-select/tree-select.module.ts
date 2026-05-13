@@ -34,6 +34,7 @@ import { KbqTreeSelect } from './tree-select.component';
         A11yModule,
         KbqTreeSelect
     ],
+    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER],
     exports: [
         KbqTreeSelect,
         KbqSelectSearch,
@@ -42,7 +43,6 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
         KbqFormFieldModule
-    ],
-    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
+    ]
 })
 export class KbqTreeSelectModule {}

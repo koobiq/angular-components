@@ -10,7 +10,6 @@ import { map } from 'rxjs';
 @Component({
     selector: 'form-field-with-hint-example',
     imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-label>Article title</kbq-label>
@@ -18,6 +17,7 @@ import { map } from 'rxjs';
             <kbq-hint>Max {{ maxLength }} chars ({{ count() }}/{{ maxLength }})</kbq-hint>
         </kbq-form-field>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithHintExample {

@@ -34,10 +34,10 @@ export class DevDocsExamples {}
         DevThemeToggle,
         E2eInlineEditStates
     ],
-    providers: [],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    providers: [],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {}

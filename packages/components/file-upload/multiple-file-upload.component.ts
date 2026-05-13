@@ -77,8 +77,9 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KbqFullScreenDropzoneService],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-multiple-file-upload'
     },
@@ -88,8 +89,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
             inputs: ['id', 'disabled']
         },
         { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
-    ],
-    providers: [KbqFullScreenDropzoneService]
+    ]
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase

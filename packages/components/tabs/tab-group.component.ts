@@ -92,9 +92,9 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     imports: [KbqTabHeader, CdkMonitorFocus, KbqTabLabelWrapper, KbqTooltipTrigger, CdkPortalOutlet, KbqTabBody],
     templateUrl: './tab-group.html',
     styleUrls: ['./tab-group.scss', './tabs-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTabGroup',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-group',
         '[class.kbq-tab-group_filled]': '!transparent',
@@ -105,7 +105,7 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
         '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"',
         '(window:resize)': 'resizeStream.next($event)'
     },
-    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }]
+    exportAs: 'kbqTabGroup'
 })
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     readonly resizeStream = new Subject<Event>();

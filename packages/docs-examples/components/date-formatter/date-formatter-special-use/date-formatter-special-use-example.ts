@@ -9,7 +9,6 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'date-formatter-special-use-example',
     template: '{{ date }}',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: DateAdapter,
@@ -17,7 +16,8 @@ import { DateTime } from 'luxon';
             deps: [KBQ_DATE_LOCALE]
         },
         { provide: DateFormatter, deps: [DateAdapter] }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateFormatterSpecialUseExample {
     date: string;

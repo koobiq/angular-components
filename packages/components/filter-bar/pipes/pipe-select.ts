@@ -38,14 +38,14 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-select.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
     /** control for search options */

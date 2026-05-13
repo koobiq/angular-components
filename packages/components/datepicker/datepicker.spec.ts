@@ -56,7 +56,6 @@ const customErrorStateMatcher: ErrorStateMatcher = {
 
 @Component({
     imports: [KbqDatepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -65,7 +64,8 @@ const customErrorStateMatcher: ErrorStateMatcher = {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class DatepickerWithErrorStateMatcher {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
@@ -75,10 +75,6 @@ class DatepickerWithErrorStateMatcher {
 
 @Component({
     imports: [KbqDatepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -86,7 +82,11 @@ class DatepickerWithErrorStateMatcher {
                 <kbq-datepicker #d />
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class DatepickerWithDIErrorStateMatcher {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
@@ -118,13 +118,13 @@ class LegacyDatepickerControlWithAsyncValidators {
 
 @Component({
     imports: [KbqDatepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <input [kbqDatepicker]="d" [formControl]="control" />
             <kbq-datepicker #d />
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class DatepickerControlWithAsyncValidators {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);

@@ -68,8 +68,8 @@ export const defaultOnSearchTimeout = 0;
         </kbq-form-field>
     `,
     styleUrl: 'filter-search.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-filter-search'
     }

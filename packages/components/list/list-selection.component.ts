@@ -109,9 +109,9 @@ export class KbqListCopyEvent<T> {
         <ng-content />
     `,
     styleUrls: ['./list.scss', 'list-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqListSelection',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-list-selection',
         '[attr.tabindex]': 'tabIndex',
@@ -121,7 +121,7 @@ export class KbqListCopyEvent<T> {
         '(blur)': 'blur()',
         '(window:resize)': 'updateScrollSize()'
     },
-    providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
+    exportAs: 'kbqListSelection',
     preserveWhitespaces: false
 })
 export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
@@ -673,9 +673,12 @@ export class KbqListOptionCaption {}
         KbqActionContainer
     ],
     templateUrl: './list-option.html',
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqListOption },
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqListOption',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-list-option',
         '[class.kbq-selected]': 'selected',
@@ -690,11 +693,8 @@ export class KbqListOptionCaption {}
         '(click)': 'handleClick($event)',
         '(keydown)': 'onKeydown($event)'
     },
-    preserveWhitespaces: false,
-    providers: [
-        { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqListOption },
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqListOption }
-    ]
+    exportAs: 'kbqListOption',
+    preserveWhitespaces: false
 })
 export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     hasFocus: boolean = false;

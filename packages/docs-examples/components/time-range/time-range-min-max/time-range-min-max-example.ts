@@ -21,10 +21,10 @@ import { DateTime } from 'luxon';
             <kbq-time-range [minDate]="minDate" [maxDate]="maxDate" [nonNullable]="false" />
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column layout-align-center-center layout-gap-xs'
     }

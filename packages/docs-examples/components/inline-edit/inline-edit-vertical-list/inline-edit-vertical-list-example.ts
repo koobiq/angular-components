@@ -73,10 +73,10 @@ import { KbqInputModule } from '@koobiq/components/input';
             white-space: nowrap;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditVerticalListExample {
     protected readonly placeholder = 'Placeholder';

@@ -17,7 +17,6 @@ import { DateTime } from 'luxon';
         ReactiveFormsModule,
         KbqLuxonDateModule
     ],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <!-- empty state -->
         <kbq-form-field>
@@ -83,6 +82,7 @@ import { DateTime } from 'luxon';
             padding: var(--kbq-size-xxs);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTimepickerStates'

@@ -14,15 +14,15 @@ import { KbqFormField } from './form-field';
         <i color="contrast-fade" kbq-icon-button="kbq-circle-xmark_16" [autoColor]="true"></i>
     `,
     styleUrl: './cleaner.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCleaner',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-cleaner___EXPERIMENTAL',
         '(click)': 'clean($event)',
         '[style.visibility]': 'visible ? "visible" : "hidden"',
         '[attr.aria-hidden]': '!visible'
-    }
+    },
+    exportAs: 'kbqCleaner'
 })
 export class KbqCleaner {
     // @TODO fix types (#DS-2915)

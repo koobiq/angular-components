@@ -25,8 +25,8 @@ export class DevDocsExamples {}
         FormsModule
     ],
     templateUrl: './template.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     search: string;

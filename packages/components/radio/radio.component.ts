@@ -51,14 +51,14 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
 
 @Directive({
     selector: 'kbq-radio-group',
-    exportAs: 'kbqRadioGroup',
+    providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
     host: {
         role: 'radiogroup',
         class: 'kbq-radio-group',
         '[class.kbq-radio-group_normal]': '!big',
         '[class.kbq-radio-group_big]': 'big'
     },
-    providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR]
+    exportAs: 'kbqRadioGroup'
 })
 export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     @Input() big: boolean = false;
@@ -284,16 +284,16 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     selector: 'kbq-radio-button',
     templateUrl: 'radio.component.html',
     styleUrls: ['radio.scss', 'radio-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqRadioButton',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-radio-button',
         '[attr.id]': 'id',
         '[class.kbq-radio-button_big]': 'radioGroup?.big',
         '[class.kbq-selected]': 'checked',
         '[class.kbq-disabled]': 'disabled'
-    }
+    },
+    exportAs: 'kbqRadioButton'
 })
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
     /** Whether this radio button is checked. */

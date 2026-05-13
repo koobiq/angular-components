@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     KbqCodeBlockFile,
@@ -33,9 +33,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <kbq-toggle [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
 
         <kbq-code-block
-            activeFileIndex="1"
-            canToggleSoftWrap
-            canDownload
+            [canToggleSoftWrap
+            [activeFileIndex]="1"
+            [canDownload]="true"
             [files]="files"
             [hideTabs]="hideTabs()"
             [filled]="filled()"

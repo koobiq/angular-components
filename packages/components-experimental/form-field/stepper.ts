@@ -33,12 +33,12 @@ const getKbqStepperToggleMissingControlError = (): Error => {
         ></i>
     `,
     styleUrl: './stepper.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqStepper',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-stepper___EXPERIMENTAL'
-    }
+    },
+    exportAs: 'kbqStepper'
 })
 export class KbqStepper {
     // @TODO fix types (#DS-2915)

@@ -148,8 +148,8 @@ type ExampleAction = {
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [KbqActionsPanel]
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelCustomCounterExample {
     protected readonly actions: ExampleAction[] = [

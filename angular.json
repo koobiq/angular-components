@@ -141,7 +141,7 @@
                     "options": {
                         "roots": ["apps/docs"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -171,7 +171,7 @@
                     "options": {
                         "roots": ["packages/cdk"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -201,7 +201,7 @@
                     "options": {
                         "roots": ["packages/components"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -231,7 +231,7 @@
                     "options": {
                         "roots": ["packages/components-experimental"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -261,7 +261,7 @@
                     "options": {
                         "roots": ["packages/angular-moment-adapter"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -291,7 +291,7 @@
                     "options": {
                         "roots": ["packages/angular-luxon-adapter"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }

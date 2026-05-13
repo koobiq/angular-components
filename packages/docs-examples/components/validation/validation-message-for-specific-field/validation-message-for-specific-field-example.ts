@@ -61,14 +61,14 @@ import { KbqInputModule } from '@koobiq/components/input';
             padding: 1px;
         }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ValidationMessageForSpecificFieldExample {
     protected readonly form = new FormGroup({

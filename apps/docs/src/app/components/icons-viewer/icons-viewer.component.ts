@@ -48,8 +48,8 @@ const SEARCH_DEBOUNCE_TIME = 300;
     ],
     templateUrl: './icons-viewer.template.html',
     styleUrls: ['./icons-viewer.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-icons-viewer kbq-scrollbar'
     }

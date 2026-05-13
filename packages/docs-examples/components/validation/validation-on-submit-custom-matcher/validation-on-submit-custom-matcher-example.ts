@@ -60,14 +60,14 @@ import { timer } from 'rxjs';
             width: 320px;
         }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-column'
-    },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowRequiredOnSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-column'
+    }
 })
 export class ValidationOnSubmitCustomMatcherExample {
     protected readonly inProgress = signal(false);

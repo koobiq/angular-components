@@ -21,7 +21,6 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
 @Component({
     selector: 'tag-input-draggable-example',
     imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" draggable (dropped)="dropped($event)">
@@ -54,6 +53,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
             margin: var(--kbq-size-5xl);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputDraggableExample {

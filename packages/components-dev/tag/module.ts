@@ -146,14 +146,14 @@ export class DevDocsExamples {}
     ],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         // {
         //     provide: KBQ_TAGS_DEFAULT_OPTIONS,
         //     useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } satisfies KbqTagsDefaultOptions
         // }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements AfterViewInit {
     colors = KbqComponentColors;
@@ -298,10 +298,12 @@ export class DevApp implements AfterViewInit {
     autocompleteOnSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        if (option.value.new) {
-            this.autocompleteSelectedTags.push(option.value.value);
+        const value = option.value();
+
+        if (value.new) {
+            this.autocompleteSelectedTags.push(value.value);
         } else {
-            this.autocompleteSelectedTags.push(option.value);
+            this.autocompleteSelectedTags.push(value);
         }
 
         this.autocompleteTagInput.nativeElement.value = '';

@@ -18,8 +18,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <kbq-error>Minimum 10 characters</kbq-error>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-xl layout-row'
     }

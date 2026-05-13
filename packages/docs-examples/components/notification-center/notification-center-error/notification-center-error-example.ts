@@ -59,10 +59,10 @@ enum NavbarIcItems {
             margin-top: -139px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterErrorExample {
     notificationService = inject(KbqNotificationCenterService);

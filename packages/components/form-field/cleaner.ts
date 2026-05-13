@@ -12,8 +12,8 @@ import { KbqIconButton } from '@koobiq/components/icon';
         <ng-content />
     `,
     styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     exportAs: 'kbqCleaner',
     host: {
         class: 'kbq-cleaner'

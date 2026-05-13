@@ -17,9 +17,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             </button>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class TooltipDisabledExample {}

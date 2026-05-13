@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -69,8 +69,8 @@ export class DevModalLongCustomComponent {
     imports: [KbqButtonModule],
     template: `
         <div>
-            <h2>{{ title }}</h2>
-            <h4>{{ subtitle }}</h4>
+            <h2>{{ title() }}</h2>
+            <h4>{{ subtitle() }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
                 <button kbq-button [color]="componentColors.Contrast" (click)="destroyModal()">
@@ -86,8 +86,8 @@ export class DevModalCustomComponent {
 
     data = inject(KBQ_MODAL_DATA);
 
-    @Input() title: string;
-    @Input() subtitle: string;
+    readonly title = input<string>(undefined!);
+    readonly subtitle = input<string>(undefined!);
 
     constructor(private modal: KbqModalRef) {
         console.log('data: ', this.data);
@@ -108,8 +108,8 @@ export class DevModalCustomComponent {
         </kbq-modal-title>
 
         <kbq-modal-body>
-            <h2>{{ title }}</h2>
-            <h4>{{ subtitle }}</h4>
+            <h2>{{ title() }}</h2>
+            <h4>{{ subtitle() }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
                 <button kbq-button [color]="componentColors.Contrast" (click)="destroyModal()">
@@ -128,8 +128,8 @@ export class DevModalCustomComponent {
 export class DevModalFullCustomComponent {
     componentColors = KbqComponentColors;
 
-    @Input() title: string;
-    @Input() subtitle: string;
+    readonly title = input<string>(undefined!);
+    readonly subtitle = input<string>(undefined!);
 
     constructor(private modal: KbqModalRef) {}
 
@@ -150,8 +150,8 @@ export class DevModalFullCustomComponent {
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     componentColors = KbqComponentColors;

@@ -9,7 +9,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     selector: 'form-field-with-cleaner-example',
     imports: [KbqFormFieldModule, KbqInputModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field class="layout-margin-bottom-m">
             <input kbqInput placeholder="Enter some input" [formControl]="inputFormControl" />
@@ -24,6 +23,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </kbq-select>
         </kbq-form-field>
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithCleanerExample {

@@ -68,9 +68,13 @@ let uniqueIdCounter: number = 0;
     ],
     templateUrl: './tree-option.html',
     styleUrls: ['./tree-option.scss', './tree-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KbqTreeNode, useExisting: KbqTreeOption },
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTreeOption },
+        { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqTreeOption }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTreeOption',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-option',
         '[class.kbq-tree-option_multiple]': 'tree.multiple',
@@ -87,11 +91,7 @@ let uniqueIdCounter: number = 0;
         '(click)': 'selectViaInteraction($event)',
         '(keydown)': 'onKeydown($event)'
     },
-    providers: [
-        { provide: KbqTreeNode, useExisting: KbqTreeOption },
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTreeOption },
-        { provide: KBQ_OPTION_ACTION_PARENT, useExisting: KbqTreeOption }
-    ]
+    exportAs: 'kbqTreeOption'
 })
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     readonly onFocus = new Subject<KbqTreeOptionEvent>();

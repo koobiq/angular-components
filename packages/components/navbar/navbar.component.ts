@@ -186,8 +186,8 @@ export class KbqNavbarContainer {}
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar',
         '[attr.tabindex]': 'tabIndex',

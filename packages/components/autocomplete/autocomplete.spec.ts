@@ -2197,8 +2197,8 @@ class SimpleAutocomplete implements OnDestroy {
         </kbq-autocomplete>
     `,
     styles: ``,
-    encapsulation: ViewEncapsulation.ShadowDom,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.ShadowDom
 })
 class TestShadowDomAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();

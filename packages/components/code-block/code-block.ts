@@ -93,9 +93,8 @@ export class KbqCodeBlockTabLinkContent {}
     ],
     templateUrl: './code-block.html',
     styleUrls: ['./code-block.scss', './code-block-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCodeBlock',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-code-block',
         '[class.kbq-code-block_filled]': 'filled',
@@ -105,7 +104,8 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_no-border]': 'noBorder || filled',
         '[class.kbq-code-block_soft-wrap]': 'softWrap',
         '[class.kbq-code-block_view-all]': 'viewAll'
-    }
+    },
+    exportAs: 'kbqCodeBlock'
 })
 export class KbqCodeBlock implements AfterViewInit {
     @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;

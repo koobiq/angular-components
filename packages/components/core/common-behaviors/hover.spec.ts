@@ -25,9 +25,9 @@ class TestByAttrDirective {}
 
 @Component({
     selector: 'test-by-host-directive',
-    hostDirectives: [KbqHover],
     template: '<div>test</div>',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [KbqHover]
 })
 class TestByHostDirective {}
 

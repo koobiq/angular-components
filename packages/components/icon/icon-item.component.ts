@@ -5,8 +5,8 @@ import { KbqIcon } from './icon.component';
     selector: `[kbq-icon-item]`,
     template: '<ng-content />',
     styleUrls: ['icon-item.scss', 'icon-item-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon-item kbq-icon-item_filled',
         '[class.kbq-icon-item_normal]': '!big',

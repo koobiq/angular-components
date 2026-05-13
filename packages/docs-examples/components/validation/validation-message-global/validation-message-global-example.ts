@@ -125,14 +125,14 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             outline: none;
         }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-column'
-    },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-column'
+    }
 })
 export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');

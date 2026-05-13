@@ -59,13 +59,13 @@ class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
             </ng-template>
         </kbq-multiple-file-upload>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
             useClass: FileUploadConfiguration,
             deps: [KBQ_LOCALE_SERVICE]
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleCustomTextOverviewExample {}

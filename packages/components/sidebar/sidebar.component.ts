@@ -35,10 +35,10 @@ interface KbqSidebarParams {
 
 @Directive({
     selector: '[kbq-sidebar-opened]',
-    exportAs: 'kbqSidebarOpened',
     host: {
         class: 'kbq-sidebar-opened'
-    }
+    },
+    exportAs: 'kbqSidebarOpened'
 })
 export class KbqSidebarOpened {
     @Input() minWidth: string;
@@ -48,10 +48,10 @@ export class KbqSidebarOpened {
 
 @Directive({
     selector: '[kbq-sidebar-closed]',
-    exportAs: 'kbqSidebarClosed',
     host: {
         class: 'kbq-sidebar-closed'
-    }
+    },
+    exportAs: 'kbqSidebarClosed'
 })
 export class KbqSidebarClosed {
     @Input() width: string;
@@ -59,9 +59,10 @@ export class KbqSidebarClosed {
 
 @Component({
     selector: 'kbq-sidebar',
-    exportAs: 'kbqSidebar',
     templateUrl: 'sidebar.component.html',
     styleUrls: ['./sidebar.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-sidebar',
         '[@state]': `{
@@ -72,8 +73,7 @@ export class KbqSidebarClosed {
         '(@state.done)': 'onAnimationDone()'
     },
     animations: [kbqSidebarAnimations.sidebarState],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqSidebar'
 })
 export class KbqSidebar implements OnDestroy, AfterContentInit {
     /**

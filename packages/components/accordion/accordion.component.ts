@@ -48,16 +48,16 @@ interface KbqAccordionState {
     selector: 'kbq-accordion, [kbq-accordion]',
     template: '<ng-content />',
     styleUrls: ['accordion.component.scss', 'accordion-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion',
         '[attr.data-orientation]': 'orientation',
         '(keydown)': 'keydownHandler($event)'
-    },
-    providers: [
-        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }
-    ]
+    }
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     private readonly isBrowser = inject(Platform).isBrowser;

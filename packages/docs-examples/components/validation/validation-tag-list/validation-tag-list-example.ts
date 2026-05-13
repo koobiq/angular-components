@@ -62,14 +62,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <button type="submit" kbq-button>Submit</button>
         </form>
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ValidationTagListExample implements OnInit {
     protected readonly reactiveForm: FormGroup;

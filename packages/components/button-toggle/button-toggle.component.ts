@@ -312,15 +312,15 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         </button>
     `,
     styleUrls: ['button-toggle.scss', 'button-toggle-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqButtonToggle',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-button-toggle',
         '[class]': '"kbq-button-toggle" + iconType',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-selected]': 'checked'
-    }
+    },
+    exportAs: 'kbqButtonToggle'
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;

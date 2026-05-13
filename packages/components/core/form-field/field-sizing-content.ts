@@ -61,10 +61,10 @@ const FIELD_RESIZE_EVENTS = ['input', 'change', 'focus', 'blur'] as const;
  */
 @Directive({
     selector: '[kbqFieldSizingContent]',
-    exportAs: 'kbqFieldSizingContent',
     host: {
         class: 'kbq-field-sizing-content'
-    }
+    },
+    exportAs: 'kbqFieldSizingContent'
 })
 export class KbqFieldSizingContent {
     private readonly element = kbqInjectNativeElement<HTMLInputElement>();

@@ -48,10 +48,10 @@ import { docsData } from './data/typography';
             </table>
         </docs-component-viewer-wrapper>
     `,
+    styleUrls: ['design-tokens.scss'],
     host: {
         class: 'kbq-markdown'
-    },
-    styleUrls: ['design-tokens.scss']
+    }
 })
 export class DocsTypographyTable extends DocsLocaleState {
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);

@@ -55,16 +55,16 @@ export class KbqDropdownStaticContent {}
     templateUrl: 'dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqDropdown',
+    encapsulation: ViewEncapsulation.None,
     animations: [
         kbqDropdownAnimations.transformDropdown,
         kbqDropdownAnimations.fadeInItems
     ],
-    providers: [
-        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
-    ]
+    exportAs: 'kbqDropdown'
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     @ContentChild(KbqFormField) private search?: KbqFormField;

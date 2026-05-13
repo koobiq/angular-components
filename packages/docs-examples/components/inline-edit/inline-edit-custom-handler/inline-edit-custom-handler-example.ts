@@ -46,10 +46,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </div>
         </kbq-inline-edit>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditCustomHandlerExample {
     protected readonly control = new FormControl<KbqFileItem | null>(null);

@@ -202,9 +202,8 @@ export class KbqNavbarIcContainer {}
         './navbar-ic-divider.scss',
         './navbar-ic-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'KbqNavbarIc',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-ic',
         '[class.kbq-collapsed]': '!expanded',
@@ -220,7 +219,8 @@ export class KbqNavbarIcContainer {}
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
     },
-    animations: [toggleNavbarIcAnimation()]
+    animations: [toggleNavbarIcAnimation()],
+    exportAs: 'KbqNavbarIc'
 })
 export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     /** @docs-private */

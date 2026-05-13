@@ -19,16 +19,6 @@ export class KbqTimeRangeTitlePlaceholder {}
     template: `
         <ng-content />
     `,
-    providers: [
-        {
-            provide: KbqFormFieldControl,
-            useExisting: KbqTimeRangeTitleAsControl
-        }
-    ],
-    host: {
-        '[attr.tabindex]': '0',
-        class: 'kbq-time-range-title-as-form-field'
-    },
     styles: `
         :host {
             &:focus-visible {
@@ -38,7 +28,17 @@ export class KbqTimeRangeTitlePlaceholder {}
             align-items: center;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    providers: [
+        {
+            provide: KbqFormFieldControl,
+            useExisting: KbqTimeRangeTitleAsControl
+        }
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.tabindex]': '0',
+        class: 'kbq-time-range-title-as-form-field'
+    }
 })
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     private timeRange = inject(KbqTimeRange);

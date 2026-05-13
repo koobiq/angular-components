@@ -50,7 +50,6 @@ let nextUniqueId = 0;
  */
 @Directive({
     selector: 'input[kbqTagInputFor]',
-    exportAs: 'kbqTagInput, kbqTagInputFor',
     host: {
         class: 'kbq-tag-input',
         '[id]': 'id',
@@ -62,7 +61,8 @@ let nextUniqueId = 0;
         '(input)': 'onInput()',
         '(paste)': 'onPaste($event)'
     },
-    hostDirectives: [KbqFieldSizingContent]
+    hostDirectives: [KbqFieldSizingContent],
+    exportAs: 'kbqTagInput, kbqTagInputFor'
 })
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Whether the control is focused. */

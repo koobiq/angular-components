@@ -58,12 +58,12 @@ export type KbqInlineEditMode = 'view' | 'edit';
 /** @docs-private */
 @Directive({
     selector: '[kbqFocusRegionItem]',
-    exportAs: 'kbqFocusRegionItem',
     host: {
         '(focusin)': 'isFocused = true',
         '(keydown.tab)': 'onTabOut($event)',
         '(keydown.shift.tab)': 'onTabOut($event)'
-    }
+    },
+    exportAs: 'kbqFocusRegionItem'
 })
 export class KbqFocusRegionItem {
     readonly tabOut = output<KeyboardEvent>();
@@ -82,10 +82,10 @@ export class KbqFocusRegionItem {
 /** Directive for easy using styles of inline edit placeholder publicly. */
 @Directive({
     selector: '[kbqInlineEditPlaceholder]',
-    exportAs: 'kbqInlineEditPlaceholder',
     host: {
         class: 'kbq-inline-edit__placeholder'
-    }
+    },
+    exportAs: 'kbqInlineEditPlaceholder'
 })
 export class KbqInlineEditPlaceholder {}
 
@@ -96,7 +96,6 @@ export class KbqInlineEditPlaceholder {}
  */
 @Directive({
     selector: '[kbqInlineEditMenu]',
-    exportAs: 'kbqInlineEditMenu',
     host: {
         role: 'button',
         class: 'kbq-inline-edit__menu',
@@ -104,7 +103,8 @@ export class KbqInlineEditPlaceholder {}
         '(click)': '$event.stopPropagation()',
         '(keydown.enter)': '$event.stopPropagation()',
         '(keydown.space)': '$event.stopPropagation()'
-    }
+    },
+    exportAs: 'kbqInlineEditMenu'
 })
 export class KbqInlineEditMenu {
     /** @docs-private */
@@ -128,9 +128,8 @@ export class KbqInlineEditMenu {
     ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqInlineEdit',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: baseClass,
         // @TODO: resolve tab queue with content-first (DS-4810)
@@ -146,7 +145,8 @@ export class KbqInlineEditMenu {
     hostDirectives: [
         CdkMonitorFocus
     ],
-    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION]
+    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
+    exportAs: 'kbqInlineEdit'
 })
 export class KbqInlineEdit {
     private readonly overlay = inject(Overlay);

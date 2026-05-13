@@ -14,7 +14,6 @@ import { KbqAccordionItem } from './accordion-item';
 
 @Directive({
     selector: '[kbqAccordionContent]',
-    exportAs: 'kbqAccordionContent',
     host: {
         '[attr.id]': 'contentId',
         '[attr.role]': '"region"',
@@ -26,7 +25,8 @@ import { KbqAccordionItem } from './accordion-item';
         '[attr.data-orientation]': 'item.orientation',
 
         '(transitionend)': 'toggle()'
-    }
+    },
+    exportAs: 'kbqAccordionContent'
 })
 export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
     private readonly renderer: Renderer2 = inject(Renderer2);

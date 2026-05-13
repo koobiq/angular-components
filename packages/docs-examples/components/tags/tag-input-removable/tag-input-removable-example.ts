@@ -14,7 +14,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
 @Component({
     selector: 'tag-input-removable-example',
     imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" removable>
@@ -48,6 +47,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
             margin: var(--kbq-size-5xl);
         }
     `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputRemovableExample {

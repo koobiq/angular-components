@@ -115,8 +115,8 @@ type ExampleAction = {
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [KbqActionsPanel]
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });

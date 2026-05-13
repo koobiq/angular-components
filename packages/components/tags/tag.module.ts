@@ -29,6 +29,12 @@ const COMPONENTS = [
         KbqTagAvatar,
         KbqTagRemove
     ],
+    providers: [
+        {
+            provide: KBQ_TAGS_DEFAULT_OPTIONS,
+            useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions
+        }
+    ],
     exports: [
         KbqTagList,
         KbqTag,
@@ -37,12 +43,6 @@ const COMPONENTS = [
         KbqTagAvatar,
         KbqTagRemove,
         ...COMPONENTS
-    ],
-    providers: [
-        {
-            provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions
-        }
     ]
 })
 export class KbqTagsModule {}
