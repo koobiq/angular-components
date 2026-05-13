@@ -173,7 +173,7 @@ function syncNgVersion(
 async function tryJsonParse<T>(path: string): Promise<T> {
     try {
         return JSON.parse(await fs.readFile(path, { encoding: 'utf-8' }));
-    } catch (err) {
+    } catch {
         throw new Error(`Error while parsing json file at ${path}`);
     }
 }

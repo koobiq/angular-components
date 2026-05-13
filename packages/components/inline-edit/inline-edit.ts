@@ -286,7 +286,9 @@ export class KbqInlineEdit {
                 if (!this.isInvalid()) {
                     const tooltipTrigger = this.tooltipTrigger();
 
-                    tooltipTrigger?.isOpen && tooltipTrigger?.hide();
+                    if (tooltipTrigger?.isOpen) {
+                        tooltipTrigger.hide();
+                    }
                 }
             });
 
@@ -311,7 +313,10 @@ export class KbqInlineEdit {
     protected save($event?: Event): void {
         if (this.isInvalid()) {
             $event?.stopPropagation();
-            this.showTooltipOnError() && this.tooltipTrigger()?.show();
+
+            if (this.showTooltipOnError()) {
+                this.tooltipTrigger()?.show();
+            }
         } else {
             this.toggleMode();
             this.saved.emit();

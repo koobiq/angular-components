@@ -82,12 +82,12 @@ export class KbqModalComponent<T = any, R = any>
     // The instance of component opened into the dialog.
     @Input() kbqComponent: Type<T>;
     // If not specified, will use <ng-content>
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqContent: string | TemplateRef<{}> | Type<T>;
     // available when kbqContent is a component
     @Input() kbqComponentParams: any;
     // Default Modal ONLY
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqFooter: string | TemplateRef<{}> | IModalButtonOptions<T>[];
 
     @Input()
@@ -107,7 +107,7 @@ export class KbqModalComponent<T = any, R = any>
     @Input() kbqWrapClassName: string;
     @Input() kbqClassName: string;
     @Input() kbqStyle: object;
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqTitle: string | TemplateRef<{}>;
     @Input() kbqCloseByESC: boolean = true;
 
@@ -425,7 +425,7 @@ export class KbqModalComponent<T = any, R = any>
         this.handleCloseResult(type, (doClose) => doClose !== false);
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
         const trigger = { ok: this.kbqOnOk, cancel: this.kbqOnCancel }[triggerType];
         const loadingKey = { ok: 'kbqOkLoading', cancel: 'kbqCancelLoading' }[triggerType];
@@ -435,7 +435,7 @@ export class KbqModalComponent<T = any, R = any>
         } else if (typeof trigger === 'function') {
             const result = trigger(this.getContentComponent());
             // Users can return "false" to prevent closing by default
-            // eslint-disable-next-line @typescript-eslint/ban-types
+            // eslint-disable-next-line @typescript-eslint/no-empty-object-type
             const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
 
             if (isPromise(result)) {
@@ -454,32 +454,32 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isNonEmptyString(value: {}): boolean {
         return typeof value === 'string' && value !== '';
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isTemplateRef(value: {}): boolean {
         return value instanceof TemplateRef;
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isComponent(value: {}): boolean {
         return value instanceof Type;
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isModalButtons(value: {}): boolean {
         return Array.isArray(value) && value.length > 0;
     }
 
     // Lookup a button's property, if the prop is a function, call & then return the result, otherwise, return itself.
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {} {
         const value = options[prop];
         const args: any[] = [];
@@ -499,7 +499,7 @@ export class KbqModalComponent<T = any, R = any>
 
         if (isPromise(result)) {
             button.loading = true;
-            // eslint-disable-next-line @typescript-eslint/ban-types
+            // eslint-disable-next-line @typescript-eslint/no-empty-object-type
             (result as Promise<{}>).then(() => (button.loading = false)).catch(() => (button.loading = false));
         }
     }

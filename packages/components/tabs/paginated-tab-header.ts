@@ -225,9 +225,11 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
-        typeof this.window.requestAnimationFrame !== 'undefined'
-            ? this.window.requestAnimationFrame(realign)
-            : realign();
+        if (typeof this.window.requestAnimationFrame !== 'undefined') {
+            this.window.requestAnimationFrame(realign);
+        } else {
+            realign();
+        }
 
         // On dir change or window resize, realign the ink bar and update the orientation of
         // the key manager if the direction has changed.

@@ -194,7 +194,7 @@ export class DevApp {
         this.showConfirm();
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     createTplModal(tplContent?: TemplateRef<{}>, tplTitle?: TemplateRef<{}>, tplFooter?: TemplateRef<{}>) {
         this.tplModal = this.modalService.create({
             kbqTitle: tplTitle,

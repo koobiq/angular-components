@@ -663,7 +663,11 @@ export class KbqSelect
 
             if (this.parentFormField) {
                 Promise.resolve().then(() => {
-                    this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+                    if (this._disabled) {
+                        this.parentFormField.stopFocusMonitor();
+                    } else {
+                        this.parentFormField.runFocusMonitor();
+                    }
                 });
             }
 
@@ -1116,7 +1120,7 @@ export class KbqSelect
      *
      * @param fn Callback to be triggered when the component has been touched.
      */
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }

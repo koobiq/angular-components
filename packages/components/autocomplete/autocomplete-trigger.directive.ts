@@ -329,13 +329,13 @@ export class KbqAutocompleteTrigger
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnChange(fn: (value: any) => {}): void {
         this.onChange = fn;
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }

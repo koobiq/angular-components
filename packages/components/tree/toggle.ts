@@ -55,9 +55,11 @@ export class KbqTreeNodeToggleBaseDirective<T> {
             return;
         }
 
-        this.recursive
-            ? this.tree.treeControl.toggleDescendants(this.treeNode.data)
-            : this.tree.treeControl.toggle(this.treeNode.data);
+        if (this.recursive) {
+            this.tree.treeControl.toggleDescendants(this.treeNode.data);
+        } else {
+            this.tree.treeControl.toggle(this.treeNode.data);
+        }
 
         event.stopPropagation();
     }

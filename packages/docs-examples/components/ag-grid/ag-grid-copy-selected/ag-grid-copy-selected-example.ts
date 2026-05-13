@@ -179,10 +179,11 @@ export class AgGridCopySelectedExample {
     }
 
     protected onCopyDone({ success }: KbqAgGridCopyEvent): void {
-        success &&
+        if (success) {
             this.toast.show({
                 title: 'Data copied',
                 caption: `Selected nodes have been copied to clipboard. Format: ${this.copyFormat()}`
             });
+        }
     }
 }

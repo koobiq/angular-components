@@ -33,7 +33,11 @@ export class DocsDocStates {
     }
 
     toggleNavbarMenu() {
-        this._navbarMenu.value === DocsNavbarState.Closed ? this.openNavbarMenu() : this.closeNavbarMenu();
+        if (this._navbarMenu.value === DocsNavbarState.Closed) {
+            this.openNavbarMenu();
+        } else {
+            this.closeNavbarMenu();
+        }
     }
 
     scrollUp() {

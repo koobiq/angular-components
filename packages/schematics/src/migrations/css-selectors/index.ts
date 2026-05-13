@@ -16,7 +16,7 @@ export default function cssSelectors(options: Schema): Rule {
             const projectDefinition = await setupOptions(project, tree);
 
             targetDir = projectDefinition ? tree.getDir(projectDefinition.root) : tree;
-        } catch (e) {
+        } catch {
             targetDir = tree;
         }
 

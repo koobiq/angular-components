@@ -6,7 +6,6 @@ import {
     Component,
     ContentChild,
     ElementRef,
-    HostListener,
     Inject,
     Input,
     OnDestroy,
@@ -43,7 +42,10 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         '[class.kbq-disabled]': 'disabled',
 
         '[attr.disabled]': 'disabled || null',
-        '[attr.tabindex]': 'getTabIndex()'
+        '[attr.tabindex]': 'getTabIndex()',
+
+        '(click)': 'checkDisabled($event)',
+        '(mouseenter)': 'handleMouseEnter()'
     },
     exportAs: 'kbqDropdownItem'
 })
@@ -132,24 +134,16 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
         return this.disabled ? '-1' : '0';
     }
 
-    /** Prevents the default element actions if it is disabled. */
-    // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-    // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-    // ViewEngine they're overwritten.
-    // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-    @HostListener('click', ['$event']) checkDisabled(event: Event): void {
+    /** Prevents the default element actions if it is disabled. Bound via `host` metadata. */
+    checkDisabled(event: Event): void {
         if (this.disabled) {
             event.preventDefault();
             event.stopPropagation();
         }
     }
 
-    /** Emits to the hover stream. */
-    // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-    // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-    // ViewEngine they're overwritten.
-    // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-    @HostListener('mouseenter') handleMouseEnter() {
+    /** Emits to the hover stream. Bound via `host` metadata. */
+    handleMouseEnter() {
         this.hovered.next(this);
         this.focus('mouse');
     }

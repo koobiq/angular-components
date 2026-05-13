@@ -186,7 +186,11 @@ export class KbqDatepicker<D> implements OnDestroy {
     }
 
     set opened(value: boolean) {
-        coerceBooleanProperty(value) ? this.open() : this.close();
+        if (coerceBooleanProperty(value)) {
+            this.open();
+        } else {
+            this.close();
+        }
     }
 
     private _opened = false;
@@ -388,7 +392,11 @@ export class KbqDatepicker<D> implements OnDestroy {
             return;
         }
 
-        this._opened ? this.close() : this.open();
+        if (this._opened) {
+            this.close();
+        } else {
+            this.open();
+        }
     }
 
     /** Destroys the current overlay. */

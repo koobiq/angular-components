@@ -591,7 +591,7 @@ export class KbqTreeSelection
     /** `View -> model callback called when select has been touched` */
     onTouched = () => {};
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }

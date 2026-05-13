@@ -323,12 +323,20 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     // Sets the active item to the next enabled item in the list.
     setNextItemActive(): void {
-        this._activeItemIndex < 0 ? this.setFirstItemActive() : this.setActiveItemByDelta(1);
+        if (this._activeItemIndex < 0) {
+            this.setFirstItemActive();
+        } else {
+            this.setActiveItemByDelta(1);
+        }
     }
 
     // Sets the active item to a previous enabled item in the list.
     setPreviousItemActive(): void {
-        this._activeItemIndex < 0 && this.wrap ? this.setLastItemActive() : this.setActiveItemByDelta(-1);
+        if (this._activeItemIndex < 0 && this.wrap) {
+            this.setLastItemActive();
+        } else {
+            this.setActiveItemByDelta(-1);
+        }
     }
 
     setNextPageItemActive(delta: number = this.scrollSize): void {
@@ -383,7 +391,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * depending on whether wrap mode is turned on.
      */
     private setActiveItemByDelta(delta: number): void {
-        this.wrap ? this.setActiveInWrapMode(delta) : this.setActiveInDefaultMode(delta);
+        if (this.wrap) {
+            this.setActiveInWrapMode(delta);
+        } else {
+            this.setActiveInDefaultMode(delta);
+        }
     }
 
     /**

@@ -439,7 +439,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         }
 
         this._opened = isOpen;
-        this._opened ? this.dropdownOpened.emit() : this.dropdownClosed.emit();
+
+        if (this._opened) {
+            this.dropdownOpened.emit();
+        } else {
+            this.dropdownClosed.emit();
+        }
 
         if (this.isNested()) {
             this.dropdownItemInstance.highlighted = isOpen;

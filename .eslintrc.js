@@ -435,7 +435,11 @@ const toolsRules = {
     files: ['tools/**/*.ts', 'tools/**/*.js'],
     rules: {
         // plugin:eslint
-        'no-console': 0
+        'no-console': 0,
+
+        // plugin:@typescript-eslint
+        // node-only build scripts may use require() for legacy CommonJS modules
+        '@typescript-eslint/no-require-imports': 0
     }
 };
 
@@ -461,7 +465,11 @@ const cliRules = {
     files: ['packages/cli/**/*.ts', 'packages/cli/**/*.js'],
     rules: {
         // plugin:eslint
-        'no-console': 0
+        'no-console': 0,
+
+        // plugin:@typescript-eslint
+        // node-only CLI scripts may use require() for legacy CommonJS modules
+        '@typescript-eslint/no-require-imports': 0
     }
 };
 

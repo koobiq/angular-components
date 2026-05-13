@@ -561,7 +561,11 @@ export class KbqTag
             case DELETE:
             case BACKSPACE: {
                 // If there is a tag list and it has selected tags, remove them, otherwise remove focused tag.
-                this.tagList?.selected.length ? this.tagList.removeSelected() : this.remove();
+                if (this.tagList?.selected.length) {
+                    this.tagList.removeSelected();
+                } else {
+                    this.remove();
+                }
 
                 // Always prevent so page navigation does not occur
                 event.preventDefault();

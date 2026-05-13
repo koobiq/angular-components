@@ -125,7 +125,11 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     set disabled(value: boolean) {
         this._disabled = value;
 
-        this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
+        if (this._disabled) {
+            this.stopFocusMonitor();
+        } else {
+            this.runFocusMonitor();
+        }
     }
 
     private _disabled: boolean = false;

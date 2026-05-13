@@ -65,9 +65,11 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
 
     /** Toggles a subtree rooted at `node` recursively. */
     toggleDescendants(dataNode: T): void {
-        this.expansionModel.isSelected(dataNode)
-            ? this.collapseDescendants(dataNode)
-            : this.expandDescendants(dataNode);
+        if (this.expansionModel.isSelected(dataNode)) {
+            this.collapseDescendants(dataNode);
+        } else {
+            this.expandDescendants(dataNode);
+        }
     }
 
     /** Collapse all dataNodes in the tree. */

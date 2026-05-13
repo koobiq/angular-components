@@ -15,8 +15,7 @@ export class DocsIconItems {
     allIcons: DocsIconItem[] = [];
     sizes: Set<number> = new Set();
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    constructor(ICONS: Object) {
+    constructor(ICONS: object) {
         this.allIcons = Object.keys(ICONS).map((id) => {
             const { codepoint, tags, description } = ICONS[id];
 
