@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -71,7 +72,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
                 class="layout-margin-bottom-s"
                 type="color"
                 style="width:100%;"
-                [(ngModel)]="data.value"
+                [formControl]="control"
                 (keydown.enter)="popover.hide()"
             />
         </ng-template>
@@ -117,8 +118,14 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
     ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.control.valueChanges.subscribe(() => this.stateChanges.next());
-        this.popover.visibleChange.subscribe(() => this.stateChanges.next());
+        this.popover.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible) => {
+            if (!visible) {
+                this.data.value = this.control.value;
+                this.filterBar?.onChangePipe.next(this.data);
+            }
+
+            this.stateChanges.next();
+        });
     }
 
     override open() {
