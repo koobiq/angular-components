@@ -82,7 +82,7 @@ export class KbqIconRegistry {
         });
     }
 
-    /** Registers an SVG sprite file in the default namespace. Icons are looked up by their `<symbol id>`. */
+    /** Registers an SVG sprite file in the default namespace. Icons are looked up by their `symbol id`. */
     addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void {
         this.addSvgIconSetInNamespace('', url, options);
     }
@@ -104,8 +104,8 @@ export class KbqIconRegistry {
     }
 
     /**
-     * Returns an Observable that emits a cloned SVGElement for the given name.
-     * Accepts "namespace:name" syntax or explicit namespace argument.
+     * Emits a cloned SVGElement for the given name.
+     * Accepts "namespace:name" syntax.
      */
     getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
         let resolvedNs = namespace;
