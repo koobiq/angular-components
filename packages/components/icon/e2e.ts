@@ -164,25 +164,20 @@ export class E2eIconStateAndStyle {
     ],
     providers: [
         // KbqIconRegistry,
-        // kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name}.svg`)
+        // kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`)
     ],
     template: `
         <table style="max-width: 120px">
             <tr>
                 <td><i kbq-icon="kbq-chevron-down-s_16"></i></td>
-                <td><i kbq-icon="chevron-down-s_16"></i></td>
 
                 <td><i kbq-icon="kbq-arrow-up-from-line_24"></i></td>
-                <td><i kbq-icon="arrow-up-from-line_24"></i></td>
 
                 <td><i kbq-icon="kbq-chevron-up_32"></i></td>
-                <td><i kbq-icon="chevron-up_32"></i></td>
 
                 <td><i kbq-icon="kbq-file-pdf-o_48"></i></td>
-                <td><i kbq-icon="file-pdf-o_48"></i></td>
 
                 <td><i kbq-icon="kbq-play_64"></i></td>
-                <td><i kbq-icon="play_64"></i></td>
             </tr>
         </table>
 
@@ -191,12 +186,12 @@ export class E2eIconStateAndStyle {
                 <kbq-tag>
                     <i kbq-icon="kbq-circle-check_16"></i>
                     Tag
-                    <i kbqTagRemove kbq-icon-button="xmark-s_16"></i>
+                    <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
                 <kbq-tag>
                     <i kbq-icon="kbq-circle-check_16"></i>
                     Tag
-                    <i kbqTagRemove kbq-icon-button="xmark-s_16"></i>
+                    <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
             </div>
 
@@ -236,23 +231,23 @@ export class E2eIconStateAndStyle {
             <div class="layout-row layout-gap-xs">
                 <kbq-multiple-file-upload>
                     <ng-template #kbqFileIcon>
-                        <i kbq-icon="" class="kbq-file-o_16"></i>
+                        <i kbq-icon="kbq-file-o_16"></i>
                     </ng-template>
                 </kbq-multiple-file-upload>
 
                 <kbq-multiple-file-upload>
                     <ng-template #kbqFileIcon>
-                        <i kbq-icon="" class="kbq-file-o_16"></i>
+                        <i kbq-icon="kbq-file-o_16"></i>
                     </ng-template>
                 </kbq-multiple-file-upload>
             </div>
 
             <div class="layout-row layout-gap-xs">
                 <kbq-file-upload>
-                    <i kbq-icon="file-o_16"></i>
+                    <i kbq-icon="kbq-file-o_16"></i>
                 </kbq-file-upload>
                 <kbq-file-upload>
-                    <i kbq-icon="file-o_16"></i>
+                    <i kbq-icon="kbq-file-o_16"></i>
                 </kbq-file-upload>
             </div>
 
@@ -295,7 +290,7 @@ export class E2eIconStateAndStyle {
 
                 <kbq-dropdown #dropdown="kbqDropdown">
                     <button kbq-dropdown-item>
-                        <i kbq-icon="circle-check_16"></i>
+                        <i kbq-icon="kbq-circle-check_16"></i>
                         Item with icon
                     </button>
                 </kbq-dropdown>

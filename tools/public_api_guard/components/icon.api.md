@@ -8,7 +8,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { DestroyRef } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
@@ -21,6 +20,7 @@ import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
+import { SimpleChanges } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
@@ -51,11 +51,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     protected readonly registry: KbqIconRegistry | null;
-    // (undocumented)
-    protected readonly sanitizer: DomSanitizer;
     // (undocumented)
     small: boolean;
     protected svgIcon: boolean;
