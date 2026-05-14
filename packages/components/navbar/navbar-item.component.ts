@@ -18,6 +18,7 @@ import {
     booleanAttribute,
     inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
@@ -460,8 +461,10 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
             this.dropdownTrigger.openByArrowDown = false;
         }
 
-        this.rectangleElement.state.subscribe(() => {
+        this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => {
             this.collapsed = this.rectangleElement.collapsed;
+
+            this.updateDropdown();
 
             this.changeDetectorRef.detectChanges();
         });
@@ -477,14 +480,20 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     }
 
     ngAfterContentInit(): void {
-        if (this.dropdownTrigger?.dropdown) {
+        this.updateTooltip();
+    }
+
+    updateDropdown(): void {
+        if (!this.dropdownTrigger?.dropdown) return;
+
+        this.dropdownTrigger.demoteOverlay = false;
+
+        if (this.rectangleElement.vertical) {
             this.dropdownTrigger.dropdown.overlapTriggerX = false;
             this.dropdownTrigger.dropdown.overlapTriggerY = true;
             // needs to shift dropdown to the left by 8 pixels
             this.dropdownTrigger.offsetX = -8;
         }
-
-        this.updateTooltip();
     }
 
     updateTooltip(): void {

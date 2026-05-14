@@ -97,6 +97,13 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     @Input() openByArrowDown: boolean = true;
 
     /**
+     * Whether to demote the overlay container z-index so that dropdown overlays
+     * sit below sibling overlays (tooltips, modals, etc.). Set to `false` to
+     * keep the dropdown overlay at the default overlay container z-index.
+     */
+    @Input({ transform: numberAttribute }) demoteOverlay: boolean = true;
+
+    /**
      * Whether focus should be restored when the menu is closed.
      * Note that disabling this option can have accessibility implications
      * and it's up to you to manage focus, if you decide to turn it off.
@@ -639,6 +646,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     }
 
     private addClassToOverlayContainer() {
+        if (!this.demoteOverlay) return;
+
         const overlayContainer = this.overlayContainer?.getContainerElement();
 
         if (overlayContainer.childNodes.length === 1) {

@@ -262,6 +262,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     constructor(overlay: Overlay, elementRef: ElementRef<HTMLElement>, viewContainerRef: ViewContainerRef, scrollStrategy: any, parent: KbqDropdown, dropdownItemInstance: KbqDropdownItem, _dir: Directionality, changeDetectorRef: ChangeDetectorRef, focusMonitor?: FocusMonitor | undefined);
     close(): void;
     data: any;
+    demoteOverlay: boolean;
     get dir(): Direction;
     get dropdown(): KbqDropdownPanel;
     set dropdown(dropdown: KbqDropdownPanel);
@@ -276,6 +277,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     isNested(): boolean;
     // (undocumented)
     lastDestroyReason: DropdownCloseReason;
+    // (undocumented)
+    static ngAcceptInputType_demoteOverlay: unknown;
     // (undocumented)
     static ngAcceptInputType_offsetX: unknown;
     // (undocumented)
@@ -295,7 +298,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     restoreFocus: boolean;
     toggle(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "demoteOverlay": { "alias": "demoteOverlay"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownTrigger, [null, null, null, null, { optional: true; }, { optional: true; self: true; }, { optional: true; }, null, null]>;
 }
