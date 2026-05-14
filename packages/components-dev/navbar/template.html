@@ -62,7 +62,7 @@
             [kbqTooltip]="'Приложения'"
             [kbqTrigger]="'hover'"
         >
-            <i kbq-icon="kbq-bento-menu_16"></i>
+            <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <a href="#" kbq-navbar-brand>
@@ -74,7 +74,7 @@
         </a>
 
         <button kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Панели мониторинга'">
-            <i kbq-icon="kbq-folder_16"></i>
+            <i kbq-icon="kbq-folder_16" color="contrast"></i>
         </button>
 
         <kbq-navbar-item
@@ -113,18 +113,18 @@
 
     <kbq-navbar-container>
         <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Уведомления'">
-            <i kbq-icon="kbq-bell_16"></i>
+            <i kbq-icon="kbq-bell_16" color="contrast"></i>
             <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
         </kbq-navbar-item>
 
         <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Администрирование'">
-            <i kbq-icon="kbq-gear_16"></i>
+            <i kbq-icon="kbq-gear_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-divider />
 
         <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Справка'">
-            <i kbq-icon="kbq-magnifying-glass_16"></i>
+            <i kbq-icon="kbq-magnifying-glass_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-item
@@ -135,7 +135,7 @@
             [kbqTooltip]="'Профиль'"
             [kbqTrigger]="'hover'"
         >
-            <i kbq-icon="kbq-user_16"></i>
+            <i kbq-icon="kbq-user_16" color="contrast"></i>
         </kbq-navbar-item>
     </kbq-navbar-container>
 </kbq-navbar>
@@ -153,7 +153,7 @@
                 [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
             >
-                <i kbq-icon="kbq-bento-menu_16"></i>
+                <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
 
                 <span kbq-navbar-title>
                     App NameApp NameApp NameApp NameApp NameApp NameApp NameApp NameApp NameApp Name
@@ -179,12 +179,12 @@
             </div>
 
             <a href="#" kbq-navbar-item>
-                <i kbq-icon="kbq-folder-open_16"></i>
+                <i kbq-icon="kbq-folder-open_16" color="contrast"></i>
                 <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
             </a>
 
             <button kbq-navbar-item>
-                <i kbq-icon="kbq-folder-open_16"></i>
+                <i kbq-icon="kbq-folder-open_16" color="contrast"></i>
                 <span kbq-navbar-title>Задачи</span>
             </button>
 
@@ -193,7 +193,7 @@
                 [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened"
                 [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
             >
-                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                <i kbq-icon="kbq-ellipsis-vertical_16" color="contrast"></i>
                 <kbq-navbar-title>Еще</kbq-navbar-title>
             </kbq-navbar-item>
 
@@ -208,7 +208,7 @@
                     [kbqTooltipArrow]="false"
                     [kbqTooltipDisabled]="verticalNavbar.expanded"
                 >
-                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
                     @if (verticalNavbar.expanded) {
                         <span>Новый инцидент</span>
                     }
@@ -218,7 +218,7 @@
             <!-- Asynchronous navbar-item -->
             @if (permission$ | async) {
                 <button kbq-navbar-item>
-                    <i kbq-icon="kbq-bsd_16"></i>
+                    <i kbq-icon="kbq-bsd_16" color="contrast"></i>
                     <span kbq-navbar-title>Настройки</span>
                 </button>
             }
@@ -228,7 +228,7 @@
             <!-- Second asynchronous navbar-item -->
             @if (permission$ | async) {
                 <button kbq-navbar-item>
-                    <i kbq-icon="kbq-bsd_16"></i>
+                    <i kbq-icon="kbq-bsd_16" color="contrast"></i>
                     <span kbq-navbar-title>Настройки</span>
                 </button>
             }
@@ -241,7 +241,7 @@
                 [kbqPopoverHeader]="'Центр уведомлений'"
                 [kbqPopoverPlacement]="popUpPlacements.Right"
             >
-                <i kbq-icon="kbq-bell_16"></i>
+                <i kbq-icon="kbq-bell_16" color="contrast"></i>
                 <kbq-navbar-title>Уведомления</kbq-navbar-title>
                 <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
@@ -249,7 +249,7 @@
             <kbq-navbar-divider />
 
             <kbq-navbar-item>
-                <i kbq-icon="kbq-gear_16"></i>
+                <i kbq-icon="kbq-gear_16" color="contrast"></i>
                 <kbq-navbar-title>Настройки</kbq-navbar-title>
             </kbq-navbar-item>
         </kbq-navbar-container>
