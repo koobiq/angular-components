@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -50,6 +50,8 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     private _tabIndex = 0;
 
+    private lastFocusOrigin: FocusOrigin = null;
+
     get optionFocusChanges(): Observable<KbqNavbarFocusableItemEvent> {
         return merge(...this.focusableItems.map((item) => item.onFocus));
     }
@@ -91,6 +93,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef).subscribe((focusOrigin) => {
+            this.lastFocusOrigin = focusOrigin;
             this.keyManager.setFocusOrigin(focusOrigin);
         });
     }
@@ -101,6 +104,12 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     focus(): void {
         if (this.focusableItems.length === 0) {
+            return;
+        }
+
+        // Pointer focus on the navbar host (e.g. clicking empty area) should not
+        // steal keyboard focus into the first item, which would surface its tooltip.
+        if (this.lastFocusOrigin === 'mouse' || this.lastFocusOrigin === 'touch') {
             return;
         }
 
@@ -243,6 +252,8 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     ngAfterViewInit(): void {
+        super.ngAfterViewInit();
+
         // Note: this wait is required for loading and rendering fonts for icons;
         // unfortunately we cannot control font rendering
         setTimeout(this.updateExpandedStateForItems);
