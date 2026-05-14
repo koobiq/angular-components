@@ -16,4 +16,14 @@ test.describe('KbqIconModule', () => {
             await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eIconSvg', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eIconSvg');
+
+        test('svg icons - dropdown open', async ({ page }) => {
+            await page.goto('/E2eIconSvg');
+            await page.getByTestId('e2eIconSvgDropdownTrigger').click();
+            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
+        });
+    });
 });
