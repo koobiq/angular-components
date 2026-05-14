@@ -16,12 +16,15 @@
     align-items: flex-start;
     text-decoration: none;
 
-    & > .kbq-icon:first-child:before {
-        align-self: center;
-        display: flex;
-        height: var(--kbq-size-xl);
-        width: 16px;
-        align-items: center;
+    & > .kbq-icon:first-child {
+        &:before,
+        & > svg {
+            align-self: center;
+            display: flex;
+            height: var(--kbq-size-xl);
+            width: 16px;
+            align-items: center;
+        }
     }
 
     & .kbq-dropdown-item__caption {
