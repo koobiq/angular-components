@@ -3,7 +3,14 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
-import { KbqIcon, KbqIconButton, KbqIconItem, KbqIconModule } from '@koobiq/components/icon';
+import {
+    KbqIcon,
+    KbqIconButton,
+    KbqIconItem,
+    KbqIconModule,
+    KbqIconRegistry,
+    kbqIconsResolverProvider
+} from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqLinkModule } from '../link';
@@ -163,8 +170,8 @@ export class E2eIconStateAndStyle {
         KbqLinkModule
     ],
     providers: [
-        // KbqIconRegistry,
-        // kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`)
+        KbqIconRegistry,
+        kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`)
     ],
     template: `
         <table style="max-width: 120px">
