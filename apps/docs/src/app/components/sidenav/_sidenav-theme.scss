@@ -33,10 +33,6 @@
         }
     }
 
-    .docs-navbar__anchor .kbq-button {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
-    }
-
     @media (width <= 768px) {
         .docs-sidenav__category {
             @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
