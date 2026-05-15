@@ -16,8 +16,7 @@ test.describe('KbqBreadcrumbs overflow', () => {
     });
 });
 
-// @TODO: should be fixed (#DS-4622)
-test.fixme('KbqBreadcrumbsModule', () => {
+test.describe('KbqBreadcrumbsModule', () => {
     test.describe('E2eBreadcrumbsStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eBreadcrumbsStateAndStyle');
         const getBreadcrumbsWithDropdown = (locator: Locator) => locator.getByTestId('e2eBreadcrumbsWithDropdown');

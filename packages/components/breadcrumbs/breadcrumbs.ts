@@ -1,14 +1,11 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ContentChild,
+    computed,
     contentChild,
-    ContentChildren,
-    DestroyRef,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
@@ -17,13 +14,11 @@ import {
     input,
     OnInit,
     Provider,
-    QueryList,
     TemplateRef,
     viewChild,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
@@ -168,7 +163,7 @@ export class KbqBreadcrumbItem {
     },
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
-export class KbqBreadcrumbs implements AfterContentInit {
+export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
@@ -199,15 +194,16 @@ export class KbqBreadcrumbs implements AfterContentInit {
      */
     readonly wrapMode = input<KbqBreadcrumbsWrapMode>(this.configuration.wrapMode);
 
-    @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
-    protected readonly separator?: TemplateRef<any>;
+    protected readonly separator = contentChild(KbqBreadcrumbsSeparator, { read: TemplateRef });
 
-    @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
-    protected readonly items: QueryList<KbqBreadcrumbItem>;
+    protected readonly items = contentChildren(forwardRef(() => KbqBreadcrumbItem));
 
     private readonly result = viewChild(KbqOverflowItemsResult, { read: ElementRef });
 
-    private readonly overflowItems = viewChildren(KbqOverflowItem, { read: ElementRef });
+    private readonly overflowItems = viewChildren(
+        forwardRef(() => KbqOverflowItem),
+        { read: ElementRef }
+    );
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
@@ -216,20 +212,16 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
-    protected get itemsExcludingEdges() {
-        return this.items.toArray().slice(1, -1);
-    }
+    protected readonly itemsExcludingEdges = computed(() => this.items().slice(1, -1));
 
     /**
      * Calculates the total width of visible items based on the `max` value and overflow items.
      * @returns {number | null} The computed max width for overflow items or null if conditions are not met.
      * @docs-private
      */
-    protected get maxWidth(): number | null {
+    protected readonly maxWidth = computed((): number | null => {
         const max = this.max();
 
         const overflowItems = this.overflowItems();
@@ -247,12 +239,12 @@ export class KbqBreadcrumbs implements AfterContentInit {
             return null;
         }
 
-        let visibleItemsWidth = this.getItemWidth(result);
+        let visibleItemsWidth = this.getItemWidth(this.result());
         // Reorders overflow items to prioritize the first and last elements
         const sortedItems = [
             ...overflowItems.slice(1, -1),
-            overflowItems.at(0)!,
-            overflowItems.at(-1)!
+            overflowItems[0],
+            overflowItems[overflowItems.length - 1]
         ];
 
         for (let i = 0; i < max - 1; i++) {
@@ -260,14 +252,10 @@ export class KbqBreadcrumbs implements AfterContentInit {
         }
 
         return visibleItemsWidth;
-    }
+    });
 
     constructor() {
         inject(RdxRovingFocusGroupDirective, { self: true }).orientation = 'horizontal';
-    }
-
-    ngAfterContentInit() {
-        this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
 
     private getItemWidth(item?: ElementRef) {

@@ -206,7 +206,7 @@ export class KbqOverflowItems {
      *
      * @default true
      */
-    readonly enableDefer = input(true, { transform: booleanAttribute });
+    readonly enableDefer = input(false, { transform: booleanAttribute });
 
     private initialMeasurementDone = false;
 
