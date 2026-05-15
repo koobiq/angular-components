@@ -142,6 +142,10 @@
             top: 0;
             right: var(--kbq-size-m);
             padding: var(--kbq-size-s) 0 var(--kbq-size-s) var(--kbq-size-m);
+
+            .kbq-code-block__actionbar__button-stack {
+                border-radius: 0 var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0;
+            }
         }
 
         .kbq-code-block__main {
