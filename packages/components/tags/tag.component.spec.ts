@@ -731,6 +731,56 @@ describe(KbqTag.name, () => {
         expect(isTagSelected(debugElement)).toBeFalsy();
     });
 
+    it('should toggle selection on click for standalone selectable tag', fakeAsync(() => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.selectable.set(true);
+        fixture.detectChanges();
+
+        const tag = getTagElement(debugElement);
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        getFocusMonitor().focusVia(tag, 'mouse');
+        tick();
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+
+        tag.dispatchEvent(new MouseEvent('click'));
+
+        expect(isTagSelected(debugElement)).toBeTruthy();
+
+        tag.dispatchEvent(new MouseEvent('click'));
+
+        expect(isTagSelected(debugElement)).toBeFalsy();
+    }));
+
+    it('should emit KbqTagSelectionChange event on click for standalone selectable tag', fakeAsync(() => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.selectable.set(true);
+        fixture.detectChanges();
+
+        const tag = getTagElement(debugElement);
+
+        getFocusMonitor().focusVia(tag, 'mouse');
+        tick();
+
+        tag.dispatchEvent(new MouseEvent('click'));
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledWith(
+            expect.objectContaining({ selected: true, isUserInput: true })
+        );
+
+        tag.dispatchEvent(new MouseEvent('click'));
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledWith(
+            expect.objectContaining({ selected: false, isUserInput: true })
+        );
+    }));
+
     it('should emit KbqTagSelectionChange event on Ctrl + click', () => {
         const { debugElement, componentInstance } = createComponent(TestTagInsideTagList);
 

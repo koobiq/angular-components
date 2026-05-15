@@ -547,6 +547,10 @@ export class KbqTag
 
             return;
         }
+
+        if (!this.tagList && this.selectable) {
+            this.toggleSelected(true);
+        }
     }
 
     /** @docs-private */
@@ -674,7 +678,7 @@ export class KbqTag
 
                 if (this.hasFocus) {
                     this.onFocus.next({ tag: this, origin });
-                    if (!this.tagList) this.select();
+                    if (!this.tagList && origin !== 'mouse') this.select();
                 } else {
                     this.onBlur.next({ tag: this });
                     this.cancelEditing('blur');
