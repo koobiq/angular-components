@@ -1527,6 +1527,69 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
 }
 
 @Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select [compareWith]="compareWith" [displayWith]="displayWith" [(value)]="value">
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="400">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
+                        {{ option.name }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class CdkVirtualScrollSingleSelectWithDisplayWith {
+    options = OPTIONS.sort().map((name, id) => ({ id, name }));
+    value: { id: number; name: string } | null = null;
+    compareWith = (a: { id: number } | null, b: { id: number } | null) => a?.id === b?.id;
+    displayWith = (v: { name: string }) => v.name;
+
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select [multiple]="true" [compareWith]="compareWith" [displayWith]="displayWith" [(value)]="values">
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="400">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
+                        {{ option.name }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class CdkVirtualScrollMultipleWithDisplayWith {
+    options = OPTIONS.sort().map((name, id) => ({ id, name }));
+    values: { id: number; name: string }[] = [];
+    compareWith = (a: { id: number } | null, b: { id: number } | null) => a?.id === b?.id;
+    displayWith = (v: { name: string }) => v.name;
+
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+}
+
+@Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
 
@@ -5583,6 +5646,83 @@ describe('KbqSelect', () => {
                 while (restore.length) restore.pop()!();
             }
         }));
+
+        describe('displayWith', () => {
+            it('should render trigger label via displayWith for object values (single mode)', fakeAsync(() => {
+                const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithDisplayWith);
+                const instance = singleFixture.componentInstance;
+
+                finishInit(singleFixture);
+
+                instance.value = instance.options[0];
+                singleFixture.detectChanges();
+                flush();
+
+                const triggerText = singleFixture.debugElement
+                    .query(By.css('.kbq-select__matcher-text'))
+                    .nativeElement.textContent.trim();
+
+                expect(triggerText).toBe(instance.options[0].name);
+            }));
+
+            it('should render label for pre-selected value outside viewport (single mode)', fakeAsync(() => {
+                const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithDisplayWith);
+                const instance = singleFixture.componentInstance;
+
+                // Pick a value far past the initial rendered window so its KbqOption is not in the QueryList.
+                const target = instance.options[instance.options.length - 1];
+
+                instance.value = target;
+                finishInit(singleFixture);
+
+                const triggerText = singleFixture.debugElement
+                    .query(By.css('.kbq-select__matcher-text'))
+                    .nativeElement.textContent.trim();
+
+                // selected entry must be a KbqVirtualOption (option's DOM is not in the rendered window)
+                // and its viewValue must come from displayWith.
+                expect(instance.select.selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
+                expect(triggerText).toBe(target.name);
+            }));
+
+            it('should render tag labels via displayWith for non-rendered values (multiple mode)', fakeAsync(() => {
+                const multiFixture = TestBed.createComponent(CdkVirtualScrollMultipleWithDisplayWith);
+                const instance = multiFixture.componentInstance;
+
+                instance.values = [instance.options[0], instance.options[instance.options.length - 1]];
+                finishInit(multiFixture);
+
+                multiFixture.detectChanges();
+                flush();
+
+                const tags: NodeListOf<HTMLElement> = multiFixture.debugElement
+                    .query(By.css('.kbq-select__matcher'))
+                    .nativeElement.querySelectorAll('kbq-tag');
+
+                expect(tags.length).toBe(2);
+                const tagTexts = Array.from(tags).map((tag) => tag.textContent!.trim());
+
+                expect(tagTexts).toContain(instance.options[0].name);
+                expect(tagTexts).toContain(instance.options[instance.options.length - 1].name);
+            }));
+
+            it('should keep using raw value when displayWith is not provided (primitive backward compat)', fakeAsync(() => {
+                // testInstance already uses primitive string OPTIONS without displayWith.
+                testInstance.values = [OPTIONS[0]];
+                fixture.detectChanges();
+                flush();
+
+                testInstance.select.open();
+                finishInit(fixture);
+
+                const tags: NodeListOf<HTMLElement> = fixture.debugElement
+                    .query(By.css('.kbq-select__matcher'))
+                    .nativeElement.querySelectorAll('kbq-tag');
+
+                expect(tags.length).toBeGreaterThan(0);
+                expect(tags[0].textContent!.trim()).toBe(OPTIONS[0]);
+            }));
+        });
     });
 
     describe('ErrorStateMatcher', () => {

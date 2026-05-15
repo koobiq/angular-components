@@ -556,6 +556,14 @@ export class KbqSelect
     }
 
     /**
+     * Function that maps a selected option's value to its display label.
+     * Required when using object values with virtual scroll so that the trigger
+     * (and tags in multiple mode) can render a human-readable label for options
+     * that are not currently rendered in the viewport.
+     */
+    @Input() displayWith?: (value: any) => string;
+
+    /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
      * By default, the internal handler selects all options.
      * @param event The keyboard event that triggered the handler.
@@ -694,10 +702,6 @@ export class KbqSelect
     /** Returns the display value for the trigger element. */
     get triggerValue(): string {
         if (this.empty) return '';
-
-        if (this.selectionModel.selected[0] instanceof KbqVirtualOption) {
-            return this.selectionModel.selected[0].value;
-        }
 
         return this.selectionModel.selected[0].viewValue;
     }
@@ -1617,12 +1621,16 @@ export class KbqSelect
                 source instanceof Array ? source.find((item) => this.compareWith(item, value)) : undefined;
 
             if (correspondingOptionVirtual) {
-                const kbqVirtualOption = new KbqVirtualOption(correspondingOptionVirtual, this.disabled);
+                const kbqVirtualOption = new KbqVirtualOption(
+                    correspondingOptionVirtual,
+                    this.disabled,
+                    this.displayWith?.(correspondingOptionVirtual)
+                );
 
                 this.selectionModel.select(kbqVirtualOption);
             }
         } else if (this.showPreselectedValues) {
-            this.selectionModel.select(new KbqVirtualOption(value));
+            this.selectionModel.select(new KbqVirtualOption(value, false, this.displayWith?.(value)));
         }
 
         return correspondingOption as KbqOption;
