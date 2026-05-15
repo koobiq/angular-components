@@ -1,6 +1,7 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { DOCUMENT } from '@angular/common';
 import {
+    afterNextRender,
     booleanAttribute,
     computed,
     contentChild,
@@ -198,6 +199,17 @@ export class KbqOverflowItems {
      */
     readonly wrap = input<KbqFlexWrap>('nowrap');
 
+    /**
+     * When true, hides the container before the first overflow measurement to prevent
+     * the initial render flicker. The container becomes visible only after the first
+     * measurement completes.
+     *
+     * @default true
+     */
+    readonly enableDefer = input(true, { transform: booleanAttribute });
+
+    private initialMeasurementDone = false;
+
     private readonly orientationConfig: Record<
         KbqOrientation,
         {
@@ -238,6 +250,12 @@ export class KbqOverflowItems {
     constructor() {
         this.setStyles();
         this.setupObservers();
+
+        afterNextRender(() => {
+            if (this.enableDefer() && !this.initialMeasurementDone) {
+                this.renderer.setStyle(this.element, 'visibility', 'hidden');
+            }
+        });
     }
 
     private setupObservers(): void {
@@ -306,6 +324,14 @@ export class KbqOverflowItems {
 
             itemToHide.hide();
             result?.show();
+        }
+
+        if (!this.initialMeasurementDone) {
+            this.initialMeasurementDone = true;
+
+            if (this.enableDefer()) {
+                this.renderer.removeStyle(this.element, 'visibility');
+            }
         }
 
         return items.filter(({ hidden }) => hidden());
