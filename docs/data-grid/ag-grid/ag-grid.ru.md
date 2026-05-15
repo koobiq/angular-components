@@ -38,10 +38,10 @@ import { AgGridModule } from 'ag-grid-angular';
 
 ### Отключение стилей фокуса ячеек
 
-Для этого добавьте атрибут `disableCellFocusStyles` к `<ag-grid-angular>`:
+Для этого добавьте атрибут `kbqAgGridThemeDisableCellFocusStyles` к `<ag-grid-angular>`:
 
 ```html
-<ag-grid-angular kbqAgGridTheme disableCellFocusStyles />
+<ag-grid-angular kbqAgGridTheme kbqAgGridThemeDisableCellFocusStyles />
 ```
 
 ### Перетаскивание строк
@@ -65,6 +65,37 @@ import { AgGridModule } from 'ag-grid-angular';
 Директива `kbqAgGridStatusBar` добавляет настраиваемую панель под таблицей.
 
 <!-- example(ag-grid-status-bar) -->
+
+### Сохранение состояния
+
+Директивы сохраняют и восстанавливают состояние таблицы после перезагрузки страницы.
+
+По умолчанию используется `LocalStorageStore`. При необходимости можно переключиться на `QueryParamsStore`.
+
+| Директива                      | Что сохраняет                           |
+| ------------------------------ | --------------------------------------- |
+| `kbqAgGridColumnState`         | Сортировку, порядок, видимость и ширину |
+| `kbqAgGridFilterState`         | Модели фильтров колонок                 |
+| `kbqAgGridQuickFilterState`    | Значение быстрого фильтра               |
+| `kbqAgGridExternalFilterState` | Значение внешнего фильтра               |
+
+Ниже примеры для каждого типа состояния.
+
+#### Колонки
+
+<!-- example(ag-grid-column-state) -->
+
+#### Фильтры
+
+<!-- example(ag-grid-filter-state) -->
+
+#### Быстрый фильтр
+
+<!-- example(ag-grid-quick-filter-state) -->
+
+#### Внешний фильтр
+
+<!-- example(ag-grid-external-filter-state) -->
 
 ### Пользовательские сочетания клавиш
 

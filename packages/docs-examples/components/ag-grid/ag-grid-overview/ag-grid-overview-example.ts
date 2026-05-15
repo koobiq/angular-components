@@ -50,7 +50,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
         <ag-grid-angular
             kbqAgGridTheme
             kbqAgGridSelectRowsByShiftClick
-            disableCellFocusStyles
+            kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick

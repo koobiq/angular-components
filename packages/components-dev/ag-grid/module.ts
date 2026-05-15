@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
+    AgGridColumnStateExample,
     AgGridCopySelectedExample,
+    AgGridExternalFilterStateExample,
+    AgGridFilterStateExample,
     AgGridOverviewExample,
+    AgGridQuickFilterStateExample,
     AgGridRowActionsExample,
     AgGridRowDraggingExample,
     AgGridStatusBarExample
@@ -15,9 +19,21 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridRowDraggingExample,
         AgGridCopySelectedExample,
         AgGridStatusBarExample,
-        AgGridRowActionsExample
+        AgGridRowActionsExample,
+        AgGridColumnStateExample,
+        AgGridFilterStateExample,
+        AgGridQuickFilterStateExample,
+        AgGridExternalFilterStateExample
     ],
     template: `
+        <ag-grid-external-filter-state-example />
+        <hr />
+        <ag-grid-quick-filter-state-example />
+        <hr />
+        <ag-grid-filter-state-example />
+        <hr />
+        <ag-grid-column-state-example />
+        <hr />
         <ag-grid-overview-example />
         <hr />
         <ag-grid-row-dragging-example />

@@ -65,7 +65,7 @@ export class ExampleAgGridStatusBarComponent {
         <ag-grid-angular
             kbqAgGridTheme
             kbqAgGridSelectRowsByShiftClick
-            disableCellFocusStyles
+            kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick

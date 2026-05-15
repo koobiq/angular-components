@@ -195,6 +195,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-with-dropdown-and-popover-example.ts",
     "importPath": "components/actions-panel"
   },
+  "ag-grid-column-state": {
+    "packagePath": "components/ag-grid/ag-grid-column-state",
+    "title": "AG Grid with `KbqAgGridColumnState` directive",
+    "componentName": "AgGridColumnStateExample",
+    "files": [
+      "ag-grid-column-state-example.ts"
+    ],
+    "selector": "ag-grid-column-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-column-state-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-copy-selected": {
     "packagePath": "components/ag-grid/ag-grid-copy-selected",
     "title": "AG Grid with `KbqAgGridCopyByCtrlC` directive",
@@ -205,6 +217,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "ag-grid-copy-selected-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-copy-selected-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-external-filter-state": {
+    "packagePath": "components/ag-grid/ag-grid-external-filter-state",
+    "title": "AG Grid with `KbqAgGridExternalFilterState` directive",
+    "componentName": "AgGridExternalFilterStateExample",
+    "files": [
+      "ag-grid-external-filter-state-example.ts"
+    ],
+    "selector": "ag-grid-external-filter-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-external-filter-state-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-filter-state": {
+    "packagePath": "components/ag-grid/ag-grid-filter-state",
+    "title": "AG Grid with `KbqAgGridFilterState` directive",
+    "componentName": "AgGridFilterStateExample",
+    "files": [
+      "ag-grid-filter-state-example.ts"
+    ],
+    "selector": "ag-grid-filter-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-filter-state-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-overview": {
@@ -219,6 +255,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ExampleLinkCellRenderer"
     ],
     "primaryFile": "ag-grid-overview-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-quick-filter-state": {
+    "packagePath": "components/ag-grid/ag-grid-quick-filter-state",
+    "title": "AG Grid with `KbqAgGridQuickFilterState` directive",
+    "componentName": "AgGridQuickFilterStateExample",
+    "files": [
+      "ag-grid-quick-filter-state-example.ts"
+    ],
+    "selector": "ag-grid-quick-filter-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-quick-filter-state-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-row-actions": {
@@ -6381,9 +6429,17 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-with-dropdown-and-popover':
 return import('@koobiq/docs-examples/components/actions-panel');
+  case 'ag-grid-column-state':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-copy-selected':
 return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-external-filter-state':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-filter-state':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-overview':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-quick-filter-state':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-actions':
 return import('@koobiq/docs-examples/components/ag-grid');
