@@ -1,5 +1,18 @@
 Notification center — панель уведомлений о работе приложений
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Компонент использует [Scrollbar](/ru/components/scrollbar), поэтому необходимо установить его зависимости:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
+
 <!-- example(notification-center-overview) -->
 
 Список уведомлений открывается из главного меню. В меню показывается счётчик непрочитанных сообщений: при 0 он скрыт, при количестве больше 99 отображается «99+».

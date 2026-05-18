@@ -1,5 +1,18 @@
 `KbqContentPanel` - выезжающая сбоку панель, которая сдвигает соседний контент. Часто используется, чтобы реализовать режим быстрого просмотра сущности из таблицы.
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Компонент использует [Scrollbar](/ru/components/scrollbar), поэтому необходимо установить его зависимости:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
+
 <!-- example(content-panel-overview) -->
 
 ### Грид и контент-панель
