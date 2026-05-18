@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
@@ -10,6 +11,7 @@ import {
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 interface ExampleFilter extends KbqFilter {
@@ -23,8 +25,10 @@ interface ExampleFilter extends KbqFilter {
     selector: 'filter-bar-saved-filters-example',
     imports: [
         KbqFilterBarModule,
+        KbqSearchExpandableModule,
         LuxonDateModule,
-        KbqLinkModule
+        KbqLinkModule,
+        ReactiveFormsModule
     ],
     template: `
         <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates" (filterChange)="onFilterChange($event)">
@@ -45,7 +49,7 @@ interface ExampleFilter extends KbqFilter {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
 
-            <kbq-filter-search />
+            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
 
         <ng-template #toastErrorTitleTemplate let-toast>
@@ -61,6 +65,7 @@ interface ExampleFilter extends KbqFilter {
 })
 export class FilterBarSavedFiltersExample {
     readonly toastService = inject(KbqToastService);
+    readonly searchControl = new FormControl('');
 
     @ViewChild(KbqFilterBar) filterBar: KbqFilterBar;
     @ViewChild('errorToastActions') errorToastActionsTemplate: TemplateRef<any>;

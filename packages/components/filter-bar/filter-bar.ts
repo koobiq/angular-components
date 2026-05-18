@@ -39,14 +39,14 @@ import { KbqFilters } from './filters';
         </div>
 
         <div class="kbq-filter-bar__right">
-            <ng-content select="kbq-filter-search, [kbq-filter-search], kbq-search-expandable" />
+            <ng-content select="kbq-search-expandable" />
 
             <ng-content select="kbq-filter-refresher, [kbq-filter-refresher]" />
         </div>
     `,
     styleUrls: ['filter-bar.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-filter-bar'
     }

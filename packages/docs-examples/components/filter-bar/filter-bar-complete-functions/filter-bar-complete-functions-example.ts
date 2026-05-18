@@ -1,8 +1,25 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    inject,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    KbqFilter,
+    KbqFilterBarModule,
+    KbqPipeTemplate,
+    KbqPipeTypes,
+    KbqSaveFilterEvent
+} from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { DateTime } from 'luxon';
 
 /**
@@ -12,8 +29,10 @@ import { DateTime } from 'luxon';
     selector: 'filter-bar-complete-functions-example',
     imports: [
         KbqFilterBarModule,
+        KbqSearchExpandableModule,
         LuxonDateModule,
-        KbqIcon
+        KbqIcon,
+        ReactiveFormsModule
     ],
     template: `
         <kbq-filter-bar
@@ -26,7 +45,6 @@ import { DateTime } from 'luxon';
                 [filters]="filters"
                 (onRemoveFilter)="onDeleteFilter($event)"
                 (onSave)="onSaveFilter($event)"
-                (onSaveAsNew)="onSaveAsNewFilter($event)"
                 (onSelectFilter)="onSelectFilter($event)"
             />
 
@@ -38,7 +56,7 @@ import { DateTime } from 'luxon';
 
             <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
 
-            <kbq-filter-search (onSearch)="onSearch($event)" />
+            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
 
         <ng-template #optionTemplate let-option="option">
@@ -50,8 +68,17 @@ import { DateTime } from 'luxon';
 })
 export class FilterBarCompleteFunctionsExample implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
+    private readonly destroyRef = inject(DestroyRef);
 
     @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
+
+    readonly searchControl = new FormControl('');
+
+    constructor() {
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => this.onSearch(value ?? ''));
+    }
 
     filters: KbqFilter[] = [
         {
@@ -600,16 +627,12 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
         console.log('onSelectFilter: ', filter);
     }
 
-    onSaveAsNewFilter({ filter, filterBar }) {
-        console.log('filter to save as new: ', filter);
-        console.log('filterBar: ', filterBar);
-
-        this.filters.push(filter);
-        this.activeFilter = filter;
-    }
-
-    onSaveFilter({ filter, filterBar }) {
+    onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
         console.log('filter to save: ', filter);
+
+        if (status === 'newFilter') {
+            this.filters.push(filter);
+        }
 
         this.activeFilter = filter;
         filterBar.filters.filterSavedSuccessfully();

@@ -4,7 +4,6 @@ import { KbqFilterBarButton } from './filter-bar-button';
 import { kbqFilterBarPipesProvider } from './filter-bar.types';
 import { KbqFilterBarRefresher } from './filter-refresher';
 import { KbqFilterReset } from './filter-reset';
-import { KbqFilterBarSearch } from './filter-search';
 import { KbqFilters } from './filters';
 import { KbqPipeAdd } from './pipe-add';
 import { KbqPipeDirective } from './pipe.directive';
@@ -21,14 +20,13 @@ const COMPONENTS = [
     KbqPipeAdd,
     KbqPipeDirective,
     KbqPipeButton,
-    KbqFilterBarSearch,
     KbqPipeTitleDirective,
     KbqPipeState
 ];
 
 @NgModule({
     imports: COMPONENTS,
-    providers: [kbqFilterBarPipesProvider()],
-    exports: COMPONENTS
+    exports: COMPONENTS,
+    providers: [kbqFilterBarPipesProvider()]
 })
 export class KbqFilterBarModule {}

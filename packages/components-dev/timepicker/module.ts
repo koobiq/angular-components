@@ -1,4 +1,4 @@
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -41,14 +41,15 @@ export class DevExamples {}
         ReactiveFormsModule,
         KbqRadioModule,
         JsonPipe,
+        LowerCasePipe,
         DevLocaleSelector,
         KbqIcon,
         DevExamples
     ],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {
     timeFormats = TimeFormats;

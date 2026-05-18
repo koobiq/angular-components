@@ -55,8 +55,8 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
     ],
     templateUrl: 'filters.html',
     styleUrls: ['filters.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-filters'
     },
@@ -129,9 +129,6 @@ export class KbqFilters implements OnInit {
     @Output() readonly onSave = new EventEmitter<KbqSaveFilterEvent>();
     /** Event that is generated whenever the user change a filter. */
     @Output() readonly onChangeFilter = new EventEmitter<KbqSaveFilterEvent>();
-    /** Event that is generated whenever the user saves a filter as new.
-     * @deprecated use onSave with status = newFilter. */
-    @Output() readonly onSaveAsNew = new EventEmitter<KbqSaveFilterEvent>();
     /** Event that is generated whenever the user remove a filter. */
     @Output() readonly onRemoveFilter = new EventEmitter<KbqFilter>();
     /** Event that is generated whenever the user reset a filter changes. */
@@ -240,7 +237,6 @@ export class KbqFilters implements OnInit {
         this.filterName.disable();
 
         if (this.saveNewFilter) {
-            this.onSaveAsNew.emit({ filter, filterBar: this.filterBar });
             this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewFilter });
         } else {
             this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewName });
@@ -353,7 +349,7 @@ export class KbqFilters implements OnInit {
     }
 
     /** Hide the popup and restore focus.
-     * Use this method in the onSave, onSaveAsNew, or onChangeFilter events after the data has been successfully saved. */
+     * Use this method in the onSave or onChangeFilter events after the data has been successfully saved. */
     filterSavedSuccessfully() {
         this.isSaving = false;
         this.popover.preventClose = false;
@@ -364,7 +360,7 @@ export class KbqFilters implements OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
-    /** Shows an error. Use this method in the onSave, onSaveAsNew, or onChangeFilter events if saving data failed. */
+    /** Shows an error. Use this method in the onSave or onChangeFilter events if saving data failed. */
     filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
         this.isSaving = false;
         this.popover.preventClose = false;

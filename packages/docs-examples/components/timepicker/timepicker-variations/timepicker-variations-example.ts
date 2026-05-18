@@ -1,3 +1,4 @@
+import { LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -21,7 +22,8 @@ import { DateTime } from 'luxon';
         KbqToolTipModule,
         KbqTimepickerModule,
         KbqIconModule,
-        LuxonDateModule
+        LuxonDateModule,
+        LowerCasePipe
     ],
     templateUrl: 'timepicker-variations-example.html',
     styleUrls: ['timepicker-variations-example.css'],

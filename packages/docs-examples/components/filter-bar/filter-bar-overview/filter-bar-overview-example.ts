@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
@@ -9,6 +10,7 @@ import {
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
+import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 
 /**
  * @title filter bar
@@ -17,7 +19,9 @@ import {
     selector: 'filter-bar-overview-example',
     imports: [
         KbqFilterBarModule,
-        LuxonDateModule
+        KbqSearchExpandableModule,
+        LuxonDateModule,
+        ReactiveFormsModule
     ],
     template: `
         <kbq-filter-bar
@@ -42,12 +46,14 @@ import {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
 
-            <kbq-filter-search />
+            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarOverviewExample {
+    readonly searchControl = new FormControl('');
+
     filters: KbqFilter[] = [
         {
             name: 'Saved Filter 1',

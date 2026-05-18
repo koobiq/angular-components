@@ -47,7 +47,6 @@ const createFilter = (pipes: KbqPipe[], overrides: Partial<KbqFilter> = {}): Kbq
                 [filters]="filters"
                 (onSelectFilter)="onSelectFilterSpy($event)"
                 (onSave)="onSaveSpy($event)"
-                (onSaveAsNew)="onSaveAsNewSpy($event)"
                 (onRemoveFilter)="onRemoveFilterSpy($event)"
                 (onResetFilterChanges)="onResetFilterChangesSpy($event)"
             />
@@ -81,7 +80,6 @@ class TestComponent {
 
     onSelectFilterSpy = jest.fn();
     onSaveSpy = jest.fn();
-    onSaveAsNewSpy = jest.fn();
     onRemoveFilterSpy = jest.fn();
     onResetFilterChangesSpy = jest.fn();
 }
@@ -292,7 +290,7 @@ describe('KbqFilters', () => {
         }));
 
         describe('when saveNewFilter is true', () => {
-            it('should emit both onSaveAsNew and onSave with status NewFilter', fakeAsync(() => {
+            it('should emit onSave with status NewFilter', fakeAsync(() => {
                 const filter = createFilter([], { name: 'Existing', saved: true });
 
                 initFixture(filter);
@@ -306,7 +304,6 @@ describe('KbqFilters', () => {
                 component.filterName.setValue('New Filter');
                 component.saveAsNew();
 
-                expect(fixture.componentInstance.onSaveAsNewSpy).toHaveBeenCalled();
                 expect(fixture.componentInstance.onSaveSpy).toHaveBeenCalledWith(
                     expect.objectContaining({ status: KbqSaveFilterStatuses.NewFilter })
                 );
@@ -406,23 +403,6 @@ describe('KbqFilters', () => {
                 expect(fixture.componentInstance.onSaveSpy).toHaveBeenCalledWith(
                     expect.objectContaining({ status: KbqSaveFilterStatuses.NewName })
                 );
-            }));
-
-            it('should NOT emit onSaveAsNew', fakeAsync(() => {
-                const filter = createFilter([], { name: 'Existing', saved: true });
-
-                initFixture(filter);
-
-                const component = getFiltersComponent();
-
-                component.openChangeFilterNamePopover();
-                fixture.detectChanges();
-                flush();
-
-                component.filterName.setValue('Renamed');
-                component.saveAsNew();
-
-                expect(fixture.componentInstance.onSaveAsNewSpy).not.toHaveBeenCalled();
             }));
         });
     });
