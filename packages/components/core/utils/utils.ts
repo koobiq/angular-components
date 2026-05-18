@@ -25,15 +25,6 @@ export const isHtmlElementOrNull = (value: unknown): value is HTMLElement | null
     return isHtmlElement(value) || isNull(value);
 };
 
-/**
- * Will be removed in the next major release
- *
- * @deprecated Use `booleanAttribute` instead
- */
-export function toBoolean(value: unknown): boolean {
-    return value != null && `${value}` !== 'false';
-}
-
 export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
     const COMMENT_NODE = 8;
 

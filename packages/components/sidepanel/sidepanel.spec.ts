@@ -192,7 +192,6 @@ describe('KbqSidepanelService', () => {
         expect(sidepanelRef.config.position).toBe(KbqSidepanelPosition.Right);
         expect(sidepanelRef.config.hasBackdrop).toBe(true);
         expect(sidepanelRef.config.disableClose).toBe(false);
-        expect(sidepanelRef.config.requiredBackdrop).toBe(false);
     });
 
     it('should be able to pass in data', () => {
@@ -265,7 +264,7 @@ describe('KbqSidepanelService', () => {
 
     it('should be able to add more than one dark backdrop with multiple sidepanels', fakeAsync(() => {
         sidepanelService.open(SimpleSidepanelExample);
-        sidepanelService.open(SimpleSidepanelExample, { requiredBackdrop: true });
+        sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
 
         tick(1000);

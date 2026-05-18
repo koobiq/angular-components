@@ -25,9 +25,6 @@ import { KbqSidepanelConfig, KbqSidepanelPosition } from './sidepanel-config';
 
 export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepanel-with-indent');
 
-/** @deprecated */
-export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepanel-with-shadow');
-
 @Component({
     selector: 'kbq-sidepanel-container',
     imports: [
@@ -36,8 +33,8 @@ export const KBQ_SIDEPANEL_WITH_SHADOW = new InjectionToken<boolean>('kbq-sidepa
     ],
     templateUrl: './sidepanel-container.component.html',
     styleUrls: ['./sidepanel.scss', './sidepanel-tokens.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-sidepanel-container kbq-sidepanel-container_shadowed',
         '[class]': 'size',

@@ -10,7 +10,6 @@ import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { ApplicationRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
@@ -135,7 +134,7 @@ export const kbqDropdownAnimations: {
 
 // @public
 export class KbqDropdownContent implements OnDestroy {
-    constructor(template: TemplateRef<any>, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef);
+    constructor(template: TemplateRef<any>, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef);
     attach(context?: any): void;
     attached: Subject<void>;
     detach(): void;

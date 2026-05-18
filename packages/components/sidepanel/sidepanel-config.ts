@@ -38,12 +38,6 @@ export class KbqSidepanelConfig<D = any> {
 
     backdropClass?: string;
 
-    /**
-     * When we open multiple sidepanels, backdrop appears only once, except cases then this flag is true.
-     * @deprecated used single shared backdrop instead.
-     */
-    requiredBackdrop?: boolean = false;
-
     /** Whether the user can use escape or clicking outside to close the sidepanel. */
     disableClose?: boolean = false;
 

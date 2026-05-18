@@ -180,9 +180,6 @@ export class KbqCodeBlockTabLinkContent {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkContent, never>;
 }
 
-// @public @deprecated (undocumented)
-export type KbqCodeFile = KbqCodeBlockFile;
-
 // @public
 export type KbqTabLinkTemplateContext = {
     $implicit: KbqCodeBlockFile;

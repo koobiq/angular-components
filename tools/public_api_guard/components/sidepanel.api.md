@@ -44,9 +44,6 @@ export const KBQ_SIDEPANEL_DEFAULT_OPTIONS: InjectionToken<KbqSidepanelConfig<an
 // @public (undocumented)
 export const KBQ_SIDEPANEL_WITH_INDENT: InjectionToken<boolean>;
 
-// @public @deprecated (undocumented)
-export const KBQ_SIDEPANEL_WITH_SHADOW: InjectionToken<boolean>;
-
 // @public
 export class KbqSidepanelActions {
     // (undocumented)
@@ -95,8 +92,6 @@ export class KbqSidepanelConfig<D = any> {
     overlayPanelClass?: string | string[];
     // (undocumented)
     position?: KbqSidepanelPosition;
-    // @deprecated
-    requiredBackdrop?: boolean;
     // (undocumented)
     size?: KbqSidepanelSize;
     trapFocus?: boolean;

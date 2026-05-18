@@ -19,9 +19,6 @@ import { KbqAccordion, KbqAccordionOrientation } from './accordion.component';
 
 let uniqueIdCounter: number = 0;
 
-/** @deprecated Use KbqAccordionItemState instead. */
-export type RdxAccordionItemState = 'open' | 'closed';
-
 export type KbqAccordionItemState = 'open' | 'closed';
 
 @Directive({

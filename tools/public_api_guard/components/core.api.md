@@ -33,8 +33,7 @@ import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i1_4 from '@angular/common';
+import * as i1_3 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -141,18 +140,6 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", true>;
-}
-
-// @public @deprecated (undocumented)
-export enum AnimationCurves {
-    // (undocumented)
-    AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
-    // (undocumented)
-    DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
-    // (undocumented)
-    SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
-    // (undocumented)
-    StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
 }
 
 // @public (undocumented)
@@ -704,23 +691,11 @@ export class FileValidators {
     static maxFileSize(maxSize: number): ValidatorFn;
 }
 
-// @public @deprecated (undocumented)
-export const formatDataSize: (value: number, precision: number, system: KbqUnitSystem) => {
-    value: string;
-    unit: string;
-};
-
 // @public
 export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
 // @public
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): {
-    value: string;
-    unit: string;
-};
-
-// @public @deprecated
-export function getFormattedSizeParts(value: number, _precision: number, system: KbqUnitSystem): {
     value: string;
     unit: string;
 };
@@ -1900,9 +1875,6 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 // @public
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
 
-// @public @deprecated
-export const KBQ_SANITY_CHECKS: InjectionToken<boolean>;
-
 // @public
 export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
@@ -2056,19 +2028,6 @@ export class KbqColorDirective {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective, never>;
 }
 
-// @public @deprecated
-export class KbqCommonModule {
-    constructor(_sanityChecksEnabled: boolean);
-    // (undocumented)
-    protected readonly document: Document;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCommonModule, [{ optional: true; }]>;
-    // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqCommonModule>;
-    // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCommonModule, never, [typeof i1.BidiModule], [typeof i1.BidiModule]>;
-}
-
 // @public (undocumented)
 export enum KbqComponentColors {
     // (undocumented)
@@ -2192,12 +2151,12 @@ export class KbqFormattersModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormattersModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormattersModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof i1_2.AbsoluteDateFormatterPipe, typeof i1_2.AbsoluteDateTimeFormatterPipe, typeof i1_2.AbsoluteDateShortFormatterPipe, typeof i1_2.AbsoluteShortDateTimeFormatterPipe, typeof i1_2.RelativeDateFormatterPipe, typeof i1_2.RelativeDateTimeFormatterPipe, typeof i1_2.RelativeShortDateFormatterPipe, typeof i1_2.RelativeShortDateTimeFormatterPipe, typeof i1_2.RangeDateFormatterPipe, typeof i1_2.RangeShortDateFormatterPipe, typeof i1_2.RangeDateTimeFormatterPipe, typeof i1_2.RangeShortDateTimeFormatterPipe, typeof i1_2.RangeMiddleDateTimeFormatterPipe, typeof i1_2.AbsoluteDateFormatterImpurePipe, typeof i1_2.AbsoluteDateTimeFormatterImpurePipe, typeof i1_2.AbsoluteDateShortFormatterImpurePipe, typeof i1_2.AbsoluteShortDateTimeFormatterImpurePipe, typeof i1_2.RelativeDateFormatterImpurePipe, typeof i1_2.RelativeDateTimeFormatterImpurePipe, typeof i1_2.RelativeShortDateFormatterImpurePipe, typeof i1_2.RelativeShortDateTimeFormatterImpurePipe, typeof i1_2.RangeDateFormatterImpurePipe, typeof i1_2.RangeShortDateFormatterImpurePipe, typeof i1_2.RangeDateTimeFormatterImpurePipe, typeof i1_2.RangeShortDateTimeFormatterImpurePipe, typeof i1_2.RangeMiddleDateTimeFormatterImpurePipe, typeof i2.KbqDataSizePipe, typeof i3.KbqDecimalPipe, typeof i3.KbqRoundDecimalPipe, typeof i3.KbqTableNumberPipe], [typeof i3.KbqDecimalPipe, typeof i3.KbqRoundDecimalPipe, typeof i3.KbqTableNumberPipe, typeof i1_2.AbsoluteDateFormatterPipe, typeof i1_2.AbsoluteDateTimeFormatterPipe, typeof i1_2.AbsoluteDateShortFormatterPipe, typeof i1_2.AbsoluteShortDateTimeFormatterPipe, typeof i1_2.RelativeDateFormatterPipe, typeof i1_2.RelativeDateTimeFormatterPipe, typeof i1_2.RelativeShortDateFormatterPipe, typeof i1_2.RelativeShortDateTimeFormatterPipe, typeof i1_2.RangeDateFormatterPipe, typeof i1_2.RangeShortDateFormatterPipe, typeof i1_2.RangeDateTimeFormatterPipe, typeof i1_2.RangeShortDateTimeFormatterPipe, typeof i1_2.RangeMiddleDateTimeFormatterPipe, typeof i1_2.AbsoluteDateFormatterImpurePipe, typeof i1_2.AbsoluteDateTimeFormatterImpurePipe, typeof i1_2.AbsoluteDateShortFormatterImpurePipe, typeof i1_2.AbsoluteShortDateTimeFormatterImpurePipe, typeof i1_2.RelativeDateFormatterImpurePipe, typeof i1_2.RelativeDateTimeFormatterImpurePipe, typeof i1_2.RelativeShortDateFormatterImpurePipe, typeof i1_2.RelativeShortDateTimeFormatterImpurePipe, typeof i1_2.RangeDateFormatterImpurePipe, typeof i1_2.RangeShortDateFormatterImpurePipe, typeof i1_2.RangeDateTimeFormatterImpurePipe, typeof i1_2.RangeShortDateTimeFormatterImpurePipe, typeof i1_2.RangeMiddleDateTimeFormatterImpurePipe, typeof i2.KbqDataSizePipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof i1.AbsoluteDateFormatterPipe, typeof i1.AbsoluteDateTimeFormatterPipe, typeof i1.AbsoluteDateShortFormatterPipe, typeof i1.AbsoluteShortDateTimeFormatterPipe, typeof i1.RelativeDateFormatterPipe, typeof i1.RelativeDateTimeFormatterPipe, typeof i1.RelativeShortDateFormatterPipe, typeof i1.RelativeShortDateTimeFormatterPipe, typeof i1.RangeDateFormatterPipe, typeof i1.RangeShortDateFormatterPipe, typeof i1.RangeDateTimeFormatterPipe, typeof i1.RangeShortDateTimeFormatterPipe, typeof i1.RangeMiddleDateTimeFormatterPipe, typeof i1.AbsoluteDateFormatterImpurePipe, typeof i1.AbsoluteDateTimeFormatterImpurePipe, typeof i1.AbsoluteDateShortFormatterImpurePipe, typeof i1.AbsoluteShortDateTimeFormatterImpurePipe, typeof i1.RelativeDateFormatterImpurePipe, typeof i1.RelativeDateTimeFormatterImpurePipe, typeof i1.RelativeShortDateFormatterImpurePipe, typeof i1.RelativeShortDateTimeFormatterImpurePipe, typeof i1.RangeDateFormatterImpurePipe, typeof i1.RangeShortDateFormatterImpurePipe, typeof i1.RangeDateTimeFormatterImpurePipe, typeof i1.RangeShortDateTimeFormatterImpurePipe, typeof i1.RangeMiddleDateTimeFormatterImpurePipe, typeof i2.KbqDataSizePipe, typeof i3.KbqDecimalPipe, typeof i3.KbqRoundDecimalPipe, typeof i3.KbqTableNumberPipe], [typeof i3.KbqDecimalPipe, typeof i3.KbqRoundDecimalPipe, typeof i3.KbqTableNumberPipe, typeof i1.AbsoluteDateFormatterPipe, typeof i1.AbsoluteDateTimeFormatterPipe, typeof i1.AbsoluteDateShortFormatterPipe, typeof i1.AbsoluteShortDateTimeFormatterPipe, typeof i1.RelativeDateFormatterPipe, typeof i1.RelativeDateTimeFormatterPipe, typeof i1.RelativeShortDateFormatterPipe, typeof i1.RelativeShortDateTimeFormatterPipe, typeof i1.RangeDateFormatterPipe, typeof i1.RangeShortDateFormatterPipe, typeof i1.RangeDateTimeFormatterPipe, typeof i1.RangeShortDateTimeFormatterPipe, typeof i1.RangeMiddleDateTimeFormatterPipe, typeof i1.AbsoluteDateFormatterImpurePipe, typeof i1.AbsoluteDateTimeFormatterImpurePipe, typeof i1.AbsoluteDateShortFormatterImpurePipe, typeof i1.AbsoluteShortDateTimeFormatterImpurePipe, typeof i1.RelativeDateFormatterImpurePipe, typeof i1.RelativeDateTimeFormatterImpurePipe, typeof i1.RelativeShortDateFormatterImpurePipe, typeof i1.RelativeShortDateTimeFormatterImpurePipe, typeof i1.RangeDateFormatterImpurePipe, typeof i1.RangeShortDateFormatterImpurePipe, typeof i1.RangeDateTimeFormatterImpurePipe, typeof i1.RangeShortDateTimeFormatterImpurePipe, typeof i1.RangeMiddleDateTimeFormatterImpurePipe, typeof i2.KbqDataSizePipe]>;
 }
 
 // @public (undocumented)
@@ -2244,10 +2203,10 @@ export class KbqFormsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormsModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormsModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormsModule, never, [typeof i1_3.KbqForm, typeof i1_3.KbqFormElement], [typeof i1_3.KbqForm, typeof i1_3.KbqFormElement]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormsModule, never, [typeof i1_2.KbqForm, typeof i1_2.KbqFormElement], [typeof i1_2.KbqForm, typeof i1_2.KbqFormElement]>;
 }
 
 // @public
@@ -2262,7 +2221,7 @@ export class KbqHighlightModule {
     // Warning: (ae-forgotten-export) The symbol "i2_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof i1_4.CommonModule, typeof i2_2.KbqHighlightPipe], [typeof i2_2.KbqHighlightPipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof i1_3.CommonModule, typeof i2_2.KbqHighlightPipe], [typeof i2_2.KbqHighlightPipe]>;
 }
 
 // @public (undocumented)
@@ -2548,13 +2507,13 @@ export class KbqOptionModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqOptionModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1_4" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2_3" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i3_2" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof i1_5.KbqPseudoCheckbox, typeof i2_3.KbqOption, typeof i3_2.KbqOptgroup, typeof i4.KbqOptionActionComponent], [typeof i2_3.KbqOption, typeof i3_2.KbqOptgroup, typeof i4.KbqOptionActionComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof i1_4.KbqPseudoCheckbox, typeof i2_3.KbqOption, typeof i3_2.KbqOptgroup, typeof i4.KbqOptionActionComponent], [typeof i2_3.KbqOption, typeof i3_2.KbqOptgroup, typeof i4.KbqOptionActionComponent]>;
 }
 
 // @public
@@ -2830,7 +2789,7 @@ export class KbqPseudoCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqPseudoCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof i1_4.CommonModule, typeof i1_5.KbqPseudoCheckbox], [typeof i1_5.KbqPseudoCheckbox]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof i1_3.CommonModule, typeof i1_4.KbqPseudoCheckbox], [typeof i1_4.KbqPseudoCheckbox]>;
 }
 
 // @public (undocumented)
@@ -3093,14 +3052,6 @@ export const LEFT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
 export const leftIconClassName = "kbq-icon_left";
-
-// @public @deprecated (undocumented)
-export enum MeasurementSystem {
-    // (undocumented)
-    IEC = "IEC",
-    // (undocumented)
-    SI = "SI"
-}
 
 // Warning: (ae-forgotten-export) The symbol "HasElementRef" needs to be exported by the entry point index.d.ts
 //
@@ -3900,19 +3851,6 @@ export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher 
     static ɵprov: i0.ɵɵInjectableDeclaration<ShowRequiredOnSubmitErrorStateMatcher>;
 }
 
-// @public @deprecated (undocumented)
-export interface SizeUnitsConfig {
-    // (undocumented)
-    defaultPrecision: number;
-    // (undocumented)
-    defaultUnitSystem: string;
-    // (undocumented)
-    unitSystems: {
-        [MeasurementSystem.SI]: KbqUnitSystem;
-        [MeasurementSystem.IEC]: KbqUnitSystem;
-    };
-}
-
 // @public (undocumented)
 export enum ThemePalette {
     // (undocumented)
@@ -4179,9 +4117,6 @@ export const tkTMLocaleData: {
         repeat: string;
     };
 };
-
-// @public @deprecated
-export function toBoolean(value: unknown): boolean;
 
 // @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];

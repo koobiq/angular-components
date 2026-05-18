@@ -2,15 +2,6 @@ import { InjectionToken, Provider } from '@angular/core';
 import { enUSFormattersData } from '../../locales';
 
 /**
- * @deprecated Will be removed in next major release. Use `KbqMeasurementSystem` instead.
- * @docs-private
- */
-export enum MeasurementSystem {
-    SI = 'SI',
-    IEC = 'IEC'
-}
-
-/**
  * Available unit systems for file size formatting.
  * - SI (Metric): 1 KB = 1000 bytes
  * - IEC (Binary): 1 KiB = 1024 bytes
@@ -27,19 +18,6 @@ export interface KbqUnitSystem {
     abbreviations: string[];
     base: number;
     power: number;
-}
-
-/**
- * @deprecated Will be removed in next major release. Use `KbqSizeUnitsConfig` instead.
- * @docs-private
- */
-export interface SizeUnitsConfig {
-    defaultUnitSystem: string;
-    defaultPrecision: number;
-    unitSystems: {
-        [MeasurementSystem.SI]: KbqUnitSystem;
-        [MeasurementSystem.IEC]: KbqUnitSystem;
-    };
 }
 
 /**

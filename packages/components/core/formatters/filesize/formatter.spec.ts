@@ -12,7 +12,7 @@ import {
     ruRUFormattersData
 } from '@koobiq/components/core';
 import { KBQ_SIZE_UNITS_DEFAULT_CONFIG, KbqMeasurementSystem } from './config';
-import { formatDataSize, getFormattedSizeParts, getHumanizedBytes } from './size';
+import { getFormattedSizeParts, getHumanizedBytes } from './size';
 
 describe('Filesize formatter', () => {
     describe(getHumanizedBytes.name, () => {
@@ -59,20 +59,6 @@ describe('Filesize formatter', () => {
             expect(result).toBe(expectedResult);
             expect(unit).toBe(expectedUnit);
         });
-    });
-
-    it(formatDataSize.name, () => {
-        const raw = 53094588; // 50.63 MiB
-        const precision = 2;
-        const expected = '50,63';
-
-        const { value } = formatDataSize(
-            raw,
-            precision,
-            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC]
-        );
-
-        expect(value).toBe(expected);
     });
 
     describe(getFormattedSizeParts.name, () => {

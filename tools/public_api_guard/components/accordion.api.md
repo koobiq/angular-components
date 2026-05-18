@@ -242,9 +242,6 @@ export enum KbqAccordionVariant {
     hugSpaceBetween = "hugSpaceBetween"
 }
 
-// @public @deprecated (undocumented)
-export type RdxAccordionItemState = 'open' | 'closed';
-
 // Warnings were encountered during analysis:
 //
 // dist/components/accordion/accordion-content.d.ts:5:153 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
