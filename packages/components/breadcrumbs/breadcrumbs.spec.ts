@@ -14,6 +14,7 @@ import {
     kbqBreadcrumbsConfigurationProvider
 } from './breadcrumbs';
 import { KbqBreadcrumbsModule } from './breadcrumbs.module';
+import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = [], imports: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, ...imports], providers }).compileComponents();
@@ -182,6 +183,60 @@ describe(KbqBreadcrumbs.name, () => {
         }));
     });
 
+    describe('focusable items ordering', () => {
+        function getRovingGroup(fixture: ComponentFixture<any>): RdxRovingFocusGroupDirective {
+            return fixture.debugElement.query(By.directive(KbqBreadcrumbs)).injector.get(RdxRovingFocusGroupDirective);
+        }
+
+        function getExpandButton(fixture: ComponentFixture<any>): HTMLElement | null {
+            return fixture.debugElement.query(By.css('.kbq-breadcrumb__expand'))?.nativeElement ?? null;
+        }
+
+        it('should not place the expand button as the first focusable item on initial render', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+            const expandButton = getExpandButton(fixture);
+
+            expect(focusableItems.length).toBeGreaterThan(0);
+            expect(focusableItems[0]).not.toBe(expandButton);
+        });
+
+        it('should not place the expand button as the first focusable item after items are added', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+
+            fixture.componentInstance.items.push({ text: 'New Item', disabled: false });
+            fixture.detectChanges();
+
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+            const expandButton = getExpandButton(fixture);
+
+            expect(focusableItems.length).toBeGreaterThan(0);
+            expect(focusableItems[0]).not.toBe(expandButton);
+        });
+
+        it('should not place the expand button as the first focusable item after items are removed', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+
+            fixture.componentInstance.items.splice(1, 1);
+            fixture.detectChanges();
+
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+            const expandButton = getExpandButton(fixture);
+
+            expect(focusableItems.length).toBeGreaterThan(0);
+            expect(focusableItems[0]).not.toBe(expandButton);
+        });
+
+        it('should not modify focusableItems when fewer than two items are registered', () => {
+            const fixture = createComponent(SingleBreadcrumb, [provideRouter([])]);
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+
+            // A single breadcrumb renders as $last → focusable=false → nothing registered.
+            // The effect must return early and leave focusableItems unchanged (empty).
+            expect(focusableItems.length).toBe(0);
+        });
+    });
+
     describe('customization', () => {
         it('should use the custom separator template', () => {
             const fixture = createComponent(BreadcrumbsCustomization, [
@@ -305,3 +360,13 @@ class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
         return `./${text}`;
     }
 }
+
+@Component({
+    imports: [KbqBreadcrumbsModule],
+    template: `
+        <kbq-breadcrumbs>
+            <kbq-breadcrumb-item text="Home" />
+        </kbq-breadcrumbs>
+    `
+})
+class SingleBreadcrumb {}

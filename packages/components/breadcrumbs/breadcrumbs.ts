@@ -222,19 +222,13 @@ export class KbqBreadcrumbs {
      * @docs-private
      */
     protected readonly maxWidth = computed((): number | null => {
-        const max = this.max();
-
         const overflowItems = this.overflowItems();
 
-        const result = this.result();
-
         if (
-            !overflowItems ||
             !overflowItems.length ||
-            !result ||
-            max === null ||
-            max >= this.items.length ||
-            max < this.minVisibleItems
+            this.max === null ||
+            this.max >= overflowItems.length ||
+            this.max < this.minVisibleItems
         ) {
             return null;
         }
