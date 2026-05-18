@@ -1,5 +1,6 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { KbqVirtualOption } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -15,7 +16,7 @@ type OptionItem = { id: number; label: string };
         <kbq-form-field>
             <kbq-select
                 [compareWith]="compareWith"
-                [displayWith]="displayWith"
+                [virtualOptionFactory]="virtualOptionFactory"
                 [(value)]="selected"
                 (openedChange)="openedChange($event)"
             >
@@ -47,7 +48,7 @@ export class SelectVirtualScrollExample {
     selected: OptionItem = this.options[0];
 
     readonly compareWith = (a: OptionItem | null, b: OptionItem | null) => a?.id === b?.id;
-    readonly displayWith = (v: OptionItem) => v.label;
+    readonly virtualOptionFactory = (value: OptionItem) => new KbqVirtualOption(value, false, value.label);
 
     openedChange(isOpened: boolean): void {
         if (!isOpened) return;

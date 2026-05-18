@@ -2560,8 +2560,6 @@ export class KbqOptionModule {
 // @public
 export interface KbqOptionParentComponent {
     // (undocumented)
-    displayWith?: (value: any) => string;
-    // (undocumented)
     keyManager?: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
     multiple?: boolean;
@@ -3061,7 +3059,7 @@ export interface KbqValidationOptions {
 
 // @public (undocumented)
 export class KbqVirtualOption extends KbqOptionBase {
-    constructor(value: any, _disabled?: boolean, _displayValue?: string | undefined);
+    constructor(value: any, _disabled?: boolean, _viewValue?: string | undefined);
     // (undocumented)
     deselect(): void;
     // (undocumented)

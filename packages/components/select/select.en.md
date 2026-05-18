@@ -140,7 +140,7 @@ To make navigation easier, selected items can be pinned to the top of the list.
 
 Add `cdk-virtual-scroll-viewport` to your component template to display only visible elements and improve performance.
 
-When option values are objects, provide `displayWith` so the trigger (and tags in multiple mode) can render a human-readable label for the selected option even when its DOM has been recycled by virtual scrolling or was never rendered (for example, a programmatically set initial value outside the initial viewport).
+When option values are objects, provide a `virtualOptionFactory` that maps a value to a `KbqVirtualOption` carrying the display label (and optionally a per-value `disabled` state). The factory is used whenever the selected value's `KbqOption` is not currently rendered — virtual scroll recycled it out of the viewport, or the value was set programmatically before its option was rendered. The same `KbqVirtualOption` powers the trigger label in single mode and tag labels in multiple mode.
 
 <!-- example(select-virtual-scroll) -->
 

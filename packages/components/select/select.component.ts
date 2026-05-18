@@ -556,12 +556,19 @@ export class KbqSelect
     }
 
     /**
-     * Function that maps a selected option's value to its display label.
-     * Required when using object values with virtual scroll so that the trigger
-     * (and tags in multiple mode) can render a human-readable label for options
-     * that are not currently rendered in the viewport.
+     * Factory used to construct a `KbqVirtualOption` for selected values whose
+     * `KbqOption` is not currently rendered (e.g. virtual scroll out of viewport,
+     * programmatically set initial value, `showPreselectedValues`).
+     *
+     * Required when option values are objects so the trigger (and tags in
+     * multiple mode) can render a human-readable label. Also lets consumers
+     * customise per-value `disabled` state or any future `KbqVirtualOption`
+     * fields without adding new `@Input`s.
+     *
+     * Defaults to `new KbqVirtualOption(value, this.disabled)`, which is correct
+     * for primitive values where `value` itself is the display label.
      */
-    @Input() displayWith?: (value: any) => string;
+    @Input() virtualOptionFactory?: (value: any) => KbqVirtualOption;
 
     /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
@@ -1621,19 +1628,24 @@ export class KbqSelect
                 source instanceof Array ? source.find((item) => this.compareWith(item, value)) : undefined;
 
             if (correspondingOptionVirtual) {
-                const kbqVirtualOption = new KbqVirtualOption(
-                    correspondingOptionVirtual,
-                    this.disabled,
-                    this.displayWith?.(correspondingOptionVirtual)
-                );
-
-                this.selectionModel.select(kbqVirtualOption);
+                this.selectionModel.select(this.createVirtualOption(correspondingOptionVirtual));
             }
         } else if (this.showPreselectedValues) {
-            this.selectionModel.select(new KbqVirtualOption(value, false, this.displayWith?.(value)));
+            this.selectionModel.select(this.createVirtualOption(value));
         }
 
         return correspondingOption as KbqOption;
+    }
+
+    /**
+     * Single entry point for building a `KbqVirtualOption` from a raw value.
+     * Uses the consumer-provided `virtualOptionFactory` when set, otherwise
+     * wraps the raw value with the select's current `disabled` state.
+     */
+    private createVirtualOption(value: any): KbqVirtualOption {
+        return this.virtualOptionFactory
+            ? this.virtualOptionFactory(value)
+            : new KbqVirtualOption(value, this.disabled);
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */

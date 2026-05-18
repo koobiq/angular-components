@@ -47,7 +47,6 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     multiSelection?: boolean;
     withVirtualScroll?: boolean;
-    displayWith?: (value: any) => string;
     keyManager?: ActiveDescendantKeyManager<KbqOption>;
     setSelectedOptionsByClick: (option: KbqOption) => void;
 }
@@ -98,7 +97,7 @@ export class KbqVirtualOption extends KbqOptionBase {
     private _selected = false;
 
     get viewValue(): string {
-        return this._displayValue ?? this.value;
+        return this._viewValue ?? this.value;
     }
 
     readonly onSelectionChange = new EventEmitter<KbqOptionSelectionChange<KbqVirtualOption>>();
@@ -106,7 +105,7 @@ export class KbqVirtualOption extends KbqOptionBase {
     constructor(
         public value: any,
         private _disabled: boolean = false,
-        private readonly _displayValue?: string
+        private readonly _viewValue?: string
     ) {
         super();
     }
@@ -196,10 +195,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      */
     @Input()
     get viewValue(): string {
-        if (this.parent?.withVirtualScroll) {
-            return this.parent.displayWith ? this.parent.displayWith(this.value) : this.value;
-        }
-
         return this._viewValue || (this.getHostElement().textContent || '').trim();
     }
 
