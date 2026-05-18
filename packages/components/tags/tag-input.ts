@@ -153,13 +153,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         return !this.inputElement.value;
     }
 
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    countOfSymbolsForUpdateWidth: number = 3;
-
     /** The native input element to which this directive is attached. */
     private inputElement: HTMLInputElement;
 
@@ -285,13 +278,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         $event.preventDefault();
         $event.stopPropagation();
     }
-
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    updateInputWidth(): void {}
 
     /** @docs-private */
     onFocus(): void {

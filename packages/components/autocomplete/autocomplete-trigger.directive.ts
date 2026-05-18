@@ -261,14 +261,6 @@ export class KbqAutocompleteTrigger
         this.attachOverlay();
     }
 
-    /**
-     * @deprecated Will be removed in next major release. Use `open` instead.
-     * @docs-private
-     */
-    openPanel(): void {
-        this.open();
-    }
-
     closePanel(): void {
         if (!this.overlayAttached) {
             return;
@@ -329,13 +321,13 @@ export class KbqAutocompleteTrigger
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnChange(fn: (value: any) => {}): void {
         this.onChange = fn;
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }
@@ -366,7 +358,7 @@ export class KbqAutocompleteTrigger
             if (this.panelOpen || keyCode === TAB) {
                 this.autocomplete.onKeydown(event);
             } else if (!this.panelOpen && keyCode === DOWN_ARROW && this.canOpen()) {
-                this.openPanel();
+                this.open();
             }
 
             const isArrowKey = keyCode === UP_ARROW || keyCode === DOWN_ARROW;
@@ -396,7 +388,7 @@ export class KbqAutocompleteTrigger
             this.onChange(value);
 
             if (this.canOpen() && _getFocusedElementPierceShadowDom() === target) {
-                this.openPanel();
+                this.open();
             }
         }
     }
@@ -412,7 +404,7 @@ export class KbqAutocompleteTrigger
 
     handleClick($event: MouseEvent) {
         if (!this.panelOpen && this.canOpen() && _getFocusedElementPierceShadowDom() === $event.target) {
-            this.openPanel();
+            this.open();
         }
     }
 

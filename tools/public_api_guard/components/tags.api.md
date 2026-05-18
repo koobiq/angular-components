@@ -29,7 +29,6 @@ import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
@@ -38,7 +37,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
 
@@ -187,8 +185,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     // (undocumented)
     autocompleteTrigger?: KbqAutocompleteTrigger | undefined;
     blur(event: FocusEvent): void;
-    // @deprecated
-    countOfSymbolsForUpdateWidth: number;
     get disabled(): boolean;
     set disabled(value: boolean);
     distinct: boolean;
@@ -218,8 +214,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     set tagList(value: KbqTagList);
     // (undocumented)
     triggerValidation(): void;
-    // @deprecated
-    updateInputWidth(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1_2.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
@@ -239,8 +233,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get canShowCleaner(): boolean;
     readonly change: EventEmitter<KbqTagListChange>;
     cleaner: KbqCleaner;
-    // @deprecated
-    compareWith: (o1: any, o2: any) => boolean;
     readonly controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -253,8 +245,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
-    // @deprecated
-    emitOnTagChanges: boolean;
     get empty(): boolean;
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
@@ -265,18 +255,12 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     keydown(event: KeyboardEvent): void;
     keyManager: FocusKeyManager<KbqTag>;
     markAsTouched(): void;
-    // @deprecated (undocumented)
-    multiple: boolean;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_draggable: unknown;
     // (undocumented)
     static ngAcceptInputType_editable: unknown;
-    // (undocumented)
-    static ngAcceptInputType_emitOnTagChanges: unknown;
-    // (undocumented)
-    static ngAcceptInputType_multiple: unknown;
     // (undocumented)
     static ngAcceptInputType_removable: unknown;
     // (undocumented)
@@ -295,8 +279,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     onChange: (value: any) => void;
     onContainerClick(): void;
     onTouched: () => void;
-    // @deprecated
-    orientation: KbqOrientation;
     // (undocumented)
     parentForm: NgForm;
     // (undocumented)
@@ -313,19 +295,13 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     set required(value: boolean);
     selectable: boolean;
     get selected(): KbqTag[];
-    // @deprecated
-    selectionModel: SelectionModel<KbqTag>;
     setDisabledState(isDisabled: boolean): void;
-    // @deprecated
-    setSelectionByValue(_value: any, _isUserInput?: boolean): void;
     get shouldLabelFloat(): boolean;
     readonly stateChanges: Subject<void>;
     get tabIndex(): number | null;
     set tabIndex(value: number);
     protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent>;
     get tagBlurChanges(): Observable<KbqTagEvent>;
-    // @deprecated
-    tagChanges: EventEmitter<any>;
     get tagEditChanges(): Observable<KbqTagEditChange>;
     get tagFocusChanges(): Observable<KbqTagFocusEvent>;
     get tagRemoveChanges(): Observable<KbqTagEvent>;
@@ -342,7 +318,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "emitOnTagChanges": { "alias": "emitOnTagChanges"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i1.CdkDropList; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i1.CdkDropList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagList, [null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
 }

@@ -102,9 +102,9 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '../textarea/textarea.scss',
         '../tags/tag-input-tokens.scss'
     ],
-    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }],
     host: {
         class: 'kbq-form-field',
 
@@ -335,14 +335,6 @@ export class KbqFormField
     get disabled(): boolean {
         return this.control?.disabled;
     }
-
-    /**
-     * @deprecated stepper should be always visible when provided, so this parameter is redundant,
-     * use `hasStepper` instead
-     *
-     * @docs-private
-     */
-    canShowStepper = true;
 
     ngAfterContentInit(): void {
         this.validateControlChild();

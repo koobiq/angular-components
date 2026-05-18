@@ -7,14 +7,13 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_TAGS_DEFAULT_OPTIONS,
-    KbqTag,
     KbqTagInput,
     KbqTagInputEvent,
     KbqTagList,
     KbqTagsDefaultOptions,
     KbqTagsModule
 } from '@koobiq/components/tags';
-import { merge, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
@@ -66,17 +65,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.filteredTags = merge(
-            this.tagList.tagChanges.asObservable().pipe(
-                map((selectedTags: KbqTag[]) => {
-                    const values = selectedTags.map((tag: any) => tag.value);
-
-                    return this.suggestions.filter((tag) => !values.includes(tag));
-                })
-            ),
-
-            this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)))
-        );
+        this.filteredTags = this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)));
     }
 
     addOnBlurFunc(event: FocusEvent) {

@@ -1,7 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
@@ -31,13 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isSelectAll } from '@koobiq/cdk/keycodes';
-import {
-    CanUpdateErrorState,
-    ErrorStateMatcher,
-    isNull,
-    KBQ_VALIDATION,
-    KbqOrientation
-} from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, isNull, KBQ_VALIDATION } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
@@ -80,9 +73,9 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         }
     `,
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
@@ -196,22 +189,6 @@ export class KbqTagList
     get canShowCleaner(): boolean {
         return this.cleaner && this.tags.length > 0;
     }
-
-    /**
-     * @deprecated Unused. Will be removed in next major release.
-     *
-     * @docs-private
-     */
-    @Input({ transform: booleanAttribute }) multiple: boolean = false;
-
-    /**
-     * A function to compare the option values with the selected values. The first argument
-     * is a value from an option. The second is a value from the selection. A boolean
-     * should be returned.
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    @Input() compareWith = (o1: any, o2: any) => o1 === o2;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -332,13 +309,6 @@ export class KbqTagList
     /** Whether the tags in the list are editable. */
     @Input({ transform: booleanAttribute }) editable = false;
 
-    /**
-     * Whether to emit change events when tags are added/removed.
-     *
-     * @deprecated No longer needed. Will be removed in the next major release.
-     */
-    @Input({ transform: booleanAttribute }) emitOnTagChanges = true;
-
     /** Whether the tags in the list are removable. */
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
@@ -390,29 +360,8 @@ export class KbqTagList
     /** @docs-private */
     keyManager: FocusKeyManager<KbqTag>;
 
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    selectionModel: SelectionModel<KbqTag>;
-
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    tagChanges = new EventEmitter<any>();
-
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
-
-    /**
-     * Orientation of the tag list.
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    @Input() orientation: KbqOrientation = 'horizontal';
 
     /** Event emitted when the selected tag list value has been changed by the user. */
     @Output() readonly change: EventEmitter<KbqTagListChange> = new EventEmitter<KbqTagListChange>();
@@ -698,13 +647,6 @@ export class KbqTagList
             this.stateChanges.next();
         }
     }
-
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    setSelectionByValue(_value: any, _isUserInput: boolean = true): void {}
 
     /** When blurred, mark the field as touched when focus moved outside the tag list. */
     blur() {

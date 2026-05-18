@@ -6,8 +6,8 @@ import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
-import { Observable, merge } from 'rxjs';
+import { KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
@@ -105,16 +105,9 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.filteredTags = merge(
-            this.tagList.tagChanges.asObservable().pipe(
-                map((selectedTags: KbqTag[]) => {
-                    const values = selectedTags.map((tag: any) => tag.value);
-
-                    return this.allTags.filter((tag) => !values.includes(tag));
-                })
-            ),
-            this.control.valueChanges.pipe(map((e) => this.onControlValueChanges(e)))
-        ).pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
+        this.filteredTags = this.control.valueChanges
+            .pipe(map((e) => this.onControlValueChanges(e)))
+            .pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
     }
 
     onCreate({ input, value }: KbqTagInputEvent): void {

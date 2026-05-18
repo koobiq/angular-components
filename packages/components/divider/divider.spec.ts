@@ -22,37 +22,14 @@ describe('KbqDivider', () => {
         expect(divider.nativeElement.className).toContain('kbq-divider');
         expect(divider.nativeElement.className).toContain('kbq-divider_vertical');
     });
-
-    it('should apply inset class to inset divider', () => {
-        fixture.componentInstance.inset = true;
-        fixture.detectChanges();
-
-        const divider = fixture.debugElement.query(By.css('kbq-divider'));
-
-        expect(divider.nativeElement.className).toContain('kbq-divider');
-        expect(divider.nativeElement.className).toContain('kbq-divider_inset');
-    });
-
-    it('should apply inset and vertical classes to vertical inset divider', () => {
-        fixture.componentInstance.vertical = true;
-        fixture.componentInstance.inset = true;
-        fixture.detectChanges();
-
-        const divider = fixture.debugElement.query(By.css('kbq-divider'));
-
-        expect(divider.nativeElement.className).toContain('kbq-divider');
-        expect(divider.nativeElement.className).toContain('kbq-divider_inset');
-        expect(divider.nativeElement.className).toContain('kbq-divider_vertical');
-    });
 });
 
 @Component({
     imports: [KbqDividerModule],
     template: `
-        <kbq-divider [vertical]="vertical" [inset]="inset" />
+        <kbq-divider [vertical]="vertical" />
     `
 })
 class KbqDividerTestComponent {
     vertical: boolean;
-    inset: boolean;
 }

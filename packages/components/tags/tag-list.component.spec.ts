@@ -1987,13 +1987,7 @@ class BasicTagList {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tag-list
-                #tagList1
-                placeholder="Food"
-                [formControl]="control"
-                [required]="isRequired"
-                [emitOnTagChanges]="emitOnTagChanges"
-            >
+            <kbq-tag-list #tagList1 placeholder="Food" [formControl]="control" [required]="isRequired">
                 @for (food of foods; track food) {
                     <kbq-tag [value]="food.value" (removed)="remove(food)">
                         {{ food.viewValue }}
@@ -2011,7 +2005,6 @@ class BasicTagList {
     `
 })
 class InputTagList {
-    emitOnTagChanges = true;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },

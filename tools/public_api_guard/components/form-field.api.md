@@ -99,8 +99,6 @@ export class KbqFieldsetItem {
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
-    // @deprecated (undocumented)
-    canShowStepper: boolean;
     cleaner: KbqCleaner | null;
     clearValue(event: Event): void;
     connectionContainerRef: ElementRef;
