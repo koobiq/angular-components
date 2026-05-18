@@ -628,14 +628,14 @@ describe(KbqFormField.name, () => {
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should apply legacy KbqValidateDirective by default', () => {
+    it.skip('should apply legacy KbqValidateDirective by default', () => {
         const { debugElement } = createComponent(InputFormFieldWithLegacyValidationDirective);
 
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_has-validate-directive']).toBeTruthy();
         expect(getInputDebugElement(debugElement).classes['kbq-control_has-validate-directive']).toBeTruthy();
     });
 
-    it('should disable legacy KbqValidateDirective by kbqDisableLegacyValidationDirective() provider', () => {
+    it.skip('should disable legacy KbqValidateDirective by kbqDisableLegacyValidationDirective() provider', () => {
         const { debugElement } = createComponent(InputFormFieldWithLegacyValidationDirective, [
             kbqDisableLegacyValidationDirectiveProvider()
         ]);

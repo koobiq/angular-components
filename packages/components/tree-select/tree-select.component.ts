@@ -62,7 +62,6 @@ import {
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KBQ_VALIDATION,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
@@ -153,13 +152,13 @@ export class KbqTreeSelectChange {
     ],
     templateUrl: 'tree-select.html',
     styleUrls: ['./tree-select.scss', './tree-select-tokens.scss', '../select/select-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
         { provide: KbqTree, useExisting: KbqTreeSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
@@ -193,7 +192,6 @@ export class KbqTreeSelect
 {
     protected readonly isBrowser = inject(Platform).isBrowser;
 
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
 
     /** Whether the component is in an error state. */
@@ -903,7 +901,7 @@ export class KbqTreeSelect
      *
      * @param fn Callback to be triggered when the component has been touched.
      */
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }
@@ -985,13 +983,6 @@ export class KbqTreeSelect
             this.onTouched();
             this.changeDetectorRef.markForCheck();
             this.stateChanges.next();
-
-            if (this.useLegacyValidation && this.ngControl?.control) {
-                const control = this.ngControl.control;
-
-                control.updateValueAndValidity({ emitEvent: false });
-                (control.statusChanges as EventEmitter<string>).emit(control.status);
-            }
         }
     }
 

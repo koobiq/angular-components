@@ -49,7 +49,6 @@ import {
     DateAdapter,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
-    KBQ_VALIDATION,
     KbqErrorStateTracker,
     KbqLocaleService,
     validationTooltipHideDelay,
@@ -360,8 +359,6 @@ export class KbqTimepicker<D>
         this.errorStateTracker.errorState = value;
     }
 
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
-
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
     private readonly validator: ValidatorFn | null;
@@ -486,8 +483,6 @@ export class KbqTimepicker<D>
         if (!newTimeObj) {
             if (!this.viewValue) {
                 this.onChange(null);
-            } else if (this.useLegacyValidation) {
-                this.control?.updateValueAndValidity();
             }
 
             return;

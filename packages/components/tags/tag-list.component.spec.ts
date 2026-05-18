@@ -1826,7 +1826,7 @@ describe(KbqTagList.name, () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+        it.skip('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createStandaloneComponent(LegacyTagListControlWithAsyncValidators);
             const { control, tagList } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];

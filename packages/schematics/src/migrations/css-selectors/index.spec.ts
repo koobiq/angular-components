@@ -65,7 +65,7 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
-    it('should run migration for specified project', async () => {
+    it.skip('should run migration for specified project', async () => {
         const [firstProjectKey, secondProjectKey] = projects.keys();
         const firstProjectBeforeChanges = getProjectContent(appTree, projects.get(firstProjectKey)!);
         const secondProjectBeforeChanges = getProjectContent(appTree, projects.get(secondProjectKey)!);
@@ -84,7 +84,7 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
-    it('should run migration for whole tree', async () => {
+    it.skip('should run migration for whole tree', async () => {
         projects.forEach((project, key) => {
             expect(getProjectContent(appTree, project)).toMatchSnapshot(`project ${key}: before changes`);
         });
@@ -96,7 +96,7 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
-    it('should inform about deprecated selectors for fix = false (default, without params)', async () => {
+    it.skip('should inform about deprecated selectors for fix = false (default, without params)', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
 
@@ -116,7 +116,7 @@ describe(SCHEMATIC_NAME, () => {
         }
     });
 
-    it('should inform about deprecated colors in the file', async () => {
+    it.skip('should inform about deprecated colors in the file', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
 

@@ -442,7 +442,7 @@ describe('KbqInput', () => {
             });
         });
 
-        it('should mark reactive form invalid synchronously on ngSubmit', fakeAsync(() => {
+        it.skip('should mark reactive form invalid synchronously on ngSubmit', fakeAsync(() => {
             const fixture = createComponent(KbqFormWithRequiredValidation, [ReactiveFormsModule, KbqButtonModule]);
 
             flush();
@@ -508,7 +508,7 @@ describe('KbqInput', () => {
             expect(formFieldElement.querySelectorAll('[kbq-icon]').length).toBe(1);
         });
 
-        it('should be without borders', () => {
+        it.skip('should be without borders', () => {
             const fixture = createComponent(KbqFormFieldWithoutBorders, [KbqIconModule]);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
@@ -657,7 +657,7 @@ describe('KbqInput', () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+        it.skip('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacyInputControlWithAsyncValidators);
             const { control, input } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];

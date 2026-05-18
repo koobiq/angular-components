@@ -53,7 +53,6 @@ import {
     ErrorStateMatcher,
     KBQ_DATE_FORMATS,
     KBQ_LOCALE_SERVICE,
-    KBQ_VALIDATION,
     KbqDateFormats,
     KbqErrorStateTracker,
     ruRULocaleData,
@@ -255,8 +254,6 @@ export class KbqDatepickerInput<D>
     protected readonly formField = inject(KbqFormField, { optional: true, host: true });
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
 
     /** @docs-private */
     protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
@@ -794,11 +791,6 @@ export class KbqDatepickerInput<D>
         this.focusChanged(false);
 
         this.onInput();
-
-        if (this.useLegacyValidation && this.control) {
-            this.control.updateValueAndValidity({ emitEvent: false });
-            (this.control.statusChanges as EventEmitter<string>).emit(this.control.status);
-        }
     }
 
     onPaste($event) {

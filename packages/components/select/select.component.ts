@@ -68,7 +68,6 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KBQ_VALIDATION,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
@@ -173,13 +172,13 @@ export const minimumTimeToDisplayLoading = 300;
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
@@ -210,8 +209,6 @@ export class KbqSelect
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
-
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
@@ -1120,7 +1117,7 @@ export class KbqSelect
      *
      * @param fn Callback to be triggered when the component has been touched.
      */
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    // eslint-disable-next-line @typescript-eslint/ban-types
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }
@@ -1180,13 +1177,6 @@ export class KbqSelect
             this.onTouched();
             this._changeDetectorRef.markForCheck();
             this.stateChanges.next();
-
-            if (this.useLegacyValidation && this.ngControl?.control) {
-                const control = this.ngControl.control;
-
-                control.updateValueAndValidity({ emitEvent: false });
-                (control.statusChanges as EventEmitter<string>).emit(control.status);
-            }
         }
     }
 

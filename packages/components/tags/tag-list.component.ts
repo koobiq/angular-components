@@ -30,7 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isSelectAll } from '@koobiq/cdk/keycodes';
-import { CanUpdateErrorState, ErrorStateMatcher, isNull, KBQ_VALIDATION } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, isNull } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
@@ -103,7 +103,6 @@ export class KbqTagList
         CanUpdateErrorState,
         AfterViewInit
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -663,13 +662,11 @@ export class KbqTagList
                 setTimeout(() => {
                     if (!this.focused) {
                         this.markAsTouched();
-                        this.revalidate();
                     }
                 });
             } else {
                 // If there's no tag input, then mark the field as touched.
                 this.markAsTouched();
-                this.revalidate();
             }
         }
     }
@@ -829,16 +826,6 @@ export class KbqTagList
 
     private syncTagsRemovableState(): void {
         this.tags?.forEach((tag) => (tag.removable = this.removable));
-    }
-
-    /** Revalidate control. */
-    private revalidate() {
-        if (this.useLegacyValidation && this.ngControl?.control) {
-            const control = this.ngControl.control;
-
-            control.updateValueAndValidity({ emitEvent: false });
-            (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
     }
 
     private setupDropListInitialProperties(): void {

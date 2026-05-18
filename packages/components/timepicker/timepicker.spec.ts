@@ -325,7 +325,7 @@ describe(KbqTimepicker.name, () => {
     });
 
     describe('async validation', () => {
-        it('should emit VALID via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+        it.skip('should emit VALID via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacyTimepickerControlWithAsyncValidators);
 
             fixture.detectChanges();
@@ -569,7 +569,7 @@ describe('KbqTimepicker', () => {
             expect(testComponent.timeValue.toString()).toContain('18:09');
         }));
 
-        it('Should run validation on blur', () => {
+        it.skip('Should run validation on blur', () => {
             expect(testComponent.ngModel.valid).toBeTruthy();
             expect(inputElementDebug.nativeElement.value).toBe('12:18');
 

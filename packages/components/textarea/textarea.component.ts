@@ -5,7 +5,6 @@ import {
     Directive,
     DoCheck,
     ElementRef,
-    EventEmitter,
     Host,
     inject,
     Inject,
@@ -25,7 +24,6 @@ import {
     CanUpdateErrorState,
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
-    KBQ_VALIDATION,
     KBQ_WINDOW
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -57,8 +55,6 @@ let nextUniqueId = 0;
 export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
-
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
@@ -277,13 +273,6 @@ export class KbqTextarea
 
     onBlur(): void {
         this.focusChanged(false);
-
-        if (this.useLegacyValidation && this.ngControl?.control) {
-            const control = this.ngControl.control;
-
-            control.updateValueAndValidity({ emitEvent: false });
-            (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
     }
 
     /** Grow textarea height to avoid vertical scroll  */

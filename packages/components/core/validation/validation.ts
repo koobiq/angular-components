@@ -1,4 +1,4 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { Provider } from '@angular/core';
 
 /**
  * @docs-private
@@ -11,29 +11,13 @@ export const validationTooltipShowDelay = 10;
 export const validationTooltipHideDelay = 3000;
 
 /**
- * @deprecated Will be removed in next major release.
+ * No-op provider kept for backwards compatibility.
  *
- * @docs-private
- */
-export interface KbqValidationOptions {
-    useValidation: boolean;
-}
-
-/**
- * @deprecated Will be removed in next major release.
+ * Legacy validation directive (`KbqValidateDirective`) was removed in v20.0.0; the new
+ * `ErrorStateMatcher` based validation is enabled by default. This function can still be
+ * placed in component `providers` arrays but no longer adds any tokens — it just returns
+ * an empty provider list.
  *
- * @docs-private
+ * @deprecated No longer needed. Will be removed in a future release.
  */
-export const KBQ_VALIDATION = new InjectionToken<KbqValidationOptions>('KbqUseValidation', {
-    factory: () => ({ useValidation: true })
-});
-
-/**
- * Utility provider which disables legacy validation directive.
- *
- * Will be removed in next major release, so legacy validation will be disabled by default.
- */
-export const kbqDisableLegacyValidationDirectiveProvider = (): Provider => ({
-    provide: KBQ_VALIDATION,
-    useValue: { useValidation: false } satisfies KbqValidationOptions
-});
+export const kbqDisableLegacyValidationDirectiveProvider = (): Provider[] => [];

@@ -1897,9 +1897,6 @@ export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 // @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
-// @public @deprecated (undocumented)
-export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
-
 // @public
 export const KBQ_WINDOW: InjectionToken<Window>;
 
@@ -2085,8 +2082,8 @@ export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 // @public (undocumented)
 export const KbqDefaultThemes: KbqTheme[];
 
-// @public
-export const kbqDisableLegacyValidationDirectiveProvider: () => Provider;
+// @public @deprecated
+export const kbqDisableLegacyValidationDirectiveProvider: () => Provider[];
 
 // @public
 export type KbqEnumValues<T extends string | number> = `${T}`;
@@ -3008,12 +3005,6 @@ export interface KbqUnitSystem {
     base: number;
     // (undocumented)
     power: number;
-}
-
-// @public @deprecated (undocumented)
-export interface KbqValidationOptions {
-    // (undocumented)
-    useValidation: boolean;
 }
 
 // @public (undocumented)

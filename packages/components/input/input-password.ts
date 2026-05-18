@@ -1,19 +1,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    Directive,
-    DoCheck,
-    ElementRef,
-    EventEmitter,
-    inject,
-    Inject,
-    Input,
-    OnChanges,
-    OnDestroy,
-    Optional,
-    Self
-} from '@angular/core';
+import { Directive, DoCheck, ElementRef, Inject, Input, OnChanges, OnDestroy, Optional, Self } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, KBQ_VALIDATION } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
@@ -46,8 +34,6 @@ let nextUniqueId = 0;
 export class KbqInputPassword
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
-
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
@@ -239,13 +225,6 @@ export class KbqInputPassword
 
     onBlur(): void {
         this.focusChanged(false);
-
-        if (this.useLegacyValidation && this.ngControl?.control) {
-            const control = this.ngControl.control;
-
-            control.updateValueAndValidity({ emitEvent: false });
-            (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
     }
 
     /** Callback for the cases where the focused state of the input changes. */

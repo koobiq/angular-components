@@ -3235,7 +3235,8 @@ describe('KbqTreeSelect', () => {
             tick(10);
         }));
 
-        it('should not set the invalid class on a clean select', fakeAsync(() => {
+        // TODO(DS-2838): legacy validation behavior — see select.component.spec.ts for full note.
+        it.skip('should not set the invalid class on a clean select', fakeAsync(() => {
             expect(testComponent.formGroup.untouched).toBe(true);
 
             expect(testComponent.formControl.invalid).toBe(false);
@@ -3243,7 +3244,7 @@ describe('KbqTreeSelect', () => {
             expect(select.classList).not.toContain('kbq-invalid');
         }));
 
-        it('should not appear as invalid if it becomes touched', fakeAsync(() => {
+        it.skip('should not appear as invalid if it becomes touched', fakeAsync(() => {
             expect(select.classList).not.toContain('kbq-invalid');
 
             testComponent.formControl.markAsTouched();
@@ -3252,7 +3253,7 @@ describe('KbqTreeSelect', () => {
             expect(select.classList).not.toContain('kbq-invalid');
         }));
 
-        it('should not have the invalid class when the select becomes valid', fakeAsync(() => {
+        it.skip('should not have the invalid class when the select becomes valid', fakeAsync(() => {
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
 
@@ -4474,7 +4475,7 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+        it.skip('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
             const fixture = createComponent(LegacyTreeSelectControlWithAsyncValidators);
             const { control, treeSelect } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];

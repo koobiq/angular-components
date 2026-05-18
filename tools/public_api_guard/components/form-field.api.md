@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AbstractControl } from '@angular/forms';
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
@@ -13,7 +12,6 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
-import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
@@ -22,10 +20,8 @@ import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { KbqValidationOptions } from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -33,8 +29,6 @@ import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { Validator } from '@angular/forms';
-import { ValidatorFn } from '@angular/forms';
 
 // @public
 export function getKbqFormFieldMissingControlError(): Error;
@@ -203,10 +197,9 @@ export class KbqFormFieldModule {
     // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i13.KbqValidateDirective, typeof i2.KbqTrim], [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i13.KbqValidateDirective, typeof i2.KbqTrim]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqTrim], [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqTrim]>;
 }
 
 // @public @deprecated
@@ -368,38 +361,6 @@ export class KbqTrim {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTrim, "[kbqInput], [kbqTextarea]", ["KbqTrim"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTrim, [{ attribute: "no-trim"; }, { optional: true; self: true; }]>;
-}
-
-// @public @deprecated (undocumented)
-export class KbqValidateDirective implements AfterContentInit {
-    constructor(formFieldControl: KbqFormFieldControl<any>, rawValidators: Validator[], ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, mcValidation: KbqValidationOptions, cdr: ChangeDetectorRef, parentFormField: KbqFormField | null, elementRef: ElementRef);
-    // (undocumented)
-    get hasNotSubmittedParent(): boolean;
-    // (undocumented)
-    get isFormControl(): boolean;
-    // (undocumented)
-    get isFormControlName(): boolean;
-    // (undocumented)
-    get isNgModel(): boolean;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    get parent(): NgForm;
-    // (undocumented)
-    rawValidators: Validator[];
-    setMosaicValidation(): void;
-    // (undocumented)
-    setMosaicValidationForFormControl(): void;
-    // (undocumented)
-    setMosaicValidationForModelControl(): void;
-    // (undocumented)
-    setValidState(control: AbstractControl, validator: ValidatorFn): void;
-    // (undocumented)
-    get validationControl(): any;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqValidateDirective, "        input[kbqInput],        input[kbqNumberInput],        input[kbqInputPassword],        input[kbqTimepicker],        input[kbqDatepicker],        textarea[kbqTextarea],        kbq-select,        kbq-tree-select,        kbq-tag-list    ", ["KbqValidate"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqValidateDirective, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; host: true; }, null]>;
 }
 
 // @public (undocumented)
