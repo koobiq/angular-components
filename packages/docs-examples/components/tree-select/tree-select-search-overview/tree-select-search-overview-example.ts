@@ -117,7 +117,7 @@ export const DATA_OBJECT = {
     template: `
         <kbq-form-field>
             <kbq-tree-select [multiple]="true" [(ngModel)]="selected">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />

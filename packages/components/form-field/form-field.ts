@@ -518,18 +518,6 @@ export class KbqFormField
 
 /**
  * @docs-private
- *
- * @deprecated Will be removed in next major release, use `noBorders` input instead.
- */
-@Directive({
-    selector: 'kbq-form-field[kbqFormFieldWithoutBorders]',
-    host: { class: 'kbq-form-field_without-borders' },
-    exportAs: 'kbqFormFieldWithoutBorders'
-})
-export class KbqFormFieldWithoutBorders {}
-
-/**
- * @docs-private
  */
 @Directive({
     selector: '[kbqInput], [kbqTextarea]',

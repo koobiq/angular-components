@@ -25,7 +25,7 @@ import { map, startWith } from 'rxjs/operators';
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />

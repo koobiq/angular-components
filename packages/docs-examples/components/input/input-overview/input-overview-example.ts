@@ -29,7 +29,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         <br />
         <br />
 
-        <kbq-form-field kbqFormFieldWithoutBorders>
+        <kbq-form-field noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
             <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />

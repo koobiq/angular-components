@@ -142,7 +142,7 @@ export class E2eMultilineSelectStates {}
     template: `
         <kbq-form-field style="width: 200px">
             <kbq-select data-testid="e2eSelect" [value]="'selected'">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />

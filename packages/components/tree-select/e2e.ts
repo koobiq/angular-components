@@ -169,7 +169,7 @@ class BaseTreeSelectStates {
                 placeholder="this is placeholder"
                 [ngModel]="'rootNode_1_long_text_long_text'"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />
@@ -233,7 +233,7 @@ export class E2eTreeSelectStates extends BaseTreeSelectStates {}
                 [multiple]="true"
                 [ngModel]="['rootNode_1_long_text_long_text', 'material2', 'PhotoBoothLibrary']"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />
@@ -294,7 +294,7 @@ export class E2eMultiTreeSelectStates extends BaseTreeSelectStates {}
                 [multiline]="true"
                 [ngModel]="['rootNode_1_long_text_long_text', 'material2', 'PhotoBoothLibrary']"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />

@@ -40,7 +40,7 @@ import { DateTime } from 'luxon';
 import { map, Observable, timer } from 'rxjs';
 import { KbqInputModule } from '../input/index';
 import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
-import { KbqDatepickerToggle } from './datepicker-toggle.component';
+import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
 import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerIntl, KbqDatepickerModule } from './index';
 
@@ -1094,7 +1094,7 @@ describe('KbqDatepicker', () => {
             ));
 
             it('should toggle the active state of the datepicker toggle', fakeAsync(() => {
-                const toggle = fixture.debugElement.query(By.css('kbq-datepicker-toggle')).nativeElement;
+                const toggle = fixture.debugElement.query(By.css('kbq-datepicker-toggle-icon')).nativeElement;
 
                 expect(toggle.classList).not.toContain('kbq-active');
 
@@ -1119,9 +1119,9 @@ describe('KbqDatepicker', () => {
 
                 fixture.detectChanges();
 
-                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle .custom-icon')).toBeTruthy();
+                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle-icon.custom-icon')).toBeTruthy();
 
-                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle kbq-icon')).toBeFalsy();
+                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle-iconkbq-icon')).toBeFalsy();
             }));
         });
 
@@ -1653,7 +1653,7 @@ class DatepickerWithNgModel {
     ],
     template: `
         <input [formControl]="formControl" [kbqDatepicker]="d" />
-        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
         <kbq-datepicker #d />
     `
 })
@@ -1661,18 +1661,19 @@ class DatepickerWithFormControl {
     formControl = new UntypedFormControl();
     @ViewChild('d', { static: false }) datepicker: KbqDatepicker<DateTime>;
     @ViewChild(KbqDatepickerInput, { static: false }) datepickerInput: KbqDatepickerInput<DateTime>;
-    @ViewChild(KbqDatepickerToggle, { static: false }) datepickerToggle: KbqDatepickerToggle<DateTime>;
+    @ViewChild(KbqDatepickerToggleIconComponent, { static: false })
+    datepickerToggle: KbqDatepickerToggleIconComponent<DateTime>;
 }
 
 @Component({
     imports: [
         KbqDatepickerInput,
         KbqDatepicker,
-        KbqDatepickerToggle
+        KbqDatepickerToggleIconComponent
     ],
     template: `
         <input [kbqDatepicker]="d" />
-        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
         <kbq-datepicker #d />
     `
 })
@@ -1687,9 +1688,9 @@ class DatepickerWithToggle {
     ],
     template: `
         <input [kbqDatepicker]="d" />
-        <kbq-datepicker-toggle [for]="d">
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="d">
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
-        </kbq-datepicker-toggle>
+        </kbq-datepicker-toggle-icon>
         <kbq-datepicker #d />
     `
 })
@@ -1702,7 +1703,7 @@ class DatepickerWithCustomIcon {}
     ],
     template: `
         <input [kbqDatepicker]="d" [min]="minDate" [max]="maxDate" [(ngModel)]="date" />
-        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
         <kbq-datepicker #d />
     `
 })
@@ -1720,7 +1721,7 @@ class DatepickerWithMinAndMaxValidation {
     ],
     template: `
         <input [kbqDatepicker]="d" [kbqDatepickerFilter]="filter" [(ngModel)]="date" />
-        <kbq-datepicker-toggle [for]="d" />
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
         <kbq-datepicker #d />
     `
 })
@@ -1844,9 +1845,9 @@ class DelayedDatepicker {
     ],
     template: `
         <input [kbqDatepicker]="d" />
-        <kbq-datepicker-toggle [tabIndex]="7" [for]="d">
+        <kbq-datepicker-toggle-icon kbqSuffix [tabIndex]="7" [for]="d">
             <div class="custom-icon" kbqDatepickerToggleIcon></div>
-        </kbq-datepicker-toggle>
+        </kbq-datepicker-toggle-icon>
         <kbq-datepicker #d />
     `
 })

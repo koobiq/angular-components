@@ -498,7 +498,7 @@ class ManySelects {
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" [searchMinOptionsThreshold]="searchMinOptionsThreshold">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
                     <input class="search-input" kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />

@@ -202,14 +202,6 @@ export class KbqFormFieldModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqTrim], [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqTrim]>;
 }
 
-// @public @deprecated
-export class KbqFormFieldWithoutBorders {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFormFieldWithoutBorders, "kbq-form-field[kbqFormFieldWithoutBorders]", ["kbqFormFieldWithoutBorders"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormFieldWithoutBorders, never>;
-}
-
 // @public
 export class KbqHint extends KbqColorDirective {
     compact: boolean;

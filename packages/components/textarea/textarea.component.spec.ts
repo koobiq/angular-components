@@ -137,7 +137,7 @@ class KbqTextareaGrowOff {
         KbqTextareaModule
     ],
     template: `
-        <kbq-form-field kbqFormFieldWithoutBorders>
+        <kbq-form-field noBorders>
             <textarea kbqTextarea></textarea>
         </kbq-form-field>
     `

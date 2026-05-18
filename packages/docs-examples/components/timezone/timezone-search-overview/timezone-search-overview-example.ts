@@ -37,7 +37,7 @@ const timezones=[{offset:"02:00:00",associatedZones:[],id:"Europe/Kaliningrad",c
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input
                         autocomplete="off"

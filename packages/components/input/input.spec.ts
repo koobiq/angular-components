@@ -163,7 +163,7 @@ class KbqFormFieldWithSuffix {}
         KbqInputModule
     ],
     template: `
-        <kbq-form-field kbqFormFieldWithoutBorders>
+        <kbq-form-field noBorders>
             <input kbqInput />
         </kbq-form-field>
     `

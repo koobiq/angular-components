@@ -43,7 +43,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 [searchMinOptionsThreshold]="undefined"
                 [(value)]="selected"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input
                         autocomplete="off"
