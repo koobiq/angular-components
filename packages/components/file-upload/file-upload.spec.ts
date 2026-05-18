@@ -26,7 +26,7 @@ import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
-import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
+import { KbqFileItem } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqFileDropDirective } from './primitives/file-drop';
@@ -160,15 +160,6 @@ function fileContentLinesValidator(maxLines: number): AsyncValidatorFn {
         });
     };
 }
-
-const maxFileExceeded = (file: File): string | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    return (file?.size ?? 0) > maxSize ? `Exceeded with (${maxSize / mega} Mb)` : null;
-};
 
 describe(KbqMultipleFileUploadComponent.name, () => {
     let component: BasicMultipleFileUpload;
@@ -329,27 +320,6 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 component.fileUpload.deleteFile(0, event);
                 fixture.detectChanges();
             }).not.toThrow();
-        });
-    });
-
-    describe('with custom validation', () => {
-        it('should mark added file with error', (done) => {
-            expect(component.files).toBeUndefined();
-            // max file === 5e6
-            component.validation = [maxFileExceeded];
-            fixture.detectChanges();
-
-            const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
-
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(fakeFile));
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.files).toHaveLength(1);
-                expect(component.files[0].hasError).toBeTruthy();
-                done();
-            });
         });
     });
 
@@ -792,26 +762,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             expect(tooltipInstance).toBeTruthy();
         }));
-    });
-
-    describe('with custom validation', () => {
-        it('should mark added file with error', (done) => {
-            expect(component.file).toBeUndefined();
-            // max file === 5e6
-            component.validation = [maxFileExceeded];
-            fixture.detectChanges();
-
-            const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
-
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(fakeFile));
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(component.file?.file.name).toBe(FILE_NAME);
-                expect(component.file?.hasError).toBeTruthy();
-                done();
-            });
-        });
     });
 
     describe('with ControlValueAccessor', () => {
@@ -1566,7 +1516,6 @@ describe('KbqLocalDropzone', () => {
             <kbq-single-file-upload
                 #fileUpload
                 [accept]="accept"
-                [customValidation]="validation"
                 [disabled]="disabled"
                 [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
@@ -1580,7 +1529,6 @@ class BasicSingleFileUpload {
     disabled: boolean;
     file: KbqFileItem | null;
     accept: string[] = [];
-    validation: KbqFileValidatorFn[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
@@ -1601,7 +1549,6 @@ class BasicSingleFileUpload {
                 #fileUpload
                 [formControl]="control"
                 [accept]="accept"
-                [customValidation]="validation"
                 (fileQueueChange)="onChange($event)"
             />
         </div>
@@ -1611,7 +1558,6 @@ class ControlValueAccessorSingleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
     file: KbqFileItem | null;
     accept: string[] = [];
-    validation: KbqFileValidatorFn[] = [];
     control = new FormControl();
 
     constructor(public elementRef: ElementRef) {}
@@ -1629,7 +1575,6 @@ class ControlValueAccessorSingleFileUpload {
             <kbq-multiple-file-upload
                 #fileUpload
                 [disabled]="disabled"
-                [customValidation]="validation"
                 [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
                 (fileQueueChanged)="onChange($event)"
@@ -1641,7 +1586,6 @@ class BasicMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
     disabled: boolean;
     files: KbqFileItem[];
-    validation: KbqFileValidatorFn[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
@@ -1665,7 +1609,6 @@ class BasicMultipleFileUpload {
                 #fileUpload
                 [formControl]="control"
                 [accept]="accept"
-                [customValidation]="validation"
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
@@ -1675,7 +1618,6 @@ class ControlValueAccessorMultipleFileUpload {
     @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
     files: KbqFileItem[];
     accept: string[] = [];
-    validation: KbqFileValidatorFn[] = [];
     control = new FormControl();
 
     constructor(public elementRef: ElementRef) {}

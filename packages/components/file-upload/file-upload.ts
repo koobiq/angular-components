@@ -32,30 +32,6 @@ export interface KbqFileItem {
     progress?: BehaviorSubject<number>;
 }
 
-/**
- * @docs-private
- * @deprecated Will be removed in next major release
- */
-export interface KbqInputFile {
-    disabled: boolean;
-    accept?: string[];
-    onFileSelectedViaClick(event: Event): void;
-    onFileDropped(files: FileList | KbqFile[]): void;
-}
-
-/**
- * @docs-private
- * @deprecated Will be removed in next major release
- */
-export interface KbqInputFileLabel {
-    /* Text for description, used with `browseLink` */
-    captionText: string;
-    /* Text for link with which the file(s) can be selected to download */
-    browseLink: string;
-    /* Header for multiple file-upload in default size */
-    title?: string | undefined;
-}
-
 /** Upload modes enum. */
 export enum KbqFileUploadAllowedType {
     File = 'file',
@@ -74,33 +50,10 @@ export type KbqFileUploadCaptionContext = {
     browseLinkFolder?: string;
 };
 
-/**
- * @deprecated use FormControl for validation
- */
-export type KbqFileValidatorFn = (file: File) => string | null;
-
 /* Object for labels customization inside file upload component */
 export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<
     KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig
 >('KbqFileUploadConfiguration');
-
-/** @deprecated use `FileValidators.isCorrectExtension` instead. Will be removed in next major release. */
-export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
-    if (!accept?.length) return true;
-
-    const { name, type } = file;
-    const fileExt: string = name.split('.').pop() || '';
-
-    for (const acceptedExtensionOrMimeType of accept) {
-        const typeAsRegExp = new RegExp(acceptedExtensionOrMimeType);
-
-        if (typeAsRegExp.test(fileExt) || typeAsRegExp.test(type)) {
-            return true;
-        }
-    }
-
-    return false;
-};
 
 /** @docs-private */
 export abstract class KbqFileUploadBase<T = KbqBaseFileUploadLocaleConfig> implements CanUpdateErrorState {

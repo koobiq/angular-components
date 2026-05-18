@@ -53,9 +53,6 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
-// @public @deprecated (undocumented)
-export const isCorrectExtension: (file: File, accept?: string[]) => boolean;
-
 // @public
 export const isOutsideViewport: (input: {
     event: MouseEvent;
@@ -271,9 +268,6 @@ export class KbqFileUploadModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, never, [typeof i1_3.FormsModule, typeof i1_3.ReactiveFormsModule, typeof i2.KbqToolTipModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqIconModule, typeof i5.KbqButtonModule, typeof i6.KbqListModule, typeof i7.KbqFormFieldModule, typeof i8.KbqEllipsisCenterModule, typeof i9.KbqDataSizePipe, typeof i10.KbqLinkModule, typeof i11.AsyncPipe, typeof i11.NgClass, typeof i11.NgTemplateOutlet, typeof i12.KbqFileDropDirective, typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent], [typeof i13.KbqSingleFileUploadComponent, typeof i14.KbqMultipleFileUploadComponent, typeof i12.KbqFileDropDirective]>;
 }
 
-// @public @deprecated (undocumented)
-export type KbqFileValidatorFn = (file: File) => string | null;
-
 // @public
 export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     constructor();
@@ -289,28 +283,6 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFullScreenDropzoneService, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqFullScreenDropzoneService>;
-}
-
-// @public @deprecated
-export interface KbqInputFile {
-    // (undocumented)
-    accept?: string[];
-    // (undocumented)
-    disabled: boolean;
-    // (undocumented)
-    onFileDropped(files: FileList | KbqFile[]): void;
-    // (undocumented)
-    onFileSelectedViaClick(event: Event): void;
-}
-
-// @public @deprecated
-export interface KbqInputFileLabel {
-    // (undocumented)
-    browseLink: string;
-    // (undocumented)
-    captionText: string;
-    // (undocumented)
-    title?: string | undefined;
 }
 
 // @public (undocumented)
@@ -344,12 +316,8 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     protected get captionTextWhenSelected(): string;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
     protected readonly customFileIcon: TemplateRef<HTMLElement>;
-    // @deprecated (undocumented)
-    customValidation?: KbqFileValidatorFn[];
     cvaOnChange: (_: KbqFileItem[]) => void;
     deleteFile(index: number, event?: MouseEvent, origin?: FocusOrigin): void;
-    // @deprecated (undocumented)
-    errors: string[];
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     protected readonly fileLoader: KbqFileLoader | undefined;
@@ -365,8 +333,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     title: string;
     autoCapture: boolean;
     }> | undefined>;
-    // @deprecated (undocumented)
-    get hasErrors(): boolean;
     hasFocus: boolean;
     get hasHint(): boolean;
     protected readonly hint: QueryList<TemplateRef<any>>;
@@ -390,7 +356,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     size: 'compact' | 'default';
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof i1.KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof i1.KbqFileList; inputs: {}; outputs: { "listChange": "filesChange"; "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof i1.KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof i1.KbqFileList; inputs: {}; outputs: { "listChange": "filesChange"; "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, never>;
 }
@@ -403,12 +369,8 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     allowed: InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: Signal<KbqFileUploadCaptionContext>;
     readonly configuration: KbqBaseFileUploadLocaleConfig | null;
-    // @deprecated (undocumented)
-    customValidation?: KbqFileValidatorFn[];
     cvaOnChange: (_: KbqFileItem | null) => void;
     deleteItem(event?: MouseEvent, origin?: FocusOrigin): void;
-    // @deprecated (undocumented)
-    errors: string[];
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     get file(): KbqFileItem | null;
@@ -444,14 +406,14 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     showFileSize: boolean;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, [{ directive: typeof i1.KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; "multiple": "multiple"; }; outputs: {}; }, { directive: typeof i1.KbqFileList; inputs: {}; outputs: { "listChange": "fileChange"; }; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, [{ directive: typeof i1.KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; "multiple": "multiple"; }; outputs: {}; }, { directive: typeof i1.KbqFileList; inputs: {}; outputs: { "listChange": "fileChange"; }; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, never>;
 }
 
 // Warnings were encountered during analysis:
 //
-// dist/components/file-upload/multiple-file-upload.component.d.ts:137:1016 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+// dist/components/file-upload/multiple-file-upload.component.d.ts:124:890 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -45,8 +45,7 @@ import {
     KbqFileUploadAllowedType,
     KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
-    KbqFileUploadCaptionContext,
-    KbqFileValidatorFn
+    KbqFileUploadCaptionContext
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
@@ -71,9 +70,9 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
-    providers: [KbqFullScreenDropzoneService],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqFullScreenDropzoneService],
     host: {
         class: 'kbq-single-file-upload',
         '[class.kbq-single-file-upload_selected]': '!!file'
@@ -96,15 +95,7 @@ export class KbqSingleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     /** Array of file type specifiers */
     @Input() accept?: string[];
-    /**
-     * @deprecated use `FormControl.errors`
-     */
-    @Input() errors: string[] = [];
     @Input() inputId: string = `kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`;
-    /**
-     * @deprecated use FormControl for validation
-     */
-    @Input() customValidation?: KbqFileValidatorFn[];
 
     /** An object used to control the error state of the component. */
     @Input() errorStateMatcher: ErrorStateMatcher;
@@ -277,7 +268,7 @@ export class KbqSingleFileUploadComponent
     }
 
     ngAfterViewInit() {
-        // FormControl specific errors update
+        // FormControl specific errors update — set hasError on current KbqFileItem when control is invalid
         this.ngControl?.statusChanges
             ?.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe((status: FormControlStatus) => {
@@ -287,7 +278,6 @@ export class KbqSingleFileUploadComponent
                     file.hasError = status === 'INVALID';
                 }
 
-                this.errors = Object.values(this.ngControl?.errors || {});
                 this.cdr.markForCheck();
             });
 
@@ -362,7 +352,6 @@ export class KbqSingleFileUploadComponent
         event?.stopPropagation();
         this.file = null;
         this.fileChange.emit(this.file);
-        this.errors = [];
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
 
@@ -382,23 +371,8 @@ export class KbqSingleFileUploadComponent
     private mapToFileItem(file: File): KbqFileItem {
         return {
             file,
-            hasError: this.validateFile(file),
             progress: new BehaviorSubject<number>(0),
             loading: new BehaviorSubject<boolean>(false)
         };
-    }
-
-    private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) return;
-
-        this.errors = this.customValidation
-            .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
-                errors.push(validatorFn(file));
-
-                return errors;
-            }, [])
-            .filter(Boolean) as string[];
-
-        return !!this.errors.length;
     }
 }

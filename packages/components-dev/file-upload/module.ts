@@ -32,8 +32,7 @@ import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
-    KbqFileUploadModule,
-    KbqFileValidatorFn
+    KbqFileUploadModule
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -43,6 +42,8 @@ import { interval, takeWhile, timer } from 'rxjs';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../../components/file-upload/e2e';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { DevLocaleSelector } from '../locale-selector';
+
+type FileValidatorFn = (file: File) => string | null;
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
@@ -230,12 +231,12 @@ export class DevMultipleFileUploadCompact {
     ],
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {
     disabled = false;
-    validation: KbqFileValidatorFn[] = [maxFileExceededFiveMbs];
+    validation: FileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;
 
     file: KbqFileItem | null;

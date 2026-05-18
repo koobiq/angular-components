@@ -45,8 +45,7 @@ import {
     KbqFileItem,
     KbqFileUploadAllowedType,
     KbqFileUploadBase,
-    KbqFileUploadCaptionContext,
-    KbqFileValidatorFn
+    KbqFileUploadCaptionContext
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
@@ -77,9 +76,9 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
-    providers: [KbqFullScreenDropzoneService],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KbqFullScreenDropzoneService],
     host: {
         class: 'kbq-multiple-file-upload'
     },
@@ -101,19 +100,11 @@ export class KbqMultipleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     /** Array of file type specifiers */
     @Input() accept?: string[];
-    /**
-     * @deprecated use `FormControl.errors`
-     */
-    @Input() errors: string[] = [];
     @Input() size: 'compact' | 'default' = 'default';
     /**
      * custom ID for the file input element.
      */
     @Input() inputId: string = `kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`;
-    /**
-     * @deprecated use FormControl for validation
-     */
-    @Input() customValidation?: KbqFileValidatorFn[];
 
     /** An object used to control the error state of the component. */
     @Input() errorStateMatcher: ErrorStateMatcher;
@@ -234,13 +225,6 @@ export class KbqMultipleFileUploadComponent
         return this.accept?.join(',') || '*/*';
     }
 
-    /**
-     * @deprecated use `FormControl.errors`
-     */
-    get hasErrors(): boolean {
-        return this.errors && !!this.errors.length;
-    }
-
     /** @docs-private */
     get hasHint(): boolean {
         return this.hint.length > 0;
@@ -304,12 +288,6 @@ export class KbqMultipleFileUploadComponent
     }
 
     ngAfterViewInit() {
-        // FormControl specific errors update
-        this.ngControl?.statusChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.errors = Object.values(this.ngControl?.errors || {});
-            this.cdr.markForCheck();
-        });
-
         this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
 
@@ -398,31 +376,9 @@ export class KbqMultipleFileUploadComponent
 
         return Array.from(files).map((file: File) => ({
             file,
-            hasError: this.validateFile(file),
             loading: new BehaviorSubject<boolean>(false),
             progress: new BehaviorSubject<number>(0)
         }));
-    }
-
-    private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) {
-            return;
-        }
-
-        const errorsPerFile = this.customValidation
-            .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
-                errors.push(validatorFn(file));
-
-                return errors;
-            }, [])
-            .filter(Boolean) as string[];
-
-        this.errors = [
-            ...this.errors,
-            ...errorsPerFile
-        ];
-
-        return !!errorsPerFile.length;
     }
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {
