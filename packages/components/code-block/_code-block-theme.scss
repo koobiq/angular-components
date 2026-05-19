@@ -22,13 +22,8 @@
 
     &.kbq-code-block_hide-tabs {
         .kbq-code-block__actionbar {
-            background: transparent;
-
-            .kbq-code-block__actionbar__fade-gradient {
-                background: var(--kbq-#{$base}-actionbar-fade-gradient);
-            }
-
             .kbq-code-block__actionbar__button-stack {
+                border-color: var(--kbq-#{$base}-actionbar-border-color);
                 background: var(--kbq-#{$base}-actionbar-background);
             }
         }

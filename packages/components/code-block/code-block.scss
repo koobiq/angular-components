@@ -38,11 +38,6 @@
             display: flex;
             gap: var(--kbq-code-block-size-actionbar-content-gap-horizontal);
         }
-
-        .kbq-code-block__actionbar__fade-gradient {
-            align-self: stretch;
-            width: var(--kbq-code-block-size-actionbar-fade-gradient-width);
-        }
     }
 
     &:has(.kbq-code-block__view-all) {
@@ -140,11 +135,13 @@
             display: none;
             position: absolute;
             top: 0;
-            right: var(--kbq-size-m);
-            padding: var(--kbq-size-s) 0 var(--kbq-size-s) var(--kbq-size-m);
+            right: 0;
+            margin: var(--kbq-size-s) var(--kbq-size-s) var(--kbq-size-s) 0;
 
             .kbq-code-block__actionbar__button-stack {
-                border-radius: 0 var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0;
+                border-width: 1px;
+                border-style: solid;
+                border-radius: calc(var(--kbq-size-border-radius) + 1px);
             }
         }
 
