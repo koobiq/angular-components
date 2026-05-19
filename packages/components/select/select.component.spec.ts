@@ -4158,31 +4158,32 @@ describe('KbqSelect', () => {
             flush();
         }));
 
-        // TODO(DS-2838): legacy validation behavior — clean/untouched form-control invalid state no longer suppressed.
-        // ErrorStateMatcher gates display. Test needs explicit matcher selection.
-        it.skip('should not set the invalid class on a clean select', fakeAsync(() => {
+        // The form control is intrinsically invalid (Validators.required + empty value),
+        // but until the user touches the field or submits the form the default
+        // ErrorStateMatcher keeps the `.kbq-invalid` class off the host.
+        it('should not set the invalid class on a clean (untouched) select', fakeAsync(() => {
             expect(testComponent.formGroup.untouched).toBe(true);
-
-            expect(testComponent.formControl.invalid).toBe(false);
+            expect(testComponent.formControl.invalid).toBe(true);
 
             expect(select.classList).not.toContain('kbq-invalid');
         }));
 
-        it.skip('should not appear as invalid if it becomes touched', fakeAsync(() => {
+        it('should set the invalid class after the control is touched while still invalid', fakeAsync(() => {
             expect(select.classList).not.toContain('kbq-invalid');
 
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
             flush();
 
-            expect(select.classList).not.toContain('kbq-invalid');
+            expect(select.classList).toContain('kbq-invalid');
         }));
 
-        it.skip('should not have the invalid class when the select becomes valid', fakeAsync(() => {
+        it('should drop the invalid class once a touched-then-invalid select becomes valid', fakeAsync(() => {
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
+            flush();
 
-            expect(select.classList).not.toContain('kbq-invalid');
+            expect(select.classList).toContain('kbq-invalid');
 
             testComponent.formControl.setValue('pizza-1');
             fixture.detectChanges();

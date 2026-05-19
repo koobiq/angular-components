@@ -42,7 +42,7 @@ import { KbqInputModule } from '../input/index';
 import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
 import { KbqDatepicker } from './datepicker.component';
-import { KbqDatepickerIntl, KbqDatepickerModule } from './index';
+import { KbqDatepickerModule } from './index';
 
 const getDatepickerInputElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
     fixture.debugElement.query(By.directive(KbqDatepickerInput)).nativeElement;
@@ -977,46 +977,38 @@ describe('KbqDatepicker', () => {
                 flush();
             }));
 
-            // TODO(DS-5079): kbq-datepicker-toggle was removed in v20.0.0; rewrite these tests
-            // for <kbq-datepicker-toggle-icon>, which renders <i kbq-icon-button> instead of
-            // a <button>. The icon-only directive does not expose `aria-haspopup`/`type` on a
-            // button element, so the assertions must target the host directive and the
-            // overlay trigger rather than DOM-querying `By.css('button')`.
-            it.skip('should set `aria-haspopup` on the toggle button', () => {
-                const button = fixture.debugElement.query(By.css('button'));
-
-                expect(button).toBeTruthy();
-                expect(button.nativeElement.getAttribute('aria-haspopup')).toBe('true');
-            });
-
-            it.skip('should not open calendar when toggle clicked if datepicker is disabled', () => {
+            // The legacy `<kbq-datepicker-toggle>` (a wrapper around a real <button>) was
+            // removed in v20.0.0 — the new `<kbq-datepicker-toggle-icon>` is an icon-only
+            // directive whose host listens to (click) and projects an <i kbq-icon-button>.
+            // Tests below query the host element directly instead of `By.css('button')`.
+            it('should reflect the datepicker disabled state via aria-disabled on the toggle host', () => {
                 testComponent.datepicker.disabled = true;
                 fixture.detectChanges();
-                const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
 
-                expect(toggle.hasAttribute('disabled')).toBe(true);
+                const toggle = fixture.debugElement.query(By.css('kbq-datepicker-toggle-icon')).nativeElement;
+
+                expect(toggle.getAttribute('aria-disabled')).toBe('true');
 
                 dispatchMouseEvent(toggle, 'click');
                 fixture.detectChanges();
+
+                expect(testComponent.datepicker.opened).toBe(false);
             });
 
-            it.skip('should not open calendar when toggle clicked if input is disabled', () => {
+            it('should not open calendar when toggle clicked if input is disabled', () => {
                 expect(testComponent.datepicker.disabled).toBe(false);
 
                 testComponent.input.disabled = true;
                 fixture.detectChanges();
-                const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
 
-                expect(toggle.hasAttribute('disabled')).toBe(true);
+                const toggle = fixture.debugElement.query(By.css('kbq-datepicker-toggle-icon')).nativeElement;
+
+                expect(toggle.getAttribute('aria-disabled')).toBe('true');
 
                 dispatchMouseEvent(toggle, 'click');
                 fixture.detectChanges();
-            });
 
-            it.skip('should set the `button` type on the trigger to prevent form submissions', () => {
-                const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
-
-                expect(toggle.getAttribute('type')).toBe('button');
+                expect(testComponent.datepicker.opened).toBe(false);
             });
 
             it('should not change focus on open/close calendar', () => {
@@ -1040,61 +1032,43 @@ describe('KbqDatepicker', () => {
                 expect(document.activeElement).toBe(input);
             });
 
-            it.skip('should re-render when the i18n labels change', inject(
-                [KbqDatepickerIntl],
-                (intl: KbqDatepickerIntl) => {
-                    const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
+            it('should toggle the kbq-active class on the inner icon-button while the datepicker is open', fakeAsync(() => {
+                const innerIcon = fixture.debugElement.query(
+                    By.css('kbq-datepicker-toggle-icon i[kbq-icon-button]')
+                ).nativeElement;
 
-                    intl.openCalendarLabel = 'Open the calendar, perhaps?';
-                    intl.changes.next();
-                    fixture.detectChanges();
-
-                    expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
-                }
-            ));
-
-            it.skip('should toggle the active state of the datepicker toggle', fakeAsync(() => {
-                const toggle = fixture.debugElement.query(By.css('kbq-datepicker-toggle-icon')).nativeElement;
-
-                expect(toggle.classList).not.toContain('kbq-active');
+                expect(innerIcon.classList).not.toContain('kbq-active');
 
                 fixture.componentInstance.datepicker.open();
                 fixture.detectChanges();
                 flush();
 
-                expect(toggle.classList).toContain('kbq-active');
+                expect(innerIcon.classList).toContain('kbq-active');
 
                 fixture.componentInstance.datepicker.close();
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();
 
-                expect(toggle.classList).not.toContain('kbq-active');
+                expect(innerIcon.classList).not.toContain('kbq-active');
             }));
         });
 
         describe('datepicker with custom kbq-datepicker-toggle icon', () => {
-            it.skip('should be able to override the kbq-datepicker-toggle icon', fakeAsync(() => {
+            it('should render the projected custom icon and suppress the default kbq-icon-button', fakeAsync(() => {
                 const fixture = createComponent(DatepickerWithCustomIcon, [KbqLuxonDateModule]);
 
                 fixture.detectChanges();
 
-                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle-icon.custom-icon')).toBeTruthy();
+                const host = fixture.nativeElement.querySelector('kbq-datepicker-toggle-icon');
 
-                expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle-iconkbq-icon')).toBeFalsy();
+                expect(host).toBeTruthy();
+                // Projected custom icon is rendered inside the host.
+                expect(host.querySelector('.custom-icon')).toBeTruthy();
+                // And the default <i kbq-icon-button="kbq-calendar-o_16"> is NOT projected
+                // (ng-content fallback is replaced by user-supplied content).
+                expect(host.querySelector('i[kbq-icon-button]')).toBeFalsy();
             }));
-        });
-
-        describe('datepicker with tabindex on kbq-datepicker-toggle', () => {
-            it.skip('should forward tabindex from host to button', () => {
-                const fixture = createComponent(DatepickerWithTabindexOnToggle, [KbqLuxonDateModule]);
-
-                fixture.detectChanges();
-
-                const button = fixture.nativeElement.querySelector('.kbq-datepicker-toggle__button');
-
-                expect(button.getAttribute('tabindex')).toBe('7');
-            });
         });
 
         describe('datepicker with min and max dates and validation', () => {
@@ -1798,17 +1772,3 @@ class DelayedDatepicker {
     date: DateTime | null;
     assignedDatepicker: KbqDatepicker<DateTime>;
 }
-
-@Component({
-    imports: [
-        KbqDatepickerModule
-    ],
-    template: `
-        <input [kbqDatepicker]="d" />
-        <kbq-datepicker-toggle-icon kbqSuffix [tabIndex]="7" [for]="d">
-            <div class="custom-icon" kbqDatepickerToggleIcon></div>
-        </kbq-datepicker-toggle-icon>
-        <kbq-datepicker #d />
-    `
-})
-class DatepickerWithTabindexOnToggle {}

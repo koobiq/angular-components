@@ -39,7 +39,7 @@ Replace with specified rules:
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file:
-../../../../../projects/app/src/app/app.html
+../../../../../projects/app/src/app/app.component.html
 Replace with specified rules:
 	neutral-white -> 	<remove from project>
 	brand-default -> 	<remove from project>
@@ -112,7 +112,7 @@ Pay attention: overwriting is possible. Check the code after automatic replaceme
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file:
-../../../../../projects/app/src/app/app.ts
+../../../../../projects/app/src/app/app.component.html
 Replace with specified rules:
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong
@@ -146,7 +146,7 @@ Pay attention: overwriting is possible. Check the code after automatic replaceme
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file:
-../../../../../projects/app/src/app/app.html
+../../../../../projects/app/src/app/app.component.ts
 Replace with specified rules:
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong

@@ -34,11 +34,28 @@ const cssClassesWithDeprecatedColors = colorsVarsReplacement
     .map(({ replace }) => `.test { color: var(--${replace}) }`)
     .join('\n');
 
+/**
+ * `@schematics/angular:application` changed file names across major versions
+ * (`app.component.ts` ↔ `app.ts`, `app.component.html` ↔ `app.html`). Pick
+ * whichever the generator actually produced.
+ */
+const projectPaths = (project: workspaces.ProjectDefinition, tree: Tree | UnitTestTree) => {
+    const root = `/${project.root}/src/app`;
+
+    return {
+        ts: tree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`,
+        html: tree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`,
+        styles: `/${project.root}/src/styles.scss`
+    };
+};
+
 const getProjectContent = (tree: UnitTestTree | Tree, project: workspaces.ProjectDefinition) => {
+    const p = projectPaths(project, tree);
+
     return [
-        tree.read(`/${project.root}/src/app/app.html`)?.toString() || '',
-        tree.read(`/${project.root}/src/app/app.ts`)?.toString() || '',
-        tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
+        tree.read(p.html)?.toString() || '',
+        tree.read(p.ts)?.toString() || '',
+        tree.read(p.styles)?.toString() || ''
     ];
 };
 
@@ -55,17 +72,15 @@ describe(SCHEMATIC_NAME, () => {
 
         projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
         projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.html`;
-            const tsPath = `/${project.root}/src/app/app.ts`;
-            const stylesPath = `/${project.root}/src/styles.scss`;
+            const p = projectPaths(project, appTree);
 
-            appTree.overwrite(templatePath, elementsWithDeprecatedSelectors);
-            appTree.overwrite(stylesPath, cssClassesWithDeprecatedSelectors);
-            appTree.overwrite(tsPath, componentClass);
+            appTree.overwrite(p.html, elementsWithDeprecatedSelectors);
+            appTree.overwrite(p.styles, cssClassesWithDeprecatedSelectors);
+            appTree.overwrite(p.ts, componentClass);
         });
     });
 
-    it.skip('should run migration for specified project', async () => {
+    it('should run migration for specified project', async () => {
         const [firstProjectKey, secondProjectKey] = projects.keys();
         const firstProjectBeforeChanges = getProjectContent(appTree, projects.get(firstProjectKey)!);
         const secondProjectBeforeChanges = getProjectContent(appTree, projects.get(secondProjectKey)!);
@@ -84,7 +99,7 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
-    it.skip('should run migration for whole tree', async () => {
+    it('should run migration for whole tree', async () => {
         projects.forEach((project, key) => {
             expect(getProjectContent(appTree, project)).toMatchSnapshot(`project ${key}: before changes`);
         });
@@ -96,7 +111,7 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
-    it.skip('should inform about deprecated selectors for fix = false (default, without params)', async () => {
+    it('should inform about deprecated selectors for fix = false (default, without params)', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
 
@@ -116,7 +131,7 @@ describe(SCHEMATIC_NAME, () => {
         }
     });
 
-    it.skip('should inform about deprecated colors in the file', async () => {
+    it('should inform about deprecated colors in the file', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
 
@@ -130,13 +145,11 @@ describe(SCHEMATIC_NAME, () => {
         );
 
         projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.html`;
-            const tsPath = `/${project.root}/src/app/app.ts`;
-            const stylesPath = `/${project.root}/src/styles.scss`;
+            const p = projectPaths(project, appTree);
 
-            appTree.overwrite(templatePath, elementsWithDeprecatedColors);
-            appTree.overwrite(stylesPath, cssClassesWithDeprecatedColors);
-            appTree.overwrite(tsPath, '');
+            appTree.overwrite(p.html, elementsWithDeprecatedColors);
+            appTree.overwrite(p.styles, cssClassesWithDeprecatedColors);
+            appTree.overwrite(p.ts, '');
         });
 
         try {

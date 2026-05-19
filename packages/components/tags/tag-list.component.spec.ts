@@ -436,10 +436,7 @@ describe(KbqTagList.name, () => {
                     expect(tagListInstance.keyManager.activeItemIndex).toEqual(-1);
                 });
 
-                // TODO(DS-5064): re-enable after auditing the keydown handler — Angular 20's
-                // event-target handling reports an undefined element during the destroy animation,
-                // causing isInputElement(target) to throw before the noop short-circuit.
-                it.skip('should move focus to the last tag when the focused tag was deleted inside a component with animations', fakeAsync(() => {
+                it('should move focus to the last tag when the focused tag was deleted inside a component with animations', fakeAsync(() => {
                     fixture.destroy();
                     TestBed.resetTestingModule();
                     fixture = createComponent(StandardTagListWithAnimations, []);
@@ -677,8 +674,7 @@ describe(KbqTagList.name, () => {
                 manager = tagListInstance.keyManager;
             });
 
-            // TODO(DS-5064): same keydown-target undefined issue as above.
-            it.skip('should maintain focus if the active tag is deleted', fakeAsync(() => {
+            it('should maintain focus if the active tag is deleted', fakeAsync(() => {
                 const secondTag = fixture.nativeElement.querySelectorAll('.kbq-tag')[1];
 
                 secondTag.focus();
@@ -950,8 +946,7 @@ describe(KbqTagList.name, () => {
             expect(fixture.componentInstance.control.dirty).toEqual(false);
         }));
 
-        // TODO(DS-5064): same keydown-target undefined issue as above.
-        it.skip('should set the control to dirty when a tag is removed via UI (BACKSPACE)', fakeAsync(() => {
+        it('should set the control to dirty when a tag is removed via UI (BACKSPACE)', fakeAsync(() => {
             expect(fixture.componentInstance.control.dirty).toEqual(false);
 
             const tagListDebugEl = fixture.debugElement.query(By.directive(KbqTagList));

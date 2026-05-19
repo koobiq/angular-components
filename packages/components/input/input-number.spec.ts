@@ -267,23 +267,30 @@ describe('KbqNumberInput', () => {
         expect(icons.length).toBe(2);
     }));
 
-    // TODO(DS-5063): re-enable after auditing form-field cleaner-detection timing — Angular 20
-    // schedules ngAfterContentInit errors as microtask rejections; the test's try/catch + flush()
-    // wrapper no longer surfaces the thrown error to expect().toThrow().
-    it.skip('should throw error with stepper', fakeAsync(() => {
+    it('should throw error with stepper', () => {
+        // KbqFormField.ngAfterContentInit() throws when it detects a kbq-cleaner inside
+        // a number input. Override ComponentFixtureAutoDetect so CD doesn't run inside
+        // TestBed.createComponent — that way the throw originates from our explicit
+        // fixture.detectChanges() call, where expect-to-throw can capture it.
         jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        const fixture = createComponent(KbqNumberInputWithCleaner);
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            imports: [
+                ReactiveFormsModule,
+                FormsModule,
+                KbqInputModule,
+                KbqLocaleServiceModule,
+                KbqFormFieldModule,
+                KbqNumberInputWithCleaner
+            ],
+            providers: [{ provide: ComponentFixtureAutoDetect, useValue: false }]
+        }).compileComponents();
 
-        expect(() => {
-            try {
-                fixture.detectChanges();
-                flush();
-            } catch {
-                flush();
-            }
-        }).toThrow(getKbqFormFieldYouCanNotUseCleanerInNumberInputError());
-    }));
+        const fixture = TestBed.createComponent(KbqNumberInputWithCleaner);
+
+        expect(() => fixture.detectChanges()).toThrow(getKbqFormFieldYouCanNotUseCleanerInNumberInputError());
+    });
 
     it('should throw an exception with kbq-cleaner', fakeAsync(() => {
         const fixture = createComponent(KbqNumberInputTestComponent);

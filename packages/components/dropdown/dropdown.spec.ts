@@ -460,21 +460,34 @@ describe('KbqDropdown', () => {
         expect(focusSpyFn).toHaveBeenCalledWith('touch');
     }));
 
-    // todo fix me after update angular
-    xit('should close the dropdown when using the CloseScrollStrategy', fakeAsync(() => {
+    it('should close the dropdown when using the CloseScrollStrategy', fakeAsync(() => {
         const scrolledSubject = new Subject();
-        const fixture = createComponent(
-            SimpleDropdown,
-            [
-                { provide: ScrollDispatcher, useFactory: () => ({ scrolled: () => scrolledSubject }) },
-                {
-                    provide: KBQ_DROPDOWN_SCROLL_STRATEGY,
-                    deps: [Overlay],
-                    useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close()
-                }
-            ],
-            []
-        );
+
+        // KbqDropdownModule (imported by SimpleDropdown as a standalone-component import)
+        // declares its own provider for KBQ_DROPDOWN_SCROLL_STRATEGY, which shadows
+        // TestBed-level providers. TestBed.overrideProvider bypasses that scoping.
+        TestBed.configureTestingModule({
+            imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown]
+        });
+        TestBed.overrideProvider(ScrollDispatcher, {
+            useFactory: () => ({ scrolled: () => scrolledSubject })
+        });
+        TestBed.overrideProvider(KBQ_DROPDOWN_SCROLL_STRATEGY, {
+            deps: [Overlay],
+            useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close()
+        });
+        TestBed.compileComponents();
+
+        // Capture the OverlayContainer + FocusMonitor so the suite's afterEach can
+        // dispose them — `createComponent()` would have done this for us, but we
+        // need to use overrideProvider above which bypasses that helper.
+        inject([OverlayContainer, FocusMonitor], (oc: OverlayContainer, fm: FocusMonitor) => {
+            overlayContainer = oc;
+            overlayContainerElement = oc.getContainerElement();
+            focusMonitor = fm;
+        })();
+
+        const fixture = TestBed.createComponent(SimpleDropdown);
 
         fixture.detectChanges();
 
@@ -486,7 +499,8 @@ describe('KbqDropdown', () => {
         expect(trigger.opened).toBe(true);
 
         scrolledSubject.next(null);
-        tick(500);
+        flush();
+        fixture.detectChanges();
 
         expect(trigger.opened).toBe(false);
     }));

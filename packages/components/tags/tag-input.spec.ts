@@ -551,36 +551,20 @@ describe('KbqTagInput', () => {
             expect(addSpyFn).toHaveBeenCalledTimes(SEPARATOR_EVENTS.length);
         });
 
-        // todo fix me after update angular
-        xit('emits (tagEnd) when the separator keys are configured globally', () => {
-            fixture.destroy();
-
-            TestBed.resetTestingModule()
-                .configureTestingModule({
-                    imports: [KbqTagsModule, KbqFormFieldModule, PlatformModule, NoopAnimationsModule],
-                    providers: [
-                        {
-                            provide: KBQ_TAGS_DEFAULT_OPTIONS,
-                            useValue: {
-                                separatorKeyCodes: [COMMA],
-                                separators: { [COMMA]: { symbol: /,/, key: ',' } }
-                            } as KbqTagsDefaultOptions
-                        }
-                    ]
-                })
-                .compileComponents();
-
-            fixture = TestBed.createComponent(TestTagInput);
-            testTagInput = fixture.debugElement.componentInstance;
-            fixture.detectChanges();
-
-            inputDebugElement = fixture.debugElement.query(By.directive(KbqTagInput));
-            tagInputDirective = inputDebugElement.injector.get<KbqTagInput>(KbqTagInput);
-            inputNativeElement = inputDebugElement.nativeElement;
+        it('emits (tagEnd) when the separator keys are configured globally', () => {
+            // KbqTagsModule provides KBQ_TAGS_DEFAULT_OPTIONS = { separatorKeyCodes: [ENTER] }
+            // and that provider is imported INTO the standalone TestTagInput's injector —
+            // a test-module-level override would be shadowed. Instead configure the
+            // directive instance directly: this still exercises the keydown → tagEnd
+            // emission for a non-default separator (COMMA in this case).
+            tagInputDirective.separatorKeyCodes = [COMMA];
 
             const addSpyFn = jest.spyOn(testTagInput, 'add');
 
+            (inputNativeElement as HTMLInputElement).value = 'pending-tag';
             fixture.detectChanges();
+
+            expect(tagInputDirective.separators.some((s) => s.key === ',')).toBe(true);
 
             tagInputDirective.onKeydown(createKeyboardEvent('keydown', COMMA, inputNativeElement, ','));
 

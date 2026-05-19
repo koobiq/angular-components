@@ -266,12 +266,6 @@ describe('KbqAppSwitcher', () => {
                 expect(hideSpy).not.toHaveBeenCalled();
             });
         });
-
-        // TODO(DS-XXXX): port to sites setter (single-site mode) — original tests covered
-        // grouping logic via the now-removed deprecated `apps` setter.
-        describe.skip('makeGroupsForApps — grouping logic (deprecated apps setter)', () => {
-            it('placeholder', () => {});
-        });
     });
 
     describe('KbqAppSwitcherComponent', () => {

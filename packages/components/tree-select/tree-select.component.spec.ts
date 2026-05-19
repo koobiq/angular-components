@@ -3219,29 +3219,30 @@ describe('KbqTreeSelect', () => {
             tick(10);
         }));
 
-        // TODO(DS-2838): legacy validation behavior — see select.component.spec.ts for full note.
-        it.skip('should not set the invalid class on a clean select', fakeAsync(() => {
+        // See select.component.spec.ts for the full rationale — default
+        // ErrorStateMatcher shows `.kbq-invalid` on touched-invalid, hides on clean,
+        // and drops it once the value satisfies the validators.
+        it('should not set the invalid class on a clean (untouched) select', fakeAsync(() => {
             expect(testComponent.formGroup.untouched).toBe(true);
-
-            expect(testComponent.formControl.invalid).toBe(false);
+            expect(testComponent.formControl.invalid).toBe(true);
 
             expect(select.classList).not.toContain('kbq-invalid');
         }));
 
-        it.skip('should not appear as invalid if it becomes touched', fakeAsync(() => {
+        it('should set the invalid class after the control is touched while still invalid', fakeAsync(() => {
             expect(select.classList).not.toContain('kbq-invalid');
 
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
 
-            expect(select.classList).not.toContain('kbq-invalid');
+            expect(select.classList).toContain('kbq-invalid');
         }));
 
-        it.skip('should not have the invalid class when the select becomes valid', fakeAsync(() => {
+        it('should drop the invalid class once a touched-then-invalid select becomes valid', fakeAsync(() => {
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
 
-            expect(select.classList).not.toContain('kbq-invalid');
+            expect(select.classList).toContain('kbq-invalid');
 
             testComponent.formControl.setValue('pizza-1');
             fixture.detectChanges();

@@ -210,21 +210,29 @@ describe('KbqPasswordInput', () => {
         expect(kbqPasswordHints.length).toBe(5);
     });
 
-    // TODO(DS-5063): same Angular-20 ngAfterContentInit timing change as input-number's stepper test.
-    it.skip('should throw Error if custom password rule selected and verification method not provided', fakeAsync(() => {
+    it('should throw Error if custom password rule selected and verification method not provided', () => {
+        // Same Angular-20 pattern as input-number's stepper test: turn off
+        // ComponentFixtureAutoDetect so the lifecycle throw originates from our
+        // explicit detectChanges() call inside the expect-to-throw wrapper.
         jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        const fixture = createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            imports: [
+                FormsModule,
+                ReactiveFormsModule,
+                KbqFormFieldModule,
+                KbqInputModule,
+                KbqToolTipModule,
+                KbqPasswordInputCustomPasswordRulesUndefined
+            ],
+            providers: [{ provide: ComponentFixtureAutoDetect, useValue: false }]
+        }).compileComponents();
 
-        expect(() => {
-            try {
-                fixture.detectChanges();
-                flush();
-            } catch {
-                flush();
-            }
-        }).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
-    }));
+        const fixture = TestBed.createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
+
+        expect(() => fixture.detectChanges()).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
+    });
 
     it('should provide custom password rule via callback', fakeAsync(() => {
         const valueToTest = 'TestValue';
