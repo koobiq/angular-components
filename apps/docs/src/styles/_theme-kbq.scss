@@ -12,7 +12,6 @@
 @use '../app/components/anchors/anchors-theme';
 @use '../app/components/footer/footer-theme';
 @use '../app/components/sidenav/sidenav-theme';
-@use '../app/components/navbar/navbar-theme';
 @use '../app/components/welcome/welcome-theme';
 @use '../app/components/live-example-viewer/live-example-viewer-theme';
 @use '../app/components/page-not-found/page-not-found-theme';
@@ -33,7 +32,6 @@
     @include component-viewer-theme.kbq-docs-component-viewer-typography();
     @include footer-theme.kbq-docs-footer-typography();
     @include sidenav-theme.kbq-docs-sidenav-typography();
-    @include navbar-theme.kbq-docs-navbar-typography();
     @include icons-viewer-theme.kbq-docs-icons-viewer-typography();
     @include welcome-theme.kbq-docs-welcome-typography();
     @include live-example-viewer-theme.kbq-docs-live-example-viewer-typography();
@@ -46,7 +44,6 @@
     @include anchors-theme.kbq-docs-anchors-theme();
     @include footer-theme.kbq-docs-footer-theme();
     @include sidenav-theme.kbq-docs-sidenav-theme();
-    @include navbar-theme.kbq-docs-navbar-theme();
     @include icons-viewer-theme.kbq-docs-icons-viewer-theme();
     @include live-example-viewer-theme.kbq-docs-live-example-viewer-theme();
     @include hot-keys.docs-hot-key-button-theme();
