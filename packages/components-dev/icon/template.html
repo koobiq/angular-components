@@ -2,7 +2,21 @@
 
 <hr />
 
+<h3>SVG icon provisioning approaches</h3>
+
+<p>Approach A — Sprite (kbqIconsProvider): one HTTP request, all icons available via kbq- prefix</p>
+<i kbq-icon="kbq:chevron-down-s_16" [color]="colors.Theme"></i>
+<i kbq-icon="kbq:plus_16" [color]="colors.Theme"></i>
+
+<p>Approach B — URL resolver (kbqIconsResolverProvider): each icon fetched on demand by name</p>
+<i kbq-icon="chevron-down-s_16" [color]="colors.Theme"></i>
+<i kbq-icon="plus_16" [color]="colors.Theme"></i>
+
+<p>Approach D — Font fallback (no provider needed)</p>
+
+<i kbq-icon="kbq-chevron-down-s_16"></i>
 icon
+
 <table class="dev-icon-table">
     <thead>
         <tr>

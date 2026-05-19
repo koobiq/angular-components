@@ -989,6 +989,14 @@
                         "outputPath": {
                             "base": "dist/e2e"
                         },
+
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/svg",
+                                "output": "/assets/SVGIcons"
+                            }
+                        ],
                         "tsConfig": "packages/e2e/tsconfig.app.json",
                         "index": "packages/e2e/index.html",
                         "styles": ["packages/e2e/main.scss"],
@@ -1287,6 +1295,18 @@
                         "outputPath": {
                             "base": "dist/components-dev/icon"
                         },
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/symbol/svg",
+                                "output": "/assets/svg-icons/sprite"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/svg",
+                                "output": "/assets/svg-icons"
+                            }
+                        ],
                         "tsConfig": "packages/components-dev/icon/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],

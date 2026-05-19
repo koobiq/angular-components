@@ -7,7 +7,7 @@
 
 <kbq-modal-body>
     <div class="docs-icon-preview-modal__preview-area">
-        <i #iconPreview kbq-icon [color]="color()" [ngClass]="iconItem.cssClass"></i>
+        <i #iconPreview [kbq-icon]="iconItem.cssClass" [color]="color()"></i>
     </div>
     <div class="docs-icon-preview-modal__content">
         <kbq-form-field>

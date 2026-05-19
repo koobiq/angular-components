@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -11,7 +12,8 @@ if (e2eEnvironment.production) enableProdMode();
 bootstrapApplication(E2eApp, {
     providers: [
         provideNoopAnimations(),
-        provideRouter(e2eRoutes)
+        provideRouter(e2eRoutes),
+        provideHttpClient()
     ]
     // eslint-disable-next-line no-console
 }).catch((error) => console.error(error));
