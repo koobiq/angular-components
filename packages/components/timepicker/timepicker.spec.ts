@@ -105,21 +105,6 @@ const getAsyncValidator =
         <kbq-form-field>
             <input kbqTimepicker [formControl]="control" />
         </kbq-form-field>
-    `
-})
-class LegacyTimepickerControlWithAsyncValidators {
-    readonly timepickerInput = viewChild.required(KbqTimepicker);
-    readonly control = new FormControl<DateTime | null>(null, {
-        asyncValidators: [getAsyncValidator()]
-    });
-}
-
-@Component({
-    imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
-    template: `
-        <kbq-form-field>
-            <input kbqTimepicker [formControl]="control" />
-        </kbq-form-field>
     `,
     providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
@@ -325,35 +310,6 @@ describe(KbqTimepicker.name, () => {
     });
 
     describe('async validation', () => {
-        it.skip('should emit VALID via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-            const fixture = createComponent(LegacyTimepickerControlWithAsyncValidators);
-
-            fixture.detectChanges();
-
-            const { timepickerInput, control } = fixture.componentInstance;
-            const statuses: FormControlStatus[] = [];
-
-            const subscription = control.statusChanges!.subscribe((status) => statuses.push(status));
-
-            control.setValue(DateTime.local(2020, 1, 1, 10, 0, 0));
-
-            expect(control.status).toBe('PENDING');
-            expect(statuses).toEqual(['PENDING']);
-
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            timepickerInput().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            subscription.unsubscribe();
-        }));
-
         it('should emit VALID via statusChanges on blur', fakeAsync(() => {
             const fixture = createComponent(TimepickerControlWithAsyncValidators);
 
@@ -568,26 +524,6 @@ describe('KbqTimepicker', () => {
 
             expect(testComponent.timeValue.toString()).toContain('18:09');
         }));
-
-        it.skip('Should run validation on blur', () => {
-            expect(testComponent.ngModel.valid).toBeTruthy();
-            expect(inputElementDebug.nativeElement.value).toBe('12:18');
-
-            inputElementDebug.triggerEventHandler('paste', {
-                preventDefault: () => null,
-                clipboardData: {
-                    getData: () => 'string'
-                }
-            });
-
-            fixture.detectChanges();
-
-            expect(inputElementDebug.nativeElement.value).toBe('string');
-
-            inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
-
-            expect(testComponent.ngModel.valid).toBeFalsy();
-        });
 
         it('Should not change model on blur', () => {
             const date = testComponent.adapter.toIso8601(testComponent.timeValue);

@@ -104,22 +104,6 @@ const getAsyncValidator =
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" />
         </kbq-form-field>
-    `
-})
-class LegacyTreeSelectControlWithAsyncValidators {
-    readonly treeSelect = viewChild.required(KbqTreeSelect);
-    readonly control = new FormControl<string>('', {
-        nonNullable: true,
-        asyncValidators: [getAsyncValidator()]
-    });
-}
-
-@Component({
-    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select [formControl]="control" />
-        </kbq-form-field>
     `,
     providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
@@ -4475,32 +4459,6 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('async validation', () => {
-        it.skip('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-            const fixture = createComponent(LegacyTreeSelectControlWithAsyncValidators);
-            const { control, treeSelect } = fixture.componentInstance;
-            const statuses: FormControlStatus[] = [];
-
-            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
-
-            control.setValue('1');
-
-            expect(control.status).toBe('PENDING');
-            expect(statuses).toEqual(['PENDING']);
-
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            treeSelect().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
-
-            subscription.unsubscribe();
-        }));
-
         it('should emit VALID via statusChanges on blur', fakeAsync(() => {
             const fixture = createComponent(TreeSelectControlWithAsyncValidators);
             const { control, treeSelect } = fixture.componentInstance;

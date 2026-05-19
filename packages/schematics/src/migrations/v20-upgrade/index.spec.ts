@@ -116,7 +116,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('[kbqWarningTooltip]');
     });
 
-    it('rewrites toBoolean(x) call to booleanAttribute(x)', async () => {
+    it('rewrites toBoolean(x) call to booleanAttribute(x) and injects @angular/core import', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
 
@@ -132,6 +132,85 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(updated).toContain('booleanAttribute(');
         expect(updated).not.toContain('toBoolean(');
+        // Import injection — the rewrite would otherwise leave booleanAttribute undefined.
+        expect(updated).toMatch(/import\s*\{[^}]*\bbooleanAttribute\b[^}]*\}\s*from\s*['"]@angular\/core['"]/);
+    });
+
+    it('extends an existing @angular/core import clause rather than duplicating the import line', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { Component } from '@angular/core';\nimport { toBoolean } from '@koobiq/components/core';\nconst v = toBoolean('x');\n"
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        // Only one @angular/core import line, containing both symbols.
+        const angularCoreImports = updated.match(/from\s*['"]@angular\/core['"]/g) ?? [];
+
+        expect(angularCoreImports.length).toBe(1);
+        expect(updated).toMatch(
+            /import\s*\{[^}]*\bComponent\b[^}]*\bbooleanAttribute\b[^}]*\}\s*from\s*['"]@angular\/core['"]/
+        );
+    });
+
+    it('rewrites selectors in @Component inline templates inside .ts files', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { Component } from '@angular/core';\n" +
+                "@Component({ selector: 'x', template: '<kbq-filter-search></kbq-filter-search>' })\n" +
+                'export class X {}\n'
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        expect(updated).toContain('<kbq-search-expandable>');
+        expect(updated).toContain('</kbq-search-expandable>');
+        expect(updated).not.toContain('kbq-filter-search');
+    });
+
+    it('warns about kbqComponentParams: needing inject(KBQ_MODAL_DATA) in the child component', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(ts, "const opts = { kbqComponentParams: { title: 'x' } };\n");
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        // Caller-side gets rewritten…
+        expect(updated).toContain('data:');
+        expect(updated).not.toContain('kbqComponentParams:');
+        // …and the user is told the child must change too.
+        expect(messages.some((m) => m.includes('KBQ_MODAL_DATA'))).toBe(true);
     });
 
     it('rewrites .kbq-risk-level CSS class to .kbq-badge', async () => {

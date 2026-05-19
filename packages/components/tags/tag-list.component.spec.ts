@@ -192,27 +192,6 @@ export class TestFormFieldTagList {
                 <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
             </kbq-tag-list>
         </kbq-form-field>
-    `
-})
-class LegacyTagListControlWithAsyncValidators {
-    readonly tagList = viewChild.required(KbqTagList);
-    readonly control = new FormControl('', {
-        nonNullable: true,
-        asyncValidators: [getAsyncValidator()]
-    });
-}
-
-@Component({
-    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
-    template: `
-        <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" [formControl]="control">
-                <kbq-tag value="1">1</kbq-tag>
-                <kbq-tag value="2">2</kbq-tag>
-
-                <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
-            </kbq-tag-list>
-        </kbq-form-field>
     `,
     providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
@@ -1826,32 +1805,6 @@ describe(KbqTagList.name, () => {
     });
 
     describe('async validation', () => {
-        it.skip('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-            const fixture = createStandaloneComponent(LegacyTagListControlWithAsyncValidators);
-            const { control, tagList } = fixture.componentInstance;
-            const statuses: FormControlStatus[] = [];
-
-            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
-
-            control.setValue('1');
-
-            expect(control.status).toBe('PENDING');
-            expect(statuses).toEqual(['PENDING']);
-
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            tagList().blur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
-
-            subscription.unsubscribe();
-        }));
-
         it('should emit VALID via statusChanges on blur', fakeAsync(() => {
             const fixture = createStandaloneComponent(TagListControlWithAsyncValidators);
             const { control, tagList } = fixture.componentInstance;

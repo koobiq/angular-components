@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -11,6 +12,7 @@ import {
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
+import { KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 
 const PIPE_TEMPLATE_ID = 'TestText';
 
@@ -464,6 +466,48 @@ describe('KbqFilterBar', () => {
             const filterBar = getFilterBar();
 
             expect(filterBar.selectedAllEqualsSelectedNothing).toBe(true);
+        });
+    });
+
+    // Replacement for the projection coverage that used to live in filter-search.spec.ts
+    // (removed in v20.0.0 when KbqFilterBarSearch was deleted in favor of kbq-search-expandable).
+    describe('search-expandable projection slot', () => {
+        @Component({
+            selector: 'test-app-with-search',
+            imports: [KbqFilterBarModule, KbqSearchExpandableModule, ReactiveFormsModule],
+            template: `
+                <kbq-filter-bar>
+                    <kbq-search-expandable [formControl]="searchControl" />
+                </kbq-filter-bar>
+            `
+        })
+        class TestComponentWithSearch {
+            readonly searchControl = new FormControl('');
+        }
+
+        it('should project <kbq-search-expandable> into the kbq-filter-bar__right slot', () => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    KbqFilterBarModule,
+                    KbqSearchExpandableModule,
+                    ReactiveFormsModule,
+                    TestComponentWithSearch
+                ]
+            });
+
+            const localFixture = TestBed.createComponent(TestComponentWithSearch);
+
+            localFixture.detectChanges();
+
+            const filterBarHost = localFixture.debugElement.query(By.directive(KbqFilterBar))
+                .nativeElement as HTMLElement;
+            const rightSlot = filterBarHost.querySelector('.kbq-filter-bar__right');
+
+            expect(rightSlot).not.toBeNull();
+            // The projected component should be rendered inside the right slot.
+            expect(rightSlot!.querySelector('kbq-search-expandable')).not.toBeNull();
+            expect(localFixture.debugElement.query(By.directive(KbqSearchExpandable))).not.toBeNull();
         });
     });
 });

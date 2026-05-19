@@ -13,6 +13,13 @@ export interface Replacement {
     to: string;
     /** Optional human-readable note shown in dry-run / warn mode. */
     note?: string;
+    /**
+     * When this replacement matches in a .ts file, ensure the listed import
+     * specifier is present. Used for rewrites that introduce a symbol the
+     * user did not previously import (e.g. `toBoolean(` → `booleanAttribute(`
+     * requires `import { booleanAttribute } from '@angular/core'`).
+     */
+    ensureImport?: { symbol: string; from: string };
 }
 
 /** TypeScript-source replacements (imports + identifiers + method renames). */
@@ -62,8 +69,16 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bKBQ_SIDEPANEL_WITH_SHADOW\\b', to: '' },
     { from: '\\bmcSanityChecksFactory\\b', to: '' },
     { from: '\\bKbqCommonModule\\b', to: '' },
-    { from: '\\btoBoolean\\(', to: 'booleanAttribute(' },
-    { from: '\\bisCorrectExtension\\(', to: 'FileValidators.isCorrectExtension(' },
+    {
+        from: '\\btoBoolean\\(',
+        to: 'booleanAttribute(',
+        ensureImport: { symbol: 'booleanAttribute', from: '@angular/core' }
+    },
+    {
+        from: '\\bisCorrectExtension\\(',
+        to: 'FileValidators.isCorrectExtension(',
+        ensureImport: { symbol: 'FileValidators', from: '@koobiq/components/file-upload' }
+    },
     { from: '\\bformatDataSize\\(', to: 'getFormattedSizeParts(' },
 
     // ─── Method renames on instances ──────────────────────────────────────
@@ -72,7 +87,14 @@ export const tsReplacements: Replacement[] = [
     { from: '\\.focusViaKeyboard\\(', to: '.focus(' },
 
     // ─── Modal options object key ─────────────────────────────────────────
-    { from: '\\bkbqComponentParams:', to: 'data:', note: 'and read with inject(KBQ_MODAL_DATA) in the child component' }
+    {
+        from: '\\bkbqComponentParams:',
+        to: 'data:',
+        note:
+            'kbqComponentParams was renamed to data. The CHILD modal component must read the ' +
+            'payload via inject(KBQ_MODAL_DATA) instead of @Input — this rewrite only changes ' +
+            'the caller side.'
+    }
 ];
 
 /** Template (HTML / inline-template string) replacements — selectors + attributes. */
@@ -161,5 +183,12 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqAppSwitcherTrigger.apps @Input was removed. Wrap your apps array in a single ' +
             'KbqAppSwitcherSite and pass it via [sites]="[{ id, name, apps }]".'
+    },
+    {
+        pattern: '\\bkbqComponentParams:',
+        message:
+            'kbqComponentParams is being rewritten to "data:" — remember the CHILD modal ' +
+            "component must read the payload via inject(KBQ_MODAL_DATA) (from '@koobiq/components/modal') " +
+            'instead of @Input.'
     }
 ];

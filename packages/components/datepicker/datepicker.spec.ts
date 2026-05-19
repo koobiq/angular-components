@@ -101,22 +101,6 @@ const getAsyncValidator =
         timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
-    imports: [KbqDatepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
-    template: `
-        <kbq-form-field>
-            <input [kbqDatepicker]="d" [formControl]="control" />
-            <kbq-datepicker #d />
-        </kbq-form-field>
-    `
-})
-class LegacyDatepickerControlWithAsyncValidators {
-    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
-    readonly control = new FormControl<DateTime | null>(null, {
-        asyncValidators: [getAsyncValidator()]
-    });
-}
-
-@Component({
     imports: [KbqDatepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
     template: `
         <kbq-form-field>
@@ -946,35 +930,6 @@ describe('KbqDatepicker', () => {
         });
 
         describe('async validation', () => {
-            it.skip('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-                const fixture = createComponent(LegacyDatepickerControlWithAsyncValidators, [KbqLuxonDateModule]);
-
-                fixture.detectChanges();
-
-                const { datepickerInput, control } = fixture.componentInstance;
-                const statuses: FormControlStatus[] = [];
-
-                const subscription = control.statusChanges!.subscribe((status) => statuses.push(status));
-
-                control.setValue(DateTime.local(2020, 1, 1));
-
-                expect(control.status).toBe('PENDING');
-                expect(statuses).toEqual(['PENDING']);
-
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-                expect(control.status).toBe('VALID');
-                expect(statuses).toEqual(['PENDING', 'VALID']);
-
-                datepickerInput().onBlur();
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-                expect(control.status).toBe('VALID');
-                expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
-
-                subscription.unsubscribe();
-            }));
-
             it('should emit VALID via statusChanges on blur', fakeAsync(() => {
                 const fixture = createComponent(DatepickerControlWithAsyncValidators, [KbqLuxonDateModule]);
 
@@ -1022,8 +977,11 @@ describe('KbqDatepicker', () => {
                 flush();
             }));
 
-            // TODO(DS-XXXX): kbq-datepicker-toggle was removed in v20; rewrite these for
-            // <kbq-datepicker-toggle-icon> (the icon-only directive does not render a <button>).
+            // TODO(DS-5079): kbq-datepicker-toggle was removed in v20.0.0; rewrite these tests
+            // for <kbq-datepicker-toggle-icon>, which renders <i kbq-icon-button> instead of
+            // a <button>. The icon-only directive does not expose `aria-haspopup`/`type` on a
+            // button element, so the assertions must target the host directive and the
+            // overlay trigger rather than DOM-querying `By.css('button')`.
             it.skip('should set `aria-haspopup` on the toggle button', () => {
                 const button = fixture.debugElement.query(By.css('button'));
 

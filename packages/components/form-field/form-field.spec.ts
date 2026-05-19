@@ -239,17 +239,6 @@ export class PasswordFormField {
 }
 
 @Component({
-    selector: 'input-form-field-with-legacy-validation-directive',
-    imports: [KbqFormFieldModule, KbqInputModule],
-    template: `
-        <kbq-form-field>
-            <input kbqInput />
-        </kbq-form-field>
-    `
-})
-export class InputFormFieldWithLegacyValidationDirective {}
-
-@Component({
     selector: 'input-form-field-in-overlay',
     imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
     template: `
@@ -626,22 +615,6 @@ describe(KbqFormField.name, () => {
         input.dispatchEvent(new Event('input'));
 
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
-    });
-
-    it.skip('should apply legacy KbqValidateDirective by default', () => {
-        const { debugElement } = createComponent(InputFormFieldWithLegacyValidationDirective);
-
-        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_has-validate-directive']).toBeTruthy();
-        expect(getInputDebugElement(debugElement).classes['kbq-control_has-validate-directive']).toBeTruthy();
-    });
-
-    it.skip('should disable legacy KbqValidateDirective by kbqDisableLegacyValidationDirective() provider', () => {
-        const { debugElement } = createComponent(InputFormFieldWithLegacyValidationDirective, [
-            kbqDisableLegacyValidationDirectiveProvider()
-        ]);
-
-        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_has-validate-directive']).toBeFalsy();
-        expect(getInputDebugElement(debugElement).classes['kbq-control_has-validate-directive']).toBeFalsy();
     });
 
     it('should add .kbq-form-field_in-overlay for KbqFormField', () => {
