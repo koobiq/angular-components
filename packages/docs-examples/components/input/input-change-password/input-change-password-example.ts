@@ -16,7 +16,7 @@ import {
     kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
-import { KbqFormFieldModule, KbqPasswordToggle } from '@koobiq/components/form-field';
+import { KbqPasswordToggle } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 @Injectable()
@@ -36,7 +36,6 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
     selector: 'input-change-password-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqPasswordToggle,
         KbqButtonModule

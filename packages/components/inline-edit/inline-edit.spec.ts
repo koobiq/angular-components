@@ -15,7 +15,6 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -572,7 +571,6 @@ export class BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqInlineEditModule
     ],
@@ -636,7 +634,6 @@ export class TestComponent extends BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqTextareaModule,
         KbqDropdownModule,
@@ -702,7 +699,6 @@ export class TestWithMenu extends BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqTextareaModule
     ],
@@ -762,7 +758,6 @@ export class TestWithTextareaControl extends BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqTextareaModule,
         ReactiveFormsModule
@@ -824,7 +819,7 @@ export class TestWithValidatedControl extends BaseTestComponent {
 
 @Component({
     selector: 'name',
-    imports: [FormsModule, KbqFormFieldModule, KbqInputModule, KbqInlineEditModule],
+    imports: [FormsModule, KbqInputModule, KbqInlineEditModule],
     template: `
         <kbq-inline-edit [interactiveSelectors]="interactiveSelectors()" (modeChange)="onModeChange($event)">
             <div kbqInlineEditViewMode>
@@ -848,7 +843,6 @@ export class TestWithClickableContent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqOptionModule,
         KbqSelectModule
@@ -920,7 +914,6 @@ export class TestWithSelect extends BaseTestComponent {
     selector: 'name',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqInlineEditModule
     ],

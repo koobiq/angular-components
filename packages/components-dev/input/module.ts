@@ -17,13 +17,7 @@ import {
     KbqLocaleServiceModule,
     KbqNormalizeWhitespace
 } from '@koobiq/components/core';
-import {
-    hasPasswordStrengthError,
-    KbqFormField,
-    KbqFormFieldModule,
-    KbqPasswordHint,
-    PasswordRules
-} from '@koobiq/components/form-field';
+import { hasPasswordStrengthError, KbqFormField, KbqPasswordHint, PasswordRules } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleComponent } from '@koobiq/components/toggle';
@@ -68,7 +62,6 @@ export class DevDocsExamples {}
         FormsModule,
         ReactiveFormsModule,
         KbqLocaleServiceModule,
-        KbqFormFieldModule,
         KbqButtonModule,
         KbqInputModule,
         KbqToolTipModule,

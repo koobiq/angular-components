@@ -13,7 +13,6 @@ import {
     PopUpSizes,
     ThemePalette
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -55,7 +54,6 @@ export class DevDocsExamples {}
         FormsModule,
         CdkScrollableModule,
         KbqFormsModule,
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqPopoverModule,
         KbqButtonModule,

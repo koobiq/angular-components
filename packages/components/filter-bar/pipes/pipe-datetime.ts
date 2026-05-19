@@ -21,7 +21,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
@@ -39,7 +38,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
     selector: 'kbq-pipe-datetime',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqInputModule,
         KbqDividerModule,

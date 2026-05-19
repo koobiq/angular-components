@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field without borders */
 @Component({
     selector: 'form-field-without-borders-example',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field noBorders>
             <input placeholder="Form field without borders" kbqInput [formControl]="formControl" />

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     FlatTreeControl,
@@ -109,7 +108,7 @@ export const DATA_OBJECT = {
  */
 @Component({
     selector: 'tree-select-child-selection-overview-example',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqTreeSelectModule, KbqTreeModule, KbqIconModule],
+    imports: [ReactiveFormsModule, KbqTreeSelectModule, KbqTreeModule, KbqIconModule],
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" [multiple]="true" (selectionChange)="onSelectionChange($event)">

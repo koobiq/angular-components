@@ -92,7 +92,6 @@ const groupedZones: KbqTimezoneGroup[] = [
 @Component({
     selector: 'basic-timezone-select',
     imports: [
-        KbqFormFieldModule,
         KbqTimezoneModule,
         ReactiveFormsModule,
         KbqOptionModule
@@ -134,7 +133,6 @@ class BasicTimezoneSelect {
 @Component({
     selector: 'select-with-search',
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqSelectSearch,
         KbqTimezoneModule,

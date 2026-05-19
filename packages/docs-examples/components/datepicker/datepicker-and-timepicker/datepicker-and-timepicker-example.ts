@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
@@ -18,7 +17,6 @@ import { DateTime } from 'luxon';
         LuxonDateModule,
         KbqTimepickerModule,
         KbqDatepickerModule,
-        KbqFormFieldModule,
         KbqFormsModule,
         KbqIconModule
     ],

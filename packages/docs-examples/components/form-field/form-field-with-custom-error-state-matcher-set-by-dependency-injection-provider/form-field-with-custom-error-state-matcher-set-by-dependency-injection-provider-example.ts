@@ -14,7 +14,6 @@ import {
     kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -30,7 +29,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 /** @title Form field with CustomErrorStateMatcher which set by DI provider */
 @Component({
     selector: 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule, KbqButtonModule],
+    imports: [KbqInputModule, ReactiveFormsModule, KbqButtonModule],
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>

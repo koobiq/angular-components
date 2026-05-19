@@ -3,7 +3,6 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChil
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
@@ -20,7 +19,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag $
     selector: 'tag-autocomplete-option-operations-example',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqTagsModule,
         ReactiveFormsModule,
         KbqAutocompleteModule,

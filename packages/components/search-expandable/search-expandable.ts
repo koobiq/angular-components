@@ -23,7 +23,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, ruRULocaleData } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -47,7 +46,6 @@ export const defaultEmitValueTimeout = 200;
         KbqInputModule,
         FormsModule,
         KbqToolTipModule,
-        KbqFormFieldModule,
         ReactiveFormsModule
     ],
     templateUrl: './search-expandable.html',

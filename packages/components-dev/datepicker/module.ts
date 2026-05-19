@@ -3,7 +3,6 @@ import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/f
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepicker, KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
@@ -42,7 +41,6 @@ export class DevDocsExamples {}
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqToolTipModule,
         KbqDatepickerModule,
         KbqTimepickerModule,

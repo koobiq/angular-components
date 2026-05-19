@@ -21,7 +21,7 @@ import {
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { map, Observable, timer } from 'rxjs';
@@ -46,7 +46,6 @@ const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement 
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -62,7 +61,6 @@ class KbqInputInvalid {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         FormsModule,
         KbqInputModule
     ],
@@ -78,7 +76,6 @@ class KbqInputWithKbqInputMonospace {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -96,7 +93,6 @@ class KbqInputForBehaviors {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         FormsModule
@@ -114,7 +110,6 @@ class KbqFormFieldWithCleaner {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule
     ],
     template: `
@@ -128,7 +123,6 @@ class KbqFormFieldWithHint {}
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule
     ],
@@ -143,7 +137,6 @@ class KbqFormFieldWithPrefix {}
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule
     ],
@@ -158,7 +151,6 @@ class KbqFormFieldWithSuffix {}
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -174,7 +166,6 @@ class KbqFormFieldWithStandaloneNgModel {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -207,7 +198,7 @@ const getAsyncValidator =
         timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -224,7 +215,7 @@ class InputControlWithAsyncValidators {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -243,7 +234,7 @@ class InputWithDIErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>

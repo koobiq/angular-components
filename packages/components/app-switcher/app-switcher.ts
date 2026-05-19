@@ -45,7 +45,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
@@ -139,7 +138,6 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         KbqDividerModule,

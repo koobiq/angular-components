@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewCh
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -18,7 +17,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Edita
     selector: 'tag-autocomplete-editable-example',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqTagsModule,
         KbqAutocompleteModule,
         KbqIconModule,

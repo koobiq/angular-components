@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -8,7 +7,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     selector: 'select-with-multiline-matcher-example',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `

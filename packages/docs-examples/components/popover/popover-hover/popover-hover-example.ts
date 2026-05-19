@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 
@@ -9,7 +8,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  */
 @Component({
     selector: 'popover-hover-example',
-    imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],
+    imports: [KbqPopoverModule, KbqButtonModule, KbqInputModule],
     template: `
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">Интересно, что это такое?</div>

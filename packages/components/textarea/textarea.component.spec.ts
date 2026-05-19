@@ -62,7 +62,6 @@ const getAsyncValidator =
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -78,7 +77,6 @@ class KbqTextareaInvalid {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -98,7 +96,6 @@ class KbqFormFieldWithNgModelInForm {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -116,7 +113,6 @@ class KbqTextareaForBehaviors {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -131,7 +127,7 @@ class KbqTextareaGrowOff {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
+    imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [formControl]="control"></textarea>
@@ -148,7 +144,7 @@ class TextareaControlWithAsyncValidators {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
+    imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -167,7 +163,7 @@ class TextareaWithDIErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
+    imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>

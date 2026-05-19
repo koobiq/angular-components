@@ -5,7 +5,6 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ENTER, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -19,7 +18,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
     selector: 'kbq-pipe-text',
     imports: [
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqPopoverModule,
         KbqInputModule,
         KbqDividerModule,

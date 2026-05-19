@@ -62,7 +62,7 @@ const customErrorStateMatcher: ErrorStateMatcher = {
 };
 
 @Component({
-    imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
+    imports: [KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -80,7 +80,7 @@ class TimepickerWithErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
+    imports: [KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -106,7 +106,7 @@ const getAsyncValidator =
         timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
-    imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
+    imports: [KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
     template: `
         <kbq-form-field>
             <input kbqTimepicker [formControl]="control" />
@@ -123,7 +123,7 @@ class TimepickerControlWithAsyncValidators {
 
 @Component({
     selector: 'test-app',
-    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
+    imports: [FormsModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-clock_16"></i>
@@ -855,7 +855,6 @@ describe('KbqTimepicker', () => {
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqTimepickerModule,
         KbqIconModule,
         KbqLuxonDateModule
@@ -942,7 +941,7 @@ describe('KbqTimepicker with null formControl value', () => {
 
 @Component({
     selector: 'test-app',
-    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
+    imports: [FormsModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-clock_16"></i>
@@ -1024,7 +1023,7 @@ describe('KbqTimepicker with null model value', () => {
 
 @Component({
     selector: 'test-app',
-    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
+    imports: [FormsModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-clock_16"></i>

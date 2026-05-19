@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule, KbqNormalizeWhitespace } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -10,7 +9,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'input-number-overview-example',
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule,
         KbqFormsModule,

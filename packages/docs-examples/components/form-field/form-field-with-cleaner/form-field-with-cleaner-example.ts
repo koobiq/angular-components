@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /** @title Form field with kbq-cleaner */
 @Component({
     selector: 'form-field-with-cleaner-example',
-    imports: [KbqFormFieldModule, KbqInputModule, KbqSelectModule, ReactiveFormsModule],
+    imports: [KbqInputModule, KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field class="layout-margin-bottom-m">
             <input kbqInput placeholder="Enter some input" [formControl]="inputFormControl" />

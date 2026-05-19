@@ -1,7 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
@@ -9,7 +8,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  */
 @Component({
     selector: 'textarea-error-state-example',
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
+    imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -10,7 +9,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'form-fieldset-with-button-example',
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqIconModule

@@ -17,7 +17,6 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
 @NgModule({
     imports: [
         OverlayModule,
-        KbqFormFieldModule,
         KbqOptionModule,
         KbqSelectModule,
         KbqIconModule,

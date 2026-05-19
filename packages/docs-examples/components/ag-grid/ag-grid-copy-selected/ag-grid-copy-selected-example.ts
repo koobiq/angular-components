@@ -8,7 +8,6 @@ import {
     kbqAgGridCopyFormatterTsv,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
 import { AgGridModule } from 'ag-grid-angular';
@@ -34,7 +33,7 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
  */
 @Component({
     selector: 'ag-grid-copy-selected-example',
-    imports: [AgGridModule, KbqAgGridThemeModule, KbqSelectModule, KbqFormFieldModule, FormsModule],
+    imports: [AgGridModule, KbqAgGridThemeModule, KbqSelectModule, FormsModule],
     template: `
         <kbq-form-field>
             <kbq-select [(ngModel)]="copyFormat">

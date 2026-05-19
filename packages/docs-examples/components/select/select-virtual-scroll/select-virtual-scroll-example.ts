@@ -1,7 +1,6 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqVirtualOption } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 type OptionItem = { id: number; label: string };
@@ -11,7 +10,7 @@ type OptionItem = { id: number; label: string };
  */
 @Component({
     selector: 'select-virtual-scroll-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
+    imports: [KbqSelectModule, ScrollingModule],
     template: `
         <kbq-form-field>
             <kbq-select

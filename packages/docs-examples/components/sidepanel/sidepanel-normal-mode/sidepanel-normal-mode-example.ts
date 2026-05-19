@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { take } from 'rxjs/operators';
@@ -10,7 +9,7 @@ import { take } from 'rxjs/operators';
  */
 @Component({
     selector: 'sidepanel-normal-mode-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
+    imports: [KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
     templateUrl: 'sidepanel-normal-mode-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

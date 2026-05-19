@@ -3,7 +3,6 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { COMMA, ENTER, KbqHighlightModule, KbqPseudoCheckboxModule, SPACE, TAB } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule } from '@koobiq/components/modal';
@@ -161,7 +160,6 @@ const DATA_OBJECT = {
         FormsModule,
         KbqSelectModule,
         KbqInputModule,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqTagsModule,
         KbqToolTipModule,

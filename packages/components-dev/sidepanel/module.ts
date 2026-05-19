@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import {
@@ -102,7 +101,6 @@ export class DevSidepanelComponent {
         KbqSidepanelModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqToggleModule,
         KbqDropdownModule,

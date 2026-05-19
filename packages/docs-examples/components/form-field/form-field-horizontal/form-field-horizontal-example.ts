@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field horizontal */
 @Component({
     selector: 'form-field-horizontal-example',
-    imports: [KbqFormFieldModule, KbqInputModule],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field horizontal labelClass="flex-15" contentClass="flex-85">
             <kbq-label>Field name</kbq-label>

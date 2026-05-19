@@ -4,7 +4,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
@@ -30,7 +29,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeTitleDirective,
         KbqPipeMinWidth,
         NgTemplateOutlet,
-        KbqFormFieldModule,
         KbqIcon,
         KbqInputModule,
         ReactiveFormsModule,

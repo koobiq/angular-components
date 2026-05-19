@@ -1,7 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -11,7 +10,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     selector: 'form-fieldset-invalid-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule
     ],
     template: `

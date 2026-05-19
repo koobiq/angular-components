@@ -1,7 +1,6 @@
 import { SelectionChange } from '@angular/cdk/collections';
 import { ChangeDetectionStrategy, Component, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
@@ -168,7 +167,6 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
 @Component({
     selector: 'tree-select-lazyload-example',
     imports: [
-        KbqFormFieldModule,
         KbqTreeSelectModule,
         FormsModule,
         KbqTreeModule,

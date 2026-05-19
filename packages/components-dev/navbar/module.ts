@@ -6,7 +6,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -37,7 +36,6 @@ export class DevDocsExamples {}
         KbqNavbarModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule,
         KbqDropdownModule,

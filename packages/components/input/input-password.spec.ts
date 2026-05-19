@@ -31,7 +31,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -69,7 +68,6 @@ class KbqPasswordInputDefault {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -93,7 +91,6 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -129,8 +126,7 @@ class KbqPasswordInputCustomPasswordRule {
 @Component({
     imports: [
         ReactiveFormsModule,
-        KbqInputModule,
-        KbqFormFieldModule
+        KbqInputModule
     ],
     template: `
         <form [formGroup]="form">

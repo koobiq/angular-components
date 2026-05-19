@@ -100,7 +100,7 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
 
 @Component({
     selector: 'input-form-field-with-hint-and-error',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -116,7 +116,7 @@ export class InputFormFieldWithHintAndError {
 
 @Component({
     selector: 'input-form-field-with-prefix-and-suffix',
-    imports: [KbqFormFieldModule, KbqInputModule],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -130,7 +130,7 @@ export class InputFormFieldWithPrefixAndSuffix {}
 
 @Component({
     selector: 'input-form-field-with-cleaner',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -159,7 +159,7 @@ export class InputFormFieldWithoutFormFieldControl {
 
 @Component({
     selector: 'input-form-field-with-label',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>
@@ -180,7 +180,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
     selector: 'input-form-field-with-custom-error-state-matcher',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
@@ -201,7 +201,7 @@ export class InputFormFieldWithCustomErrorStateMatcher {
 
 @Component({
     selector: 'input-form-field-with-border-customization',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field [noBorders]="noBorders">
             <input kbqInput />
@@ -215,7 +215,7 @@ export class InputFormFieldWithBorderCustomization {
 
 @Component({
     selector: 'password-form-field',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="formControl" />
@@ -240,7 +240,7 @@ export class PasswordFormField {
 
 @Component({
     selector: 'input-form-field-in-overlay',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field [inOverlay]="inOverlay">
             <input kbqInput />
@@ -254,7 +254,7 @@ export class InputFormFieldInOverlay {
 
 @Component({
     selector: 'input-form-field-horizontal',
-    imports: [KbqFormFieldModule, KbqInputModule],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field [horizontal]="horizontal">
             <kbq-label>Label</kbq-label>
@@ -269,7 +269,7 @@ export class InputFormFieldHorizontal {
 
 @Component({
     selector: 'input-form-field-with-class-customization',
-    imports: [KbqFormFieldModule, KbqInputModule],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field [labelClass]="labelClass" [contentClass]="contentClass">
             <kbq-label>Label</kbq-label>
@@ -285,7 +285,7 @@ export class InputFormFieldWithClassCustomization {
 
 @Component({
     selector: 'input-form-field-with-invalid-or-submit-matcher',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="formGroup" (ngSubmit)="submitted = true">
             <kbq-form-field>

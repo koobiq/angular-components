@@ -13,7 +13,6 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -58,7 +57,6 @@ export class DevToastComponent extends KbqToastComponent {
         KbqDropdownModule,
         KbqModalModule,
         KbqSidepanelModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqNavbarModule,
         KbqPopoverModule,

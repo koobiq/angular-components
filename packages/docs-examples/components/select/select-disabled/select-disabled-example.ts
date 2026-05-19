@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -7,7 +6,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'select-disabled-example',
-    imports: [KbqFormFieldModule, KbqSelectModule],
+    imports: [KbqSelectModule],
     template: `
         <div class="example-row">
             <div class="kbq-form__label">For select</div>

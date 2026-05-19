@@ -7,7 +7,7 @@ import {
     KbqFormsModule,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -17,7 +17,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     selector: 'validation-optional-label-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqFormsModule

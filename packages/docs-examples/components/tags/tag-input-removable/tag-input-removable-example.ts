@@ -1,7 +1,6 @@
 import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -13,7 +12,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
  */
 @Component({
     selector: 'tag-input-removable-example',
-    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" removable>

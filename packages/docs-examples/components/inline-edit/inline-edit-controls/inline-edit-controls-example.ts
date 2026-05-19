@@ -4,7 +4,6 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -21,7 +20,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         ReactiveFormsModule,
         KbqInlineEditModule,
         KbqDlModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqTextareaModule,
         KbqOptionModule,

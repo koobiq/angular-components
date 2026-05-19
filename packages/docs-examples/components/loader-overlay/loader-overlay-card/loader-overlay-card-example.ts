@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqModalService } from '@koobiq/components/modal';
@@ -10,7 +9,7 @@ import { KbqModalService } from '@koobiq/components/modal';
  */
 @Component({
     selector: 'loader-overlay-card-example',
-    imports: [KbqButtonModule, KbqLoaderOverlayModule, KbqFormFieldModule, KbqInputModule],
+    imports: [KbqButtonModule, KbqLoaderOverlayModule, KbqInputModule],
     template: `
         <button kbq-button (click)="openModal()">Open modal with loader</button>
 

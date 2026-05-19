@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -7,7 +6,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'layout-flex-order-example',
-    imports: [KbqSelectModule, KbqFormFieldModule],
+    imports: [KbqSelectModule],
     template: `
         <div class="example-layout-flex-order layout-margin-top-4xl">
             <div class="example-controls">

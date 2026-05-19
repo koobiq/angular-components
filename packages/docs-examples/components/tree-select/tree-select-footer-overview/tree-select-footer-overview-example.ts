@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
@@ -103,7 +102,7 @@ export const DATA_OBJECT = {
  */
 @Component({
     selector: 'tree-select-footer-overview-example',
-    imports: [KbqFormFieldModule, KbqTreeSelectModule, FormsModule, KbqTreeModule, KbqIconModule, KbqLinkModule],
+    imports: [KbqTreeSelectModule, FormsModule, KbqTreeModule, KbqIconModule, KbqLinkModule],
     template: `
         <kbq-form-field>
             <kbq-tree-select [(ngModel)]="selected">

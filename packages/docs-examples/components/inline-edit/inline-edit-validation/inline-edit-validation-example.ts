@@ -24,7 +24,6 @@ import {
     kbqDisableLegacyValidationDirectiveProvider,
     PopUpPlacements
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -77,7 +76,6 @@ class ExampleResetTouchedOnFirstInput {
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         KbqToolTipModule,

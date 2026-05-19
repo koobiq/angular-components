@@ -19,7 +19,7 @@ import {
     KbqFormsModule,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
@@ -33,7 +33,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
         KbqAlertModule,
         KbqIconModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqFormsModule,

@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewCh
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -22,7 +21,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Dragg
  */
 @Component({
     selector: 'tag-autocomplete-draggable-example',
-    imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
+    imports: [FormsModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" draggable (dropped)="dropped($event)">

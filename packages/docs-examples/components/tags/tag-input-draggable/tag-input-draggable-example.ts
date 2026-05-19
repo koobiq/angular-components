@@ -2,7 +2,6 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -20,7 +19,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
  */
 @Component({
     selector: 'tag-input-draggable-example',
-    imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" draggable (dropped)="dropped($event)">

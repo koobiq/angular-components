@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulatio
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
@@ -114,7 +113,6 @@ export class DevDocsExamples {}
         KbqSelectModule,
         KbqHighlightModule,
         KbqInputModule,
-        KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
         KbqTagsModule,

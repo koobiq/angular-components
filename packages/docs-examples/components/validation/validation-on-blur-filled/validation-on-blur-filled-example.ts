@@ -25,7 +25,6 @@ import {
     kbqErrorStateMatcherProvider,
     PopUpPlacements
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { fromEvent, switchMap } from 'rxjs';
@@ -74,7 +73,6 @@ class ExampleResetTouchedOnFirstInput {
     selector: 'validation-on-blur-filled-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqToolTipModule,
         ExampleResetTouchedOnFirstInput

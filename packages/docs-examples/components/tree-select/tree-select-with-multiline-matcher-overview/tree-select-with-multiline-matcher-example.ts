@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
@@ -102,7 +101,7 @@ export const DATA_OBJECT = {
  */
 @Component({
     selector: 'tree-select-with-multiline-matcher-example',
-    imports: [KbqFormFieldModule, FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule],
+    imports: [FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule],
     template: `
         <kbq-form-field>
             <kbq-tree-select [multiline]="true" [(ngModel)]="selected">

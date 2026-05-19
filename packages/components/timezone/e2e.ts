@@ -6,7 +6,6 @@ import {
     KbqOptgroup,
     KbqSelectSearch
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -28,7 +27,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 @Component({
     selector: 'e2e-timezone-states',
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqOptgroup,
         KbqTimezoneModule,

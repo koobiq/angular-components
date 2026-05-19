@@ -15,7 +15,6 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
@@ -42,7 +41,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqTitleModule,
         KbqPipeTitleDirective,
         NgTemplateOutlet,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,

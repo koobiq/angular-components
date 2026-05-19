@@ -59,7 +59,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         FormsModule,
         KbqInputModule
     ],
@@ -80,7 +79,6 @@ class KbqNumberInputTestComponent {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         FormsModule,
         KbqInputModule
     ],
@@ -103,7 +101,6 @@ class TestNumberInputConditional {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqInputModule
     ],
@@ -120,7 +117,6 @@ class KbqNumberInputWithFormControl {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqInputModule
     ],
@@ -145,7 +141,6 @@ class KbqNumberInputWithFormControlName {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -162,7 +157,6 @@ class KbqNumberInputMaxMinStep {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -183,7 +177,6 @@ class KbqNumberInputMaxMinStepInput {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -200,7 +193,6 @@ class KbqNumberInputWithCleaner {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -234,7 +226,6 @@ class KbqNumberInputWithMask {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],

@@ -8,7 +8,6 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -55,7 +54,6 @@ const MAX_PERCENT: number = 100;
         KbqCheckboxModule,
         KbqDropdownModule,
         KbqInputModule,
-        KbqFormFieldModule,
         KbqNavbarModule,
         KbqListModule,
         KbqMarkdownModule,

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -10,7 +9,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'overflow-items-justify-content-example',
-    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqSelectModule, FormsModule, KbqFormFieldModule],
+    imports: [KbqOverflowItemsModule, KbqBadgeModule, KbqSelectModule, FormsModule],
     template: `
         <kbq-form-field>
             <kbq-select [(ngModel)]="justifyContent">

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
@@ -186,7 +185,7 @@ export class E2eTagListStates {}
 
 @Component({
     selector: 'e2e-tag-input-states',
-    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
+    imports: [KbqTagsModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -280,7 +279,7 @@ export class E2eTagInputStates {}
 
 @Component({
     selector: 'e2e-tag-autocomplete-states',
-    imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
+    imports: [FormsModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">

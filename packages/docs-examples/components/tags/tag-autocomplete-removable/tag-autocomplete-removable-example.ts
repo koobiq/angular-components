@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewCh
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -15,7 +14,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Remov
  */
 @Component({
     selector: 'tag-autocomplete-removable-example',
-    imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
+    imports: [FormsModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" removable>

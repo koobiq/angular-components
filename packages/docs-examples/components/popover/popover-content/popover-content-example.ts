@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
@@ -16,7 +15,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     imports: [
         KbqDropdownModule,
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         KbqPopoverModule,

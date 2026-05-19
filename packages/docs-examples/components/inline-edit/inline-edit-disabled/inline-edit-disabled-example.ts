@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -16,7 +15,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     imports: [
         FormsModule,
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconButton,
         KbqButtonModule,

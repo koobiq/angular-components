@@ -7,7 +7,7 @@ import {
     KbqFormsModule,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { take } from 'rxjs';
@@ -19,7 +19,7 @@ type DocsFormData = {
 
 @Component({
     selector: 'docs-empty-form',
-    imports: [KbqFormsModule, KbqFormFieldModule, FormsModule, KbqButtonModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqFormsModule, FormsModule, KbqButtonModule, KbqInputModule, ReactiveFormsModule],
     template: `
         <form class="kbq-form-vertical" id="docs-form" novalidate [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
@@ -83,7 +83,6 @@ export class DocsNameFormComponent {
     selector: 'validation-on-open-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule
     ],

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
@@ -9,7 +8,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  */
 @Component({
     selector: 'textarea-max-rows-example',
-    imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule, KbqInputModule],
+    imports: [KbqTextareaModule, FormsModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>

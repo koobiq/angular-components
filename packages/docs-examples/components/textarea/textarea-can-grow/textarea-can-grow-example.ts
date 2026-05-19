@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
@@ -9,7 +8,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  */
 @Component({
     selector: 'textarea-can-grow-example',
-    imports: [KbqFormFieldModule, KbqTextareaModule, KbqToggleModule, FormsModule],
+    imports: [KbqTextareaModule, KbqToggleModule, FormsModule],
     template: `
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="canGrow">canGrow</kbq-toggle>
 

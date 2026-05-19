@@ -21,7 +21,6 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import { KbqComponentColors, KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
@@ -42,7 +41,6 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
         KbqDividerModule,
         KbqIcon,
         KbqTitleModule,
-        KbqFormFieldModule,
         KbqInputModule,
         NgClass,
         KbqFilterBarButton,

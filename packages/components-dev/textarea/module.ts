@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import {
     TextareaCanGrowExample,
@@ -37,7 +36,7 @@ export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule, DevDocsExamples, DevThemeToggle],
+    imports: [KbqTextareaModule, FormsModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

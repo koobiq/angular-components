@@ -19,7 +19,6 @@ import {
     KbqPipeTitleDirective,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -29,7 +28,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
     selector: 'color-pipe',
     imports: [
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqPopoverModule,
         KbqInputModule,
         KbqDividerModule,

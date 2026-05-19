@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { AutocompleteOverviewExample } from 'packages/docs-examples/components/autocomplete';
@@ -32,7 +31,6 @@ export class DevDocsExamples {}
         KbqAutocompleteModule,
         KbqInputModule,
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
         AsyncPipe,

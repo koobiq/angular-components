@@ -274,7 +274,6 @@ const OPTIONS = [
     selector: 'basic-select',
     imports: [
         KbqSelectModule,
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqIconModule,
         KbqTagsModule
@@ -339,7 +338,6 @@ class BasicSelect {
     selector: 'basic-events',
     imports: [
         KbqSelectModule,
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqIconModule,
         KbqTagsModule
@@ -394,8 +392,7 @@ class BasicEvents {
 @Component({
     selector: 'many-selects',
     imports: [
-        KbqSelectModule,
-        KbqFormFieldModule
+        KbqSelectModule
     ],
     template: `
         <kbq-form-field>
@@ -418,7 +415,6 @@ class ManySelects {}
     selector: 'select-with-change-event',
     imports: [
         KbqSelectModule,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqTagsModule
     ],
@@ -582,7 +578,6 @@ class ThrowsErrorOnInit implements OnInit {
 @Component({
     selector: 'select-infinite-loop',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ThrowsErrorOnInit,
         FormsModule
@@ -601,7 +596,6 @@ class SelectWithErrorSibling {
 @Component({
     selector: 'basic-select-on-push',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule
     ],
@@ -630,7 +624,6 @@ class BasicSelectOnPush {
 @Component({
     selector: 'basic-select-on-push-preselected',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule
     ],
@@ -660,7 +653,6 @@ class BasicSelectOnPushPreselected {
     selector: 'multi-select',
     imports: [
         KbqSelectModule,
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqIconModule,
         KbqTagsModule
@@ -711,7 +703,6 @@ class MultiSelect {
     selector: 'multi-select-narrow',
     imports: [
         KbqSelectModule,
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqIconModule,
         KbqTagsModule
@@ -767,7 +758,6 @@ class MultiSelectNarrow {
 @Component({
     selector: 'select-with-plain-tabindex',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -781,7 +771,6 @@ class SelectWithPlainTabindex {}
 @Component({
     selector: 'select-early-sibling-access',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -798,7 +787,6 @@ class SelectEarlyAccessSibling {}
 @Component({
     selector: 'basic-select-with-theming',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -818,7 +806,6 @@ class BasicSelectWithTheming {
 @Component({
     selector: 'reset-values-select',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule,
         KbqTagsModule
@@ -864,7 +851,6 @@ class ResetValuesSelect {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule,
         KbqTagsModule
@@ -906,7 +892,6 @@ class FalsyValueSelect {
 @Component({
     selector: 'select-with-groups',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule
     ],
@@ -971,7 +956,6 @@ class SelectWithGroups {
 @Component({
     selector: 'select-with-groups',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule
     ],
@@ -1001,7 +985,6 @@ class SelectWithGroupsAndNgContainer {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         FormsModule
     ],
@@ -1020,7 +1003,6 @@ class InvalidSelectInForm {
 @Component({
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -1051,7 +1033,6 @@ class SelectInsideFormGroup {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -1081,7 +1062,6 @@ class BasicSelectWithoutForms {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -1108,7 +1088,6 @@ class BasicSelectWithoutFormsPreselected {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -1137,7 +1116,6 @@ class BasicSelectWithoutFormsMultiple {
 @Component({
     selector: 'select-with-custom-trigger',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule
     ],
@@ -1167,7 +1145,6 @@ class SelectWithCustomTrigger {
 @Component({
     selector: 'ng-model-compare-with',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         FormsModule,
         KbqTagsModule
@@ -1260,7 +1237,6 @@ class CustomErrorBehaviorSelect {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         FormsModule
     ],
@@ -1292,7 +1268,6 @@ class SingleSelectWithPreselectedArrayValues {
 @Component({
     selector: 'select-without-option-centering',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         ReactiveFormsModule
     ],
@@ -1327,7 +1302,6 @@ class SelectWithoutOptionCentering {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule
     ],
     template: `
@@ -1347,7 +1321,6 @@ class SelectWithFormFieldLabel {
 @Component({
     selector: 'select-with-long-label-option',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqTagsModule
     ],
@@ -1391,7 +1364,6 @@ class SelectWithLongOptionText {
 @Component({
     selector: 'multiple-select-with-customized-tag-content',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqTagsModule
     ],
@@ -1430,7 +1402,6 @@ class MultiSelectWithCustomizedTagContent {
 @Component({
     selector: 'cdk-virtual-scroll-viewport-select',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqInputModule,
         KbqTagsModule,
@@ -1470,7 +1441,6 @@ class CdkVirtualScrollViewportSelect<T = string> {
 @Component({
     selector: 'cdk-virtual-scroll-viewport-select-option-as-object',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqInputModule,
         KbqTagsModule,
@@ -1595,7 +1565,7 @@ class CdkVirtualScrollMultipleWithFactory {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1616,7 +1586,7 @@ class SelectWithErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1635,7 +1605,7 @@ class SelectWithDIErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
@@ -1764,7 +1734,7 @@ class SelectWithPanelWidth {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqInputModule, ReactiveFormsModule],
+    imports: [KbqSelectModule, KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [panelWidth]="panelWidth">
@@ -1838,7 +1808,7 @@ class SelectWithShowPreselectedValuesMultiple {
 
 @Component({
     selector: 'multi-select-with-trigger-values-limit',
-    imports: [KbqSelectModule, KbqFormFieldModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
+    imports: [KbqSelectModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
     template: `
         <kbq-form-field>
             <kbq-select multiple placeholder="Food" [formControl]="control" [triggerValuesLimit]="triggerValuesLimit">
@@ -1878,7 +1848,7 @@ class MultiSelectWithTriggerValuesLimit {
 
 @Component({
     selector: 'multi-select-with-configurable-inputs',
-    imports: [KbqSelectModule, KbqFormFieldModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
+    imports: [KbqSelectModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
     template: `
         <kbq-form-field style="width: 80px">
             <kbq-select
@@ -1924,7 +1894,7 @@ class MultiSelectWithConfigurableInputs {
 
 @Component({
     selector: 'select-with-scrolled-to-bottom',
-    imports: [KbqFormFieldModule, KbqSelectModule],
+    imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
             <kbq-select [scrolledToBottomOffset]="scrolledToBottomOffset" (scrolledToBottom)="onScrolledToBottom()">
@@ -1947,7 +1917,7 @@ class SelectWithScrolledToBottom {
 
 @Component({
     selector: 'virtual-select-with-scrolled-to-bottom',
-    imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
+    imports: [KbqSelectModule, ScrollingModule],
     template: `
         <kbq-form-field>
             <kbq-select [scrolledToBottomOffset]="scrolledToBottomOffset" (scrolledToBottom)="onScrolledToBottom()">

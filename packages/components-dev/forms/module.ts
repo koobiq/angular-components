@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 @Component({
@@ -9,7 +8,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     imports: [
         FormsModule,
         KbqInputModule,
-        KbqFormFieldModule,
         KbqFormsModule
     ],
     templateUrl: './template.html',

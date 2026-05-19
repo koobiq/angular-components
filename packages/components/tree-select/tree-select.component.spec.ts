@@ -106,7 +106,7 @@ const getAsyncValidator =
         timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
+    imports: [KbqTreeSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" />
@@ -123,7 +123,7 @@ class TreeSelectControlWithAsyncValidators {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
+    imports: [KbqTreeSelectModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -142,7 +142,7 @@ class TreeSelectWithDIErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
+    imports: [KbqTreeSelectModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1525,7 +1525,6 @@ class LocalizedTreeSelect extends BasicTreeSelect {}
 @Component({
     selector: 'ng-if-tree-select',
     imports: [
-        KbqFormFieldModule,
         KbqTreeModule,
         KbqTreeSelectModule,
         ReactiveFormsModule
@@ -1574,7 +1573,7 @@ class NgIfTreeSelect {
 
 @Component({
     selector: 'tree-select-with-panel-width',
-    imports: [KbqFormFieldModule, KbqTreeModule, KbqTreeSelectModule],
+    imports: [KbqTreeModule, KbqTreeSelectModule],
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-tree-select [panelWidth]="panelWidth">

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqOptionModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import {
     getZonesGroupedByCountry,
     KbqTimezoneGroup,
@@ -16,7 +15,7 @@ const timezones=[{offset:"02:00:00",associatedZones:[],id:"Europe/Kaliningrad",c
  */
 @Component({
     selector: 'timezone-overview-example',
-    imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOptionModule],
+    imports: [KbqTimezoneModule, KbqOptionModule],
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">

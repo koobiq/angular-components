@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
     FlatTreeControl,
@@ -155,7 +154,7 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
  */
 @Component({
     selector: 'tree-custom-filtering-example',
-    imports: [KbqFormFieldModule, KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
+    imports: [KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
     template: `
         <kbq-form-field>
             <input kbqInput type="text" [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" />

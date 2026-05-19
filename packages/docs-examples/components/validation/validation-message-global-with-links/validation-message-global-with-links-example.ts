@@ -3,7 +3,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqDisableLegacyValidationDirectiveProvider, KbqFormsModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -17,7 +16,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
         ReactiveFormsModule,
         KbqAlertModule,
         KbqIconModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqFormsModule,

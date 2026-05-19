@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThemePalette } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -11,7 +10,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'input-overview-example',
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         FormsModule

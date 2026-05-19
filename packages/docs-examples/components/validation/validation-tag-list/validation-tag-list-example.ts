@@ -8,7 +8,6 @@ import {
     kbqErrorStateMatcherProvider,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -21,7 +20,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'validation-tag-list-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqToolTipModule,
         KbqButtonModule,

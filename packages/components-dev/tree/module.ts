@@ -6,7 +6,6 @@ import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqHighlightModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
@@ -127,7 +126,6 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqCheckboxModule,
         KbqDropdownModule,
         KbqInputModule,

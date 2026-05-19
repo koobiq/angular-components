@@ -15,7 +15,6 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { COMMA, ENTER, ThemePalette } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -72,7 +71,6 @@ export class DevDocsExamples {}
         KbqSelectModule,
         KbqTreeModule,
         KbqTreeSelectModule,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqDatepickerModule,
         KbqTimepickerModule,

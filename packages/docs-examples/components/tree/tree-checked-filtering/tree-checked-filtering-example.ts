@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -164,7 +163,6 @@ abstract class TreeParams {
 @Component({
     selector: 'tree-checked-filtering-example',
     imports: [
-        KbqFormFieldModule,
         FormsModule,
         KbqButtonToggleModule,
         KbqTreeModule,

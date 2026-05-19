@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
@@ -12,7 +11,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqTextareaModule
     ],
     template: `

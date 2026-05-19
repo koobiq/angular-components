@@ -219,7 +219,6 @@ export class DevMultipleFileUploadCompact {
         KbqLocaleServiceModule,
         KbqFileUploadModule,
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         KbqCheckboxModule,

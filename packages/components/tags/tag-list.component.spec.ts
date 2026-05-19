@@ -160,7 +160,7 @@ export class TestTagList {
 
 @Component({
     selector: 'test-form-field-tag-list',
-    imports: [KbqTagsModule, KbqFormFieldModule, CdkMonitorFocus, KbqInputModule],
+    imports: [KbqTagsModule, CdkMonitorFocus, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" [editable]="editable()">

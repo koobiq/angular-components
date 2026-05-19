@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -15,7 +15,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [
         FormsModule,
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqCleaner,
         KbqBadgeModule,

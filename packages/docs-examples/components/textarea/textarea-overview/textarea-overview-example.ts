@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
@@ -7,7 +6,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  */
 @Component({
     selector: 'textarea-overview-example',
-    imports: [KbqFormFieldModule, KbqTextareaModule],
+    imports: [KbqTextareaModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>

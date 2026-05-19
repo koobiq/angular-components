@@ -26,7 +26,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher, KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepicker, KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
@@ -65,7 +65,6 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
         KbqFieldset,
         KbqFieldsetItem,
         KbqDatepickerModule,
-        KbqFormFieldModule,
         KbqTimepickerModule,
         KbqRadioModule,
         KbqIcon

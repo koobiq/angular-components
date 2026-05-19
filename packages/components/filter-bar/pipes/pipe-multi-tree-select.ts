@@ -6,7 +6,6 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
@@ -37,7 +36,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqTitleModule,
         KbqPipeTitleDirective,
         KbqPipeMinWidth,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,
