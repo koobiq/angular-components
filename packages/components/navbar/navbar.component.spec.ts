@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchKeyboardEvent, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/components/core';
 import { KbqIconModule } from './../icon/icon.module';
 import {
@@ -21,7 +22,16 @@ const FONT_RENDER_TIMEOUT_MS = 10;
 describe('KbqNavbar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqNavbarModule, KbqIconModule, TestApp, TestItemApp, TestTitleApp, TestVerticalApp, TestBrandApp]
+            imports: [
+                NoopAnimationsModule,
+                KbqNavbarModule,
+                KbqIconModule,
+                TestApp,
+                TestItemApp,
+                TestTitleApp,
+                TestVerticalApp,
+                TestBrandApp
+            ]
         }).compileComponents();
     });
 
