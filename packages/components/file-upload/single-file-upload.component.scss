@@ -71,6 +71,12 @@
 }
 
 .kbq-single-file-upload {
+    .kbq-file-upload__dropzone-icon {
+        > svg {
+            vertical-align: bottom;
+        }
+    }
+
     &.kbq-single-file-upload_selected .kbq-file-upload {
         .kbq-file-item {
             padding: kbq-difference-series-css-variables(
