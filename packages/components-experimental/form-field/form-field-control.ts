@@ -1,3 +1,0 @@
-/**
- * Uses the original KbqFormFieldControl
- */

@@ -69,7 +69,5 @@
         "markdown",
         "badge"
     ],
-    "components-experimental": [
-        "form-field"
-    ]
+    "components-experimental": []
 }
