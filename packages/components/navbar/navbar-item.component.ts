@@ -221,7 +221,12 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
         if (this.nestedElement) {
             if (origin === 'keyboard') {
-                this.nestedElement.focusViaKeyboard();
+                // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
+                if ('focusViaKeyboard' in this.nestedElement) {
+                    this.nestedElement.focusViaKeyboard();
+                } else {
+                    this.nestedElement.focus();
+                }
             }
 
             this.changeDetector.markForCheck();
@@ -342,8 +347,8 @@ export class KbqNavbarRectangleElement {
         KbqIcon
     ],
     templateUrl: './navbar-item.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-navbar-item',
         '[class.kbq-navbar-item_collapsed]': 'isCollapsed',

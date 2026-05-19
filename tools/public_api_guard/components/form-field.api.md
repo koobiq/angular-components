@@ -102,8 +102,6 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly elementRef: ElementRef<HTMLElement>;
     focus(options?: FocusOptions): void;
     get focusOrigin(): FocusOrigin;
-    // @deprecated (undocumented)
-    focusViaKeyboard(options?: FocusOptions): void;
     getConnectedOverlayOrigin(): ElementRef;
     get hasCleaner(): boolean;
     protected get hasError(): boolean;

@@ -382,15 +382,6 @@ export class KbqFormField
     }
 
     /**
-     * @deprecated Use `focus` instead.
-     *
-     * @docs-private
-     */
-    focusViaKeyboard(options?: FocusOptions): void {
-        this.control.focus(options);
-    }
-
-    /**
      * @docs-private
      */
     clearValue(event: Event): void {

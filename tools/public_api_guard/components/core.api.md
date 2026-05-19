@@ -2179,7 +2179,7 @@ export class KbqFormElement implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormElement, never>;
 }
 
-// @public @deprecated (undocumented)
+// @public
 export interface KbqFormFieldRef {
     // (undocumented)
     canCleanerClearByEsc: boolean;
@@ -2187,11 +2187,7 @@ export interface KbqFormFieldRef {
     control: any;
     // (undocumented)
     focus(): void;
-    // @deprecated (undocumented)
-    focusViaKeyboard(): void;
     inOverlay: ModelSignal<boolean>;
-    // @deprecated
-    shouldForward(str: string): boolean;
 }
 
 // @public (undocumented)

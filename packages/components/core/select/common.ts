@@ -73,7 +73,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     focus(): void {
-        this.formField.focusViaKeyboard();
+        this.formField.focus();
     }
 
     reset(): void {
