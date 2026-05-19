@@ -190,9 +190,6 @@ export interface KbqAppSwitcherSite {
 
 // @public (undocumented)
 export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherComponent> implements AfterContentInit, OnInit {
-    // @deprecated (undocumented)
-    get apps(): KbqAppSwitcherApp[];
-    set apps(apps: KbqAppSwitcherApp[]);
     get appsCount(): number;
     arrow: boolean;
     backdropClass: string;
@@ -217,7 +214,6 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     // (undocumented)
     ngOnInit(): void;
     offset: number | null;
-    originalApps: KbqAppSwitcherApp[];
     originalSites: KbqAppSwitcherSite[];
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
@@ -240,7 +236,7 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     readonly visibleChange: EventEmitter<boolean>;
     get withSearch(): boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "selectedApp": { "alias": "selectedApp"; "required": false; }; "placement": { "alias": "kbqAppSwitcherPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "sites": { "alias": "sites"; "required": false; }; "apps": { "alias": "apps"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChange": "selectedSiteChange"; "selectedAppChange": "selectedAppChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "selectedApp": { "alias": "selectedApp"; "required": false; }; "placement": { "alias": "kbqAppSwitcherPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "sites": { "alias": "sites"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChange": "selectedSiteChange"; "selectedAppChange": "selectedAppChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherTrigger, never>;
 }

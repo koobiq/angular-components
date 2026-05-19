@@ -153,8 +153,8 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     ],
     templateUrl: './app-switcher.html',
     styleUrls: ['./app-switcher.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-app-switcher'
     },
@@ -380,20 +380,6 @@ export class KbqAppSwitcherTrigger
 
     private _parsedSites: KbqAppSwitcherSite[];
 
-    /**
-     * @deprecated Will be removed in next major release, use `sites` with one element instead.
-     */
-    @Input()
-    get apps(): KbqAppSwitcherApp[] {
-        return this._parsedApps;
-    }
-
-    set apps(apps: KbqAppSwitcherApp[]) {
-        this.originalApps = apps;
-
-        this._parsedApps = this.makeGroupsForApps(this.originalApps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
-    }
-
     private makeGroupsForApps(apps: KbqAppSwitcherApp[], minAppsForGrouping: number): KbqAppSwitcherApp[] {
         const groups: Record<string, KbqAppSwitcherApp> = {};
         const untyped: KbqAppSwitcherApp[] = [];
@@ -489,8 +475,6 @@ export class KbqAppSwitcherTrigger
 
     /** @docs-private */
     originalSites: KbqAppSwitcherSite[];
-    /** @docs-private */
-    originalApps: KbqAppSwitcherApp[];
 
     /** @docs-private */
     protected originSelector = '.kbq-app-switcher';
