@@ -93,6 +93,30 @@ Removed long-standing deprecated symbols. Use `ng update @koobiq/components@20` 
 * **`KbqDatepickerToggle`** component (`<kbq-datepicker-toggle>`) — removed. Use `<kbq-datepicker-toggle-icon>` (`KbqDatepickerToggleIconComponent`) instead.
 * **`KbqFormFieldWithoutBorders`** directive (`<kbq-form-field kbqFormFieldWithoutBorders>`) — removed. Use the `noBorders` input on `KbqFormField`: `<kbq-form-field noBorders>`.
 
+#### Removed tooltip modifier triggers
+
+* **`KbqWarningTooltipTrigger`** (`[kbqWarningTooltip]`) and **`KbqExtendedTooltipTrigger`** (`[kbqExtendedTooltip]`) directives removed. Use the base `[kbqTooltip]` directive with the new public `kbqTooltipModifier` input:
+
+  ```html
+  <!-- before -->
+  <kbq-form-field #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="msg">
+
+  <!-- after -->
+  <kbq-form-field #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="msg">
+  ```
+
+  For the extended variant, `[kbqTooltipHeader]` is now also exposed on the base trigger:
+
+  ```html
+  <!-- before -->
+  <button [kbqExtendedTooltip]="content" [kbqTooltipHeader]="header">
+
+  <!-- after -->
+  <button kbqTooltipModifier="extended" [kbqTooltip]="content" [kbqTooltipHeader]="header">
+  ```
+
+  `KbqDatepickerInput.kbqValidationTooltip` and `KbqTimepicker.kbqValidationTooltip` setters now accept `KbqTooltipTrigger` (the base class) instead of `KbqWarningTooltipTrigger`.
+
 ### Known follow-ups
 
 * Refactor remaining `(instance as any).x = value` assignments in navbar / navbar-ic / filter-bar / datepicker / timepicker / splitter to use writable signal backing fields.
