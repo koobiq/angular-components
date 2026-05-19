@@ -192,7 +192,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 // Warnings were encountered during analysis:
 //
 // dist/components/breadcrumbs/breadcrumbs.d.ts:27:134 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-// dist/components/breadcrumbs/breadcrumbs.d.ts:122:450 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+// dist/components/breadcrumbs/breadcrumbs.d.ts:121:450 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
