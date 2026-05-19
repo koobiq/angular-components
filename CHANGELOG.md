@@ -117,6 +117,32 @@ Removed long-standing deprecated symbols. Use `ng update @koobiq/components@20` 
 
   `KbqDatepickerInput.kbqValidationTooltip` and `KbqTimepicker.kbqValidationTooltip` setters now accept `KbqTooltipTrigger` (the base class) instead of `KbqWarningTooltipTrigger`.
 
+### Migration
+
+Consumers can run the automatic migration:
+
+```
+ng update @koobiq/components@20
+```
+
+This invokes the `v20-upgrade` schematic which rewrites your codebase in place:
+
+- Imports from `@koobiq/components/navbar-ic` / `risk-level` / `components-experimental/form-field` are remapped to the surviving packages (`navbar`, `badge`, `components/form-field`).
+- Identifier renames in `.ts` files (`KbqNavbarIc*` → `Kbq*`, `KbqRiskLevel*` → `KbqBadge*`, `KbqWarningTooltipTrigger` / `KbqExtendedTooltipTrigger` → `KbqTooltipTrigger`, `KbqDatepickerToggle` → `KbqDatepickerToggleIconComponent`, `KbqFilterBarSearch` → `KbqSearchExpandable`, `RdxAccordionItemState` → `KbqAccordionItemState`, `KbqCodeFile` → `KbqCodeBlockFile`, `AnimationCurves` → `KbqAnimationCurves`, `MeasurementSystem` → `KbqMeasurementSystem`, `SizeUnitsConfig` → `KbqSizeUnitsConfig`, `KbqFormFieldRef` → `KbqFormField`).
+- Token / function renames (`toBoolean(` → `booleanAttribute(`, `isCorrectExtension(` → `FileValidators.isCorrectExtension(`, `formatDataSize(` → `getFormattedSizeParts(`, `kbqComponentParams:` → `data:`); dropped tokens `KBQ_VALIDATION`, `KBQ_SANITY_CHECKS`, `KBQ_SIDEPANEL_WITH_SHADOW` removed from imports.
+- Instance method renames (`.openPanel(` → `.open(`, `.toggleIsCollapsed(` → `.toggle(`, `.focusViaKeyboard(` → `.focus(`).
+- Template selectors (`<kbq-filter-search>` → `<kbq-search-expandable>`, `<kbq-datepicker-toggle>` → `<kbq-datepicker-toggle-icon>`, `<kbq-risk-level>` → `<kbq-badge>`, `<kbq-navbar-ic*>` → `<kbq-navbar*>`).
+- Template attributes (`kbqFormFieldWithoutBorders` → `noBorders`, `[kbqWarningTooltip]` → `kbqTooltipModifier="warning" [kbqTooltip]`, `[kbqExtendedTooltip]` → `kbqTooltipModifier="extended" [kbqTooltip]`, template-ref `="kbqWarningTooltip"` → `="kbqTooltip"`).
+- SCSS class selectors (`.kbq-risk-level` → `.kbq-badge`, `.kbq-navbar-ic` → `.kbq-navbar`, etc.).
+
+The schematic prints warnings for structural changes it cannot safely auto-fix:
+
+- `(onSaveAsNew)` listeners on `<kbq-filters>` — switch to `(onSave)` and branch on `$event.status === 'newFilter'`.
+- `[customValidation]` / `[errors]` on file-upload components — use `FormControl` validators / read `FormControl.errors`.
+- `[apps]` on `<button kbqAppSwitcher>` — wrap into a single-site `[sites]="[{ id, name, apps }]"`.
+
+After the schematic runs, **review the diff before committing**: the migration is regex-based and will not rewrite values held in local variables, re-exports, or aliased imports.
+
 ### Known follow-ups
 
 * Refactor remaining `(instance as any).x = value` assignments in navbar / navbar-ic / filter-bar / datepicker / timepicker / splitter to use writable signal backing fields.

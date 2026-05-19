@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics": {
+        "v20-upgrade": {
+            "version": "20.0.0-0",
+            "description": "Migrates code from deprecated APIs removed in @koobiq/components v20.0.0. Handles package moves (navbar-ic, risk-level, experimental form-field), TypeScript identifier renames, template selector renames (e.g. <kbq-filter-search> → <kbq-search-expandable>, <kbq-datepicker-toggle> → <kbq-datepicker-toggle-icon>), attribute renames (kbqFormFieldWithoutBorders → noBorders), tooltip modifier inputs, and emits warnings for structural changes that need manual migration (onSaveAsNew, file-upload customValidation/errors, app-switcher apps).",
+            "factory": "./migrations/v20-upgrade/index"
+        }
+    }
+}

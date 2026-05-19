@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-v20-upgrade",
+    "title": "Koobiq components v20.0.0 upgrade",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to migrate. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, applies all auto-fix replacements. When false, prints what would change without writing."
+        }
+    }
+}

@@ -38,7 +38,8 @@
     "ng-update": {
         "packageGroup": [
             "@koobiq/components"
-        ]
+        ],
+        "migrations": "./schematics/migrations.json"
     },
     "exports": {
         ".": {

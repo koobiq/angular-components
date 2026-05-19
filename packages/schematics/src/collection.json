@@ -36,6 +36,11 @@
             "description": "Updates names of icons in dedicated files",
             "factory": "./migrations/icons-replacement/index",
             "schema": "./migrations/icons-replacement/schema.json"
+        },
+        "v20-upgrade": {
+            "description": "Migrates deprecated API removed in @koobiq/components v20.0.0",
+            "factory": "./migrations/v20-upgrade/index",
+            "schema": "./migrations/v20-upgrade/schema.json"
         }
     }
 }
