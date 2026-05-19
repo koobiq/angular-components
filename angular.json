@@ -201,7 +201,8 @@
                     "options": {
                         "roots": ["packages/components-experimental"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json",
+                        "passWithNoTests": true
                     }
                 }
             }
