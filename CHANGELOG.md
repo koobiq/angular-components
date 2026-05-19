@@ -30,6 +30,69 @@
 * Per-project `tsconfig.spec.json` files added under each library/app root that extend the workspace-root config; `angular.json` `test.options.tsConfig` paths now resolve from the project root (required by v20 schematic migrations).
 * Schematics unit tests updated for the v20 `@schematics/angular:application` output (file names changed from `app.component.html` → `app.html`).
 
+### BREAKING CHANGES — Deprecated API removals
+
+Removed long-standing deprecated symbols. Use `ng update @koobiq/components@20` for assisted migration (schematics TBD — track follow-up).
+
+#### Removed packages
+
+* **`@koobiq/components/navbar-ic`** — entire package deleted. Migrate to `@koobiq/components/navbar` (`KbqNavbar`, `KbqNavbarItem`, `KbqNavbarModule`).
+* **`@koobiq/components/risk-level`** — entire package deleted. Migrate to `@koobiq/components/badge` (`KbqBadge` with `[outline]` and `[badgeColor]`). Note: Badge default density and color enum differ — verify visual parity.
+* **`@koobiq/components-experimental/form-field`** — sub-package deleted. Migrate to `@koobiq/components/form-field`. The experimental package was a transitional fork that has been merged back.
+
+#### Removed core symbols
+
+* `AnimationCurves` enum → use `KbqAnimationCurves`.
+* `MeasurementSystem` enum → use `KbqMeasurementSystem`.
+* `SizeUnitsConfig` interface → use `KbqSizeUnitsConfig`.
+* `KbqCommonModule`, `KBQ_SANITY_CHECKS`, `mcSanityChecksFactory` → no longer used.
+* `toBoolean()` → use Angular `booleanAttribute` from `@angular/core`.
+* `RdxAccordionItemState` → use `KbqAccordionItemState`.
+* `KbqCodeFile` → use `KbqCodeBlockFile`.
+* `KBQ_SIDEPANEL_WITH_SHADOW` token → removed.
+* `KbqSidepanelConfig.requiredBackdrop` field → removed (single shared backdrop used).
+* `formatDataSize()` → use `getFormattedSizeParts()`.
+* `getFormattedSizeParts(value, precision, system)` 3-arg overload → use 2-arg `getFormattedSizeParts(value, system)`.
+* `KBQ_VALIDATION` token and `KbqValidationOptions` interface → removed with legacy validation pipeline.
+* `kbqDisableLegacyValidationDirectiveProvider()` → **kept as a no-op** for backwards-compat; will be removed in a future release.
+
+#### Removed component methods / inputs
+
+* `KbqAutocompleteTrigger.openPanel()` → use `open()`.
+* `KbqClampedText.toggleIsCollapsed()` → use `toggle()`.
+* `KbqDivider.inset` input → removed.
+* `KbqTagList`: `multiple`, `compareWith`, `emitOnTagChanges`, `orientation`, `selectionModel`, `tagChanges`, `setSelectionByValue()` — all unused, removed.
+* `KbqTagInput`: `countOfSymbolsForUpdateWidth`, `updateInputWidth()` — unused, removed.
+* `KbqFormField.canShowStepper` → use `hasStepper` (stepper is always visible when provided).
+* `KbqAppSwitcherTrigger.apps` input → use `sites` with a single-element array.
+
+#### Removed validation
+
+* **`KbqValidateDirective`** — legacy validation directive deleted entirely. The new behaviour relies exclusively on `ErrorStateMatcher`. Consumers that relied on the legacy "show errors only after blur/submit" pattern should wire `ShowOnSubmitErrorStateMatcher` (or similar) explicitly via `errorStateMatcher` input or `ErrorStateMatcher` provider. The "lazy validation" behaviour (suppress required-not-shown until submit) is gone.
+
+#### Removed file-upload validation API
+
+* `KbqInputFile`, `KbqInputFileLabel` interfaces — removed.
+* `KbqFileValidatorFn` type → removed.
+* `isCorrectExtension()` function → use `FileValidators.isCorrectExtension` (`ValidatorFn`).
+* `KbqMultipleFileUploadComponent.errors`, `customValidation`, `hasErrors` → use `FormControl.errors` and `FormControl` validators.
+* `KbqSingleFileUploadComponent.errors`, `customValidation` → same.
+
+#### Removed modal API
+
+* `ModalOptions.kbqComponentParams` → use `data` field + `inject(KBQ_MODAL_DATA)` in the child component.
+* `KbqModalComponent.kbqComponentParams` @Input → removed.
+
+#### Removed filter-bar API
+
+* `KbqFilters.onSaveAsNew` Output → use `onSave` with `status === 'newFilter'`.
+* **`KbqFilterBarSearch`** component (`<kbq-filter-search>`) — removed. Use `<kbq-search-expandable [formControl]="searchControl" />` instead. Note: `kbq-search-expandable` requires a `FormControl`/`NgModel` binding.
+
+#### Removed form-field directives
+
+* **`KbqDatepickerToggle`** component (`<kbq-datepicker-toggle>`) — removed. Use `<kbq-datepicker-toggle-icon>` (`KbqDatepickerToggleIconComponent`) instead.
+* **`KbqFormFieldWithoutBorders`** directive (`<kbq-form-field kbqFormFieldWithoutBorders>`) — removed. Use the `noBorders` input on `KbqFormField`: `<kbq-form-field noBorders>`.
+
 ### Known follow-ups
 
 * Refactor remaining `(instance as any).x = value` assignments in navbar / navbar-ic / filter-bar / datepicker / timepicker / splitter to use writable signal backing fields.
