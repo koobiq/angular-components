@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    COMMA,
+    ENTER,
     kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     ShowOnFormSubmitErrorStateMatcher

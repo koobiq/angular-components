@@ -1,4 +1,4 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
@@ -19,16 +19,23 @@ import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
+    DOWN_ARROW,
+    ENTER,
+    ESCAPE,
+    KbqLocaleServiceModule,
+    KbqOption,
+    KbqOptionSelectionChange,
     MockNgZone,
+    SPACE,
+    TAB,
+    UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     typeInElement
-} from '@koobiq/cdk/testing';
-import { KbqLocaleServiceModule, KbqOption, KbqOptionSelectionChange } from '@koobiq/components/core';
+} from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
@@ -2197,8 +2204,8 @@ class SimpleAutocomplete implements OnDestroy {
         </kbq-autocomplete>
     `,
     styles: ``,
-    encapsulation: ViewEncapsulation.ShadowDom,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.ShadowDom
 })
 class TestShadowDomAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();

@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -13,7 +13,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
+import { ENTER, SPACE, TAB } from '../keycodes';
 import { kbqInjectNativeElement } from '../utils';
 
 export interface KbqOptionActionParent {

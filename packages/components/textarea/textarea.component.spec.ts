@@ -1,4 +1,4 @@
-import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -11,7 +11,7 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Observable, map, timer } from 'rxjs';
 import {

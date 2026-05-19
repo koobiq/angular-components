@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
     ChangeDetectionStrategy,
@@ -16,9 +16,23 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { A, C, DOWN_ARROW, END, ENTER, HOME, PAGE_DOWN, PAGE_UP, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, createMouseEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import {
+    A,
+    C,
+    createKeyboardEvent,
+    createMouseEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    FocusKeyManager,
+    HOME,
+    PAGE_DOWN,
+    PAGE_UP,
+    SPACE,
+    UP_ARROW
+} from '@koobiq/components/core';
 import {
     KbqListCopyEvent,
     KbqListModule,

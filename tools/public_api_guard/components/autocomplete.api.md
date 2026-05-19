@@ -4,7 +4,7 @@
 
 ```ts
 
-import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
+import { ActiveDescendantKeyManager } from '@koobiq/components/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';

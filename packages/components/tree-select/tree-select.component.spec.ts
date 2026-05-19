@@ -1,4 +1,4 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
 import {
@@ -31,30 +31,37 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { A, DOWN_ARROW, END, ENTER, ESCAPE, HOME, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
-    createFakeEvent,
-    createKeyboardEvent,
-    dispatchEvent,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent,
-    wrappedErrorMessage
-} from '@koobiq/cdk/testing';
-import {
+    A,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
     ErrorStateMatcher,
+    HOME,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxModule,
     KbqPseudoCheckboxState,
+    RIGHT_ARROW,
+    SPACE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
+    TAB,
     ThemePalette,
+    UP_ARROW,
+    createFakeEvent,
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider
+    kbqErrorStateMatcherProvider,
+    wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';

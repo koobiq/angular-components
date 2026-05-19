@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
@@ -20,9 +20,13 @@ import {
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
 import {
+    DOWN_ARROW,
+    ESCAPE,
+    LEFT_ARROW,
     MockNgZone,
+    RIGHT_ARROW,
+    TAB,
     createKeyboardEvent,
     createMouseEvent,
     dispatchEvent,
@@ -30,7 +34,7 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent,
     patchElementFocus
-} from '@koobiq/cdk/testing';
+} from '@koobiq/components/core';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';

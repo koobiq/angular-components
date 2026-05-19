@@ -1,4 +1,4 @@
-import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
+﻿import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
@@ -22,8 +22,7 @@ import {
     QueryList
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { DOWN_ARROW, END, HOME, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/components/core';
 import { fromEvent, merge, of as observableOf, Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

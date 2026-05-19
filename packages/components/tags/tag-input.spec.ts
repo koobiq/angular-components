@@ -1,12 +1,11 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { DASH } from '@angular/cdk/keycodes';
 import { PlatformModule } from '@angular/cdk/platform';
 import { Component, DebugElement, Provider, signal, Type, viewChild, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent } from '@koobiq/cdk/testing';
+import { COMMA, createKeyboardEvent, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';

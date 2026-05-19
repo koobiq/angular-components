@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqScrollbar } from './scrollbar.component';
 import { KbqScrollbarModule } from './scrollbar.module';
 import {

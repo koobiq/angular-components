@@ -25,6 +25,23 @@ export interface Replacement {
 /** TypeScript-source replacements (imports + identifiers + method renames). */
 export const tsReplacements: Replacement[] = [
     // ─── Package moves ─────────────────────────────────────────────────────
+    // @koobiq/cdk was merged into @koobiq/components/core in v20.0.0.
+    // Order matters: subpath rules must run before any bare-prefix rule.
+    {
+        from: '@koobiq/cdk/a11y',
+        to: '@koobiq/components/core',
+        note: '@koobiq/cdk package was merged into @koobiq/components/core in v20.0.0'
+    },
+    {
+        from: '@koobiq/cdk/keycodes',
+        to: '@koobiq/components/core',
+        note: '@koobiq/cdk package was merged into @koobiq/components/core in v20.0.0'
+    },
+    {
+        from: '@koobiq/cdk/testing',
+        to: '@koobiq/components/core',
+        note: '@koobiq/cdk package was merged into @koobiq/components/core in v20.0.0'
+    },
     {
         from: '@koobiq/components/navbar-ic',
         to: '@koobiq/components/navbar',

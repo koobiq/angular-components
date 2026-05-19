@@ -1,13 +1,24 @@
-import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
+﻿import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, QueryList, ViewChild, ViewChildren, getDebugNode } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
-import { KbqOptionModule, KbqOptionSelectionChange, KbqSelectSearch } from '@koobiq/components/core';
+import {
+    DOWN_ARROW,
+    ESCAPE,
+    KbqOptionModule,
+    KbqOptionSelectionChange,
+    KbqSelectSearch,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    UP_ARROW,
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';

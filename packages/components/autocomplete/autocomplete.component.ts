@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
@@ -24,8 +24,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
-import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption } from '@koobiq/components/core';
+import {
+    ActiveDescendantKeyManager,
+    KBQ_OPTION_PARENT_COMPONENT,
+    KbqOptgroup,
+    KbqOption
+} from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { delay, filter } from 'rxjs/operators';
 

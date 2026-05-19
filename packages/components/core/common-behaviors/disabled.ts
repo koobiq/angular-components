@@ -10,8 +10,10 @@ export interface CanDisable {
 export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
 /** Mixin to augment a directive with a `disabled` property. */
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function mixinDisabled<T extends Constructor<{}>>(base: T): CanDisableCtor & T {
     return class extends base {

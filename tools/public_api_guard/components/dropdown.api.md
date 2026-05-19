@@ -20,7 +20,7 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@koobiq/components/icon';
 import * as i3 from '@angular/common';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';

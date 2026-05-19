@@ -1,10 +1,9 @@
-import { AsyncPipe } from '@angular/common';
+﻿import { AsyncPipe } from '@angular/common';
 import { Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { LEFT_ARROW } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
+import { LEFT_ARROW, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
 import { KbqTab } from './tab.component';

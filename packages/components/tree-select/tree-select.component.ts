@@ -1,4 +1,4 @@
-import { CdkMonitorFocus } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -41,24 +41,13 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
+    CanUpdateErrorState,
     DOWN_ARROW,
     END,
     ENTER,
     ESCAPE,
-    HOME,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    UP_ARROW,
-    hasModifierKey,
-    isSelectAll
-} from '@koobiq/cdk/keycodes';
-import {
-    CanUpdateErrorState,
     ErrorStateMatcher,
+    HOME,
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
@@ -69,10 +58,19 @@ import {
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
+    LEFT_ARROW,
     MultipleMode,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW,
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
+    hasModifierKey,
+    isSelectAll,
     isUndefined,
     kbqSelectAnimations
 } from '@koobiq/components/core';
@@ -152,13 +150,13 @@ export class KbqTreeSelectChange {
     ],
     templateUrl: 'tree-select.html',
     styleUrls: ['./tree-select.scss', './tree-select-tokens.scss', '../select/select-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
         { provide: KbqTree, useExisting: KbqTreeSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
@@ -901,7 +899,7 @@ export class KbqTreeSelect
      *
      * @param fn Callback to be triggered when the component has been touched.
      */
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }

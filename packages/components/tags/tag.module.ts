@@ -1,6 +1,6 @@
-import { PlatformModule } from '@angular/cdk/platform';
+﻿import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
-import { ENTER } from '@koobiq/cdk/keycodes';
+import { ENTER } from '@koobiq/components/core';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagInput } from './tag-input';
 import { KbqTagList } from './tag-list.component';

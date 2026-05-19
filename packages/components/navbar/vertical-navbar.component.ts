@@ -1,4 +1,4 @@
-import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
@@ -18,8 +18,15 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { KBQ_LOCALE_SERVICE, ruRULocaleData } from '@koobiq/components/core';
+import {
+    DOWN_ARROW,
+    isHorizontalMovement,
+    isVerticalMovement,
+    KBQ_LOCALE_SERVICE,
+    ruRULocaleData,
+    TAB,
+    UP_ARROW
+} from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, TemplateRef, ViewEncapsulation } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -147,8 +147,8 @@ export class DevModalFullCustomComponent {
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     componentColors = KbqComponentColors;
@@ -191,7 +191,7 @@ export class DevApp {
         this.showConfirm();
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     createTplModal(tplContent?: TemplateRef<{}>, tplTitle?: TemplateRef<{}>, tplFooter?: TemplateRef<{}>) {
         this.tplModal = this.modalService.create({
             kbqTitle: tplTitle,

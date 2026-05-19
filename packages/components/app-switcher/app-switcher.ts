@@ -153,8 +153,8 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     ],
     templateUrl: './app-switcher.html',
     styleUrls: ['./app-switcher.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher'
     },

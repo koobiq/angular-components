@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
@@ -28,9 +28,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { isSelectAll } from '@koobiq/cdk/keycodes';
-import { CanUpdateErrorState, ErrorStateMatcher, isNull } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, FocusKeyManager, isNull, isSelectAll } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
@@ -73,9 +71,9 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         }
     `,
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',

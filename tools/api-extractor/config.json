@@ -1,9 +1,4 @@
 {
-    "cdk": [
-        "a11y",
-        "keycodes",
-        "testing"
-    ],
     "components": [
         "accordion",
         "actions-panel",

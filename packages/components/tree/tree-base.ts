@@ -1,4 +1,4 @@
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+﻿import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import {
     AfterContentChecked,
     ChangeDetectorRef,
@@ -21,7 +21,7 @@ import {
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { IFocusableOption } from '@koobiq/components/core';
 import { BehaviorSubject, Observable, Subject, Subscription, of as observableOf } from 'rxjs';
 import { TreeControl } from './control/tree-control';
 import { KbqTreeNodeDef, KbqTreeNodeOutletContext } from './node';

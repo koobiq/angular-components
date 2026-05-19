@@ -1,8 +1,8 @@
-import { ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
+﻿import { ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import { dispatchKeyboardEvent } from '@koobiq/components/core';
 import {
     KbqAccordion,
     KbqAccordionContent,

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals -- testing utilities legitimately use raw `document`/`window` */
+
 /** Creates a browser MouseEvent with the specified options. */
 export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
     const event = document.createEvent('MouseEvent');

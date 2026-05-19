@@ -39,34 +39,30 @@ import {
     END,
     ENTER,
     ESCAPE,
+    ErrorStateMatcher,
     HOME,
+    KbqOption,
+    KbqOptionSelectionChange,
+    KbqVirtualOption,
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
     TAB,
-    UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import {
+    ThemePalette,
+    UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    wrappedErrorMessage
-} from '@koobiq/cdk/testing';
-import {
-    ErrorStateMatcher,
-    KbqOption,
-    KbqOptionSelectionChange,
-    KbqVirtualOption,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
     kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider
+    kbqErrorStateMatcherProvider,
+    wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';

@@ -1,4 +1,4 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     ConnectedPosition,
@@ -32,12 +32,16 @@ import {
     inject
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
+    DOWN_ARROW,
+    ENTER,
+    ESCAPE,
     KBQ_WINDOW,
     KbqOption,
     KbqOptionSelectionChange,
     KeyboardNavigationHandler,
+    TAB,
+    UP_ARROW,
     defaultOffsetY
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
@@ -321,13 +325,13 @@ export class KbqAutocompleteTrigger
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnChange(fn: (value: any) => {}): void {
         this.onChange = fn;
     }
 
     // Implemented as part of ControlValueAccessor.
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnTouched(fn: () => {}) {
         this.onTouched = fn;
     }

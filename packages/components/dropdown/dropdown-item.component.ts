@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -13,8 +13,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { KBQ_TITLE_TEXT_REF, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
+import { IFocusableOption, KBQ_TITLE_TEXT_REF, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';

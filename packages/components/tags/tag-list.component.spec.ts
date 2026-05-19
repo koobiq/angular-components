@@ -1,4 +1,4 @@
-import { animate, style, transition, trigger } from '@angular/animations';
+﻿import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { A } from '@angular/cdk/keycodes';
@@ -31,15 +31,23 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { BACKSPACE, DELETE, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import {
+    BACKSPACE,
     createKeyboardEvent,
+    DELETE,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    END,
+    ENTER,
+    FocusKeyManager,
+    HOME,
+    LEFT_ARROW,
     MockNgZone,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
     typeInElement
-} from '@koobiq/cdk/testing';
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { map, Observable, Subject, timer } from 'rxjs';
 import {

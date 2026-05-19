@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -19,8 +19,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
+import {
+    FocusKeyManager,
+    isHorizontalMovement,
+    isVerticalMovement,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    TAB
+} from '@koobiq/components/core';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {

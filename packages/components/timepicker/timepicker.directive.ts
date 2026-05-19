@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     Directive,
@@ -29,28 +29,26 @@ import {
 } from '@angular/forms';
 import {
     BACKSPACE,
+    DateAdapter,
     DELETE,
     DOWN_ARROW,
     END,
+    ErrorStateMatcher,
     hasModifierKey,
     HOME,
     isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
+    KBQ_LOCALE_SERVICE,
+    KbqErrorStateTracker,
+    KbqLocaleService,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import {
-    DateAdapter,
-    ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
-    KbqErrorStateTracker,
-    KbqLocaleService,
+    UP_ARROW,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';

@@ -1,4 +1,4 @@
-import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     FormsModule,
@@ -8,12 +8,20 @@ import {
     UntypedFormGroup
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { COMMA, DASH, DOWN_ARROW, FF_MINUS, NUMPAD_MINUS, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import {
+    COMMA,
+    DASH,
+    DOWN_ARROW,
+    FF_MINUS,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
+    NUMPAD_MINUS,
+    UP_ARROW,
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     ruRUFormattersData
 } from '@koobiq/components/core';
 import {

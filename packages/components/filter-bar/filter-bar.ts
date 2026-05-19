@@ -45,8 +45,8 @@ import { KbqFilters } from './filters';
         </div>
     `,
     styleUrls: ['filter-bar.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-filter-bar'
     }

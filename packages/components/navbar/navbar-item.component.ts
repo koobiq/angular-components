@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
@@ -19,10 +19,16 @@ import {
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { DOWN_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers, kbqInjectNativeElement } from '@koobiq/components/core';
+import {
+    DOWN_ARROW,
+    IFocusableOption,
+    KBQ_WINDOW,
+    PopUpPlacements,
+    PopUpTriggers,
+    RIGHT_ARROW,
+    kbqInjectNativeElement
+} from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -347,8 +353,8 @@ export class KbqNavbarRectangleElement {
         KbqIcon
     ],
     templateUrl: './navbar-item.component.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-item',
         '[class.kbq-navbar-item_collapsed]': 'isCollapsed',

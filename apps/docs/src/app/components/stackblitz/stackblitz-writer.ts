@@ -213,7 +213,6 @@ export class DocsStackblitzWriter {
             '@angular/platform-browser-dynamic': ngVersion,
             '@angular/router': ngVersion,
             '@koobiq/angular-luxon-adapter': koobiqVersion,
-            '@koobiq/cdk': koobiqVersion,
             '@koobiq/components': koobiqVersion,
             '@koobiq/date-formatter': '^3.4.0',
             '@koobiq/date-adapter': '^3.4.0',

@@ -1,4 +1,4 @@
-import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -11,10 +11,11 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ESCAPE } from '@koobiq/cdk/keycodes';
-import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import {
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     ErrorStateMatcher,
+    ESCAPE,
     kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,

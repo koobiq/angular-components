@@ -1,7 +1,7 @@
 import { QueryList } from '@angular/core';
-import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '@koobiq/cdk/keycodes';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
+import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '../../keycodes';
 
 // This interface is for items that can be passed to a ListKeyManager.
 export interface ListKeyManagerOption {

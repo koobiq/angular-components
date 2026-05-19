@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
@@ -26,9 +26,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
+    hasModifierKey,
+    IFocusableOption,
     isNull,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,

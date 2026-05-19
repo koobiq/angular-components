@@ -1,4 +1,4 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, FactoryProvider, Type, ValueProvider, viewChild, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
@@ -17,23 +17,26 @@ import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_LUXON_DATE_FORMATS, KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DOWN_ARROW, ENTER, ESCAPE, ONE, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
     createKeyboardEvent,
+    DateAdapter,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    dispatchMouseEvent
-} from '@koobiq/cdk/testing';
-import {
-    DateAdapter,
+    dispatchMouseEvent,
+    DOWN_ARROW,
+    ENTER,
     ErrorStateMatcher,
+    ESCAPE,
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
+    ONE,
     ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { DateTime } from 'luxon';

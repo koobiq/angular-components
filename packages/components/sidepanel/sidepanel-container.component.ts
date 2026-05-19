@@ -33,8 +33,8 @@ export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepa
     ],
     templateUrl: './sidepanel-container.component.html',
     styleUrls: ['./sidepanel.scss', './sidepanel-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-sidepanel-container kbq-sidepanel-container_shadowed',
         '[class]': 'size',

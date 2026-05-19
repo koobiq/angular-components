@@ -1,12 +1,18 @@
-import { coerceElement } from '@angular/cdk/coercion';
+﻿import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, ElementRef, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
-import { dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
-import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT } from '@koobiq/components/core';
+import {
+    ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
+    ENTER,
+    ESCAPE,
+    SPACE,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent
+} from '@koobiq/components/core';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';

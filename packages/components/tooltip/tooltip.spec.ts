@@ -1,13 +1,17 @@
-import { coerceElement } from '@angular/cdk/coercion';
+﻿import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, viewChild, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TAB } from '@koobiq/cdk/keycodes';
-import { dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT } from '@koobiq/components/core';
+import {
+    ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent,
+    TAB
+} from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { KbqTooltipTrigger } from './tooltip.component';

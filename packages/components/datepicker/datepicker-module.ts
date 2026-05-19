@@ -40,6 +40,10 @@ import { KbqMonthView } from './month-view.component';
         KbqMonthView,
         KbqCalendarHeader
     ],
+    providers: [
+        KbqDatepickerIntl,
+        KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
+    ],
     exports: [
         KbqCalendar,
         KbqCalendarBody,
@@ -51,10 +55,6 @@ import { KbqMonthView } from './month-view.component';
         KbqMonthView,
         KbqCalendarHeader,
         KbqFormFieldModule
-    ],
-    providers: [
-        KbqDatepickerIntl,
-        KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
     ]
 })
 export class KbqDatepickerModule {}

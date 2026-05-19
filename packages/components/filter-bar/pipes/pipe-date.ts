@@ -1,4 +1,4 @@
-import {
+﻿import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
@@ -9,11 +9,11 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     DateAdapter,
     DateFormatter,
+    ENTER,
     KbqComponentColors,
     kbqDisableLegacyValidationDirectiveProvider,
     KbqFormattersModule,

@@ -1,7 +1,7 @@
-import { Component, Type, ViewChild } from '@angular/core';
+﻿import { Component, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchMouseEvent } from '@koobiq/cdk/testing';
+import { dispatchMouseEvent } from '@koobiq/components/core';
 import {
     Direction,
     KbqGutterDirective,

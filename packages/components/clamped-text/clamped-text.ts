@@ -62,11 +62,11 @@ import {
         }
     `,
     styleUrls: ['./clamped-text.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqClampedRoot, useExisting: KbqClampedText }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-clamped-text',
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'

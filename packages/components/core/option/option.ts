@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterViewChecked,
     booleanAttribute,
@@ -17,9 +17,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
-import { ENTER, hasModifierKey, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
+import { ActiveDescendantKeyManager } from '../a11y';
+import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';

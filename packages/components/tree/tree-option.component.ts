@@ -1,4 +1,4 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
@@ -17,15 +17,16 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
 import {
+    hasModifierKey,
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
-    KbqTitleTextRef
+    KbqTitleTextRef,
+    TAB
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';

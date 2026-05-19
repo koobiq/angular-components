@@ -1,12 +1,19 @@
-import { ENTER, SPACE } from '@angular/cdk/keycodes';
+﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ESCAPE, TAB } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { kbqDisableLegacyValidationDirectiveProvider, KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
+import {
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchKeyboardEvent,
+    ESCAPE,
+    kbqDisableLegacyValidationDirectiveProvider,
+    KbqOptionModule,
+    PopUpPlacements,
+    TAB
+} from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';

@@ -40,8 +40,8 @@ export class KbqDatepickerToggleIcon {}
         </ng-content>
     `,
     styleUrls: ['./datepicker-toggle.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker-toggle-icon',
         '[attr.aria-expanded]': 'datepicker.opened',

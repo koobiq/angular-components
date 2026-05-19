@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Attribute,
     booleanAttribute,
@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     BACKSPACE,
+    checkAndNormalizeLocalizedNumber,
     DASH,
     DELETE,
     DOWN_ARROW,
@@ -23,30 +24,27 @@ import {
     ENTER,
     ESCAPE,
     FF_MINUS,
+    formatNumberWithLocale,
     HOME,
     isCopy,
     isFunctionKey,
     isNumberKey,
     isNumpadKey,
     isSelectAll,
+    KBQ_DEFAULT_PRECISION_SEPARATOR,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqNumberInputLocaleConfig,
     LEFT_ARROW,
+    normalizeNumber,
     NUMPAD_MINUS,
     RIGHT_ARROW,
+    ruRUFormattersData,
     TAB,
     UP_ARROW,
     V,
     X,
     Z
-} from '@koobiq/cdk/keycodes';
-import {
-    checkAndNormalizeLocalizedNumber,
-    formatNumberWithLocale,
-    KBQ_DEFAULT_PRECISION_SEPARATOR,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
-    KbqNumberInputLocaleConfig,
-    normalizeNumber,
-    ruRUFormattersData
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';

@@ -1,4 +1,4 @@
-import { AnimationEvent } from '@angular/animations';
+﻿import { AnimationEvent } from '@angular/animations';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -24,8 +24,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
+import { ESCAPE, FocusKeyManager, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, switchMap, take } from 'rxjs/operators';

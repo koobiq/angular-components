@@ -1,4 +1,4 @@
-import { CdkMonitorFocus } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -43,27 +43,18 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import {
     A,
+    ActiveDescendantKeyManager,
     BACKSPACE,
+    CanUpdateErrorState,
     DELETE,
     DOWN_ARROW,
     END,
     ENTER,
     ESCAPE,
-    HOME,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import {
-    CanUpdateErrorState,
     ErrorStateMatcher,
+    HOME,
     KBQ_LOCALE_SERVICE,
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
@@ -82,6 +73,13 @@ import {
     KbqSelectSearchEmptyResult,
     KbqSelectTrigger,
     KbqVirtualOption,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW,
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
@@ -172,13 +170,13 @@ export const minimumTimeToDisplayLoading = 300;
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
@@ -1117,7 +1115,7 @@ export class KbqSelect
      *
      * @param fn Callback to be triggered when the component has been touched.
      */
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }

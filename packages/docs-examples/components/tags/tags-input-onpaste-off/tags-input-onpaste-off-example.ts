@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
+import { COMMA, ENTER } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {

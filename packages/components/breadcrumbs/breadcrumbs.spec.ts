@@ -1,12 +1,10 @@
-import { Component, DebugElement, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
+﻿import { Component, DebugElement, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
-import { DOWN_ARROW } from '@koobiq/cdk/keycodes';
-import { dispatchEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import { dispatchEvent, DOWN_ARROW, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem } from '@koobiq/components/overflow-items';
 import {

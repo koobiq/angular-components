@@ -37,6 +37,30 @@ describe(SCHEMATIC_NAME, () => {
         };
     }
 
+    it('rewrites @koobiq/cdk/{a11y,keycodes,testing} imports to @koobiq/components/core', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { FocusKeyManager } from '@koobiq/cdk/a11y';\n" +
+                "import { ENTER } from '@koobiq/cdk/keycodes';\n" +
+                "import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';\n" +
+                'const x: any = [FocusKeyManager, ENTER, dispatchKeyboardEvent];\n'
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        expect(updated).not.toContain('@koobiq/cdk');
+        expect(updated).toContain("from '@koobiq/components/core'");
+    });
+
     it('rewrites @koobiq/components/navbar-ic imports to @koobiq/components/navbar', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

@@ -1,9 +1,8 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import { dispatchKeyboardEvent, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/components/core';
 import { KbqIconModule } from './../icon/icon.module';
 import {
     KbqNavbar,

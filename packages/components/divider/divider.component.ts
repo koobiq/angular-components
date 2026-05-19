@@ -5,8 +5,8 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
     selector: 'kbq-divider',
     template: '',
     styleUrls: ['divider.scss', 'divider-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-divider',
         '[class.kbq-divider_vertical]': 'vertical',

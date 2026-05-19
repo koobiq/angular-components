@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
     FlexibleConnectedPositionStrategy,
@@ -30,8 +30,7 @@ import {
     Self,
     ViewContainerRef
 } from '@angular/core';
-import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
-import { defaultOffsetY, KBQ_WINDOW } from '@koobiq/components/core';
+import { defaultOffsetY, DOWN_ARROW, ENTER, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';

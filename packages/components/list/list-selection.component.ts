@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -31,25 +31,17 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FocusKeyManager, IFocusableOption } from '@koobiq/cdk/a11y';
 import {
     DOWN_ARROW,
     END,
     ENTER,
+    FocusKeyManager,
     hasModifierKey,
     HOME,
+    IFocusableOption,
     isCopy,
     isSelectAll,
     isVerticalMovement,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
@@ -57,7 +49,14 @@ import {
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqTitleTextRef,
-    MultipleMode
+    LEFT_ARROW,
+    MultipleMode,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';

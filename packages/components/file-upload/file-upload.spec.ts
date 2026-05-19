@@ -1,4 +1,4 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, ViewChild, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
@@ -13,16 +13,17 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DELETE, TAB } from '@koobiq/cdk/keycodes';
 import {
+    DELETE,
+    KbqBaseFileUploadLocaleConfig,
+    TAB,
     createFakeEvent,
     createMouseEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent
-} from '@koobiq/cdk/testing';
-import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
+} from '@koobiq/components/core';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';

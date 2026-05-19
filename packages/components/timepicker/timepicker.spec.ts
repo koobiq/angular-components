@@ -1,4 +1,4 @@
-import { Component, DebugElement, Inject, Type, viewChild, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, Inject, Type, viewChild, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -14,17 +14,23 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DOWN_ARROW, ONE, SPACE, TWO, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import {
+    createKeyboardEvent,
     DateAdapter,
+    dispatchEvent,
+    dispatchFakeEvent,
+    DOWN_ARROW,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
     kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     KbqLocaleService,
+    ONE,
     ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TWO,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';

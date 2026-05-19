@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     afterNextRender,
@@ -17,7 +17,7 @@ import {
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
-import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/cdk/keycodes';
+import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/components/core';
 import { kbqSidebarAnimations, KbqSidebarAnimationState } from './sidebar-animations';
 
 export enum SidebarPositions {

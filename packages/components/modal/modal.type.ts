@@ -1,7 +1,7 @@
-import { OverlayRef } from '@angular/cdk/overlay';
+﻿import { OverlayRef } from '@angular/cdk/overlay';
 import { EventEmitter, Injector, TemplateRef, Type } from '@angular/core';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;
 
 // Different modal styles we have supported
@@ -31,9 +31,9 @@ export interface ModalOptions<C = any, R = any> {
     kbqWrapClassName?: string;
     kbqClassName?: string;
     kbqStyle?: object;
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     kbqTitle?: string | TemplateRef<{}>;
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     kbqContent?: string | TemplateRef<{}> | Type<C>;
     kbqComponent?: Type<C>; // The instance of component opened into the dialog.
     kbqClosable?: boolean;
@@ -41,7 +41,7 @@ export interface ModalOptions<C = any, R = any> {
     kbqMaskClosable?: boolean;
     kbqMaskStyle?: object;
     kbqBodyStyle?: object;
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<C>[]; // Default Modal ONLY
     kbqGetContainer?: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null; // STATIC
     kbqAfterOpen?: EventEmitter<void>;
@@ -89,6 +89,6 @@ export interface IModalButtonOptions<T = any> {
     autoFocus?: boolean;
     kbqModalMainAction?: boolean;
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     onClick?(this: IModalButtonOptions<T>, contentComponentInstance?: T): (void | {}) | Promise<void | {}>;
 }

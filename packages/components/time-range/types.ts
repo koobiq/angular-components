@@ -59,6 +59,7 @@ export type KbqTimeRangeTranslationType = Exclude<DurationUnit, 'quarters' | 'mi
  * Configuration for a custom time range with duration metadata.
  * Defines a time range with its identifier, duration units, and optional fixed date range.
  */
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface KbqTimeRangeUnits extends DurationObjectUnits {}
 

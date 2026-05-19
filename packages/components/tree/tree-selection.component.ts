@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -27,25 +27,27 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import {
     DOWN_ARROW,
     END,
     ENTER,
+    FocusKeyManager,
+    getKbqSelectNonArrayValueError,
     hasModifierKey,
     HOME,
     isCopy,
     isSelectAll,
     isVerticalMovement,
+    KBQ_FORM_FIELD_REF,
     LEFT_ARROW,
+    MultipleMode,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
     SPACE,
     TAB,
     UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import { getKbqSelectNonArrayValueError, KBQ_FORM_FIELD_REF, MultipleMode } from '@koobiq/components/core';
+} from '@koobiq/components/core';
 import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';

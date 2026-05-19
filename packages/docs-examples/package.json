@@ -12,7 +12,6 @@
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/common": "{{NG_VERSION}}",
-        "@koobiq/cdk": "{{VERSION}}",
         "@koobiq/components": "{{VERSION}}",
         "@koobiq/angular-moment-adapter": "{{VERSION}}",
         "@koobiq/angular-luxon-adapter": "{{VERSION}}"

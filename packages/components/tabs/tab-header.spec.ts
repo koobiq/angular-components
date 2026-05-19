@@ -1,10 +1,18 @@
-import { Direction, Directionality } from '@angular/cdk/bidi';
+﻿import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule, ViewportRuler } from '@angular/cdk/scrolling';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from '@angular/core/testing';
-import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
-import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import {
+    END,
+    ENTER,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent
+} from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';

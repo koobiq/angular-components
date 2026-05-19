@@ -161,7 +161,6 @@
         "prepare": "husky",
         "clean": "playwright clear-cache && jest --clearCache && ng cache clean && rimraf .angular dist playwright-report .playwright-mcp test-results --verbose",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
-        "build:cdk": "ng build cdk",
         "build:angular-moment-adapter": "ng build angular-moment-adapter",
         "build:angular-luxon-adapter": "ng build angular-luxon-adapter",
         "build:components": "ng build components",
@@ -174,7 +173,7 @@
         "build:package-docs-content": "ts-node --project ./tools/package-docs-content/tsconfig.json ./tools/package-docs-content/package-docs-content.ts",
         "styles:build-all": "ts-node --project tools/scss-compiler/tsconfig.json tools/scss-compiler/scss-bundle.ts",
         "build:schematics": "rimraf packages/schematics/dist && rollup --failAfterWarnings -c packages/schematics/rollup.config.js && node ./packages/schematics/scripts/copy-meta-to-dist.js",
-        "docs": "yarn run build:cdk && yarn run build:components && yarn run build:components-experimental && yarn run styles:build-all && yarn run build:angular-luxon-adapter && yarn run build:angular-moment-adapter && yarn run build:tokens:data && yarn run build:docs-content && yarn run build:package-docs-content && yarn run build:docs-examples-module && yarn run build:docs-examples && yarn run docs:start:dev",
+        "docs": "yarn run build:components && yarn run build:components-experimental && yarn run styles:build-all && yarn run build:angular-luxon-adapter && yarn run build:angular-moment-adapter && yarn run build:tokens:data && yarn run build:docs-content && yarn run build:package-docs-content && yarn run build:docs-examples-module && yarn run build:docs-examples && yarn run docs:start:dev",
         "docs:start:dev": "ng serve --configuration=development koobiq-docs",
         "docs:start:prod": "ng serve --configuration=production koobiq-docs",
         "docs:generate-sitemap": "ts-node tools/generate-sitemap.ts",
@@ -272,7 +271,6 @@
         "dev:validation": "ng serve dev-validation --port 3003",
         "dev:z-index": "ng serve dev-z-index --port 3003",
         "-----UNIT_TESTS-----": "-------------------------------------------------------------------------------------",
-        "unit:cdk": "ng test cdk",
         "unit:components": "ng test components",
         "unit:components-experimental": "ng test components-experimental",
         "unit:angular-moment-adapter": "ng test angular-moment-adapter",
@@ -298,7 +296,6 @@
     },
     "release": {
         "packages": [
-            "cdk",
             "components",
             "components-experimental",
             "angular-luxon-adapter",

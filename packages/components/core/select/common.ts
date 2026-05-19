@@ -1,4 +1,4 @@
-import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+﻿import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -9,9 +9,9 @@ import {
     OnDestroy,
     Optional
 } from '@angular/core';
-import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
+import { END, ESCAPE, HOME, SPACE } from '../keycodes';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({

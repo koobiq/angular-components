@@ -1,8 +1,8 @@
-import { Component, Provider, Type, ViewChild } from '@angular/core';
+﻿import { Component, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqInputModule, KbqInputPassword } from './index';

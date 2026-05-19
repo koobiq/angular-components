@@ -1,4 +1,4 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
+﻿import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
     Inject,
@@ -12,9 +12,8 @@ import {
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ESCAPE } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { ESCAPE, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import {
     KBQ_SIDEPANEL_DATA,

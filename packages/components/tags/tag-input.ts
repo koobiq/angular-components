@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     Directive,
@@ -12,9 +12,8 @@ import {
     Self
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { COMMA, ENTER, hasModifierKey, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import { KbqFieldSizingContent } from '@koobiq/components/core';
+import { COMMA, ENTER, hasModifierKey, KbqFieldSizingContent, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagList } from './tag-list.component';
