@@ -15,13 +15,10 @@ import { InitializationTarget } from 'overlayscrollbars';
 import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnUpdatedEventListenerArgs } from 'overlayscrollbars';
-import { OverflowBehavior } from 'overlayscrollbars';
 import { OverlayScrollbars } from 'overlayscrollbars';
+import * as overlayscrollbars from 'overlayscrollbars';
 import { PartialOptions } from 'overlayscrollbars';
 import { Provider } from '@angular/core';
-import { ScrollbarsAutoHideBehavior } from 'overlayscrollbars';
-import { ScrollbarsVisibilityBehavior } from 'overlayscrollbars';
 
 // @public (undocumented)
 export const KBQ_SCROLLBAR_CONFIG: InjectionToken<{
@@ -34,13 +31,13 @@ export const KBQ_SCROLLBAR_CONFIG: InjectionToken<{
         ignoreMutation?: ((mutation: MutationRecord) => any) | null | undefined;
     } | undefined;
     overflow?: {
-        x?: OverflowBehavior | undefined;
-        y?: OverflowBehavior | undefined;
+        x?: overlayscrollbars.OverflowBehavior | undefined;
+        y?: overlayscrollbars.OverflowBehavior | undefined;
     } | undefined;
     scrollbars?: {
         theme?: string | null | undefined;
-        visibility?: ScrollbarsVisibilityBehavior | undefined;
-        autoHide?: ScrollbarsAutoHideBehavior | undefined;
+        visibility?: overlayscrollbars.ScrollbarsVisibilityBehavior | undefined;
+        autoHide?: overlayscrollbars.ScrollbarsAutoHideBehavior | undefined;
         autoHideDelay?: number | undefined;
         autoHideSuspend?: boolean | undefined;
         dragScroll?: boolean | undefined;
@@ -71,12 +68,12 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly onDestroy: EventEmitter<[instance: OverlayScrollbars, canceled: boolean]>;
+    readonly onDestroy: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars, canceled: boolean]>;
     // (undocumented)
-    readonly onInitialize: EventEmitter<[instance: OverlayScrollbars]>;
+    readonly onInitialize: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars]>;
     // (undocumented)
-    readonly onScroll: EventEmitter<[instance: OverlayScrollbars, event: Event]>;
-    readonly onUpdate: EventEmitter<[instance: OverlayScrollbars, onUpdatedArgs: OnUpdatedEventListenerArgs]>;
+    readonly onScroll: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars, event: Event]>;
+    readonly onUpdate: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars, onUpdatedArgs: overlayscrollbars.OnUpdatedEventListenerArgs]>;
     options: KbqScrollbarOptions;
     scrollTo(options?: ScrollToOptions): void;
     // (undocumented)
@@ -118,11 +115,8 @@ export class KbqScrollbarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqScrollbarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof i1_2.KbqScrollbar, typeof i2.KbqScrollbarDirective], [typeof i1_2.KbqScrollbar, typeof i2.KbqScrollbarDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof KbqScrollbar, typeof KbqScrollbarDirective], [typeof KbqScrollbar, typeof KbqScrollbarDirective]>;
 }
 
 // @public (undocumented)

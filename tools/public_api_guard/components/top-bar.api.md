@@ -33,10 +33,8 @@ export class KbqTopBarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopBarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTopBarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTopBarModule, never, [typeof i1.KbqTopBar, typeof i1.KbqTopBarContainer, typeof i1.KbqTopBarSpacer], [typeof i1.KbqTopBar, typeof i1.KbqTopBarContainer, typeof i1.KbqTopBarSpacer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTopBarModule, never, [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer], [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer]>;
 }
 
 // @public (undocumented)

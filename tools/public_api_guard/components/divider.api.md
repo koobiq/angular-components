@@ -27,10 +27,8 @@ export class KbqDividerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDividerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDividerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof i1.CommonModule, typeof i2.KbqDivider], [typeof i2.KbqDivider]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof i1.CommonModule, typeof KbqDivider], [typeof KbqDivider]>;
 }
 
 // (No @packageDocumentation comment for this package)

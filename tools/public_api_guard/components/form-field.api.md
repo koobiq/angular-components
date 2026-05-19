@@ -14,13 +14,10 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { InputSignal } from '@angular/core';
-import { InputSignalWithTransform } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -96,7 +93,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     cleaner: KbqCleaner | null;
     clearValue(event: Event): void;
     connectionContainerRef: ElementRef;
-    readonly contentClass: InputSignal<string | string[] | Set<string> | undefined>;
+    readonly contentClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
     control: KbqFormFieldControl<unknown>;
     get disabled(): boolean;
     readonly elementRef: ElementRef<HTMLElement>;
@@ -115,11 +112,11 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     get hasStepper(): boolean;
     get hasSuffix(): boolean;
     hint: QueryList<KbqHint>;
-    readonly horizontal: InputSignalWithTransform<boolean | undefined, unknown>;
+    readonly horizontal: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     hovered: boolean;
-    readonly inOverlay: ModelSignal<boolean | undefined>;
+    readonly inOverlay: i0.ModelSignal<boolean | undefined>;
     get invalid(): boolean;
-    readonly labelClass: InputSignal<string | string[] | Set<string> | undefined>;
+    readonly labelClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -128,7 +125,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly noBorders: InputSignalWithTransform<boolean | undefined, unknown>;
+    readonly noBorders: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     onContainerClick(event: MouseEvent): void;
     onHoverChanged(isHovered: boolean): void;
     onKeyDown(event: KeyboardEvent): void;
@@ -183,21 +180,8 @@ export class KbqFormFieldModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormFieldModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormFieldModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqTrim], [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqTrim]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof KbqCleaner, typeof KbqFormField, typeof KbqPrefix, typeof KbqSuffix, typeof KbqPasswordToggle, typeof KbqStepper, typeof KbqLabel, typeof KbqHint, typeof KbqError, typeof KbqReactivePasswordHint, typeof KbqLegend, typeof KbqFieldset, typeof KbqFieldsetItem, typeof KbqPasswordHint, typeof KbqTrim], [typeof KbqCleaner, typeof KbqFormField, typeof KbqPrefix, typeof KbqSuffix, typeof KbqPasswordToggle, typeof KbqStepper, typeof KbqLabel, typeof KbqHint, typeof KbqError, typeof KbqReactivePasswordHint, typeof KbqLegend, typeof KbqFieldset, typeof KbqFieldsetItem, typeof KbqPasswordHint, typeof KbqTrim]>;
 }
 
 // @public
@@ -310,8 +294,8 @@ export class KbqPrefix {
 // @public
 export class KbqReactivePasswordHint extends KbqHint {
     constructor();
-    readonly hasError: InputSignalWithTransform<boolean, unknown>;
-    protected readonly icon: Signal<"kbq-check-s_16" | "kbq-xmark-s_16">;
+    readonly hasError: i0.InputSignalWithTransform<boolean, unknown>;
+    protected readonly icon: i0.Signal<"kbq-check-s_16" | "kbq-xmark-s_16">;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqReactivePasswordHint, "kbq-reactive-password-hint", ["kbqReactivePasswordHint"], { "hasError": { "alias": "hasError"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)

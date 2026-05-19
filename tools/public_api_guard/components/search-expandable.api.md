@@ -13,7 +13,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqLocaleService } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 
@@ -52,7 +52,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
     get localeData(): any;
-    protected readonly localeService: KbqLocaleService | null;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -95,10 +95,8 @@ export class KbqSearchExpandableModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandableModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSearchExpandableModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSearchExpandableModule, never, [typeof i1.KbqSearchExpandable], [typeof i1.KbqSearchExpandable]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSearchExpandableModule, never, [typeof KbqSearchExpandable], [typeof KbqSearchExpandable]>;
 }
 
 // (No @packageDocumentation comment for this package)

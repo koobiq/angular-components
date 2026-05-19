@@ -13,13 +13,12 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1_4 from '@koobiq/components/icon';
+import * as i1 from '@koobiq/components/icon';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
-import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
@@ -74,7 +73,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
 // @public (undocumented)
 export class KbqAccordionContent {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordionContent, "kbq-accordion-content, [kbq-accordion-content]", never, {}, {}, never, ["*"], true, [{ directive: typeof i1.KbqAccordionContentDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordionContent, "kbq-accordion-content, [kbq-accordion-content]", never, {}, {}, never, ["*"], true, [{ directive: typeof KbqAccordionContentDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionContent, never>;
 }
@@ -87,7 +86,7 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     disableAnimation(): void;
     // (undocumented)
     enableAnimation(): void;
-    protected readonly hidden: WritableSignal<boolean>;
+    protected readonly hidden: i0.WritableSignal<boolean>;
     protected readonly item: KbqAccordionItem;
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
@@ -106,7 +105,7 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
 // @public (undocumented)
 export class KbqAccordionHeader {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionHeader, "kbq-accordion-header, [kbq-accordion-header]", never, {}, {}, never, never, true, [{ directive: typeof i1_3.KbqAccordionHeaderDirective; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionHeader, "kbq-accordion-header, [kbq-accordion-header]", never, {}, {}, never, never, true, [{ directive: typeof KbqAccordionHeaderDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionHeader, never>;
 }
@@ -177,14 +176,8 @@ export class KbqAccordionModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqAccordionModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1_4.KbqIcon, typeof i2.KbqAccordion, typeof i3.KbqAccordionContent, typeof i4.KbqAccordionHeader, typeof i5.KbqAccordionItem, typeof i6.KbqAccordionTrigger], [typeof i2.KbqAccordion, typeof i3.KbqAccordionContent, typeof i4.KbqAccordionHeader, typeof i5.KbqAccordionItem, typeof i6.KbqAccordionTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
 }
 
 // @public (undocumented)
@@ -209,7 +202,7 @@ export class KbqAccordionTrigger implements AfterViewInit {
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordionTrigger, "kbq-accordion-trigger, [kbq-accordion-trigger]", never, {}, {}, never, ["*"], true, [{ directive: typeof i1_2.KbqAccordionTriggerDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordionTrigger, "kbq-accordion-trigger, [kbq-accordion-trigger]", never, {}, {}, never, ["*"], true, [{ directive: typeof KbqAccordionTriggerDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionTrigger, never>;
 }
@@ -241,12 +234,6 @@ export enum KbqAccordionVariant {
     // (undocumented)
     hugSpaceBetween = "hugSpaceBetween"
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/components/accordion/accordion-content.d.ts:5:153 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-// dist/components/accordion/accordion-header.d.ts:5:150 - (ae-forgotten-export) The symbol "i1_3" needs to be exported by the entry point index.d.ts
-// dist/components/accordion/accordion-trigger.component.d.ts:23:153 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

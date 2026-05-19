@@ -35,10 +35,8 @@ export class KbqTableModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTableModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqTable, typeof i3.KbqTableCellContent], [typeof i3.KbqTable, typeof i3.KbqTableCellContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqTable, typeof KbqTableCellContent], [typeof KbqTable, typeof KbqTableCellContent]>;
 }
 
 // (No @packageDocumentation comment for this package)

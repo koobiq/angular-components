@@ -4,23 +4,18 @@
 
 ```ts
 
+import * as _angular_core from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
-import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
-import { InputSignal } from '@angular/core';
-import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqLabel } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { OutputEmitterRef } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class KbqFocusRegionItem {
@@ -29,70 +24,70 @@ export class KbqFocusRegionItem {
     // (undocumented)
     protected onTabOut(event: KeyboardEvent): void;
     // (undocumented)
-    readonly tabOut: OutputEmitterRef<KeyboardEvent>;
+    readonly tabOut: _angular_core.OutputEmitterRef<KeyboardEvent>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusRegionItem, "[kbqFocusRegionItem]", ["kbqFocusRegionItem"], {}, { "tabOut": "tabOut"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqFocusRegionItem, "[kbqFocusRegionItem]", ["kbqFocusRegionItem"], {}, { "tabOut": "tabOut"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusRegionItem, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFocusRegionItem, never>;
 }
 
 // @public
 export class KbqInlineEdit {
     constructor();
     protected cancel(): void;
-    protected readonly canceled: OutputEmitterRef<void>;
-    readonly canSaveOnEnter: InputSignal<(event: KeyboardEvent) => boolean>;
-    protected readonly className: Signal<string>;
+    protected readonly canceled: _angular_core.OutputEmitterRef<void>;
+    readonly canSaveOnEnter: _angular_core.InputSignal<(event: KeyboardEvent) => boolean>;
+    protected readonly className: _angular_core.Signal<string>;
     protected readonly colors: typeof KbqComponentColors;
-    readonly disabled: InputSignalWithTransform<boolean, unknown>;
-    readonly editModeWidth: InputSignalWithTransform<number | undefined, unknown>;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly editModeWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
     protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly formFieldRef: Signal<KbqFormField | undefined>;
-    protected readonly formFieldRefList: Signal<readonly KbqFormField[]>;
-    readonly getValueHandler: InputSignal<(() => unknown) | undefined>;
-    readonly interactiveSelectors: InputSignal<string[]>;
-    protected readonly isEditMode: Signal<boolean>;
-    protected readonly label: Signal<KbqLabel | undefined>;
-    protected readonly menu: Signal<KbqInlineEditMenu | undefined>;
-    protected readonly mode: WritableSignal<KbqInlineEditMode>;
-    readonly modeAsReadonly: Signal<KbqInlineEditMode>;
-    protected readonly modeChange: OutputEmitterRef<KbqInlineEditMode>;
+    protected readonly formFieldRef: _angular_core.Signal<KbqFormField | undefined>;
+    protected readonly formFieldRefList: _angular_core.Signal<readonly KbqFormField[]>;
+    readonly getValueHandler: _angular_core.InputSignal<(() => unknown) | undefined>;
+    readonly interactiveSelectors: _angular_core.InputSignal<string[]>;
+    protected readonly isEditMode: _angular_core.Signal<boolean>;
+    protected readonly label: _angular_core.Signal<KbqLabel | undefined>;
+    protected readonly menu: _angular_core.Signal<KbqInlineEditMenu | undefined>;
+    protected readonly mode: _angular_core.WritableSignal<KbqInlineEditMode>;
+    readonly modeAsReadonly: _angular_core.Signal<KbqInlineEditMode>;
+    protected readonly modeChange: _angular_core.OutputEmitterRef<KbqInlineEditMode>;
     protected onAttach(): void;
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
     protected onOverlayOutsideClick($event: Event): void;
-    protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
+    protected readonly overlayDir: _angular_core.Signal<CdkConnectedOverlay | undefined>;
     protected overlayOrigin: HTMLElement;
-    readonly overlayPanelClass: InputSignal<string | string[]>;
-    protected readonly overlayWidth: WritableSignal<string | number>;
+    readonly overlayPanelClass: _angular_core.InputSignal<string | string[]>;
+    protected readonly overlayWidth: _angular_core.WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
-    protected readonly regionItems: Signal<readonly KbqFocusRegionItem[]>;
+    protected readonly regionItems: _angular_core.Signal<readonly KbqFocusRegionItem[]>;
     protected save($event?: Event): void;
-    protected readonly saved: OutputEmitterRef<void>;
-    protected readonly scrollStrategy: WritableSignal<ScrollStrategy>;
-    readonly setValueHandler: InputSignal<((value: any) => void) | undefined>;
-    readonly showActions: InputSignalWithTransform<boolean, unknown>;
-    readonly showTooltipOnError: InputSignalWithTransform<boolean, unknown>;
-    protected readonly tabIndex: Signal<0 | -1>;
+    protected readonly saved: _angular_core.OutputEmitterRef<void>;
+    protected readonly scrollStrategy: _angular_core.WritableSignal<ScrollStrategy>;
+    readonly setValueHandler: _angular_core.InputSignal<((value: any) => void) | undefined>;
+    readonly showActions: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly showTooltipOnError: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly tabIndex: _angular_core.Signal<0 | -1>;
     toggleMode(): void;
-    readonly tooltipPlacement: InputSignal<PopUpPlacements | undefined>;
-    protected readonly tooltipTrigger: Signal<KbqTooltipTrigger | undefined>;
-    readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
-    protected readonly viewContainer: Signal<ElementRef<HTMLElement>>;
+    readonly tooltipPlacement: _angular_core.InputSignal<PopUpPlacements | undefined>;
+    protected readonly tooltipTrigger: _angular_core.Signal<KbqTooltipTrigger | undefined>;
+    readonly validationTooltip: _angular_core.InputSignal<string | TemplateRef<any> | undefined>;
+    protected readonly viewContainer: _angular_core.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "overlayPanelClass": { "alias": "overlayPanelClass"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "overlayPanelClass": { "alias": "overlayPanelClass"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
 }
 
 // @public
 export class KbqInlineEditMenu {
     protected readonly dropdownTrigger: KbqDropdownTrigger | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditMenu, "[kbqInlineEditMenu]", ["kbqInlineEditMenu"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInlineEditMenu, "[kbqInlineEditMenu]", ["kbqInlineEditMenu"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditMenu, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInlineEditMenu, never>;
 }
 
 // @public (undocumented)
@@ -101,21 +96,19 @@ export type KbqInlineEditMode = 'view' | 'edit';
 // @public (undocumented)
 export class KbqInlineEditModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInlineEditModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqInlineEditModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqInlineEditModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu], [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof KbqInlineEdit, typeof KbqInlineEditPlaceholder, typeof KbqInlineEditMenu], [typeof KbqInlineEdit, typeof KbqInlineEditPlaceholder, typeof KbqInlineEditMenu]>;
 }
 
 // @public
 export class KbqInlineEditPlaceholder {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditPlaceholder, "[kbqInlineEditPlaceholder]", ["kbqInlineEditPlaceholder"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInlineEditPlaceholder, "[kbqInlineEditPlaceholder]", ["kbqInlineEditPlaceholder"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditPlaceholder, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInlineEditPlaceholder, never>;
 }
 
 // (No @packageDocumentation comment for this package)

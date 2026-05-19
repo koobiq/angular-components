@@ -166,10 +166,8 @@ export class KbqCodeBlockModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCodeBlockModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent], [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent], [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent]>;
 }
 
 // @public

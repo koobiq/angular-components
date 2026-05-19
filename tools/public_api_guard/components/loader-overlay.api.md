@@ -77,10 +77,8 @@ export class KbqLoaderOverlayModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqLoaderOverlayModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqLoaderOverlay, typeof i4.KbqLoaderOverlayIndicator, typeof i4.KbqLoaderOverlayText, typeof i4.KbqLoaderOverlayCaption], [typeof i4.KbqLoaderOverlay, typeof i4.KbqLoaderOverlayIndicator, typeof i4.KbqLoaderOverlayText, typeof i4.KbqLoaderOverlayCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
 }
 
 // @public (undocumented)

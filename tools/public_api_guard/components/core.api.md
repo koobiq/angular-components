@@ -32,7 +32,7 @@ import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1_3 from '@angular/common';
+import * as i1 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -52,7 +52,6 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -2403,12 +2402,8 @@ export class KbqFormattersModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormattersModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormattersModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof i1.AbsoluteDateFormatterPipe, typeof i1.AbsoluteDateTimeFormatterPipe, typeof i1.AbsoluteDateShortFormatterPipe, typeof i1.AbsoluteShortDateTimeFormatterPipe, typeof i1.RelativeDateFormatterPipe, typeof i1.RelativeDateTimeFormatterPipe, typeof i1.RelativeShortDateFormatterPipe, typeof i1.RelativeShortDateTimeFormatterPipe, typeof i1.RangeDateFormatterPipe, typeof i1.RangeShortDateFormatterPipe, typeof i1.RangeDateTimeFormatterPipe, typeof i1.RangeShortDateTimeFormatterPipe, typeof i1.RangeMiddleDateTimeFormatterPipe, typeof i1.AbsoluteDateFormatterImpurePipe, typeof i1.AbsoluteDateTimeFormatterImpurePipe, typeof i1.AbsoluteDateShortFormatterImpurePipe, typeof i1.AbsoluteShortDateTimeFormatterImpurePipe, typeof i1.RelativeDateFormatterImpurePipe, typeof i1.RelativeDateTimeFormatterImpurePipe, typeof i1.RelativeShortDateFormatterImpurePipe, typeof i1.RelativeShortDateTimeFormatterImpurePipe, typeof i1.RangeDateFormatterImpurePipe, typeof i1.RangeShortDateFormatterImpurePipe, typeof i1.RangeDateTimeFormatterImpurePipe, typeof i1.RangeShortDateTimeFormatterImpurePipe, typeof i1.RangeMiddleDateTimeFormatterImpurePipe, typeof i2.KbqDataSizePipe, typeof i3.KbqDecimalPipe, typeof i3.KbqRoundDecimalPipe, typeof i3.KbqTableNumberPipe], [typeof i3.KbqDecimalPipe, typeof i3.KbqRoundDecimalPipe, typeof i3.KbqTableNumberPipe, typeof i1.AbsoluteDateFormatterPipe, typeof i1.AbsoluteDateTimeFormatterPipe, typeof i1.AbsoluteDateShortFormatterPipe, typeof i1.AbsoluteShortDateTimeFormatterPipe, typeof i1.RelativeDateFormatterPipe, typeof i1.RelativeDateTimeFormatterPipe, typeof i1.RelativeShortDateFormatterPipe, typeof i1.RelativeShortDateTimeFormatterPipe, typeof i1.RangeDateFormatterPipe, typeof i1.RangeShortDateFormatterPipe, typeof i1.RangeDateTimeFormatterPipe, typeof i1.RangeShortDateTimeFormatterPipe, typeof i1.RangeMiddleDateTimeFormatterPipe, typeof i1.AbsoluteDateFormatterImpurePipe, typeof i1.AbsoluteDateTimeFormatterImpurePipe, typeof i1.AbsoluteDateShortFormatterImpurePipe, typeof i1.AbsoluteShortDateTimeFormatterImpurePipe, typeof i1.RelativeDateFormatterImpurePipe, typeof i1.RelativeDateTimeFormatterImpurePipe, typeof i1.RelativeShortDateFormatterImpurePipe, typeof i1.RelativeShortDateTimeFormatterImpurePipe, typeof i1.RangeDateFormatterImpurePipe, typeof i1.RangeShortDateFormatterImpurePipe, typeof i1.RangeDateTimeFormatterImpurePipe, typeof i1.RangeShortDateTimeFormatterImpurePipe, typeof i1.RangeMiddleDateTimeFormatterImpurePipe, typeof i2.KbqDataSizePipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof KbqDataSizePipe, typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe], [typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe, typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof KbqDataSizePipe]>;
 }
 
 // @public (undocumented)
@@ -2451,10 +2446,8 @@ export class KbqFormsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormsModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormsModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormsModule, never, [typeof i1_2.KbqForm, typeof i1_2.KbqFormElement], [typeof i1_2.KbqForm, typeof i1_2.KbqFormElement]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormsModule, never, [typeof KbqForm, typeof KbqFormElement], [typeof KbqForm, typeof KbqFormElement]>;
 }
 
 // @public
@@ -2466,10 +2459,8 @@ export class KbqHighlightModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqHighlightModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof i1_3.CommonModule, typeof i2_2.KbqHighlightPipe], [typeof i2_2.KbqHighlightPipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof i1.CommonModule, typeof KbqHighlightPipe], [typeof KbqHighlightPipe]>;
 }
 
 // @public (undocumented)
@@ -2484,7 +2475,7 @@ export class KbqHighlightPipe implements PipeTransform {
 
 // @public
 export class KbqHover {
-    readonly hovered: Signal<boolean>;
+    readonly hovered: i0.Signal<boolean>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqHover, "[kbqHover]", ["kbqHover"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -2755,13 +2746,8 @@ export class KbqOptionModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqOptionModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2_3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3_2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof i1_4.KbqPseudoCheckbox, typeof i2_3.KbqOption, typeof i3_2.KbqOptgroup, typeof i4.KbqOptionActionComponent], [typeof i2_3.KbqOption, typeof i3_2.KbqOptgroup, typeof i4.KbqOptionActionComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof KbqPseudoCheckbox, typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent], [typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent]>;
 }
 
 // @public
@@ -3037,7 +3023,7 @@ export class KbqPseudoCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqPseudoCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof i1_3.CommonModule, typeof i1_4.KbqPseudoCheckbox], [typeof i1_4.KbqPseudoCheckbox]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof i1.CommonModule, typeof KbqPseudoCheckbox], [typeof KbqPseudoCheckbox]>;
 }
 
 // @public (undocumented)
