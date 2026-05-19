@@ -15,15 +15,69 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
+import {
+    TagAutocompleteDraggableExample,
+    TagAutocompleteEditableExample,
+    TagAutocompleteOptionOperationsExample,
+    TagAutocompleteOverviewExample,
+    TagAutocompleteRemovableExample,
+    TagDisabledExample,
+    TagEditableExample,
+    TagEditableWithValidationExample,
+    TagFillAndStyleExample,
+    TagInputDraggableExample,
+    TagInputEditableExample,
+    TagInputOverviewExample,
+    TagInputRemovableExample,
+    TagInputWithFormControlValidatorsExample,
+    TagListDraggableExample,
+    TagListEditableExample,
+    TagListOverviewExample,
+    TagListRemovableExample,
+    TagLongTextExample,
+    TagOverviewExample,
+    TagRemovableExample,
+    TagsAutocompleteOnpasteOffExample,
+    TagSelectableExample,
+    TagsInputOnpasteOffExample,
+    TagWithIconExample
+} from 'packages/docs-examples/components/tags';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TagExamplesModule } from '../../docs-examples/components/tags';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [TagExamplesModule],
+    imports: [
+        TagOverviewExample,
+        TagFillAndStyleExample,
+        TagLongTextExample,
+        TagInputOverviewExample,
+        TagListOverviewExample,
+        TagAutocompleteOverviewExample,
+        TagAutocompleteOptionOperationsExample,
+        TagsInputOnpasteOffExample,
+        TagsAutocompleteOnpasteOffExample,
+        TagInputWithFormControlValidatorsExample,
+        TagDisabledExample,
+        TagWithIconExample,
+        TagRemovableExample,
+        TagListRemovableExample,
+        TagEditableExample,
+        TagListEditableExample,
+        TagInputEditableExample,
+        TagEditableWithValidationExample,
+        TagInputRemovableExample,
+        TagListDraggableExample,
+        TagInputDraggableExample,
+        TagAutocompleteDraggableExample,
+        TagAutocompleteEditableExample,
+        TagAutocompleteRemovableExample,
+        TagSelectableExample
+    ],
     template: `
+        <tag-selectable-example />
+        <hr />
         <tag-list-draggable-example />
         <hr />
         <tag-input-draggable-example />
@@ -66,6 +120,11 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <tag-list-overview-example />
         <hr />
+        <tag-long-text-example />
+        <hr />
+        <tags-input-onpaste-off-example />
+        <hr />
+        <tags-autocomplete-onpaste-off-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

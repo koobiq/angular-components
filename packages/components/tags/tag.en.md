@@ -46,7 +46,9 @@ Tags can be selected in several ways:
 - `Space` when the tag is focused.
 - Programmatic selection through the component [API](/en/components/tag/api).
 
-The selection option is configured using the `selectable` attribute (enabled by default).
+The selection option is configured using the `selectable` attribute (disabled by default).
+
+<!-- example(tag-selectable) -->
 
 ### Editing
 
