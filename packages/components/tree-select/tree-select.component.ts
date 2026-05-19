@@ -1164,7 +1164,14 @@ export class KbqTreeSelect
                 );
             }
 
-            if (this.search) {
+            // Ensure the active option's keyboard-focus indicator is shown even when the
+            // index didn't change (e.g. ArrowDown on a single-option list) — without this
+            // setActiveItem isn't invoked and the focus stays on the trigger.
+            if (isArrowKey && this.tree.keyManager.activeItemIndex === previouslyFocusedIndex) {
+                this.tree.keyManager.activeItem?.focus('keyboard');
+            }
+
+            if (this.search && this.shouldShowSearch()) {
                 this.search.focus();
             }
         }
