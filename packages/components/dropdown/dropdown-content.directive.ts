@@ -36,7 +36,7 @@ export class KbqDropdownContent implements OnDestroy {
         this.detach();
 
         if (!this.outlet) {
-            this.outlet = new DomPortalOutlet(this.document.createElement('div'), null, this.appRef, this.injector);
+            this.outlet = new DomPortalOutlet(this.document.createElement('div'), this.appRef, this.injector);
         }
 
         const element: HTMLElement = this.template.elementRef.nativeElement;
