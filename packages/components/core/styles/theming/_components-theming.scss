@@ -1339,67 +1339,6 @@
         )
     );
 
-    $risk-level: (
-        filled: (
-            fade-off: (
-                success: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-off-success-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-off-success-background')
-                ),
-                warning: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-off-warning-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-off-warning-background')
-                ),
-                error: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-off-error-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-off-error-background')
-                )
-            ),
-            fade-on: (
-                success: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-success-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-success-background')
-                ),
-                warning: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-warning-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-warning-background')
-                ),
-                error: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-error-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-error-background')
-                ),
-                contrast: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-contrast-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-filled-fade-on-contrast-background')
-                )
-            )
-        ),
-        outline: (
-            fade-on: (
-                success: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-success-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-success-background'),
-                    border: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-success-border')
-                ),
-                warning: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-warning-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-warning-background'),
-                    border: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-warning-border')
-                ),
-                error: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-error-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-error-background'),
-                    border: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-error-border')
-                ),
-                contrast: (
-                    color: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-contrast-text'),
-                    background: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-contrast-background'),
-                    border: map.get($tokens, 'risk-level-#{$scheme}-outline-fade-on-contrast-border')
-                )
-            )
-        )
-    );
-
     $select-panel: (
         background: map.get($tokens, 'select-panel-#{$scheme}-dropdown-background'),
         shadow: map.get($tokens, 'select-panel-#{$scheme}-dropdown-shadow')
@@ -1973,7 +1912,6 @@
         progress-bar: $progress-bar,
         progress-spinner: $progress-spinner,
         radio: $radio,
-        risk-level: $risk-level,
         select-panel: $select-panel,
         sidepanel: $sidepanel,
         tab-item: $tab-item,
