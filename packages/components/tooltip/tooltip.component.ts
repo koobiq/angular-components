@@ -67,9 +67,9 @@ export const MIN_TIME_FOR_DELAY = 2000;
     ],
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
-    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
     animations: [kbqTooltipAnimations.tooltipState]
 })
 export class KbqTooltipComponent extends KbqPopUp {
@@ -296,7 +296,19 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         panelClass: ['kbq-tooltip-panel']
     };
 
-    protected modifier: TooltipModifier = TooltipModifier.Default;
+    /**
+     * Visual variant of the tooltip. Accepts `'default'` | `'warning'` | `'extended'`.
+     * Replaces the removed `KbqWarningTooltipTrigger` and `KbqExtendedTooltipTrigger`
+     * subclasses — to render a warning tooltip use `kbqTooltipModifier="warning"`,
+     * and `kbqTooltipModifier="extended"` for the extended variant (combine with `kbqTooltipHeader`).
+     */
+    @Input('kbqTooltipModifier') modifier: TooltipModifier | `${TooltipModifier}` = TooltipModifier.Default;
+
+    /**
+     * Header text or template, rendered above the tooltip content. Only meaningful with
+     * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
+     */
+    @Input('kbqTooltipHeader') header: string | TemplateRef<any>;
 
     constructor() {
         super();
@@ -377,6 +389,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         this.instance.content = this.content;
+        this.instance.header = this.header;
         this.instance.context = this.context && { $implicit: this.context };
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
@@ -431,85 +444,5 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         this.strategy.setOrigin(point);
-    }
-}
-
-/**
- * @docs-private
- * @deprecated Will be removed in next major release
- */
-@Directive({
-    selector: '[kbqWarningTooltip]',
-    host: {
-        '[class.kbq-tooltip_open]': 'isOpen',
-
-        '(keydown)': 'keydownHandler($event)',
-        '(touchend)': 'touchendHandler()'
-    },
-    exportAs: 'kbqWarningTooltip'
-})
-export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
-    @Input('kbqWarningTooltip')
-    get content(): string | TemplateRef<any> {
-        return this._content;
-    }
-
-    set content(content: string | TemplateRef<any>) {
-        this._content = content;
-
-        this.updateData();
-    }
-
-    protected modifier: TooltipModifier = TooltipModifier.Warning;
-}
-
-/**
- * @docs-private
- * @deprecated Will be removed in next major release
- */
-@Directive({
-    selector: '[kbqExtendedTooltip]',
-    host: {
-        '[class.kbq-tooltip_open]': 'isOpen',
-
-        '(keydown)': 'keydownHandler($event)',
-        '(touchend)': 'touchendHandler()'
-    },
-    exportAs: 'kbqExtendedTooltip'
-})
-export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
-    @Input('kbqExtendedTooltip')
-    get content(): string | TemplateRef<any> {
-        return this._content;
-    }
-
-    set content(content: string | TemplateRef<any>) {
-        this._content = content;
-
-        this.updateData();
-    }
-
-    @Input('kbqTooltipHeader')
-    get header(): string | TemplateRef<any> {
-        return this._header;
-    }
-
-    set header(header: string | TemplateRef<any>) {
-        this._header = header;
-
-        this.updateData();
-    }
-
-    private _header: string | TemplateRef<any>;
-
-    protected modifier: TooltipModifier = TooltipModifier.Extended;
-
-    updateData() {
-        if (!this.instance) {
-            return;
-        }
-
-        super.updateData();
-        this.instance.header = this.header;
     }
 }

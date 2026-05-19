@@ -9,9 +9,10 @@
     </kbq-radio-group>
 
     <kbq-form-field
-        #tooltip="kbqWarningTooltip"
+        #tooltip="kbqTooltip"
         class="example-timepicker-element"
-        [kbqWarningTooltip]="'Только цифры'"
+        kbqTooltipModifier="warning"
+        [kbqTooltip]="'Только цифры'"
     >
         <i kbq-icon="kbq-clock_16" kbqPrefix></i>
         <input kbqTimepicker [format]="timeFormat" [kbqValidationTooltip]="tooltip" [(ngModel)]="value" />

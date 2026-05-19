@@ -19,7 +19,7 @@ import * as i3 from '@angular/forms';
 import * as i5 from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -84,7 +84,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     get isShortFormat(): boolean;
     // (undocumented)
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger);
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
     // (undocumented)
     get max(): D | null;
     set max(value: D | null);

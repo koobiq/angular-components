@@ -16,7 +16,7 @@ import { DateTime } from 'luxon';
     imports: [KbqFormFieldModule, KbqToolTipModule, KbqIconModule, FormsModule, KbqTimepickerModule, LuxonDateModule],
     template: `
         <div class="docs-row">
-            <kbq-form-field #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="'Только цифры'">
+            <kbq-form-field #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="'Только цифры'">
                 <i kbq-icon="kbq-clock_16" kbqPrefix></i>
                 <input kbqTimepicker [format]="timeFormats.HHmm" [kbqValidationTooltip]="tooltip" [(ngModel)]="time" />
             </kbq-form-field>

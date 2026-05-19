@@ -55,7 +55,7 @@ import {
     validationTooltipShowDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { noop, Subject, Subscription } from 'rxjs';
 
 import {
@@ -275,7 +275,7 @@ export class KbqTimepicker<D>
     private _value: D | null;
 
     @Input()
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger) {
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {
             return;
         }

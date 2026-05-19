@@ -30,7 +30,7 @@ import { KbqDateFormats } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -328,7 +328,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set kbqDatepicker(value: KbqDatepicker<D>);
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
     // (undocumented)
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger);
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
     protected readonly localeService: KbqLocaleService | null;
     get max(): D | null;
     set max(value: D | null);

@@ -60,7 +60,7 @@ import {
     validationTooltipShowDelay
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendar } from './calendar.component';
 import { createMissingDateImplError } from './datepicker-errors';
@@ -437,7 +437,7 @@ export class KbqDatepickerInput<D>
     private _id: string;
 
     @Input()
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger) {
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {
             return;
         }

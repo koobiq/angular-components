@@ -252,7 +252,8 @@
                 @case (ELEMENTS.EXTENDED) {
                     <button
                         kbq-button
-                        [kbqExtendedTooltip]="tooltipContent"
+                        kbqTooltipModifier="extended"
+                        [kbqTooltip]="tooltipContent"
                         [kbqPlacement]="selectedPlacement"
                         [kbqPlacementPriority]="multipleSelected"
                         [kbqTooltipArrow]="hasArrow"
