@@ -14,7 +14,6 @@ yarn install
 ### Available commands
 
 ```bash
-yarn run unit:cdk
 yarn run unit:components
 yarn run unit:components-experimental
 yarn run unit:angular-moment-adapter

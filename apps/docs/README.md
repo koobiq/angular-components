@@ -14,7 +14,6 @@ nvm use
 yarn install
 
 # Build packages
-yarn run build:cdk
 yarn run build:angular-luxon-adapter
 yarn run build:angular-moment-adapter
 yarn run styles:build-all
