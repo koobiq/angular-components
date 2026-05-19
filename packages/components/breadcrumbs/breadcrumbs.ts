@@ -24,7 +24,7 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqOverflowItem, KbqOverflowItemsModule, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
+import { KbqOverflowItem, KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBreadcrumbsConfiguration, KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
@@ -198,12 +198,9 @@ export class KbqBreadcrumbs {
 
     protected readonly items = contentChildren(forwardRef(() => KbqBreadcrumbItem));
 
-    private readonly result = viewChild(KbqOverflowItemsResult, { read: ElementRef });
+    private readonly breadcrumbsResult = viewChild('breadcrumbsResult', { read: ElementRef });
 
-    private readonly overflowItems = viewChildren(
-        forwardRef(() => KbqOverflowItem),
-        { read: ElementRef }
-    );
+    private readonly overflowItems = viewChildren(forwardRef(() => KbqOverflowItem));
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
@@ -233,7 +230,6 @@ export class KbqBreadcrumbs {
             return null;
         }
 
-        let visibleItemsWidth = this.getItemWidth(this.result());
         // Reorders overflow items to prioritize the first and last elements
         const sortedItems = [
             ...overflowItems.slice(1, -1),
@@ -241,7 +237,9 @@ export class KbqBreadcrumbs {
             overflowItems[overflowItems.length - 1]
         ];
 
-        for (let i = 0; i < max - 1; i++) {
+        let visibleItemsWidth = 0;
+
+        for (let i = 0; i < this.max; i++) {
             visibleItemsWidth += this.getItemWidth(sortedItems[sortedItems.length - i - 1]);
         }
 
@@ -252,7 +250,7 @@ export class KbqBreadcrumbs {
         inject(RdxRovingFocusGroupDirective, { self: true }).orientation = 'horizontal';
     }
 
-    private getItemWidth(item?: ElementRef) {
-        return item ? item.nativeElement.offsetWidth : 0;
+    private getItemWidth(item?: KbqOverflowItem) {
+        return item ? item.element.offsetWidth : 0;
     }
 }
