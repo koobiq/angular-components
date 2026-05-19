@@ -1,5 +1,18 @@
 Notification center — a panel for application notifications.
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+The component uses [Scrollbar](/en/components/scrollbar), so its dependencies must be installed:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
+
 <!-- example(notification-center-overview) -->
 
 The notification list opens from the main menu. The menu shows an unread message counter: it is hidden when the count is 0, and displays "99+" when the count exceeds 99.

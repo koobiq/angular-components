@@ -1,5 +1,18 @@
 `KbqContentPanel` - a slide-out side panel that shifts adjacent content. Often used to implement a quick preview mode for entities from a table.
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+The component uses [Scrollbar](/en/components/scrollbar), so its dependencies must be installed:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
+
 <!-- example(content-panel-overview) -->
 
 ### Grid and content-panel

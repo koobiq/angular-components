@@ -1,5 +1,18 @@
 A menu for switching between applications and platforms.
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+The component uses [Scrollbar](/en/components/scrollbar), so its dependencies must be installed:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
+
 <!-- example(app-switcher-overview) -->
 
 ### Multiple platforms
