@@ -247,7 +247,26 @@ export class KbqBreadcrumbs {
     });
 
     constructor() {
-        inject(RdxRovingFocusGroupDirective, { self: true }).orientation = 'horizontal';
+        const group = inject(RdxRovingFocusGroupDirective, { self: true });
+
+        group.orientation = 'horizontal';
+
+        effect(() => {
+            const focusableItems = group.focusableItems();
+
+            if (focusableItems.length < 2) return;
+
+            group.focusableItems.update((items) => {
+                if (items.length && items[0] === this.breadcrumbsResult()?.nativeElement) {
+                    const [firstItem, secondItem] = items;
+
+                    items[0] = secondItem;
+                    items[1] = firstItem;
+                }
+
+                return items;
+            });
+        });
     }
 
     private getItemWidth(item?: KbqOverflowItem) {
