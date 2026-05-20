@@ -1,4 +1,13 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    Renderer2,
+    viewChild,
+    viewChildren
+} from '@angular/core';
 import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
 
 @Component({
@@ -9,6 +18,8 @@ import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
         <div>
             <kbq-code-block [files]="[singleLineFile]" />
             <kbq-code-block filled [files]="[singleLineFile]" />
+            <kbq-code-block #codeBlockHover [files]="[singleLineFile]" />
+            <kbq-code-block #codeBlockHover filled [files]="[singleLineFile]" />
         </div>
 
         <!-- With tabs and scrolled -->
@@ -82,6 +93,9 @@ import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
 })
 export class E2eCodeBlockStates {
     private readonly codeBlockWithTabs = viewChild.required<KbqCodeBlock>('withTabs');
+    private readonly codeBlockHoverList = viewChildren('codeBlockHover', { read: ElementRef });
+    private readonly renderer = inject(Renderer2);
+
     protected readonly htmlFile: KbqCodeBlockFile = {
         // For testing KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE
         // language: 'html',
@@ -107,6 +121,9 @@ export class E2eCodeBlockStates {
     constructor() {
         afterNextRender(() => {
             this.codeBlockWithTabs().scrollableCodeContent.scrollTo({ top: 999 });
+            this.codeBlockHoverList().forEach((item) =>
+                this.renderer.addClass(item.nativeElement, 'kbq-code-block_show-actionbar')
+            );
         });
     }
 }
