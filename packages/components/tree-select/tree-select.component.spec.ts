@@ -116,12 +116,12 @@ class LegacyTreeSelectControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" />
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class TreeSelectControlWithAsyncValidators {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
@@ -133,17 +133,17 @@ class TreeSelectControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
                 <kbq-tree-select formControlName="treeSelect" />
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class TreeSelectWithDIErrorStateMatcher {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
@@ -152,7 +152,6 @@ class TreeSelectWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTreeSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -160,7 +159,8 @@ class TreeSelectWithDIErrorStateMatcher {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class TreeSelectWithErrorStateMatcher {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
@@ -3019,6 +3019,43 @@ describe('KbqTreeSelect', () => {
 
             expect(options.length).toBe(1);
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        }));
+
+        it('should focus the active tree option when ArrowDown does not change the index (boundary)', fakeAsync(() => {
+            const { componentInstance } = fixture;
+            const select = fixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const keyManager = componentInstance.select.tree.keyManager;
+            // Navigate to the last rendered option so the next ArrowDown can't move further —
+            // exactly the boundary condition the fix targets.
+            const lastIndex = componentInstance.select.tree.renderedOptions.length - 1;
+
+            while (keyManager.activeItemIndex < lastIndex) {
+                dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+                flush();
+            }
+
+            expect(keyManager.activeItemIndex).toBe(lastIndex);
+
+            const activeItem = keyManager.activeItem!;
+
+            expect(activeItem).toBeTruthy();
+
+            const focusSpy = jest.spyOn(activeItem, 'focus');
+
+            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            // Index did not change (we were already at the last option), so the fix's
+            // explicit focus call should have fired with 'keyboard' origin.
+            expect(keyManager.activeItemIndex).toBe(lastIndex);
+            expect(focusSpy).toHaveBeenCalledWith('keyboard');
         }));
     });
 

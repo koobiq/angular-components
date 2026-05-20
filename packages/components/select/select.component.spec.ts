@@ -1528,8 +1528,6 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1540,7 +1538,8 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class SelectWithErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1550,7 +1549,6 @@ class SelectWithErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1560,7 +1558,8 @@ class SelectWithErrorStateMatcher {
                 </kbq-select>
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)]
 })
 class SelectWithDIErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1588,7 +1587,6 @@ class LegacySelectControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
@@ -1596,7 +1594,8 @@ class LegacySelectControlWithAsyncValidators {
                 <kbq-option value="2">2</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class SelectControlWithAsyncValidators {
     readonly select = viewChild.required(KbqSelect);
@@ -3712,6 +3711,116 @@ describe('KbqSelect', () => {
 
             expect(options.length).toBe(1);
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        }));
+
+        it('should highlight the only remaining option as active when search filters to a single item', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            componentInstance.searchCtrl.setValue('Almetyevsk');
+            fixture.detectChanges();
+            flush();
+            tick(1);
+            fixture.detectChanges();
+
+            const options = fixture.debugElement.queryAll(By.css('kbq-option'));
+
+            expect(options.length).toBe(1);
+            expect(componentInstance.select.keyManager.activeItem?.viewValue).toBe('Almetyevsk');
+
+            const activeOption = overlayContainerElement.querySelector('kbq-option.kbq-active');
+
+            expect(activeOption).toBeTruthy();
+            expect(activeOption!.textContent!.trim()).toBe('Almetyevsk');
+        }));
+
+        it('should re-activate the first option when the previously active option is filtered out', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            componentInstance.searchCtrl.setValue('Almetyevsk');
+            fixture.detectChanges();
+            flush();
+            tick(1);
+            fixture.detectChanges();
+
+            expect(componentInstance.select.keyManager.activeItem?.viewValue).toBe('Almetyevsk');
+
+            componentInstance.searchCtrl.setValue('Anapa');
+            fixture.detectChanges();
+            flush();
+            tick(1);
+            fixture.detectChanges();
+
+            const options = fixture.debugElement.queryAll(By.css('kbq-option'));
+
+            expect(options.length).toBe(1);
+            expect(componentInstance.select.keyManager.activeItem?.viewValue).toBe('Anapa');
+
+            const activeOption = overlayContainerElement.querySelector('kbq-option.kbq-active');
+
+            expect(activeOption).toBeTruthy();
+            expect(activeOption!.textContent!.trim()).toBe('Anapa');
+        }));
+
+        it('should NOT reset active option when filter still includes it', fakeAsync(() => {
+            const { componentInstance } = fixture;
+            const select = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            // Navigate down to "Almetyevsk" (second option in OPTIONS).
+            dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(componentInstance.select.keyManager.activeItem?.viewValue).toBe('Almetyevsk');
+
+            // Filter that still includes "Almetyevsk" (substring 'Al' is unique to Almetyevsk
+            // among the city options).
+            componentInstance.searchCtrl.setValue('Al');
+            fixture.detectChanges();
+            flush();
+            tick(1);
+            fixture.detectChanges();
+
+            // The active item should remain "Almetyevsk", not be reset to the first option.
+            expect(componentInstance.select.keyManager.activeItem?.viewValue).toBe('Almetyevsk');
+        }));
+
+        it('should focus the active option when ArrowDown does not change the index (boundary)', fakeAsync(() => {
+            const { componentInstance } = fixture;
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            componentInstance.searchCtrl.setValue('Almetyevsk');
+            fixture.detectChanges();
+            flush();
+            tick(1);
+            fixture.detectChanges();
+
+            const activeItem = componentInstance.select.keyManager.activeItem!;
+
+            expect(activeItem).toBeTruthy();
+
+            const focusSpy = jest.spyOn(activeItem, 'focus');
+            const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            dispatchKeyboardEvent(inputElement, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(focusSpy).toHaveBeenCalled();
         }));
     });
 
