@@ -10,7 +10,6 @@ import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
     selector: 'kbq-cleaner',
     imports: [KbqIconModule],
     template: `
-        <i [kbq-icon]="'kbq-circle-xmark_16'"></i>
         <ng-content />
     `,
     styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
@@ -25,6 +24,10 @@ export class KbqCleaner extends KbqIconButton {
     constructor() {
         super();
 
+        const initialIcon = 'kbq-circle-xmark_16';
+
+        this.iconName = initialIcon;
+        this.svgIconName.next(initialIcon);
         this.color = KbqComponentColors.ContrastFade;
         this.autoColor = true;
     }
