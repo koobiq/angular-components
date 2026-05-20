@@ -3059,7 +3059,7 @@ export interface KbqValidationOptions {
 
 // @public (undocumented)
 export class KbqVirtualOption extends KbqOptionBase {
-    constructor(value: any, _disabled?: boolean);
+    constructor(value: any, _disabled?: boolean, _viewValue?: string | undefined);
     // (undocumented)
     deselect(): void;
     // (undocumented)

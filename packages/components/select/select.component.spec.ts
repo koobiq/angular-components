@@ -1,4 +1,4 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
@@ -1526,10 +1526,78 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     }
 }
 
+type CityOption = { id: number; name: string };
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select [compareWith]="compareWith" [virtualOptionFactory]="virtualOptionFactory" [(value)]="value">
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="400">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
+                        {{ option.name }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class CdkVirtualScrollSingleSelectWithFactory {
+    options = OPTIONS.sort().map((name, id) => ({ id, name }));
+    value: CityOption | null = null;
+    compareWith = (a: { id: number } | null, b: { id: number } | null) => a?.id === b?.id;
+    virtualOptionFactory = (v: CityOption) => new KbqVirtualOption(v, false, v.name);
+
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ScrollingModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                [multiple]="true"
+                [compareWith]="compareWith"
+                [virtualOptionFactory]="virtualOptionFactory"
+                [(value)]="values"
+            >
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="400">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
+                        {{ option.name }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class CdkVirtualScrollMultipleWithFactory {
+    options = OPTIONS.sort().map((name, id) => ({ id, name }));
+    values: CityOption[] = [];
+    compareWith = (a: { id: number } | null, b: { id: number } | null) => a?.id === b?.id;
+    virtualOptionFactory = (v: CityOption) => new KbqVirtualOption(v, false, v.name);
+
+    @ViewChild(KbqSelect, { static: true }) select: KbqSelect;
+    @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+}
+
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1540,7 +1608,8 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class SelectWithErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1550,7 +1619,6 @@ class SelectWithErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1560,7 +1628,8 @@ class SelectWithErrorStateMatcher {
                 </kbq-select>
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)]
 })
 class SelectWithDIErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1588,7 +1657,6 @@ class LegacySelectControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
@@ -1596,7 +1664,8 @@ class LegacySelectControlWithAsyncValidators {
                 <kbq-option value="2">2</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class SelectControlWithAsyncValidators {
     readonly select = viewChild.required(KbqSelect);
@@ -5583,6 +5652,119 @@ describe('KbqSelect', () => {
                 while (restore.length) restore.pop()!();
             }
         }));
+
+        describe('virtualOptionFactory', () => {
+            it('should render trigger label via factory for object values (single mode)', fakeAsync(() => {
+                const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithFactory);
+                const instance = singleFixture.componentInstance;
+
+                finishInit(singleFixture);
+
+                instance.value = instance.options[0];
+                singleFixture.detectChanges();
+                flush();
+
+                const triggerText = singleFixture.debugElement
+                    .query(By.css('.kbq-select__matcher-text'))
+                    .nativeElement.textContent.trim();
+
+                expect(triggerText).toBe(instance.options[0].name);
+            }));
+
+            it('should render label for pre-selected value outside viewport (single mode)', fakeAsync(() => {
+                const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithFactory);
+                const instance = singleFixture.componentInstance;
+
+                // Pick a value far past the initial rendered window so its KbqOption is not in the QueryList.
+                const target = instance.options[instance.options.length - 1];
+
+                instance.value = target;
+                finishInit(singleFixture);
+
+                const triggerText = singleFixture.debugElement
+                    .query(By.css('.kbq-select__matcher-text'))
+                    .nativeElement.textContent.trim();
+
+                // The selected entry must be a KbqVirtualOption produced by the factory,
+                // and its viewValue must come from the factory-supplied `_viewValue`.
+                expect(instance.select.selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
+                expect(triggerText).toBe(target.name);
+            }));
+
+            it('should render tag labels via factory for non-rendered values (multiple mode)', fakeAsync(() => {
+                const multiFixture = TestBed.createComponent(CdkVirtualScrollMultipleWithFactory);
+                const instance = multiFixture.componentInstance;
+
+                instance.values = [instance.options[0], instance.options[instance.options.length - 1]];
+                finishInit(multiFixture);
+
+                multiFixture.detectChanges();
+                flush();
+
+                const tags: NodeListOf<HTMLElement> = multiFixture.debugElement
+                    .query(By.css('.kbq-select__matcher'))
+                    .nativeElement.querySelectorAll('kbq-tag');
+
+                expect(tags.length).toBe(2);
+                const tagTexts = Array.from(tags).map((tag) => tag.textContent!.trim());
+
+                expect(tagTexts).toContain(instance.options[0].name);
+                expect(tagTexts).toContain(instance.options[instance.options.length - 1].name);
+            }));
+
+            it('should honour per-value disabled returned by the factory', fakeAsync(() => {
+                const multiFixture = TestBed.createComponent(CdkVirtualScrollMultipleWithFactory);
+                const instance = multiFixture.componentInstance;
+
+                // Mark the last selected value as disabled via the factory.
+                instance.virtualOptionFactory = (v: CityOption) =>
+                    new KbqVirtualOption(v, v.id === instance.options[instance.options.length - 1].id, v.name);
+                instance.values = [instance.options[0], instance.options[instance.options.length - 1]];
+                finishInit(multiFixture);
+
+                multiFixture.detectChanges();
+                flush();
+
+                const selected = instance.select.selectionModel.selected;
+                const disabledStates = selected.map((opt) => opt.disabled);
+
+                expect(disabledStates).toContain(true);
+                expect(disabledStates).toContain(false);
+            }));
+
+            it('should keep using raw value when virtualOptionFactory is not provided (primitive backward compat)', fakeAsync(() => {
+                // testInstance already uses primitive string OPTIONS without virtualOptionFactory.
+                testInstance.values = [OPTIONS[0]];
+                fixture.detectChanges();
+                flush();
+
+                testInstance.select.open();
+                finishInit(fixture);
+
+                const tags: NodeListOf<HTMLElement> = fixture.debugElement
+                    .query(By.css('.kbq-select__matcher'))
+                    .nativeElement.querySelectorAll('kbq-tag');
+
+                expect(tags.length).toBeGreaterThan(0);
+                expect(tags[0].textContent!.trim()).toBe(OPTIONS[0]);
+            }));
+
+            it('should read viewValue from DOM for currently-rendered KbqOption under virtual scroll', fakeAsync(() => {
+                // After dropping the `if (parent?.withVirtualScroll) return this.value` branch,
+                // a rendered KbqOption with an object value and `{{ option.name }}` template
+                // must expose its DOM textContent as viewValue, not the raw object.
+                const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithFactory);
+                const instance = singleFixture.componentInstance;
+
+                finishInit(singleFixture);
+                instance.select.open();
+                finishInit(singleFixture);
+
+                const renderedOption = instance.select.options.first;
+
+                expect(renderedOption.viewValue).toBe(instance.options[renderedOption.value.id].name);
+            }));
+        });
     });
 
     describe('ErrorStateMatcher', () => {

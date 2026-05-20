@@ -97,14 +97,15 @@ export class KbqVirtualOption extends KbqOptionBase {
     private _selected = false;
 
     get viewValue(): string {
-        return this.value;
+        return this._viewValue ?? this.value;
     }
 
     readonly onSelectionChange = new EventEmitter<KbqOptionSelectionChange<KbqVirtualOption>>();
 
     constructor(
         public value: any,
-        private _disabled: boolean = false
+        private _disabled: boolean = false,
+        private readonly _viewValue?: string
     ) {
         super();
     }
@@ -194,8 +195,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      */
     @Input()
     get viewValue(): string {
-        if (this.parent?.withVirtualScroll) return this.value;
-
         return this._viewValue || (this.getHostElement().textContent || '').trim();
     }
 

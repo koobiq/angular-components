@@ -1,7 +1,10 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { KbqVirtualOption } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
+
+type OptionItem = { id: number; label: string };
 
 /**
  * @title Select virtual scroll
@@ -11,8 +14,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
     template: `
         <kbq-form-field>
-            <kbq-select #select [(value)]="selected" (openedChange)="openedChange($event)">
-                <div kbq-select-trigger>{{ select.triggerValue['label'] }}</div>
+            <kbq-select
+                [compareWith]="compareWith"
+                [virtualOptionFactory]="virtualOptionFactory"
+                [(value)]="selected"
+                (openedChange)="openedChange($event)"
+            >
                 <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
                     <kbq-option *cdkVirtualFor="let option of options" [value]="option">
                         {{ option.label }}
@@ -35,10 +42,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectVirtualScrollExample {
-    readonly options = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
+    readonly options: OptionItem[] = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
     readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
-    selected = this.options[0];
+    selected: OptionItem = this.options[0];
+
+    readonly compareWith = (a: OptionItem | null, b: OptionItem | null) => a?.id === b?.id;
+    readonly virtualOptionFactory = (value: OptionItem) => new KbqVirtualOption(value, false, value.label);
 
     openedChange(isOpened: boolean): void {
         if (!isOpened) return;
