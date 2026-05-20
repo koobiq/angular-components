@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqFormFieldModule, PasswordRules } from '@koobiq/components/form-field';
 import {
     KbqIcon,
     KbqIconButton,
@@ -11,9 +13,12 @@ import {
     KbqIconRegistry,
     kbqIconsResolverProvider
 } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { KbqLinkModule } from '../link';
 
 type IconStates = {
     color: KbqComponentColors;
@@ -167,7 +172,12 @@ export class E2eIconStateAndStyle {
         KbqSplitButtonModule,
         KbqDropdownModule,
         KbqFileUploadModule,
-        KbqLinkModule
+        KbqLinkModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule,
+        KbqNavbarIcModule,
+        KbqTabsModule
     ],
     providers: [
         KbqIconRegistry,
@@ -289,25 +299,73 @@ export class E2eIconStateAndStyle {
                 </p>
             </div>
 
-            <div>
-                <button kbq-button data-testid="e2eIconSvgDropdownTrigger" [kbqDropdownTriggerFor]="dropdown">
-                    Dropdown
-                    <i kbq-icon="kbq-chevron-down-s_16"></i>
-                </button>
+            <div class="layout-row">
+                <div>
+                    <kbq-form-field style="width: 200px" data-testid="e2eInputPasswordWithHints">
+                        <input
+                            kbqInputPassword
+                            placeholder="kbqInputPassword"
+                            [ngModel]="inputMonoValue()"
+                            (ngModelChange)="inputMonoValue.set($event)"
+                        />
 
-                <kbq-dropdown #dropdown="kbqDropdown">
-                    <button kbq-dropdown-item>
-                        <i kbq-icon="kbq-circle-check_16"></i>
-                        Item with icon
+                        <kbq-password-toggle />
+
+                        <kbq-password-hint [min]="8" [max]="15" [rule]="passwordRules.Length">
+                            8 - 15 symbols
+                        </kbq-password-hint>
+
+                        <kbq-reactive-password-hint [hasError]="true">Min length</kbq-reactive-password-hint>
+                    </kbq-form-field>
+                </div>
+
+                <div style="height: 80px">
+                    <kbq-navbar-ic [expanded]="false" [pinned]="false">
+                        <kbq-navbar-ic-container>
+                            <kbq-navbar-ic-item>
+                                <i kbq-icon="kbq-diamond_16"></i>
+                                <div kbqNavbarIcTitle>Issues</div>
+                            </kbq-navbar-ic-item>
+
+                            <kbq-navbar-ic-toggle />
+                        </kbq-navbar-ic-container>
+                    </kbq-navbar-ic>
+                </div>
+
+                <div>
+                    <kbq-tab-group [(activeTab)]="selectedTabId">
+                        @for (tab of tabs; track tab) {
+                            <kbq-tab [tabId]="tab.tabId">
+                                <ng-template kbq-tab-label>
+                                    <i [kbq-icon]="tab.icon"></i>
+                                    {{ tab.tabId }}
+                                </ng-template>
+                                id: {{ selectedTabId }}
+                            </kbq-tab>
+                        }
+                    </kbq-tab-group>
+                </div>
+
+                <div>
+                    <button kbq-button data-testid="e2eIconSvgDropdownTrigger" [kbqDropdownTriggerFor]="dropdown">
+                        Dropdown
+                        <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>
-                </kbq-dropdown>
+
+                    <kbq-dropdown #dropdown="kbqDropdown">
+                        <button kbq-dropdown-item>
+                            <i kbq-icon="kbq-circle-check_16"></i>
+                            Item with icon
+                        </button>
+                    </kbq-dropdown>
+                </div>
             </div>
         </div>
     `,
     styles: `
         :host {
-            height: 540px;
-            max-width: 646px;
+            height: 570px;
+            max-width: 660px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -316,4 +374,15 @@ export class E2eIconStateAndStyle {
         'data-testid': 'e2eIconSvg'
     }
 })
-export class E2eIconSvg {}
+export class E2eIconSvg {
+    inputMonoValue = signal('P@a$$w0rd');
+    protected readonly passwordRules = PasswordRules;
+
+    readonly tabs = [
+        { tabId: 'files', icon: 'kbq-folder-open_16' },
+        { tabId: 'settings', icon: 'kbq-gear_16' },
+        { tabId: 'tasks', icon: 'kbq-bars-horizontal_16' }
+    ];
+
+    selectedTabId: string = 'settings';
+}
