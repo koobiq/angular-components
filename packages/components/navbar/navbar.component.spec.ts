@@ -7,6 +7,7 @@ import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqIconModule } from './../icon/icon.module';
 import {
     KbqNavbar,
+    KbqNavbarBrand,
     KbqNavbarContainer,
     KbqNavbarFocusableItem,
     KbqNavbarItem,
@@ -21,7 +22,7 @@ const FONT_RENDER_TIMEOUT_MS = 10;
 describe('KbqNavbar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqNavbarModule, KbqIconModule, TestApp, TestItemApp, TestTitleApp, TestVerticalApp]
+            imports: [KbqNavbarModule, KbqIconModule, TestApp, TestItemApp, TestTitleApp, TestVerticalApp, TestBrandApp]
         }).compileComponents();
     });
 
@@ -267,6 +268,56 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(itemDebugEl.nativeElement.classList).not.toContain('kbq-navbar-item_collapsed');
+        }));
+    });
+
+    describe('KbqNavbarBrand', () => {
+        it('collapsedText input should override inner kbq-navbar-title in titleText', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            fixture.componentInstance.collapsedText = 'Custom Tooltip';
+            fixture.detectChanges();
+
+            const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
+
+            expect(brand.titleText).toBe('Custom Tooltip');
+        }));
+
+        it('titleText should fall back to inner kbq-navbar-title text when collapsedText is empty', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandApp);
+
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
+
+            expect(brand.titleText).toBe('App Name');
+        }));
+
+        it('tooltip content should update reactively when collapsedText changes while collapsed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandApp);
+
+            fixture.componentInstance.collapsedText = 'First';
+            fixture.detectChanges();
+            tick(FONT_RENDER_TIMEOUT_MS);
+            fixture.detectChanges();
+
+            const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
+
+            brand.collapsed = true;
+            fixture.detectChanges();
+
+            expect(brand.content).toBe('First');
+
+            fixture.componentInstance.collapsedText = 'Updated';
+            fixture.detectChanges();
+
+            expect(brand.content).toBe('Updated');
         }));
     });
 
@@ -647,6 +698,23 @@ class TestItemApp {
 })
 class TestTitleApp {
     titleText: string = '';
+}
+
+@Component({
+    selector: 'test-brand-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <a href="#" kbq-navbar-brand [collapsedText]="collapsedText">
+                    <div kbq-navbar-title>App Name</div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-vertical-navbar>
+    `
+})
+class TestBrandApp {
+    collapsedText: string = '';
 }
 
 @Component({
