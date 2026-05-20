@@ -1,8 +1,10 @@
+import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { AfterViewInit, ChangeDetectorRef, Directive, inject, OnDestroy } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subscription } from 'rxjs';
+import { Subscription, throttleTime } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { KbqTimezoneOption } from './timezone-option.component';
 
 export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
@@ -10,43 +12,65 @@ export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
 @Directive({
     selector: 'kbq-timezone-option',
     host: {
-        '(mouseenter)': 'onMouseEnter()',
-        '(mouseleave)': 'onMouseLeave()'
+        '(mouseenter)': 'handleElementEnter()',
+        '(mouseleave)': 'handleElementLeave()'
     }
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    private resizeObserver = inject(SharedResizeObserver);
-    private resizeObserverSubscription: Subscription | null = null;
+    private readonly option = inject(KbqTimezoneOption);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly contentObserver = inject(ContentObserver);
 
-    constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        private option: KbqTimezoneOption
-    ) {
+    private readonly debounceInterval = 100;
+
+    private resizeSubscription = Subscription.EMPTY;
+    private contentObserverSubscription = Subscription.EMPTY;
+    private focusMonitorSubscription = Subscription.EMPTY;
+
+    constructor() {
         super();
         this.tooltipPlacement = PopUpPlacements.Right;
     }
 
     ngAfterViewInit(): void {
+        super.ngAfterViewInit();
+
         this.content = this.option.viewValue;
         this.option.tooltipContentWrapper.nativeElement.style.webkitLineClamp = TOOLTIP_VISIBLE_ROWS_COUNT.toString();
+        this.checkTooltipDisabled();
+
+        this.resizeSubscription = this.resizeObserver
+            .observe(this.option.tooltipContentWrapper.nativeElement)
+            .pipe(debounceTime(this.debounceInterval))
+            .subscribe(this.checkTooltipDisabled);
+
+        this.contentObserverSubscription = this.contentObserver
+            .observe(this.option.tooltipContent.nativeElement)
+            .pipe(throttleTime(this.debounceInterval))
+            .subscribe(() => {
+                this.content = this.option.viewValue;
+                this.checkTooltipDisabled();
+            });
+
+        this.focusMonitorSubscription = this.focusMonitor
+            .monitor(this.elementRef)
+            .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.handleElementLeave()));
     }
 
     ngOnDestroy(): void {
+        this.resizeSubscription.unsubscribe();
+        this.contentObserverSubscription.unsubscribe();
+        this.focusMonitorSubscription.unsubscribe();
+
         super.ngOnDestroy();
-        this.resizeObserverSubscription?.unsubscribe();
     }
 
-    onMouseEnter(): void {
-        this.resizeObserver
-            .observe(this.option.tooltipContentWrapper.nativeElement)
-            .subscribe(this.checkTooltipDisabled);
-
+    handleElementEnter(): void {
         this.checkTooltipDisabled();
     }
 
-    onMouseLeave(): void {
-        this.resizeObserverSubscription?.unsubscribe();
-
+    handleElementLeave(): void {
         this.disabled = true;
     }
 

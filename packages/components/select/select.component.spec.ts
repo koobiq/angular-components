@@ -12,6 +12,7 @@ import {
     Type,
     ViewChild,
     ViewChildren,
+    getDebugNode,
     viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
@@ -73,6 +74,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { KbqOptionTooltip } from './select-option.directive';
 import { KbqSelect, KbqSelectPanelWidth, kbqSelectOptionsProvider } from './select.component';
 import { KbqSelectModule } from './select.module';
 
@@ -5439,7 +5441,9 @@ describe('KbqSelect', () => {
             }
 
             private onWindowResize(): void {
-                this.callback(this.elements as unknown as ResizeObserverEntry[], this);
+                const entries = this.elements.map((target) => ({ target }) as ResizeObserverEntry);
+
+                this.callback(entries, this);
             }
         }
 
@@ -5514,6 +5518,26 @@ describe('KbqSelect', () => {
             tick(500);
             fixture.detectChanges();
             discardPeriodicTasks();
+            flush();
+        }));
+
+        it('should reactively update disabled via ResizeObserver without mouseenter', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const directive = getDebugNode(options[1])!.injector.get(KbqOptionTooltip);
+
+            // JSDOM defaults: clientWidth=0, scrollWidth=0 → not overflown → disabled
+            expect(directive.disabled).toBe(true);
+
+            mockOverflow(options[1]);
+            window.dispatchEvent(new Event('resize'));
+            tick(150); // past debounceTime(100)
+
+            expect(directive.disabled).toBe(false);
+
             flush();
         }));
 
