@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
     afterNextRender,
     booleanAttribute,
@@ -22,9 +21,9 @@ import { KbqHint } from './hint';
 /** Password hint to be shown below the password form field control. */
 @Component({
     selector: 'kbq-reactive-password-hint',
-    imports: [NgClass, KbqIconModule],
+    imports: [KbqIconModule],
     template: `
-        <i kbq-icon="" [ngClass]="icon()" [color]="color"></i>
+        <i [kbq-icon]="icon()" [color]="color"></i>
 
         <span class="kbq-hint__text">
             <ng-content />

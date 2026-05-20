@@ -59,7 +59,7 @@ type ExampleAction = {
                             [class.layout-margin-left-xxs]="!$first"
                             (click)="onAction(action)"
                         >
-                            <i kbq-icon [class]="action.icon"></i>
+                            <i [kbq-icon]="action.icon"></i>
                             {{ action.id }}
                         </button>
                     </div>
@@ -87,7 +87,7 @@ type ExampleAction = {
                             <kbq-divider />
                         }
                         <button kbq-dropdown-item (click)="onAction(action)">
-                            <i kbq-icon [class]="action.icon"></i>
+                            <i [kbq-icon]="action.icon"></i>
                             {{ action.id }}
                         </button>
                     }

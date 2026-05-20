@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
@@ -10,15 +9,14 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     selector: 'tabs-active-tab-index-example',
     imports: [
         KbqTabsModule,
-        KbqIconModule,
-        NgClass
+        KbqIconModule
     ],
     template: `
         <kbq-tab-group [(activeTab)]="selectedTabIndex">
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab.tabId">
                     <ng-template kbq-tab-label>
-                        <i kbq-icon [ngClass]="tab.icon"></i>
+                        <i [kbq-icon]="tab.icon"></i>
                         {{ tab.tabId }}
                     </ng-template>
                     Content for selected tab with index: {{ selectedTabIndex }}

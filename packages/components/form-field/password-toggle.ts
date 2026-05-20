@@ -40,6 +40,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     selector: `kbq-password-toggle`,
     imports: [KbqIconModule, KbqToolTipModule],
     template: `
+        <i [kbq-icon]="iconClass"></i>
         <ng-content />
     `,
     styleUrls: ['password-toggle.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
@@ -47,10 +48,8 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqPasswordToggle',
     host: {
-        class: 'kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade',
+        class: 'kbq-password-toggle kbq-icon-button kbq-contrast-fade',
         '[class.kbq-error]': 'hasError',
-        '[class.kbq-eye_16]': 'hidden',
-        '[class.kbq-eye-slash_16]': '!hidden',
         // legacy style for backward compatibility
         '[style.visibility]': 'visibility',
         '[class.cdk-visually-hidden]': 'visibility === "hidden"',
