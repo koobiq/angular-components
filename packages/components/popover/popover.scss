@@ -23,7 +23,7 @@ $arrow-padding: 24px;
     z-index: 1;
 
     &.kbq-popover_small {
-        max-width: var(--kbq-popover-size-container-width-small);
+        width: var(--kbq-popover-size-container-width-small);
 
         & .kbq-popover__content_default-paddings.kbq-popover__content {
             padding: var(--kbq-size-l);
@@ -31,11 +31,11 @@ $arrow-padding: 24px;
     }
 
     &.kbq-popover_medium {
-        max-width: var(--kbq-popover-size-container-width-medium);
+        width: var(--kbq-popover-size-container-width-medium);
     }
 
     &.kbq-popover_large {
-        max-width: var(--kbq-popover-size-container-width-large);
+        width: var(--kbq-popover-size-container-width-large);
     }
 
     @include pop-up.popup-margins(kbq-popover, 8px);
