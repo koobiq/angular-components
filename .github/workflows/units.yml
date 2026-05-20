@@ -6,11 +6,14 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   unit_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/workflows/actions/setup-node
       # Build styles which are required for unit tests
       - run: yarn run styles:build-all
