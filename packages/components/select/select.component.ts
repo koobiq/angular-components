@@ -898,9 +898,13 @@ export class KbqSelect
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 delay(0),
-                filter(() => !this.keyManager.activeItem)
+                filter(() => {
+                    const activeItem = this.keyManager.activeItem as KbqOption | null;
+
+                    return !activeItem || !this.options.toArray().includes(activeItem);
+                })
             )
-            .subscribe(() => this.keyManager.updateActiveItem(0));
+            .subscribe(() => this.keyManager.setFirstItemActive());
     }
 
     /** Lifecycle hook when component is destroyed. Cleans up subscriptions. */
@@ -1535,7 +1539,14 @@ export class KbqSelect
                 this.keyManager.activeItem.selectViaInteraction();
             }
 
-            if (this.search) {
+            // Ensure the active option's keyboard-focus indicator is shown even when the
+            // index didn't change (e.g. ArrowDown on a single-option list) — without this
+            // the panel never gains `cdk-keyboard-focused` and the active border is hidden.
+            if (isArrowKey && this.keyManager.activeItemIndex === previouslyFocusedIndex) {
+                this.keyManager.activeItem?.focus();
+            }
+
+            if (this.search && this.shouldShowSearch()) {
                 this.search.focus();
             }
 
