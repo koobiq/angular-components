@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, DebugElement, Provider, signal, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFlexWrap } from '@koobiq/components/core';
 import { KbqOverflowItemsModule } from './module';
-import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from './overflow-items';
+import { KbqOverflowItem, KbqOverflowItemsResult } from './overflow-items';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -39,7 +39,6 @@ const getOverflowItemsResultDebugElement = (debugElement: DebugElement): DebugEl
             [style.box-sizing]="containerBoxSizing()"
             [reverseOverflowOrder]="reverseOverflowOrder()"
             [wrap]="flexWrap()"
-            [enableDefer]="enableDefer()"
         >
             <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItems.hiddenItemIDs().size }} more
@@ -71,23 +70,7 @@ export class TestOverflowItems {
     readonly resultWidth = signal(100);
     readonly justifyContent = signal<'start' | 'end'>('start');
     readonly flexWrap = signal<KbqFlexWrap>('nowrap');
-    readonly enableDefer = signal(false);
 }
-
-@Component({
-    selector: 'overflow-items-defer-test',
-    imports: [KbqOverflowItemsModule],
-    template: `
-        <div kbqOverflowItems enableDefer [style.width.px]="200">
-            <div kbqOverflowItemsResult [style.width.px]="60" [style.flex-shrink]="0">more</div>
-            <div kbqOverflowItem="item1" [style.width.px]="100" [style.flex-shrink]="0">item1</div>
-            <div kbqOverflowItem="item2" [style.width.px]="100" [style.flex-shrink]="0">item2</div>
-            <div kbqOverflowItem="item3" [style.width.px]="100" [style.flex-shrink]="0">item3</div>
-        </div>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class TestOverflowItemsWithDefer {}
 
 describe('KbqOverflowItems', () => {
     it('should render all items', () => {
@@ -113,39 +96,5 @@ describe('KbqOverflowItems', () => {
 
             expect(hasAlwaysVisibleClass).toBe(index === 7);
         });
-    });
-
-    describe('enableDefer', () => {
-        it('should not hide the container when enableDefer is false (default)', fakeAsync(() => {
-            const fixture = createComponent(TestOverflowItems);
-            const container: HTMLElement = fixture.debugElement.query(By.directive(KbqOverflowItems)).nativeElement;
-
-            tick(0);
-            fixture.detectChanges();
-
-            expect(container.style.visibility).not.toBe('hidden');
-        }));
-
-        it('should hide the container before first measurement when enableDefer is true', fakeAsync(() => {
-            TestBed.configureTestingModule({ imports: [TestOverflowItemsWithDefer] });
-            const fixture = TestBed.createComponent(TestOverflowItemsWithDefer);
-            const container: HTMLElement = fixture.debugElement.query(By.directive(KbqOverflowItems)).nativeElement;
-
-            fixture.detectChanges();
-
-            expect(container.style.visibility).toBe('hidden');
-        }));
-
-        it('should reveal the container after first measurement when enableDefer is true', fakeAsync(() => {
-            TestBed.configureTestingModule({ imports: [TestOverflowItemsWithDefer] });
-            const fixture = TestBed.createComponent(TestOverflowItemsWithDefer);
-            const container: HTMLElement = fixture.debugElement.query(By.directive(KbqOverflowItems)).nativeElement;
-
-            fixture.detectChanges();
-            tick(0);
-            fixture.detectChanges();
-
-            expect(container.style.visibility).not.toBe('hidden');
-        }));
     });
 });

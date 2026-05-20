@@ -38,13 +38,12 @@ export class KbqOverflowItems {
     readonly additionalResizeObserverTargets: InputSignal<Element | Element[]>;
     readonly changes: OutputEmitterRef<ReadonlySet<unknown>>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
-    readonly enableDefer: InputSignalWithTransform<boolean, unknown>;
     readonly hiddenItemIDs: Signal<ReadonlySet<unknown>>;
     readonly orientation: InputSignal<KbqOrientation>;
     readonly reverseOverflowOrder: InputSignalWithTransform<boolean, unknown>;
     readonly wrap: InputSignal<KbqFlexWrap>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "additionalResizeObserverTargets": { "alias": "additionalResizeObserverTargets"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "enableDefer": { "alias": "enableDefer"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "additionalResizeObserverTargets": { "alias": "additionalResizeObserverTargets"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqOverflowItems, never>;
 }
