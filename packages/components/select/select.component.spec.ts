@@ -1,4 +1,4 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
@@ -1598,8 +1598,6 @@ class CdkVirtualScrollMultipleWithFactory {
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1610,7 +1608,8 @@ class CdkVirtualScrollMultipleWithFactory {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class SelectWithErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1620,7 +1619,6 @@ class SelectWithErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1630,7 +1628,8 @@ class SelectWithErrorStateMatcher {
                 </kbq-select>
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)]
 })
 class SelectWithDIErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1658,7 +1657,6 @@ class LegacySelectControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-select [formControl]="control">
@@ -1666,7 +1664,8 @@ class LegacySelectControlWithAsyncValidators {
                 <kbq-option value="2">2</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 class SelectControlWithAsyncValidators {
     readonly select = viewChild.required(KbqSelect);
@@ -5717,7 +5716,7 @@ describe('KbqSelect', () => {
                 const multiFixture = TestBed.createComponent(CdkVirtualScrollMultipleWithFactory);
                 const instance = multiFixture.componentInstance;
 
-                // Mark the first selected value as disabled via the factory.
+                // Mark the last selected value as disabled via the factory.
                 instance.virtualOptionFactory = (v: CityOption) =>
                     new KbqVirtualOption(v, v.id === instance.options[instance.options.length - 1].id, v.name);
                 instance.values = [instance.options[0], instance.options[instance.options.length - 1]];
