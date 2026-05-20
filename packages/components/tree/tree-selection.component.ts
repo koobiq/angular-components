@@ -168,6 +168,8 @@ export class KbqTreeSelection
 
     private sortedNodes: KbqTreeOption[] = [];
 
+    private lastSyncedDataNodes: readonly any[] | null = null;
+
     @Input()
     get autoSelect(): boolean {
         return this._autoSelect;
@@ -618,30 +620,38 @@ export class KbqTreeSelection
      * objects, but options render with new ones, so toggle()/isSelected() break on identity.
      */
     private syncSelectionModelToDataNodes(): void {
-        if (this.selectionModel.isEmpty()) return;
-
         const currentNodes = this.treeControl.dataNodes;
 
-        if (!currentNodes?.length) return;
+        // Fast path: dataNodes ref hasn't changed since last sync → orphans impossible.
+        // Skips work on filter / expand / selection-toggle re-renders where data ref is stable.
+        if (currentNodes === this.lastSyncedDataNodes) return;
+        this.lastSyncedDataNodes = currentNodes;
+
+        if (this.selectionModel.isEmpty() || !currentNodes?.length) return;
+
+        const selected = this.selectionModel.selected;
+        const currentNodesSet = new Set<any>(currentNodes);
 
         let hasOrphans = false;
-        const reconciled = this.selectionModel.selected.map((node) => {
-            if (currentNodes.includes(node as any)) return node;
+
+        for (const node of selected) {
+            if (!currentNodesSet.has(node)) {
+                hasOrphans = true;
+                break;
+            }
+        }
+
+        if (!hasOrphans) return;
+
+        const reconciled = selected.map((node) => {
+            if (currentNodesSet.has(node)) return node;
 
             const replacement = this.treeControl.hasValue(this.treeControl.getValue(node));
 
-            if (replacement) {
-                hasOrphans = true;
-
-                return replacement as any;
-            }
-
-            return node;
+            return replacement ?? node;
         });
 
-        if (hasOrphans) {
-            this.selectionModel.setSelection(...reconciled);
-        }
+        this.selectionModel.setSelection(...reconciled);
     }
 
     getSelectedValues(): any[] {
