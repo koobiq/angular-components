@@ -301,6 +301,8 @@ export class KbqTreeSelection
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
 
+                this.syncSelectionModelToDataNodes();
+
                 const selectedValues = this.multiple ? this.getSelectedValues() : [this.getSelectedValues()];
 
                 options.forEach((option) => {
@@ -608,6 +610,38 @@ export class KbqTreeSelection
         }, []);
 
         this.selectionModel.select(...valuesToSelect);
+    }
+
+    /**
+     * Rebinds orphan node references in selectionModel to current treeControl.dataNodes by value.
+     * Needed after dataSource.data is replaced — selectionModel holds references to old node
+     * objects, but options render with new ones, so toggle()/isSelected() break on identity.
+     */
+    private syncSelectionModelToDataNodes(): void {
+        if (this.selectionModel.isEmpty()) return;
+
+        const currentNodes = this.treeControl.dataNodes;
+
+        if (!currentNodes?.length) return;
+
+        let hasOrphans = false;
+        const reconciled = this.selectionModel.selected.map((node) => {
+            if (currentNodes.includes(node as any)) return node;
+
+            const replacement = this.treeControl.hasValue(this.treeControl.getValue(node));
+
+            if (replacement) {
+                hasOrphans = true;
+
+                return replacement as any;
+            }
+
+            return node;
+        });
+
+        if (hasOrphans) {
+            this.selectionModel.setSelection(...reconciled);
+        }
     }
 
     getSelectedValues(): any[] {

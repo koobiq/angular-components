@@ -704,6 +704,52 @@ describe('KbqTreeSelection', () => {
             }));
         });
 
+        describe('after dataSource.data replacement', () => {
+            let fixture: ComponentFixture<KbqTreeAppMultipleCheckbox>;
+            let component: KbqTreeAppMultipleCheckbox;
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(KbqTreeAppMultipleCheckbox);
+
+                component = fixture.componentInstance;
+
+                fixture.detectChanges();
+            });
+
+            it('should rebind selectionModel orphans so ngModel selection stays toggleable', fakeAsync(() => {
+                tick();
+                fixture.detectChanges();
+
+                const originalPicturesNode = component.treeControl.dataNodes.find(
+                    (node) => component.treeControl.getValue(node) === 'Pictures'
+                );
+
+                expect(component.tree.selectionModel.selected[0]).toBe(originalPicturesNode);
+
+                component.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+                fixture.detectChanges();
+                tick();
+
+                const newPicturesNode = component.treeControl.dataNodes.find(
+                    (node) => component.treeControl.getValue(node) === 'Pictures'
+                );
+
+                expect(newPicturesNode).not.toBe(originalPicturesNode);
+                expect(component.tree.selectionModel.selected[0]).toBe(newPicturesNode);
+
+                const picturesOption = component.tree.renderedOptions.find((option) => option.value === 'Pictures');
+
+                expect(picturesOption).toBeDefined();
+                picturesOption!.selectViaInteraction();
+                fixture.detectChanges();
+                tick();
+
+                expect(component.tree.selectionModel.selected.length).toBe(0);
+                expect(component.modelValue).toEqual([]);
+            }));
+        });
+
         describe('selection with CTRL + A', () => {
             let fixture: ComponentFixture<KbqTreeAppMultiple>;
             let component: KbqTreeAppMultiple;
