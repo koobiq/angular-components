@@ -77,21 +77,17 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
 
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(option: KbqOption);
+    constructor();
+    // (undocumented)
+    handleElementEnter(): void;
+    // (undocumented)
+    handleElementLeave(): void;
     // (undocumented)
     get isOverflown(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    onBlur(): void;
-    // (undocumented)
-    onFocus(): void;
-    // (undocumented)
-    onMouseEnter(): void;
-    // (undocumented)
-    onMouseLeave(): void;
     // (undocumented)
     get textElement(): HTMLElement;
     // (undocumented)

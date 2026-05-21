@@ -3,23 +3,26 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { AfterViewInit, Directive, inject, OnDestroy } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subscription } from 'rxjs';
+import { Subscription, throttleTime } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Directive({
     selector: 'kbq-option',
     host: {
-        '(mouseenter)': 'onMouseEnter()',
-        '(mouseleave)': 'onMouseLeave()',
-        '(focus)': 'onFocus()',
-        '(blur)': 'onBlur()'
+        '(mouseenter)': 'handleElementEnter()',
+        '(mouseleave)': 'handleElementLeave()'
     }
 })
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    private resizeObserver = inject(SharedResizeObserver);
-    private resizeObserverSubscription: Subscription | null = null;
+    private readonly option = inject(KbqOption);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly contentObserver = inject(ContentObserver);
 
-    private contentObserver = inject(ContentObserver);
-    private contentObserverSubscription: Subscription | null = null;
+    private readonly debounceInterval = 100;
+
+    private resizeSubscription = Subscription.EMPTY;
+    private contentObserverSubscription = Subscription.EMPTY;
+    private focusMonitorSubscription = Subscription.EMPTY;
 
     get textElement(): HTMLElement {
         return this.option.textElement.nativeElement;
@@ -29,49 +32,47 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         return this.textElement.clientWidth < this.textElement.scrollWidth;
     }
 
-    constructor(private option: KbqOption) {
+    constructor() {
         super();
     }
 
     ngAfterViewInit() {
+        super.ngAfterViewInit();
+
         this.content = this.option.viewValue;
+        this.disabled = !this.isOverflown;
+
+        this.resizeSubscription = this.resizeObserver
+            .observe(this.textElement)
+            .pipe(debounceTime(this.debounceInterval))
+            .subscribe(() => (this.disabled = !this.isOverflown));
 
         this.contentObserverSubscription = this.contentObserver
             .observe(this.textElement)
-            .subscribe(() => (this.content = this.option.viewValue));
+            .pipe(throttleTime(this.debounceInterval))
+            .subscribe(() => {
+                this.disabled = !this.isOverflown;
+                this.content = this.option.viewValue;
+            });
+
+        this.focusMonitorSubscription = this.focusMonitor
+            .monitor(this.elementRef)
+            .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.handleElementLeave()));
     }
 
     ngOnDestroy() {
+        this.resizeSubscription.unsubscribe();
+        this.contentObserverSubscription.unsubscribe();
+        this.focusMonitorSubscription.unsubscribe();
+
         super.ngOnDestroy();
-
-        this.resizeObserverSubscription?.unsubscribe();
-        this.contentObserverSubscription?.unsubscribe();
     }
 
-    onMouseEnter() {
-        this.resizeObserverSubscription = this.resizeObserver
-            .observe(this.textElement)
-            .subscribe(() => (this.disabled = !this.isOverflown));
-
+    handleElementEnter() {
         this.disabled = !this.isOverflown;
     }
 
-    onMouseLeave() {
-        this.resizeObserverSubscription?.unsubscribe();
-
+    handleElementLeave() {
         this.disabled = true;
-    }
-
-    onFocus() {
-        this.disabled = !this.isOverflown;
-
-        if (!this.disabled) {
-            this.show();
-        }
-    }
-
-    onBlur() {
-        this.disabled = true;
-        this.hide();
     }
 }

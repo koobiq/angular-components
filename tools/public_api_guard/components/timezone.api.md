@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
@@ -78,15 +77,15 @@ export class KbqTimezoneOption extends KbqOption {
 
 // @public (undocumented)
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, option: KbqTimezoneOption);
+    constructor();
+    // (undocumented)
+    handleElementEnter(): void;
+    // (undocumented)
+    handleElementLeave(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    onMouseEnter(): void;
-    // (undocumented)
-    onMouseLeave(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, {}, {}, never, never, true, never>;
     // (undocumented)

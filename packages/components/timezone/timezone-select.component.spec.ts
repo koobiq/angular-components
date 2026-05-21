@@ -1,6 +1,6 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren, getDebugNode } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -14,6 +14,7 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { Observable, Subject, merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqTimezoneGroup, KbqTimezoneModule, KbqTimezoneOption, KbqTimezoneSelect, offsetFormatter } from './index';
+import { KbqTimezoneOptionTooltip, TOOLTIP_VISIBLE_ROWS_COUNT } from './timezone-option.directive';
 
 const longOptionText: string = [
     'Gordon Freeman Town',
@@ -717,16 +718,54 @@ describe('KbqTimezoneSelect', () => {
     describe('option tooltip', () => {
         let fixture: ComponentFixture<BasicTimezoneSelect>;
         let trigger: HTMLElement;
+        let originalResizeObserver: typeof ResizeObserver;
+
+        class MockedResizeObserver implements ResizeObserver {
+            elements: Element[] = [];
+
+            constructor(private callback: ResizeObserverCallback) {
+                window.addEventListener('resize', () => this.onWindowResize());
+            }
+
+            observe(target: Element): void {
+                this.elements.push(target);
+            }
+
+            unobserve(target: Element): void {
+                const idx = this.elements.indexOf(target);
+
+                if (idx > -1) {
+                    this.elements.splice(idx, 1);
+                }
+            }
+
+            disconnect(): void {
+                window.removeEventListener('resize', this.onWindowResize.bind(this));
+            }
+
+            private onWindowResize(): void {
+                const entries = this.elements.map((target) => ({ target }) as ResizeObserverEntry);
+
+                this.callback(entries, this);
+            }
+        }
 
         beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
 
         beforeEach(fakeAsync(() => {
+            originalResizeObserver = window.ResizeObserver;
+            (window as any).ResizeObserver = MockedResizeObserver;
+
             fixture = TestBed.createComponent(BasicTimezoneSelect);
             fixture.detectChanges();
 
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
             flush();
         }));
+
+        afterEach(() => {
+            window.ResizeObserver = originalResizeObserver;
+        });
 
         it('should not display the tooltip when option text fits within the visible-rows clamp', fakeAsync(() => {
             trigger.click();
@@ -770,6 +809,30 @@ describe('KbqTimezoneSelect', () => {
 
             expect(tooltips.length).toEqual(1);
             expect(tooltips[0].textContent).toContain(longOptionText);
+        }));
+
+        it('should reactively update disabled via ResizeObserver without mouseenter', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const optionInstances = fixture.componentInstance.options.toArray();
+            const tooltipContentEl = optionInstances[2].tooltipContent.nativeElement;
+            const optionEls = overlayContainerElement.querySelectorAll<HTMLElement>('kbq-timezone-option');
+            const directive = getDebugNode(optionEls[2])!.injector.get(KbqTimezoneOptionTooltip);
+
+            // JSDOM defaults: getClientRects().length = 0 ≤ TOOLTIP_VISIBLE_ROWS_COUNT → disabled
+            expect(directive.disabled).toBe(true);
+
+            jest.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue(
+                new Array(TOOLTIP_VISIBLE_ROWS_COUNT + 1).fill({}) as unknown as DOMRectList
+            );
+            window.dispatchEvent(new Event('resize'));
+            tick(150); // past debounceTime(100)
+
+            expect(directive.disabled).toBe(false);
+
+            flush();
         }));
     });
 });
