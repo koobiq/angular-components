@@ -86,7 +86,7 @@ export class KbqCodeBlockHighlight {
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
     private readonly window = inject(KBQ_WINDOW);
-    private readonly hljsConfig = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
+    private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
 
     private hljs: HLJSApi | null = null;
 
@@ -96,7 +96,7 @@ export class KbqCodeBlockHighlight {
         if (!this.window) return;
 
         if (!this.hljs) {
-            this.loadHljs(this.hljsConfig ?? {}).then(() => this.applyHighlighting(file));
+            this.load(this.config ?? {}).then(() => this.applyHighlighting(file));
         } else {
             this.applyHighlighting(file);
         }
@@ -108,7 +108,7 @@ export class KbqCodeBlockHighlight {
     /** Whether to display line numbers for single line code block. */
     @Input({ transform: booleanAttribute }) singleLine: boolean = false;
 
-    private async loadHljs({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<void> {
+    private async load({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<void> {
         const loader = core ?? defaultHljsLoader;
         const { default: instance } = await loader();
 
