@@ -88,14 +88,14 @@ export class KbqCodeBlockHighlight {
     private readonly window = inject(KBQ_WINDOW);
     private readonly hljsConfig = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
 
-    private hljsInstance: HLJSApi | null = null;
+    private hljs: HLJSApi | null = null;
 
     /** The code file. */
     @Input({ required: true })
     set file(file: KbqCodeBlockFile) {
         if (!this.window) return;
 
-        if (!this.hljsInstance) {
+        if (!this.hljs) {
             this.loadHljs(this.hljsConfig ?? {}).then(() => this.applyHighlighting(file));
         } else {
             this.applyHighlighting(file);
@@ -122,14 +122,14 @@ export class KbqCodeBlockHighlight {
             );
         }
 
-        this.hljsInstance = instance;
+        this.hljs = instance;
         this.initLineNumbersPlugin(instance);
     }
 
     private applyHighlighting(file: KbqCodeBlockFile): void {
         let { language } = file;
 
-        if (!language || !this.hljsInstance!.getLanguage(language)) {
+        if (!language || !this.hljs!.getLanguage(language)) {
             this.warn(
                 `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
                 file
@@ -143,7 +143,7 @@ export class KbqCodeBlockHighlight {
             language: highlightedLanguage,
             illegal,
             relevance
-        } = this.hljsInstance!.highlight(file.content, {
+        } = this.hljs!.highlight(file.content, {
             language: language!
         });
 
