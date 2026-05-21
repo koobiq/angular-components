@@ -168,6 +168,8 @@ export class KbqTreeSelection
 
     private sortedNodes: KbqTreeOption[] = [];
 
+    private lastSyncedDataNodes: readonly any[] | null = null;
+
     @Input()
     get autoSelect(): boolean {
         return this._autoSelect;
@@ -300,6 +302,8 @@ export class KbqTreeSelection
 
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
+
+                this.syncSelectionModelToDataNodes();
 
                 const selectedValues = this.multiple ? this.getSelectedValues() : [this.getSelectedValues()];
 
@@ -608,6 +612,46 @@ export class KbqTreeSelection
         }, []);
 
         this.selectionModel.select(...valuesToSelect);
+    }
+
+    /**
+     * Rebinds orphan node references in selectionModel to current treeControl.dataNodes by value.
+     * Needed after dataSource.data is replaced — selectionModel holds references to old node
+     * objects, but options render with new ones, so toggle()/isSelected() break on identity.
+     */
+    private syncSelectionModelToDataNodes(): void {
+        const currentNodes = this.treeControl.dataNodes;
+
+        // Fast path: dataNodes ref hasn't changed since last sync → orphans impossible.
+        // Skips work on filter / expand / selection-toggle re-renders where data ref is stable.
+        if (currentNodes === this.lastSyncedDataNodes) return;
+        this.lastSyncedDataNodes = currentNodes;
+
+        if (this.selectionModel.isEmpty() || !currentNodes?.length) return;
+
+        const selected = this.selectionModel.selected;
+        const currentNodesSet = new Set<any>(currentNodes);
+
+        let hasOrphans = false;
+
+        for (const node of selected) {
+            if (!currentNodesSet.has(node)) {
+                hasOrphans = true;
+                break;
+            }
+        }
+
+        if (!hasOrphans) return;
+
+        const reconciled = selected.map((node) => {
+            if (currentNodesSet.has(node)) return node;
+
+            const replacement = this.treeControl.hasValue(this.treeControl.getValue(node));
+
+            return replacement ?? node;
+        });
+
+        this.selectionModel.setSelection(...reconciled);
     }
 
     getSelectedValues(): any[] {
