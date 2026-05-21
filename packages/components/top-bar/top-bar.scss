@@ -45,7 +45,7 @@
     }
 
     .kbq-top-bar-container {
-        &:has(> .kbq-overflow-items) {
+        &:has(.kbq-overflow-items) {
             gap: unset;
             overflow: hidden;
             // reduce height added by overflow-items' padding
