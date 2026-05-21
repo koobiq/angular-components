@@ -31,7 +31,7 @@ type ExampleRowData = Record<string, string>;
     template: `
         <ag-grid-angular
             kbqAgGridTheme
-            disableCellFocusStyles
+            kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridSelectRowsByShiftClick
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow

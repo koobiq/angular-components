@@ -38,10 +38,10 @@ The full documentation for using the theme is available [in the GitHub repositor
 
 ### Disabling cell focus styles
 
-To disable the focus styles for table cells, add the `disableCellFocusStyles` attribute to `<ag-grid-angular>`:
+To disable the focus styles for table cells, add the `kbqAgGridThemeDisableCellFocusStyles` attribute to `<ag-grid-angular>`:
 
 ```html
-<ag-grid-angular kbqAgGridTheme disableCellFocusStyles />
+<ag-grid-angular kbqAgGridTheme kbqAgGridThemeDisableCellFocusStyles />
 ```
 
 ### Row dragging
@@ -65,6 +65,35 @@ The `kbqAgGridCopyByCtrlC` directive allows you to copy selected rows to the cli
 The `kbqAgGridStatusBar` directive adds a customizable panel below the table.
 
 <!-- example(ag-grid-status-bar) -->
+
+### State persistence
+
+Directives save and restore grid state across page reloads.
+
+`LocalStorageStore` is used by default. Switch to `QueryParamsStore` if needed.
+
+| Directive                      | Saves                                     |
+| ------------------------------ | ----------------------------------------- |
+| `kbqAgGridColumnState`         | Sort, column order, visibility, and width |
+| `kbqAgGridFilterState`         | Column filter models                      |
+| `kbqAgGridQuickFilterState`    | Quick filter value                        |
+| `kbqAgGridExternalFilterState` | External filter value                     |
+
+#### Columns
+
+<!-- example(ag-grid-column-state) -->
+
+#### Filters
+
+<!-- example(ag-grid-filter-state) -->
+
+#### Quick filter
+
+<!-- example(ag-grid-quick-filter-state) -->
+
+#### External filter
+
+<!-- example(ag-grid-external-filter-state) -->
 
 ### Custom keyboard shortcuts
 
