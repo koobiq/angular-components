@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
+import { KbqIconButton } from '@koobiq/components/icon';
 
 /**
  * Element to be placed in end of the form field.
@@ -8,7 +8,6 @@ import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
  */
 @Component({
     selector: 'kbq-cleaner',
-    imports: [KbqIconModule],
     template: `
         <ng-content />
     `,

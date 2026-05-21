@@ -41,11 +41,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     imports: [KbqIconModule, KbqToolTipModule],
     template: `
         <ng-content>
-            <i
-                [kbq-icon-button]="iconClass"
-                [color]="hasError ? 'error' : 'contrast-fade'"
-                [attr.tabindex]="tabindex"
-            ></i>
+            <i [kbq-icon-button]="iconClass" [color]="hasError ? 'error' : 'contrast-fade'" [tabindex]="tabindex"></i>
         </ng-content>
     `,
     styleUrls: ['password-toggle.scss'],
@@ -71,7 +67,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     // @TODO fix types (#DS-2915)
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
 
-    @Input({ transform: numberAttribute }) tabindex: number = -1;
+    @Input({ transform: numberAttribute }) tabindex: number = 0;
 
     /**
      * @docs-private
