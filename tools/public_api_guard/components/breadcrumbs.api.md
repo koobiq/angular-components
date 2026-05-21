@@ -7,6 +7,8 @@
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
@@ -32,18 +34,13 @@ export class KbqBreadcrumbButton implements OnInit {
 
 // @public
 export class KbqBreadcrumbItem {
-    readonly current: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    current: boolean;
+    readonly current: InputSignalWithTransform<boolean, unknown>;
     readonly customTemplateRef: Signal<TemplateRef<any> | undefined>;
-    disabled: boolean;
-    // (undocumented)
-    static ngAcceptInputType_current: unknown;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    readonly disabled: InputSignalWithTransform<boolean, unknown>;
     readonly routerLink: RouterLink | null;
-    readonly text: _angular_core.InputSignal<string>;
+    readonly text: InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "current": { "alias": "current"; "required": false; "isSignal": true; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "current": { "alias": "current"; "required": false; "isSignal": true; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
 }
@@ -53,8 +50,8 @@ export class KbqBreadcrumbs {
     constructor();
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
-    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly firstItemNegativeMargin: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly disabled: InputSignalWithTransform<boolean, unknown>;
+    readonly firstItemNegativeMargin: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly items: Signal<readonly any[]>;
     protected readonly itemsExcludingEdges: Signal<any[]>;
@@ -62,21 +59,17 @@ export class KbqBreadcrumbs {
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
-    max: number | null;
+    readonly max: InputSignal<number | null>;
     protected readonly maxWidth: Signal<number | null>;
     protected readonly minVisibleItems = 2;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_firstItemNegativeMargin: unknown;
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
     protected readonly separator: Signal<TemplateRef<any> | undefined>;
-    size: KbqDefaultSizes;
-    wrapMode: KbqBreadcrumbsWrapMode;
+    readonly size: InputSignal<KbqDefaultSizes>;
+    readonly wrapMode: InputSignal<KbqBreadcrumbsWrapMode>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof i2.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -192,7 +185,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 // Warnings were encountered during analysis:
 //
 // dist/components/breadcrumbs/breadcrumbs.d.ts:27:134 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-// dist/components/breadcrumbs/breadcrumbs.d.ts:121:450 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+// dist/components/breadcrumbs/breadcrumbs.d.ts:118:540 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

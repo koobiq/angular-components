@@ -114,16 +114,15 @@ export class KbqBreadcrumbItem {
      * The text displayed for the breadcrumb item.
      * This text will be shown if breadcrumb item is hidden in dropdown.
      */
-    readonly text = input<string>(undefined!);
+    readonly text = input<string>();
     /**
      * Indicates whether the breadcrumb item is disabled.
      */
-    readonly disabled = input<boolean, unknown>(undefined!, { transform: booleanAttribute });
+    readonly disabled = input(false, { transform: booleanAttribute });
     /**
      * Indicates whether the breadcrumb item is the current/active item.
-     * Defaults to `false`.
      */
-    readonly current = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly current = input(false, { transform: booleanAttribute });
     /**
      * A reference to a custom template provided for the breadcrumb item content.
      * The template can be used to override the default appearance of the breadcrumb.
@@ -170,7 +169,7 @@ export class KbqBreadcrumbs {
      *
      * @see KbqBreadcrumbsConfiguration
      */
-    readonly firstItemNegativeMargin = input<boolean, unknown>(this.configuration.firstItemNegativeMargin, {
+    readonly firstItemNegativeMargin = input(this.configuration.firstItemNegativeMargin, {
         transform: booleanAttribute
     });
     /**
@@ -188,7 +187,7 @@ export class KbqBreadcrumbs {
      * Indicates whether the breadcrumbs are disabled.
      * When disabled, user interactions are blocked.
      */
-    readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly disabled = input(false, { transform: booleanAttribute });
     /**
      * Wrapping behavior of the breadcrumb items.
      */
@@ -220,13 +219,9 @@ export class KbqBreadcrumbs {
      */
     protected readonly maxWidth = computed((): number | null => {
         const overflowItems = this.overflowItems();
+        const max = this.max();
 
-        if (
-            !overflowItems.length ||
-            this.max === null ||
-            this.max >= overflowItems.length ||
-            this.max < this.minVisibleItems
-        ) {
+        if (!overflowItems.length || max === null || max >= overflowItems.length || max < this.minVisibleItems) {
             return null;
         }
 
@@ -239,7 +234,7 @@ export class KbqBreadcrumbs {
 
         let visibleItemsWidth = 0;
 
-        for (let i = 0; i < this.max; i++) {
+        for (let i = 0; i < max; i++) {
             visibleItemsWidth += this.getItemWidth(sortedItems[sortedItems.length - i - 1]);
         }
 
@@ -253,19 +248,13 @@ export class KbqBreadcrumbs {
 
         effect(() => {
             const focusableItems = group.focusableItems();
+            const expandButton = this.breadcrumbsResult()?.nativeElement;
 
-            if (focusableItems.length < 2) return;
+            if (focusableItems.length < 2 || focusableItems[0] !== expandButton) return;
 
-            group.focusableItems.update((items) => {
-                if (items.length && items[0] === this.breadcrumbsResult()?.nativeElement) {
-                    const [firstItem, secondItem] = items;
+            const [first, second, ...rest] = focusableItems;
 
-                    items[0] = secondItem;
-                    items[1] = firstItem;
-                }
-
-                return items;
-            });
+            group.focusableItems.set([second, first, ...rest]);
         });
     }
 
