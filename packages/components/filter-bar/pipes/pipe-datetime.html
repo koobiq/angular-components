@@ -30,7 +30,9 @@
             <kbq-list-selection #listSelection [autoSelect]="false" [ngModel]="data.value?.name">
                 <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">
                     {{ localeData.datePipe?.customPeriod }}
-                    <i kbq-icon="kbq-chevron-right_16" class="kbq-contrast-fade"></i>
+                    <ng-container>
+                        <i kbq-icon="kbq-chevron-right_16" class="kbq-contrast-fade"></i>
+                    </ng-container>
                 </kbq-list-option>
 
                 @for (item of values; track item) {
