@@ -7,11 +7,13 @@
 import { AfterViewInit } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { EventEmitter } from '@angular/core';
+import type { HLJSApi } from 'highlight.js';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import type { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
@@ -20,6 +22,16 @@ export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE: InjectionToken<string>;
 
 // @public
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_NAME: InjectionToken<string>;
+
+// @public
+export const KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG: InjectionToken<Partial<{
+    core: () => Promise<{
+        default: HLJSApi;
+    }>;
+    languages: Record<string, () => Promise<{
+        default: LanguageFn;
+    }>>;
+}>>;
 
 // @public
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLocaleConfiguration>;
@@ -112,7 +124,6 @@ export type KbqCodeBlockFile = {
 
 // @public
 export class KbqCodeBlockHighlight {
-    constructor();
     set file(file: KbqCodeBlockFile);
     // (undocumented)
     static ngAcceptInputType_singleLine: unknown;
@@ -125,6 +136,19 @@ export class KbqCodeBlockHighlight {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockHighlight, never>;
 }
+
+// @public
+export type KbqCodeBlockHighlightJsConfig = Partial<{
+    core: () => Promise<{
+        default: HLJSApi;
+    }>;
+    languages: Record<string, () => Promise<{
+        default: LanguageFn;
+    }>>;
+}>;
+
+// @public
+export const kbqCodeBlockHighlightJsConfigProvider: (options: KbqCodeBlockHighlightJsConfig) => Provider;
 
 // @public
 export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqCodeBlockLocaleConfiguration) => Provider;

@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    KbqCodeBlockModule
+} from '@koobiq/components/code-block';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
@@ -14,6 +18,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqToggleModule,
         KbqIcon,
         FormsModule
+    ],
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                json: () => import('highlight.js/lib/languages/json')
+            }
+        })
     ],
     template: `
         <kbq-code-block

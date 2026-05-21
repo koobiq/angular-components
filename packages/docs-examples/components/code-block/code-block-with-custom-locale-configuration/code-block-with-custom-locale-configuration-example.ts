@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
     kbqCodeBlockLocaleConfigurationProvider,
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
@@ -13,6 +14,12 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
     selector: 'code-block-with-custom-locale-configuration-example',
     imports: [KbqCodeBlockModule],
     providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                xml: () => import('highlight.js/lib/languages/xml')
+            }
+        }),
         // Disable global KBQ_LOCALE_SERVICE for locale configuration overriding
         { provide: KBQ_LOCALE_SERVICE, useValue: null },
         kbqCodeBlockLocaleConfigurationProvider({

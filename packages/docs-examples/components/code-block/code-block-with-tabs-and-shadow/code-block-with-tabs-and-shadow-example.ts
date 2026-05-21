@@ -1,5 +1,10 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { KbqCodeBlock, KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlock,
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    KbqCodeBlockModule
+} from '@koobiq/components/code-block';
 
 /**
  * @title Code-block with tabs and shadow
@@ -7,6 +12,16 @@ import { KbqCodeBlock, KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/comp
 @Component({
     selector: 'code-block-with-tabs-and-shadow-example',
     imports: [KbqCodeBlockModule],
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                xml: () => import('highlight.js/lib/languages/xml'),
+                typescript: () => import('highlight.js/lib/languages/typescript'),
+                css: () => import('highlight.js/lib/languages/css')
+            }
+        })
+    ],
     template: `
         <kbq-code-block
             activeFileIndex="2"

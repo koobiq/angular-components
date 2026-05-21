@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    KbqCodeBlockModule
+} from '@koobiq/components/code-block';
 
 /**
  * @title Code-block with link
@@ -7,6 +11,14 @@ import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-bl
 @Component({
     selector: 'code-block-with-link-example',
     imports: [KbqCodeBlockModule],
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                xml: () => import('highlight.js/lib/languages/xml')
+            }
+        })
+    ],
     template: `
         <kbq-code-block lineNumbers canCopy="false" [files]="files" />
     `,
