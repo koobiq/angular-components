@@ -583,7 +583,7 @@ export class KbqAutocompleteTrigger
             if (this.viewportRuler) {
                 this.viewportSubscription = this.viewportRuler.change().subscribe(() => {
                     if (this.panelOpen && overlayRef) {
-                        overlayRef.updateSize({ width: this.getPanelWidth() });
+                        overlayRef.updateSize(this.getOverlaySize());
                     }
                 });
             }
@@ -592,7 +592,7 @@ export class KbqAutocompleteTrigger
 
             // Update the trigger, panel width and direction, in case anything has changed.
             position.setOrigin(this.getConnectedElement());
-            overlayRef.updateSize({ width: this.getPanelWidth() });
+            overlayRef.updateSize(this.getOverlaySize());
         }
 
         if (overlayRef && !overlayRef.hasAttached()) {
@@ -618,10 +618,12 @@ export class KbqAutocompleteTrigger
     }
 
     private getOverlayConfig(): OverlayConfig {
+        const panelWidth = this.autocomplete.panelWidth;
+
         return new OverlayConfig({
             positionStrategy: this.getOverlayPosition(),
             scrollStrategy: this.scrollStrategy(),
-            width: this.getPanelWidth(),
+            ...(panelWidth ? { width: panelWidth } : { minWidth: this.getPanelMinWidth() }),
             direction: this.dir
         });
     }
@@ -660,8 +662,14 @@ export class KbqAutocompleteTrigger
         return this.formField ? this.formField.getConnectedOverlayOrigin() : this.elementRef;
     }
 
-    private getPanelWidth(): number | string {
-        return this.autocomplete.panelWidth || this.getHostWidth();
+    private getPanelMinWidth(): number {
+        return Math.max(this.autocomplete.panelMinWidth, this.getHostWidth());
+    }
+
+    private getOverlaySize(): { width: number | string } | { minWidth: number } {
+        const panelWidth = this.autocomplete.panelWidth;
+
+        return panelWidth ? { width: panelWidth } : { minWidth: this.getPanelMinWidth() };
     }
 
     private getHostWidth(): number {
