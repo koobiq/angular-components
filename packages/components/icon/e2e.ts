@@ -344,6 +344,12 @@ export class E2eIconStateAndStyle {
                             </kbq-tab>
                         }
                     </kbq-tab-group>
+
+                    <kbq-form-field style="width: 200px" data-testid="e2eInputPasswordWithHints">
+                        <input kbqInput [ngModel]="inputMonoValue()" (ngModelChange)="inputMonoValue.set($event)" />
+
+                        <kbq-cleaner />
+                    </kbq-form-field>
                 </div>
 
                 <div>
