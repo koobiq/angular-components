@@ -188,7 +188,7 @@ export enum KbqToastPosition {
     TOP_RIGHT = "top-right"
 }
 
-// @public (undocumented)
+// @public
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
     constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, ngZone: NgZone, toastFactory: any, toastConfig: KbqToastConfig);
     // (undocumented)

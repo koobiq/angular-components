@@ -26,6 +26,7 @@ const CHECK_INTERVAL = 500;
 
 let templateId = 0;
 
+/** Generic `T` is a type hint only; the runtime component comes from `KBQ_TOAST_FACTORY`. */
 @Injectable({ providedIn: 'root' })
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
     get toasts(): ComponentRef<T>[] {
@@ -47,10 +48,11 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         shareReplay()
     );
 
-    private containerInstance: KbqToastContainerComponent;
-    private overlayRef: OverlayRef;
-    private portal: ComponentPortal<KbqToastContainerComponent>;
+    private containerInstance?: KbqToastContainerComponent;
+    private overlayRef?: OverlayRef;
+    private portal?: ComponentPortal<KbqToastContainerComponent>;
     private timerSubscription: Subscription;
+    private currentPosition?: KbqToastPosition;
 
     private toastsDict: { [id: number]: ComponentRef<T> } = {};
     private templatesDict: { [id: number]: EmbeddedViewRef<T> } = {};
@@ -70,6 +72,13 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     ngOnDestroy(): void {
         this.timerSubscription.unsubscribe();
+        this.overlayRef?.dispose();
+        this.overlayRef = undefined;
+        this.containerInstance = undefined;
+        this.portal = undefined;
+        this.currentPosition = undefined;
+        this.toastsDict = {};
+        this.templatesDict = {};
     }
 
     show(
@@ -77,9 +86,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         duration: number = this.toastConfig.duration,
         onTop: boolean = this.toastConfig.onTop
     ): { ref: ComponentRef<T>; id: number } {
-        this.prepareContainer();
-
-        const componentRef = this.containerInstance.createToast<T>(data, this.toastFactory, onTop);
+        const container = this.prepareContainer();
+        const componentRef = container.createToast<T>(data, this.toastFactory, onTop);
 
         this.toastsDict[componentRef.instance.id] = componentRef;
 
@@ -95,17 +103,14 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         duration: number = this.toastConfig.duration,
         onTop: boolean = this.toastConfig.onTop
     ): { ref: EmbeddedViewRef<T>; id: number } {
-        this.prepareContainer();
+        const container = this.prepareContainer();
+        const viewRef = container.createTemplate<T>(data, template, onTop);
+        const id = templateId++;
 
-        const viewRef = this.containerInstance.createTemplate<T>(data, template, onTop);
+        this.templatesDict[id] = viewRef;
+        this.addRemoveTimer(id, duration);
 
-        this.templatesDict[templateId] = viewRef;
-
-        this.addRemoveTimer(templateId, duration);
-
-        templateId++;
-
-        return { ref: viewRef, id: templateId };
+        return { ref: viewRef, id };
     }
 
     hide(id: number) {
@@ -115,7 +120,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
             return;
         }
 
-        this.containerInstance.remove(componentRef.hostView);
+        this.containerInstance?.remove(componentRef.hostView);
 
         delete this.toastsDict[id];
 
@@ -129,7 +134,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
             return;
         }
 
-        this.containerInstance.remove(viewRef);
+        this.containerInstance?.remove(viewRef);
 
         delete this.templatesDict[id];
 
@@ -137,11 +142,11 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     private detachOverlay() {
-        if (this.toasts.length !== 0) {
+        if (this.toasts.length !== 0 || this.templates.length !== 0) {
             return;
         }
 
-        this.overlayRef.detach();
+        this.overlayRef?.detach();
     }
 
     private processToasts = () => {
@@ -170,38 +175,54 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         setTimeout(() => this.hideTemplate(id), duration);
     }
 
-    private prepareContainer() {
-        this.createOverlay();
+    private prepareContainer(): KbqToastContainerComponent {
+        const overlayRef = this.createOverlay();
+        const portal = this.portal || new ComponentPortal(KbqToastContainerComponent, null, this.injector);
 
-        this.portal = this.portal || new ComponentPortal(KbqToastContainerComponent, null, this.injector);
+        this.portal = portal;
 
-        if (!this.overlayRef.hasAttached()) {
-            this.containerInstance = this.overlayRef.attach(this.portal).instance;
+        if (!overlayRef.hasAttached()) {
+            this.containerInstance = overlayRef.attach(portal).instance;
             this.containerInstance
                 .getElementRef()
                 .nativeElement.classList.add(`kbq-toast-container-${this.toastConfig.position}`);
         }
 
-        this.toTop();
+        this.toTop(overlayRef);
+
+        return this.containerInstance!;
     }
 
-    private toTop() {
+    private toTop(overlayRef: OverlayRef) {
         const overlays = this.overlayContainer.getContainerElement().childNodes;
 
         if (overlays.length > 1) {
-            overlays[overlays.length - 1].after(this.overlayRef.hostElement);
+            overlays[overlays.length - 1].after(overlayRef.hostElement);
         }
     }
 
-    private createOverlay() {
-        if (this.overlayRef) {
+    private createOverlay(): OverlayRef {
+        const expectedPosition = this.toastConfig.position;
+
+        if (this.overlayRef && this.currentPosition === expectedPosition) {
             return this.overlayRef;
         }
 
-        const positionStrategy = this.getPositionStrategy(this.toastConfig.position);
+        if (this.overlayRef) {
+            this.overlayRef.dispose();
+            this.containerInstance = undefined;
+            this.portal = undefined;
+        }
 
-        this.overlayRef = this.overlay.create({ positionStrategy });
-        this.overlayRef.hostElement.classList.add('kbq-toast-overlay');
+        const positionStrategy = this.getPositionStrategy(expectedPosition);
+        const overlayRef = this.overlay.create({ positionStrategy });
+
+        overlayRef.hostElement.classList.add('kbq-toast-overlay');
+
+        this.overlayRef = overlayRef;
+        this.currentPosition = expectedPosition;
+
+        return overlayRef;
     }
 
     private getPositionStrategy(position?: KbqToastPosition): GlobalPositionStrategy {
