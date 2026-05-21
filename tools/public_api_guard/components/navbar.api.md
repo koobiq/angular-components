@@ -128,7 +128,8 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get collapsed(): boolean;
     set collapsed(value: boolean);
-    collapsedText: string;
+    get collapsedText(): string;
+    set collapsedText(value: string);
     get croppedText(): string;
     get disabled(): boolean;
     set disabled(value: boolean);

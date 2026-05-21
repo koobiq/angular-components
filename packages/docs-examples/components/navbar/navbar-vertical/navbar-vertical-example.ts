@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -29,4 +29,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 export class NavbarVerticalExample {
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
+    readonly apps: readonly string[] = ['User Management', 'Knowledge Hub', 'Secret Notes'];
+    readonly selectedApp = signal<string>(this.apps[0]);
 }

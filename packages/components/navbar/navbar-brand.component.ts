@@ -37,7 +37,18 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     @Input() longTitle: boolean = false;
 
     /** text that will be displayed in the tooltip. By default, the text is taken from kbq-navbar-title. */
-    @Input() collapsedText: string;
+    @Input()
+    get collapsedText(): string {
+        return this._collapsedText;
+    }
+
+    set collapsedText(value: string) {
+        this._collapsedText = value;
+
+        this.updateTooltip();
+    }
+
+    private _collapsedText: string;
 
     get isLink(): boolean {
         return this.nativeElement.tagName === 'A';
