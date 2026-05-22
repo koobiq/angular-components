@@ -80,6 +80,7 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
  */
 @Directive({
     selector: 'code[kbqCodeBlockHighlight]',
+    exportAs: 'kbqCodeBlockHighlight',
     host: {
         class: 'hljs'
     }

@@ -137,7 +137,7 @@ export class KbqCodeBlockHighlight {
     singleLine: boolean;
     startFrom: number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", never, { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", ["kbqCodeBlockHighlight"], { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockHighlight, never>;
 }
