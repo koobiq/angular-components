@@ -3,7 +3,21 @@
 
 @mixin _overflow-items-margins {
     padding: var(--kbq-size-border-width);
-    gap: var(--kbq-top-bar-container-end-gap);
+
+    > .kbq-overflow-item {
+        &:not(:last-of-type) {
+            margin-right: var(--kbq-top-bar-container-end-gap);
+        }
+
+        // apply margin if the last item needs to be alwaysVisible
+        &:last-of-type:is(.kbq-overflow-item_always-visible) + .kbq-overflow-items-result {
+            margin-left: var(--kbq-top-bar-container-end-gap);
+        }
+    }
+
+    .kbq-overflow-items-result:first-child {
+        margin-right: var(--kbq-top-bar-container-end-gap);
+    }
 }
 
 .kbq-top-bar {
