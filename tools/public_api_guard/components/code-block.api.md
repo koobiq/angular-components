@@ -7,6 +7,7 @@
 import { AfterViewInit } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { EventEmitter } from '@angular/core';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import type { HLJSApi } from 'highlight.js';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -15,6 +16,7 @@ import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import type { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -94,7 +96,9 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
+    // @deprecated
     readonly scrollableCodeContent: CdkScrollable;
+    scrollTo(options: ExtendedScrollToOptions): void;
     softWrap: boolean;
     readonly softWrapChange: EventEmitter<boolean>;
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
@@ -129,6 +133,7 @@ export class KbqCodeBlockHighlight {
     static ngAcceptInputType_singleLine: unknown;
     // (undocumented)
     static ngAcceptInputType_startFrom: unknown;
+    readonly pending: Signal<boolean>;
     singleLine: boolean;
     startFrom: number;
     // (undocumented)

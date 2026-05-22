@@ -640,5 +640,91 @@ describe(KbqCodeBlock.name, () => {
                 TestBed.inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE)
             );
         }));
+
+        it('should set pending to true while hljs is loading', () => {
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () =>
+                        new Promise<{ default: HLJSApi }>(() => {
+                            /* never resolves within this synchronous test */
+                        })
+                })
+            ]);
+            const highlight = geCodeBlockHighlightDebugElement(fixture.debugElement).injector.get(
+                KbqCodeBlockHighlight
+            );
+
+            expect(highlight.pending()).toBe(true);
+        });
+
+        it('should set pending to false after hljs has loaded', waitForAsync(async () => {
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: buildMockCore() })
+                })
+            ]);
+            const highlight = geCodeBlockHighlightDebugElement(fixture.debugElement).injector.get(
+                KbqCodeBlockHighlight
+            );
+
+            await fixture.whenStable();
+
+            expect(highlight.pending()).toBe(false);
+        }));
+    });
+
+    describe('scrollTo', () => {
+        const createMockCore = () =>
+            ({
+                getLanguage: jest.fn().mockReturnValue({}),
+                highlight: jest.fn().mockImplementation((_content: string, { language }: { language: string }) => ({
+                    value: `<span class="hljs-keyword">code</span>`,
+                    language,
+                    illegal: false,
+                    relevance: 10
+                })),
+                registerLanguage: jest.fn()
+            }) as unknown as HLJSApi;
+
+        it('should scroll immediately when highlighting is complete', waitForAsync(async () => {
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: createMockCore() })
+                })
+            ]);
+
+            await fixture.whenStable();
+
+            const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent, 'scrollTo').mockImplementation(() => {});
+
+            codeBlock.scrollTo({ top: 50 });
+
+            expect(scrollSpy).toHaveBeenCalledWith({ top: 50 });
+        }));
+
+        it('should defer scroll until highlighting completes when pending', waitForAsync(async () => {
+            let resolveCore!: (value: { default: HLJSApi }) => void;
+
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () =>
+                        new Promise<{ default: HLJSApi }>((resolve) => {
+                            resolveCore = resolve;
+                        })
+                })
+            ]);
+
+            const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent, 'scrollTo').mockImplementation(() => {});
+
+            codeBlock.scrollTo({ top: 100 });
+            expect(scrollSpy).not.toHaveBeenCalled();
+
+            resolveCore({ default: createMockCore() });
+            await fixture.whenStable();
+
+            expect(scrollSpy).toHaveBeenCalledWith({ top: 100 });
+        }));
     });
 });

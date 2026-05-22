@@ -1,7 +1,7 @@
 import { A11yModule, FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Platform } from '@angular/cdk/platform';
-import { CdkScrollable, CdkScrollableModule } from '@angular/cdk/scrolling';
+import { CdkScrollable, CdkScrollableModule, ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -16,6 +16,7 @@ import {
     EventEmitter,
     inject,
     InjectionToken,
+    Injector,
     Input,
     numberAttribute,
     Output,
@@ -26,7 +27,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
@@ -39,7 +40,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, EMPTY, fromEvent, merge, startWith, switchMap } from 'rxjs';
+import { debounceTime, EMPTY, filter, fromEvent, merge, startWith, switchMap, take } from 'rxjs';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
 import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
@@ -108,8 +109,15 @@ export class KbqCodeBlock implements AfterViewInit {
     @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;
     /**
      * Reference to the scrollable code content.
+     *
+     * @deprecated Use `scrollTo` method instead.
+     *
+     * @docs-private
      */
     @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
+
+    /** @docs-private */
+    @ViewChild(KbqCodeBlockHighlight) private readonly highlight!: KbqCodeBlockHighlight;
 
     /** @docs-private */
     @ContentChild(KbqCodeBlockTabLinkContent, { read: TemplateRef })
@@ -280,6 +288,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly buttonStyle = KbqButtonStyles;
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
@@ -330,10 +339,26 @@ export class KbqCodeBlock implements AfterViewInit {
         this.viewAll = !this.viewAll;
 
         if (!this.viewAll) {
-            this.scrollableCodeContent.scrollTo({ top: 0, behavior: 'instant' });
+            this.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         this.viewAllChange.emit(this.viewAll);
+    }
+
+    /** Scrolls the code content to the specified position. */
+    scrollTo(options: ExtendedScrollToOptions): void {
+        const scroll = () => this.scrollableCodeContent.scrollTo(options);
+
+        if (this.highlight?.pending()) {
+            toObservable(this.highlight.pending, { injector: this.injector })
+                .pipe(
+                    filter((pending) => !pending),
+                    take(1)
+                )
+                .subscribe(scroll);
+        } else {
+            scroll();
+        }
     }
 
     /**
@@ -360,7 +385,7 @@ export class KbqCodeBlock implements AfterViewInit {
         if (this.activeFileIndex !== index) {
             this.activeFileIndex = index;
             this.activeFileIndexChange.emit(this.activeFileIndex);
-            this.scrollableCodeContent.scrollTo({ top: 0, behavior: 'instant' });
+            this.scrollTo({ top: 0, behavior: 'instant' });
         }
     }
 

@@ -9,7 +9,8 @@ import {
     numberAttribute,
     Provider,
     Renderer2,
-    SecurityContext
+    SecurityContext,
+    signal
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
@@ -72,7 +73,11 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
     useValue: language
 });
 
-/** Directive which applies syntax highlighting to the code block content. */
+/**
+ * Directive which applies syntax highlighting to the code block content.
+ *
+ * @docs-private
+ */
 @Directive({
     selector: 'code[kbqCodeBlockHighlight]',
     host: {
@@ -87,8 +92,15 @@ export class KbqCodeBlockHighlight {
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
     private readonly window = inject(KBQ_WINDOW);
     private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
-
     private hljs: HLJSApi | null = null;
+    private readonly _pending = signal(false);
+
+    /**
+     * Whether syntax highlighting is pending.
+     *
+     * @docs-private
+     */
+    readonly pending = this._pending.asReadonly();
 
     /** The code file. */
     @Input({ required: true })
@@ -96,9 +108,9 @@ export class KbqCodeBlockHighlight {
         if (!this.window) return;
 
         if (!this.hljs) {
-            this.load(this.config ?? {}).then(() => this.applyHighlighting(file));
+            this.load(this.config ?? {}).then(() => this.highlight(file));
         } else {
-            this.applyHighlighting(file);
+            this.highlight(file);
         }
     }
 
@@ -109,6 +121,8 @@ export class KbqCodeBlockHighlight {
     @Input({ transform: booleanAttribute }) singleLine: boolean = false;
 
     private async load({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<void> {
+        this._pending.set(true);
+
         const loader = core ?? defaultHljsLoader;
         const { default: instance } = await loader();
 
@@ -126,7 +140,9 @@ export class KbqCodeBlockHighlight {
         this.initLineNumbersPlugin(instance);
     }
 
-    private applyHighlighting(file: KbqCodeBlockFile): void {
+    private highlight(file: KbqCodeBlockFile): void {
+        this._pending.set(true);
+
         let { language } = file;
 
         if (!language || !this.hljs!.getLanguage(language)) {
@@ -143,9 +159,7 @@ export class KbqCodeBlockHighlight {
             language: highlightedLanguage,
             illegal,
             relevance
-        } = this.hljs!.highlight(file.content, {
-            language: language!
-        });
+        } = this.hljs!.highlight(file.content, { language });
 
         if (illegal) {
             this.warn('[KbqCodeBlock] File content contains illegal characters.', file);
@@ -163,6 +177,8 @@ export class KbqCodeBlockHighlight {
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
         this.renderer.setProperty(this.nativeElement, 'innerHTML', highlightedHTMLWithLineNumbers);
+
+        this._pending.set(false);
     }
 
     private warn(...messages: unknown[]): void {

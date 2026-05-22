@@ -120,7 +120,7 @@ export class E2eCodeBlockStates {
 
     constructor() {
         afterNextRender(() => {
-            this.codeBlockWithTabs().scrollableCodeContent.scrollTo({ top: 999 });
+            this.codeBlockWithTabs().scrollTo({ top: 999 });
             this.codeBlockHoverList().forEach((item) =>
                 this.renderer.addClass(item.nativeElement, 'kbq-code-block_show-actionbar')
             );

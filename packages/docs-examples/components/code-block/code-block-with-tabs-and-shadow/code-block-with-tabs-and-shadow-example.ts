@@ -56,6 +56,6 @@ export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {
     ];
 
     ngAfterViewInit(): void {
-        this.codeBlock.scrollableCodeContent.scrollTo({ bottom: 0, behavior: 'instant' });
+        this.codeBlock.scrollTo({ bottom: 0, behavior: 'instant' });
     }
 }
