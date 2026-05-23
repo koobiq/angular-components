@@ -4,7 +4,6 @@
         class="kbq-dropdown__panel"
         [class.kbq-dropdown__panel_nested]="parent"
         [ngClass]="classList"
-        [style.min-width]="triggerWidth"
         [@transformDropdown]="panelAnimationState"
         (@transformDropdown.done)="onAnimationDone($event)"
         (@transformDropdown.start)="onAnimationStart($event)"

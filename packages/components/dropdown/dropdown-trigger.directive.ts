@@ -398,12 +398,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             this.dropdown.items.notifyOnChanges();
         }
 
-        const isVerticalTrigger = this.dropdown.overlapTriggerY && !this.dropdown.overlapTriggerX;
-
-        if (!this.dropdown.parent && !isVerticalTrigger) {
-            this.dropdown.triggerWidth = this.dropdown.triggerWidth ?? this.getWidth();
-        }
-
         this.dropdown.focusFirstItem(this.openedBy || 'program');
 
         this.setIsOpened(true);
@@ -458,6 +452,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * @returns OverlayConfig
      */
     private getOverlayConfig(): OverlayConfig {
+        const isVerticalTrigger = this.dropdown.overlapTriggerY && !this.dropdown.overlapTriggerX;
+
         return new OverlayConfig({
             positionStrategy: this.overlay
                 .position()
@@ -466,7 +462,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 .withPush(false),
             backdropClass: this.dropdown.backdropClass || 'cdk-overlay-transparent-backdrop',
             scrollStrategy: this.scrollStrategy(),
-            direction: this.dir
+            direction: this.dir,
+            ...(!this.isNested() && !isVerticalTrigger && { minWidth: this.getWidth() })
         });
     }
 

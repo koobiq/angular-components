@@ -1582,6 +1582,61 @@ describe('KbqDropdown', () => {
             expect(tooltipInstance).toBeNull();
         }));
     });
+
+    describe('panel min-width', () => {
+        it('should set minWidth on the overlay pane for a top-level panel', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+
+            jest.spyOn(window, 'getComputedStyle').mockReturnValue({
+                width: '300px',
+                borderRightWidth: '1px',
+                borderLeftWidth: '1px'
+            } as CSSStyleDeclaration);
+
+            fixture.componentInstance.trigger.open();
+            fixture.detectChanges();
+
+            const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+            expect(overlayPane.style.minWidth).toBe('298px');
+
+            jest.restoreAllMocks();
+        });
+
+        it('should not set minWidth on the overlay pane for nested panels', () => {
+            const fixture = createComponent(NestedDropdown);
+
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance;
+
+            instance.rootTrigger.open();
+            fixture.detectChanges();
+
+            instance.levelOneTrigger.open();
+            fixture.detectChanges();
+
+            const overlayPanes = overlayContainerElement.querySelectorAll('.cdk-overlay-pane');
+            const nestedPane = overlayPanes[overlayPanes.length - 1] as HTMLElement;
+
+            expect(nestedPane.style.minWidth).toBe('');
+        });
+
+        it('should not set minWidth on the overlay pane for vertical triggers', () => {
+            const fixture = createComponent(VerticalTriggerDropdown);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger.open();
+            fixture.detectChanges();
+
+            const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+            expect(overlayPane.style.minWidth).toBe('');
+        });
+    });
 });
 
 describe('KbqDropdown default overrides', () => {
@@ -1984,4 +2039,18 @@ class DropdownWithTooltip implements TestableDropdown {
 
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" [overlapTriggerY]="true" [overlapTriggerX]="false">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class VerticalTriggerDropdown {
+    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
+    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
 }

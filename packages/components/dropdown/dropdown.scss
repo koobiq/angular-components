@@ -35,7 +35,12 @@
     overflow-x: hidden;
     overflow-y: auto;
 
-    min-width: var(--kbq-dropdown-size-container-width-min);
+    min-width: max(var(--kbq-dropdown-size-container-width-min), 100%);
+
+    &.kbq-dropdown__panel_nested {
+        --kbq-dropdown-size-container-width-min: var(--kbq-size-7xl);
+    }
+
     max-width: var(--kbq-dropdown-size-container-width-max);
 
     border-radius: var(--kbq-dropdown-size-container-border-radius);
