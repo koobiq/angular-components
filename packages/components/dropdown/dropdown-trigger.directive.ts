@@ -516,13 +516,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         if (this.isNested()) {
             // When the dropdown is nested, it should always align itself
             // to the edges of the trigger, instead of overlapping it.
-            overlayFallbackX = originX =
-                this.dropdown.xPosition === 'before'
-                    ? 'start'
-                    : this.dropdown.xPosition === 'center'
-                      ? 'center'
-                      : 'end';
-            originFallbackX = overlayX = originX === 'end' ? 'start' : originX === 'center' ? 'center' : 'end';
+            // 'center' is not applicable for nested panels — fall back to 'after' (end).
+            overlayFallbackX = originX = this.dropdown.xPosition === 'before' ? 'start' : 'end';
+            originFallbackX = overlayX = originX === 'end' ? 'start' : 'end';
             offsetY = overlayY === 'bottom' ? NESTED_PANEL_TOP_PADDING : -NESTED_PANEL_TOP_PADDING;
             offsetX = NESTED_PANEL_LEFT_PADDING;
         } else {
