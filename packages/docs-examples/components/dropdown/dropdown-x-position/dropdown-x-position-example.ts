@@ -10,7 +10,7 @@ import { KbqDropdownModule, KbqDropdownPositionX } from '@koobiq/components/drop
     selector: 'dropdown-x-position-example',
     imports: [KbqDropdownModule, KbqButtonModule, KbqDividerModule],
     template: `
-        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+        <div class="layout-row layout-gap-s">
             @for (pos of positions; track pos) {
                 <button kbq-button (click)="setPosition(pos)">{{ pos }}</button>
             }
@@ -18,7 +18,7 @@ import { KbqDropdownModule, KbqDropdownPositionX } from '@koobiq/components/drop
 
         <button kbq-button [kbqDropdownTriggerFor]="appDropdown">Dropdown ({{ xPosition() }})</button>
 
-        <kbq-dropdown #appDropdown="kbqDropdown" [xPosition]="xPosition()">
+        <kbq-dropdown #appDropdown="kbqDropdown" style="display: none" [xPosition]="xPosition()">
             <button kbq-dropdown-item>Dropdown option 1</button>
             <button kbq-dropdown-item>Dropdown option 2</button>
             <kbq-divider />
@@ -27,7 +27,7 @@ import { KbqDropdownModule, KbqDropdownPositionX } from '@koobiq/components/drop
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-align-center-center'
+        class: 'layout-column layout-align-center-center layout-gap-s'
     }
 })
 export class DropdownXPositionExample {
