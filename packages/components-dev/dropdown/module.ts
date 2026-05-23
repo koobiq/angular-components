@@ -15,7 +15,8 @@ import {
     DropdownOpenByArrowDownExample,
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
-    DropdownWithFilterExample
+    DropdownWithFilterExample,
+    DropdownXPositionExample
 } from 'packages/docs-examples/components/dropdown';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -29,7 +30,8 @@ import { DevThemeToggle } from '../theme-toggle';
         DropdownLazyloadDataExample,
         DropdownOpenByArrowDownExample,
         DropdownRecursiveTemplateExample,
-        DropdownWithFilterExample
+        DropdownWithFilterExample,
+        DropdownXPositionExample
     ],
     template: `
         <dropdown-with-filter-example />
@@ -54,6 +56,9 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
 
         <dropdown-recursive-template-example />
+        <hr />
+
+        <dropdown-x-position-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

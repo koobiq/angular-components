@@ -34,12 +34,12 @@ import { KbqDropdownContent } from './dropdown-content.directive';
 import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
 import {
-    DropdownPositionX,
-    DropdownPositionY,
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_PANEL,
     KbqDropdownDefaultOptions,
-    KbqDropdownPanel
+    KbqDropdownPanel,
+    KbqDropdownPositionX,
+    KbqDropdownPositionY
 } from './dropdown.types';
 
 @Directive({
@@ -73,12 +73,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     /** Position of the dropdown in the X axis. */
     @Input()
-    get xPosition(): DropdownPositionX {
+    get xPosition(): KbqDropdownPositionX {
         return this._xPosition;
     }
 
-    set xPosition(value: DropdownPositionX) {
-        if (value !== 'before' && value !== 'after') {
+    set xPosition(value: KbqDropdownPositionX) {
+        if (value !== 'before' && value !== 'after' && value !== 'center') {
             throwKbqDropdownInvalidPositionX();
         }
 
@@ -88,11 +88,11 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     /** Position of the dropdown in the Y axis. */
     @Input()
-    get yPosition(): DropdownPositionY {
+    get yPosition(): KbqDropdownPositionY {
         return this._yPosition;
     }
 
-    set yPosition(value: DropdownPositionY) {
+    set yPosition(value: KbqDropdownPositionY) {
         if (value !== 'above' && value !== 'below') {
             throwKbqDropdownInvalidPositionY();
         }
@@ -154,8 +154,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         }
     }
 
-    private _xPosition: DropdownPositionX = this.defaultOptions.xPosition;
-    private _yPosition: DropdownPositionY = this.defaultOptions.yPosition;
+    private _xPosition: KbqDropdownPositionX = this.defaultOptions.xPosition;
+    private _yPosition: KbqDropdownPositionY = this.defaultOptions.yPosition;
     private _overlapTriggerX: boolean = this.defaultOptions.overlapTriggerX;
     private _overlapTriggerY: boolean = this.defaultOptions.overlapTriggerY;
     private _hasBackdrop: boolean = this.defaultOptions.hasBackdrop;
@@ -325,11 +325,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * @param posY Position of the dropdown along the y axis.
      * @docs-private
      */
-    setPositionClasses(posX: DropdownPositionX = this.xPosition, posY: DropdownPositionY = this.yPosition) {
+    setPositionClasses(posX: KbqDropdownPositionX = this.xPosition, posY: KbqDropdownPositionY = this.yPosition) {
         const classes = this.classList;
 
         classes['kbq-dropdown-before'] = posX === 'before';
         classes['kbq-dropdown-after'] = posX === 'after';
+        classes['kbq-dropdown-center'] = posX === 'center';
         classes['kbq-dropdown-above'] = posY === 'above';
         classes['kbq-dropdown-below'] = posY === 'below';
     }

@@ -7,6 +7,7 @@ import { DropdownOpenByArrowDownExample } from './dropdown-open-by-arrow-down/dr
 import { DropdownOverviewExample } from './dropdown-overview/dropdown-overview-example';
 import { DropdownRecursiveTemplateExample } from './dropdown-recursive-template/dropdown-recursive-template-example';
 import { DropdownWithFilterExample } from './dropdown-with-filter/dropdown-with-filter-example';
+import { DropdownXPositionExample } from './dropdown-x-position/dropdown-x-position-example';
 
 export {
     DropdownDisabledExample,
@@ -16,7 +17,8 @@ export {
     DropdownOpenByArrowDownExample,
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
-    DropdownWithFilterExample
+    DropdownWithFilterExample,
+    DropdownXPositionExample
 };
 
 const EXAMPLES = [
@@ -27,7 +29,8 @@ const EXAMPLES = [
     DropdownLazyloadDataExample,
     DropdownOpenByArrowDownExample,
     DropdownRecursiveTemplateExample,
-    DropdownWithFilterExample
+    DropdownWithFilterExample,
+    DropdownXPositionExample
 ];
 
 @NgModule({

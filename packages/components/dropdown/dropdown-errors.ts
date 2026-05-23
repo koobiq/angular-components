@@ -15,8 +15,8 @@ export function throwKbqDropdownMissingError() {
  * @docs-private
  */
 export function throwKbqDropdownInvalidPositionX() {
-    throw Error(`xPosition value must be either 'before' or after'.
-      Example: <kbq-dropdown [xPosition]="'before'" #dropdown="kbqDropdown"></kbq-dropdown>`);
+    throw Error(`xPosition value must be either 'before', 'after', or 'center'.
+      Example: <kbq-dropdown [xPosition]="'center'" #dropdown="kbqDropdown"></kbq-dropdown>`);
 }
 
 /**

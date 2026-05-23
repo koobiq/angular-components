@@ -41,10 +41,10 @@ import { ViewContainerRef } from '@angular/core';
 // @public
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
 
-// @public (undocumented)
-export type DropdownPositionX = 'before' | 'after';
+// @public @deprecated (undocumented)
+export type DropdownPositionX = 'before' | 'after' | 'center';
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export type DropdownPositionY = 'above' | 'below';
 
 // @public (undocumented)
@@ -112,15 +112,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
-    setPositionClasses(posX?: DropdownPositionX, posY?: DropdownPositionY): void;
+    setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
     templateRef: TemplateRef<any>;
     // (undocumented)
     triggerWidth: string;
-    get xPosition(): DropdownPositionX;
-    set xPosition(value: DropdownPositionX);
-    get yPosition(): DropdownPositionY;
-    set yPosition(value: DropdownPositionY);
+    get xPosition(): KbqDropdownPositionX;
+    set xPosition(value: KbqDropdownPositionX);
+    get yPosition(): KbqDropdownPositionY;
+    set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
@@ -238,16 +238,22 @@ export interface KbqDropdownPanel {
     // (undocumented)
     resetActiveItem(): void;
     // (undocumented)
-    setPositionClasses?(x: DropdownPositionX, y: DropdownPositionY): void;
+    setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
     templateRef: TemplateRef<any>;
     // (undocumented)
     triggerWidth?: string;
     // (undocumented)
-    xPosition: DropdownPositionX;
+    xPosition: KbqDropdownPositionX;
     // (undocumented)
-    yPosition: DropdownPositionY;
+    yPosition: KbqDropdownPositionY;
 }
+
+// @public
+export type KbqDropdownPositionX = 'before' | 'after' | 'center';
+
+// @public
+export type KbqDropdownPositionY = 'above' | 'below';
 
 // @public (undocumented)
 export class KbqDropdownStaticContent {

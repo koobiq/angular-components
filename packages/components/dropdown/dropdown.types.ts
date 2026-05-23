@@ -4,8 +4,20 @@ import { EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/c
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { KbqDropdownItem } from './dropdown-item.component';
 
-export type DropdownPositionX = 'before' | 'after';
+/** Position of the dropdown panel along the x-axis. */
+export type KbqDropdownPositionX = 'before' | 'after' | 'center';
+/**
+ * @deprecated Use `KbqDropdownPositionX` instead.
+ * @docs-private
+ */
+export type DropdownPositionX = 'before' | 'after' | 'center';
 
+/** Position of the dropdown panel along the y-axis. */
+export type KbqDropdownPositionY = 'above' | 'below';
+/**
+ * @deprecated Use `KbqDropdownPositionY` instead.
+ * @docs-private
+ */
 export type DropdownPositionY = 'above' | 'below';
 
 /** Reason why the menu was closed. */
@@ -16,8 +28,8 @@ export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
  * @docs-private
  */
 export interface KbqDropdownPanel {
-    xPosition: DropdownPositionX;
-    yPosition: DropdownPositionY;
+    xPosition: KbqDropdownPositionX;
+    yPosition: KbqDropdownPositionY;
     overlapTriggerX: boolean;
     overlapTriggerY: boolean;
     templateRef: TemplateRef<any>;
@@ -31,7 +43,7 @@ export interface KbqDropdownPanel {
     items: QueryList<KbqDropdownItem>;
     focusFirstItem(origin?: FocusOrigin): void;
     resetActiveItem(): void;
-    setPositionClasses?(x: DropdownPositionX, y: DropdownPositionY): void;
+    setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
 }
 
 /** Default `kbq-dropdown` options that can be overridden. */
