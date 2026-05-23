@@ -618,13 +618,11 @@ export class KbqAutocompleteTrigger
     }
 
     private getOverlayConfig(): OverlayConfig {
-        const panelWidth = this.autocomplete.panelWidth;
-
         return new OverlayConfig({
             positionStrategy: this.getOverlayPosition(),
             scrollStrategy: this.scrollStrategy(),
-            ...(panelWidth ? { width: panelWidth } : { minWidth: this.getPanelMinWidth() }),
-            direction: this.dir
+            direction: this.dir,
+            ...this.getOverlaySize()
         });
     }
 
