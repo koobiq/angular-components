@@ -80,6 +80,8 @@ export class KbqAutocomplete implements AfterContentInit {
     set isOpen(value: boolean);
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
+    static ngAcceptInputType_panelMinWidth: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     onKeydown(event: KeyboardEvent): any;
@@ -94,6 +96,7 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly optionSelected: EventEmitter<KbqAutocompleteSelectedEvent>;
     // (undocumented)
     panel: ElementRef;
+    panelMinWidth: number;
     panelWidth: string | number;
     // (undocumented)
     setScrollTop(scrollTop: number): void;
@@ -103,7 +106,7 @@ export class KbqAutocomplete implements AfterContentInit {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
 }
