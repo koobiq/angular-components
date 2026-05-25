@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
@@ -35,6 +35,17 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         {{ tab }}
                     </ng-template>
                     Active tab is {{ tab }}
+                </kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- underlined with icons only -->
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedIconsOnly">
+            @for (tab of tabs.slice(0, 5); track tab) {
+                <kbq-tab>
+                    <ng-template kbqTabLabel iconOnly>
+                        <i kbq-icon="kbq-bug_16"></i>
+                    </ng-template>
                 </kbq-tab>
             }
         </kbq-tab-group>
@@ -91,6 +102,18 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                 </kbq-tab>
             }
         </kbq-tab-group>
+
+        <!-- vertical with icons only -->
+        <kbq-tab-group vertical data-testid="e2eTabsVerticalIconsOnly" [style.height.px]="130" [activeTab]="tabs[2]">
+            @for (tab of tabs; track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 1">
+                    <ng-template kbqTabLabel iconOnly>
+                        <i kbq-icon="kbq-bug_16"></i>
+                    </ng-template>
+                    Active tab is {{ tab }}
+                </kbq-tab>
+            }
+        </kbq-tab-group>
     `,
     styles: `
         :host {
@@ -119,6 +142,35 @@ export class E2eTabsStates {
         'Ransomware',
         'Phishing'
     ] as const;
+
+    constructor() {
+        afterNextRender(() => {
+            this.setupTabsUnderlinedIconsOnlyStates();
+            this.setupTabsVerticalIconsOnlyStates();
+        });
+    }
+
+    private setupTabsUnderlinedIconsOnlyStates(): void {
+        const labels = document.querySelectorAll('[data-testid="e2eTabsUnderlinedIconsOnly"] .kbq-tab-label');
+
+        labels[0].classList.add('kbq-hover');
+        labels[0].classList.add('cdk-keyboard-focused');
+
+        labels[1].classList.add('kbq-hover');
+
+        labels[2].classList.add('kbq-hover');
+        labels[2].classList.add('cdk-keyboard-focused');
+
+        labels[4].classList.add('cdk-keyboard-focused');
+    }
+
+    private setupTabsVerticalIconsOnlyStates(): void {
+        const labels = document.querySelectorAll('[data-testid="e2eTabsVerticalIconsOnly"] .kbq-tab-label');
+
+        labels[0].classList.add('cdk-keyboard-focused');
+
+        labels[2].classList.add('cdk-keyboard-focused');
+    }
 }
 
 type TabNavBarScenario = { testid: string; disabled: boolean };

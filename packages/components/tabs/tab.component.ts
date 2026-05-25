@@ -103,6 +103,10 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     readonly empty = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     readonly tabId = input<string>(undefined!);
+    get iconOnlyLabel(): boolean {
+        return this.templateLabel?.iconOnly() ?? false;
+    }
+
 
     /** Emits whenever the internal state of the tab changes. */
     readonly stateChanges = new Subject<void>();

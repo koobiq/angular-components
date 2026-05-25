@@ -55,11 +55,21 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
 
     protected get activeTabOffsetWidth(): number | undefined {
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth;
+        const item = this.items.get(this.selectedIndex);
+        const width = item?.elementRef?.nativeElement?.offsetWidth;
+
+        if (!width) return width;
+
+        return item!.tab.iconOnlyLabel ? width + 12 : width;
     }
 
     protected get activeTabOffsetLeft(): number | undefined {
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
+        const item = this.items.get(this.selectedIndex);
+        const left = item?.elementRef?.nativeElement?.offsetLeft;
+
+        if (left == null) return left;
+
+        return item!.tab.iconOnlyLabel ? left - 6 : left;
     }
 
     protected itemSelected(event: KeyboardEvent): void {

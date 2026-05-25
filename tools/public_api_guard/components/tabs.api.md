@@ -270,8 +270,9 @@ export type KbqTabHeaderPosition = 'above' | 'below';
 
 // @public
 export class KbqTabLabel extends CdkPortal {
+    readonly iconOnly: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, { "iconOnly": { "alias": "iconOnly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLabel, never>;
 }

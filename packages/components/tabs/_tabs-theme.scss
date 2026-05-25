@@ -14,7 +14,7 @@
 @mixin kbq-tab-item-style($type, $sub-type) {
     @include kbq-tab-item-state($type, $sub-type, default);
 
-    &:hover:not(.kbq-disabled) {
+    &:is(:hover, .kbq-hover):not(.kbq-disabled) {
         @include kbq-tab-item-state($type, $sub-type, states-hover);
     }
 
@@ -29,7 +29,7 @@
             background: none;
         }
 
-        &:hover {
+        &:is(:hover, .kbq-hover) {
             @include kbq-tab-item-state($type, $sub-type, states-selected-hover);
 
             &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {

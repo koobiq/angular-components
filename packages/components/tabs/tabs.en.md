@@ -20,6 +20,8 @@ Use the `underlined` attribute.
 
 <!-- example(tabs-underlined) -->
 
+If a tab contains only an icon without a label, add the `iconOnly` attribute to the `kbqTabLabel` directive - this sets a fixed size of 32×32px for the clickable area.
+
 #### Disabled
 
 A disabled tab can't be selected. It doesn't have interactive states.
@@ -52,7 +54,7 @@ By default, the width of horizontal tabs depends on the text inside them. If nec
 
 ### Customizable tab design
 
-You can configure how tabs look according to your product design using the `kbq-tab-label` directive.
+You can configure how tabs look according to your product design using the `kbqTabLabel` directive.
 
 <!-- example(tabs-custom-label) -->
 

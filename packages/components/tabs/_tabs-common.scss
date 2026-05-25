@@ -81,6 +81,14 @@
         bottom: -10px;
     }
 
+    &.kbq-tab-label_icon-only {
+        width: var(--kbq-size-3xl);
+        height: var(--kbq-size-3xl);
+        padding: 0 !important;
+        margin-inline: var(--kbq-size-xs);
+        box-sizing: content-box;
+    }
+
     &.kbq-tab-label_vertical {
         justify-content: flex-start;
 
@@ -89,6 +97,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        &.kbq-tab-label_icon-only {
+            margin-inline: 0;
+            justify-content: center;
         }
     }
 }
