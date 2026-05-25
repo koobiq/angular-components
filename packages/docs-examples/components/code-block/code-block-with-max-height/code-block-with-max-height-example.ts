@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    KbqCodeBlockModule
+} from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
@@ -12,6 +16,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqCodeBlockModule,
         KbqToggleModule,
         FormsModule
+    ],
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                xml: () => import('highlight.js/lib/languages/xml')
+            }
+        })
     ],
     template: `
         <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="viewAll">Show all</kbq-toggle>

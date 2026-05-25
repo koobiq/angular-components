@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    KbqCodeBlockModule
+} from '@koobiq/components/code-block';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
 /**
@@ -12,6 +16,14 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
         KbqCodeBlockModule,
         KbqSidepanelModule,
         KbqButtonModule
+    ],
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                xml: () => import('highlight.js/lib/languages/xml')
+            }
+        })
     ],
     template: `
         <button kbq-button (click)="sidepanel.open(template)">Open sidepanel</button>

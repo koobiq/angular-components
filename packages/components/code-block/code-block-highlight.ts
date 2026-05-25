@@ -9,12 +9,52 @@ import {
     numberAttribute,
     Provider,
     Renderer2,
-    SecurityContext
+    SecurityContext,
+    signal
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
-import hljs from 'highlight.js';
+import type { HLJSApi, LanguageFn } from 'highlight.js';
 import { KbqCodeBlockFile } from './types';
+
+const defaultHljsLoader = (): Promise<{ default: HLJSApi }> => import('highlight.js');
+
+/** `highlight.js` configuration */
+export type KbqCodeBlockHighlightJsConfig = Partial<{
+    /** Lazy loader for highlight.js core (no bundled languages). When omitted, the full bundle is loaded. */
+    core: () => Promise<{ default: HLJSApi }>;
+    /** Map of language name to lazy loader for that language's LanguageFn. */
+    languages: Record<string, () => Promise<{ default: LanguageFn }>>;
+}>;
+
+/**
+ * Injection token for configuring `KbqCodeBlockHighlightJsConfig`.
+ */
+export const KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG = new InjectionToken<KbqCodeBlockHighlightJsConfig>(
+    'KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG'
+);
+
+/**
+ * Utility provider for `KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG`.
+ *
+ * @example
+ * ```ts
+ * providers: [
+ *   kbqCodeBlockHighlightJsConfigProvider({
+ *     core: () => import('highlight.js/lib/core'),
+ *     languages: {
+ *       typescript: () => import('highlight.js/lib/languages/typescript'),
+ *       css: () => import('highlight.js/lib/languages/css'),
+ *       html: () => import('highlight.js/lib/languages/xml')
+ *     }
+ *   })
+ * ]
+ * ```
+ */
+export const kbqCodeBlockHighlightJsConfigProvider = (options: KbqCodeBlockHighlightJsConfig): Provider => ({
+    provide: KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG,
+    useValue: options
+});
 
 /**
  * Fallback language for code block if language is not supported/specified.
@@ -33,9 +73,14 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
     useValue: language
 });
 
-/** Directive which applies syntax highlighting to the code block content. */
+/**
+ * Directive which applies syntax highlighting to the code block content.
+ *
+ * @docs-private
+ */
 @Directive({
     selector: 'code[kbqCodeBlockHighlight]',
+    exportAs: 'kbqCodeBlockHighlight',
     host: {
         class: 'hljs'
     }
@@ -47,15 +92,61 @@ export class KbqCodeBlockHighlight {
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
+    private hljs: HLJSApi | null = null;
+    private readonly _pending = signal(false);
+
+    /**
+     * Whether syntax highlighting is pending.
+     *
+     * @docs-private
+     */
+    readonly pending = this._pending.asReadonly();
 
     /** The code file. */
     @Input({ required: true })
     set file(file: KbqCodeBlockFile) {
         if (!this.window) return;
 
+        if (!this.hljs) {
+            this.load(this.config ?? {}).then(() => this.highlight(file));
+        } else {
+            this.highlight(file);
+        }
+    }
+
+    /** The starting line number. */
+    @Input({ transform: numberAttribute }) startFrom: number = 1;
+
+    /** Whether to display line numbers for single line code block. */
+    @Input({ transform: booleanAttribute }) singleLine: boolean = false;
+
+    private async load({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<void> {
+        this._pending.set(true);
+
+        const loader = core ?? defaultHljsLoader;
+        const { default: instance } = await loader();
+
+        if (languages) {
+            await Promise.all(
+                Object.entries(languages).map(async ([name, loader]) => {
+                    const { default: language } = await loader();
+
+                    instance.registerLanguage(name, language);
+                })
+            );
+        }
+
+        this.hljs = instance;
+        this.initLineNumbersPlugin(instance);
+    }
+
+    private highlight(file: KbqCodeBlockFile): void {
+        this._pending.set(true);
+
         let { language } = file;
 
-        if (!language || !hljs.getLanguage(language)) {
+        if (!language || !this.hljs!.getLanguage(language)) {
             this.warn(
                 `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
                 file
@@ -69,9 +160,7 @@ export class KbqCodeBlockHighlight {
             language: highlightedLanguage,
             illegal,
             relevance
-        } = hljs.highlight(file.content, {
-            language: language!
-        });
+        } = this.hljs!.highlight(file.content, { language });
 
         if (illegal) {
             this.warn('[KbqCodeBlock] File content contains illegal characters.', file);
@@ -89,16 +178,8 @@ export class KbqCodeBlockHighlight {
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
         this.renderer.setProperty(this.nativeElement, 'innerHTML', highlightedHTMLWithLineNumbers);
-    }
 
-    /** The starting line number. */
-    @Input({ transform: numberAttribute }) startFrom: number = 1;
-
-    /** Whether to display line numbers for single line code block. */
-    @Input({ transform: booleanAttribute }) singleLine: boolean = false;
-
-    constructor() {
-        this.initLineNumbersPlugin();
+        this._pending.set(false);
     }
 
     private warn(...messages: unknown[]): void {
@@ -108,14 +189,11 @@ export class KbqCodeBlockHighlight {
         console.warn(...messages);
     }
 
-    /**
-     * Initialize the HighlightJS line numbers plugin. This method is called once when
-     * the component is constructed.
-     */
-    private initLineNumbersPlugin(): void {
+    /** Initialize the HighlightJS line numbers plugin after the hljs instance is available. */
+    private initLineNumbersPlugin(instance: HLJSApi): void {
         if (!this.window) return;
 
-        this.window['hljs'] = hljs;
+        this.window['hljs'] = instance;
         this.highlightJSLineNumbersPlugin(this.document, this.window);
     }
 

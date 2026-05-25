@@ -13,6 +13,25 @@ npm install highlight.js@^11
 </div>
 </div>
 
+### Configuring highlight.js
+
+By default, the component loads the full `highlight.js` bundle with all languages (~1 MB). To reduce bundle size, use `kbqCodeBlockHighlightJsConfigProvider` and specify only the languages you need:
+
+```typescript
+providers: [
+    kbqCodeBlockHighlightJsConfigProvider({
+        core: () => import('highlight.js/lib/core'),
+        languages: {
+            typescript: () => import('highlight.js/lib/languages/typescript'),
+            css: () => import('highlight.js/lib/languages/css'),
+            html: () => import('highlight.js/lib/languages/xml')
+        }
+    })
+];
+```
+
+Languages are loaded lazily on first use. Note that the `html` language is an alias of `xml` in `highlight.js`, so register `xml` to enable HTML syntax highlighting.
+
 ### Line numbers
 
 Numbering lines is useful for referencing a specific location in the document. Line numbers are disabled by default and can be enabled using the `lineNumbers` attribute.

@@ -13,6 +13,25 @@ npm install highlight.js@^11
 </div>
 </div>
 
+### Настройка highlight.js
+
+По умолчанию компонент загружает полную сборку `highlight.js` со всеми языками (~1 МБ). Чтобы уменьшить размер сборки, используйте `kbqCodeBlockHighlightJsConfigProvider` и укажите только нужные языки:
+
+```typescript
+providers: [
+    kbqCodeBlockHighlightJsConfigProvider({
+        core: () => import('highlight.js/lib/core'),
+        languages: {
+            typescript: () => import('highlight.js/lib/languages/typescript'),
+            css: () => import('highlight.js/lib/languages/css'),
+            html: () => import('highlight.js/lib/languages/xml')
+        }
+    })
+];
+```
+
+Языки загружаются лениво при первом использовании компонента. Обратите внимание: язык `html` является псевдонимом `xml` в `highlight.js`, поэтому для подсветки HTML-кода регистрируйте язык `xml`.
+
 ### Нумерация строк
 
 Пронумеровать строки полезно, чтобы дать ссылку на конкретное место в документе. Нумерация строк отключена по умолчанию, включается при помощи атрибута `lineNumbers`.

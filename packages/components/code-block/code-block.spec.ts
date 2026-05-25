@@ -1,11 +1,16 @@
 import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqTabNavBar } from '@koobiq/components/tabs';
+import { HLJSApi } from 'highlight.js';
 import { KBQ_CODE_BLOCK_FALLBACK_FILE_NAME, KbqCodeBlock, kbqCodeBlockLocaleConfigurationProvider } from './code-block';
-import { KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE, KbqCodeBlockHighlight } from './code-block-highlight';
+import {
+    KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE,
+    KbqCodeBlockHighlight,
+    kbqCodeBlockHighlightJsConfigProvider
+} from './code-block-highlight';
 import { KbqCodeBlockModule } from './code-block.module';
 import { KbqCodeBlockFile } from './types';
 
@@ -150,12 +155,14 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_hide-line-numbers']).toBeFalsy();
     });
 
-    it('should apply lineNumbers plugin', () => {
-        const { debugElement } = createComponent(BaseCodeBlock);
-        const codeBlock = geCodeBlockDebugElement(debugElement);
+    it('should apply lineNumbers plugin', waitForAsync(async () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement);
+
+        await fixture.whenStable();
 
         expect(codeBlock.nativeElement.querySelector('.hljs-ln')).toBeInstanceOf(HTMLTableElement);
-    });
+    }));
 
     it('should fill the code block', () => {
         const fixture = createComponent(BaseCodeBlock);
@@ -279,27 +286,33 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_soft-wrap']).toBeTruthy();
     });
 
-    it('should set fallback file content language if not provided', () => {
+    it('should set fallback file content language if not provided', waitForAsync(async () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
+        await fixture.whenStable();
 
         componentInstance.files = [{ content: 'koobiq' }];
         fixture.detectChanges();
+
         expect(geCodeBlockHighlightDebugElement(debugElement).attributes['data-language']).toBe(
             TestBed.inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE)
         );
-    });
+    }));
 
-    it('should set fallback file content language if is invalid', () => {
+    it('should set fallback file content language if is invalid', waitForAsync(async () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
 
+        await fixture.whenStable();
+
         componentInstance.files = [{ content: 'koobiq', language: 'invalid_file_language' }];
         fixture.detectChanges();
+
         expect(geCodeBlockHighlightDebugElement(debugElement).attributes['data-language']).toBe(
             TestBed.inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE)
         );
-    });
+    }));
 
     it('should provide custom locale configuration', () => {
         const { debugElement } = createComponent(BaseCodeBlock, [
@@ -318,10 +331,12 @@ describe(KbqCodeBlock.name, () => {
         expect(geCodeBlockDebugElement(debugElement).componentInstance.localeConfiguration).toMatchSnapshot();
     });
 
-    it('should highlight code', () => {
+    it('should highlight code', waitForAsync(async () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const code = geCodeBlockHighlightDebugElement(debugElement);
+
+        await fixture.whenStable();
 
         componentInstance.activeFileIndex = 0;
         fixture.detectChanges();
@@ -335,7 +350,7 @@ describe(KbqCodeBlock.name, () => {
         fixture.detectChanges();
         expect(code.classes['hljs']).toBe(true);
         expect(code.attributes['data-language']).toBe('css');
-    });
+    }));
 
     it('should display toggle soft wrap button', () => {
         const fixture = createComponent(BaseCodeBlock);
@@ -529,5 +544,187 @@ describe(KbqCodeBlock.name, () => {
         expect(componentInstance.files[0].filename).toBeTruthy();
         expect(textContent).not.toBe(componentInstance.files[0].filename);
         expect(textContent).toBe(componentInstance.customFileName);
+    });
+
+    describe('with core (async highlight.js loading)', () => {
+        const buildMockCore = () =>
+            ({
+                getLanguage: jest.fn().mockReturnValue({}),
+                highlight: jest.fn().mockImplementation((_content: string, { language }: { language: string }) => ({
+                    value: `<span class="hljs-keyword">code</span>`,
+                    language,
+                    illegal: false,
+                    relevance: 10
+                })),
+                registerLanguage: jest.fn()
+            }) as unknown as HLJSApi;
+
+        it('should defer highlighting until hljs core is loaded', waitForAsync(async () => {
+            const mockCore = buildMockCore();
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: mockCore })
+                })
+            ]);
+            const code = geCodeBlockHighlightDebugElement(fixture.debugElement);
+
+            expect(code.attributes['data-language']).toBeUndefined();
+
+            await fixture.whenStable();
+
+            expect(code.attributes['data-language']).toBe('html');
+            expect(mockCore.highlight).toHaveBeenCalled();
+        }));
+
+        it('should call registerLanguage for each provided language', waitForAsync(async () => {
+            const mockCore = buildMockCore();
+            const typescriptLoader = jest.fn().mockResolvedValue({ default: jest.fn() });
+            const cssLoader = jest.fn().mockResolvedValue({ default: jest.fn() });
+
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: mockCore as any }),
+                    languages: {
+                        typescript: typescriptLoader,
+                        css: cssLoader
+                    }
+                })
+            ]);
+
+            await fixture.whenStable();
+
+            expect(typescriptLoader).toHaveBeenCalledTimes(1);
+            expect(cssLoader).toHaveBeenCalledTimes(1);
+            expect(mockCore.registerLanguage).toHaveBeenCalledTimes(2);
+        }));
+
+        it('should apply the pending file after hljs loads', waitForAsync(async () => {
+            const mockCore = buildMockCore();
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: mockCore })
+                })
+            ]);
+            const code = geCodeBlockHighlightDebugElement(fixture.debugElement);
+
+            expect(mockCore.highlight).not.toHaveBeenCalled();
+
+            await fixture.whenStable();
+
+            expect(mockCore.highlight).toHaveBeenCalled();
+            expect(code.attributes['data-language']).toBeDefined();
+        }));
+
+        it('should fall back to fallback language for unknown languages (async path)', waitForAsync(async () => {
+            const mockCore = buildMockCore();
+
+            (mockCore.getLanguage as jest.Mock).mockReturnValue(undefined);
+            (mockCore.highlight as jest.Mock).mockImplementation(
+                (_content: string, { language: _lang }: { language: string }) => ({
+                    value: `<span>code</span>`,
+                    language: 'plaintext',
+                    illegal: false,
+                    relevance: 0
+                })
+            );
+
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: mockCore })
+                })
+            ]);
+
+            await fixture.whenStable();
+
+            expect(geCodeBlockHighlightDebugElement(fixture.debugElement).attributes['data-language']).toBe(
+                TestBed.inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE)
+            );
+        }));
+
+        it('should set pending to true while hljs is loading', () => {
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () =>
+                        new Promise<{ default: HLJSApi }>(() => {
+                            /* never resolves within this synchronous test */
+                        })
+                })
+            ]);
+            const highlight = geCodeBlockHighlightDebugElement(fixture.debugElement).injector.get(
+                KbqCodeBlockHighlight
+            );
+
+            expect(highlight.pending()).toBe(true);
+        });
+
+        it('should set pending to false after hljs has loaded', waitForAsync(async () => {
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: buildMockCore() })
+                })
+            ]);
+            const highlight = geCodeBlockHighlightDebugElement(fixture.debugElement).injector.get(
+                KbqCodeBlockHighlight
+            );
+
+            await fixture.whenStable();
+
+            expect(highlight.pending()).toBe(false);
+        }));
+    });
+
+    describe('scrollTo', () => {
+        const createMockCore = () =>
+            ({
+                getLanguage: jest.fn().mockReturnValue({}),
+                highlight: jest.fn().mockImplementation((_content: string, { language }: { language: string }) => ({
+                    value: `<span class="hljs-keyword">code</span>`,
+                    language,
+                    illegal: false,
+                    relevance: 10
+                })),
+                registerLanguage: jest.fn()
+            }) as unknown as HLJSApi;
+
+        it('should scroll immediately when highlighting is complete', waitForAsync(async () => {
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () => Promise.resolve({ default: createMockCore() })
+                })
+            ]);
+
+            await fixture.whenStable();
+
+            const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent, 'scrollTo').mockImplementation(() => {});
+
+            codeBlock.scrollTo({ top: 50 });
+
+            expect(scrollSpy).toHaveBeenCalledWith({ top: 50 });
+        }));
+
+        it('should defer scroll until highlighting completes when pending', waitForAsync(async () => {
+            let resolveCore!: (value: { default: HLJSApi }) => void;
+
+            const fixture = createComponent(BaseCodeBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    core: () =>
+                        new Promise<{ default: HLJSApi }>((resolve) => {
+                            resolveCore = resolve;
+                        })
+                })
+            ]);
+
+            const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
+            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent, 'scrollTo').mockImplementation(() => {});
+
+            codeBlock.scrollTo({ top: 100 });
+            expect(scrollSpy).not.toHaveBeenCalled();
+
+            resolveCore({ default: createMockCore() });
+            await fixture.whenStable();
+
+            expect(scrollSpy).toHaveBeenCalledWith({ top: 100 });
+        }));
     });
 });
