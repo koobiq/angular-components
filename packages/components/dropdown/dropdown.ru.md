@@ -1,22 +1,22 @@
 <!-- example(dropdown-overview) -->
 
-### Disabled trigger
+### Отключенный триггер
 
 <!-- example(dropdown-disabled) -->
 
-### Open by arrow down ↓
+### Открытие по стрелке вниз ↓
 
 <!-- example(dropdown-open-by-arrow-down) -->
 
-### Lazy load data
+### Ленивая загрузка данных
 
 <!-- example(dropdown-lazyload-data) -->
 
-### Nested elements
+### Вложенные элементы
 
 <!-- example(dropdown-nested) -->
 
-### Navigation wrap
+### Циклическая навигация
 
 Режим "циклической навигации" по списку,
 где после достижения одного конца списка мы переходим к другому.
@@ -32,3 +32,9 @@
 ### Поиск в меню
 
 <!-- example(dropdown-with-filter) -->
+
+## Выравнивание по горизонтали
+
+Используйте свойство `xPosition` для управления горизонтальным выравниванием панели выпадающего меню относительно триггера. Поддерживаемые значения: `'after'` (по умолчанию), `'before'` и `'center'`.
+
+<!-- example(dropdown-x-position) -->

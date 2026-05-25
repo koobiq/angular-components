@@ -35,8 +35,6 @@ import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import {
-    DropdownPositionX,
-    DropdownPositionY,
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_SCROLL_STRATEGY,
     KbqDropdown,
@@ -44,6 +42,8 @@ import {
     KbqDropdownItem,
     KbqDropdownModule,
     KbqDropdownPanel,
+    KbqDropdownPositionX,
+    KbqDropdownPositionY,
     KbqDropdownTrigger
 } from './index';
 
@@ -756,6 +756,26 @@ describe('KbqDropdown', () => {
 
             expect(panel.classList).toContain('kbq-dropdown-below');
             expect(panel.classList).toContain('kbq-dropdown-after');
+        });
+
+        it('should append kbq-dropdown-center if the x position is set to center', () => {
+            fixture.componentInstance.xPosition = 'center';
+            fixture.detectChanges();
+            fixture.componentInstance.trigger.open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
+
+            expect(panel.classList).toContain('kbq-dropdown-center');
+            expect(panel.classList).not.toContain('kbq-dropdown-before');
+            expect(panel.classList).not.toContain('kbq-dropdown-after');
+        });
+
+        it('should throw when xPosition is set to an invalid value', () => {
+            expect(() => {
+                fixture.componentInstance.xPosition = 'invalid' as KbqDropdownPositionX;
+                fixture.detectChanges();
+            }).toThrow();
         });
     });
 
@@ -1713,8 +1733,8 @@ class SimpleDropdown {
 class PositionedDropdown {
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
     @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
-    xPosition: DropdownPositionX = 'before';
-    yPosition: DropdownPositionY = 'above';
+    xPosition: KbqDropdownPositionX = 'before';
+    yPosition: KbqDropdownPositionY = 'above';
 }
 
 interface TestableDropdown {
@@ -1751,8 +1771,8 @@ class OverlapDropdown implements TestableDropdown {
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
     direction: Direction;
-    xPosition: DropdownPositionX = 'after';
-    yPosition: DropdownPositionY = 'below';
+    xPosition: KbqDropdownPositionX = 'after';
+    yPosition: KbqDropdownPositionY = 'below';
     overlapTriggerX = true;
     overlapTriggerY = true;
     parent: KbqDropdownPanel;

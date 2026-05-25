@@ -31,3 +31,9 @@ Recursive rendering of an array or object, allowing the creation of nested dropd
 ### Menu Search
 
 <!-- example(dropdown-with-filter) -->
+
+## Horizontal alignment
+
+Use the `xPosition` property to control horizontal alignment of the dropdown panel relative to the trigger. Supported values: `'after'` (default), `'before'`, and `'center'`.
+
+<!-- example(dropdown-x-position) -->

@@ -37,7 +37,7 @@ import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdown } from './dropdown.component';
-import { DropdownCloseReason, DropdownPositionX, DropdownPositionY, KbqDropdownPanel } from './dropdown.types';
+import { DropdownCloseReason, KbqDropdownPanel, KbqDropdownPositionX, KbqDropdownPositionY } from './dropdown.types';
 
 /** Injection token that determines the scroll handling while the dropdown is open. */
 export const KBQ_DROPDOWN_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-dropdown-scroll-strategy');
@@ -60,6 +60,35 @@ export const NESTED_PANEL_LEFT_PADDING = 8;
 
 /** Options for binding a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true });
+
+const positionMap = {
+    /** Maps CDK overlay x-anchor back to a dropdown x-position label. */
+    overlayXToPosX: {
+        start: 'after',
+        center: 'center',
+        end: 'before'
+    } as Record<HorizontalConnectionPos, KbqDropdownPositionX>,
+
+    /** Primary (overlapping) X positions: [originX, originFallbackX, overlayX, overlayFallbackX]. */
+    xPositions: {
+        before: ['end', 'start', 'end', 'start'],
+        center: ['center', 'start', 'center', 'end'],
+        after: ['start', 'end', 'start', 'end']
+    } as Record<
+        KbqDropdownPositionX,
+        [HorizontalConnectionPos, HorizontalConnectionPos, HorizontalConnectionPos, HorizontalConnectionPos]
+    >,
+
+    /** Non-overlapping X positions: [originX, originFallbackX, overlayX, overlayFallbackX]. */
+    nonOverlapXPositions: {
+        before: ['start', 'end', 'end', 'start'],
+        center: ['center', 'start', 'center', 'end'],
+        after: ['end', 'start', 'start', 'end']
+    } as Record<
+        KbqDropdownPositionX,
+        [HorizontalConnectionPos, HorizontalConnectionPos, HorizontalConnectionPos, HorizontalConnectionPos]
+    >
+};
 
 /**
  * This directive is intended to be used in conjunction with an kbq-dropdown tag.  It is
@@ -475,8 +504,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private subscribeToPositions(position: FlexibleConnectedPositionStrategy): void {
         if (this.dropdown.setPositionClasses) {
             position.positionChanges.subscribe((change) => {
-                const posX: DropdownPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
-                const posY: DropdownPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
+                const posX = positionMap.overlayXToPosX[change.connectionPair.overlayX];
+                const posY: KbqDropdownPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
 
                 this.dropdown.setPositionClasses!(posX, posY);
             });
@@ -489,8 +518,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * @param positionStrategy Strategy whose position to update.
      */
     private setPosition(positionStrategy: FlexibleConnectedPositionStrategy) {
-        let [originX, originFallbackX, overlayX, overlayFallbackX]: HorizontalConnectionPos[] =
-            this.dropdown.xPosition === 'before' ? ['end', 'start', 'end', 'start'] : ['start', 'end', 'start', 'end'];
+        let [originX, originFallbackX, overlayX, overlayFallbackX] = positionMap.xPositions[this.dropdown.xPosition];
 
         // eslint-disable-next-line prefer-const
         let [overlayY, overlayFallbackY, originY, originFallbackY]: VerticalConnectionPos[] =
@@ -503,9 +531,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
         if (this.isNested()) {
             // When the dropdown is nested, it should always align itself
-            // to the edges of the trigger, instead of overlapping it.
-            overlayFallbackX = originX = this.dropdown.xPosition === 'before' ? 'start' : 'end';
-            originFallbackX = overlayX = originX === 'end' ? 'start' : 'end';
+            // to the edges of the trigger, instead of overlapping it,
+            // so 'center' is not applicable for nested panels — falls back to 'after'.
+            const xPosition = this.dropdown.xPosition === 'center' ? 'after' : this.dropdown.xPosition;
+
+            [originX, originFallbackX, overlayX, overlayFallbackX] = positionMap.nonOverlapXPositions[xPosition];
             offsetY = overlayY === 'bottom' ? NESTED_PANEL_TOP_PADDING : -NESTED_PANEL_TOP_PADDING;
             offsetX = NESTED_PANEL_LEFT_PADDING;
         } else {
@@ -516,8 +546,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             }
 
             if (!this.dropdown.overlapTriggerX) {
-                overlayFallbackX = originX = this.dropdown.xPosition === 'before' ? 'start' : 'end';
-                originFallbackX = overlayX = originX === 'end' ? 'start' : 'end';
+                [originX, originFallbackX, overlayX, overlayFallbackX] =
+                    positionMap.nonOverlapXPositions[this.dropdown.xPosition];
             }
         }
 
