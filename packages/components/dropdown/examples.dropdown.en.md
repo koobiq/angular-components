@@ -1,5 +1,5 @@
-## xPosition
+🚧 **Documentation in progress** 🚧
 
-Use the `xPosition` property to control horizontal alignment of the dropdown panel relative to the trigger. Supported values: `'after'` (default), `'before'`, and `'center'`.
+Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
 
-<!-- example(dropdown-x-position) -->
+If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
