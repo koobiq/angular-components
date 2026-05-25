@@ -6,7 +6,7 @@
     (mousedown)="handlePaginatorPress('before', $event)"
     (touchend)="stopInterval()"
 >
-    <i kbq-icon="kbq-chevron-left_16"></i>
+    <i kbq-icon="kbq-chevron-left_16" [color]="disableScrollBefore ? 'contrast-fade' : 'contrast'"></i>
 </div>
 
 <div #tabListContainer class="kbq-tab-header__container" (keydown)="handleKeydown($event)">
@@ -30,5 +30,5 @@
     (mousedown)="handlePaginatorPress('after', $event)"
     (touchend)="stopInterval()"
 >
-    <i kbq-icon="kbq-chevron-right_16"></i>
+    <i kbq-icon="kbq-chevron-right_16" [color]="disableScrollAfter ? 'contrast-fade' : 'contrast'"></i>
 </div>
