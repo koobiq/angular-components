@@ -5,6 +5,8 @@ on:
     types:
       - opened
 
+permissions: {}
+
 jobs:
   notify:
     name: Pull Request Notification
@@ -12,7 +14,7 @@ jobs:
     steps:
       - name: Notification
         if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: mattermost/action-mattermost-notify@v2.1.0
+        uses: mattermost/action-mattermost-notify@ae31bb6f9e26a54336e79696f108a2c91cf55b4e # v2.1.0
         env:
           PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         with:
@@ -23,7 +25,7 @@ jobs:
             [${{ github.repository }}] | [${{ github.event.pull_request.title }} #${{ github.event.number }}](${{ env.PR_URL }}) was created by ${{ github.actor }}
 
       - name: Notification to BotChannel
-        uses: mattermost/action-mattermost-notify@v2.1.0
+        uses: mattermost/action-mattermost-notify@ae31bb6f9e26a54336e79696f108a2c91cf55b4e # v2.1.0
         env:
           PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         with:

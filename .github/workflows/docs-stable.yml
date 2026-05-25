@@ -7,6 +7,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   build:
     name: Build
@@ -14,7 +18,7 @@ jobs:
     if: ${{ github.repository_owner == 'koobiq' }}
 
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node
         uses: ./.github/workflows/actions/setup-node
@@ -25,7 +29,7 @@ jobs:
       - uses: ./.github/workflows/actions/build-docs
 
       - name: Deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: FirebaseExtended/action-hosting-deploy@e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c # v0.10.0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
@@ -35,7 +39,7 @@ jobs:
           channelId: live
 
       - name: Run Algolia DocSearch Crawler
-        uses: algolia/algoliasearch-crawler-github-actions@v1.1.13
+        uses: algolia/algoliasearch-crawler-github-actions@3ae4def15d82c60aa02b0e528b50167593cbaaf6 # v1.1.13
         id: algolia_docsearch_crawler
         with:
           crawler-user-id: ${{ secrets.ALGOLIA_DOCSEARCH_CRAWLER_USER_ID }}
