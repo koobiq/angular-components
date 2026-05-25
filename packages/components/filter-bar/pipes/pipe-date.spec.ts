@@ -1,3 +1,4 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -601,5 +602,27 @@ describe('KbqPipeDateComponent', () => {
             expect(clearSpy).toHaveBeenCalledWith(component.data);
             expect(changeSpy).toHaveBeenCalledWith(component.data);
         });
+    });
+
+    describe('icon projection', () => {
+        beforeEach(() => {
+            setupSinglePipe({ value: null });
+        });
+
+        it('should render chevron icon inside list text, not in leading icon slot', fakeAsync(() => {
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            component.open();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const customPeriodOption = overlayContainer.querySelector('kbq-list-option')!;
+            const listText = customPeriodOption.querySelector('.kbq-list-text');
+            const icon = customPeriodOption.querySelector('i[kbq-icon]');
+
+            expect(listText?.contains(icon)).toBe(true);
+        }));
     });
 });
