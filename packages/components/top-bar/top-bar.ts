@@ -3,12 +3,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    inject,
     input,
     Input,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqOverflowItems } from '@koobiq/components/overflow-items';
 
 @Directive({
     selector: '[kbqTopBarSpacer]',
@@ -26,8 +24,7 @@ export class KbqTopBarSpacer {}
     host: {
         class: 'kbq-top-bar-container',
         '[class.kbq-top-bar-container__start]': 'placement() === "start"',
-        '[class.kbq-top-bar-container__end]': 'placement() === "end"',
-        '[class.kbq-top-bar-container__with-overflow-items]': 'overflowItems'
+        '[class.kbq-top-bar-container__end]': 'placement() === "end"'
     }
 })
 export class KbqTopBarContainer {
@@ -35,12 +32,6 @@ export class KbqTopBarContainer {
      * Conditionally applies a CSS class based on the value
      */
     readonly placement = input.required<'start' | 'end'>();
-    /**
-     * Track if container has `KbqOverflowItems` directive assigned.
-     * Used to replace `gap` with `margin` so `KbqOverflowItems` will calculate correct width on resize.
-     * @docs-private
-     */
-    protected readonly overflowItems = inject(KbqOverflowItems, { optional: true, self: true });
 }
 
 @Component({

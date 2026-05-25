@@ -53,10 +53,6 @@
             margin-bottom: calc(-1 * var(--kbq-size-border-width));
         }
 
-        .kbq-overflow-items {
-            @include _overflow-items-margins;
-        }
-
         &.kbq-top-bar-container__start {
             display: flex;
             gap: var(--kbq-top-bar-container-start-gap);
@@ -71,10 +67,8 @@
             justify-content: end;
         }
 
-        &.kbq-top-bar-container__with-overflow-items {
-            gap: unset;
-            justify-content: unset;
-
+        &.kbq-overflow-items,
+        > .kbq-overflow-items {
             @include _overflow-items-margins;
         }
     }
