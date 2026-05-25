@@ -6,7 +6,6 @@
 
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
-import { KbqOverflowItems } from '@koobiq/components/overflow-items';
 
 // @public (undocumented)
 export class KbqTopBar {
@@ -21,8 +20,7 @@ export class KbqTopBar {
 
 // @public
 export class KbqTopBarContainer {
-    protected readonly overflowItems: KbqOverflowItems | null;
-    placement: InputSignal<"start" | "end">;
+    readonly placement: InputSignal<"start" | "end">;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopBarContainer, "[kbqTopBarContainer]", never, { "placement": { "alias": "placement"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
