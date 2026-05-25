@@ -35,7 +35,7 @@
     overflow-x: hidden;
     overflow-y: auto;
 
-    min-width: var(--kbq-dropdown-size-container-width-min);
+    min-width: max(var(--kbq-dropdown-size-container-width-min), 100%);
     max-width: var(--kbq-dropdown-size-container-width-max);
 
     border-radius: var(--kbq-dropdown-size-container-border-radius);

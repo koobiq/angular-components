@@ -15,6 +15,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    numberAttribute,
     Optional,
     Output,
     QueryList,
@@ -114,6 +115,12 @@ export class KbqAutocomplete implements AfterContentInit {
      * match the width of its host.
      */
     @Input() panelWidth: string | number;
+
+    /**
+     * Minimum width of the panel in pixels.
+     * When panelWidth is not set, the panel will be at least as wide as its host and no less than panelMinWidth.
+     */
+    @Input({ transform: numberAttribute }) panelMinWidth: number = 200;
 
     /** Event that is emitted whenever an option from the list is selected. */
     @Output() readonly optionSelected: EventEmitter<KbqAutocompleteSelectedEvent> =

@@ -1795,7 +1795,7 @@ describe('KbqAutocomplete', () => {
         expect(fixture.componentInstance.trigger.panelOpen).toBe(true);
     });
 
-    it('should have correct width when opened', () => {
+    it('should have correct min-width when opened', () => {
         const widthFixture = createComponent(SimpleAutocomplete);
 
         widthFixture.componentInstance.width = 300;
@@ -1809,7 +1809,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(300);
 
         widthFixture.componentInstance.trigger.closePanel();
         widthFixture.detectChanges();
@@ -1821,10 +1821,10 @@ describe('KbqAutocomplete', () => {
         widthFixture.componentInstance.trigger.openPanel();
         widthFixture.detectChanges();
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(500);
     });
 
-    it('should update the width while the panel is open', () => {
+    it('should update the min-width while the panel is open', () => {
         const widthFixture = createComponent(SimpleAutocomplete);
 
         widthFixture.componentInstance.width = 300;
@@ -1838,7 +1838,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(300);
 
         widthFixture.componentInstance.width = 500;
         widthFixture.detectChanges();
@@ -1848,10 +1848,10 @@ describe('KbqAutocomplete', () => {
         widthFixture.componentInstance.trigger.openPanel();
         widthFixture.detectChanges();
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(500);
     });
 
-    it('should update the panel width if the window is resized', fakeAsync(() => {
+    it('should update the panel min-width if the window is resized', fakeAsync(() => {
         const widthFixture = createComponent(SimpleAutocomplete);
 
         widthFixture.componentInstance.width = 300;
@@ -1865,7 +1865,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(300);
 
         widthFixture.componentInstance.width = 400;
         widthFixture.detectChanges();
@@ -1874,10 +1874,10 @@ describe('KbqAutocomplete', () => {
         dispatchFakeEvent(window, 'resize');
         tick(20);
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(400);
     }));
 
-    it('should have panel width match host width by default', () => {
+    it('should have panel min-width match host width by default', () => {
         const widthFixture = createComponent(SimpleAutocomplete);
 
         widthFixture.componentInstance.width = 300;
@@ -1892,7 +1892,81 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(300);
+    });
+
+    it('should enforce panelMinWidth when host is narrower', () => {
+        const widthFixture = createComponent(SimpleAutocomplete);
+
+        widthFixture.detectChanges();
+
+        const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+
+        widthFixture.componentInstance.trigger.open();
+        widthFixture.detectChanges();
+
+        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(200);
+    });
+
+    it('should use host width when wider than panelMinWidth', () => {
+        const widthFixture = createComponent(SimpleAutocomplete);
+
+        widthFixture.componentInstance.width = 400;
+        widthFixture.detectChanges();
+
+        const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 400 } as DOMRect);
+
+        widthFixture.componentInstance.trigger.openPanel();
+        widthFixture.detectChanges();
+
+        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(400);
+    });
+
+    it('should respect a custom panelMinWidth input', () => {
+        const widthFixture = createComponent(SimpleAutocomplete);
+
+        widthFixture.detectChanges();
+
+        widthFixture.componentInstance.trigger.autocomplete.panelMinWidth = 350;
+
+        const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+
+        widthFixture.componentInstance.trigger.open();
+        widthFixture.detectChanges();
+
+        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(350);
+    });
+
+    it('should use exact width when panelWidth is set, ignoring panelMinWidth', () => {
+        const widthFixture = createComponent(SimpleAutocomplete);
+
+        widthFixture.detectChanges();
+
+        widthFixture.componentInstance.trigger.autocomplete.panelWidth = 250;
+
+        const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+
+        widthFixture.componentInstance.trigger.open();
+        widthFixture.detectChanges();
+
+        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(250);
+        expect(overlayPane.style.minWidth).toBe('');
     });
 
     describe('Option selection with disabled items', () => {
