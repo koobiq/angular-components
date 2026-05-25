@@ -12,7 +12,7 @@ test.describe('KbqTabsModule', () => {
             const component = getComponent(page);
 
             // Flaky test workaround: click to underlined tab to ensure proper bottom outline rendering
-            await getTabsUnderlined(page).locator('.kbq-tab-label_underlined').nth(3).click();
+            await getTabsUnderlined(page).locator('.kbq-tab-label_underlined').nth(1).click();
 
             await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
