@@ -42,10 +42,10 @@ import { ViewContainerRef } from '@angular/core';
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
 
 // @public @deprecated (undocumented)
-export type DropdownPositionX = 'before' | 'after' | 'center';
+export type DropdownPositionX = KbqDropdownPositionX;
 
 // @public @deprecated (undocumented)
-export type DropdownPositionY = 'above' | 'below';
+export type DropdownPositionY = KbqDropdownPositionY;
 
 // @public (undocumented)
 export const fadeInItems: AnimationTriggerMetadata;
@@ -155,8 +155,8 @@ export interface KbqDropdownDefaultOptions {
     hasBackdrop: boolean;
     overlapTriggerX: boolean;
     overlapTriggerY: boolean;
-    xPosition: DropdownPositionX;
-    yPosition: DropdownPositionY;
+    xPosition: KbqDropdownPositionX;
+    yPosition: KbqDropdownPositionY;
 }
 
 // @public

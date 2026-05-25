@@ -49,10 +49,10 @@ export interface KbqDropdownPanel {
 /** Default `kbq-dropdown` options that can be overridden. */
 export interface KbqDropdownDefaultOptions {
     /** The x-axis position of the dropdown. */
-    xPosition: DropdownPositionX;
+    xPosition: KbqDropdownPositionX;
 
     /** The y-axis position of the dropdown. */
-    yPosition: DropdownPositionY;
+    yPosition: KbqDropdownPositionY;
 
     /** Whether the dropdown should overlap the dropdown trigger horizontally. */
     overlapTriggerX: boolean;
