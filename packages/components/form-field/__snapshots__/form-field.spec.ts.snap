@@ -4,17 +4,22 @@ exports[`KbqFormField should change KbqPasswordToggle icon by click 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
-    class="kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade kbq-eye-slash_16"
+    class="kbq-password-toggle"
     style="visibility: visible;"
-    tabindex="0"
-  />,
+  >
+    <i
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye-slash_16"
+      tabindex="0"
+    />
+    
+  </kbq-password-toggle>,
 }
 `;
 
 exports[`KbqFormField should display KbqCleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
-    class="kbq-cleaner kbq kbq-circle-xmark_16 kbq-icon-button kbq-icon kbq-contrast-fade"
+    class="kbq-cleaner kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-circle-xmark_16"
     tabindex="0"
   />,
 }
@@ -64,10 +69,15 @@ exports[`KbqFormField should display KbqPasswordToggle by input 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
-    class="kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade kbq-eye_16"
+    class="kbq-password-toggle"
     style="visibility: visible;"
-    tabindex="0"
-  />,
+  >
+    <i
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      tabindex="0"
+    />
+    
+  </kbq-password-toggle>,
 }
 `;
 
@@ -90,7 +100,7 @@ DebugElement {
   >
     <i
       class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
-      kbq-icon=""
+      style="max-height: 16px;"
     />
     <span
       class="kbq-hint__text"
@@ -111,7 +121,7 @@ DebugElement {
   >
     <i
       class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
-      kbq-icon=""
+      style="max-height: 16px;"
     />
     <span
       class="kbq-hint__text"
@@ -132,7 +142,7 @@ DebugElement {
   >
     <i
       class="kbq kbq-icon kbq-contrast-fade kbq-check-s_16"
-      kbq-icon=""
+      style="max-height: 16px;"
     />
     <span
       class="kbq-hint__text"
@@ -159,9 +169,14 @@ exports[`KbqFormField should hide KbqPasswordToggle initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
-    class="kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade kbq-eye_16"
+    class="kbq-password-toggle"
     style="visibility: visible;"
-    tabindex="0"
-  />,
+  >
+    <i
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      tabindex="0"
+    />
+    
+  </kbq-password-toggle>,
 }
 `;

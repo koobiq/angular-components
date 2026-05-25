@@ -71,7 +71,7 @@ type ExampleAction = {
                     @for (action of actions; track action.id) {
                         @if (hiddenItemIDs.has(action.id)) {
                             <button kbq-dropdown-item (click)="onAction(action)">
-                                <i kbq-icon [class]="action.icon"></i>
+                                <i [kbq-icon]="action.icon"></i>
                                 {{ action.id }}
                             </button>
                         }

@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { SimpleChanges } from '@angular/core';
@@ -57,6 +58,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // (undocumented)
     small: boolean;
     protected svgIcon: boolean;
+    protected readonly svgIconName: ReplaySubject<string | undefined>;
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)

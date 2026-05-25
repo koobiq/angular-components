@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -41,9 +40,9 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
 
 @Component({
     selector: 'kbq-password-hint',
-    imports: [NgClass, KbqIconModule],
+    imports: [KbqIconModule],
     template: `
-        <i class="kbq-password-hint__icon" kbq-icon="" [ngClass]="icon" [color]="iconColor"></i>
+        <i class="kbq-password-hint__icon" [kbq-icon]="icon" [color]="iconColor"></i>
 
         <span class="kbq-hint__text">
             <ng-content />

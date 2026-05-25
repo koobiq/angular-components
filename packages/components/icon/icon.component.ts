@@ -47,10 +47,14 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     protected name = 'KbqIcon';
 
-    /** True when icon is being rendered as inline SVG. */
+    /**
+     * True when icon is being rendered as inline SVG.
+     * @docs-private
+     */
     protected svgIcon = false;
 
-    private readonly svgIconName = new ReplaySubject<string | undefined>(1);
+    /** @docs-private */
+    protected readonly svgIconName = new ReplaySubject<string | undefined>(1);
 
     getHostElement() {
         return this.elementRef.nativeElement;

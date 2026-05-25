@@ -30,7 +30,10 @@
             <kbq-list-selection #listSelection [autoSelect]="false" [ngModel]="data.value?.name">
                 <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">
                     {{ localeData.datePipe?.customPeriod }}
-                    <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
+                    <!-- prevents [kbq-icon] from matching icon slot in kbq-list-option, keeping chevron after label text -->
+                    <ng-container>
+                        <i kbq-icon="kbq-chevron-right_16" color="contrast-fade"></i>
+                    </ng-container>
                 </kbq-list-option>
 
                 @for (item of values; track item) {
