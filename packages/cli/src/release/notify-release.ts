@@ -6,17 +6,19 @@ const { green, red, cyan } = chalk;
 type MattermostConfig = {
     url: string;
     channel: string;
+    username: string;
 };
 
 function getMattermostConfig(): MattermostConfig | null {
     const url = process.env['MATTERMOST_WEBHOOK_URL'];
     const channel = process.env['MATTERMOST_CHANNEL'];
+    const username = process.env['MATTERMOST_USERNAME'];
 
-    if (!url || !channel) {
+    if (!url || !channel || !username) {
         return null;
     }
 
-    return { url, channel };
+    return { url, channel, username };
 }
 
 async function sendNotification(url: string, body: object): Promise<void> {
@@ -27,7 +29,7 @@ async function sendNotification(url: string, body: object): Promise<void> {
         body: JSON.stringify(body)
     };
 
-    console.info(cyan('POST notification:', { url, headers, body: JSON.stringify(body) }));
+    console.info(cyan('POST notification:'), { headers, body: JSON.stringify(body) });
 
     const response = await fetch(url, requestOptions);
 
@@ -66,8 +68,7 @@ export async function notify(releaseData: ChangelogReleaseNotes): Promise<void> 
 
     const body = {
         channel: `${config.channel}`,
-        username: 'Wall-e',
-        short: false,
+        username: `${config.username}`,
         text: `${releaseData.releaseTitle}\n${releaseData.releaseNotes}`
     };
 
