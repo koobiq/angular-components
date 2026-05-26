@@ -18,13 +18,13 @@ import { DestroyRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { FocusKeyManager } from '@koobiq/components/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@koobiq/components/icon';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
@@ -259,17 +259,8 @@ export class KbqTreeModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTreeModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof i2.KbqIconModule, typeof i1.KbqActionContainer, typeof i3.KbqTreeNodeOutlet, typeof i4.KbqTreeNodeDef, typeof i5.KbqTreeNode, typeof i6.KbqTreeNodePadding, typeof i7.KbqTree, typeof i8.KbqTreeSelection, typeof i9.KbqTreeOption, typeof i10.KbqTreeNodeToggleComponent, typeof i10.KbqTreeNodeToggleDirective], [typeof i3.KbqTreeNodeOutlet, typeof i4.KbqTreeNodeDef, typeof i5.KbqTreeNode, typeof i6.KbqTreeNodePadding, typeof i7.KbqTree, typeof i8.KbqTreeSelection, typeof i9.KbqTreeOption, typeof i10.KbqTreeNodeToggleComponent, typeof i10.KbqTreeNodeToggleDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof i2.KbqIconModule, typeof i1.KbqActionContainer, typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective], [typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective]>;
 }
 
 // @public (undocumented)

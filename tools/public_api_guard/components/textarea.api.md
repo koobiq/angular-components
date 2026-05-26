@@ -104,10 +104,8 @@ export class KbqTextareaModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextareaModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTextareaModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqTextarea], [typeof i3.KbqTextarea, typeof i4.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTextareaModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof KbqTextarea], [typeof KbqTextarea, typeof i4.KbqFormFieldModule]>;
 }
 
 // (No @packageDocumentation comment for this package)

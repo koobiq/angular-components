@@ -48,10 +48,8 @@ export class KbqSplitButtonModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitButtonModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitButtonModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitButtonModule, never, [typeof i1.KbqSplitButton], [typeof i1.KbqSplitButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitButtonModule, never, [typeof KbqSplitButton], [typeof KbqSplitButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -13,15 +13,15 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqFormFieldRef } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { SimpleChanges } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
@@ -40,7 +40,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
-    protected readonly formField: KbqFormFieldRef | null;
+    protected readonly formField: _koobiq_components_core.KbqFormFieldRef | null;
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -57,6 +57,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // (undocumented)
     small: boolean;
     protected svgIcon: boolean;
+    protected readonly svgIconName: ReplaySubject<string | undefined>;
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
@@ -70,7 +71,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     constructor();
     get disabled(): boolean;
     set disabled(value: boolean);
-    readonly disabledSignal: WritableSignal<boolean>;
+    readonly disabledSignal: i0.WritableSignal<boolean>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
@@ -114,12 +115,8 @@ export class KbqIconModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqIconModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof KbqIcon, typeof KbqIconButton, typeof KbqIconItem], [typeof KbqIcon, typeof KbqIconButton, typeof KbqIconItem]>;
 }
 
 // @public (undocumented)

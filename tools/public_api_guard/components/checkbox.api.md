@@ -100,11 +100,8 @@ export class KbqCheckboxModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckboxModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCheckboxModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof i2.KbqCheckbox, typeof i3.KbqCheckboxRequiredValidator], [typeof i2.KbqCheckbox, typeof i3.KbqCheckboxRequiredValidator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator], [typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator]>;
 }
 
 // @public

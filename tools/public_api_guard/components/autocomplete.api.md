@@ -4,7 +4,7 @@
 
 ```ts
 
-import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
+import { ActiveDescendantKeyManager } from '@koobiq/components/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -80,6 +80,8 @@ export class KbqAutocomplete implements AfterContentInit {
     set isOpen(value: boolean);
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
+    static ngAcceptInputType_panelMinWidth: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     onKeydown(event: KeyboardEvent): any;
@@ -94,6 +96,7 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly optionSelected: EventEmitter<KbqAutocompleteSelectedEvent>;
     // (undocumented)
     panel: ElementRef;
+    panelMinWidth: number;
     panelWidth: string | number;
     // (undocumented)
     setScrollTop(scrollTop: number): void;
@@ -103,7 +106,7 @@ export class KbqAutocomplete implements AfterContentInit {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
 }
@@ -127,12 +130,8 @@ export class KbqAutocompleteModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof i4.KbqAutocomplete, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter], [typeof i4.KbqAutocomplete, typeof i1.KbqOptionModule, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
 }
 
 // @public
@@ -184,8 +183,6 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     onInputBlur: (event: FocusEvent) => boolean;
     onTouched: () => void;
     open(): void;
-    // @deprecated (undocumented)
-    openPanel(): void;
     // (undocumented)
     readonly optionSelections: Observable<KbqOptionSelectionChange>;
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null>;

@@ -47,10 +47,8 @@ export class KbqProgressSpinnerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinnerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressSpinnerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof i2.NgStyle, typeof i3.KbqProgressSpinner, typeof i3.KbqProgressSpinnerText, typeof i3.KbqProgressSpinnerCaption], [typeof i3.KbqProgressSpinner, typeof i3.KbqProgressSpinnerText, typeof i3.KbqProgressSpinnerCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof i2.NgStyle, typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption], [typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption]>;
 }
 
 // @public (undocumented)

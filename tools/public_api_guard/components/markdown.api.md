@@ -11,7 +11,6 @@ import { MarkedOptions } from 'marked';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export const CLASS_PREFIX: string;
@@ -27,7 +26,7 @@ export class KbqMarkdown implements OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    protected resultHtml: WritableSignal<SafeHtml | null>;
+    protected resultHtml: i0.WritableSignal<SafeHtml | null>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqMarkdown, "kbq-markdown", never, { "markdownText": { "alias": "markdownText"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -43,10 +42,8 @@ export class KbqMarkdownModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMarkdownModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqMarkdownModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqMarkdownModule, never, [typeof i1.KbqMarkdown], [typeof i1.KbqMarkdown]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqMarkdownModule, never, [typeof KbqMarkdown], [typeof KbqMarkdown]>;
 }
 
 // @public

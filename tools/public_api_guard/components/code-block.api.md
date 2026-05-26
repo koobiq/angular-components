@@ -7,11 +7,14 @@
 import { AfterViewInit } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { EventEmitter } from '@angular/core';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import { HLJSApi } from 'highlight.js';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
@@ -21,6 +24,16 @@ export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE: InjectionToken<string>;
 
 // @public
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_NAME: InjectionToken<string>;
+
+// @public
+export const KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG: InjectionToken<Partial<{
+    core: () => Promise<{
+        default: HLJSApi;
+    }>;
+    languages: Record<string, () => Promise<{
+        default: LanguageFn;
+    }>>;
+}>>;
 
 // @public
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLocaleConfiguration>;
@@ -84,7 +97,9 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
+    // @deprecated
     readonly scrollableCodeContent: CdkScrollable;
+    scrollTo(options: ExtendedScrollToOptions): void;
     softWrap: boolean;
     readonly softWrapChange: EventEmitter<boolean>;
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
@@ -114,19 +129,32 @@ export type KbqCodeBlockFile = {
 
 // @public
 export class KbqCodeBlockHighlight {
-    constructor();
     set file(file: KbqCodeBlockFile);
     // (undocumented)
     static ngAcceptInputType_singleLine: unknown;
     // (undocumented)
     static ngAcceptInputType_startFrom: unknown;
+    readonly pending: i0.Signal<boolean>;
     singleLine: boolean;
     startFrom: number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", never, { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", ["kbqCodeBlockHighlight"], { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockHighlight, never>;
 }
+
+// @public
+export type KbqCodeBlockHighlightJsConfig = Partial<{
+    core: () => Promise<{
+        default: HLJSApi;
+    }>;
+    languages: Record<string, () => Promise<{
+        default: LanguageFn;
+    }>>;
+}>;
+
+// @public
+export const kbqCodeBlockHighlightJsConfigProvider: (options: KbqCodeBlockHighlightJsConfig) => Provider;
 
 // @public
 export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqCodeBlockLocaleConfiguration) => Provider;
@@ -137,10 +165,8 @@ export class KbqCodeBlockModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCodeBlockModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent], [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent], [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent]>;
 }
 
 // @public
@@ -150,9 +176,6 @@ export class KbqCodeBlockTabLinkContent {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkContent, never>;
 }
-
-// @public @deprecated (undocumented)
-export type KbqCodeFile = KbqCodeBlockFile;
 
 // @public
 export type KbqTabLinkTemplateContext = {

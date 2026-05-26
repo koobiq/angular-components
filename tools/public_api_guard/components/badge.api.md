@@ -97,10 +97,8 @@ export class KbqBadgeModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadgeModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqBadgeModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqBadge, typeof i3.KbqBadgeCaption, typeof i3.KbqBadgeCssStyler], [typeof i3.KbqBadge, typeof i3.KbqBadgeCaption, typeof i3.KbqBadgeCssStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler], [typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler]>;
 }
 
 // @public (undocumented)

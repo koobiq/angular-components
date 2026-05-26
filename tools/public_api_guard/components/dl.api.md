@@ -45,10 +45,8 @@ export class KbqDlModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDlModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqDlComponent, typeof i3.KbqDtComponent, typeof i3.KbqDdComponent], [typeof i3.KbqDlComponent, typeof i3.KbqDtComponent, typeof i3.KbqDdComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent], [typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent]>;
 }
 
 // @public (undocumented)

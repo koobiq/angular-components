@@ -98,6 +98,11 @@
                             "apps/docs/src/main.scss"
                         ],
                         "scripts": [],
+                        "allowedCommonJsDependencies": [
+                            "@messageformat/core",
+                            "luxon",
+                            "path-normalize"
+                        ],
                         "namedChunks": true,
                         "browser": "apps/docs/src/main.ts",
                         "server": "apps/docs/src/main.server.ts",

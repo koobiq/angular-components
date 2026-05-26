@@ -10,7 +10,6 @@ import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { ApplicationRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
@@ -21,7 +20,7 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@koobiq/components/icon';
 import * as i3 from '@angular/common';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -41,11 +40,11 @@ import { ViewContainerRef } from '@angular/core';
 // @public
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
 
-// @public (undocumented)
-export type DropdownPositionX = 'before' | 'after';
+// @public @deprecated (undocumented)
+export type DropdownPositionX = KbqDropdownPositionX;
 
-// @public (undocumented)
-export type DropdownPositionY = 'above' | 'below';
+// @public @deprecated (undocumented)
+export type DropdownPositionY = KbqDropdownPositionY;
 
 // @public (undocumented)
 export const fadeInItems: AnimationTriggerMetadata;
@@ -112,15 +111,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
-    setPositionClasses(posX?: DropdownPositionX, posY?: DropdownPositionY): void;
+    setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
     templateRef: TemplateRef<any>;
     // (undocumented)
     triggerWidth: string;
-    get xPosition(): DropdownPositionX;
-    set xPosition(value: DropdownPositionX);
-    get yPosition(): DropdownPositionY;
-    set yPosition(value: DropdownPositionY);
+    get xPosition(): KbqDropdownPositionX;
+    set xPosition(value: KbqDropdownPositionX);
+    get yPosition(): KbqDropdownPositionY;
+    set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
@@ -135,7 +134,7 @@ export const kbqDropdownAnimations: {
 
 // @public
 export class KbqDropdownContent implements OnDestroy {
-    constructor(template: TemplateRef<any>, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef);
+    constructor(template: TemplateRef<any>, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef);
     attach(context?: any): void;
     attached: Subject<void>;
     detach(): void;
@@ -155,8 +154,8 @@ export interface KbqDropdownDefaultOptions {
     hasBackdrop: boolean;
     overlapTriggerX: boolean;
     overlapTriggerY: boolean;
-    xPosition: DropdownPositionX;
-    yPosition: DropdownPositionY;
+    xPosition: KbqDropdownPositionX;
+    yPosition: KbqDropdownPositionY;
 }
 
 // @public
@@ -204,13 +203,8 @@ export class KbqDropdownModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDropdownModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent], [typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownStaticContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent]>;
 }
 
 // @public
@@ -238,16 +232,22 @@ export interface KbqDropdownPanel {
     // (undocumented)
     resetActiveItem(): void;
     // (undocumented)
-    setPositionClasses?(x: DropdownPositionX, y: DropdownPositionY): void;
+    setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
     templateRef: TemplateRef<any>;
     // (undocumented)
     triggerWidth?: string;
     // (undocumented)
-    xPosition: DropdownPositionX;
+    xPosition: KbqDropdownPositionX;
     // (undocumented)
-    yPosition: DropdownPositionY;
+    yPosition: KbqDropdownPositionY;
 }
+
+// @public
+export type KbqDropdownPositionX = 'before' | 'after' | 'center';
+
+// @public
+export type KbqDropdownPositionY = 'above' | 'below';
 
 // @public (undocumented)
 export class KbqDropdownStaticContent {

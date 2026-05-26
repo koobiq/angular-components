@@ -18,11 +18,11 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqReadStateDirective } from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
-import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
+import * as rxjs from 'rxjs';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
@@ -163,11 +163,8 @@ export class KbqToastModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqToastModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, never, [typeof i1_2.KbqToastComponent, typeof i1_2.KbqToastCloseButton, typeof i2.KbqToastContainerComponent], [typeof i1_2.KbqToastComponent, typeof i1_2.KbqToastCloseButton, typeof i2.KbqToastContainerComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, never, [typeof KbqToastComponent, typeof KbqToastCloseButton, typeof KbqToastContainerComponent], [typeof KbqToastComponent, typeof KbqToastCloseButton, typeof KbqToastContainerComponent]>;
 }
 
 // @public (undocumented)
@@ -188,7 +185,7 @@ export enum KbqToastPosition {
     TOP_RIGHT = "top-right"
 }
 
-// @public (undocumented)
+// @public
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
     constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, ngZone: NgZone, toastFactory: any, toastConfig: KbqToastConfig);
     // (undocumented)
@@ -218,7 +215,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     // (undocumented)
     get templates(): EmbeddedViewRef<T>[];
     // (undocumented)
-    timer: Observable<number>;
+    timer: rxjs.Observable<number>;
     // (undocumented)
     get toasts(): ComponentRef<T>[];
     // (undocumented)

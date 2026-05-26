@@ -106,10 +106,8 @@ export class KbqToggleModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqToggleModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1.A11yModule, typeof i2.KbqToggleComponent], [typeof i2.KbqToggleComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1.A11yModule, typeof KbqToggleComponent], [typeof KbqToggleComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)
