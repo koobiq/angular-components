@@ -316,16 +316,15 @@ export class E2eIconStateAndStyle {
                 </div>
 
                 <div style="height: 80px">
-                    <kbq-navbar>
+                    <kbq-vertical-navbar class="kbq-hovered">
                         <kbq-navbar-container>
                             <kbq-navbar-item>
                                 <i kbq-icon="kbq-diamond_16"></i>
                                 <kbq-navbar-title>Issues</kbq-navbar-title>
                             </kbq-navbar-item>
-
-                            <kbq-navbar-toggle />
                         </kbq-navbar-container>
-                    </kbq-navbar>
+                        <button kbq-navbar-toggle></button>
+                    </kbq-vertical-navbar>
                 </div>
 
                 <div>
