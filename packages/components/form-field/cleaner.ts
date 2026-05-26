@@ -14,10 +14,10 @@ import { KbqIconButton } from '@koobiq/components/icon';
     styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    exportAs: 'kbqCleaner',
     host: {
         class: 'kbq-cleaner'
-    }
+    },
+    exportAs: 'kbqCleaner'
 })
 export class KbqCleaner extends KbqIconButton {
     constructor() {

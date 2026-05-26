@@ -12,16 +12,6 @@ import {
 @Component({
     selector: 'code-block-with-tabs-and-shadow-example',
     imports: [KbqCodeBlockModule],
-    providers: [
-        kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
-            languages: {
-                html: () => import('highlight.js/lib/languages/xml'),
-                typescript: () => import('highlight.js/lib/languages/typescript'),
-                css: () => import('highlight.js/lib/languages/css')
-            }
-        })
-    ],
     template: `
         <kbq-code-block
             [lineNumbers
@@ -32,6 +22,16 @@ import {
             [style.height.px]="350"
         />
     `,
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                html: () => import('highlight.js/lib/languages/xml'),
+                typescript: () => import('highlight.js/lib/languages/typescript'),
+                css: () => import('highlight.js/lib/languages/css')
+            }
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {

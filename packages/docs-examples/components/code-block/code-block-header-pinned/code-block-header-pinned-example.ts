@@ -19,14 +19,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqIcon,
         FormsModule
     ],
-    providers: [
-        kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
-            languages: {
-                json: () => import('highlight.js/lib/languages/json')
-            }
-        })
-    ],
     template: `
         <kbq-code-block
             canToggleSoftWrap
@@ -64,6 +56,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             }
         }
     `,
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                json: () => import('highlight.js/lib/languages/json')
+            }
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockHeaderPinnedExample {

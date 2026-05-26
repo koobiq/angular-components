@@ -5,7 +5,6 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
-import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter } from '@koobiq/components/core';
 import { DateFormatter } from '@koobiq/components/core';
@@ -15,8 +14,11 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormGroupDirective } from '@angular/forms';
+import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
@@ -25,7 +27,9 @@ import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -76,21 +80,21 @@ export interface KbqRangeValue<T> {
 // @public (undocumented)
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     constructor();
-    readonly arrow: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly availableTimeRangeTypes: _angular_core.InputSignal<KbqTimeRangeType[]>;
-    readonly defaultRangeValue: _angular_core.InputSignal<KbqRangeValue<T> | undefined>;
+    readonly arrow: InputSignalWithTransform<boolean, unknown>;
+    readonly availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
+    readonly defaultRangeValue: InputSignal<KbqRangeValue<T> | undefined>;
     protected readonly localeConfiguration: WritableSignal<KbqTimeRangeLocaleConfig>;
-    readonly maxDate: _angular_core.InputSignal<T | undefined>;
-    readonly minDate: _angular_core.InputSignal<T | undefined>;
+    readonly maxDate: InputSignal<T | undefined>;
+    readonly minDate: InputSignal<T | undefined>;
     readonly ngControl: NgControl | null;
     // (undocumented)
     ngOnInit(): void;
-    readonly nonNullable: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly normalizedDefaultRangeValue: _angular_core.Signal<{
-        fromTime: T;
-        fromDate: T;
-        toTime: T;
-        toDate: T;
+    readonly nonNullable: InputSignalWithTransform<boolean, unknown>;
+    protected readonly normalizedDefaultRangeValue: Signal<    {
+    fromTime: T;
+    fromDate: T;
+    toTime: T;
+    toDate: T;
     }>;
     onApply(popover: KbqPopoverTrigger): void;
     onCancel(popover: KbqPopoverTrigger): void;
@@ -98,21 +102,21 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     onTouch: () => void;
     // (undocumented)
     onVisibleChange(isVisible: boolean): void;
-    readonly optionTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
+    readonly optionTemplate: InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
     protected readonly popoverSize = PopUpSizes.Medium;
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
     protected readonly rangeEditorControl: FormControl<KbqTimeRangeRange>;
     registerOnChange(fn: (_value: KbqTimeRangeRange) => void): void;
     registerOnTouched(fn: () => void): void;
-    readonly showRangeAsDefault: _angular_core.InputSignal<boolean>;
-    readonly titleTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeCustomizableTitleContext> | undefined>;
+    readonly showRangeAsDefault: InputSignal<boolean>;
+    readonly titleTemplate: InputSignal<TemplateRef<KbqTimeRangeCustomizableTitleContext> | undefined>;
     protected readonly titleValue: WritableSignal<KbqTimeRangeRange | null>;
-    readonly valueCorrected: _angular_core.OutputEmitterRef<KbqTimeRangeRange>;
+    readonly valueCorrected: OutputEmitterRef<KbqTimeRangeRange>;
     writeValue(value: KbqTimeRangeRange | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRange<any>, "kbq-time-range", never, { "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "defaultRangeValue": { "alias": "defaultRangeValue"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; "optionTemplate": { "alias": "optionTemplate"; "required": false; "isSignal": true; }; "arrow": { "alias": "arrow"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": false; "isSignal": true; }; "nonNullable": { "alias": "nonNullable"; "required": false; "isSignal": true; }; }, { "valueCorrected": "valueCorrected"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRange<any>, "kbq-time-range", never, { "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "defaultRangeValue": { "alias": "defaultRangeValue"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; "optionTemplate": { "alias": "optionTemplate"; "required": false; "isSignal": true; }; "arrow": { "alias": "arrow"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": false; "isSignal": true; }; "nonNullable": { "alias": "nonNullable"; "required": false; "isSignal": true; }; }, { "valueCorrected": "valueCorrected"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimeRange<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRange<any>, never>;
 }
 
 // @public
@@ -129,35 +133,35 @@ export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleCont
 // @public
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     constructor();
-    readonly availableTimeRangeTypes: _angular_core.InputSignal<KbqTimeRangeType[]>;
+    readonly availableTimeRangeTypes: InputSignal<KbqTimeRangeType[]>;
     // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
     protected readonly form: FormGroup<FormValue<T>>;
-    protected readonly isRangeVisible: _angular_core.Signal<boolean>;
+    protected readonly isRangeVisible: Signal<boolean>;
     // (undocumented)
-    readonly localeConfiguration: _angular_core.InputSignal<KbqTimeRangeLocaleConfig>;
-    readonly maxDate: _angular_core.InputSignal<T | null>;
-    readonly minDate: _angular_core.InputSignal<T | null>;
+    readonly localeConfiguration: InputSignal<KbqTimeRangeLocaleConfig>;
+    readonly maxDate: InputSignal<T | null>;
+    readonly minDate: InputSignal<T | null>;
     // (undocumented)
     ngOnInit(): void;
     onChange: (_value: KbqTimeRangeRange) => void;
     onTouch: () => void;
-    readonly optionTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
+    readonly optionTemplate: InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
     // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point index.d.ts
     protected readonly rangeStateMatcher: RangeErrorStateMatcher;
-    readonly rangeValue: _angular_core.InputSignal<Required<KbqRangeValue<T>>>;
+    readonly rangeValue: InputSignal<Required<KbqRangeValue<T>>>;
     registerOnChange(fn: (value: KbqTimeRangeRange) => void): void;
     registerOnTouched(fn: () => void): void;
     // (undocumented)
-    readonly showRangeAsDefault: _angular_core.InputSignal<boolean>;
+    readonly showRangeAsDefault: InputSignal<boolean>;
     protected readonly timepickerFormat = TimeFormats.HHmmss;
-    protected readonly timepickerList: _angular_core.Signal<readonly KbqTimepicker<T>[]>;
-    protected readonly timeRangeTypesWithoutRange: _angular_core.Signal<KbqTimeRangeOptionContext[]>;
+    protected readonly timepickerList: Signal<readonly KbqTimepicker<T>[]>;
+    protected readonly timeRangeTypesWithoutRange: Signal<KbqTimeRangeOptionContext[]>;
     validate(): ValidationErrors | null;
     writeValue(value?: KbqTimeRangeRange): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRangeEditor<any>, "kbq-time-range-editor", never, { "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "rangeValue": { "alias": "rangeValue"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": true; "isSignal": true; }; "localeConfiguration": { "alias": "localeConfiguration"; "required": true; "isSignal": true; }; "optionTemplate": { "alias": "optionTemplate"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRangeEditor<any>, "kbq-time-range-editor", never, { "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "availableTimeRangeTypes": { "alias": "availableTimeRangeTypes"; "required": false; "isSignal": true; }; "rangeValue": { "alias": "rangeValue"; "required": false; "isSignal": true; }; "showRangeAsDefault": { "alias": "showRangeAsDefault"; "required": true; "isSignal": true; }; "localeConfiguration": { "alias": "localeConfiguration"; "required": true; "isSignal": true; }; "optionTemplate": { "alias": "optionTemplate"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimeRangeEditor<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeEditor<any>, never>;
 }
 
 // @public
@@ -166,11 +170,16 @@ export const kbqTimeRangeLocaleConfigurationProvider: (configuration: KbqTimeRan
 // @public (undocumented)
 export class KbqTimeRangeModule {
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimeRangeModule, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeModule, never>;
     // (undocumented)
-    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTimeRangeModule>;
+    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimeRangeModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTimeRangeModule, never, [typeof KbqTimeRange, typeof KbqTimeRangeTitle, typeof KbqTimeRangeEditor, typeof KbqTimeRangeTitlePlaceholder, typeof KbqTimeRangeTitleAsControl], [typeof KbqTimeRange, typeof KbqTimeRangeTitle, typeof KbqTimeRangeEditor, typeof KbqTimeRangeTitlePlaceholder, typeof KbqTimeRangeTitleAsControl]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimeRangeModule, never, [typeof i1.KbqTimeRange, typeof i2.KbqTimeRangeTitle, typeof i3.KbqTimeRangeEditor, typeof i4.KbqTimeRangeTitlePlaceholder, typeof i4.KbqTimeRangeTitleAsControl], [typeof i1.KbqTimeRange, typeof i2.KbqTimeRangeTitle, typeof i3.KbqTimeRangeEditor, typeof i4.KbqTimeRangeTitlePlaceholder, typeof i4.KbqTimeRangeTitleAsControl]>;
 }
 
 // @public
@@ -185,23 +194,23 @@ export type KbqTimeRangeRange = KbqRange & KbqTimeRangeTypeContext;
 // @public
 export class KbqTimeRangeTitle {
     // (undocumented)
-    protected readonly context: _angular_core.Signal<KbqTimeRangeTitleContext | undefined>;
+    protected readonly context: Signal<KbqTimeRangeTitleContext | undefined>;
     // (undocumented)
-    protected readonly formattedDate: _angular_core.Signal<string>;
+    protected readonly formattedDate: Signal<string>;
     // (undocumented)
     protected readonly injector: Injector;
     // (undocumented)
-    readonly localeConfiguration: _angular_core.InputSignal<KbqTimeRangeLocaleConfig>;
+    readonly localeConfiguration: InputSignal<KbqTimeRangeLocaleConfig>;
     // (undocumented)
-    readonly timeRange: _angular_core.InputSignal<KbqTimeRangeRange | null>;
+    readonly timeRange: InputSignal<KbqTimeRangeRange | null>;
     // (undocumented)
-    protected readonly titleContext: _angular_core.Signal<KbqTimeRangeCustomizableTitleContext | undefined>;
+    protected readonly titleContext: Signal<KbqTimeRangeCustomizableTitleContext | undefined>;
     // (undocumented)
-    readonly titleTemplate: _angular_core.InputSignal<TemplateRef<any> | undefined>;
+    readonly titleTemplate: InputSignal<TemplateRef<any> | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRangeTitle, "kbq-time-range-title", never, { "timeRange": { "alias": "timeRange"; "required": true; "isSignal": true; }; "localeConfiguration": { "alias": "localeConfiguration"; "required": true; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRangeTitle, "kbq-time-range-title", never, { "timeRange": { "alias": "timeRange"; "required": true; "isSignal": true; }; "localeConfiguration": { "alias": "localeConfiguration"; "required": true; "isSignal": true; }; "titleTemplate": { "alias": "titleTemplate"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimeRangeTitle, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeTitle, never>;
 }
 
 // @public
@@ -220,9 +229,9 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     stateChanges: Observable<void>;
     value: any;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRangeTitleAsControl, "kbq-time-range-title-as-control", never, {}, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimeRangeTitleAsControl, "kbq-time-range-title-as-control", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimeRangeTitleAsControl, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeTitleAsControl, never>;
 }
 
 // @public
@@ -231,9 +240,9 @@ export type KbqTimeRangeTitleContext = KbqTimeRangeRange & KbqTimeRangeUnits;
 // @public
 export class KbqTimeRangeTitlePlaceholder {
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTimeRangeTitlePlaceholder, "[kbqTimeRangeTitlePlaceholder]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimeRangeTitlePlaceholder, "[kbqTimeRangeTitlePlaceholder]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTimeRangeTitlePlaceholder, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimeRangeTitlePlaceholder, never>;
 }
 
 // @public

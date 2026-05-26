@@ -17,6 +17,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqToggleModule,
         FormsModule
     ],
+    template: `
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
+        <kbq-code-block canToggleSoftWrap [files]="files" [lineNumbers]="lineNumbers" />
+    `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
             core: () => import('highlight.js/lib/core'),
@@ -25,10 +29,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             }
         })
     ],
-    template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
-        <kbq-code-block canToggleSoftWrap [files]="files" [lineNumbers]="lineNumbers" />
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockOverviewExample {

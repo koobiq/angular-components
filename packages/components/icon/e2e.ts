@@ -179,10 +179,6 @@ export class E2eIconStateAndStyle {
         KbqNavbarIcModule,
         KbqTabsModule
     ],
-    providers: [
-        KbqIconRegistry,
-        kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`)
-    ],
     template: `
         <table style="max-width: 120px">
             <tr>
@@ -374,6 +370,10 @@ export class E2eIconStateAndStyle {
             max-width: 660px;
         }
     `,
+    providers: [
+        KbqIconRegistry,
+        kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`)
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-top-l layout-margin-bottom-l layout-column',

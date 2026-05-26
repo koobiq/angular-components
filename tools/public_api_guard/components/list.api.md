@@ -11,13 +11,13 @@ import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/components/core';
+import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@koobiq/components/core';
 import * as i3 from '@koobiq/components/icon';
-import { IFocusableOption } from '@koobiq/components/core';
+import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqLine } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
@@ -81,8 +81,11 @@ export class KbqListModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqListModule>;
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1.A11yModule, typeof i2.KbqPseudoCheckboxModule, typeof i2.KbqLine, typeof i2.KbqOptionModule, typeof i2.KbqActionContainer, typeof i3.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i2.KbqOptionModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1.A11yModule, typeof i2.KbqPseudoCheckboxModule, typeof i2.KbqLine, typeof i2.KbqOptionModule, typeof i2.KbqActionContainer, typeof i3.KbqIconModule, typeof i4.KbqList, typeof i5.KbqListSelection, typeof i4.KbqListItem, typeof i5.KbqListOption, typeof i5.KbqListOptionCaption], [typeof i4.KbqList, typeof i5.KbqListSelection, typeof i4.KbqListItem, typeof i5.KbqListOption, typeof i5.KbqListOptionCaption, typeof i2.KbqOptionModule]>;
 }
 
 // @public

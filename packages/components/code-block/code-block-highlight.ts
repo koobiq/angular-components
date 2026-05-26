@@ -80,10 +80,10 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
  */
 @Directive({
     selector: 'code[kbqCodeBlockHighlight]',
-    exportAs: 'kbqCodeBlockHighlight',
     host: {
         class: 'hljs'
-    }
+    },
+    exportAs: 'kbqCodeBlockHighlight'
 })
 export class KbqCodeBlockHighlight {
     private readonly nativeElement = kbqInjectNativeElement();

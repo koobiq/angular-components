@@ -5,6 +5,9 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
 export class KbqResizable {
@@ -18,9 +21,9 @@ export class KbqResizable {
 // @public
 export class KbqResizer {
     constructor();
-    protected readonly cursor: i0.Signal<"default" | "ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
-    readonly direction: i0.InputSignal<KbqResizerDirection>;
-    readonly sizeChange: i0.OutputEmitterRef<KbqResizerSizeChangeEvent>;
+    protected readonly cursor: Signal<"default" | "ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
+    readonly direction: InputSignal<KbqResizerDirection>;
+    readonly sizeChange: OutputEmitterRef<KbqResizerSizeChangeEvent>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizer, "[kbqResizer]", ["kbqResizer"], { "direction": { "alias": "kbqResizer"; "required": true; "isSignal": true; }; }, { "sizeChange": "sizeChange"; }, never, never, true, never>;
     // (undocumented)
@@ -36,8 +39,10 @@ export class KbqResizerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqResizerModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqResizerModule, never, [typeof KbqResizable, typeof KbqResizer], [typeof KbqResizable, typeof KbqResizer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqResizerModule, never, [typeof i1.KbqResizable, typeof i1.KbqResizer], [typeof i1.KbqResizable, typeof i1.KbqResizer]>;
 }
 
 // @public

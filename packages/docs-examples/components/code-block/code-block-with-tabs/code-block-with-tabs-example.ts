@@ -17,16 +17,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqToggleModule,
         FormsModule
     ],
-    providers: [
-        kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
-            languages: {
-                html: () => import('highlight.js/lib/languages/xml'),
-                typescript: () => import('highlight.js/lib/languages/typescript'),
-                css: () => import('highlight.js/lib/languages/css')
-            }
-        })
-    ],
     template: `
         <kbq-toggle class="layout-margin-right-m layout-margin-bottom-m" [(ngModel)]="hideTabs">Hide tabs</kbq-toggle>
         <kbq-toggle class="layout-margin-right-m" [(ngModel)]="filled">Filled</kbq-toggle>
@@ -42,6 +32,16 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             [lineNumbers]="lineNumbers()"
         />
     `,
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                html: () => import('highlight.js/lib/languages/xml'),
+                typescript: () => import('highlight.js/lib/languages/typescript'),
+                css: () => import('highlight.js/lib/languages/css')
+            }
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithTabsExample {

@@ -1929,7 +1929,7 @@ describe('KbqAutocomplete', () => {
 
         jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 400 } as DOMRect);
 
-        widthFixture.componentInstance.trigger.openPanel();
+        widthFixture.componentInstance.trigger.open();
         widthFixture.detectChanges();
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;

@@ -129,8 +129,10 @@ export class KbqRadioModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqRadioModule>;
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, never, [typeof i1.A11yModule, typeof KbqRadioGroup, typeof KbqRadioButton], [typeof KbqRadioGroup, typeof KbqRadioButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, never, [typeof i1.A11yModule, typeof i2.KbqRadioGroup, typeof i2.KbqRadioButton], [typeof i2.KbqRadioGroup, typeof i2.KbqRadioButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

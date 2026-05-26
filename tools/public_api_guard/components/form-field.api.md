@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
@@ -12,13 +13,19 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqValidationOptions } from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -26,6 +33,8 @@ import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { Validator } from '@angular/forms';
+import { ValidatorFn } from '@angular/forms';
 
 // @public
 export function getKbqFormFieldMissingControlError(): Error;
@@ -90,15 +99,19 @@ export class KbqFieldsetItem {
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
+    // @deprecated (undocumented)
+    canShowStepper: boolean;
     cleaner: KbqCleaner | null;
     clearValue(event: Event): void;
     connectionContainerRef: ElementRef;
-    readonly contentClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
+    readonly contentClass: InputSignal<string | string[] | Set<string> | undefined>;
     control: KbqFormFieldControl<unknown>;
     get disabled(): boolean;
     readonly elementRef: ElementRef<HTMLElement>;
     focus(options?: FocusOptions): void;
     get focusOrigin(): FocusOrigin;
+    // @deprecated (undocumented)
+    focusViaKeyboard(options?: FocusOptions): void;
     getConnectedOverlayOrigin(): ElementRef;
     get hasCleaner(): boolean;
     protected get hasError(): boolean;
@@ -112,11 +125,11 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     get hasStepper(): boolean;
     get hasSuffix(): boolean;
     hint: QueryList<KbqHint>;
-    readonly horizontal: i0.InputSignalWithTransform<boolean | undefined, unknown>;
+    readonly horizontal: InputSignalWithTransform<boolean | undefined, unknown>;
     hovered: boolean;
-    readonly inOverlay: i0.ModelSignal<boolean | undefined>;
+    readonly inOverlay: ModelSignal<boolean | undefined>;
     get invalid(): boolean;
-    readonly labelClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
+    readonly labelClass: InputSignal<string | string[] | Set<string> | undefined>;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -125,7 +138,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly noBorders: i0.InputSignalWithTransform<boolean | undefined, unknown>;
+    readonly noBorders: InputSignalWithTransform<boolean | undefined, unknown>;
     onContainerClick(event: MouseEvent): void;
     onHoverChanged(isHovered: boolean): void;
     onKeyDown(event: KeyboardEvent): void;
@@ -180,8 +193,30 @@ export class KbqFormFieldModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormFieldModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormFieldModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof KbqCleaner, typeof KbqFormField, typeof KbqPrefix, typeof KbqSuffix, typeof KbqPasswordToggle, typeof KbqStepper, typeof KbqLabel, typeof KbqHint, typeof KbqError, typeof KbqReactivePasswordHint, typeof KbqLegend, typeof KbqFieldset, typeof KbqFieldsetItem, typeof KbqPasswordHint, typeof KbqTrim], [typeof KbqCleaner, typeof KbqFormField, typeof KbqPrefix, typeof KbqSuffix, typeof KbqPasswordToggle, typeof KbqStepper, typeof KbqLabel, typeof KbqHint, typeof KbqError, typeof KbqReactivePasswordHint, typeof KbqLegend, typeof KbqFieldset, typeof KbqFieldsetItem, typeof KbqPasswordHint, typeof KbqTrim]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i13.KbqValidateDirective, typeof i2.KbqTrim], [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i13.KbqValidateDirective, typeof i2.KbqTrim]>;
+}
+
+// @public @deprecated
+export class KbqFormFieldWithoutBorders {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFormFieldWithoutBorders, "kbq-form-field[kbqFormFieldWithoutBorders]", ["kbqFormFieldWithoutBorders"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormFieldWithoutBorders, never>;
 }
 
 // @public
@@ -294,8 +329,8 @@ export class KbqPrefix {
 // @public
 export class KbqReactivePasswordHint extends KbqHint {
     constructor();
-    readonly hasError: i0.InputSignalWithTransform<boolean, unknown>;
-    protected readonly icon: i0.Signal<"kbq-check-s_16" | "kbq-xmark-s_16">;
+    readonly hasError: InputSignalWithTransform<boolean, unknown>;
+    protected readonly icon: Signal<"kbq-check-s_16" | "kbq-xmark-s_16">;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqReactivePasswordHint, "kbq-reactive-password-hint", ["kbqReactivePasswordHint"], { "hasError": { "alias": "hasError"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -335,6 +370,38 @@ export class KbqTrim {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTrim, "[kbqInput], [kbqTextarea]", ["KbqTrim"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTrim, [{ attribute: "no-trim"; }, { optional: true; self: true; }]>;
+}
+
+// @public @deprecated (undocumented)
+export class KbqValidateDirective implements AfterContentInit {
+    constructor(formFieldControl: KbqFormFieldControl<any>, rawValidators: Validator[], ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, mcValidation: KbqValidationOptions, cdr: ChangeDetectorRef, parentFormField: KbqFormField | null, elementRef: ElementRef);
+    // (undocumented)
+    get hasNotSubmittedParent(): boolean;
+    // (undocumented)
+    get isFormControl(): boolean;
+    // (undocumented)
+    get isFormControlName(): boolean;
+    // (undocumented)
+    get isNgModel(): boolean;
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    get parent(): NgForm;
+    // (undocumented)
+    rawValidators: Validator[];
+    setMosaicValidation(): void;
+    // (undocumented)
+    setMosaicValidationForFormControl(): void;
+    // (undocumented)
+    setMosaicValidationForModelControl(): void;
+    // (undocumented)
+    setValidState(control: AbstractControl, validator: ValidatorFn): void;
+    // (undocumented)
+    get validationControl(): any;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqValidateDirective, "        input[kbqInput],        input[kbqNumberInput],        input[kbqInputPassword],        input[kbqTimepicker],        input[kbqDatepicker],        textarea[kbqTextarea],        kbq-select,        kbq-tree-select,        kbq-tag-list    ", ["KbqValidate"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqValidateDirective, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; host: true; }, null]>;
 }
 
 // @public (undocumented)

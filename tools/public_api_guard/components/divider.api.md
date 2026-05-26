@@ -9,6 +9,9 @@ import * as i1 from '@angular/common';
 
 // @public (undocumented)
 export class KbqDivider {
+    // @deprecated
+    get inset(): boolean;
+    set inset(value: boolean);
     // (undocumented)
     get paddings(): boolean;
     set paddings(value: boolean);
@@ -16,7 +19,7 @@ export class KbqDivider {
     get vertical(): boolean;
     set vertical(value: boolean);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; }; "paddings": { "alias": "paddings"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; }; "inset": { "alias": "inset"; "required": false; }; "paddings": { "alias": "paddings"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDivider, never>;
 }
@@ -27,8 +30,10 @@ export class KbqDividerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDividerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDividerModule>;
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof i1.CommonModule, typeof KbqDivider], [typeof KbqDivider]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof i1.CommonModule, typeof i2.KbqDivider], [typeof i2.KbqDivider]>;
 }
 
 // (No @packageDocumentation comment for this package)
