@@ -1189,7 +1189,7 @@ type ExampleTableItem = unknown;
         <ag-grid-angular
             kbqAgGridTheme
             kbqAgGridSelectRowsByShiftClick
-            disableCellFocusStyles
+            kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
@@ -1500,10 +1500,10 @@ The full documentation for using the theme is available [in the GitHub repositor
 
 ### Disabling cell focus styles
 
-To disable the focus styles for table cells, add the `disableCellFocusStyles` attribute to `<ag-grid-angular>`:
+To disable the focus styles for table cells, add the `kbqAgGridThemeDisableCellFocusStyles` attribute to `<ag-grid-angular>`:
 
 ```html
-<ag-grid-angular kbqAgGridTheme disableCellFocusStyles />
+<ag-grid-angular kbqAgGridTheme kbqAgGridThemeDisableCellFocusStyles />
 ```
 
 ### Row dragging
@@ -1527,6 +1527,35 @@ The `kbqAgGridCopyByCtrlC` directive allows you to copy selected rows to the cli
 The `kbqAgGridStatusBar` directive adds a customizable panel below the table.
 
 <!-- example(ag-grid-status-bar) -->
+
+### State persistence
+
+Directives save and restore grid state across page reloads.
+
+`LocalStorageStore` is used by default. Switch to `QueryParamsStore` if needed.
+
+| Directive                      | Saves                                     |
+| ------------------------------ | ----------------------------------------- |
+| `kbqAgGridColumnState`         | Sort, column order, visibility, and width |
+| `kbqAgGridFilterState`         | Column filter models                      |
+| `kbqAgGridQuickFilterState`    | Quick filter value                        |
+| `kbqAgGridExternalFilterState` | External filter value                     |
+
+#### Columns
+
+<!-- example(ag-grid-column-state) -->
+
+#### Filters
+
+<!-- example(ag-grid-filter-state) -->
+
+#### Quick filter
+
+<!-- example(ag-grid-quick-filter-state) -->
+
+#### External filter
+
+<!-- example(ag-grid-external-filter-state) -->
 
 ### Custom keyboard shortcuts
 
@@ -1602,7 +1631,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
         <ag-grid-angular
             kbqAgGridTheme
             kbqAgGridSelectRowsByShiftClick
-            disableCellFocusStyles
+            kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
@@ -1892,6 +1921,19 @@ export class AlertOverviewExample {
 #### overview
 
 A menu for switching between applications and platforms.
+
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+The component uses [Scrollbar](/en/components/scrollbar), so its dependencies must be installed:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
 
 <!-- example(app-switcher-overview) -->
 
@@ -2344,6 +2386,8 @@ export class KbqAutocomplete implements AfterContentInit {
     set isOpen(value: boolean);
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
+    static ngAcceptInputType_panelMinWidth: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     onKeydown(event: KeyboardEvent): any;
@@ -2358,6 +2402,7 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly optionSelected: EventEmitter<KbqAutocompleteSelectedEvent>;
     // (undocumented)
     panel: ElementRef;
+    panelMinWidth: number;
     panelWidth: string | number;
     // (undocumented)
     setScrollTop(scrollTop: number): void;
@@ -2367,7 +2412,7 @@ export class KbqAutocomplete implements AfterContentInit {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
 }
@@ -4628,6 +4673,25 @@ npm install highlight.js@^11
 </div>
 </div>
 
+### Configuring highlight.js
+
+By default, the component loads the full `highlight.js` bundle with all languages (~1 MB). To reduce bundle size, use `kbqCodeBlockHighlightJsConfigProvider` and specify only the languages you need:
+
+```typescript
+providers: [
+    kbqCodeBlockHighlightJsConfigProvider({
+        core: () => import('highlight.js/lib/core'),
+        languages: {
+            typescript: () => import('highlight.js/lib/languages/typescript'),
+            css: () => import('highlight.js/lib/languages/css'),
+            html: () => import('highlight.js/lib/languages/xml')
+        }
+    })
+];
+```
+
+Languages are loaded lazily on first use. Note that the `html` language is an alias of `xml` in `highlight.js`, so register `xml` to enable HTML syntax highlighting.
+
 ### Line numbers
 
 Numbering lines is useful for referencing a specific location in the document. Line numbers are disabled by default and can be enabled using the `lineNumbers` attribute.
@@ -4727,12 +4791,16 @@ The address is taken from the `link` field. The link opens in a new tab.
 import { AfterViewInit } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { EventEmitter } from '@angular/core';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import type { HLJSApi } from 'highlight.js';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import type { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -4740,6 +4808,16 @@ export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE: InjectionToken<string>;
 
 // @public
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_NAME: InjectionToken<string>;
+
+// @public
+export const KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG: InjectionToken<Partial<{
+    core: () => Promise<{
+        default: HLJSApi;
+    }>;
+    languages: Record<string, () => Promise<{
+        default: LanguageFn;
+    }>>;
+}>>;
 
 // @public
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLocaleConfiguration>;
@@ -4802,7 +4880,9 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
+    // @deprecated
     readonly scrollableCodeContent: CdkScrollable;
+    scrollTo(options: ExtendedScrollToOptions): void;
     softWrap: boolean;
     readonly softWrapChange: EventEmitter<boolean>;
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
@@ -4832,19 +4912,32 @@ export type KbqCodeBlockFile = {
 
 // @public
 export class KbqCodeBlockHighlight {
-    constructor();
     set file(file: KbqCodeBlockFile);
     // (undocumented)
     static ngAcceptInputType_singleLine: unknown;
     // (undocumented)
     static ngAcceptInputType_startFrom: unknown;
+    readonly pending: Signal<boolean>;
     singleLine: boolean;
     startFrom: number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", never, { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", ["kbqCodeBlockHighlight"], { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockHighlight, never>;
 }
+
+// @public
+export type KbqCodeBlockHighlightJsConfig = Partial<{
+    core: () => Promise<{
+        default: HLJSApi;
+    }>;
+    languages: Record<string, () => Promise<{
+        default: LanguageFn;
+    }>>;
+}>;
+
+// @public
+export const kbqCodeBlockHighlightJsConfigProvider: (options: KbqCodeBlockHighlightJsConfig) => Provider;
 
 // @public
 export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqCodeBlockLocaleConfiguration) => Provider;
@@ -4887,7 +4980,11 @@ export type KbqTabLinkTemplateContext = {
 ```typescript
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    KbqCodeBlockModule
+} from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
@@ -4899,6 +4996,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqCodeBlockModule,
         KbqToggleModule,
         FormsModule
+    ],
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                javascript: () => import('highlight.js/lib/languages/javascript')
+            }
+        })
     ],
     template: `
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
@@ -4924,6 +5029,19 @@ export class CodeBlockOverviewExample {
 #### overview
 
 `KbqContentPanel` - a slide-out side panel that shifts adjacent content. Often used to implement a quick preview mode for entities from a table.
+
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+The component uses [Scrollbar](/en/components/scrollbar), so its dependencies must be installed:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
 
 <!-- example(content-panel-overview) -->
 
@@ -8233,7 +8351,7 @@ export interface KbqValidationOptions {
 
 // @public (undocumented)
 export class KbqVirtualOption extends KbqOptionBase {
-    constructor(value: any, _disabled?: boolean);
+    constructor(value: any, _disabled?: boolean, _viewValue?: string | undefined);
     // (undocumented)
     deselect(): void;
     // (undocumented)
@@ -10308,6 +10426,12 @@ Recursive rendering of an array or object, allowing the creation of nested dropd
 
 <!-- example(dropdown-with-filter) -->
 
+## Horizontal alignment
+
+Use the `xPosition` property to control horizontal alignment of the dropdown panel relative to the trigger. Supported values: `'after'` (default), `'before'`, and `'center'`.
+
+<!-- example(dropdown-x-position) -->
+
 #### api
 
 ## API Report File for "koobiq"
@@ -10353,11 +10477,11 @@ import { ViewContainerRef } from '@angular/core';
 // @public
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
 
-// @public (undocumented)
-export type DropdownPositionX = 'before' | 'after';
+// @public @deprecated (undocumented)
+export type DropdownPositionX = KbqDropdownPositionX;
 
-// @public (undocumented)
-export type DropdownPositionY = 'above' | 'below';
+// @public @deprecated (undocumented)
+export type DropdownPositionY = KbqDropdownPositionY;
 
 // @public (undocumented)
 export const fadeInItems: AnimationTriggerMetadata;
@@ -10424,15 +10548,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
-    setPositionClasses(posX?: DropdownPositionX, posY?: DropdownPositionY): void;
+    setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
     templateRef: TemplateRef<any>;
     // (undocumented)
     triggerWidth: string;
-    get xPosition(): DropdownPositionX;
-    set xPosition(value: DropdownPositionX);
-    get yPosition(): DropdownPositionY;
-    set yPosition(value: DropdownPositionY);
+    get xPosition(): KbqDropdownPositionX;
+    set xPosition(value: KbqDropdownPositionX);
+    get yPosition(): KbqDropdownPositionY;
+    set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
@@ -10467,8 +10591,8 @@ export interface KbqDropdownDefaultOptions {
     hasBackdrop: boolean;
     overlapTriggerX: boolean;
     overlapTriggerY: boolean;
-    xPosition: DropdownPositionX;
-    yPosition: DropdownPositionY;
+    xPosition: KbqDropdownPositionX;
+    yPosition: KbqDropdownPositionY;
 }
 
 // @public
@@ -10550,16 +10674,22 @@ export interface KbqDropdownPanel {
     // (undocumented)
     resetActiveItem(): void;
     // (undocumented)
-    setPositionClasses?(x: DropdownPositionX, y: DropdownPositionY): void;
+    setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
     templateRef: TemplateRef<any>;
     // (undocumented)
     triggerWidth?: string;
     // (undocumented)
-    xPosition: DropdownPositionX;
+    xPosition: KbqDropdownPositionX;
     // (undocumented)
-    yPosition: DropdownPositionY;
+    yPosition: KbqDropdownPositionY;
 }
+
+// @public
+export type KbqDropdownPositionX = 'before' | 'after' | 'center';
+
+// @public
+export type KbqDropdownPositionY = 'above' | 'below';
 
 // @public (undocumented)
 export class KbqDropdownStaticContent {
@@ -10574,6 +10704,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     constructor(overlay: Overlay, elementRef: ElementRef<HTMLElement>, viewContainerRef: ViewContainerRef, scrollStrategy: any, parent: KbqDropdown, dropdownItemInstance: KbqDropdownItem, _dir: Directionality, changeDetectorRef: ChangeDetectorRef, focusMonitor?: FocusMonitor | undefined);
     close(): void;
     data: any;
+    demoteOverlay: boolean;
     get dir(): Direction;
     get dropdown(): KbqDropdownPanel;
     set dropdown(dropdown: KbqDropdownPanel);
@@ -10588,6 +10719,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     isNested(): boolean;
     // (undocumented)
     lastDestroyReason: DropdownCloseReason;
+    // (undocumented)
+    static ngAcceptInputType_demoteOverlay: unknown;
     // (undocumented)
     static ngAcceptInputType_offsetX: unknown;
     // (undocumented)
@@ -10607,7 +10740,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     restoreFocus: boolean;
     toggle(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "demoteOverlay": { "alias": "demoteOverlay"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownTrigger, [null, null, null, null, { optional: true; }, { optional: true; self: true; }, { optional: true; }, null, null]>;
 }
@@ -13455,29 +13588,21 @@ export class FormFieldOverviewExample {}
 
 #### overview
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Note</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+## Font icons (default)
 
-The component requires the [`@koobiq/icons`](https://github.com/koobiq/icons) dependency:
+Uses `@koobiq/icons` CSS font. No providers needed — works out of the box after adding the stylesheet.
+
+Install the dependency and configure `angular.json`:
 
 ```bash
 npm install @koobiq/icons
 ```
 
-</div>
-</div>
-
-After installation, configure `angular.json`:
-
 ```json
 "styles": [
-  "node_modules/@koobiq/icons/fonts/kbq-icons.css",
-  // ...
+  "node_modules/@koobiq/icons/fonts/kbq-icons.css"
 ]
 ```
-
-Usage example:
 
 ```ts
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -13486,15 +13611,69 @@ import { KbqIconModule } from '@koobiq/components/icon';
     imports: [KbqIconModule],
     template: `
         <i kbq-icon="kbq-plus_16"></i>
-        <i kbq-icon="kbq-plus-s_24"></i>
-        <i kbq-icon="kbq-plus_32"></i>
-        <i kbq-icon="kbq-plus_64"></i>
     `
 })
 export class AppComponent {}
 ```
 
 Available icons: [Icons](/en/icons)
+
+---
+
+### SVG icons
+
+SVG icons render inline and support CSS color theming via `currentColor`. Choose one of the approaches below depending on your needs.
+
+#### Sprite file
+
+Best when you have a pre-built SVG sprite and want all icons in a single HTTP request.
+
+```ts
+import { provideHttpClient } from '@angular/common/http';
+import { kbqIconsProvider } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        kbqIconsProvider(
+            { spriteUrl: '/assets/icons/sprite.symbol.svg' },
+            { spriteUrl: '/assets/brand/sprite.symbol.svg', namespace: 'brand' }
+        )
+    ]
+});
+
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="plus_16"></i>
+        <i kbq-icon="brand:logo_24"></i>
+    `
+})
+export class AppComponent {}
+```
+
+#### URL resolver
+
+Best when icons live at predictable URLs and you want them fetched on demand (no sprite required).
+
+```ts
+import { provideHttpClient } from '@angular/common/http';
+import { kbqIconsResolverProvider } from '@koobiq/components/icon';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideHttpClient(),
+        kbqIconsResolverProvider((name) => `/assets/icons/${name}.svg`)
+    ]
+});
+
+@Component({
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="plus_16"></i>
+    `
+})
+export class AppComponent {}
+```
 
 #### api
 
@@ -13507,20 +13686,37 @@ Available icons: [Icons](/en/icons)
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldRef } from '@koobiq/components/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { SimpleChanges } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
+// @public
+export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
+
 // @public (undocumented)
-export class KbqIcon extends KbqColorDirective implements AfterContentInit {
+export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
+
+// @public (undocumented)
+export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     // (undocumented)
     autoColor: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -13535,7 +13731,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    protected readonly registry: KbqIconRegistry | null;
+    // (undocumented)
     small: boolean;
+    protected svgIcon: boolean;
+    protected readonly svgIconName: ReplaySubject<string | undefined>;
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
@@ -13600,6 +13802,48 @@ export class KbqIconModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
 }
+
+// @public (undocumented)
+export interface KbqIconOptions {
+    // (undocumented)
+    viewBox?: string;
+    // (undocumented)
+    withCredentials?: boolean;
+}
+
+// @public (undocumented)
+export class KbqIconRegistry {
+    constructor();
+    addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    getNamedSvgIcon(name: string, namespace?: string): Observable<SVGElement>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconRegistry, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqIconRegistry>;
+}
+
+// @public
+export type KbqIconResolver = (name: string) => string | null;
+
+// @public (undocumented)
+export interface KbqIconsConfig {
+    namespace?: string;
+    spriteUrl: string;
+}
+
+// @public
+export function kbqIconsDictProvider(dict: Record<string, string>): Provider;
+
+// @public
+export function kbqIconsProvider(...sprites: KbqIconsConfig[]): Provider;
+
+// @public
+export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider;
 
 // (No @packageDocumentation comment for this package)
 
@@ -13641,20 +13885,37 @@ Icon buttons support overriding internal padding via CSS custom properties.
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldRef } from '@koobiq/components/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { SimpleChanges } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
+// @public
+export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
+
 // @public (undocumented)
-export class KbqIcon extends KbqColorDirective implements AfterContentInit {
+export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
+
+// @public (undocumented)
+export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     // (undocumented)
     autoColor: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -13669,7 +13930,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    protected readonly registry: KbqIconRegistry | null;
+    // (undocumented)
     small: boolean;
+    protected svgIcon: boolean;
+    protected readonly svgIconName: ReplaySubject<string | undefined>;
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
@@ -13734,6 +14001,48 @@ export class KbqIconModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
 }
+
+// @public (undocumented)
+export interface KbqIconOptions {
+    // (undocumented)
+    viewBox?: string;
+    // (undocumented)
+    withCredentials?: boolean;
+}
+
+// @public (undocumented)
+export class KbqIconRegistry {
+    constructor();
+    addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    getNamedSvgIcon(name: string, namespace?: string): Observable<SVGElement>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconRegistry, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqIconRegistry>;
+}
+
+// @public
+export type KbqIconResolver = (name: string) => string | null;
+
+// @public (undocumented)
+export interface KbqIconsConfig {
+    namespace?: string;
+    spriteUrl: string;
+}
+
+// @public
+export function kbqIconsDictProvider(dict: Record<string, string>): Provider;
+
+// @public
+export function kbqIconsProvider(...sprites: KbqIconsConfig[]): Provider;
+
+// @public
+export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider;
 
 // (No @packageDocumentation comment for this package)
 
@@ -13806,20 +14115,37 @@ A backing icon can be used instead of an illustration where you want to attract 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldRef } from '@koobiq/components/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { SimpleChanges } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
+// @public
+export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
+
 // @public (undocumented)
-export class KbqIcon extends KbqColorDirective implements AfterContentInit {
+export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
+
+// @public (undocumented)
+export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     // (undocumented)
     autoColor: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -13834,7 +14160,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    protected readonly registry: KbqIconRegistry | null;
+    // (undocumented)
     small: boolean;
+    protected svgIcon: boolean;
+    protected readonly svgIconName: ReplaySubject<string | undefined>;
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
@@ -13899,6 +14231,48 @@ export class KbqIconModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
 }
+
+// @public (undocumented)
+export interface KbqIconOptions {
+    // (undocumented)
+    viewBox?: string;
+    // (undocumented)
+    withCredentials?: boolean;
+}
+
+// @public (undocumented)
+export class KbqIconRegistry {
+    constructor();
+    addSvgIcon(name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconInNamespace(namespace: string, name: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconLiteral(name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void;
+    addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void;
+    addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    getNamedSvgIcon(name: string, namespace?: string): Observable<SVGElement>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconRegistry, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqIconRegistry>;
+}
+
+// @public
+export type KbqIconResolver = (name: string) => string | null;
+
+// @public (undocumented)
+export interface KbqIconsConfig {
+    namespace?: string;
+    spriteUrl: string;
+}
+
+// @public
+export function kbqIconsDictProvider(dict: Record<string, string>): Provider;
+
+// @public
+export function kbqIconsProvider(...sprites: KbqIconsConfig[]): Provider;
+
+// @public
+export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider;
 
 // (No @packageDocumentation comment for this package)
 
@@ -14114,6 +14488,7 @@ export class KbqInlineEdit {
     protected onOverlayOutsideClick($event: Event): void;
     protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
     protected overlayOrigin: HTMLElement;
+    readonly overlayPanelClass: InputSignal<string | string[]>;
     protected readonly overlayWidth: WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
     protected readonly regionItems: Signal<readonly KbqFocusRegionItem[]>;
@@ -14130,7 +14505,7 @@ export class KbqInlineEdit {
     readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
     protected readonly viewContainer: Signal<ElementRef<HTMLElement>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "overlayPanelClass": { "alias": "overlayPanelClass"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
 }
@@ -16151,37 +16526,30 @@ export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<
 ```typescript
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
  * @title Modal
  */
 @Component({
     selector: 'modal-overview-example',
-    imports: [
-        KbqModalModule,
-        KbqButtonModule
-    ],
+    imports: [KbqButtonModule],
     template: `
         <button kbq-button (click)="showConfirmModal()">Open Confirm Modal</button>
-
         <button kbq-button (click)="showSuccessModal()">Open Success Modal</button>
-
         <button kbq-button (click)="showDeleteModal()">Open Delete Modal</button>
     `,
-    styles: [
-        `
-            :host {
-                display: flex;
-                flex-direction: column;
-                width: 200px;
-            }
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+        }
 
-            button:not(:last-child) {
-                margin-bottom: var(--kbq-size-m);
-            }
-        `
-    ],
+        button:not(:last-child) {
+            margin-bottom: var(--kbq-size-m);
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalOverviewExample {
@@ -16385,7 +16753,8 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get collapsed(): boolean;
     set collapsed(value: boolean);
-    collapsedText: string;
+    get collapsedText(): string;
+    set collapsedText(value: string);
     get croppedText(): string;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -16524,6 +16893,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     get trigger(): string;
     set trigger(value: string);
+    // (undocumented)
+    updateDropdown(): void;
     // (undocumented)
     updateTooltip(): void;
     // (undocumented)
@@ -16707,6 +17078,19 @@ export class NavbarOverviewExample {
 #### overview
 
 Notification center — a panel for application notifications.
+
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+The component uses [Scrollbar](/en/components/scrollbar), so its dependencies must be installed:
+
+```bash
+npm install overlayscrollbars@2.7.3
+```
+
+</div>
+</div>
 
 <!-- example(notification-center-overview) -->
 
@@ -19429,6 +19813,8 @@ To make navigation easier, selected items can be pinned to the top of the list.
 
 Add `cdk-virtual-scroll-viewport` to your component template to display only visible elements and improve performance.
 
+When option values are objects, provide a `virtualOptionFactory` that maps a value to a `KbqVirtualOption` carrying the display label (and optionally a per-value `disabled` state). The factory is used whenever the selected value's `KbqOption` is not currently rendered — virtual scroll recycled it out of the viewport, or the value was set programmatically before its option was rendered. The same `KbqVirtualOption` powers the trigger label in single mode and tag labels in multiple mode.
+
 <!-- example(select-virtual-scroll) -->
 
 ### Layering
@@ -19463,6 +19849,7 @@ import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
@@ -19500,6 +19887,7 @@ import { KbqSelectSearchEmptyResult } from '@koobiq/components/core';
 import { KbqSelectTrigger } from '@koobiq/components/core';
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqVirtualOption } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -19527,21 +19915,17 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
 
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(option: KbqOption);
+    constructor();
+    // (undocumented)
+    handleElementEnter(): void;
+    // (undocumented)
+    handleElementLeave(): void;
     // (undocumented)
     get isOverflown(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    onBlur(): void;
-    // (undocumented)
-    onFocus(): void;
-    // (undocumented)
-    onMouseEnter(): void;
-    // (undocumented)
-    onMouseLeave(): void;
     // (undocumented)
     get textElement(): HTMLElement;
     // (undocumented)
@@ -19623,6 +20007,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     static ngAcceptInputType_panelMinWidth: unknown;
     // (undocumented)
+    static ngAcceptInputType_scrolledToBottomOffset: unknown;
+    // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
     ngAfterContentInit(): void;
     // (undocumented)
@@ -19672,6 +20058,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get required(): boolean;
     set required(value: boolean);
     resetSearch(): void;
+    readonly scrolledToBottom: EventEmitter<void>;
+    scrolledToBottomOffset: number;
     scrollStrategy: any;
     search: KbqSelectSearch;
     searchEmpty: KbqSelectSearchEmptyResult;
@@ -19704,10 +20092,12 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get value(): any;
     set value(newValue: any);
     readonly valueChange: EventEmitter<any>;
+    virtualOptionFactory?: (value: any) => KbqVirtualOption;
+    virtualScrollViewport?: CdkVirtualScrollViewport;
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["footer", "cdkVirtualForOf", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "searchEmpty", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "search", "searchEmpty", "options", "optionGroups"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
 }
@@ -21741,7 +22131,9 @@ Tags can be selected in several ways:
 - `Space` when the tag is focused.
 - Programmatic selection through the component [API](/en/components/tag/api).
 
-The selection option is configured using the `selectable` attribute (enabled by default).
+The selection option is configured using the `selectable` attribute (disabled by default).
+
+<!-- example(tag-selectable) -->
 
 ### Editing
 
@@ -24658,7 +25050,8 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ],
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
@@ -25069,7 +25462,6 @@ The menu is 640 pixels wide and grows to match the field size if the field is la
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
@@ -25141,15 +25533,15 @@ export class KbqTimezoneOption extends KbqOption {
 
 // @public (undocumented)
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, option: KbqTimezoneOption);
+    constructor();
+    // (undocumented)
+    handleElementEnter(): void;
+    // (undocumented)
+    handleElementLeave(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    onMouseEnter(): void;
-    // (undocumented)
-    onMouseLeave(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTimezoneOptionTooltip, "kbq-timezone-option", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -25238,7 +25630,9 @@ import {
     KbqTimezoneModule,
     KbqTimezoneZone
 } from '@koobiq/components/timezone';
-import { timezones } from '../mock';
+
+// prettier-ignore
+const timezones=[{offset:"02:00:00",associatedZones:[],id:"Europe/Kaliningrad",city:"Kaliningrad",countryCode:"RU",countryName:"Russia"},{offset:"03:00:00",associatedZones:[{id:"Europe/Kirov",city:"Kirov",countryCode:"RU",countryName:"Russia"},{id:"Europe/Volgograd",city:"Volgograd",countryCode:"RU",countryName:"Russia"},{id:"Europe/Simferopol",city:"Simferopol",countryCode:"RU",countryName:"Russia"},{id:"Europe/Minsk",city:"Minsk",countryCode:"BY",countryName:"Belarus"},{id:"Europe/Kaliningrad",city:"Kaliningrad",countryCode:"RU",countryName:"Russia"},{id:"Europe/Moscow",city:"Saint Petersburg",countryCode:"RU",countryName:"Russia"},{id:"Europe/Moscow",city:"Nizhny Novgorod",countryCode:"RU",countryName:"Russia"},{id:"Europe/Moscow",city:"Kazan",countryCode:"RU",countryName:"Russia"},{id:"Europe/Moscow",city:"Rostov-on-Don",countryCode:"RU",countryName:"Russia"}],id:"Europe/Moscow",city:"Moscow",countryCode:"RU",countryName:"Russia"},{offset:"04:00:00",associatedZones:[{id:"Europe/Ulyanovsk",city:"Ulyanovsk",countryCode:"RU",countryName:"Russia"}],id:"Europe/Astrakhan",city:"Astrakhan",countryCode:"RU",countryName:"Russia"},{offset:"04:00:00",associatedZones:[],id:"Europe/Samara",city:"Samara",countryCode:"RU",countryName:"Russia"},{offset:"04:00:00",associatedZones:[],id:"Europe/Saratov",city:"Saratov",countryCode:"RU",countryName:"Russia"},{offset:"05:00:00",associatedZones:[],id:"Asia/Yekaterinburg",city:"Yekaterinburg",countryCode:"RU",countryName:"Russia"},{offset:"06:00:00",associatedZones:[],id:"Asia/Omsk",city:"Omsk",countryCode:"RU",countryName:"Russia"},{offset:"07:00:00",associatedZones:[],id:"Asia/Barnaul",city:"Barnaul",countryCode:"RU",countryName:"Russia"},{offset:"07:00:00",associatedZones:[{id:"Asia/Novokuznetsk",city:"Novokuznetsk",countryCode:"RU",countryName:"Russia"}],id:"Asia/Krasnoyarsk",city:"Krasnoyarsk",countryCode:"RU",countryName:"Russia"},{offset:"07:00:00",associatedZones:[],id:"Asia/Novosibirsk",city:"Novosibirsk",countryCode:"RU",countryName:"Russia"},{offset:"07:00:00",associatedZones:[],id:"Asia/Tomsk",city:"Tomsk",countryCode:"RU",countryName:"Russia"},{offset:"08:00:00",associatedZones:[],id:"Asia/Irkutsk",city:"Irkutsk",countryCode:"RU",countryName:"Russia"},{offset:"09:00:00",associatedZones:[],id:"Asia/Chita",city:"Chita",countryCode:"RU",countryName:"Russia"},{offset:"09:00:00",associatedZones:[{id:"Asia/Khandyga",city:"Khandyga",countryCode:"RU",countryName:"Russia"}],id:"Asia/Yakutsk",city:"Yakutsk",countryCode:"RU",countryName:"Russia"},{offset:"10:00:00",associatedZones:[{id:"Asia/Ust-Nera",city:"Ust-Nera",countryCode:"RU",countryName:"Russia"}],id:"Asia/Vladivostok",city:"Vladivostok",countryCode:"RU",countryName:"Russia"},{offset:"11:00:00",associatedZones:[],id:"Asia/Srednekolymsk",city:"Srednekolymsk",countryCode:"RU",countryName:"Russia"},{offset:"11:00:00",associatedZones:[],id:"Asia/Magadan",city:"Magadan",countryCode:"RU",countryName:"Russia"},{offset:"11:00:00",associatedZones:[],id:"Asia/Sakhalin",city:"Sakhalin",countryCode:"RU",countryName:"Russia"},{offset:"12:00:00",associatedZones:[{id:"Asia/Anadyr",city:"Anadyr",countryCode:"RU",countryName:"Russia"}],id:"Asia/Kamchatka",city:"Kamchatka",countryCode:"RU",countryName:"Russia"}];
 
 /**
  * @title Timezone
@@ -25737,7 +26131,7 @@ export enum KbqToastPosition {
     TOP_RIGHT = "top-right"
 }
 
-// @public (undocumented)
+// @public
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
     constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, ngZone: NgZone, toastFactory: any, toastConfig: KbqToastConfig);
     // (undocumented)
@@ -26449,7 +26843,6 @@ The toolbar can remain fixed while scrolling the page.
 
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
-import { KbqOverflowItems } from '@koobiq/components/overflow-items';
 
 // @public (undocumented)
 export class KbqTopBar {
@@ -26464,7 +26857,6 @@ export class KbqTopBar {
 
 // @public
 export class KbqTopBarContainer {
-    protected readonly overflowItems: KbqOverflowItems | null;
     readonly placement: InputSignal<"start" | "end">;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopBarContainer, "[kbqTopBarContainer]", never, { "placement": { "alias": "placement"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
