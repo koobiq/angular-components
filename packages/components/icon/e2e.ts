@@ -323,7 +323,7 @@ export class E2eIconStateAndStyle {
                                 <kbq-navbar-title>Issues</kbq-navbar-title>
                             </kbq-navbar-item>
                         </kbq-navbar-container>
-                        <button kbq-navbar-toggle></button>
+                        <kbq-navbar-toggle />
                     </kbq-vertical-navbar>
                 </div>
 
