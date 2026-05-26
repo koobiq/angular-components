@@ -149,7 +149,7 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
         exampleElements.forEach((element: Element) => {
             const example = element.getAttribute(componentName);
 
-            const portalHost = new DomPortalOutlet(element, null, this.appRef, this.injector);
+            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
             const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
             const exampleViewerComponent = exampleViewer.instance as DocsLiveExampleViewerComponent;

@@ -1,4 +1,4 @@
-import { AsyncPipe, Location, NgClass } from '@angular/common';
+import { AsyncPipe, Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
@@ -43,7 +43,6 @@ const SEARCH_DEBOUNCE_TIME = 300;
         ReactiveFormsModule,
         KbqHighlightModule,
         KbqEmptyStateModule,
-        NgClass,
         KbqToolTipModule
     ],
     templateUrl: './icons-viewer.template.html',
@@ -80,7 +79,9 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
         super();
 
         this.http.get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' }).subscribe((data) => {
-            this.iconItems = new DocsIconItems(data);
+            this.iconItems = new DocsIconItems(
+                data as Record<string, { codepoint: string; tags: string[]; description: string }>
+            );
 
             this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
 

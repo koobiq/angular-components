@@ -167,7 +167,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     /** Instantiate a ExampleViewer for each example. */
     private loadComponents(componentName: string, componentClass: any) {
         this.nativeElement.querySelectorAll(`[${componentName}]`).forEach((element: Element) => {
-            const portalHost = new DomPortalOutlet(element, null, this.appRef, this.injector);
+            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
             const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
 
@@ -186,7 +186,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
             element.innerHTML = '';
 
-            const portalHost = new DomPortalOutlet(element, null, this.appRef, this.injector);
+            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
             this.codeTemplate.attach(portalHost, {
                 $implicit: outerHTML,
@@ -208,7 +208,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
             element.innerHTML = '';
 
-            const portalHost = new DomPortalOutlet(element, null, this.appRef, this.injector);
+            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
             this.codeSnippetTemplate.attach(portalHost, { $implicit: innerHTML, textContent });
             this.portalHosts.push(portalHost);

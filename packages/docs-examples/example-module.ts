@@ -1448,6 +1448,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-with-filter-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-x-position": {
+    "packagePath": "components/dropdown/dropdown-x-position",
+    "title": "Dropdown xPosition",
+    "componentName": "DropdownXPositionExample",
+    "files": [
+      "dropdown-x-position-example.ts"
+    ],
+    "selector": "dropdown-x-position-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-x-position-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dynamic-translation-overview": {
     "packagePath": "components/dynamic-translation/dynamic-translation-overview",
     "title": "Dynamic translation overview example",
@@ -5001,6 +5013,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-removable-example.ts",
     "importPath": "components/tags"
   },
+  "tag-selectable": {
+    "packagePath": "components/tags/tag-selectable",
+    "title": "Tag selectable",
+    "componentName": "TagSelectableExample",
+    "files": [
+      "tag-selectable-example.ts"
+    ],
+    "selector": "tag-selectable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-selectable-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-with-icon": {
     "packagePath": "components/tags/tag-with-icon",
     "title": "Tag with icon",
@@ -6495,6 +6519,8 @@ return import('@koobiq/docs-examples/components/dropdown');
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-with-filter':
 return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-x-position':
+return import('@koobiq/docs-examples/components/dropdown');
   case 'dynamic-translation-overview':
 return import('@koobiq/docs-examples/components/dynamic-translation');
   case 'dynamic-translation-with-dynamic-component-creation':
@@ -7074,6 +7100,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-overview':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-removable':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-selectable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-with-icon':
 return import('@koobiq/docs-examples/components/tags');

@@ -1,5 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { DOCUMENT, NgClass, TitleCasePipe } from '@angular/common';
+import { DOCUMENT, TitleCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
@@ -35,7 +35,6 @@ export type DocsIconPreviewModalData = {
         KbqIconModule,
         KbqFormFieldModule,
         KbqSelectModule,
-        NgClass,
         KbqButtonModule,
         KbqModalModule,
         KbqDlModule,

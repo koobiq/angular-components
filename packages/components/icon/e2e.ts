@@ -15,7 +15,7 @@ import {
 } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
+import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqTagsModule } from '@koobiq/components/tags';
@@ -176,7 +176,7 @@ export class E2eIconStateAndStyle {
         KbqFormFieldModule,
         KbqInputModule,
         FormsModule,
-        KbqNavbarIcModule,
+        KbqNavbarModule,
         KbqTabsModule
     ],
     template: `
@@ -316,16 +316,16 @@ export class E2eIconStateAndStyle {
                 </div>
 
                 <div style="height: 80px">
-                    <kbq-navbar-ic [expanded]="false" [pinned]="false">
-                        <kbq-navbar-ic-container>
-                            <kbq-navbar-ic-item>
+                    <kbq-navbar>
+                        <kbq-navbar-container>
+                            <kbq-navbar-item>
                                 <i kbq-icon="kbq-diamond_16"></i>
-                                <div kbqNavbarIcTitle>Issues</div>
-                            </kbq-navbar-ic-item>
+                                <kbq-navbar-title>Issues</kbq-navbar-title>
+                            </kbq-navbar-item>
 
-                            <kbq-navbar-ic-toggle />
-                        </kbq-navbar-ic-container>
-                    </kbq-navbar-ic>
+                            <kbq-navbar-toggle />
+                        </kbq-navbar-container>
+                    </kbq-navbar>
                 </div>
 
                 <div>
