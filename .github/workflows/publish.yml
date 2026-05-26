@@ -34,4 +34,3 @@ jobs:
           NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNEL_NAME }}
-          MATTERMOST_USERNAME: ${{ secrets.MM_BOT_NAME }}
