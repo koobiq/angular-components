@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 
 @Directive({
+    standalone: true,
     selector: '[kbqTopBarSpacer]',
     host: {
         class: 'kbq-top-bar-spacer'
@@ -20,6 +21,7 @@ export class KbqTopBarSpacer {}
  * Directive that dynamically applying CSS classes based on a placement value (left or right).
  */
 @Directive({
+    standalone: true,
     selector: '[kbqTopBarContainer]',
     host: {
         class: 'kbq-top-bar-container',
@@ -35,6 +37,7 @@ export class KbqTopBarContainer {
 }
 
 @Component({
+    standalone: true,
     selector: 'kbq-top-bar',
     template: `
         <ng-content />
