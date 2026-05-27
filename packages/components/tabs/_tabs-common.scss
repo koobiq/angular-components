@@ -102,7 +102,6 @@
         display: none;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
         z-index: 2;
         -webkit-tap-highlight-color: transparent;
         touch-action: none;
@@ -110,6 +109,10 @@
 
         .kbq-tab-header__pagination-controls_enabled & {
             display: flex;
+        }
+
+        &:not(.kbq-disabled) {
+            cursor: pointer;
         }
     }
 
