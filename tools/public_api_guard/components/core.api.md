@@ -2336,9 +2336,6 @@ export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 // @public (undocumented)
 export const KbqDefaultThemes: KbqTheme[];
 
-// @public @deprecated
-export const kbqDisableLegacyValidationDirectiveProvider: () => Provider[];
-
 // @public
 export type KbqEnumValues<T extends string | number> = `${T}`;
 

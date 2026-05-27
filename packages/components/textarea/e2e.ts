@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 @Component({
@@ -77,7 +76,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             padding: var(--kbq-size-xxs);
         }
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTextareaStates'

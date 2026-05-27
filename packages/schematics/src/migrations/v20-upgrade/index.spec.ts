@@ -360,4 +360,44 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(result.readText(html)).toBe(original);
     });
+
+    it('strips kbqDisableLegacyValidationDirectiveProvider call sites and the stale import', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        // Three call-site positions in a single array (first, middle, last) plus a
+        // sole-occupant case, all paired with an import that contains the symbol
+        // alongside others — the cleanup must leave the array, the sibling
+        // providers, and the import clause healthy.
+        appTree.overwrite(
+            ts,
+            "import { kbqDisableLegacyValidationDirectiveProvider, kbqErrorStateMatcherProvider, KbqColorDirective } from '@koobiq/components/core';\n" +
+                'const a = () => null;\n' +
+                'const b = () => null;\n' +
+                'const middle = { providers: [a(), kbqDisableLegacyValidationDirectiveProvider(), b()] };\n' +
+                'const first = { providers: [kbqDisableLegacyValidationDirectiveProvider(), a()] };\n' +
+                'const last = { providers: [a(), kbqDisableLegacyValidationDirectiveProvider()] };\n' +
+                'const sole = { providers: [kbqDisableLegacyValidationDirectiveProvider()] };\n' +
+                'const _color: KbqColorDirective | null = null;\n'
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        // No call sites or imports survive.
+        expect(updated).not.toContain('kbqDisableLegacyValidationDirectiveProvider');
+        // Siblings inside the arrays survive.
+        expect(updated).toMatch(/providers:\s*\[a\(\), b\(\)\]/); // middle
+        expect(updated).toMatch(/providers:\s*\[a\(\)\]/); // first + last collapse to same shape
+        // The sole-occupant array is left as `providers: []` — empty but legal; the
+        // schematic's note tells the user to drop the key manually if desired.
+        expect(updated).toMatch(/providers:\s*\[\s*\]/);
+        // Sibling imports kept; symbol gone.
+        expect(updated).toMatch(/import\s*\{[^}]*\bkbqErrorStateMatcherProvider\b[^}]*\bKbqColorDirective\b[^}]*\}/);
+    });
 });

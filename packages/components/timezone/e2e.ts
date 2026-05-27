@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import {
-    ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
-    KbqOptgroup,
-    KbqSelectSearch
-} from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqOptgroup, KbqSelectSearch } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -131,9 +126,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             --kbq-select-panel-size-max-height: 308px;
         }
     `,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTimezoneStates'

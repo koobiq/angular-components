@@ -14,7 +14,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     ShowOnFormSubmitErrorStateMatcher
@@ -125,7 +124,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
         }
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

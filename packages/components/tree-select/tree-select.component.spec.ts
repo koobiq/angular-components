@@ -59,7 +59,6 @@ import {
     dispatchKeyboardEvent,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     wrappedErrorMessage
 } from '@koobiq/components/core';
@@ -111,8 +110,7 @@ const getAsyncValidator =
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TreeSelectControlWithAsyncValidators {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
@@ -132,7 +130,6 @@ class TreeSelectControlWithAsyncValidators {
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
@@ -150,8 +147,7 @@ class TreeSelectWithDIErrorStateMatcher {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TreeSelectWithErrorStateMatcher {
     readonly treeSelect = viewChild.required(KbqTreeSelect);

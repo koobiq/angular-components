@@ -21,7 +21,6 @@ import {
 import {
     ErrorStateMatcher,
     KbqComponentColors,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     PopUpPlacements
 } from '@koobiq/components/core';
@@ -98,7 +97,6 @@ class ExampleResetTouchedOnFirstInput {
         </kbq-form-field>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

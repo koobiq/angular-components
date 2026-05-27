@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     ShowOnFormSubmitErrorStateMatcher
@@ -51,7 +50,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         }
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

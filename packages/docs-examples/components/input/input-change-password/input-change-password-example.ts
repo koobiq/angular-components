@@ -11,11 +11,7 @@ import {
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider
-} from '@koobiq/components/core';
+import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
 import { KbqPasswordToggle } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -82,7 +78,6 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(RequiredErrorStateMatcher)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush

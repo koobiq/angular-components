@@ -130,6 +130,22 @@ export const tsReplacements: Replacement[] = [
         removeImport: { symbol: 'KbqCommonModule', from: '@koobiq/components/core' }
     },
     {
+        // No-op shim kept after the KbqValidateDirective removal in v20.0.0 is
+        // gone in this release. Strip the call, its trailing comma, and the
+        // import; the array/empty-providers cleanup happens via the extended
+        // `[ , … ]` / `[ … , ]` normalize pass in the driver.
+        from: '\\bkbqDisableLegacyValidationDirectiveProvider\\(\\s*\\),?\\s*',
+        to: '',
+        note:
+            'kbqDisableLegacyValidationDirectiveProvider was a no-op shim kept after the ' +
+            'KbqValidateDirective removal in v20.0.0; it is removed in this release. ' +
+            'You may also need to remove the (now-empty) `providers: []` key from the affected decorator.',
+        removeImport: {
+            symbol: 'kbqDisableLegacyValidationDirectiveProvider',
+            from: '@koobiq/components/core'
+        }
+    },
+    {
         from: '\\btoBoolean\\(',
         to: 'booleanAttribute(',
         ensureImport: { symbol: 'booleanAttribute', from: '@angular/core' },

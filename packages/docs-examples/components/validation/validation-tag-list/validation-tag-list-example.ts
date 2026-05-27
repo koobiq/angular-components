@@ -1,13 +1,7 @@
 ﻿import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    COMMA,
-    ENTER,
-    kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider,
-    ShowOnFormSubmitErrorStateMatcher
-} from '@koobiq/components/core';
+import { COMMA, ENTER, kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -62,7 +56,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

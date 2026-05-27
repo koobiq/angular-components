@@ -60,7 +60,6 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     wrappedErrorMessage
 } from '@koobiq/components/core';
@@ -1576,8 +1575,7 @@ class CdkVirtualScrollMultipleWithFactory {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class SelectWithErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1597,7 +1595,7 @@ class SelectWithErrorStateMatcher {
             </kbq-form-field>
         </form>
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(customErrorStateMatcher)]
+    providers: [kbqErrorStateMatcherProvider(customErrorStateMatcher)]
 })
 class SelectWithDIErrorStateMatcher {
     readonly select = viewChild.required(KbqSelect);
@@ -1613,8 +1611,7 @@ class SelectWithDIErrorStateMatcher {
                 <kbq-option value="2">2</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class SelectControlWithAsyncValidators {
     readonly select = viewChild.required(KbqSelect);

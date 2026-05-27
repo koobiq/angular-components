@@ -1,6 +1,5 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -45,9 +44,6 @@ import { KbqInputModule } from '@koobiq/components/input';
             width: 320px;
         }
     `,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-row'

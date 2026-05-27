@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field with kbq-error */
@@ -21,7 +20,6 @@ import { KbqInputModule } from '@koobiq/components/input';
             </kbq-error>
         </kbq-form-field>
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithErrorExample {

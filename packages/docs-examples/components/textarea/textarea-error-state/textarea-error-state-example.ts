@@ -1,6 +1,5 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
@@ -17,7 +16,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <kbq-error>Minimum 10 characters</kbq-error>
         </kbq-form-field>
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-xl layout-row'

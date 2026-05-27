@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider, PasswordValidators } from '@koobiq/components/core';
+import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field password overview */
@@ -58,7 +58,6 @@ import { KbqInputModule } from '@koobiq/components/input';
             }
         </kbq-form-field>
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldPasswordOverviewExample {

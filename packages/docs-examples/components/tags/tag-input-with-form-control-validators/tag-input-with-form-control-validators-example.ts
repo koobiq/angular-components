@@ -7,7 +7,6 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -61,7 +60,6 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
             </kbq-error>
         </kbq-form-field>
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputWithFormControlValidatorsExample {

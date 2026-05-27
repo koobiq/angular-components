@@ -1,6 +1,5 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -43,7 +42,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
             width: 50%;
         }
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectValidationExample {

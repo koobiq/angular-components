@@ -30,7 +30,6 @@ import {
     ESCAPE,
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     ONE,
     ShowOnControlDirtyErrorStateMatcher,
@@ -67,8 +66,7 @@ const customErrorStateMatcher: ErrorStateMatcher = {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class DatepickerWithErrorStateMatcher {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
@@ -87,7 +85,6 @@ class DatepickerWithErrorStateMatcher {
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
@@ -110,8 +107,7 @@ const getAsyncValidator =
             <input [kbqDatepicker]="d" [formControl]="control" />
             <kbq-datepicker #d />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class DatepickerControlWithAsyncValidators {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);

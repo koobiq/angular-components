@@ -9,11 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider
-} from '@koobiq/components/core';
+import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -48,7 +44,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             <button class="layout-margin-top-l" kbq-button type="submit">Submit form</button>
         </form>
     `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider(), kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
+    providers: [kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample {

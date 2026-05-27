@@ -16,7 +16,6 @@ import {
     dispatchKeyboardEvent,
     ErrorStateMatcher,
     ESCAPE,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher
@@ -203,8 +202,7 @@ const getAsyncValidator =
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class InputControlWithAsyncValidators {
     readonly input = viewChild.required(KbqInput);
@@ -224,7 +222,6 @@ class InputControlWithAsyncValidators {
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
@@ -242,8 +239,7 @@ class InputWithDIErrorStateMatcher {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class InputWithErrorStateMatcher {
     readonly input = viewChild.required(KbqInput);

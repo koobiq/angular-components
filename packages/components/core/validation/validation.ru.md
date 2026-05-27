@@ -1,23 +1,4 @@
-<div class="kbq-callout kbq-callout_warning">
-<div class="kbq-callout__header">Обратите внимание</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-Ранее использовалась директива [`KbqValidateDirective`](https://github.com/koobiq/angular-components/blob/main/packages/components/form-field/validate.directive.ts), которая подменяет методы формы (`Validators`, `onSubmit`), что может привести к непредсказуемому поведению.
-
-</div>
-</div>
-
-### Отключение KbqValidateDirective
-
-```ts
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-
-@NgModule({
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
-})
-```
-
-Более подробно описано [в примерах](/ru/other/validation/examples).
+Поля формы показывают ошибки через [`ErrorStateMatcher`](/ru/other/validation/examples) — небольшой объект-политику, который решает, _когда_ выводить уже существующие ошибки контрола пользователю.
 
 ---
 

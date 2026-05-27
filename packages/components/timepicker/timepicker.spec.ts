@@ -22,7 +22,6 @@ import {
     DOWN_ARROW,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     KbqLocaleService,
     ONE,
@@ -70,8 +69,7 @@ const customErrorStateMatcher: ErrorStateMatcher = {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TimepickerWithErrorStateMatcher {
     readonly timepickerInput = viewChild.required(KbqTimepicker);
@@ -89,7 +87,6 @@ class TimepickerWithErrorStateMatcher {
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
@@ -111,8 +108,7 @@ const getAsyncValidator =
         <kbq-form-field>
             <input kbqTimepicker [formControl]="control" />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TimepickerControlWithAsyncValidators {
     readonly timepickerInput = viewChild.required(KbqTimepicker);

@@ -9,7 +9,6 @@ import {
     dispatchEvent,
     dispatchKeyboardEvent,
     ESCAPE,
-    kbqDisableLegacyValidationDirectiveProvider,
     KbqOptionModule,
     PopUpPlacements,
     TAB
@@ -789,10 +788,7 @@ export class TestWithTextareaControl extends BaseTestComponent {
                 <textarea kbqTextarea [placeholder]="placeholder" [formControl]="control"></textarea>
             </kbq-form-field>
         </kbq-inline-edit>
-    `,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    `
 })
 export class TestWithValidatedControl extends BaseTestComponent {
     control = new FormControl('', Validators.required);
@@ -940,8 +936,7 @@ export class TestWithSelect extends BaseTestComponent {
                 </kbq-form-field>
             </form>
         </kbq-inline-edit>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class TestWithMultipleFormFields extends BaseTestComponent {
     readonly placeholder = 'Placeholder';

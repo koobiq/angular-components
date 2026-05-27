@@ -52,7 +52,6 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { map, Observable, Subject, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher
@@ -200,8 +199,7 @@ export class TestFormFieldTagList {
                 <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
             </kbq-tag-list>
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TagListControlWithAsyncValidators {
     readonly tagList = viewChild.required(KbqTagList);
@@ -226,7 +224,6 @@ class TagListControlWithAsyncValidators {
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
@@ -249,8 +246,7 @@ class TagListWithDIErrorStateMatcher {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TagListWithErrorStateMatcher {
     readonly tagList = viewChild.required(KbqTagList);

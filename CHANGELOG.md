@@ -54,7 +54,7 @@ Removed long-standing deprecated symbols. Use `ng update @koobiq/components@20` 
 * `formatDataSize()` → use `getFormattedSizeParts()`.
 * `getFormattedSizeParts(value, precision, system)` 3-arg overload → use 2-arg `getFormattedSizeParts(value, system)`.
 * `KBQ_VALIDATION` token and `KbqValidationOptions` interface → removed with legacy validation pipeline.
-* `kbqDisableLegacyValidationDirectiveProvider()` → **kept as a no-op** for backwards-compat; will be removed in a future release.
+* `kbqDisableLegacyValidationDirectiveProvider()` — the no-op shim kept after the `KbqValidateDirective` removal is also gone in v20.0.0. Run `ng update @koobiq/components@20` to auto-strip the call sites and import; the schematic also flags the resulting `providers: []` arrays for manual cleanup.
 
 #### Removed component methods / inputs
 

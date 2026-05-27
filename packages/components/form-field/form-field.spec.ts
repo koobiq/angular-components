@@ -12,7 +12,6 @@ import {
 import { By } from '@angular/platform-browser';
 import {
     ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
     PasswordValidators,
     ShowOnFormSubmitErrorStateMatcher,
     ShowRequiredOnSubmitErrorStateMatcher
@@ -107,8 +106,7 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
             <kbq-hint id="test-hint-id">Hint</kbq-hint>
             <kbq-error id="test-error-id">Error</kbq-error>
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithHintAndError {
     readonly control = new FormControl('', [Validators.required]);
@@ -123,8 +121,7 @@ export class InputFormFieldWithHintAndError {
             <span kbqPrefix>Prefix</span>
             <span kbqSuffix>Suffix</span>
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithPrefixAndSuffix {}
 
@@ -136,8 +133,7 @@ export class InputFormFieldWithPrefixAndSuffix {}
             <input kbqInput [formControl]="control" />
             <kbq-cleaner />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithCleaner {
     readonly control = new FormControl();
@@ -150,8 +146,7 @@ export class InputFormFieldWithCleaner {
         <kbq-form-field>
             <input [formControl]="control" />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithoutFormFieldControl {
     readonly control = new FormControl();
@@ -165,8 +160,7 @@ export class InputFormFieldWithoutFormFieldControl {
             <kbq-label>Label</kbq-label>
             <input kbqInput [id]="id" />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithLabel {
     readonly id = 'UNIQUE_TEST_ID';
@@ -189,8 +183,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             </kbq-form-field>
             <input type="submit" />
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithCustomErrorStateMatcher {
     readonly formGroup = new FormGroup({
@@ -206,8 +199,7 @@ export class InputFormFieldWithCustomErrorStateMatcher {
         <kbq-form-field [noBorders]="noBorders">
             <input kbqInput />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithBorderCustomization {
     noBorders: boolean = true;
@@ -231,8 +223,7 @@ export class InputFormFieldWithBorderCustomization {
                 }
             </kbq-reactive-password-hint>
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class PasswordFormField {
     readonly formControl = new FormControl('', [PasswordValidators.minLength(8)]);
@@ -245,8 +236,7 @@ export class PasswordFormField {
         <kbq-form-field [inOverlay]="inOverlay">
             <input kbqInput />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldInOverlay {
     inOverlay: boolean;
@@ -260,8 +250,7 @@ export class InputFormFieldInOverlay {
             <kbq-label>Label</kbq-label>
             <input kbqInput />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldHorizontal {
     horizontal: boolean = false;
@@ -275,8 +264,7 @@ export class InputFormFieldHorizontal {
             <kbq-label>Label</kbq-label>
             <input kbqInput />
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class InputFormFieldWithClassCustomization {
     labelClass: string | undefined;
@@ -294,8 +282,7 @@ export class InputFormFieldWithClassCustomization {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class InputFormFieldWithInvalidOrSubmitMatcher {
     readonly errorStateMatcher = new ShowRequiredOnSubmitErrorStateMatcher();

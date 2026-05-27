@@ -18,7 +18,6 @@ import {
     ErrorStateMatcher,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider
 } from '../core';
 import { KbqTextarea, KbqTextareaModule } from './index';
@@ -132,8 +131,7 @@ class KbqTextareaGrowOff {
         <kbq-form-field>
             <textarea kbqTextarea [formControl]="control"></textarea>
         </kbq-form-field>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TextareaControlWithAsyncValidators {
     readonly textarea = viewChild.required(KbqTextarea);
@@ -153,7 +151,6 @@ class TextareaControlWithAsyncValidators {
         </form>
     `,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
@@ -171,8 +168,7 @@ class TextareaWithDIErrorStateMatcher {
             </kbq-form-field>
             <button type="submit">Submit</button>
         </form>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 class TextareaWithErrorStateMatcher {
     readonly textarea = viewChild.required(KbqTextarea);

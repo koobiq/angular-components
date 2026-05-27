@@ -36,8 +36,15 @@ function applyReplacements(
 
         // Tidy up double commas / empty-element commas left over from identifier
         // deletions like `{ A, KbqValidationOptions, B }` → `{ A, , B }`.
+        // Also covers array forms like `providers: [a(), removedCall(), b()]`
+        // → `providers: [a(), , b()]` after a call-site rewrite to ''.
         if (to === '' && before !== result) {
-            result = result.replace(/,\s*,/g, ',').replace(/{\s*,/g, '{').replace(/,\s*}/g, ' }');
+            result = result
+                .replace(/,\s*,/g, ',')
+                .replace(/{\s*,/g, '{')
+                .replace(/,\s*}/g, ' }')
+                .replace(/\[\s*,/g, '[')
+                .replace(/,\s*\]/g, ' ]');
         }
 
         if (ensureImport && before !== result) {

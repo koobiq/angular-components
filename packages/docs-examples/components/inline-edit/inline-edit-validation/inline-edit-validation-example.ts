@@ -18,12 +18,7 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import {
-    ErrorStateMatcher,
-    KbqComponentColors,
-    kbqDisableLegacyValidationDirectiveProvider,
-    PopUpPlacements
-} from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -135,9 +130,6 @@ class ExampleResetTouchedOnFirstInput {
             white-space: nowrap;
         }
     `,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
