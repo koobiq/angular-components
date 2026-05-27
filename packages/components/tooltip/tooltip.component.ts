@@ -13,9 +13,11 @@ import {
     Inject,
     InjectionToken,
     Input,
+    OnChanges,
     OnDestroy,
     Output,
     Renderer2,
+    SimpleChanges,
     TemplateRef,
     Type,
     ViewChild,
@@ -67,9 +69,9 @@ export const MIN_TIME_FOR_DELAY = 2000;
     ],
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
-    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
     animations: [kbqTooltipAnimations.tooltipState]
 })
 export class KbqTooltipComponent extends KbqPopUp {
@@ -133,7 +135,10 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     },
     exportAs: 'kbqTooltip'
 })
-export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnDestroy {
+export class KbqTooltipTrigger
+    extends KbqPopUpTrigger<KbqTooltipComponent>
+    implements AfterViewInit, OnChanges, OnDestroy
+{
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
@@ -309,6 +314,26 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
      * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
      */
     @Input('kbqTooltipHeader') header: string | TemplateRef<any>;
+
+    /**
+     * The old `KbqWarningTooltipTrigger` / `KbqExtendedTooltipTrigger` subclasses had
+     * setters on their content/header inputs that pushed updates into the open tooltip.
+     * Now that `modifier` and `header` are plain `@Input` fields on this base class,
+     * we need to mirror that reactivity manually — without it, changing the inputs
+     * while a tooltip is open silently leaves the overlay showing stale data until
+     * the next show/hide cycle.
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!this.instance) return;
+
+        if (changes.modifier && !changes.modifier.firstChange) {
+            this.updateClassMap();
+        }
+
+        if (changes.header && !changes.header.firstChange) {
+            this.updateData();
+        }
+    }
 
     constructor() {
         super();

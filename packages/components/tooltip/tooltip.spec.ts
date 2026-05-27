@@ -326,7 +326,87 @@ describe('KbqTooltip', () => {
             expect(component.linkTooltip().disabled).toBe(false);
         }));
     });
+
+    describe('reactive modifier and header inputs', () => {
+        let fixture: ComponentFixture<KbqTooltipReactiveInputsComponent>;
+        let component: KbqTooltipReactiveInputsComponent;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqToolTipModule, NoopAnimationsModule, KbqTooltipReactiveInputsComponent]
+            });
+            inject([OverlayContainer], (oc: OverlayContainer) => {
+                overlayContainer = oc;
+                overlayContainerElement = oc.getContainerElement();
+            })();
+
+            fixture = TestBed.createComponent(KbqTooltipReactiveInputsComponent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should refresh the tooltip class map when [kbqTooltipModifier] changes while open', fakeAsync(() => {
+            openAndAssertTooltip(fixture, component.triggerElementRef);
+
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip_warning')).toBeFalsy();
+
+            component.modifier = 'warning';
+            fixture.detectChanges();
+            tick();
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip_warning')).toBeTruthy();
+
+            // Cleanup the open overlay so trailing timers don't leak into other tests.
+            component.tooltipTrigger.hide();
+            tick(defaultLeaveDelay);
+            flush();
+        }));
+
+        it('should refresh the rendered header when [kbqTooltipHeader] changes while open', fakeAsync(() => {
+            component.modifier = 'extended';
+            component.header = 'initial header';
+            fixture.detectChanges();
+
+            openAndAssertTooltip(fixture, component.triggerElementRef);
+
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            const headerEl = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-tooltip__header');
+
+            expect(headerEl()?.textContent?.trim()).toBe('initial header');
+
+            component.header = 'updated header';
+            fixture.detectChanges();
+            tick();
+
+            expect(headerEl()?.textContent?.trim()).toBe('updated header');
+
+            component.tooltipTrigger.hide();
+            tick(defaultLeaveDelay);
+            flush();
+        }));
+    });
 });
+
+@Component({
+    selector: 'kbq-tooltip-reactive-inputs',
+    imports: [KbqToolTipModule],
+    template: `
+        <span #trigger [kbqTooltip]="'CONTENT'" [kbqTooltipModifier]="modifier" [kbqTooltipHeader]="header">Show</span>
+    `
+})
+export class KbqTooltipReactiveInputsComponent {
+    @ViewChild('trigger', { static: false }) triggerElementRef: ElementRef;
+    @ViewChild('trigger', { read: KbqTooltipTrigger, static: false }) tooltipTrigger: KbqTooltipTrigger;
+
+    modifier: 'default' | 'warning' | 'extended' = 'default';
+    header: string = '';
+}
 
 @Component({
     selector: 'tooltip-simple',
