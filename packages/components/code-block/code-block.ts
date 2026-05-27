@@ -1,5 +1,6 @@
 import { A11yModule, FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { CdkScrollable, CdkScrollableModule, ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
@@ -23,6 +24,7 @@ import {
     Provider,
     Renderer2,
     SecurityContext,
+    signal,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
@@ -110,14 +112,18 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * Reference to the scrollable code content.
      *
-     * @deprecated Use `scrollTo` method instead.
+     * @deprecated Use `scrollTo` method instead, will be removed from public API (mark as private) in the next major release.
      *
      * @docs-private
      */
     @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
 
-    /** @docs-private */
     @ViewChild(KbqCodeBlockHighlight) private readonly highlight!: KbqCodeBlockHighlight;
+
+    @ViewChild('codeBlockPre') private readonly preElementRef!: ElementRef<HTMLElement>;
+
+    /** @docs-private */
+    protected readonly contentExceedsMaxHeight = signal(false);
 
     /** @docs-private */
     @ContentChild(KbqCodeBlockTabLinkContent, { read: TemplateRef })
@@ -298,6 +304,7 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly clipboard = inject(Clipboard);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly document = inject<Document>(DOCUMENT);
+    private readonly sharedResizeObserver = inject(SharedResizeObserver);
     /**
      * @docs-private
      */
@@ -311,6 +318,7 @@ export class KbqCodeBlock implements AfterViewInit {
     ngAfterViewInit(): void {
         this.handleScroll();
         this.trackHoverState();
+        this.setupContentOverflowDetection();
 
         // Setup initial actionbar display state
         this.setupActionbarDisplay();
@@ -411,6 +419,30 @@ export class KbqCodeBlock implements AfterViewInit {
             .subscribe((event) => {
                 this.setupActionbarDisplay(event?.type === 'mouseenter');
             });
+    }
+
+    private setupContentOverflowDetection(): void {
+        if (!this.maxHeight) return;
+
+        const checkOverflow = () => {
+            this.contentExceedsMaxHeight.set(this.preElementRef.nativeElement.offsetHeight > this.maxHeight);
+        };
+
+        checkOverflow();
+
+        if (this.highlight?.pending()) {
+            toObservable(this.highlight.pending, { injector: this.injector })
+                .pipe(
+                    filter((pending) => !pending),
+                    take(1)
+                )
+                .subscribe(checkOverflow);
+        }
+
+        this.sharedResizeObserver
+            .observe(this.preElementRef.nativeElement)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(checkOverflow);
     }
 
     /**

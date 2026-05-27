@@ -99,10 +99,11 @@
     [tabIndex]="codeContentTabIndex"
 >
     <pre
+        #codeBlockPre
         class="kbq-code-block__pre"
     ><code kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file">{{ file.content }}</code></pre>
 
-    @if (maxHeight) {
+    @if (contentExceedsMaxHeight()) {
         <div
             class="kbq-code-block__view-all"
             [class.kbq-code-block__view-all_collapsed]="!viewAll"

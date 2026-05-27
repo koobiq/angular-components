@@ -49,12 +49,21 @@ import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
 
         <!-- maxHeight -->
         <div>
-            <kbq-code-block maxHeight="200" [files]="[cssFile, htmlFile, typescriptFile]" />
+            <kbq-code-block
+                maxHeight="200"
+                data-testid="e2eCodeBlockMaxHeight"
+                [files]="[cssFile, htmlFile, typescriptFile]"
+            />
         </div>
 
         <!-- maxHeight filled -->
         <div>
             <kbq-code-block maxHeight="200" filled [files]="[cssFile, htmlFile]" />
+        </div>
+
+        <!-- maxHeight single-line -->
+        <div>
+            <kbq-code-block maxHeight="200" data-testid="e2eCodeBlockMaxHeightSingleLine" [files]="[singleLineFile]" />
         </div>
 
         <!-- noBorder hideTabs lineNumbers -->
