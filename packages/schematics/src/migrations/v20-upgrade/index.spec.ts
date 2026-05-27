@@ -140,7 +140,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('[kbqWarningTooltip]');
     });
 
-    it('rewrites toBoolean(x) call to booleanAttribute(x) and injects @angular/core import', async () => {
+    it('rewrites toBoolean(x) call to booleanAttribute(x), injects @angular/core import, and removes the stale toBoolean import', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
 
@@ -158,6 +158,73 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('toBoolean(');
         // Import injection — the rewrite would otherwise leave booleanAttribute undefined.
         expect(updated).toMatch(/import\s*\{[^}]*\bbooleanAttribute\b[^}]*\}\s*from\s*['"]@angular\/core['"]/);
+        // The stale `toBoolean` import must be dropped — that symbol no longer exists in v20.
+        expect(updated).not.toMatch(/import\s*\{[^}]*\btoBoolean\b[^}]*\}/);
+    });
+
+    it('keeps sibling imports when removing a stale symbol from a multi-symbol clause', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { Component } from '@angular/core';\nimport { KbqColorDirective, toBoolean, ThemePalette } from '@koobiq/components/core';\nconst v = toBoolean('x');\n"
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        // toBoolean stripped, the other two named imports kept.
+        expect(updated).not.toMatch(/\btoBoolean\b/);
+        expect(updated).toMatch(
+            /import\s*\{[^}]*\bKbqColorDirective\b[^}]*\bThemePalette\b[^}]*\}\s*from\s*['"]@koobiq\/components\/core['"]/
+        );
+    });
+
+    it('drops an import line entirely when the removed symbol was the only specifier', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { KbqValidationOptions } from '@koobiq/components/core';\nconst x: KbqValidationOptions | null = null;\n"
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        // Neither the symbol nor its (now-empty) import line should remain.
+        expect(updated).not.toMatch(/\bKbqValidationOptions\b/);
+        expect(updated).not.toMatch(/import\s*\{[^}]*\}\s*from\s*['"]@koobiq\/components\/core['"]/);
+    });
+
+    it('rewrites the static-attribute form kbqWarningTooltip="text" to kbqTooltipModifier + kbqTooltip', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(html, '<span kbqWarningTooltip="watch out"></span>\n');
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(html);
+
+        expect(updated).toContain('kbqTooltipModifier="warning"');
+        expect(updated).toContain('kbqTooltip="watch out"');
+        expect(updated).not.toContain('kbqWarningTooltip=');
     });
 
     it('extends an existing @angular/core import clause rather than duplicating the import line', async () => {

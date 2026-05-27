@@ -19,11 +19,17 @@ const CSS_EXT = '.css';
 function applyReplacements(
     content: string,
     replacements: Replacement[]
-): { content: string; changed: boolean; importsToEnsure: { symbol: string; from: string }[] } {
+): {
+    content: string;
+    changed: boolean;
+    importsToEnsure: { symbol: string; from: string }[];
+    importsToRemove: { symbol: string; from: string }[];
+} {
     let result = content;
     const importsToEnsure: { symbol: string; from: string }[] = [];
+    const importsToRemove: { symbol: string; from: string }[] = [];
 
-    for (const { from, to, ensureImport } of replacements) {
+    for (const { from, to, ensureImport, removeImport } of replacements) {
         const before = result;
 
         result = result.replace(new RegExp(from, 'g'), to);
@@ -37,9 +43,13 @@ function applyReplacements(
         if (ensureImport && before !== result) {
             importsToEnsure.push(ensureImport);
         }
+
+        if (removeImport && before !== result) {
+            importsToRemove.push(removeImport);
+        }
     }
 
-    return { content: result, changed: result !== content, importsToEnsure };
+    return { content: result, changed: result !== content, importsToEnsure, importsToRemove };
 }
 
 /**
@@ -112,6 +122,48 @@ function escapeRegExp(s: string): string {
     return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/**
+ * Idempotently strip `symbol` from any `import { … } from 'from'` clause.
+ * - Multi-symbol clause: drop just that symbol, keep the others.
+ * - Single-symbol clause: drop the entire import line (including its trailing newline).
+ * Returns content unchanged if no matching clause is found.
+ *
+ * Used to clean up dangling references after rewrites that delete or rename a
+ * symbol (e.g. `toBoolean(` → `booleanAttribute(` must also remove the now-
+ * non-existent `toBoolean` import from `@koobiq/components/core`).
+ */
+function removeImport(content: string, symbol: string, from: string): string {
+    const moduleRe = new RegExp(
+        `(import\\s*(?:type\\s*)?\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"];?\\s*\\n?)`,
+        'g'
+    );
+
+    return content.replace(moduleRe, (full, open: string, body: string, close: string) => {
+        const items = body
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean);
+
+        // Empty clause means an earlier regex rewrite already stripped the only
+        // specifier (e.g. `KbqValidationOptions` → `''` left `import {  } from …`).
+        // Since this caller asked us to remove `symbol` from this module, the line
+        // is dead either way — drop it.
+        if (items.length === 0) return '';
+
+        const kept = items.filter((spec) => {
+            // Handle `<name> as <alias>` — match on the source name, not the alias.
+            const source = spec.split(/\s+as\s+/)[0].trim();
+
+            return source !== symbol;
+        });
+
+        if (kept.length === items.length) return full; // no change
+        if (kept.length === 0) return ''; // drop whole line
+
+        return `${open} ${kept.join(', ')} ${close}`;
+    });
+}
+
 function logWarnings(context: SchematicContext, filePath: string, content: string, patterns: WarnPattern[]) {
     for (const { pattern, message } of patterns) {
         if (new RegExp(pattern).test(content)) {
@@ -159,24 +211,44 @@ export default function v20Upgrade(options: Schema): Rule {
             // Always surface warn-only patterns regardless of fix mode.
             logWarnings(context, filePath, originalContent, warnPatterns);
 
-            const { content: replaced, changed, importsToEnsure } = applyReplacements(originalContent, replacements);
+            const {
+                content: replaced,
+                changed,
+                importsToEnsure,
+                importsToRemove
+            } = applyReplacements(originalContent, replacements);
 
             if (!changed) return;
 
             let content = replaced;
 
-            if (filePath.endsWith(TS_EXT) && importsToEnsure.length > 0) {
+            if (filePath.endsWith(TS_EXT)) {
                 // Deduplicate by symbol+module since one replacement may match
                 // many call sites in the same file.
-                const seen = new Set<string>();
+                if (importsToRemove.length > 0) {
+                    const seenRemove = new Set<string>();
 
-                for (const { symbol, from } of importsToEnsure) {
-                    const key = `${symbol}|${from}`;
+                    for (const { symbol, from } of importsToRemove) {
+                        const key = `${symbol}|${from}`;
 
-                    if (seen.has(key)) continue;
+                        if (seenRemove.has(key)) continue;
 
-                    seen.add(key);
-                    content = ensureImport(content, symbol, from);
+                        seenRemove.add(key);
+                        content = removeImport(content, symbol, from);
+                    }
+                }
+
+                if (importsToEnsure.length > 0) {
+                    const seenEnsure = new Set<string>();
+
+                    for (const { symbol, from } of importsToEnsure) {
+                        const key = `${symbol}|${from}`;
+
+                        if (seenEnsure.has(key)) continue;
+
+                        seenEnsure.add(key);
+                        content = ensureImport(content, symbol, from);
+                    }
                 }
             }
 

@@ -20,6 +20,13 @@ export interface Replacement {
      * requires `import { booleanAttribute } from '@angular/core'`).
      */
     ensureImport?: { symbol: string; from: string };
+    /**
+     * When this replacement matches in a .ts file, strip `symbol` from any
+     * existing `import { … } from 'from'` named-import clause. Used for
+     * rewrites whose source symbol no longer exists in v20.0.0 — leaving the
+     * stale import would otherwise break compilation of the migrated file.
+     */
+    removeImport?: { symbol: string; from: string };
 }
 
 /** TypeScript-source replacements (imports + identifiers + method renames). */
@@ -74,29 +81,71 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bKbqExtendedTooltipTrigger\\b', to: 'KbqTooltipTrigger' },
     { from: '\\bKbqDatepickerToggle\\b(?!Icon)', to: 'KbqDatepickerToggleIconComponent' },
     { from: '\\bKbqFilterBarSearch\\b', to: 'KbqSearchExpandable' },
-    { from: '\\bKbqInputFileLabel\\b', to: '' },
-    { from: '\\bKbqInputFile\\b', to: '' },
-    { from: '\\bKbqFileValidatorFn\\b', to: '' },
-    { from: '\\bKbqValidationOptions\\b', to: '' },
+    {
+        from: '\\bKbqInputFileLabel\\b',
+        to: '',
+        removeImport: { symbol: 'KbqInputFileLabel', from: '@koobiq/components/file-upload' }
+    },
+    {
+        from: '\\bKbqInputFile\\b',
+        to: '',
+        removeImport: { symbol: 'KbqInputFile', from: '@koobiq/components/file-upload' }
+    },
+    {
+        from: '\\bKbqFileValidatorFn\\b',
+        to: '',
+        removeImport: { symbol: 'KbqFileValidatorFn', from: '@koobiq/components/file-upload' }
+    },
+    {
+        from: '\\bKbqValidationOptions\\b',
+        to: '',
+        removeImport: { symbol: 'KbqValidationOptions', from: '@koobiq/components/core' }
+    },
     { from: '\\bKbqFormFieldRef\\b', to: 'KbqFormField' },
 
     // ─── Tokens / function renames ────────────────────────────────────────
-    { from: '\\bKBQ_VALIDATION\\b', to: '' },
-    { from: '\\bKBQ_SANITY_CHECKS\\b', to: '' },
-    { from: '\\bKBQ_SIDEPANEL_WITH_SHADOW\\b', to: '' },
-    { from: '\\bmcSanityChecksFactory\\b', to: '' },
-    { from: '\\bKbqCommonModule\\b', to: '' },
+    {
+        from: '\\bKBQ_VALIDATION\\b',
+        to: '',
+        removeImport: { symbol: 'KBQ_VALIDATION', from: '@koobiq/components/core' }
+    },
+    {
+        from: '\\bKBQ_SANITY_CHECKS\\b',
+        to: '',
+        removeImport: { symbol: 'KBQ_SANITY_CHECKS', from: '@koobiq/components/core' }
+    },
+    {
+        from: '\\bKBQ_SIDEPANEL_WITH_SHADOW\\b',
+        to: '',
+        removeImport: { symbol: 'KBQ_SIDEPANEL_WITH_SHADOW', from: '@koobiq/components/sidepanel' }
+    },
+    {
+        from: '\\bmcSanityChecksFactory\\b',
+        to: '',
+        removeImport: { symbol: 'mcSanityChecksFactory', from: '@koobiq/components/core' }
+    },
+    {
+        from: '\\bKbqCommonModule\\b',
+        to: '',
+        removeImport: { symbol: 'KbqCommonModule', from: '@koobiq/components/core' }
+    },
     {
         from: '\\btoBoolean\\(',
         to: 'booleanAttribute(',
-        ensureImport: { symbol: 'booleanAttribute', from: '@angular/core' }
+        ensureImport: { symbol: 'booleanAttribute', from: '@angular/core' },
+        removeImport: { symbol: 'toBoolean', from: '@koobiq/components/core' }
     },
     {
         from: '\\bisCorrectExtension\\(',
         to: 'FileValidators.isCorrectExtension(',
-        ensureImport: { symbol: 'FileValidators', from: '@koobiq/components/file-upload' }
+        ensureImport: { symbol: 'FileValidators', from: '@koobiq/components/file-upload' },
+        removeImport: { symbol: 'isCorrectExtension', from: '@koobiq/components/file-upload' }
     },
-    { from: '\\bformatDataSize\\(', to: 'getFormattedSizeParts(' },
+    {
+        from: '\\bformatDataSize\\(',
+        to: 'getFormattedSizeParts(',
+        removeImport: { symbol: 'formatDataSize', from: '@koobiq/components/core' }
+    },
 
     // ─── Method renames on instances ──────────────────────────────────────
     { from: '\\.openPanel\\(', to: '.open(' },
@@ -129,6 +178,21 @@ export const templateReplacements: Replacement[] = [
     { from: '</kbq-navbar-ic-header>', to: '</kbq-navbar-header>' },
     { from: '<kbq-navbar-ic([\\s/>])', to: '<kbq-navbar$1' },
     { from: '</kbq-navbar-ic>', to: '</kbq-navbar>' },
+
+    // ─── Static-attribute tooltip form ────────────────────────────────────
+    // `<span kbqWarningTooltip="text">` (plain attribute, not a binding) must
+    // become `<span kbqTooltipModifier="warning" kbqTooltip="text">`. These
+    // rules MUST precede the `="kbqWarningTooltip"` exportAs rule below — the
+    // exportAs regex would otherwise rewrite the attribute name's `="..."`
+    // suffix and turn `kbqWarningTooltip="text"` into the wrong shape.
+    {
+        from: '\\bkbqWarningTooltip="([^"]*)"',
+        to: 'kbqTooltipModifier="warning" kbqTooltip="$1"'
+    },
+    {
+        from: '\\bkbqExtendedTooltip="([^"]*)"',
+        to: 'kbqTooltipModifier="extended" kbqTooltip="$1"'
+    },
 
     // ─── Template-ref exportAs renames ────────────────────────────────────
     { from: '="kbqWarningTooltip"', to: '="kbqTooltip"' },
