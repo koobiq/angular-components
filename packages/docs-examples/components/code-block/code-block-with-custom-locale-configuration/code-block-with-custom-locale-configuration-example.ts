@@ -29,7 +29,7 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
             softWrapOnTooltip: '*CUSTOM* Enable word wrap',
             softWrapOffTooltip: '*CUSTOM* Disable word wrap',
             downloadTooltip: '*CUSTOM* Download',
-            copiedTooltip: '*CUSTOM* вњ“ Copied',
+            copiedTooltip: '*CUSTOM* ✓ Copied',
             copyTooltip: '*CUSTOM* Copy',
             viewAllText: '*CUSTOM* Show all',
             viewLessText: '*CUSTOM* Show less',
