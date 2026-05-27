@@ -23,7 +23,8 @@ import {
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterEvent
+    KbqSaveFilterEvent,
+    KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
@@ -118,8 +119,8 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
@@ -958,7 +959,7 @@ export class DevApp implements AfterViewInit {
     onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
         console.log('filter to save: ', filter);
 
-        if (status === 'newFilter') {
+        if (status === KbqSaveFilterStatuses.NewFilter) {
             this.filters.push(filter);
         } else {
             this.filters.splice(
