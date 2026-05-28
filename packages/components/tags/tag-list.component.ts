@@ -19,6 +19,7 @@ import {
     forwardRef,
     inject,
     Input,
+    input,
     OnDestroy,
     Optional,
     Output,
@@ -78,8 +79,8 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
-        '[class.kbq-tag-list_selectable]': 'selectable',
-        '[class.kbq-tag-list_editable]': 'editable',
+        '[class.kbq-tag-list_selectable]': 'selectable()',
+        '[class.kbq-tag-list_editable]': 'editable()',
         '[class.kbq-tag-list_removable]': 'removable',
         '[class.kbq-tag-list_draggable]': 'draggable',
         '[attr.tabindex]': 'tabIndex',
@@ -191,6 +192,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value;
@@ -214,6 +217,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -231,6 +236,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this.tagInput ? this.tagInput.placeholder : this._placeholder;
@@ -268,6 +275,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.ngControl ? !!this.ngControl.disabled : this._disabled;
@@ -280,6 +289,8 @@ export class KbqTagList
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get draggable(): boolean {
         return this._draggable && !this.disabled;
@@ -301,12 +312,14 @@ export class KbqTagList
      * Whether or not this tag list is selectable. When a tag list is not selectable,
      * the selected states for all the tags inside the tag list are always ignored.
      */
-    @Input({ transform: booleanAttribute }) selectable = true;
+    readonly selectable = input(true, { transform: booleanAttribute });
 
     /** Whether the tags in the list are editable. */
-    @Input({ transform: booleanAttribute }) editable = false;
+    readonly editable = input(false, { transform: booleanAttribute });
 
     /** Whether the tags in the list are removable. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
         return this._removable;
@@ -324,6 +337,8 @@ export class KbqTagList
      *
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): number | null {
         return this.disabled || this.tagInput ? null : this._tabIndex;
@@ -358,6 +373,9 @@ export class KbqTagList
     keyManager: FocusKeyManager<KbqTag>;
 
     /** An object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /** Event emitted when the selected tag list value has been changed by the user. */
@@ -605,7 +623,7 @@ export class KbqTagList
 
         if (this.disabled || isNull(target)) return;
 
-        const shouldSelectAll = this.selectable && isSelectAll(event);
+        const shouldSelectAll = this.selectable() && isSelectAll(event);
 
         if (this.isInputEmpty(target)) {
             if (

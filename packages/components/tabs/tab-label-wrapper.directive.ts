@@ -15,8 +15,12 @@ import { KbqTab } from './tab.component';
 export class KbqTabLabelWrapper implements AfterViewInit {
     @ContentChild('labelContent') labelContent: ElementRef;
 
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() tab: KbqTab;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;

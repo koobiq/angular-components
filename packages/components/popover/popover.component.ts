@@ -189,11 +189,17 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     readonly hideIfNotInViewPort = input(true, { transform: booleanAttribute });
 
     /** prevents closure by any event */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbqPopoverPreventClose', transform: booleanAttribute }) override preventClose: boolean = false;
 
     /** disables default padding for all popover elements (header, content and footer) */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ transform: booleanAttribute }) defaultPaddings = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverVisible')
     get popoverVisible(): boolean {
         return this.visible;
@@ -203,6 +209,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         super.updateVisible(value);
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverPlacement')
     get popoverPlacement(): KbqPopUpPlacementValues {
         return this.placement;
@@ -212,6 +220,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         super.updatePlacement(value);
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverPlacementPriority')
     get popoverPlacementPriority() {
         return this.placementPriority;
@@ -225,11 +235,19 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input('kbqPopoverStickToWindow') stickToWindow: KbqStickToWindowPlacementValues;
 
     /** Container for additional positioning, used with kbqPopoverStickToWindow */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() container: HTMLElement;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -241,6 +259,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _hasBackdrop: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverHeader')
     get header(): string | TemplateRef<any> {
         return this._header;
@@ -254,6 +274,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _header: string | TemplateRef<any>;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverContent')
     get content(): string | TemplateRef<any> {
         return this._content;
@@ -265,6 +287,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.updateData();
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverFooter')
     get footer(): string | TemplateRef<any> {
         return this._footer;
@@ -278,6 +302,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _footer: string | TemplateRef<any>;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverDisabled')
     get disabled(): boolean {
         return this._disabled;
@@ -291,6 +317,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         }
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTrigger')
     get trigger(): string {
         return this._trigger;
@@ -313,6 +341,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverSize')
     get size(): KbqPopUpSizeValues {
         return this._size;
@@ -330,6 +360,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _size: KbqPopUpSizeValues = PopUpSizes.Medium;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverClass')
     get customClass() {
         return this._customClass;
@@ -342,6 +374,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     /** Context for popover templates (kbqPopoverHeader, kbqPopoverContent and kbqPopoverFooter). */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverContext')
     get context() {
         return this._context;
@@ -354,6 +388,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _context: unknown = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasCloseButton() {
         return this._hasCloseButton;
@@ -369,6 +405,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * The default value is `false`.
      * Use CloseScrollStrategy as alternative
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get closeOnScroll(): boolean | null {
         return this._closeOnScroll;
@@ -389,14 +427,23 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         return this.instance.destroyRef;
     }
 
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     // @TODO add realization for arrow (#DS-2514)
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input({ alias: 'kbqPopoverArrow', transform: booleanAttribute }) arrow: boolean = true;
 
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
 
     /** Delay before closing in milliseconds. The default value for kbqTrigger=PopUpTriggers.Hover is 500 ms. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbqLeaveDelay', transform: numberAttribute }) leaveDelay: number;
 
     @Output('kbqPopoverPlacementChange') readonly placementChange = new EventEmitter();

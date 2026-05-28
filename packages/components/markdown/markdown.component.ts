@@ -51,6 +51,8 @@ export class KbqMarkdown implements OnDestroy {
     protected resultHtml = signal<SafeHtml | null>(null);
 
     /** `Markdown` text. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get markdownText(): string | null {
         return this._markdownText;

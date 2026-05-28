@@ -1,5 +1,13 @@
 import { NgOptimizedImage } from '@angular/common';
-import { booleanAttribute, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    input,
+    ViewEncapsulation
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
@@ -29,7 +37,7 @@ import { KbqAppSwitcherApp } from './app-switcher';
             }
         </div>
 
-        @if (toggle) {
+        @if (toggle()) {
             <div class="kbq-app-switcher-list-item__toggle" [class.kbq-expanded]="!collapsed">
                 <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast-fade'"></i>
             </div>
@@ -52,12 +60,17 @@ import { KbqAppSwitcherApp } from './app-switcher';
 export class KbqAppSwitcherListItem extends KbqDropdownItem {
     private sanitizer = inject(DomSanitizer);
 
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() app: KbqAppSwitcherApp;
-    @Input({ transform: booleanAttribute }) toggle = false;
+    readonly toggle = input(false, { transform: booleanAttribute });
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) collapsed: boolean = false;
 
     clickHandler(event: MouseEvent) {
-        if (this.toggle) {
+        if (this.toggle()) {
             event.stopPropagation();
             event.preventDefault();
 

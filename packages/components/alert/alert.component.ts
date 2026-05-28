@@ -5,7 +5,8 @@ import {
     ContentChild,
     Directive,
     Input,
-    ViewEncapsulation
+    ViewEncapsulation,
+    input
 } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -56,8 +57,8 @@ export class KbqAlertControl {}
     host: {
         class: 'kbq-alert',
         '[class]': 'alertColor',
-        '[class.kbq-alert_normal]': '!compact',
-        '[class.kbq-alert_compact]': 'compact',
+        '[class.kbq-alert_normal]': '!compact()',
+        '[class.kbq-alert_compact]': 'compact()',
         '[class.kbq-alert_default]': '!isColored',
         '[class.kbq-alert_colored]': 'isColored',
         '[class.kbq-alert_dismissible]': 'closeButton'
@@ -71,9 +72,11 @@ export class KbqAlert implements AfterContentInit {
     @ContentChild(KbqAlertControl) control: KbqAlertControl;
     @ContentChild(KbqAlertCloseButton) closeButton: KbqAlertCloseButton;
 
-    @Input() compact: boolean = false;
-    @Input() alertStyle: KbqAlertStyles | string = KbqAlertStyles.Default;
+    readonly compact = input<boolean>(false);
+    readonly alertStyle = input<KbqAlertStyles | string>(KbqAlertStyles.Default);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get alertColor(): string {
         return `kbq-alert_${this._alertColor}`;
@@ -86,7 +89,7 @@ export class KbqAlert implements AfterContentInit {
     private _alertColor: string | KbqAlertColors = KbqAlertColors.Info;
 
     get isColored(): boolean {
-        return this.alertStyle === KbqAlertStyles.Colored;
+        return this.alertStyle() === KbqAlertStyles.Colored;
     }
 
     ngAfterContentInit(): void {

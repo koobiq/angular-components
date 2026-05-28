@@ -7,7 +7,6 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    Input,
     NgZone,
     Output,
     Provider,
@@ -15,7 +14,8 @@ import {
     TemplateRef,
     Type,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    input
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -1766,13 +1766,13 @@ interface TestableDropdown {
     ],
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
-        <kbq-dropdown #dropdown="kbqDropdown" [overlapTriggerY]="overlapTriggerY">
+        <kbq-dropdown #dropdown="kbqDropdown" [overlapTriggerY]="overlapTriggerY()">
             <button kbq-dropdown-item>Not overlapped Content</button>
         </kbq-dropdown>
     `
 })
 class OverlapDropdown implements TestableDropdown {
-    @Input() overlapTriggerY: boolean;
+    readonly overlapTriggerY = input<boolean>(undefined!);
     @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
     @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
 }

@@ -5,7 +5,7 @@ import {
     Directive,
     EventEmitter,
     Inject,
-    Input,
+    input,
     OnDestroy,
     Optional
 } from '@angular/core';
@@ -23,7 +23,7 @@ export class KbqSelectTrigger {}
     selector: 'kbq-select-matcher, [kbq-select-matcher]'
 })
 export class KbqSelectMatcher {
-    @Input({ transform: booleanAttribute }) useDefaultHandlers: boolean = true;
+    readonly useDefaultHandlers = input<boolean, unknown>(true, { transform: booleanAttribute });
 }
 
 @Directive({

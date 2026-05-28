@@ -49,6 +49,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     years: number[] = [];
     selectedYear: number;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get activeDate(): D {
         return this._activeDate;
@@ -63,6 +65,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private _activeDate: D;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get maxDate(): D | null {
         return this._maxDate;
@@ -80,6 +84,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get minDate(): D | null {
         return this._minDate;

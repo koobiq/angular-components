@@ -114,14 +114,22 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     lastDestroyReason: DropdownCloseReason;
 
     /** Position offset of the dropdown in the X axis. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) offsetX: number;
 
     /** Position offset of the dropdown in the Y axis. */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ transform: numberAttribute }) offsetY: number;
 
     /** Data to be passed along to any lazily-rendered content. */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input('kbqDropdownTriggerData') data: any;
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() openByArrowDown: boolean = true;
 
     /**
@@ -129,6 +137,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * sit below sibling overlays (tooltips, modals, etc.). Set to `false` to
      * keep the dropdown overlay at the default overlay container z-index.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) demoteOverlay: boolean = true;
 
     /**
@@ -136,9 +146,13 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * Note that disabling this option can have accessibility implications
      * and it's up to you to manage focus, if you decide to turn it off.
      */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input('kbqDropdownTriggerRestoreFocus') restoreFocus: boolean = true;
 
     /** References the dropdown instance that the trigger is associated with. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqDropdownTriggerFor')
     get dropdown() {
         return this._dropdown;

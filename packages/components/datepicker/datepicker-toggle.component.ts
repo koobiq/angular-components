@@ -8,6 +8,7 @@ import {
     Directive,
     inject,
     Input,
+    input,
     OnChanges,
     OnDestroy,
     SimpleChanges,
@@ -33,7 +34,7 @@ export class KbqDatepickerToggleIcon {}
                 color="contrast-fade"
                 kbq-icon-button="kbq-calendar-o_16"
                 [tabindex]="-1"
-                [class.kbq-active]="datepicker && datepicker.opened"
+                [class.kbq-active]="datepicker() && datepicker().opened"
                 [disabled]="disabled"
                 [autoColor]="true"
             ></i>
@@ -44,16 +45,18 @@ export class KbqDatepickerToggleIcon {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker-toggle-icon',
-        '[attr.aria-expanded]': 'datepicker.opened',
+        '[attr.aria-expanded]': 'datepicker().opened',
         '[attr.aria-disabled]': 'disabled',
         '(click)': 'open($event)'
     }
 })
 export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
     /** Whether the toggle button is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
-        return this.datepicker.disabled || this._disabled;
+        return this.datepicker().disabled || this._disabled;
     }
 
     set disabled(value: boolean) {
@@ -63,7 +66,7 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     private _disabled = false;
 
     /** Datepicker instance that the button will toggle. */
-    @Input('for') datepicker: KbqDatepicker<D>;
+    readonly datepicker = input<KbqDatepicker<D>>(undefined!, { alias: 'for' });
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);
@@ -85,8 +88,10 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
 
     /** Open datepicker */
     open($event: MouseEvent) {
-        if (this.datepicker && !this.disabled) {
-            this.datepicker.open();
+        const datepicker = this.datepicker();
+
+        if (datepicker && !this.disabled) {
+            datepicker.open();
             $event.stopPropagation();
         }
     }
@@ -94,13 +99,15 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     private watchStateChanges() {
         this.stateChangesSubscription.unsubscribe();
 
-        if (!this.datepicker) return;
+        const datepicker = this.datepicker();
+
+        if (!datepicker) return;
 
         this.stateChangesSubscription = merge(
-            this.datepicker.disabledChange,
-            this.datepicker.datepickerInput.disabledChange,
-            this.datepicker.openedStream,
-            this.datepicker.closedStream
+            datepicker.disabledChange,
+            datepicker.datepickerInput.disabledChange,
+            datepicker.openedStream,
+            datepicker.closedStream
         )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.cdr.markForCheck());

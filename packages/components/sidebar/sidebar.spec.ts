@@ -29,7 +29,7 @@ describe(KbqSidebarModule.name, () => {
 
         it('should render with default parameters', () => {
             expect(sidebarComponent.opened).toBeTruthy();
-            expect(sidebarComponent.position).toBe(SidebarPositions.Left);
+            expect(sidebarComponent.position()).toBe(SidebarPositions.Left);
             expect(sidebarComponent.openedContent).toBeDefined();
             expect(sidebarComponent.closedContent).toBeDefined();
         });
@@ -63,12 +63,12 @@ describe(KbqSidebarModule.name, () => {
         });
 
         it('should change position', () => {
-            expect(sidebarComponent.position).toBe(SidebarPositions.Left);
+            expect(sidebarComponent.position()).toBe(SidebarPositions.Left);
 
             testComponent.position = SidebarPositions.Right;
             fixture.detectChanges();
 
-            expect(sidebarComponent.position).toBe(SidebarPositions.Right);
+            expect(sidebarComponent.position()).toBe(SidebarPositions.Right);
         });
 
         xit('should fire change event', () => {

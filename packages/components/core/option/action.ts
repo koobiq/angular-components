@@ -59,6 +59,8 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly option = inject(KBQ_OPTION_ACTION_PARENT);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;

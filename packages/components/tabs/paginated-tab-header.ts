@@ -67,6 +67,8 @@ export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementR
 @Directive()
 export abstract class KbqPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     /** The index of the active tab. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get selectedIndex(): number {
         return this._selectedIndex;
@@ -139,9 +141,13 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * Whether pagination should be disabled. This can be used to avoid unnecessary
      * layout recalculations if it's known that pagination won't be required.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) disablePagination: boolean = false;
 
     /** Whether the tabs should be displayed vertically. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     set vertical(value: boolean) {
         this._vertical = value;

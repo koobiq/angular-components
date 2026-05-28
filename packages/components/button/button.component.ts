@@ -143,6 +143,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqStyle(): string {
         return `kbq-button_${this._kbqStyle}`;
@@ -158,6 +160,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -173,6 +177,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     /** @docs-private */
     readonly disabledSignal = signal(false);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;

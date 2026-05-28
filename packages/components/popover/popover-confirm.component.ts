@@ -54,6 +54,8 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     @Output() readonly confirm: EventEmitter<void> = new EventEmitter<void>();
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverConfirmText')
     get confirmText(): string {
         return this._confirmText;
@@ -67,6 +69,8 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     private _confirmText: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverConfirmButtonText')
     get confirmButtonText(): string {
         return this._confirmButtonText;

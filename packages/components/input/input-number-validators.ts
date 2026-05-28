@@ -1,4 +1,4 @@
-import { Directive, forwardRef, Input, OnChanges, Provider, SimpleChanges } from '@angular/core';
+import { Directive, forwardRef, input, OnChanges, Provider, SimpleChanges } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 
 export const MIN_VALIDATOR: Provider = {
@@ -15,11 +15,11 @@ export const MIN_VALIDATOR: Provider = {
     selector: '[min][formControlName],[min][formControl],[min][ngModel]',
     providers: [MIN_VALIDATOR],
     host: {
-        '[attr.min]': 'min ? min : null'
+        '[attr.min]': 'min() ? min() : null'
     }
 })
 export class MinValidator implements Validator, OnChanges {
-    @Input() min: number;
+    readonly min = input<number>(undefined!);
     private validator: ValidatorFn;
     private onChange: () => void;
 
@@ -42,7 +42,7 @@ export class MinValidator implements Validator, OnChanges {
     }
 
     private createValidator(): void {
-        this.validator = Validators.min(parseInt(this.min as unknown as string, 10));
+        this.validator = Validators.min(parseInt(this.min() as unknown as string, 10));
     }
 }
 
@@ -60,11 +60,11 @@ export const MAX_VALIDATOR: Provider = {
     selector: '[max][formControlName],[max][formControl],[max][ngModel]',
     providers: [MAX_VALIDATOR],
     host: {
-        '[attr.max]': 'max ? max : null'
+        '[attr.max]': 'max() ? max() : null'
     }
 })
 export class MaxValidator implements Validator, OnChanges {
-    @Input() max: number | string;
+    readonly max = input<number | string>(undefined!);
     private validator: ValidatorFn;
     private onChange: () => void;
 
@@ -87,6 +87,6 @@ export class MaxValidator implements Validator, OnChanges {
     }
 
     private createValidator(): void {
-        this.validator = Validators.max(parseInt(this.max as unknown as string, 10));
+        this.validator = Validators.max(parseInt(this.max() as unknown as string, 10));
     }
 }

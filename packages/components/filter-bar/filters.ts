@@ -8,7 +8,7 @@ import {
     ElementRef,
     EventEmitter,
     inject,
-    Input,
+    input,
     OnInit,
     Output,
     ViewChild,
@@ -119,7 +119,7 @@ export class KbqFilters implements OnInit {
 
     isSaving: boolean = false;
 
-    @Input() filters: KbqFilter[];
+    readonly filters = input<KbqFilter[]>(undefined!);
 
     /** Event that is generated whenever the user selects a filter. */
     @Output() readonly onSelectFilter = new EventEmitter<KbqFilter>();
@@ -154,7 +154,7 @@ export class KbqFilters implements OnInit {
 
     /** Component state. True if 'filters' input contains no elements. */
     get isEmpty(): boolean {
-        return this.filters.length === 0;
+        return this.filters().length === 0;
     }
 
     /** localized data
@@ -179,7 +179,7 @@ export class KbqFilters implements OnInit {
 
     ngOnInit(): void {
         this.filteredOptions = merge(
-            of(this.filters),
+            of(this.filters()),
             this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
 
@@ -374,7 +374,7 @@ export class KbqFilters implements OnInit {
         const searchFilter = value && value.new ? value.value : value;
 
         return searchFilter
-            ? this.filters.filter((filter) => filter.name.toLowerCase().includes(searchFilter.toLowerCase()))
-            : this.filters;
+            ? this.filters().filter((filter) => filter.name.toLowerCase().includes(searchFilter.toLowerCase()))
+            : this.filters();
     }
 }

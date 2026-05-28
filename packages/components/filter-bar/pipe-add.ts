@@ -4,7 +4,7 @@ import {
     Component,
     EventEmitter,
     inject,
-    Input,
+    input,
     Output,
     ViewChild,
     ViewEncapsulation
@@ -75,15 +75,14 @@ export class KbqPipeAdd {
     @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
 
     /** template of filter */
-    @Input() filterTemplate: KbqFilter = {
+    readonly filterTemplate = input<KbqFilter>({
         name: '',
         pipes: [],
-
         readonly: false,
         disabled: false,
         changed: false,
         saved: false
-    };
+    });
 
     /** already added pipes. Used to open an already added pipe. */
     addedPipes: (string | number)[] = [];
@@ -103,7 +102,7 @@ export class KbqPipeAdd {
             option.select();
 
             if (!this.filterBar.filter) {
-                this.filterBar.filter = structuredClone(this.filterTemplate);
+                this.filterBar.filter = structuredClone(this.filterTemplate());
             }
 
             this.filterBar.filter.changed = true;

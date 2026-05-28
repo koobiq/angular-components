@@ -159,6 +159,8 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     private _hasFocus: boolean = false;
 
     /** Whether the item is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled() {
         return this._disabled;
@@ -369,6 +371,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
     @ContentChild(KbqIcon) icon: KbqIcon;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get collapsedText(): string {
         return this._collapsedText;
@@ -382,6 +386,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
     private _collapsedText: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTrigger')
     get trigger(): string {
         return this._trigger;
@@ -416,6 +422,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
         return `${croppedTitleText}`;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get collapsable(): boolean {
         return this._collapsable;

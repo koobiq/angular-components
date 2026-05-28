@@ -1,5 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, ChangeDetectorRef, Component, ContentChild, inject, Input } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, ContentChild, inject, Input, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -15,7 +15,7 @@ import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } fro
     ],
     host: {
         class: 'kbq-navbar-brand',
-        '[class.kbq-navbar-brand_long-title]': 'longTitle',
+        '[class.kbq-navbar-brand_long-title]': 'longTitle()',
         '[class.kbq-navbar-brand_link]': 'isLink'
     },
     exportAs: 'kbqNavbarBrand'
@@ -34,9 +34,11 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
 
     /** alternative display of the brand name in two lines */
-    @Input() longTitle: boolean = false;
+    readonly longTitle = input<boolean>(false);
 
     /** text that will be displayed in the tooltip. By default, the text is taken from kbq-navbar-title. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get collapsedText(): string {
         return this._collapsedText;

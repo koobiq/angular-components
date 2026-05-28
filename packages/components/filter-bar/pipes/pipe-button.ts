@@ -4,7 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     inject,
-    Input,
+    input,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -53,7 +53,7 @@ export class KbqPipeButton {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /** enables/disables read-only state */
-    @Input({ transform: booleanAttribute }) readonly: boolean = false;
+    readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** localized data
      * @docs-private */

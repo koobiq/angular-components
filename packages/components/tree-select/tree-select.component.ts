@@ -36,6 +36,7 @@ import {
     afterNextRender,
     booleanAttribute,
     inject,
+    input,
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -160,7 +161,7 @@ export class KbqTreeSelectChange {
     host: {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
-        '[class.kbq-select_multiline]': 'multiline',
+        '[class.kbq-select_multiline]': 'multiline()',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
         '[attr.tabindex]': 'tabIndex',
@@ -280,6 +281,8 @@ export class KbqTreeSelect
 
     @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() hiddenItemsText: string = '+{{ number }}';
 
     /** Event emitted when the select panel has been toggled. */
@@ -308,23 +311,35 @@ export class KbqTreeSelect
     @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
-    @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
+    readonly panelClass = input<
+        | string
+        | string[]
+        | Set<string>
+        | {
+              [key: string]: any;
+          }
+    >(undefined!);
 
-    @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /**
      * Function used to sort the values in a select in multiple mode.
      * Follows the same logic as `Array.prototype.sort`.
      */
-    @Input() sortComparator: (a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number;
+    readonly sortComparator = input<(a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number>(
+        undefined!
+    );
 
     /**
      * Whether to use a multiline matcher or not. Default is false
      */
-    @Input({ transform: booleanAttribute }) multiline: boolean = false;
+    readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange> = defer(() => {
@@ -356,6 +371,8 @@ export class KbqTreeSelect
         );
     });
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this._placeholder;
@@ -369,6 +386,8 @@ export class KbqTreeSelect
 
     private _placeholder: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -382,6 +401,8 @@ export class KbqTreeSelect
 
     private _required: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get multiple(): boolean {
         return this._multiple;
@@ -397,6 +418,8 @@ export class KbqTreeSelect
 
     private _multiple: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get autoSelect(): boolean {
         if (this.multiSelection) {
@@ -416,6 +439,8 @@ export class KbqTreeSelect
         return this.tree.getSelectedValues();
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -428,6 +453,8 @@ export class KbqTreeSelect
 
     private _id: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -439,6 +466,8 @@ export class KbqTreeSelect
 
     private _hasBackdrop: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): number | null {
         return this.disabled ? -1 : this._tabIndex;
@@ -452,6 +481,8 @@ export class KbqTreeSelect
 
     private _tabIndex: number | null = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -481,6 +512,8 @@ export class KbqTreeSelect
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selectAllHandler() {
         return this._selectAllHandler;
@@ -512,7 +545,7 @@ export class KbqTreeSelect
 
     /** Whether multiple choice is enabled or not. True if multiple or multiline */
     get multiSelection(): boolean {
-        return this.multiple || this.multiline;
+        return this.multiple || this.multiline();
     }
 
     private _focused = false;
@@ -527,8 +560,10 @@ export class KbqTreeSelect
      * Minimum width of the panel.
      * If minWidth is larger than window width, it will be ignored.
      */
-    @Input({ transform: numberAttribute }) panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'> =
-        this.defaultOptions?.panelMinWidth ?? 200;
+    readonly panelMinWidth = input<Exclude<KbqTreeSelectPanelWidth, 'auto'>, unknown>(
+        this.defaultOptions?.panelMinWidth ?? 200,
+        { transform: numberAttribute }
+    );
 
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
@@ -537,13 +572,15 @@ export class KbqTreeSelect
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
-    @Input() panelWidth: KbqTreeSelectPanelWidth = this.defaultOptions?.panelWidth || null;
+    readonly panelWidth = input<KbqTreeSelectPanelWidth>(this.defaultOptions?.panelWidth || null);
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
      * @default undefined
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input() set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
         this._searchMinOptionsThreshold =
             this.resolveSearchMinOptionsThreshold(value) ??
@@ -625,7 +662,7 @@ export class KbqTreeSelect
         this.id = this.id;
 
         afterNextRender(() => {
-            if (this.multiple && !this.multiline) {
+            if (this.multiple && !this.multiline()) {
                 merge(fromEvent(this.window, 'resize'), this.tags.changes)
                     .pipe(delay(0), debounceTime(50), takeUntilDestroyed(this.destroyRef))
                     .subscribe(this.calculateHiddenItems);
@@ -795,7 +832,7 @@ export class KbqTreeSelect
     onTouched = () => {};
 
     handleClick() {
-        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers()) return;
 
         this.toggle();
     }
@@ -831,10 +868,10 @@ export class KbqTreeSelect
         // set overlayMinWidth to the largest of `panelMinWidth` and `triggerRect.width`
         // only if `overlayWidth` falsy and `panelMinWidth` not provided.
         // This ensures panel isn't narrow.
+        const panelMinWidth = this.panelMinWidth();
+
         this.overlayMinWidth =
-            this.panelMinWidth !== null && !this.overlayWidth
-                ? Math.max(this.panelMinWidth, this.triggerRect.width)
-                : '';
+            panelMinWidth !== null && !this.overlayWidth ? Math.max(panelMinWidth, this.triggerRect.width) : '';
 
         this._panelOpen = true;
 
@@ -947,7 +984,7 @@ export class KbqTreeSelect
     }
 
     handleKeydown(event: KeyboardEvent) {
-        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers()) return;
 
         if (!this.disabled) {
             if (this.panelOpen) {
@@ -959,7 +996,7 @@ export class KbqTreeSelect
     }
 
     onFocus() {
-        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers()) return;
 
         if (!this.disabled) {
             this._focused = true;
@@ -973,7 +1010,7 @@ export class KbqTreeSelect
      * "blur" to the panel when it opens, causing a false positive.
      */
     onBlur() {
-        if (this.customMatcher && !this.customMatcher.useDefaultHandlers) return;
+        if (this.customMatcher && !this.customMatcher.useDefaultHandlers()) return;
 
         this._focused = false;
 
@@ -1039,7 +1076,7 @@ export class KbqTreeSelect
             this.customMatcher ||
             this.empty ||
             !this.multiple ||
-            this.multiline
+            this.multiline()
         )
             return;
 
@@ -1234,13 +1271,15 @@ export class KbqTreeSelect
 
     /** Gets how wide the overlay panel should be. */
     private getOverlayWidth(origin?: ElementRef | CdkOverlayOrigin): string | number {
-        if (this.panelWidth === 'auto') {
+        const panelWidth = this.panelWidth();
+
+        if (panelWidth === 'auto') {
             const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
 
             return elementRef.nativeElement.getBoundingClientRect().width;
         }
 
-        return this.panelWidth ?? '';
+        return panelWidth ?? '';
     }
 
     private buildTriggerClone(): HTMLDivElement {
@@ -1314,9 +1353,9 @@ export class KbqTreeSelect
             const options = this.options.toArray();
 
             this.selectionModel.sort((a, b) => {
-                return this.sortComparator
-                    ? this.sortComparator(a, b, options)
-                    : options.indexOf(a) - options.indexOf(b);
+                const sortComparator = this.sortComparator();
+
+                return sortComparator ? sortComparator(a, b, options) : options.indexOf(a) - options.indexOf(b);
             });
 
             this.stateChanges.next();

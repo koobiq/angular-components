@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 import { KbqIcon } from './icon.component';
 
 @Component({
@@ -9,18 +9,18 @@ import { KbqIcon } from './icon.component';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon-item kbq-icon-item_filled',
-        '[class.kbq-icon-item_normal]': '!big',
-        '[class.kbq-icon-item_big]': 'big',
-        '[class.kbq-icon-item_fade-off]': '!fade',
-        '[class.kbq-icon-item_fade-on]': 'fade'
+        '[class.kbq-icon-item_normal]': '!big()',
+        '[class.kbq-icon-item_big]': 'big()',
+        '[class.kbq-icon-item_fade-off]': '!fade()',
+        '[class.kbq-icon-item_fade-on]': 'fade()'
     }
 })
 export class KbqIconItem extends KbqIcon {
     override name = 'KbqIconItem';
 
     /** Name of an icon within a @koobiq/icons. */
-    @Input({ alias: 'kbq-icon-item' }) iconName: string;
+    readonly iconName = input<string>(undefined!, { alias: 'kbq-icon-item' });
 
-    @Input() fade: boolean = false;
-    @Input() big: boolean = false;
+    readonly fade = input<boolean>(false);
+    readonly big = input<boolean>(false);
 }

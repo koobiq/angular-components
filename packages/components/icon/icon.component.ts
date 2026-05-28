@@ -7,6 +7,7 @@ import {
     ElementRef,
     inject,
     Input,
+    input,
     OnChanges,
     SimpleChanges,
     ViewEncapsulation
@@ -25,7 +26,7 @@ import { KbqIconRegistry } from './icon-registry';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon',
-        '[class]': 'svgIcon ? null : iconName',
+        '[class]': 'svgIcon ? null : iconName()',
         '[class.kbq-error]': 'color === "error" || hasError'
     }
 })
@@ -37,13 +38,15 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly registry = inject(KbqIconRegistry, { optional: true });
     protected readonly destroyRef = inject(DestroyRef);
 
-    @Input() small = false;
+    readonly small = input(false);
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() autoColor = false;
 
     hasError: boolean = false;
 
     /** Name of an icon within a @koobiq/icons. Accepts "namespace:name" syntax. */
-    @Input({ alias: 'kbq-icon' }) iconName: string;
+    readonly iconName = input<string>(undefined!, { alias: 'kbq-icon' });
 
     protected name = 'KbqIcon';
 
@@ -137,7 +140,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     };
 
     private parseIconSize(): number {
-        const baseName = this.iconName?.includes(':') ? this.iconName.split(':')[1] : this.iconName;
+        const iconName = this.iconName();
+        const baseName = iconName?.includes(':') ? iconName.split(':')[1] : iconName;
 
         return parseInt(baseName?.split('_').pop() ?? '');
     }

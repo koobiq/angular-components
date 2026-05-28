@@ -11,6 +11,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     Output,
@@ -85,13 +86,17 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
     /** state of component. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) isOpened = false;
     /** Emit event by enter or not. Default is false */
-    @Input() isEmitValueByEnterEnabled = false;
+    readonly isEmitValueByEnterEnabled = input(false);
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
-    @Input({ transform: numberAttribute }) emitValueTimeout = defaultEmitValueTimeout;
+    readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
 
     /** Tooltip text for the search button. When set, overrides localeData.tooltip */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tooltipText(): string {
         return this._tooltipText ?? this.localeData?.tooltip;
@@ -104,6 +109,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private _tooltipText: string | null;
 
     /** Placeholder for input when expanded */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this._placeholder ?? this.localeData?.placeholder;
@@ -115,6 +122,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     private _placeholder: string | null = this.localeData?.placeholder;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -132,6 +141,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -172,8 +183,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this.value
             .pipe(
                 distinctUntilChanged(),
-                filter(() => !this.isEmitValueByEnterEnabled),
-                debounceTime(this.emitValueTimeout),
+                filter(() => !this.isEmitValueByEnterEnabled()),
+                debounceTime(this.emitValueTimeout()),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(this.emitValue);
@@ -243,7 +254,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         if (!this.isOpened) {
             this.value.next(defaultValue);
 
-            if (this.isEmitValueByEnterEnabled) {
+            if (this.isEmitValueByEnterEnabled()) {
                 this.emitValue(defaultValue, true);
             }
         }

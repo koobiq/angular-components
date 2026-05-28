@@ -18,6 +18,7 @@ import {
     inject,
     Inject,
     Input,
+    input,
     OnDestroy,
     Output,
     QueryList,
@@ -257,9 +258,11 @@ export class KbqTag
     hasFocus: boolean = false;
 
     /** Whether the tag is editable. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get editable(): boolean {
-        return this._editable ?? !!this.tagList?.editable;
+        return this._editable ?? !!this.tagList?.editable();
     }
 
     set editable(value: boolean) {
@@ -269,7 +272,7 @@ export class KbqTag
     private _editable: boolean | undefined;
 
     /** Whether the tag edits can't be submitted. */
-    @Input({ transform: booleanAttribute }) preventEditSubmit: boolean = false;
+    readonly preventEditSubmit = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     @ContentChild(KbqTagEditInput, { read: ElementRef })
     private readonly editInputElementRef: ElementRef<HTMLInputElement>;
@@ -313,6 +316,8 @@ export class KbqTag
     @Output() readonly removed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
 
     /** Whether the tag is selected. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get selected(): boolean {
         return this._selected;
@@ -325,6 +330,8 @@ export class KbqTag
     private _selected: boolean = false;
 
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value ?? this.elementRef.nativeElement.textContent?.trim();
@@ -339,9 +346,11 @@ export class KbqTag
     /**
      * Whether the tag is selectable.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get selectable(): boolean {
-        return this._selectable || !!this.tagList?.selectable;
+        return this._selectable || !!this.tagList?.selectable();
     }
 
     set selectable(value: boolean) {
@@ -353,6 +362,8 @@ export class KbqTag
     /**
      * Determines whether the tag is removable.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
         return this._removable && (this.tagList?.removable ?? true);
@@ -364,6 +375,8 @@ export class KbqTag
 
     private _removable: boolean = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabindex() {
         if (this.disabled) return null;
@@ -381,6 +394,8 @@ export class KbqTag
     /**
      * Whether the tag is disabled.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled || (this.tagList?.disabled ?? false);
@@ -628,7 +643,7 @@ export class KbqTag
 
     /** @docs-private */
     submitEditing(reason: string): void {
-        if (!this.editing() || this.preventEditSubmit) return;
+        if (!this.editing() || this.preventEditSubmit()) return;
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });

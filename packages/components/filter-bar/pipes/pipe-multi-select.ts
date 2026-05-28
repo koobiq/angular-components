@@ -112,11 +112,11 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
-        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing;
+        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing();
     }
 
     private get visibleOptions(): KbqOption[] {
-        return this.options?.filter((option) => option.selectable);
+        return this.options?.filter((option) => option.selectable());
     }
 
     private selectionAllInProgress = false;

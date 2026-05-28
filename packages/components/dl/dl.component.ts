@@ -5,6 +5,7 @@ import {
     ElementRef,
     inject,
     Input,
+    input,
     OnDestroy,
     ViewEncapsulation
 } from '@angular/core';
@@ -19,13 +20,15 @@ import { debounceTime, startWith } from 'rxjs/operators';
     host: {
         class: 'kbq-dl',
         '[class.kbq-dl_vertical]': 'vertical',
-        '[class.kbq-dl_wide]': 'wide',
+        '[class.kbq-dl_wide]': 'wide()',
         '(window:resize)': 'resizeStream.next($event)'
     }
 })
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
-    @Input() minWidth: number = 400;
-    @Input() wide = false;
+    readonly minWidth = input<number>(400);
+    readonly wide = input(false);
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() vertical: boolean | null = null;
 
     readonly resizeStream = new Subject<Event>();
@@ -54,7 +57,7 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
         const domRect = this.elementRef.nativeElement.getClientRects()[0];
         const width = domRect?.width || 0;
 
-        this.vertical = width <= this.minWidth;
+        this.vertical = width <= this.minWidth();
 
         this.changeDetectorRef.markForCheck();
     };

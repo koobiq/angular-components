@@ -39,7 +39,7 @@
 <ng-template
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
-    [cdkConnectedOverlayBackdropClass]="backdropClass"
+    [cdkConnectedOverlayBackdropClass]="backdropClass()"
     [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOffsetY]="offsetY"
@@ -56,7 +56,7 @@
         #panel
         class="kbq-select__panel kbq-timezone-select__panel {{ getPanelTheme() }}"
         cdkMonitorSubtreeFocus
-        [ngClass]="panelClass"
+        [ngClass]="panelClass()"
         [style.font-size.px]="triggerFontSize"
         [style.transformOrigin]="transformOrigin"
         (keydown)="handleKeydown($event)"

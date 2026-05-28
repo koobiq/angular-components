@@ -17,6 +17,7 @@ import {
     HostAttributeToken,
     inject,
     Input,
+    input,
     OnDestroy,
     Output,
     QueryList,
@@ -55,7 +56,7 @@ interface KbqAccordionState {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion',
-        '[attr.data-orientation]': 'orientation',
+        '[attr.data-orientation]': 'orientation()',
         '(keydown)': 'keydownHandler($event)'
     }
 })
@@ -84,17 +85,19 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     /** Specifies whether the accordion saves its states. Default is false */
     useStateSaving: boolean = inject(new HostAttributeToken('useStateSaving'), { optional: true }) !== null;
 
-    @Input() variant: KbqAccordionVariant | string = KbqAccordionVariant.fill;
+    readonly variant = input<KbqAccordionVariant | string>(KbqAccordionVariant.fill);
 
     /** Whether the Accordion is disabled. */
-    @Input({ transform: booleanAttribute }) disabled: boolean;
+    readonly disabled = input<boolean, unknown>(undefined!, { transform: booleanAttribute });
 
     /** The orientation of the accordion. */
-    @Input() orientation: KbqAccordionOrientation = 'vertical';
+    readonly orientation = input<KbqAccordionOrientation>('vertical');
 
     /**
      * The value of the item to expand when initially rendered and type is "single". Use when you do not need to control the state of the items.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get defaultValue(): string[] | string {
         return this.isMultiple ? this._defaultValue : this._defaultValue[0];
@@ -107,11 +110,13 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     }
 
     /** Determines whether one or multiple items can be opened at the same time. */
-    @Input() type: KbqAccordionType = 'single';
+    readonly type = input<KbqAccordionType>('single');
 
-    @Input() collapsible = true;
+    readonly collapsible = input(true);
 
     /** The controlled value of the item to expand */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): string[] | string {
         if (this._value === undefined) {
@@ -136,7 +141,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     }
 
     get isMultiple(): boolean {
-        return this.type === 'multiple';
+        return this.type() === 'multiple';
     }
 
     get hasSavedState(): boolean {
@@ -173,7 +178,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
 
         this.keyManager = new FocusKeyManager(this.items).withHomeAndEnd();
 
-        if (this.orientation === 'horizontal') {
+        if (this.orientation() === 'horizontal') {
             this.keyManager.withHorizontalOrientation(this.dir?.value || 'ltr');
         } else {
             this.keyManager.withVerticalOrientation();

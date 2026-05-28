@@ -29,7 +29,8 @@ import {
     ViewContainerRef,
     afterNextRender,
     forwardRef,
-    inject
+    inject,
+    input
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -101,7 +102,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
     providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR],
     host: {
         class: 'kbq-autocomplete-trigger',
-        '[attr.autocomplete]': 'autocompleteAttribute',
+        '[attr.autocomplete]': 'autocompleteAttribute()',
         // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
         // a little earlier. This avoids issues where IE delays the focusing of the input.
         '(focusin)': 'handleFocus()',
@@ -118,8 +119,10 @@ export class KbqAutocompleteTrigger
     protected readonly document = inject<Document>(DOCUMENT);
 
     readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
-        if (this.autocomplete && this.autocomplete.options) {
-            return merge(...this.autocomplete.options.map((option) => option.onSelectionChange));
+        const autocomplete = this.autocomplete();
+
+        if (autocomplete && autocomplete.options) {
+            return merge(...autocomplete.options.map((option) => option.onSelectionChange));
         }
 
         // If there are any subscribers before `ngAfterViewInit`, the `autocomplete` will be undefined.
@@ -132,32 +135,34 @@ export class KbqAutocompleteTrigger
 
     /** The currently active option, coerced to MatOption type. */
     get activeOption(): KbqOption | null {
-        return this.autocomplete?.keyManager?.activeItem;
+        return this.autocomplete()?.keyManager?.activeItem;
     }
 
     get panelOpen(): boolean {
-        return this.overlayAttached && this.autocomplete.showPanel;
+        return this.overlayAttached && this.autocomplete().showPanel;
     }
 
     /** The autocomplete panel to be attached to this trigger. */
-    @Input('kbqAutocomplete') autocomplete: KbqAutocomplete;
+    readonly autocomplete = input<KbqAutocomplete>(undefined!, { alias: 'kbqAutocomplete' });
 
     /**
      * Reference relative to which to position the autocomplete panel.
      * Defaults to the autocomplete trigger element.
      */
-    @Input('kbqAutocompleteConnectedTo') connectedTo: KbqAutocompleteOrigin;
+    readonly connectedTo = input<KbqAutocompleteOrigin>(undefined!, { alias: 'kbqAutocompleteConnectedTo' });
 
     /**
      * `autocomplete` attribute to be set on the input element.
      * @docs-private
      */
-    @Input('autocomplete') autocompleteAttribute: string = 'off';
+    readonly autocompleteAttribute = input<string>('off', { alias: 'autocomplete' });
 
     /**
      * Whether the autocomplete is disabled. When disabled, the element will
      * act as a regular input and the user won't be able to open the panel.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqAutocompleteDisabled')
     get autocompleteDisabled(): boolean {
         return this._autocompleteDisabled;
@@ -172,11 +177,14 @@ export class KbqAutocompleteTrigger
      * Determines whether the blur event is triggered outside the specific target
      * @returns A boolean indicating if the blur event happened outside the target element
      */
-    @Input('kbqAutocompleteOnBlur') onInputBlur = (event: FocusEvent): boolean => {
-        const target: HTMLElement = event.relatedTarget as HTMLElement;
+    readonly onInputBlur = input(
+        (event: FocusEvent): boolean => {
+            const target: HTMLElement = event.relatedTarget as HTMLElement;
 
-        return !target || target.tagName !== 'KBQ-OPTION';
-    };
+            return !target || target.tagName !== 'KBQ-OPTION';
+        },
+        { alias: 'kbqAutocompleteOnBlur' }
+    );
 
     private _autocompleteDisabled = false;
 
@@ -233,13 +241,17 @@ export class KbqAutocompleteTrigger
     }
 
     ngAfterViewInit(): void {
-        if (this.autocomplete) {
-            this.autocomplete.keyManager?.change.subscribe(() => {
+        const autocomplete = this.autocomplete();
+
+        if (autocomplete) {
+            autocomplete.keyManager?.change.subscribe(() => {
+                const autocompleteValue = this.autocomplete();
+
                 if (this.panelOpen) {
                     this.scrollActiveOptionIntoView();
                     this.elementRef.nativeElement.focus();
-                } else if (!this.panelOpen && this.autocomplete.keyManager.activeItem) {
-                    this.autocomplete.keyManager.activeItem?.selectViaInteraction();
+                } else if (!this.panelOpen && autocompleteValue.keyManager.activeItem) {
+                    autocompleteValue.keyManager.activeItem?.selectViaInteraction();
                 }
             });
         }
@@ -271,10 +283,10 @@ export class KbqAutocompleteTrigger
         }
 
         if (this.panelOpen) {
-            this.autocomplete.closed.emit();
+            this.autocomplete().closed.emit();
         }
 
-        this.autocomplete.isOpen = this.overlayAttached = false;
+        this.autocomplete().isOpen = this.overlayAttached = false;
 
         if (this.overlayRef && this.overlayRef.hasAttached()) {
             this.overlayRef.detach();
@@ -309,7 +321,7 @@ export class KbqAutocompleteTrigger
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null> {
         return merge(
             this.optionSelections,
-            this.autocomplete.keyManager.tabOut.pipe(filter(() => this.overlayAttached)),
+            this.autocomplete().keyManager.tabOut.pipe(filter(() => this.overlayAttached)),
             this.closeKeyEventStream,
             this.getOutsideClickStream(),
             this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached)) : observableOf()
@@ -352,23 +364,25 @@ export class KbqAutocompleteTrigger
             event.preventDefault();
         }
 
+        const autocomplete = this.autocomplete();
+
         if (this.activeOption && keyCode === ENTER && this.panelOpen) {
             this.activeOption.selectViaInteraction();
             this.resetActiveItem();
             event.preventDefault();
-        } else if (this.autocomplete) {
-            const prevActiveItem = this.autocomplete.keyManager.activeItem;
+        } else if (autocomplete) {
+            const prevActiveItem = autocomplete.keyManager.activeItem;
 
             if (this.panelOpen || keyCode === TAB) {
-                this.autocomplete.onKeydown(event);
+                autocomplete.onKeydown(event);
             } else if (!this.panelOpen && keyCode === DOWN_ARROW && this.canOpen()) {
                 this.open();
             }
 
             const isArrowKey = keyCode === UP_ARROW || keyCode === DOWN_ARROW;
 
-            if (isArrowKey && event.shiftKey && this.autocomplete.keyManager.activeItem !== prevActiveItem) {
-                this.autocomplete.keyManager.activeItem?.selectViaInteraction();
+            if (isArrowKey && event.shiftKey && autocomplete.keyManager.activeItem !== prevActiveItem) {
+                autocomplete.keyManager.activeItem?.selectViaInteraction();
             }
         }
     }
@@ -400,7 +414,7 @@ export class KbqAutocompleteTrigger
     handleFocus(): void {
         if (!this.canOpenOnNextFocus) {
             this.canOpenOnNextFocus = true;
-        } else if (!this.panelOpen && this.canOpen() && this.autocomplete.openOnFocus) {
+        } else if (!this.panelOpen && this.canOpen() && this.autocomplete().openOnFocus) {
             this.previousValue = this.elementRef.nativeElement.value;
             this.attachOverlay();
         }
@@ -413,7 +427,7 @@ export class KbqAutocompleteTrigger
     }
 
     scrollActiveOptionIntoView(): void {
-        this.autocomplete.keyManager.activeItem?.focus();
+        this.autocomplete().keyManager.activeItem?.focus();
     }
 
     /** Stream of clicks outside of the autocomplete panel. */
@@ -426,7 +440,8 @@ export class KbqAutocompleteTrigger
             filter((event) => {
                 const clickTarget = _getEventTarget<HTMLElement>(event);
                 const formField = this.formField ? this.formField.elementRef.nativeElement : null;
-                const customOrigin = this.connectedTo ? this.connectedTo.elementRef.nativeElement : null;
+                const connectedTo = this.connectedTo();
+                const customOrigin = connectedTo ? connectedTo.elementRef.nativeElement : null;
 
                 return (
                     this.overlayAttached &&
@@ -457,7 +472,7 @@ export class KbqAutocompleteTrigger
      */
     private subscribeToClosingActions(): Subscription {
         const firstStable = this.zone.onStable.asObservable().pipe(take(1));
-        const optionChanges = this.autocomplete.options.changes.pipe(
+        const optionChanges = this.autocomplete().options.changes.pipe(
             tap(() => this.positionStrategy.reapplyLastPosition()),
             // Defer emitting to the stream until the next tick, because changing
             // bindings in here will cause "changed after checked" errors.
@@ -474,7 +489,7 @@ export class KbqAutocompleteTrigger
                         const wasOpen = this.panelOpen;
 
                         this.resetActiveItem();
-                        this.autocomplete.setVisibility();
+                        this.autocomplete().setVisibility();
 
                         if (this.panelOpen) {
                             this.overlayRef!.updatePosition();
@@ -484,7 +499,7 @@ export class KbqAutocompleteTrigger
                             // can happen if the users opens the panel and there are no options, but the
                             // options come in slightly later or as a result of the value changing.
                             if (wasOpen !== this.panelOpen) {
-                                this.autocomplete.opened.emit();
+                                this.autocomplete().opened.emit();
                             }
                         }
 
@@ -508,8 +523,8 @@ export class KbqAutocompleteTrigger
     }
 
     private setTriggerValue(value: any): void {
-        const toDisplay =
-            this.autocomplete && this.autocomplete.displayWith ? this.autocomplete.displayWith(value) : value;
+        const autocomplete = this.autocomplete();
+        const toDisplay = autocomplete && autocomplete.displayWith ? autocomplete.displayWith(value) : value;
 
         // Simply falling back to an empty string if the display value is falsy does not work properly.
         // The display value can also be the number zero and shouldn't fall back to an empty string.
@@ -538,7 +553,7 @@ export class KbqAutocompleteTrigger
             this.onChange(event.source.value);
             this.elementRef.nativeElement.focus();
 
-            this.autocomplete.emitSelectEvent(event.source);
+            this.autocomplete().emitSelectEvent(event.source);
         }
 
         this.closePanel();
@@ -546,7 +561,7 @@ export class KbqAutocompleteTrigger
 
     /** Clear any previous selected option and emit a selection change event for this option */
     private clearPreviousSelectedOption(skip: KbqOption) {
-        this.autocomplete.options.forEach((option) => {
+        this.autocomplete().options.forEach((option) => {
             if (option !== skip && option.selected) {
                 option.deselect();
             }
@@ -554,14 +569,16 @@ export class KbqAutocompleteTrigger
     }
 
     private attachOverlay(): void {
-        if (!this.autocomplete) {
+        const autocomplete = this.autocomplete();
+
+        if (!autocomplete) {
             throw getKbqAutocompleteMissingPanelError();
         }
 
         let overlayRef = this.overlayRef;
 
         if (!overlayRef) {
-            this.portal = new TemplatePortal(this.autocomplete.template, this.viewContainerRef);
+            this.portal = new TemplatePortal(autocomplete.template, this.viewContainerRef);
             overlayRef = this.overlay.create(this.getOverlayConfig());
             this.overlayRef = overlayRef;
 
@@ -598,13 +615,13 @@ export class KbqAutocompleteTrigger
 
         const wasOpen = this.panelOpen;
 
-        this.autocomplete.setVisibility();
-        this.autocomplete.isOpen = this.overlayAttached = true;
+        autocomplete.setVisibility();
+        autocomplete.isOpen = this.overlayAttached = true;
 
         // We need to do an extra `panelOpen` check in here, because the
         // autocomplete won't be shown if there are no options.
         if (this.panelOpen && wasOpen !== this.panelOpen) {
-            this.autocomplete.opened.emit();
+            autocomplete.opened.emit();
         }
 
         this.zone.onStable
@@ -649,19 +666,21 @@ export class KbqAutocompleteTrigger
     }
 
     private getConnectedElement(): ElementRef<HTMLElement> {
-        if (this.connectedTo) {
-            return this.connectedTo.elementRef;
+        const connectedTo = this.connectedTo();
+
+        if (connectedTo) {
+            return connectedTo.elementRef;
         }
 
         return this.formField ? this.formField.getConnectedOverlayOrigin() : this.elementRef;
     }
 
     private getPanelMinWidth(): number {
-        return Math.max(this.autocomplete.panelMinWidth, this.getHostWidth());
+        return Math.max(this.autocomplete().panelMinWidth, this.getHostWidth());
     }
 
     private getOverlaySize(): { width: number | string } | { minWidth: number } {
-        const panelWidth = this.autocomplete.panelWidth;
+        const panelWidth = this.autocomplete().panelWidth;
 
         return panelWidth ? { width: panelWidth } : { minWidth: this.getPanelMinWidth() };
     }
@@ -675,10 +694,12 @@ export class KbqAutocompleteTrigger
      * correct options, or to 0 if the consumer opted into it.
      */
     private resetActiveItem(): void {
-        if (this.autocomplete.autoActiveFirstOption) {
-            this.autocomplete.keyManager.setFirstItemActive();
+        const autocomplete = this.autocomplete();
+
+        if (autocomplete.autoActiveFirstOption) {
+            autocomplete.keyManager.setFirstItemActive();
         } else {
-            this.autocomplete.keyManager.setActiveItem(-1);
+            autocomplete.keyManager.setActiveItem(-1);
         }
     }
 

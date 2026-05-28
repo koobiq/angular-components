@@ -15,6 +15,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    input,
     NgZone,
     OnDestroy,
     Optional,
@@ -132,6 +133,8 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 export class KbqDatepicker<D> implements OnDestroy {
     protected readonly document = inject<Document>(DOCUMENT);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -144,6 +147,8 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _hasBackdrop: boolean = false;
 
     /** The date to open the calendar to initially. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get startAt(): D | null {
         // If an explicit startAt is set we start there, otherwise we start at whatever the currently
@@ -156,13 +161,15 @@ export class KbqDatepicker<D> implements OnDestroy {
 
         this._startAt =
             deserializedValue !== null
-                ? this.dateAdapter.clampDate(deserializedValue, this.minDate, this.maxDate)
+                ? this.dateAdapter.clampDate(deserializedValue, this.minDate(), this.maxDate())
                 : null;
     }
 
     private _startAt: D | null;
 
     /** Whether the datepicker pop-up should be disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled : this._disabled;
@@ -180,6 +187,8 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _disabled: boolean;
 
     /** Whether the calendar is open. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get opened(): boolean {
         return this._opened;
@@ -213,10 +222,10 @@ export class KbqDatepicker<D> implements OnDestroy {
     }
 
     /** The minimum selectable date. */
-    @Input() minDate: D | null;
+    readonly minDate = input<D | null>(undefined!);
 
     /** The maximum selectable date. */
-    @Input() maxDate: D | null;
+    readonly maxDate = input<D | null>(undefined!);
 
     /**
      * Emits selected year in multiyear view.
@@ -231,12 +240,12 @@ export class KbqDatepicker<D> implements OnDestroy {
     @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
     /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
-    @Input() panelClass: string | string[];
+    readonly panelClass = input<string | string[]>(undefined!);
 
     /** Function that can be used to add custom CSS classes to dates. */
-    @Input() dateClass: (date: D) => KbqCalendarCellCssClasses;
+    readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
-    @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Emits when the datepicker has been opened. */
     @Output('opened') readonly openedStream: EventEmitter<void> = new EventEmitter<void>();
@@ -437,7 +446,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         const overlayConfig = new OverlayConfig({
             positionStrategy: this.createPopupPositionStrategy(),
             hasBackdrop: this.hasBackdrop,
-            backdropClass: this.backdropClass,
+            backdropClass: this.backdropClass(),
             direction: this.dir,
             scrollStrategy: this.scrollStrategy(),
             panelClass: 'kbq-datepicker__popup'

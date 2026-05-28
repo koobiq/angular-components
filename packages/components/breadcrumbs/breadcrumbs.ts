@@ -13,7 +13,7 @@ import {
     forwardRef,
     inject,
     InjectionToken,
-    Input,
+    input,
     OnInit,
     Provider,
     QueryList,
@@ -118,16 +118,16 @@ export class KbqBreadcrumbItem {
      * The text displayed for the breadcrumb item.
      * This text will be shown if breadcrumb item is hidden in dropdown.
      */
-    @Input() text: string;
+    readonly text = input<string>(undefined!);
     /**
      * Indicates whether the breadcrumb item is disabled.
      */
-    @Input({ transform: booleanAttribute }) disabled: boolean;
+    readonly disabled = input<boolean, unknown>(undefined!, { transform: booleanAttribute });
     /**
      * Indicates whether the breadcrumb item is the current/active item.
      * Defaults to `false`.
      */
-    @Input({ transform: booleanAttribute }) current: boolean = false;
+    readonly current = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
      * A reference to a custom template provided for the breadcrumb item content.
      * The template can be used to override the default appearance of the breadcrumb.
@@ -158,11 +158,11 @@ export class KbqBreadcrumbItem {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-breadcrumbs',
-        '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
-        '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
-        '[class.kbq-breadcrumbs_big]': 'size === "big"',
-        '[class.kbq-breadcrumbs_wrap]': 'wrapMode === "wrap"',
-        '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin',
+        '[class.kbq-breadcrumbs_compact]': 'size() === "compact"',
+        '[class.kbq-breadcrumbs_normal]': 'size() === "normal"',
+        '[class.kbq-breadcrumbs_big]': 'size() === "big"',
+        '[class.kbq-breadcrumbs_wrap]': 'wrapMode() === "wrap"',
+        '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin()',
         '[attr.aria-label]': "'breadcrumb'"
     },
     hostDirectives: [RdxRovingFocusGroupDirective]
@@ -174,28 +174,29 @@ export class KbqBreadcrumbs implements AfterContentInit {
      *
      * @see KbqBreadcrumbsConfiguration
      */
-    @Input({ transform: booleanAttribute }) firstItemNegativeMargin: boolean =
-        this.configuration.firstItemNegativeMargin;
+    readonly firstItemNegativeMargin = input<boolean, unknown>(this.configuration.firstItemNegativeMargin, {
+        transform: booleanAttribute
+    });
     /**
      * Size of the breadcrumbs. Affects font size.
      * Default value is taken from the global configuration.
      */
-    @Input() size: KbqDefaultSizes = this.configuration.size;
+    readonly size = input<KbqDefaultSizes>(this.configuration.size);
     /**
      * Maximum number of visible breadcrumb items.
      * Remaining items are collapsed into a dropdown if the total exceeds this value.
      * Default value is taken from the global configuration.
      */
-    @Input() max: number | null = this.configuration.max;
+    readonly max = input<number | null>(this.configuration.max);
     /**
      * Indicates whether the breadcrumbs are disabled.
      * When disabled, user interactions are blocked.
      */
-    @Input({ transform: booleanAttribute }) disabled: boolean = false;
+    readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
      * Wrapping behavior of the breadcrumb items.
      */
-    @Input() wrapMode: KbqBreadcrumbsWrapMode = this.configuration.wrapMode;
+    readonly wrapMode = input<KbqBreadcrumbsWrapMode>(this.configuration.wrapMode);
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     protected readonly separator?: TemplateRef<any>;
@@ -230,12 +231,14 @@ export class KbqBreadcrumbs implements AfterContentInit {
      * @docs-private
      */
     protected get maxWidth(): number | null {
+        const max = this.max();
+
         if (
             !this.overflowItems ||
             !this.overflowItems.length ||
-            this.max === null ||
-            this.max >= this.items.length ||
-            this.max < this.minVisibleItems
+            max === null ||
+            max >= this.items.length ||
+            max < this.minVisibleItems
         ) {
             return null;
         }
@@ -248,7 +251,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
             this.overflowItems.last
         ];
 
-        for (let i = 0; i < this.max - 1; i++) {
+        for (let i = 0; i < max - 1; i++) {
             visibleItemsWidth += this.getItemWidth(sortedItems[sortedItems.length - i - 1]);
         }
 

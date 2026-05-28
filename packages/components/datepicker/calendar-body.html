@@ -1,5 +1,5 @@
 <!-- Create the first row separately so we can include a special spacer cell. -->
-@for (row of rows; track $index; let rowIndex = $index) {
+@for (row of rows(); track $index; let rowIndex = $index) {
     <tr>
         <!--  We mark this cell as aria-hidden so it doesn't get read out as one of the days in the week.
         The aspect ratio of the table cells is maintained by setting the top and bottom padding as a
@@ -21,9 +21,9 @@
             >
                 <div
                     class="kbq-calendar__body-cell-content"
-                    [class.kbq-calendar__body-today]="todayValue === item.value"
+                    [class.kbq-calendar__body-today]="todayValue() === item.value"
                     [class.kbq-disabled]="!item.enabled"
-                    [class.kbq-selected]="selectedValue === item.value"
+                    [class.kbq-selected]="selectedValue() === item.value"
                 >
                     {{ item.displayValue }}
                 </div>

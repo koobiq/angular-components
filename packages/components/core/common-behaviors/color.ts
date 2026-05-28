@@ -95,6 +95,8 @@ export class KbqColorDirective {
         return `kbq-${this._color}`;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get color(): KbqComponentColors | ThemePalette | string {
         return this._color;

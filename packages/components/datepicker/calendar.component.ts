@@ -11,7 +11,8 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    input
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
@@ -42,6 +43,8 @@ import { KbqMonthView } from './month-view.component';
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** A date representing the period (month or year) to start the calendar in. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get startAt(): D | null {
         return this._startAt;
@@ -57,6 +60,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _startAt: D | null;
 
     /** The currently selected date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selected(): D | null {
         return this._selected;
@@ -69,6 +74,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _selected: D | null;
 
     /** The minimum selectable date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get minDate(): D | null {
         return this._minDate;
@@ -83,6 +90,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _minDate: D | null;
 
     /** The maximum selectable date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get maxDate(): D | null {
         return this._maxDate;
@@ -113,10 +122,10 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _activeDate: D;
 
     /** Function used to filter which dates are selectable. */
-    @Input() dateFilter: (date: D) => boolean;
+    readonly dateFilter = input<(date: D) => boolean>(undefined!);
 
     /** Function that can be used to add custom CSS classes to dates. */
-    @Input() dateClass: (date: D) => KbqCalendarCellCssClasses;
+    readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
     /** Emits when the currently selected date changes. */
     @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();

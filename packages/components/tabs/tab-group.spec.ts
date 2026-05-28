@@ -514,7 +514,7 @@ describe('KbqTabGroup', () => {
         it('should select by string and assign string type to binded property', fakeAsync(() => {
             const indexToSelect = 0;
 
-            instance.selectBy = instance.tabs.get(indexToSelect)!.tabId;
+            instance.selectBy = instance.tabs.get(indexToSelect)!.tabId();
             expect(instance.selectBy).toEqual('first');
             fixture.detectChanges();
             checkSelectedIndex(indexToSelect, fixture);

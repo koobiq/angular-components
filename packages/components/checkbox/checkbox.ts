@@ -11,6 +11,7 @@ import {
     forwardRef,
     inject,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     Output,
@@ -80,25 +81,27 @@ export class KbqCheckboxChange {
         '[id]': 'id',
         '[attr.id]': 'id',
         '[attr.disabled]': 'disabled',
-        '[class.kbq-checkbox_big]': 'big',
+        '[class.kbq-checkbox_big]': 'big()',
         '[class.kbq-indeterminate]': 'indeterminate',
         '[class.kbq-checked]': 'checked',
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-checkbox_label-before]': 'labelPosition == "before"'
+        '[class.kbq-checkbox_label-before]': 'labelPosition() == "before"'
     },
     exportAs: 'kbqCheckbox'
 })
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
-    @Input() big: boolean = false;
+    readonly big = input<boolean>(false);
 
     /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() id: string;
 
     /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
-    @Input() labelPosition: 'before' | 'after' = 'after';
+    readonly labelPosition = input<'before' | 'after'>('after');
 
     /** Name value will be applied to the input element if present */
-    @Input() name: string | null = null;
+    readonly name = input<string | null>(null);
 
     /** Event emitted when the checkbox's `checked` value changes. */
     @Output() readonly change: EventEmitter<KbqCheckboxChange> = new EventEmitter<KbqCheckboxChange>();
@@ -107,9 +110,11 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** The value attribute of the native input element */
-    @Input() value: string;
+    readonly value = input<string>(undefined!);
 
     /** Defines the behavior when a user clicks on the checkbox. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() clickAction: KbqCheckboxClickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) || undefined;
 
     /** The native `<input type="checkbox">` element */
@@ -121,11 +126,13 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     }
 
     /** Whether the checkbox is required. */
-    @Input({ transform: booleanAttribute }) required: boolean | undefined;
+    readonly required = input<boolean, unknown>(undefined, { transform: booleanAttribute });
 
     /**
      * Whether the checkbox is checked.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get checked(): boolean {
         return this._checked;
@@ -141,6 +148,8 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     private _checked: boolean = false;
 
     /** Whether the checkbox is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -155,6 +164,8 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -172,6 +183,8 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
      * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
      * set to false.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get indeterminate(): boolean {
         return this._indeterminate;

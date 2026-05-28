@@ -158,6 +158,8 @@ export class KbqTreeSelection
 
     @ContentChildren(KbqTreeOption) unorderedOptions: QueryList<KbqTreeOption>;
 
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() declare treeControl: FlatTreeControl<any>;
 
     @Output() readonly navigationChange = new EventEmitter<KbqTreeNavigationChange<KbqTreeOption>>();
@@ -172,6 +174,8 @@ export class KbqTreeSelection
 
     private lastSyncedDataNodes: readonly any[] | null = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get autoSelect(): boolean {
         return this._autoSelect;
@@ -195,6 +199,8 @@ export class KbqTreeSelection
         return !!this.multipleMode;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get noUnselectLast(): boolean {
         return this._noUnselectLast;
@@ -206,6 +212,8 @@ export class KbqTreeSelection
 
     private _noUnselectLast: boolean = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -223,6 +231,8 @@ export class KbqTreeSelection
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): any {
         return this.disabled ? -1 : this._tabIndex;
@@ -503,7 +513,7 @@ export class KbqTreeSelection
     toggleFocusedOption(): void {
         const focusedOption = this.keyManager.activeItem;
 
-        if (!focusedOption?.selectable) return;
+        if (!focusedOption?.selectable()) return;
 
         if (focusedOption && (!focusedOption.selected || this.canDeselectLast(focusedOption))) {
             this.selectionModel.toggle(focusedOption.data);

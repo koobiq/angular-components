@@ -136,6 +136,8 @@ export class KbqTimepicker<D>
     controlType: string = 'timepicker';
 
     /** Object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get errorStateMatcher() {
         return this.errorStateTracker.errorStateMatcher;
@@ -149,6 +151,8 @@ export class KbqTimepicker<D>
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this._placeholder;
@@ -162,6 +166,8 @@ export class KbqTimepicker<D>
 
     private _placeholder = TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT];
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -181,6 +187,8 @@ export class KbqTimepicker<D>
 
     private _disabled: boolean;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -196,6 +204,8 @@ export class KbqTimepicker<D>
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -207,6 +217,8 @@ export class KbqTimepicker<D>
 
     private _required: boolean;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get format(): TimeFormats {
         return this._format;
@@ -231,6 +243,8 @@ export class KbqTimepicker<D>
 
     private _format: TimeFormats = DEFAULT_TIME_FORMAT;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get min(): D | null {
         return this._min;
@@ -243,6 +257,8 @@ export class KbqTimepicker<D>
 
     private _min: D | null = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get max(): D | null {
         return this._max;
@@ -255,6 +271,8 @@ export class KbqTimepicker<D>
 
     private _max: D | null = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): D | null {
         return this._value;
@@ -272,6 +290,8 @@ export class KbqTimepicker<D>
 
     private _value: D | null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {

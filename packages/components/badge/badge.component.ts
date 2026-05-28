@@ -9,6 +9,7 @@ import {
     ElementRef,
     forwardRef,
     Input,
+    input,
     QueryList,
     Renderer2,
     SkipSelf,
@@ -116,18 +117,20 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-badge',
-        '[class.kbq-badge_compact]': 'compact',
-        '[class.kbq-badge-filled]': '!outline',
-        '[class.kbq-badge-outline]': 'outline',
+        '[class.kbq-badge_compact]': 'compact()',
+        '[class.kbq-badge-filled]': '!outline()',
+        '[class.kbq-badge-outline]': 'outline()',
         '[class]': 'badgeColor'
     }
 })
 export class KbqBadge {
     @ContentChild(KbqIconItem) iconItem: KbqIconItem;
 
-    @Input() compact: boolean = false;
-    @Input() outline: boolean = false;
+    readonly compact = input<boolean>(false);
+    readonly outline = input<boolean>(false);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get badgeColor(): string {
         return `kbq-badge_${this._badgeColor}`;

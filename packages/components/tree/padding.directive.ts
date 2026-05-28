@@ -23,6 +23,8 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 
     private _level: number;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTreeNodePaddingIndent')
     get indent(): number | string {
         return this._indent;
@@ -67,10 +69,8 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     }
 
     paddingIndent(): string | null {
-        const nodeLevel =
-            this.treeNode.data && this.tree.treeControl.getLevel
-                ? this.tree.treeControl.getLevel(this.treeNode.data)
-                : 0;
+        const treeControl = this.tree.treeControl();
+        const nodeLevel = this.treeNode.data && treeControl.getLevel ? treeControl.getLevel(this.treeNode.data) : 0;
 
         const level = this.level || nodeLevel;
 

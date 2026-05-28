@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation, input } from '@angular/core';
 import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
@@ -40,15 +40,17 @@ const MAX_DASH_ARRAY = 295;
     host: {
         class: 'kbq-progress-spinner',
         '[class.kbq-progress-spinner_big]': `size === 'big'`,
-        '[class.kbq-progress-spinner_indeterminate]': `mode === 'indeterminate'`,
-        '[attr.id]': 'id'
+        '[class.kbq-progress-spinner_indeterminate]': `mode() === 'indeterminate'`,
+        '[attr.id]': 'id()'
     }
 })
 export class KbqProgressSpinner extends KbqColorDirective {
-    @Input() id: string = `kbq-progress-spinner-${id++}`;
-    @Input() value: number = 0;
-    @Input() mode: ProgressSpinnerMode = 'determinate';
+    readonly id = input<string>(`kbq-progress-spinner-${id++}`);
+    readonly value = input<number>(0);
+    readonly mode = input<ProgressSpinnerMode>('determinate');
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get size(): ProgressSpinnerSize | string {
         return this._size;
@@ -65,7 +67,7 @@ export class KbqProgressSpinner extends KbqColorDirective {
     svgCircleRadius: string = '42.5%';
 
     get percentage(): number {
-        return Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value)) / MAX_PERCENT;
+        return Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value())) / MAX_PERCENT;
     }
 
     get dashOffsetPercent(): string {

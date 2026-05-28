@@ -260,18 +260,28 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Placement of popUp */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input('kbqNotificationCenterPlacement') placement: KbqPopUpPlacementValues = PopUpPlacements.Right;
 
     /** Class that will be used in the background */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Class that will be used in the panel */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input('kbqNotificationCenterPanelClass') panelClass: string;
 
     /** Offset of popUp */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetX;
 
     /** Use popover or not */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get popoverMode(): boolean {
         return this._popoverMode;
@@ -287,6 +297,8 @@ export class KbqNotificationCenterTrigger
     private _popoverMode: boolean = false;
 
     /** Set height of popover. Default is calc(100vh - 48px). 48px - height of navbar */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get popoverHeight(): string {
         return this._popoverHeight;
@@ -303,6 +315,8 @@ export class KbqNotificationCenterTrigger
     private _popoverHeight: string;
 
     /** Whether the trigger is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -320,9 +334,15 @@ export class KbqNotificationCenterTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() stickToWindow: KbqStickToWindowPlacementValues;
 
     /** Container for additional positioning, used with stickToWindow */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() container: HTMLElement;
 
     /** @docs-private */

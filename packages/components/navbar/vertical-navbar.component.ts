@@ -14,6 +14,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    input,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
@@ -58,7 +59,7 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-vertical-navbar',
-        '[class.kbq-vertical-navbar_open-over]': 'openOver',
+        '[class.kbq-vertical-navbar_open-over]': 'openOver()',
         '[attr.tabindex]': 'tabIndex',
         '[attr.cdkMonitorSubtreeFocus]': 'true',
 
@@ -89,8 +90,10 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     readonly animationDone: Subject<void> = new Subject();
 
-    @Input() openOver: boolean = false;
+    readonly openOver = input<boolean>(false);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get expanded() {
         return this._expanded;

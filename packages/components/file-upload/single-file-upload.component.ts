@@ -92,14 +92,19 @@ export class KbqSingleFileUploadComponent
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
-    @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    readonly progressMode = input<ProgressSpinnerMode>('determinate');
     /** Array of file type specifiers */
-    @Input() accept?: string[];
-    @Input() inputId: string = `kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`;
+    readonly accept = input<string[]>();
+    readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get file(): KbqFileItem | null {
         const files = this.fileList.list();
@@ -117,7 +122,7 @@ export class KbqSingleFileUploadComponent
      * Controls whether to display the file size information.
      * @default true
      */
-    @Input({ transform: booleanAttribute }) showFileSize: boolean = true;
+    readonly showFileSize = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
      * Determines which kind of items the upload component can accept.
@@ -161,7 +166,7 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     get acceptedFiles(): string {
-        return this.accept?.join(',') || '*/*';
+        return this.accept()?.join(',') || '*/*';
     }
 
     /** @docs-private */

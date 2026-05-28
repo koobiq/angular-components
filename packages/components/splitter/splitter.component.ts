@@ -70,6 +70,8 @@ export enum Direction {
     }
 })
 export class KbqGutterDirective implements OnInit {
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -81,6 +83,8 @@ export class KbqGutterDirective implements OnInit {
 
     private _direction: Direction = Direction.Vertical;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get order(): number {
         return this._order;
@@ -92,6 +96,8 @@ export class KbqGutterDirective implements OnInit {
 
     private _order: number = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get size(): number {
         return this._size;
@@ -148,8 +154,12 @@ export class KbqGutterDirective implements OnInit {
     }
 })
 export class KbqGutterGhostDirective {
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() visible: boolean;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get x(): number {
         return this._x;
@@ -162,6 +172,8 @@ export class KbqGutterGhostDirective {
 
     private _x: number = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get y(): number {
         return this._y;
@@ -174,6 +186,8 @@ export class KbqGutterGhostDirective {
 
     private _y: number = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -186,6 +200,8 @@ export class KbqGutterGhostDirective {
 
     private _direction: Direction = Direction.Vertical;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get size(): number {
         return this._size;
@@ -250,6 +266,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private areasChangeSubscription: Subscription = Subscription.EMPTY;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hideGutters(): boolean {
         return this._hideGutters;
@@ -261,6 +279,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _hideGutters: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -272,6 +292,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _direction: Direction;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -283,6 +305,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get useGhost(): boolean {
         return this._useGhost;
@@ -294,6 +318,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _useGhost: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get gutterSize(): number {
         return this._gutterSize;

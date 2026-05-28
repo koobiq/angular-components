@@ -22,7 +22,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    input
 } from '@angular/core';
 import { ESCAPE, FocusKeyManager, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
@@ -68,9 +69,11 @@ export class KbqDropdownStaticContent {}
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     @ContentChild(KbqFormField) private search?: KbqFormField;
 
-    @Input() navigationWithWrap: boolean = false;
+    readonly navigationWithWrap = input<boolean>(false);
 
     /** Position of the dropdown in the X axis. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get xPosition(): KbqDropdownPositionX {
         return this._xPosition;
@@ -86,6 +89,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Position of the dropdown in the Y axis. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get yPosition(): KbqDropdownPositionY {
         return this._yPosition;
@@ -101,6 +106,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown should overlap its trigger vertically. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get overlapTriggerY(): boolean {
         return this._overlapTriggerY;
@@ -111,6 +118,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown should overlap its trigger horizontally. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get overlapTriggerX(): boolean {
         return this._overlapTriggerX;
@@ -121,6 +130,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown has a backdrop. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -136,6 +147,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * to style the containing dropdown from outside the component.
      * @param classes list of class names
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('class')
     set panelClass(classes: string) {
         const previousPanelClass = this.previousPanelClass;
@@ -179,6 +192,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     direction: Direction;
 
     /** Class to be added to the backdrop element. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() backdropClass: string = this.defaultOptions.backdropClass;
 
     /** @docs-private */
@@ -223,7 +239,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
         this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems).withTypeAhead();
 
-        if (this.navigationWithWrap) {
+        if (this.navigationWithWrap()) {
             this.keyManager.withWrap();
         }
 

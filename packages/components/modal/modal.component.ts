@@ -76,17 +76,32 @@ export class KbqModalComponent<T = any, R = any>
 
     componentColors = KbqComponentColors;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqModalType: ModalType = 'default';
 
     // The instance of component opened into the dialog.
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqComponent: Type<T>;
     // If not specified, will use <ng-content>
+
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqContent: string | TemplateRef<{}> | Type<T>;
     // Default Modal ONLY
+
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqFooter: string | TemplateRef<{}> | IModalButtonOptions<T>[];
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqVisible() {
         return this._kbqVisible;
@@ -99,15 +114,39 @@ export class KbqModalComponent<T = any, R = any>
 
     @Output() readonly kbqVisibleChange = new EventEmitter<boolean>();
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqWidth: number | string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqSize: ModalSize = ModalSize.Medium;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqWrapClassName: string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqClassName: string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqStyle: object;
+
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqTitle: string | TemplateRef<{}>;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqCloseByESC: boolean = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqClosable() {
         return this._kbqClosable;
@@ -117,6 +156,8 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqClosable = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqMask() {
         return this._kbqMask;
@@ -126,6 +167,8 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqMask = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqMaskClosable() {
         return this._kbqMaskClosable;
@@ -135,7 +178,13 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqMaskClosable = false;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqMaskStyle: object;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqBodyStyle: object;
 
     // Trigger when modal open(visible) after animations
@@ -146,11 +195,22 @@ export class KbqModalComponent<T = any, R = any>
     @Output() readonly kbqBeforeClose = new EventEmitter<R | undefined>();
 
     // --- Predefined OK & Cancel buttons
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() kbqOkText: string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqOkType = KbqComponentColors.Contrast;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqRestoreFocus = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqOkLoading() {
         return this._kbqOkLoading;
@@ -160,9 +220,17 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqOkLoading = false;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() @Output() readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() kbqCancelText: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqCancelLoading() {
         return this._kbqCancelLoading;
@@ -172,6 +240,9 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqCancelLoading = false;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() @Output() readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
 
     @ViewChild('modalContainer', { static: true }) modalContainer: ElementRef;
@@ -240,6 +311,9 @@ export class KbqModalComponent<T = any, R = any>
         super();
     }
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqGetContainer: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) = () => this.overlay.create();
 
     // [NOTE] NOT available when using by service!

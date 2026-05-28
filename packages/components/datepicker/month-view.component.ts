@@ -8,7 +8,8 @@ import {
     Optional,
     Output,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    input
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
@@ -34,6 +35,8 @@ export class KbqMonthView<D> implements AfterContentInit {
     /**
      * The date to display in this month view (everything other than the month and year is ignored).
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get activeDate(): D {
         return this._activeDate;
@@ -52,6 +55,8 @@ export class KbqMonthView<D> implements AfterContentInit {
     private _activeDate: D;
 
     /** The currently selected date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selected(): D | null {
         return this._selected;
@@ -65,16 +70,16 @@ export class KbqMonthView<D> implements AfterContentInit {
     private _selected: D | null;
 
     /** The minimum selectable date. */
-    @Input() minDate: D | null;
+    readonly minDate = input<D | null>(undefined!);
 
     /** The maximum selectable date. */
-    @Input() maxDate: D | null;
+    readonly maxDate = input<D | null>(undefined!);
 
     /** Function used to filter which dates are selectable. */
-    @Input() dateFilter: (date: D) => boolean;
+    readonly dateFilter = input<(date: D) => boolean>(undefined!);
 
     /** Function that can be used to add custom CSS classes to dates. */
-    @Input() dateClass: (date: D) => KbqCalendarCellCssClasses;
+    readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
     /** Emits when a new date is selected. */
     @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -182,7 +187,8 @@ export class KbqMonthView<D> implements AfterContentInit {
                 i + 1
             );
             const enabled = this.shouldEnableDate(date);
-            const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
+            const dateClass = this.dateClass();
+            const cellClasses = dateClass ? dateClass(date) : undefined;
 
             this.weeks[this.weeks.length - 1].push(new KbqCalendarCell(i + 1, dateNames[i], enabled, cellClasses));
         }
@@ -190,11 +196,15 @@ export class KbqMonthView<D> implements AfterContentInit {
 
     /** Date filter for the month */
     private shouldEnableDate(date: D): boolean {
+        const dateFilter = this.dateFilter();
+        const minDate = this.minDate();
+        const maxDate = this.maxDate();
+
         return (
             !!date &&
-            (!this.dateFilter || this.dateFilter(date)) &&
-            (!this.minDate || this.adapter.compareDate(date, this.minDate) >= 0) &&
-            (!this.maxDate || this.adapter.compareDate(date, this.maxDate) <= 0)
+            (!dateFilter || dateFilter(date)) &&
+            (!minDate || this.adapter.compareDate(date, minDate) >= 0) &&
+            (!maxDate || this.adapter.compareDate(date, maxDate) <= 0)
         );
     }
 

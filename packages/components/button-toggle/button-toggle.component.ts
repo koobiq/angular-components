@@ -13,6 +13,7 @@ import {
     EventEmitter,
     forwardRef,
     Input,
+    input,
     OnDestroy,
     OnInit,
     Optional,
@@ -63,6 +64,8 @@ export class KbqButtonToggleChange {
 })
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
     /** Whether the toggle group is vertical. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get vertical(): boolean {
         return this._vertical;
@@ -73,6 +76,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     /** Value of the toggle group. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         const selected = this.selectionModel ? this.selectionModel.selected : [];
@@ -97,6 +102,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     /** Whether multiple button toggles can be selected. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get multiple(): boolean {
         return this._multiple;
@@ -110,6 +117,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     @ContentChildren(forwardRef(() => KbqButtonToggle)) buttonToggles: QueryList<KbqButtonToggle>;
 
     /** Whether multiple button toggle group is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -303,7 +312,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             [kbqStyle]="'transparent'"
             [class.kbq-selected]="checked"
             [disabled]="disabled"
-            [tabIndex]="tabIndex || 0"
+            [tabIndex]="tabIndex() || 0"
             (click)="onToggleClick()"
         >
             <div #kbqTitleText class="kbq-button-toggle-wrapper">
@@ -326,6 +335,8 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;
 
     /** Whether the button is checked. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get checked(): boolean {
         return this.buttonToggleGroup ? this.buttonToggleGroup.isSelected(this) : this._checked;
@@ -351,11 +362,15 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     @ViewChild(KbqButton, { static: false }) mcButton: KbqButton;
 
     /** KbqButtonToggleGroup reads this to assign its own value. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() value: any;
 
     /** Tabindex for the toggle. */
-    @Input() tabIndex: number | null;
+    readonly tabIndex = input<number | null>(undefined!);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled || (this.buttonToggleGroup && this.buttonToggleGroup.disabled);

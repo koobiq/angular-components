@@ -5,6 +5,7 @@ import {
     ElementRef,
     forwardRef,
     Input,
+    input,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -41,8 +42,10 @@ export class KbqTimezoneOption extends KbqOption {
     @ViewChild('tooltipContentWrapper', { static: false }) tooltipContentWrapper: ElementRef<HTMLElement>;
     @ViewChild('tooltipContent', { static: false }) tooltipContent: ElementRef<HTMLElement>;
 
-    @Input() highlightText: string;
+    readonly highlightText = input<string>(undefined!);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get timezone(): KbqTimezoneZone {
         return this._timezone;

@@ -7,6 +7,7 @@ import {
     effect,
     inject,
     Input,
+    input,
     OnDestroy,
     signal,
     ViewEncapsulation
@@ -27,17 +28,21 @@ import { KbqIcon } from './icon.component';
         '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-icon-button_small]': 'small'
+        '[class.kbq-icon-button_small]': 'small()'
     }
 })
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected readonly focusMonitor = inject(FocusMonitor);
 
-    @Input() small = false;
+    readonly small = input(false);
 
     /** Name of an icon within a @koobiq/icons. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbq-icon-button' }) iconName: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabindex() {
         return this.disabled ? null : this._tabindex;
@@ -51,6 +56,8 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;

@@ -276,6 +276,8 @@ export class KbqDatepickerInput<D>
     disabledChange = new EventEmitter<boolean>();
 
     /** Object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get errorStateMatcher() {
         return this.errorStateTracker.errorStateMatcher;
@@ -285,6 +287,8 @@ export class KbqDatepickerInput<D>
         this.errorStateTracker.errorStateMatcher = value;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this._placeholder || this.configuration.placeholder;
@@ -296,6 +300,8 @@ export class KbqDatepickerInput<D>
 
     private _placeholder: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -308,6 +314,8 @@ export class KbqDatepickerInput<D>
     private _required: boolean;
 
     /** The datepicker that this input is associated with. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqDatepicker(value: KbqDatepicker<D>) {
         if (!value) {
@@ -329,6 +337,8 @@ export class KbqDatepickerInput<D>
     }
 
     /** The calendar that this input is associated with. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqCalendar(value: KbqCalendar<D>) {
         if (!value) {
@@ -340,6 +350,8 @@ export class KbqDatepickerInput<D>
     }
 
     /** Function that can be used to filter out dates within the datepicker. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqDatepickerFilter(value: (date: D | null) => boolean) {
         this.dateFilter = value;
@@ -347,6 +359,8 @@ export class KbqDatepickerInput<D>
     }
 
     /** The value of the input. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): D | null {
         return this._value;
@@ -372,6 +386,8 @@ export class KbqDatepickerInput<D>
     private _value: D | null;
 
     /** The minimum valid date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get min(): D | null {
         return this._min;
@@ -385,6 +401,8 @@ export class KbqDatepickerInput<D>
     private _min: D | null;
 
     /** The maximum valid date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get max(): D | null {
         return this._max;
@@ -398,6 +416,8 @@ export class KbqDatepickerInput<D>
     private _max: D | null;
 
     /** Whether the datepicker-input is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -423,6 +443,8 @@ export class KbqDatepickerInput<D>
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -434,6 +456,8 @@ export class KbqDatepickerInput<D>
 
     private _id: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {
@@ -1070,48 +1094,60 @@ export class KbqDatepickerInput<D>
     }
 
     private getMaxDate(date: D): number {
-        if (this.datepicker?.maxDate && this.isMaxYear(date) && this.isMaxMonth(date)) {
-            return this.adapter.getDate(this.datepicker.maxDate);
+        const maxDate = this.datepicker?.maxDate();
+
+        if (maxDate && this.isMaxYear(date) && this.isMaxMonth(date)) {
+            return this.adapter.getDate(maxDate);
         }
 
         return this.adapter.getNumDaysInMonth(date);
     }
 
     private getMinDate(date: D): number {
-        if (this.datepicker?.minDate && this.isMinYear(date) && this.isMinMonth(date)) {
-            return this.adapter.getDate(this.datepicker.minDate);
+        const minDate = this.datepicker?.minDate();
+
+        if (minDate && this.isMinYear(date) && this.isMinMonth(date)) {
+            return this.adapter.getDate(minDate);
         }
 
         return 1;
     }
 
     private getMaxMonth(date: D): number {
-        if (this.datepicker?.maxDate && this.isMaxYear(date)) {
-            return this.adapter.getMonth(this.datepicker.maxDate);
+        const maxDate = this.datepicker?.maxDate();
+
+        if (maxDate && this.isMaxYear(date)) {
+            return this.adapter.getMonth(maxDate);
         }
 
         return 11;
     }
 
     private getMinMonth(date: D): number {
-        if (this.datepicker?.minDate && this.isMinYear(date)) {
-            return this.adapter.getMonth(this.datepicker.minDate);
+        const minDate = this.datepicker?.minDate();
+
+        if (minDate && this.isMinYear(date)) {
+            return this.adapter.getMonth(minDate);
         }
 
         return 0;
     }
 
     private getMaxYear(): number {
-        if (this.datepicker?.maxDate) {
-            return this.adapter.getYear(this.datepicker.maxDate);
+        const maxDate = this.datepicker?.maxDate();
+
+        if (maxDate) {
+            return this.adapter.getYear(maxDate);
         }
 
         return MAX_YEAR;
     }
 
     private getMinYear(): number {
-        if (this.datepicker?.minDate) {
-            return this.adapter.getYear(this.datepicker.minDate);
+        const minDate = this.datepicker?.minDate();
+
+        if (minDate) {
+            return this.adapter.getYear(minDate);
         }
 
         return 1;

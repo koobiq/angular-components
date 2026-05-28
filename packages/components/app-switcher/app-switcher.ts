@@ -183,6 +183,9 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-app-switcher';
 
     /** @docs-private */
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() trigger: KbqAppSwitcherTrigger;
 
     /** @docs-private */
@@ -338,18 +341,29 @@ export class KbqAppSwitcherTrigger
     }
 
     /** Selected application */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() selectedApp: KbqAppSwitcherApp;
 
     /** Placement of popUp */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input('kbqAppSwitcherPlacement') placement: KbqPopUpPlacementValues = PopUpPlacements.BottomLeft;
 
     /** Class that will be used in the background */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Offset of popUp */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
 
     /** Array of sites */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get sites(): KbqAppSwitcherSite[] {
         return this._parsedSites;
@@ -404,6 +418,8 @@ export class KbqAppSwitcherTrigger
 
     /** Function to group the apps by type. The first argument is an app object with type.
      * The second is a groups object and third is an array for untyped apps */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get groupBy() {
         return this._groupBy;
@@ -422,6 +438,8 @@ export class KbqAppSwitcherTrigger
     private _groupBy = defaultGroupBy;
 
     /** Selected site */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selectedSite(): KbqAppSwitcherSite {
         return this._parsedSelectedSite;
@@ -439,6 +457,8 @@ export class KbqAppSwitcherTrigger
     private _parsedSelectedSite: KbqAppSwitcherSite;
 
     /** Whether the trigger is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;

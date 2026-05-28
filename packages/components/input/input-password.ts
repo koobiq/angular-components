@@ -38,6 +38,9 @@ export class KbqInputPassword
     errorState: boolean = false;
 
     /** An object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /**
@@ -66,6 +69,9 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() placeholder: string;
 
     protected uid = `kbq-input-${nextUniqueId++}`;
@@ -75,6 +81,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
@@ -101,6 +109,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -116,6 +126,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -133,6 +145,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): string {
         return this._inputValueAccessor.value;

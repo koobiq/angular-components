@@ -4,14 +4,14 @@
     [class.kbq-disabled]="disabled"
     [class.kbq-error]="invalid"
     [class.kbq-selected]="files.length"
-    [class.kbq-file-upload_default]="size === 'default'"
-    [class.kbq-file-upload_compact]="size === 'compact'"
+    [class.kbq-file-upload_default]="size() === 'default'"
+    [class.kbq-file-upload_compact]="size() === 'compact'"
     [disabled]="!!fullScreenDropZone()"
     (filesDropped)="onFileDropped($event)"
 >
     @let localeData = resolvedLocaleConfig();
     @if (!files.length) {
-        @if (size === 'default') {
+        @if (size() === 'default') {
             <kbq-file-upload-empty-state [size]="'normal'" [title]="localeData.title" [caption]="captionText" />
         } @else {
             <div class="kbq-file-dropzone">
@@ -43,7 +43,7 @@
                                     } @else {
                                         <kbq-progress-spinner
                                             class="kbq-file-upload-name-cell__icon"
-                                            [mode]="progressMode"
+                                            [mode]="progressMode()"
                                             [value]="asyncData.progress || 0"
                                         />
                                     }
@@ -100,7 +100,7 @@
             [onlyDirectory]="null"
             [accept]="acceptedFiles"
             [disabled]="disabled"
-            [for]="fileUploadContext.id() || inputId"
+            [for]="fileUploadContext.id() || inputId()"
             [tabIndex]="-1"
             [multiple]="true"
             (fileChange)="onFileSelectedViaClick($event)"

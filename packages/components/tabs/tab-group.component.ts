@@ -16,6 +16,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     Optional,
@@ -97,11 +98,11 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-group',
-        '[class.kbq-tab-group_filled]': '!transparent',
-        '[class.kbq-tab-group_transparent]': 'transparent',
-        '[class.kbq-tab-group_on-background]': '!onSurface',
-        '[class.kbq-tab-group_on-surface]': 'onSurface',
-        '[class.kbq-tab-group_dynamic-height]': 'dynamicHeight',
+        '[class.kbq-tab-group_filled]': '!transparent()',
+        '[class.kbq-tab-group_transparent]': 'transparent()',
+        '[class.kbq-tab-group_on-background]': '!onSurface()',
+        '[class.kbq-tab-group_on-surface]': 'onSurface()',
+        '[class.kbq-tab-group_dynamic-height]': 'dynamicHeight()',
         '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"',
         '(window:resize)': 'resizeStream.next($event)'
     },
@@ -116,15 +117,17 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     @ViewChild('tabHeader', { static: false }) tabHeader: KbqTabHeader;
 
-    @Input({ transform: booleanAttribute }) transparent: boolean = false;
-    @Input({ transform: booleanAttribute }) onSurface: boolean = false;
-    @Input({ transform: booleanAttribute }) underlined: boolean = false;
-    @Input({ transform: booleanAttribute }) vertical: boolean = false;
+    readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly vertical = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Whether the tab group should grow to the size of the active tab. */
-    @Input({ transform: booleanAttribute }) dynamicHeight: boolean = false;
+    readonly dynamicHeight = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** The index of the active tab. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get selectedIndex(): number {
         return this._selectedIndex;
@@ -136,6 +139,8 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     private _selectedIndex: number;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get activeTab(): KbqTab | null {
         switch (typeof this.attributeToSelectBy) {
@@ -143,7 +148,11 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
                 return this.tabs.get(this.clampTabIndex(this.attributeToSelectBy)) || null;
             case 'string':
                 return (
-                    this.tabs.toArray().find(({ tabId }) => tabId === this.attributeToSelectBy) ||
+                    this.tabs.toArray().find(({ tabId: tabIdInput }) => {
+                        const tabId = tabIdInput();
+
+                        return tabId === this.attributeToSelectBy;
+                    }) ||
                     this.tabs.get(0) ||
                     null
                 );
@@ -159,11 +168,17 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     /** Position of the tab header. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() headerPosition: KbqTabHeaderPosition = 'above';
 
     /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() animationDuration: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -335,7 +350,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * height property is true.
      */
     setTabBodyWrapperHeight(tabHeight: number): void {
-        if (!this.dynamicHeight || !this.tabBodyWrapperHeight) {
+        if (!this.dynamicHeight() || !this.tabBodyWrapperHeight) {
             return;
         }
 
@@ -378,7 +393,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     onSelectFocusedIndex($event: number): void {
         if (typeof this.attributeToSelectBy === 'string') {
-            this.activeTab = this.tabs.get($event)?.tabId || null;
+            this.activeTab = this.tabs.get($event)?.tabId() || null;
 
             return;
         }
@@ -419,7 +434,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     private subscribeToResize() {
-        if (!this.vertical) {
+        if (!this.vertical()) {
             return;
         }
 

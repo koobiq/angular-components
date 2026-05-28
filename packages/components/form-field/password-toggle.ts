@@ -8,6 +8,7 @@ import {
     Component,
     inject,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     TemplateRef,
@@ -41,7 +42,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     imports: [KbqIconModule, KbqToolTipModule],
     template: `
         <ng-content>
-            <i [kbq-icon-button]="iconClass" [color]="hasError ? 'error' : 'contrast-fade'" [tabindex]="tabindex"></i>
+            <i [kbq-icon-button]="iconClass" [color]="hasError ? 'error' : 'contrast-fade'" [tabindex]="tabindex()"></i>
         </ng-content>
     `,
     styleUrls: ['password-toggle.scss'],
@@ -67,16 +68,18 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     // @TODO fix types (#DS-2915)
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
 
-    @Input({ transform: numberAttribute }) tabindex: number = 0;
+    readonly tabindex = input<number, unknown>(0, { transform: numberAttribute });
 
     /**
      * @docs-private
      */
     @ViewChild(KbqIconButton) readonly icon: KbqIconButton;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipNotHidden')
     get content(): string | TemplateRef<any> {
-        return this.control.elementType === 'password' ? this.kbqTooltipHidden : this._content;
+        return this.control.elementType === 'password' ? this.kbqTooltipHidden() : this._content;
     }
 
     set content(content: string | TemplateRef<any>) {
@@ -85,7 +88,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
         this.updateData();
     }
 
-    @Input() kbqTooltipHidden: string | TemplateRef<any>;
+    readonly kbqTooltipHidden = input<string | TemplateRef<any>>(undefined!);
 
     protected hasError: boolean = false;
 

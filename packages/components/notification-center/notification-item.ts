@@ -54,6 +54,8 @@ export class KbqNotificationItemComponent {
         };
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get data(): KbqNotificationItem {
         return this._data;

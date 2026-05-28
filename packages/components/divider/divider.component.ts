@@ -16,6 +16,8 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 })
 export class KbqDivider {
     // Whether the divider is vertically aligned.
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get vertical(): boolean {
         return this._vertical;
@@ -27,6 +29,8 @@ export class KbqDivider {
 
     private _vertical: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get paddings(): boolean {
         return this._paddings;

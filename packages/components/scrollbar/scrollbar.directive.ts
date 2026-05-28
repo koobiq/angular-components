@@ -1,5 +1,5 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
-import { Directive, Inject, Input, NgZone, OnDestroy } from '@angular/core';
+import { Directive, Inject, Input, NgZone, OnDestroy, input } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
 import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarEvents, KbqScrollbarOptions, KbqScrollbarTarget } from './scrollbar.types';
 
@@ -62,6 +62,8 @@ export class KbqScrollbarDirective implements OnDestroy {
 
     private _options: KbqScrollbarOptions;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set options(value: KbqScrollbarOptions) {
         this._options = value;
@@ -78,6 +80,8 @@ export class KbqScrollbarDirective implements OnDestroy {
 
     private _events?: KbqScrollbarEvents;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set events(value: KbqScrollbarEvents) {
         this._events = value;
@@ -92,8 +96,7 @@ export class KbqScrollbarDirective implements OnDestroy {
     }
 
     /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
-    @Input()
-    defer?: boolean | IdleRequestOptions;
+    readonly defer = input<boolean | IdleRequestOptions>();
 
     scrollbarInstance?: OverlayScrollbars;
 
@@ -117,8 +120,10 @@ export class KbqScrollbarDirective implements OnDestroy {
                 );
             };
 
-            if (this.defer) {
-                this.requestDefer(init, this.defer);
+            const defer = this.defer();
+
+            if (defer) {
+                this.requestDefer(init, defer);
             } else {
                 init();
             }

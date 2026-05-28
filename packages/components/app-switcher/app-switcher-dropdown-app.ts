@@ -53,6 +53,9 @@ import { KbqAppSwitcherApp } from './app-switcher';
 export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     private sanitizer = inject(DomSanitizer);
 
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input('kbq-app-switcher-dropdown-app') app: KbqAppSwitcherApp;
 
     getIcon(icon: string | null) {

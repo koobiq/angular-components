@@ -53,6 +53,8 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
 
     @ContentChild(KbqIcon) icon: KbqIcon;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;

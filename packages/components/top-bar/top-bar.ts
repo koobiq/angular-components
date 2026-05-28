@@ -4,7 +4,6 @@ import {
     Component,
     Directive,
     input,
-    Input,
     ViewEncapsulation
 } from '@angular/core';
 
@@ -47,12 +46,12 @@ export class KbqTopBarContainer {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-top-bar',
-        '[class.kbq-top-bar_with-shadow]': 'withShadow'
+        '[class.kbq-top-bar_with-shadow]': 'withShadow()'
     }
 })
 export class KbqTopBar {
     /**
      * Enables overflow behavior, applying `kbq-top-bar-overflow` to show a bottom shadow.
      */
-    @Input({ transform: booleanAttribute }) withShadow: boolean = false;
+    readonly withShadow = input<boolean, unknown>(false, { transform: booleanAttribute });
 }

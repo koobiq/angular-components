@@ -112,18 +112,24 @@ export class KbqAutocomplete implements AfterContentInit {
     @ContentChildren(KbqOptgroup) optionGroups: QueryList<KbqOptgroup>;
 
     /** Function that maps an option's control value to its display value in the trigger. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() displayWith: ((value: any) => string) | null = null;
 
     /**
      * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
      * match the width of its host.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() panelWidth: string | number;
 
     /**
      * Minimum width of the panel in pixels.
      * When panelWidth is not set, the panel will be at least as wide as its host and no less than panelMinWidth.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) panelMinWidth: number = 200;
 
     /** Event that is emitted whenever an option from the list is selected. */
@@ -140,6 +146,8 @@ export class KbqAutocomplete implements AfterContentInit {
      * Takes classes set on the host kbq-autocomplete element and applies them to the panel
      * inside the overlay container to allow for easy styling.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('class')
     get classList() {
         return this._classList;
@@ -159,6 +167,8 @@ export class KbqAutocomplete implements AfterContentInit {
      * Whether the first option should be highlighted when the autocomplete panel is opened.
      * Can be configured globally through the `KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS` token.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get autoActiveFirstOption(): boolean {
         return this._autoActiveFirstOption;
@@ -180,6 +190,8 @@ export class KbqAutocomplete implements AfterContentInit {
 
     private _isOpen: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get openOnFocus(): boolean {
         return this._openOnFocus;

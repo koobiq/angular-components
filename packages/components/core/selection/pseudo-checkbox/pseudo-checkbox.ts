@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 import { KbqColorDirective } from '../../common-behaviors';
 
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
@@ -24,17 +24,17 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pseudo-checkbox',
-        '[class.kbq-checkbox_big]': 'big',
-        '[class.kbq-indeterminate]': 'state === "indeterminate"',
-        '[class.kbq-checked]': 'state === true || state === "checked"',
-        '[class.kbq-disabled]': 'disabled'
+        '[class.kbq-checkbox_big]': 'big()',
+        '[class.kbq-indeterminate]': 'state() === "indeterminate"',
+        '[class.kbq-checked]': 'state() === true || state() === "checked"',
+        '[class.kbq-disabled]': 'disabled()'
     },
     preserveWhitespaces: false
 })
 export class KbqPseudoCheckbox extends KbqColorDirective {
-    @Input() big: boolean = false;
+    readonly big = input<boolean>(false);
 
-    @Input() state: KbqPseudoCheckboxState = 'unchecked';
+    readonly state = input<KbqPseudoCheckboxState>('unchecked');
 
-    @Input() disabled: boolean = false;
+    readonly disabled = input<boolean>(false);
 }

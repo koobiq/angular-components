@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, ViewEncapsulation, input } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 
 @Component({
@@ -9,12 +9,12 @@ import { KbqButton } from '@koobiq/components/button';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-table',
-        '[class.kbq-table_bordered]': 'border'
+        '[class.kbq-table_bordered]': 'border()'
     },
     exportAs: 'kbqTable'
 })
 export class KbqTable {
-    @Input() border: boolean = false;
+    readonly border = input<boolean>(false);
 }
 
 @Directive({

@@ -46,15 +46,15 @@ export class KbqAccordionTrigger implements AfterViewInit {
     private readonly afterRenderRef?: AfterRenderRef;
 
     get isFill(): boolean {
-        return this.accordion.variant === KbqAccordionVariant.fill;
+        return this.accordion.variant() === KbqAccordionVariant.fill;
     }
 
     get isHug(): boolean {
-        return this.accordion.variant === KbqAccordionVariant.hug;
+        return this.accordion.variant() === KbqAccordionVariant.hug;
     }
 
     get isHugSpaceBetween(): boolean {
-        return this.accordion.variant === KbqAccordionVariant.hugSpaceBetween;
+        return this.accordion.variant() === KbqAccordionVariant.hugSpaceBetween;
     }
 
     constructor() {

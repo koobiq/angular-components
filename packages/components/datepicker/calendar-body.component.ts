@@ -3,11 +3,11 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
-    Input,
     OnChanges,
     Output,
     SimpleChanges,
-    ViewEncapsulation
+    ViewEncapsulation,
+    input
 } from '@angular/core';
 
 /**
@@ -48,28 +48,28 @@ export class KbqCalendarCell {
 })
 export class KbqCalendarBody implements OnChanges {
     /** The cells to display in the table. */
-    @Input() rows: KbqCalendarCell[][];
+    readonly rows = input<KbqCalendarCell[][]>(undefined!);
 
     /** The value in the table that corresponds to today. */
-    @Input() todayValue: number;
+    readonly todayValue = input<number>(undefined!);
 
     /** The value in the table that is currently selected. */
-    @Input() selectedValue: number;
+    readonly selectedValue = input<number>(undefined!);
 
     /** The minimum number of free cells needed to fit the label in the first row. */
-    @Input() labelMinRequiredCells: number;
+    readonly labelMinRequiredCells = input<number>(undefined!);
 
     /** The number of columns in the table. */
-    @Input() numCols = 7;
+    readonly numCols = input(7);
 
     /** The cell number of the active cell in the table. */
-    @Input() activeCell = 0;
+    readonly activeCell = input(0);
 
     /**
      * The aspect ratio (width / height) to use for the cells in the table. This aspect ratio will be
      * maintained even as the table resizes.
      */
-    @Input() cellAspectRatio = 1;
+    readonly cellAspectRatio = input(1);
 
     /** Emits when a new value is selected. */
     @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
@@ -91,7 +91,9 @@ export class KbqCalendarBody implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         const columnChanges = changes.numCols;
-        const { rows, numCols } = this;
+        const { rows: rowsInput, numCols: numColsInput } = this;
+        const rows = rowsInput();
+        const numCols = numColsInput();
 
         if (changes.rows || columnChanges) {
             this.firstRowOffset = rows && rows.length && rows[0].length ? numCols - rows[0].length : 0;
@@ -109,13 +111,13 @@ export class KbqCalendarBody implements OnChanges {
     }
 
     isActiveCell(rowIndex: number, colIndex: number): boolean {
-        let cellNumber = rowIndex * this.numCols + colIndex;
+        let cellNumber = rowIndex * this.numCols() + colIndex;
 
         // Account for the fact that the first row may not have as many cells.
         if (rowIndex) {
             cellNumber -= this.firstRowOffset;
         }
 
-        return cellNumber === this.activeCell;
+        return cellNumber === this.activeCell();
     }
 }

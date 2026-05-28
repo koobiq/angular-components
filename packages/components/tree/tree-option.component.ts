@@ -12,6 +12,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    input,
     NgZone,
     Output,
     ViewChild,
@@ -109,7 +110,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     @ContentChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
     @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
 
-    @Input() checkboxThirdState: boolean = false;
+    readonly checkboxThirdState = input<boolean>(false);
 
     get externalPseudoCheckbox(): boolean {
         return !!this.pseudoCheckbox;
@@ -125,6 +126,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private _value: any;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled() {
         return this._disabled || this.tree!.disabled || this.tree.treeControl.isDisabled(this.data);
@@ -140,8 +143,10 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private _disabled: boolean = false;
 
-    @Input({ transform: booleanAttribute }) selectable: boolean = true;
+    readonly selectable = input<boolean, unknown>(true, { transform: booleanAttribute });
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get showCheckbox() {
         return this._showCheckbox !== undefined ? this._showCheckbox : this.tree.showCheckbox;
@@ -233,7 +238,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     updateCheckboxState = () => {
-        if (this.checkboxThirdState && this.isExpandable) {
+        if (this.checkboxThirdState() && this.isExpandable) {
             if (this.descendantsAllSelected()) {
                 this.checkboxState = 'checked';
             } else if (this.descendantsPartiallySelected()) {
@@ -365,7 +370,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     selectViaInteraction($event?: KeyboardEvent): void {
-        if (this.disabled || !this.selectable) {
+        if (this.disabled || !this.selectable()) {
             return;
         }
 

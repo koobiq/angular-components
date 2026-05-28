@@ -19,7 +19,8 @@ import {
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
-    forwardRef
+    forwardRef,
+    input
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -63,6 +64,8 @@ export type KbqTabBodyOriginState = 'left' | 'right';
 })
 export class KbqTabBody implements OnInit, OnDestroy {
     /** The shifted index position of the tab body, where zero represents the active center tab. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set position(position: number) {
         this.positionIndex = position;
@@ -88,15 +91,17 @@ export class KbqTabBody implements OnInit, OnDestroy {
     @ViewChild(CdkPortalOutlet, { static: false }) portalHost: CdkPortalOutlet;
 
     /** The tab body content to display. */
-    @Input() content: TemplatePortal;
+    readonly content = input<TemplatePortal>(undefined!);
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() origin: number;
 
     // Note that the default value will always be overwritten by `KbqTabBody`, but we need one
     // anyway to prevent the animations module from throwing an error if the body is used on its own.
     /** Duration for the tab's animation. */
-    @Input() animationDuration: string = '0ms';
+    readonly animationDuration = input<string>('0ms');
 
     /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
     private positionIndex: number;
@@ -217,7 +222,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
             .pipe(startWith(this.host.isCenterPosition(this.host.bodyPosition)))
             .subscribe((isCentering: boolean) => {
                 if (isCentering && !this.hasAttached()) {
-                    this.attach(this.host.content);
+                    this.attach(this.host.content());
                 }
             });
 

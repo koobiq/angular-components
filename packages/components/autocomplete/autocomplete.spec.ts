@@ -1229,7 +1229,7 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should be able to preselect the first option', () => {
-            fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+            fixture.componentInstance.trigger.autocomplete().autoActiveFirstOption = true;
             fixture.componentInstance.trigger.open();
             fixture.detectChanges();
             zone.simulateZoneExit();
@@ -1262,7 +1262,7 @@ describe('KbqAutocomplete', () => {
 
             const spy = jest.fn();
 
-            expect(fixture.componentInstance.trigger.autocomplete).toBeFalsy();
+            expect(fixture.componentInstance.trigger.autocomplete()).toBeFalsy();
             expect(() => {
                 fixture.componentInstance.trigger.optionSelections.pipe(take(1)).subscribe(spy);
             }).not.toThrow();
@@ -1394,7 +1394,7 @@ describe('KbqAutocomplete', () => {
             const trigger = fixture.componentInstance.trigger;
             const blurEvent = { relatedTarget: document.createElement('button') } as unknown as FocusEvent;
 
-            expect(trigger.onInputBlur(blurEvent)).toBe(true);
+            expect(trigger.onInputBlur()(blurEvent)).toBe(true);
         });
 
         it('should return false by default when blurring to a KBQ-OPTION target', () => {
@@ -1406,7 +1406,7 @@ describe('KbqAutocomplete', () => {
             const optionEl = document.createElement('kbq-option');
             const blurEvent = { relatedTarget: optionEl } as unknown as FocusEvent;
 
-            expect(trigger.onInputBlur(blurEvent)).toBe(false);
+            expect(trigger.onInputBlur()(blurEvent)).toBe(false);
         });
 
         it('should return true by default when relatedTarget is null', () => {
@@ -1417,7 +1417,7 @@ describe('KbqAutocomplete', () => {
             const trigger = fixture.componentInstance.trigger;
             const blurEvent = { relatedTarget: null } as unknown as FocusEvent;
 
-            expect(trigger.onInputBlur(blurEvent)).toBe(true);
+            expect(trigger.onInputBlur()(blurEvent)).toBe(true);
         });
 
         it('should accept a custom callback via [kbqAutocompleteOnBlur]', () => {
@@ -1428,7 +1428,7 @@ describe('KbqAutocomplete', () => {
             const trigger = fixture.componentInstance.trigger;
             const blurEvent = { relatedTarget: null } as unknown as FocusEvent;
 
-            expect(trigger.onInputBlur(blurEvent)).toBe(false);
+            expect(trigger.onInputBlur()(blurEvent)).toBe(false);
             expect(fixture.componentInstance.customBlurSpy).toHaveBeenCalledWith(blurEvent);
         });
     });
@@ -1617,7 +1617,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.componentInstance.width = 300;
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger.autocomplete.panelWidth = 'auto';
+        widthFixture.componentInstance.trigger.autocomplete().panelWidth = 'auto';
         widthFixture.componentInstance.trigger.open();
         widthFixture.detectChanges();
 
@@ -1632,7 +1632,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.componentInstance.width = 300;
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger.autocomplete.panelWidth = 400;
+        widthFixture.componentInstance.trigger.autocomplete().panelWidth = 400;
         widthFixture.componentInstance.trigger.open();
         widthFixture.detectChanges();
 
@@ -1942,7 +1942,7 @@ describe('KbqAutocomplete', () => {
 
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger.autocomplete.panelMinWidth = 350;
+        widthFixture.componentInstance.trigger.autocomplete().panelMinWidth = 350;
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
@@ -1961,7 +1961,7 @@ describe('KbqAutocomplete', () => {
 
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger.autocomplete.panelWidth = 250;
+        widthFixture.componentInstance.trigger.autocomplete().panelWidth = 250;
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
@@ -1985,7 +1985,7 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should not autofocus on first item when it disabled', () => {
-            fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+            fixture.componentInstance.trigger.autocomplete().autoActiveFirstOption = true;
             fixture.componentInstance.trigger.open();
             fixture.detectChanges();
             zone.simulateZoneExit();
@@ -1997,7 +1997,7 @@ describe('KbqAutocomplete', () => {
         it('should not autofocus on first and second item when it disabled', () => {
             fixture.componentInstance.states[1].disabled = true;
 
-            fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+            fixture.componentInstance.trigger.autocomplete().autoActiveFirstOption = true;
             fixture.componentInstance.trigger.open();
             fixture.detectChanges();
             zone.simulateZoneExit();
@@ -2018,7 +2018,7 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should not open dropdown with disabled openOnFocus', () => {
-            fixture.componentInstance.trigger.autocomplete.openOnFocus = false;
+            fixture.componentInstance.trigger.autocomplete().openOnFocus = false;
 
             expect(fixture.componentInstance.trigger.panelOpen).toBe(false);
 
@@ -2029,7 +2029,7 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should open dropdown with enabled openOnFocus', () => {
-            fixture.componentInstance.trigger.autocomplete.openOnFocus = true;
+            fixture.componentInstance.trigger.autocomplete().openOnFocus = true;
 
             expect(fixture.componentInstance.trigger.panelOpen).toBe(false);
 

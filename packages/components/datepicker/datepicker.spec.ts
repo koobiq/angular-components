@@ -1106,7 +1106,7 @@ describe('KbqDatepicker', () => {
             }));
 
             it('should not mark invalid when value equals min', fakeAsync(() => {
-                testComponent.date = testComponent.datepicker.minDate;
+                testComponent.date = testComponent.datepicker.minDate();
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();
@@ -1115,7 +1115,7 @@ describe('KbqDatepicker', () => {
             }));
 
             it('should not mark invalid when value equals max', fakeAsync(() => {
-                testComponent.date = testComponent.datepicker.maxDate;
+                testComponent.date = testComponent.datepicker.maxDate();
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();

@@ -465,7 +465,7 @@ describe('KbqFilterBar', () => {
         it('should default to true', () => {
             const filterBar = getFilterBar();
 
-            expect(filterBar.selectedAllEqualsSelectedNothing).toBe(true);
+            expect(filterBar.selectedAllEqualsSelectedNothing()).toBe(true);
         });
     });
 

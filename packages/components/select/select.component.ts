@@ -37,6 +37,7 @@ import {
     afterNextRender,
     booleanAttribute,
     inject,
+    input,
     isDevMode,
     numberAttribute,
     output
@@ -182,7 +183,7 @@ export const minimumTimeToDisplayLoading = 300;
         '[attr.disabled]': 'disabled || null',
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
-        '[class.kbq-select_multiline]': 'multiline',
+        '[class.kbq-select_multiline]': 'multiline()',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
         '(click)': 'toggle()',
@@ -335,10 +336,12 @@ export class KbqSelect
     @ContentChild(KbqSelectSearchEmptyResult, { static: false }) searchEmpty: KbqSelectSearchEmptyResult;
 
     /** Template string for hidden items text. Supports {{ number }} placeholder. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() hiddenItemsText: string = '+{{ number }}';
 
     /** Determines whether preselected values are displayed. */
-    @Input() showPreselectedValues: boolean = false;
+    readonly showPreselectedValues = input<boolean>(false);
 
     /**
      * Specifies the maximum number of trigger values allowed.
@@ -346,34 +349,48 @@ export class KbqSelect
      * and prevent excessive memory usage.
      * A value of `0` indicates that there is no limit.
      */
-    @Input() triggerValuesLimit: number = 0;
+    readonly triggerValuesLimit = input<number>(0);
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
-    @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
+    readonly panelClass = input<
+        | string
+        | string[]
+        | Set<string>
+        | {
+              [key: string]: any;
+          }
+    >(undefined!);
 
     /** Classes to be passed to the overlay backdrop. */
-    @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /**
      * Function used to sort the values in a select in multiple mode.
      * Follows the same logic as `Array.prototype.sort`.
      */
-    @Input() sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
+    readonly sortComparator = input<(a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number>(
+        undefined!
+    );
 
     /**
      * Whether to use a multiline matcher or not. Default is false.
      * When true, allows multiple lines of text in the selected value display.
      */
-    @Input({ transform: booleanAttribute }) multiline: boolean = false;
+    readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
      * @default undefined
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
         this._searchMinOptionsThreshold =
@@ -453,7 +470,7 @@ export class KbqSelect
      * Distance in pixels from the bottom of the options panel at which `scrolledToBottom` fires.
      * Default `0` — emits only when the panel is fully scrolled to the bottom.
      */
-    @Input({ transform: numberAttribute }) scrolledToBottomOffset: number = 0;
+    readonly scrolledToBottomOffset = input<number, unknown>(0, { transform: numberAttribute });
 
     /** Emits when the options panel is scrolled to (or within `scrolledToBottomOffset` of) the bottom. */
     @Output() readonly scrolledToBottom: EventEmitter<void> = new EventEmitter<void>();
@@ -462,6 +479,8 @@ export class KbqSelect
      * Whether the overlay should have a backdrop.
      * When true, clicking the backdrop will close the select.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -477,6 +496,8 @@ export class KbqSelect
      * Placeholder text to be shown when no value is selected.
      * Displayed in the trigger when the select is closed and no value is selected.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this._placeholder;
@@ -493,6 +514,8 @@ export class KbqSelect
     /**
      * Whether the select is required. Affects validation and display of placeholder.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -510,6 +533,8 @@ export class KbqSelect
      * Whether multiple options can be selected.
      * Note: This cannot be changed dynamically after initialization.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get multiple(): boolean {
         return this._multiple;
@@ -532,6 +557,8 @@ export class KbqSelect
      * Should return true if the values match.
      * Defaults to strict equality comparison.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get compareWith() {
         return this._compareWith;
@@ -563,7 +590,7 @@ export class KbqSelect
      * Defaults to `new KbqVirtualOption(value, this.disabled)`, which is correct
      * for primitive values where `value` itself is the display label.
      */
-    @Input() virtualOptionFactory?: (value: any) => KbqVirtualOption;
+    readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
 
     /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
@@ -571,6 +598,8 @@ export class KbqSelect
      * @param event The keyboard event that triggered the handler.
      * @param select Reference to this select component.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selectAllHandler() {
         return this._selectAllHandler;
@@ -588,16 +617,22 @@ export class KbqSelect
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
+    // TODO: Skipped for migration because:
+    //  The input cannot be migrated because the field is overridden by a subclass.
     @Input() panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || null;
 
     /**
      * Minimum width of the panel in pixels.
      * If minWidth is larger than window width, it will be ignored.
      */
+    // TODO: Skipped for migration because:
+    //  The input cannot be migrated because the field is overridden by a subclass.
     @Input({ transform: numberAttribute }) panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'> =
         this.defaultOptions?.panelMinWidth ?? 200;
 
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value;
@@ -616,6 +651,8 @@ export class KbqSelect
      * Unique identifier for the select component.
      * Auto-generates an ID if not provided.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -632,6 +669,8 @@ export class KbqSelect
      * Sets the tabIndex of the select element.
      * Automatically set to -1 when disabled.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -647,6 +686,8 @@ export class KbqSelect
      * Whether the select is disabled.
      * When disabled, the select cannot be opened and its value cannot be changed.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -692,7 +733,9 @@ export class KbqSelect
 
     /** Whether the search returned no results. */
     get isEmptySearchResult(): boolean {
-        return this.search && this.options.filter((option) => option.selectable).length === 0 && !!this.search.value();
+        return (
+            this.search && this.options.filter((option) => option.selectable()).length === 0 && !!this.search.value()
+        );
     }
 
     /** Whether the cleaner (clear button) should be shown. */
@@ -724,7 +767,7 @@ export class KbqSelect
             selectedOptions.reverse();
         }
 
-        return this.triggerValuesLimit > 0 ? selectedOptions.slice(0, this.triggerValuesLimit) : selectedOptions;
+        return this.triggerValuesLimit() > 0 ? selectedOptions.slice(0, this.triggerValuesLimit()) : selectedOptions;
     }
 
     /** Whether no option is currently selected. */
@@ -762,7 +805,7 @@ export class KbqSelect
 
     /** Whether multiple choice is enabled. True if multiple or multiline mode is active. */
     get multiSelection(): boolean {
-        return this.multiple || this.multiline;
+        return this.multiple || this.multiline();
     }
 
     /** Subscription to the close event of the overlay. */
@@ -823,7 +866,7 @@ export class KbqSelect
         this.id = this.id;
 
         afterNextRender(() => {
-            if (this.multiple && !this.multiline) {
+            if (this.multiple && !this.multiline()) {
                 merge(fromEvent(this.window, 'resize'), this.tags.changes)
                     .pipe(delay(0), debounceTime(50), takeUntilDestroyed(this.destroyRef))
                     .subscribe(this.calculateHiddenItems);
@@ -862,7 +905,7 @@ export class KbqSelect
                 setTimeout(() => {
                     this.calculateHiddenItems();
 
-                    if (this.multiline) {
+                    if (this.multiline()) {
                         this.setOverlayPosition();
                     }
                 }, 0)
@@ -1237,7 +1280,7 @@ export class KbqSelect
             this.customMatcher ||
             this.empty ||
             !this.multiple ||
-            this.multiline
+            this.multiline()
         )
             return;
 
@@ -1296,7 +1339,7 @@ export class KbqSelect
 
     /** @docs-private */
     setSelectedOptionsByClick(option: KbqOption) {
-        if (this.multiple || this.multiline) {
+        if (this.multiple || this.multiline()) {
             this.keyManager.setActiveItem(option);
             const options = this.options.toArray();
 
@@ -1428,7 +1471,7 @@ export class KbqSelect
             this.scrollSubscription = distance
                 .pipe(
                     auditTime(SCROLLED_TO_BOTTOM_THROTTLE_TIME),
-                    map((distance) => distance <= this.scrolledToBottomOffset),
+                    map((distance) => distance <= this.scrolledToBottomOffset()),
                     distinctUntilChanged(),
                     filter(Boolean),
                     takeUntilDestroyed(this.destroyRef),
@@ -1633,7 +1676,7 @@ export class KbqSelect
             if (correspondingOptionVirtual) {
                 this.selectionModel.select(this.createVirtualOption(correspondingOptionVirtual));
             }
-        } else if (this.showPreselectedValues) {
+        } else if (this.showPreselectedValues()) {
             this.selectionModel.select(this.createVirtualOption(value));
         }
 
@@ -1646,9 +1689,9 @@ export class KbqSelect
      * wraps the raw value with the select's current `disabled` state.
      */
     private createVirtualOption(value: any): KbqVirtualOption {
-        return this.virtualOptionFactory
-            ? this.virtualOptionFactory(value)
-            : new KbqVirtualOption(value, this.disabled);
+        const virtualOptionFactory = this.virtualOptionFactory();
+
+        return virtualOptionFactory ? virtualOptionFactory(value) : new KbqVirtualOption(value, this.disabled);
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */
@@ -1730,9 +1773,11 @@ export class KbqSelect
         if (this.multiSelection) {
             const options = this.options.toArray();
 
-            this.selectionModel.sort((a, b) =>
-                this.sortComparator ? this.sortComparator(a, b, options) : a.value - b.value
-            );
+            this.selectionModel.sort((a, b) => {
+                const sortComparator = this.sortComparator();
+
+                return sortComparator ? sortComparator(a, b, options) : a.value - b.value;
+            });
             this.stateChanges.next();
         }
     }

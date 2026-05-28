@@ -29,7 +29,7 @@ describe('KbqLoaderOverlay', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.overlay.transparent).toBeTruthy();
+        expect(fixture.componentInstance.overlay.transparent()).toBeTruthy();
     });
 
     it('should render params', () => {

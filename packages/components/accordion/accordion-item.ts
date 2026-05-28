@@ -59,10 +59,12 @@ export class KbqAccordionItem implements OnDestroy {
     }
 
     get orientation(): KbqAccordionOrientation {
-        return this.accordion.orientation;
+        return this.accordion.orientation();
     }
 
     /** Whether the AccordionItem is expanded. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get expanded(): boolean {
         return this._expanded;
@@ -99,6 +101,8 @@ export class KbqAccordionItem implements OnDestroy {
 
     private _expanded = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set value(value: string) {
         this._value = value;
@@ -111,9 +115,11 @@ export class KbqAccordionItem implements OnDestroy {
     private _value?: string;
 
     /** Whether the AccordionItem is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this.accordion.disabled ?? this._disabled;
+        return this.accordion.disabled() ?? this._disabled;
     }
 
     set disabled(value: boolean) {

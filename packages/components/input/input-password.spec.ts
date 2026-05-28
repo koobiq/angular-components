@@ -242,9 +242,9 @@ describe('KbqPasswordInput', () => {
         fixture.componentInstance.value = valueToTest;
         dispatchFakeEvent(input, 'input');
 
-        expect(fixture.componentInstance.passwordHint.customCheckRule).toBeTruthy();
+        expect(fixture.componentInstance.passwordHint.customCheckRule()).toBeTruthy();
         expect(fixture.componentInstance.passwordHint.hasError).toEqual(
-            fixture.componentInstance.passwordHint.customCheckRule(valueToTest)
+            fixture.componentInstance.passwordHint.customCheckRule()(valueToTest)
         );
     }));
 

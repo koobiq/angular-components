@@ -97,22 +97,27 @@ export class KbqMultipleFileUploadComponent
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
-    @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    readonly progressMode = input<ProgressSpinnerMode>('determinate');
     /** Array of file type specifiers */
-    @Input() accept?: string[];
-    @Input() size: 'compact' | 'default' = 'default';
+    readonly accept = input<string[]>();
+    readonly size = input<'compact' | 'default'>('default');
     /**
      * custom ID for the file input element.
      */
-    @Input() inputId: string = `kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`;
+    readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     get files(): KbqFileItem[] {
         return this.fileList.list();
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set files(currentFileList: KbqFileItem[]) {
         this.fileList.list.set(currentFileList);
@@ -198,7 +203,7 @@ export class KbqMultipleFileUploadComponent
             }
             case KbqFileUploadAllowedType.File:
             default: {
-                const caption = this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
+                const caption = this.size() === 'compact' ? config.captionTextForCompactSize : config.captionText;
                 const [before] = caption.split('{{ browseLink }}');
 
                 return { captionText: before, browseLink: config.browseLink };
@@ -222,7 +227,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     get acceptedFiles(): string {
-        return this.accept?.join(',') || '*/*';
+        return this.accept()?.join(',') || '*/*';
     }
 
     /** @docs-private */

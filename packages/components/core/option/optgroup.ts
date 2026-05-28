@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, Input, input, ViewEncapsulation } from '@angular/core';
 
 let uniqueOptgroupIdCounter = 0;
 
@@ -19,8 +19,10 @@ let uniqueOptgroupIdCounter = 0;
     exportAs: 'kbqOptgroup'
 })
 export class KbqOptgroup {
-    @Input() label: string;
+    readonly label = input<string>(undefined!);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;

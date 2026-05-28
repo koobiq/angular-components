@@ -7,6 +7,7 @@ import {
     EventEmitter,
     inject,
     Input,
+    input,
     Output,
     ViewEncapsulation
 } from '@angular/core';
@@ -70,9 +71,11 @@ export class KbqFilterBar {
      * This is special logic that unselect all items when all selected because "all selected = nothing selected".
      * Default is true
      * */
-    @Input({ transform: booleanAttribute }) selectedAllEqualsSelectedNothing: boolean = true;
+    readonly selectedAllEqualsSelectedNothing = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /** Filter that is currently selected */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get filter(): KbqFilter | null {
         return this._filter;
@@ -89,6 +92,8 @@ export class KbqFilterBar {
     private _filter: KbqFilter | null;
 
     /** An array of templates that are used when adding a pipe. Also contains lists of options to select (values). */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get pipeTemplates(): KbqPipeTemplate[] {
         return this._templates;

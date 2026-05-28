@@ -7,7 +7,7 @@ import {
     EventEmitter,
     inject,
     Injector,
-    Input,
+    input,
     NgZone,
     OnDestroy,
     Output,
@@ -50,9 +50,9 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             #content
             data-overlayscrollbars-contents=""
             kbqScrollbar
-            [options]="options"
+            [options]="options()"
             [events]="mergeEvents()"
-            [defer]="defer"
+            [defer]="defer()"
         >
             <ng-content />
         </div>
@@ -72,12 +72,12 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     @ViewChild('content', { read: KbqScrollbarDirective }) private kbqScrollbarDirective?: KbqScrollbarDirective;
 
     /** Elements scrollbar applied on */
-    @Input() initializationTarget?: KbqScrollbarTarget;
+    readonly initializationTarget = input<KbqScrollbarTarget>();
     /** Scrollbar behavior customization object */
-    @Input() options: KbqScrollbarOptions;
-    @Input() events: KbqScrollbarEvents;
+    readonly options = input<KbqScrollbarOptions>(undefined!);
+    readonly events = input<KbqScrollbarEvents>(undefined!);
     /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
-    @Input() defer?: boolean | IdleRequestOptions;
+    readonly defer = input<boolean | IdleRequestOptions>();
 
     @Output() readonly onInitialize = new EventEmitter<KbqScrollbarEventListenerArgs['initialized']>();
     /** Event triggered when options or event listeners updated */
@@ -102,7 +102,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
             () => {
                 if (this.element && this.contentElement.nativeElement) {
                     this.kbqScrollbarDirective?.initialize(
-                        this.initializationTarget || {
+                        this.initializationTarget() || {
                             target: this.targetElement.nativeElement,
                             elements: {
                                 viewport: this.contentElement.nativeElement,
@@ -133,14 +133,16 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
             scroll: (...args) => this.dispatchEventIfHasObservers(this.onScroll, args)
         };
 
-        if (!this.events) {
+        const events = this.events();
+
+        if (!events) {
             return defaultListeners;
         }
 
         // merge default listeners with custom listeners in case of Input binding
         return {
             ...defaultListeners,
-            ...filterEvents(this.events, defaultListeners)
+            ...filterEvents(events, defaultListeners)
         };
     }
 

@@ -6,6 +6,7 @@ import {
     Directive,
     ElementRef,
     Input,
+    input,
     OnDestroy,
     OnInit,
     Renderer2,
@@ -51,22 +52,28 @@ export class KbqLoaderOverlayCaption {}
         class: 'kbq-loader-overlay',
         '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
-        '[class.kbq-loader-overlay_transparent]': 'transparent',
-        '[class.kbq-loader-overlay_filled]': '!transparent',
-        '[class.kbq-loader-overlay_card]': 'card'
+        '[class.kbq-loader-overlay_transparent]': 'transparent()',
+        '[class.kbq-loader-overlay_filled]': '!transparent()',
+        '[class.kbq-loader-overlay_card]': 'card()'
     }
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() text: string;
 
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() caption: string;
-    @Input() size: KbqDefaultSizes = 'big';
-    @Input() transparent: boolean = true;
+    readonly size = input<KbqDefaultSizes>('big');
+    readonly transparent = input<boolean>(true);
     /**
      * Uses a semi-transparent background to blend
      * with the underlying card or modal surface. When enabled, overrides `transparent`.
      */
-    @Input({ transform: booleanAttribute }) card: boolean = false;
+    readonly card = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     private parent: HTMLElement | null = null;
 
@@ -87,14 +94,14 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     }
 
     get spinnerSize(): string {
-        return this.size === 'compact' ? 'compact' : 'big';
+        return this.size() === 'compact' ? 'compact' : 'big';
     }
 
     /**
      * @docs-private
      */
     protected get loaderSizeClass(): string {
-        return `kbq-loader-overlay_${this.size}`;
+        return `kbq-loader-overlay_${this.size()}`;
     }
 
     @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;

@@ -45,6 +45,8 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): any {
         return this._tabIndex;

@@ -4,7 +4,7 @@
     cdkOverlayOrigin
     class="kbq-select__trigger"
     [class.kbq-select__trigger_empty]="empty"
-    [class.kbq-select__trigger_multiline]="multiline"
+    [class.kbq-select__trigger_multiline]="multiline()"
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
@@ -23,8 +23,8 @@
                     <div class="kbq-select__match-container">
                         @if (multiSelection) {
                             <div
-                                [class.kbq-select__match-list]="!multiline"
-                                [class.kbq-select__multiline-match-list]="multiline"
+                                [class.kbq-select__match-list]="!multiline()"
+                                [class.kbq-select__multiline-match-list]="multiline()"
                             >
                                 @if (!customTagTemplateRef) {
                                     @for (option of triggerValues; track option) {
@@ -53,7 +53,7 @@
                                 }
                             </div>
 
-                            @if (!multiline) {
+                            @if (!multiline()) {
                                 <div
                                     class="kbq-select__match-hidden-text"
                                     [style.display]="hiddenItems > 0 ? 'block' : 'none'"
@@ -91,7 +91,7 @@
 <ng-template
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
-    [cdkConnectedOverlayBackdropClass]="backdropClass"
+    [cdkConnectedOverlayBackdropClass]="backdropClass()"
     [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOffsetY]="offsetY"
@@ -109,7 +109,7 @@
         #panel
         class="kbq-select__panel {{ getPanelTheme() }}"
         cdkMonitorSubtreeFocus
-        [ngClass]="panelClass"
+        [ngClass]="panelClass()"
         [style.font-size.px]="triggerFontSize"
         [style.transformOrigin]="transformOrigin"
         (click)="handleClick($event)"

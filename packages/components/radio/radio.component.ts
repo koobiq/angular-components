@@ -13,6 +13,7 @@ import {
     EventEmitter,
     forwardRef,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     OnInit,
@@ -55,15 +56,17 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
     host: {
         role: 'radiogroup',
         class: 'kbq-radio-group',
-        '[class.kbq-radio-group_normal]': '!big',
-        '[class.kbq-radio-group_big]': 'big'
+        '[class.kbq-radio-group_normal]': '!big()',
+        '[class.kbq-radio-group_big]': 'big()'
     },
     exportAs: 'kbqRadioGroup'
 })
 export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
-    @Input() big: boolean = false;
+    readonly big = input<boolean>(false);
 
     /** Name of the radio button group. All radio buttons inside this group will use this name. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get name(): string {
         return this._name;
@@ -75,6 +78,8 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
 
     /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get labelPosition(): 'before' | 'after' {
         return this._labelPosition;
@@ -86,6 +91,8 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
 
     /** Value of the radio button. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value;
@@ -102,6 +109,8 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
 
     /** Whether the radio button is selected. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selected() {
         return this._selected;
@@ -114,6 +123,8 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
 
     /** Whether the radio group is disabled */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -127,6 +138,8 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     private _disabled: boolean = false;
 
     /** Whether the radio group is required */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
@@ -289,7 +302,7 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     host: {
         class: 'kbq-radio-button',
         '[attr.id]': 'id',
-        '[class.kbq-radio-button_big]': 'radioGroup?.big',
+        '[class.kbq-radio-button_big]': 'radioGroup?.big()',
         '[class.kbq-selected]': 'checked',
         '[class.kbq-disabled]': 'disabled'
     },
@@ -297,6 +310,8 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
 })
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
     /** Whether this radio button is checked. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get checked(): boolean {
         return this._checked;
@@ -324,6 +339,8 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     }
 
     /** The value of this radio button. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value;
@@ -347,6 +364,8 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     }
 
     /** Whether the radio button is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled || (this.radioGroup != null && this.radioGroup.disabled);
@@ -361,6 +380,8 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
 
     private _disabled: boolean;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -373,6 +394,8 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private _tabIndex = 0;
 
     /** Whether the radio button is required. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required || (this.radioGroup && this.radioGroup.required);
@@ -390,6 +413,8 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
      * @TODO: doesn't affect anything. Should be removed or implemented (#DS-4571)
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get labelPosition(): 'before' | 'after' {
         return this._labelPosition || (this.radioGroup && this.radioGroup.labelPosition) || 'after';
@@ -400,6 +425,8 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     }
 
     /** Analog to HTML 'name' attribute used to group radios for unique selection. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() name: string;
 
     /** The native `<input type=radio>` element */
@@ -416,10 +443,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     /** The parent radio group. May or may not be present. */
     radioGroup: KbqRadioGroup;
 
-    @Input()
-    isFocused: boolean = false;
+    readonly isFocused = input<boolean>(false);
 
     /** The unique ID for the radio button. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() id: string;
 
     /** ID of the native input element inside `<kbq-radio-button>` */

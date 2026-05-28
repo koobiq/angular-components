@@ -12,6 +12,7 @@ import {
     forwardRef,
     inject,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     Output,
@@ -49,10 +50,10 @@ export class KbqToggleChange {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-toggle',
-        '[class.kbq-toggle_big]': 'big',
+        '[class.kbq-toggle_big]': 'big()',
         '[id]': 'id',
         '[attr.id]': 'id',
-        '[class.kbq-disabled]': 'disabled || loading',
+        '[class.kbq-disabled]': 'disabled || loading()',
         '[class.kbq-active]': 'checked',
         '[class.kbq-indeterminate]': 'indeterminate'
     },
@@ -79,25 +80,29 @@ export class KbqToggleChange {
     exportAs: 'kbqToggle'
 })
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
-    @Input() big: boolean = false;
+    readonly big = input<boolean>(false);
 
     @ViewChild('input', { static: false }) inputElement: ElementRef<HTMLInputElement>;
 
-    @Input() labelPosition: ToggleLabelPositionType = 'right';
+    readonly labelPosition = input<ToggleLabelPositionType>('right');
 
-    @Input('aria-label') ariaLabel: string = '';
-    @Input('aria-labelledby') ariaLabelledby: string | null = null;
+    readonly ariaLabel = input<string>('', { alias: 'aria-label' });
+    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() id: string;
 
     get inputId(): string {
         return `${this.id || this.uniqueId}-input`;
     }
 
-    @Input() name: string | null = null;
+    readonly name = input<string | null>(null);
 
-    @Input() value: string;
+    readonly value = input<string>(undefined!);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled() {
         return this._disabled;
@@ -112,6 +117,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -127,6 +134,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         return this._checked;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set checked(value: boolean) {
         if (value !== this._checked) {
@@ -144,6 +153,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
      * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
      * set to false.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get indeterminate(): boolean {
         return this._indeterminate;
@@ -164,7 +175,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     /**
      * Property for manually set loading state.
      */
-    @Input({ transform: booleanAttribute }) loading: boolean = false;
+    readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     @Output() readonly change: EventEmitter<KbqToggleChange> = new EventEmitter<KbqToggleChange>();
 
@@ -175,6 +186,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
     /** Defines the behavior when a user clicks on the toggle. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() clickAction: KbqCheckboxClickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) || undefined;
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
@@ -213,7 +226,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     onInputClick(event: MouseEvent) {
-        if (this.loading) return;
+        if (this.loading()) return;
         // We have to stop propagation for click events on the visual hidden input element.
         // By default, when a user clicks on a label element, a generated click event will be
         // dispatched on the associated input element. Since we are using a label element as our
