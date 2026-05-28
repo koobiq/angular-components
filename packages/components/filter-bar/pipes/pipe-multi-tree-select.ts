@@ -160,7 +160,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
         this.select.closedStream
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
     isNodeHasChild(_: number, nodeData) {

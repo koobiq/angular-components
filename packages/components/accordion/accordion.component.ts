@@ -12,17 +12,17 @@ import {
     Component,
     ContentChildren,
     ElementRef,
-    EventEmitter,
     forwardRef,
     HostAttributeToken,
     inject,
     Input,
     input,
     OnDestroy,
-    Output,
+    output,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
+import { outputToObservable } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
 import { KbqAccordionItem } from './accordion-item';
@@ -134,7 +134,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         }
     }
 
-    @Output() readonly onValueChange: EventEmitter<void> = new EventEmitter<void>();
+    readonly onValueChange = output<void>();
 
     get id(): string {
         return this._id;
@@ -184,9 +184,9 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
             this.keyManager.withVerticalOrientation();
         }
 
-        this.onValueChangeSubscription = merge(...this.items.map((item) => item.expandedChange)).subscribe(() =>
-            this.onValueChange.emit()
-        );
+        this.onValueChangeSubscription = merge(
+            ...this.items.map((item) => outputToObservable(item.expandedChange))
+        ).subscribe(() => this.onValueChange.emit());
     }
 
     ngAfterViewInit(): void {

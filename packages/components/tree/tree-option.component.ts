@@ -14,7 +14,7 @@ import {
     Input,
     input,
     NgZone,
-    Output,
+    output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -158,7 +158,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private _showCheckbox: boolean;
 
-    @Output() readonly onSelectionChange = new EventEmitter<KbqTreeOptionChange>();
+    readonly onSelectionChange = output<KbqTreeOptionChange>();
     readonly userInteraction = new EventEmitter<void>();
 
     get selected(): boolean {

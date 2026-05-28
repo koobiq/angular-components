@@ -10,7 +10,6 @@ import {
     ContentChildren,
     Directive,
     ElementRef,
-    EventEmitter,
     forwardRef,
     Input,
     input,
@@ -18,7 +17,7 @@ import {
     OnDestroy,
     OnInit,
     Optional,
-    Output,
+    output,
     QueryList,
     ViewChild,
     ViewEncapsulation
@@ -158,7 +157,7 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
      * Change events are only emitted when the value changes due to user interaction with
      * a radio button (the same behavior as `<input type-"radio">`).
      */
-    @Output() readonly change: EventEmitter<KbqRadioChange> = new EventEmitter<KbqRadioChange>();
+    readonly change = output<KbqRadioChange>();
 
     /** Child radio buttons. */
     @ContentChildren(forwardRef(() => KbqRadioButton), { descendants: true })
@@ -438,7 +437,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
      * the radio button (the same behavior as `<input type-"radio">`).
      */
 
-    @Output() readonly change: EventEmitter<KbqRadioChange> = new EventEmitter<KbqRadioChange>();
+    readonly change = output<KbqRadioChange>();
 
     /** The parent radio group. May or may not be present. */
     radioGroup: KbqRadioGroup;

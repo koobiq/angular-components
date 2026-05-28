@@ -8,14 +8,13 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
     Input,
     input,
     numberAttribute,
     OnDestroy,
-    Output,
+    output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -177,10 +176,10 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
      */
     readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Output() readonly change: EventEmitter<KbqToggleChange> = new EventEmitter<KbqToggleChange>();
+    readonly change = output<KbqToggleChange>();
 
     /** Event emitted when the toggle's `indeterminate` value changes. */
-    @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly indeterminateChange = output<boolean>();
 
     /** @docs-private */
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;

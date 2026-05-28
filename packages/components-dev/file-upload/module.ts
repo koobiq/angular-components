@@ -3,10 +3,9 @@ import {
     ChangeDetectorRef,
     Component,
     Directive,
-    EventEmitter,
     inject,
     input,
-    Output,
+    output,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -199,7 +198,7 @@ export class DevDocsExamples {}
 export class DevMultipleFileUploadCompact {
     readonly disabled = input<boolean>(undefined!);
     readonly files = input<KbqFileItem[]>([]);
-    @Output() readonly addedFile: EventEmitter<any> = new EventEmitter<any>();
+    readonly addedFile = output<any>();
 
     hintMessage = hintMessage;
 

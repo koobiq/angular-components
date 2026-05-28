@@ -8,13 +8,12 @@ import {
     ContentChild,
     Directive,
     ElementRef,
-    EventEmitter,
     inject,
     Input,
     input,
     NgZone,
     OnDestroy,
-    Output,
+    output,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
@@ -114,7 +113,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
         closedStateWidth: '32px'
     };
 
-    @Output() readonly stateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly stateChanged = output<boolean>();
 
     /**
      * @docs-private

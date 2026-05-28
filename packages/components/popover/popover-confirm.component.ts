@@ -4,13 +4,12 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    EventEmitter,
     Inject,
     InjectionToken,
     Input,
     Optional,
-    Output,
-    ViewEncapsulation
+    ViewEncapsulation,
+    output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -52,7 +51,7 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     exportAs: 'kbqPopoverConfirm'
 })
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
-    @Output() readonly confirm: EventEmitter<void> = new EventEmitter<void>();
+    readonly confirm = output<void>();
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -107,6 +106,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     setupButtonEvents() {
         this.instance.onConfirm.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.confirm.emit();
             this.hide();
         });

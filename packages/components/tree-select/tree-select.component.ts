@@ -37,9 +37,10 @@ import {
     booleanAttribute,
     inject,
     input,
-    numberAttribute
+    numberAttribute,
+    output
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
@@ -301,14 +302,14 @@ export class KbqTreeSelect
     );
 
     /** Event emitted when the selected value has been changed by the user. */
-    @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectChange>();
+    readonly selectionChange = output<KbqTreeSelectChange>();
 
     /**
      * Event that emits whenever the raw value of the select changes. This is here primarily
      * to facilitate the two-way binding for the `value` input.
      * @docs-private
      */
-    @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
+    readonly valueChange = output<any>();
 
     /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
     readonly panelClass = input<
@@ -346,7 +347,7 @@ export class KbqTreeSelect
         if (this.options) {
             return this.options.changes.pipe(
                 startWith(this.options),
-                switchMap(() => merge(...this.options.map((option) => option.onSelectionChange)))
+                switchMap(() => merge(...this.options.map((option) => outputToObservable(option.onSelectionChange))))
             );
         }
 

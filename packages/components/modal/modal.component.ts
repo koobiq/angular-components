@@ -18,6 +18,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    output,
     QueryList,
     Renderer2,
     SimpleChanges,
@@ -112,7 +113,7 @@ export class KbqModalComponent<T = any, R = any>
 
     private _kbqVisible = false;
 
-    @Output() readonly kbqVisibleChange = new EventEmitter<boolean>();
+    readonly kbqVisibleChange = output<boolean>();
 
     // TODO: Skipped for migration because:
     //  This input overrides a field from a superclass, while the superclass field

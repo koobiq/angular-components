@@ -26,6 +26,7 @@ import {
     OnInit,
     Optional,
     Output,
+    output,
     QueryList,
     ViewChild,
     ViewEncapsulation
@@ -131,7 +132,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     @ContentChildren(forwardRef(() => KbqListOption), { descendants: true }) options: QueryList<KbqListOption>;
 
-    @Output() readonly onSelectAll = new EventEmitter<KbqListSelectAllEvent<KbqListOption>>();
+    readonly onSelectAll = output<KbqListSelectAllEvent<KbqListOption>>();
 
     @Output() readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption>>();
 
@@ -212,8 +213,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 
     // Emits a change event whenever the selected state of an option changes.
-    @Output() readonly selectionChange: EventEmitter<KbqListSelectionChange> =
-        new EventEmitter<KbqListSelectionChange>();
+    readonly selectionChange = output<KbqListSelectionChange>();
 
     selectionModel: SelectionModel<KbqListOption>;
 

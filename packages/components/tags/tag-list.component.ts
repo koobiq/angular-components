@@ -15,19 +15,18 @@ import {
     DestroyRef,
     DoCheck,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
     Input,
     input,
     OnDestroy,
     Optional,
-    Output,
+    output,
     QueryList,
     Self,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, FocusKeyManager, isNull, isSelectAll } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -126,7 +125,7 @@ export class KbqTagList
      * @docs-private
      */
     get tagSelectionChanges(): Observable<KbqTagSelectionChange> {
-        return merge(...this.tags.map((tag) => tag.selectionChange));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.selectionChange)));
     }
 
     /**
@@ -153,7 +152,7 @@ export class KbqTagList
      * @docs-private
      */
     get tagRemoveChanges(): Observable<KbqTagEvent> {
-        return merge(...this.tags.map((tag) => tag.destroyed));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.destroyed)));
     }
 
     /**
@@ -162,7 +161,7 @@ export class KbqTagList
      * @docs-private
      */
     protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent> {
-        return merge(...this.tags.map((tag) => tag.removed));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.removed)));
     }
 
     /**
@@ -171,7 +170,7 @@ export class KbqTagList
      * @docs-private
      */
     get tagEditChanges(): Observable<KbqTagEditChange> {
-        return merge(...this.tags.map((tag) => tag.editChange));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.editChange)));
     }
 
     /**
@@ -306,7 +305,7 @@ export class KbqTagList
     /**
      * Emits when the user drops tag inside tag list container.
      */
-    @Output() readonly dropped = new EventEmitter<KbqTagListDroppedEvent>();
+    readonly dropped = output<KbqTagListDroppedEvent>();
 
     /**
      * Whether or not this tag list is selectable. When a tag list is not selectable,
@@ -356,7 +355,7 @@ export class KbqTagList
      * to facilitate the two-way binding for the `value` input.
      * @docs-private
      */
-    @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
+    readonly valueChange = output<any>();
 
     /** @docs-private */
     uid: string = `kbq-tag-list-${nextUniqueId++}`;
@@ -379,7 +378,7 @@ export class KbqTagList
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /** Event emitted when the selected tag list value has been changed by the user. */
-    @Output() readonly change: EventEmitter<KbqTagListChange> = new EventEmitter<KbqTagListChange>();
+    readonly change = output<KbqTagListChange>();
 
     /** @docs-private */
     @ContentChild('kbqTagListCleaner', { static: true }) cleaner: KbqCleaner;

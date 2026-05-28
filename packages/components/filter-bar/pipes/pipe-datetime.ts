@@ -155,7 +155,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
                 filter((visible) => !visible),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
     /** keydown handler

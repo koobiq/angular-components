@@ -7,14 +7,13 @@ import {
     Component,
     DestroyRef,
     ElementRef,
-    EventEmitter,
     inject,
     InjectionToken,
     Input,
     input,
     numberAttribute,
     OnDestroy,
-    Output,
+    output,
     QueryList,
     ViewChild,
     ViewChildren,
@@ -155,7 +154,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private _tabIndex = 0;
 
     /** Event emitted when the search has been toggled. */
-    @Output() readonly isOpenedChange = new EventEmitter<boolean>();
+    readonly isOpenedChange = output<boolean>();
 
     /** localized data
      * @docs-private */

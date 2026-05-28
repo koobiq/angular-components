@@ -145,7 +145,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
                     this.initCodeSnippets();
 
                     // Emit after dynamically created components have stabilised.
-                    this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
+                    this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.emit());
                 },
                 { injector: this.injector }
             );
@@ -161,7 +161,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
         this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(errorHtml));
 
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.next());
+        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.emit());
     }
 
     /** Instantiate a ExampleViewer for each example. */

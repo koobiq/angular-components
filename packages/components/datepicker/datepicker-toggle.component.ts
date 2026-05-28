@@ -14,7 +14,7 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { merge, Subscription } from 'rxjs';
 import { KbqDatepicker } from './datepicker.component';
@@ -106,8 +106,8 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
         this.stateChangesSubscription = merge(
             datepicker.disabledChange,
             datepicker.datepickerInput.disabledChange,
-            datepicker.openedStream,
-            datepicker.closedStream
+            outputToObservable(datepicker.openedStream),
+            outputToObservable(datepicker.closedStream)
         )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.cdr.markForCheck());

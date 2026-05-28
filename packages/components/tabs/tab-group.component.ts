@@ -11,7 +11,6 @@ import {
     ContentChildren,
     Directive,
     ElementRef,
-    EventEmitter,
     forwardRef,
     Inject,
     InjectionToken,
@@ -20,7 +19,7 @@ import {
     numberAttribute,
     OnDestroy,
     Optional,
-    Output,
+    output,
     QueryList,
     ViewChild,
     ViewEncapsulation
@@ -193,21 +192,19 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     private _disabled: boolean = false;
 
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
-    @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
+    readonly selectedIndexChange = output<number>();
 
     /** Event emitted when the tab selection has changed. */
-    @Output() readonly activeTabChange: EventEmitter<string | number | KbqTab> = new EventEmitter<
-        string | number | KbqTab
-    >();
+    readonly activeTabChange = output<string | number | KbqTab>();
 
     /** Event emitted when focus has changed within a tab group. */
-    @Output() readonly focusChange: EventEmitter<KbqTabChangeEvent> = new EventEmitter<KbqTabChangeEvent>();
+    readonly focusChange = output<KbqTabChangeEvent>();
 
     /** Event emitted when the body animation has completed */
-    @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
+    readonly animationDone = output<void>();
 
     /** Event emitted when the tab selection has changed. */
-    @Output() readonly selectedTabChange: EventEmitter<KbqTabChangeEvent> = new EventEmitter<KbqTabChangeEvent>(true);
+    readonly selectedTabChange = output<KbqTabChangeEvent>();
 
     private attributeToSelectBy: KbqTabSelectBy | null = null;
 
@@ -369,6 +366,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     removeTabBodyWrapperHeight(): void {
         this.tabBodyWrapperHeight = this.tabBodyWrapper.nativeElement.clientHeight;
         this.tabBodyWrapper.nativeElement.style.height = '';
+        // TODO: The 'emit' function requires a mandatory void argument
         this.animationDone.emit();
     }
 

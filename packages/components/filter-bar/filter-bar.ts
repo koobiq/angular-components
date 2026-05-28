@@ -9,9 +9,10 @@ import {
     Input,
     input,
     Output,
+    output,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject, merge } from 'rxjs';
@@ -111,15 +112,15 @@ export class KbqFilterBar {
      * to facilitate the two-way binding for the `filter` input.
      * @docs-private
      */
-    @Output() readonly filterChange = new EventEmitter<KbqFilter | null>();
+    readonly filterChange = output<KbqFilter | null>();
     /** Event that emits whenever the value of the pipe changes. */
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
     /** Event that emits whenever the pipe deleted. */
-    @Output() readonly onRemovePipe = new EventEmitter<KbqPipe>();
+    readonly onRemovePipe = output<KbqPipe>();
     /** Event that emits whenever the pipe cleared. */
-    @Output() readonly onClearPipe = new EventEmitter<KbqPipe>();
+    readonly onClearPipe = output<KbqPipe>();
     /** Event that emits whenever the select or multiselect pipe closed. */
-    @Output() readonly onClosePipe = new EventEmitter<KbqPipe>();
+    readonly onClosePipe = output<KbqPipe>();
 
     /** Whether the current filter is saved and changed */
     get isSavedAndChanged(): boolean {
@@ -173,7 +174,7 @@ export class KbqFilterBar {
             this.initDefaultParams();
         }
 
-        merge(this.onChangePipe, this.onRemovePipe)
+        merge(this.onChangePipe, outputToObservable(this.onRemovePipe))
             .pipe(takeUntilDestroyed())
             .subscribe(() => {
                 if (this.filter) {
@@ -182,7 +183,12 @@ export class KbqFilterBar {
                 }
             });
 
-        merge(this.filterChange, this.onChangePipe, this.onRemovePipe, this.internalFilterChanges)
+        merge(
+            outputToObservable(this.filterChange),
+            this.onChangePipe,
+            outputToObservable(this.onRemovePipe),
+            this.internalFilterChanges
+        )
             .pipe(takeUntilDestroyed())
             .subscribe(() => {
                 this.changes.next();
@@ -194,7 +200,7 @@ export class KbqFilterBar {
     removePipe(pipe: KbqPipe) {
         this.filter?.pipes.splice(this.filter?.pipes.indexOf(pipe), 1);
 
-        this.onRemovePipe.next(pipe);
+        this.onRemovePipe.emit(pipe);
         this.changes.next();
     }
 

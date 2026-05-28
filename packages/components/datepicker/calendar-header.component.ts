@@ -1,13 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-    ViewEncapsulation
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation, output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqOptionModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -118,9 +110,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     }
 
     /** Emits when any date is activated. */
-    @Output() readonly activeDateChange = new EventEmitter<D>();
-    @Output() readonly monthSelected = new EventEmitter<D>();
-    @Output() readonly yearSelected = new EventEmitter<D>();
+    readonly activeDateChange = output<D>();
+    readonly monthSelected = output<D>();
+    readonly yearSelected = output<D>();
 
     constructor(private readonly adapter: DateAdapter<D>) {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {

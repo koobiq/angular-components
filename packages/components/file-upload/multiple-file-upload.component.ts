@@ -10,11 +10,10 @@ import {
     DoCheck,
     effect,
     ElementRef,
-    EventEmitter,
     inject,
     input,
     Input,
-    Output,
+    output,
     PLATFORM_ID,
     QueryList,
     TemplateRef,
@@ -140,17 +139,20 @@ export class KbqMultipleFileUploadComponent
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
-    @Output('fileQueueChanged') readonly filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    readonly filesChange = output<KbqFileItem[]>({ alias: 'fileQueueChanged' });
     /**
      * Emits an event containing a chunk of files added to the file list.
      * Useful when handling added files, skipping filtering file list.
      */
-    @Output() readonly filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    readonly filesAdded = output<KbqFileItem[]>();
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.
      */
-    @Output() readonly fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
+    readonly fileRemoved = output<[
+            KbqFileItem,
+            number
+        ]>();
 
     /** File Icon Template */
     @ContentChild('kbqFileIcon', { static: false, read: TemplateRef })

@@ -20,6 +20,7 @@ import {
     OnDestroy,
     Optional,
     Output,
+    output,
     QueryList,
     ViewChild,
     ViewContainerRef,
@@ -162,11 +163,11 @@ export class KbqTreeSelection
     //  Class of this input is referenced in the signature of another class.
     @Input() declare treeControl: FlatTreeControl<any>;
 
-    @Output() readonly navigationChange = new EventEmitter<KbqTreeNavigationChange<KbqTreeOption>>();
+    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption>>();
 
     @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
 
-    @Output() readonly onSelectAll = new EventEmitter<KbqTreeSelectAllEvent<KbqTreeOption>>();
+    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
 
     @Output() readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
 

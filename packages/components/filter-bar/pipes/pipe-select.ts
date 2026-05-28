@@ -77,7 +77,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
 
         this.select.closedStream
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
     onSelect(item: KbqSelectValue) {

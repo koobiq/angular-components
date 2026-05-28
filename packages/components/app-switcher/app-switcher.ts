@@ -24,7 +24,8 @@ import {
     ViewEncapsulation,
     booleanAttribute,
     inject,
-    numberAttribute
+    numberAttribute,
+    output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -484,9 +485,9 @@ export class KbqAppSwitcherTrigger
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
     /** @docs-private */
-    @Output() readonly selectedSiteChange = new EventEmitter<KbqAppSwitcherSite>();
+    readonly selectedSiteChange = output<KbqAppSwitcherSite>();
     /** @docs-private */
-    @Output() readonly selectedAppChange = new EventEmitter<KbqAppSwitcherApp>();
+    readonly selectedAppChange = output<KbqAppSwitcherApp>();
 
     /** @docs-private */
     trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;

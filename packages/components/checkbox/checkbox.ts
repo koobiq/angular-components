@@ -7,14 +7,13 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
     Input,
     input,
     numberAttribute,
     OnDestroy,
-    Output,
+    output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -104,10 +103,10 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     readonly name = input<string | null>(null);
 
     /** Event emitted when the checkbox's `checked` value changes. */
-    @Output() readonly change: EventEmitter<KbqCheckboxChange> = new EventEmitter<KbqCheckboxChange>();
+    readonly change = output<KbqCheckboxChange>();
 
     /** Event emitted when the checkbox's `indeterminate` value changes. */
-    @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly indeterminateChange = output<boolean>();
 
     /** The value attribute of the native input element */
     readonly value = input<string>(undefined!);

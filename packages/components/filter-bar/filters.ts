@@ -6,11 +6,10 @@ import {
     Component,
     DestroyRef,
     ElementRef,
-    EventEmitter,
     inject,
     input,
     OnInit,
-    Output,
+    output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -122,15 +121,15 @@ export class KbqFilters implements OnInit {
     readonly filters = input<KbqFilter[]>(undefined!);
 
     /** Event that is generated whenever the user selects a filter. */
-    @Output() readonly onSelectFilter = new EventEmitter<KbqFilter>();
+    readonly onSelectFilter = output<KbqFilter>();
     /** Event that is generated whenever the user save a filter. */
-    @Output() readonly onSave = new EventEmitter<KbqSaveFilterEvent>();
+    readonly onSave = output<KbqSaveFilterEvent>();
     /** Event that is generated whenever the user change a filter. */
-    @Output() readonly onChangeFilter = new EventEmitter<KbqSaveFilterEvent>();
+    readonly onChangeFilter = output<KbqSaveFilterEvent>();
     /** Event that is generated whenever the user remove a filter. */
-    @Output() readonly onRemoveFilter = new EventEmitter<KbqFilter>();
+    readonly onRemoveFilter = output<KbqFilter>();
     /** Event that is generated whenever the user reset a filter changes. */
-    @Output() readonly onResetFilterChanges = new EventEmitter<KbqFilter | null>();
+    readonly onResetFilterChanges = output<KbqFilter | null>();
 
     /** header of popover. Depends on the mode */
     get popoverHeader(): string {
@@ -200,7 +199,7 @@ export class KbqFilters implements OnInit {
     selectFilter(filter: KbqFilter) {
         this.filterBar.internalFilterChanges.next(structuredClone(filter));
 
-        this.onSelectFilter.next(filter);
+        this.onSelectFilter.emit(filter);
     }
 
     saveChanges() {
@@ -341,7 +340,7 @@ export class KbqFilters implements OnInit {
     }
 
     removeFilter() {
-        this.onRemoveFilter.next(this.filter!);
+        this.onRemoveFilter.emit(this.filter!);
 
         setTimeout(() => this.focusMonitor.focusVia(this.mainButton.elementRef, this.focusOrigin), 0);
     }

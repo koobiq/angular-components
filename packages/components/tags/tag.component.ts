@@ -13,14 +13,13 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
     Inject,
     Input,
     input,
     OnDestroy,
-    Output,
+    output,
     QueryList,
     signal,
     ViewChild,
@@ -280,7 +279,7 @@ export class KbqTag
     /**
      * Emits event when the tag is edited.
      */
-    @Output() readonly editChange = new EventEmitter<KbqTagEditChange>();
+    readonly editChange = output<KbqTagEditChange>();
 
     /**
      * @docs-private
@@ -304,16 +303,16 @@ export class KbqTag
     @ContentChild(forwardRef(() => KbqTagRemove), { static: false }) removeIcon: KbqTagRemove;
 
     /** Emitted when the tag is selected or deselected. */
-    @Output() readonly selectionChange: EventEmitter<KbqTagSelectionChange> = new EventEmitter<KbqTagSelectionChange>();
+    readonly selectionChange = output<KbqTagSelectionChange>();
 
     /** Emitted when the tag is destroyed and leaving the DOM. */
-    @Output() readonly destroyed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
+    readonly destroyed = output<KbqTagEvent>();
 
     /**
      * Emitted when a tag is to be removed.
      * Fires on programmatic and UI removal (click or keyboard).
      */
-    @Output() readonly removed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
+    readonly removed = output<KbqTagEvent>();
 
     /** Whether the tag is selected. */
     // TODO: Skipped for migration because:

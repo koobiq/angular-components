@@ -9,7 +9,7 @@ import {
     inject,
     Input,
     OnDestroy,
-    Output
+    output
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
@@ -77,6 +77,7 @@ export class KbqAccordionItem implements OnDestroy {
             this.expandedChange.emit(expanded);
 
             if (expanded) {
+                // TODO: The 'emit' function requires a mandatory void argument
                 this.opened.emit();
                 /**
                  * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
@@ -86,6 +87,7 @@ export class KbqAccordionItem implements OnDestroy {
 
                 this.expansionDispatcher.notify(this.value, accordionId);
             } else {
+                // TODO: The 'emit' function requires a mandatory void argument
                 this.closed.emit();
             }
 
@@ -129,9 +131,9 @@ export class KbqAccordionItem implements OnDestroy {
     private _disabled = false;
 
     /** Event emitted every time the AccordionItem is closed. */
-    @Output() readonly closed: EventEmitter<void> = new EventEmitter<void>();
+    readonly closed = output<void>();
     /** Event emitted every time the AccordionItem is opened. */
-    @Output() readonly opened: EventEmitter<void> = new EventEmitter<void>();
+    readonly opened = output<void>();
 
     /**
      * Event emitted when the AccordionItem is destroyed.
@@ -144,7 +146,7 @@ export class KbqAccordionItem implements OnDestroy {
      * Primarily used to facilitate two-way binding.
      * @docs-private
      */
-    @Output() readonly expandedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly expandedChange = output<boolean>();
 
     /** Unregister function for expansionDispatcher. */
     private removeUniqueSelectionListener: () => void;
@@ -173,8 +175,6 @@ export class KbqAccordionItem implements OnDestroy {
 
     /** Emits an event for the accordion item being destroyed. */
     ngOnDestroy() {
-        this.opened.complete();
-        this.closed.complete();
         this.destroyed.emit();
         this.destroyed.complete();
         this.removeUniqueSelectionListener();

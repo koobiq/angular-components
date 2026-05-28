@@ -2,12 +2,11 @@ import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     OnChanges,
-    Output,
     SimpleChanges,
     ViewEncapsulation,
-    input
+    input,
+    output
 } from '@angular/core';
 
 /**
@@ -72,7 +71,7 @@ export class KbqCalendarBody implements OnChanges {
     readonly cellAspectRatio = input(1);
 
     /** Emits when a new value is selected. */
-    @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
+    readonly selectedValueChange = output<number>();
 
     /** The number of blank cells to put at the beginning for the first row. */
     firstRowOffset: number;

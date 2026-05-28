@@ -8,20 +8,19 @@ import {
     ContentChildren,
     Directive,
     ElementRef,
-    EventEmitter,
     Inject,
     Input,
     NgZone,
     OnDestroy,
     OnInit,
-    Output,
     QueryList,
     Renderer2,
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
     forwardRef,
-    inject
+    inject,
+    output
 } from '@angular/core';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subscription } from 'rxjs';
@@ -247,7 +246,7 @@ export class KbqGutterGhostDirective {
     preserveWhitespaces: false
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    @Output() readonly gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();
+    readonly gutterPositionChange = output<void>();
 
     areas: IArea[] = [];
 
@@ -563,6 +562,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         this.updateGutter();
 
+        // TODO: The 'emit' function requires a mandatory void argument
         this.gutterPositionChange.emit();
 
         this.changeDetectorRef.markForCheck();
@@ -581,7 +581,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     }
 })
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    @Output() readonly sizeChange: EventEmitter<number> = new EventEmitter<number>();
+    readonly sizeChange = output<number>();
 
     private readonly window = inject(KBQ_WINDOW);
 

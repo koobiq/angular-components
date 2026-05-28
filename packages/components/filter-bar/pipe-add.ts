@@ -1,14 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    inject,
-    input,
-    Output,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqOptionModule } from '@koobiq/components/core';
@@ -72,7 +63,7 @@ export class KbqPipeAdd {
     @ViewChild(KbqSelect) select: KbqSelect;
 
     /** Event that is generated after add pipe. */
-    @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
+    readonly onAddPipe = output<KbqPipeTemplate>();
 
     /** template of filter */
     readonly filterTemplate = input<KbqFilter>({
@@ -110,7 +101,7 @@ export class KbqPipeAdd {
                 Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
             );
 
-            this.onAddPipe.next(option.value);
+            this.onAddPipe.emit(option.value);
             this.filterBar.filterChange.emit(this.filterBar.filter);
         }
 

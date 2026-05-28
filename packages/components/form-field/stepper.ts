@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output, OutputEmitterRef, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -72,10 +72,10 @@ export class KbqStepper {
     private readonly document = inject<Document>(DOCUMENT);
 
     /** Emitted when the stepper is incremented. */
-    @Output() readonly stepUp: EventEmitter<void> = new EventEmitter<void>();
+    readonly stepUp = output<void>();
 
     /** Emitted when the stepper is decremented. */
-    @Output() readonly stepDown: EventEmitter<void> = new EventEmitter<void>();
+    readonly stepDown = output<void>();
 
     /** @docs-private */
     protected readonly mouseUp = new Subject<void>();
@@ -137,7 +137,7 @@ export class KbqStepper {
         this.handleStep($event, this.stepDown);
     }
 
-    private handleStep($event: MouseEvent, emitter: EventEmitter<void>): void {
+    private handleStep($event: MouseEvent, emitter: OutputEmitterRef<void>): void {
         if (this.control.disabled) return;
 
         emitter.emit();

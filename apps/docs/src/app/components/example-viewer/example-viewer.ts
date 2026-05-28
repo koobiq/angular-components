@@ -121,7 +121,7 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
 
                     this.ngZone.onStable
                         .pipe(take(1))
-                        .subscribe(() => this.contentRendered.next(this.elementRef.nativeElement));
+                        .subscribe(() => this.contentRendered.emit(this.elementRef.nativeElement));
                 },
                 { injector: this.injector }
             );
@@ -139,7 +139,7 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
 
         this.ngZone.onStable
             .pipe(take(1))
-            .subscribe(() => this.contentRenderFailed.next(this.elementRef.nativeElement));
+            .subscribe(() => this.contentRenderFailed.emit(this.elementRef.nativeElement));
     }
 
     /** Instantiate a ExampleViewer for each example. */

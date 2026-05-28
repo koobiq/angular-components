@@ -20,7 +20,8 @@ import {
     ViewContainerRef,
     ViewEncapsulation,
     forwardRef,
-    input
+    input,
+    output
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -76,7 +77,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     bodyPosition: KbqTabBodyPositionState;
 
     /** Event emitted when the tab begins to animate towards the center as the active tab. */
-    @Output() readonly onCentering: EventEmitter<number> = new EventEmitter<number>();
+    readonly onCentering = output<number>();
 
     /** Event emitted before the centering of the tab begins. */
     @Output() readonly beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -85,7 +86,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     @Output() readonly afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted when the tab completes its animation towards the center. */
-    @Output() readonly onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+    readonly onCentered = output<void>();
 
     /** The portal host inside of this container into which the tab body content will be loaded. */
     @ViewChild(CdkPortalOutlet, { static: false }) portalHost: CdkPortalOutlet;
@@ -149,6 +150,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     onTranslateTabComplete(e: AnimationEvent): void {
         // If the transition to the center is complete, emit an event.
         if (this.isCenterPosition(e.toState) && this.isCenterPosition(this.bodyPosition)) {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.onCentered.emit();
         }
 

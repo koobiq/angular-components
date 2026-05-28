@@ -457,14 +457,14 @@ export class KbqSelect
     );
 
     /** Event emitted when the selected value has been changed by the user. */
-    @Output() readonly selectionChange: EventEmitter<KbqSelectChange> = new EventEmitter<KbqSelectChange>();
+    readonly selectionChange = output<KbqSelectChange>();
 
     /**
      * Event that emits whenever the raw value of the select changes. This is here primarily
      * to facilitate the two-way binding for the `value` input.
      * @docs-private
      */
-    @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
+    readonly valueChange = output<any>();
 
     /**
      * Distance in pixels from the bottom of the options panel at which `scrolledToBottom` fires.
@@ -473,7 +473,7 @@ export class KbqSelect
     readonly scrolledToBottomOffset = input<number, unknown>(0, { transform: numberAttribute });
 
     /** Emits when the options panel is scrolled to (or within `scrolledToBottomOffset` of) the bottom. */
-    @Output() readonly scrolledToBottom: EventEmitter<void> = new EventEmitter<void>();
+    readonly scrolledToBottom = output<void>();
 
     /**
      * Whether the overlay should have a backdrop.

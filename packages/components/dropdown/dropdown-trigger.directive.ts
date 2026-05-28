@@ -17,7 +17,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    EventEmitter,
     inject,
     Inject,
     InjectionToken,
@@ -25,7 +24,7 @@ import {
     numberAttribute,
     OnDestroy,
     Optional,
-    Output,
+    output,
     Renderer2,
     Self,
     ViewContainerRef
@@ -181,10 +180,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private _dropdown: KbqDropdownPanel;
 
     /** Event emitted when the associated dropdown is opened. */
-    @Output() readonly dropdownOpened: EventEmitter<void> = new EventEmitter<void>();
+    readonly dropdownOpened = output<void>();
 
     /** Event emitted when the associated dropdown is closed. */
-    @Output() readonly dropdownClosed: EventEmitter<void> = new EventEmitter<void>();
+    readonly dropdownClosed = output<void>();
 
     // Tracking input type is necessary so it's possible to only auto-focus
     // the first item of the list when the dropdown is opened via the keyboard
@@ -454,8 +453,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         this._opened = isOpen;
 
         if (this._opened) {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.dropdownOpened.emit();
         } else {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.dropdownClosed.emit();
         }
 

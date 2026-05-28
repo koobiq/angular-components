@@ -9,7 +9,6 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
     Host,
     inject,
     Inject,
@@ -17,7 +16,7 @@ import {
     Input,
     numberAttribute,
     Optional,
-    Output,
+    output,
     QueryList,
     TemplateRef,
     ViewChild,
@@ -133,14 +132,13 @@ export class KbqAutocomplete implements AfterContentInit {
     @Input({ transform: numberAttribute }) panelMinWidth: number = 200;
 
     /** Event that is emitted whenever an option from the list is selected. */
-    @Output() readonly optionSelected: EventEmitter<KbqAutocompleteSelectedEvent> =
-        new EventEmitter<KbqAutocompleteSelectedEvent>();
+    readonly optionSelected = output<KbqAutocompleteSelectedEvent>();
 
     /** Event that is emitted when the autocomplete panel is opened. */
-    @Output() readonly opened: EventEmitter<void> = new EventEmitter<void>();
+    readonly opened = output<void>();
 
     /** Event that is emitted when the autocomplete panel is closed. */
-    @Output() readonly closed: EventEmitter<void> = new EventEmitter<void>();
+    readonly closed = output<void>();
 
     /**
      * Takes classes set on the host kbq-autocomplete element and applies them to the panel

@@ -3,16 +3,15 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     Input,
     OnChanges,
     OnDestroy,
     Optional,
-    Output,
     SimpleChanges,
     ViewChild,
     ViewEncapsulation,
-    input
+    input,
+    output
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
@@ -128,22 +127,22 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
     /** Emits when the currently selected date changes. */
-    @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
+    readonly selectedChange = output<D>();
 
     /**
      * Emits the year chosen in multiyear view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly yearSelected = output<D>();
 
     /**
      * Emits the month chosen in year view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly monthSelected = output<D>();
 
     /** Emits when any date is selected. */
-    @Output() readonly userSelection: EventEmitter<void> = new EventEmitter<void>();
+    readonly userSelection = output<void>();
 
     /** Reference to the current month view component. */
     @ViewChild(KbqMonthView, { static: false }) monthView: KbqMonthView<D>;
@@ -233,6 +232,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     userSelected(): void {
+        // TODO: The 'emit' function requires a mandatory void argument
         this.userSelection.emit();
     }
 

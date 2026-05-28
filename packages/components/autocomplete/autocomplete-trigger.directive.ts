@@ -283,6 +283,7 @@ export class KbqAutocompleteTrigger
         }
 
         if (this.panelOpen) {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.autocomplete().closed.emit();
         }
 
@@ -499,6 +500,7 @@ export class KbqAutocompleteTrigger
                             // can happen if the users opens the panel and there are no options, but the
                             // options come in slightly later or as a result of the value changing.
                             if (wasOpen !== this.panelOpen) {
+                                // TODO: The 'emit' function requires a mandatory void argument
                                 this.autocomplete().opened.emit();
                             }
                         }
@@ -621,6 +623,7 @@ export class KbqAutocompleteTrigger
         // We need to do an extra `panelOpen` check in here, because the
         // autocomplete won't be shown if there are no options.
         if (this.panelOpen && wasOpen !== this.panelOpen) {
+            // TODO: The 'emit' function requires a mandatory void argument
             autocomplete.opened.emit();
         }
 

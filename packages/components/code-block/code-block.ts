@@ -14,14 +14,13 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
     inject,
     InjectionToken,
     Injector,
     Input,
     input,
     numberAttribute,
-    Output,
+    output,
     Provider,
     Renderer2,
     SecurityContext,
@@ -30,7 +29,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
@@ -147,7 +146,7 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * Output to support two-way binding on `[(softWrap)]` property.
      */
-    @Output() readonly softWrapChange = new EventEmitter<boolean>();
+    readonly softWrapChange = output<boolean>();
 
     /**
      * Allows to view all the code, otherwise it will be hidden.
@@ -160,7 +159,7 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * Output to support two-way binding on `[(viewAll)]` property.
      */
-    @Output() readonly viewAllChange = new EventEmitter<boolean>();
+    readonly viewAllChange = output<boolean>();
 
     /**
      * Maximum height of the code block content, other parts will be hidden.
@@ -239,7 +238,7 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * Output to support two-way binding on `[(activeFileIndex)]` property.
      */
-    @Output() readonly activeFileIndexChange = new EventEmitter<number>();
+    readonly activeFileIndexChange = output<number>();
 
     /** Whether to hide border. */
     readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -267,7 +266,7 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * Output to support two-way binding on `[(hideTabs)]` property.
      */
-    @Output() readonly hideTabsChange = new EventEmitter<boolean>();
+    readonly hideTabsChange = output<boolean>();
 
     /**
      * Component locale configuration.
@@ -419,8 +418,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * Reacts to `hideTabs` changes dynamically.
      */
     private trackHoverState(): void {
-        this.hideTabsChange
-            .asObservable()
+        outputToObservable(this.hideTabsChange)
             .pipe(
                 startWith(this._hideTabs),
                 switchMap((hideTabs) => {

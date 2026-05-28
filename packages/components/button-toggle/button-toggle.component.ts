@@ -10,14 +10,13 @@ import {
     ContentChildren,
     Directive,
     ElementRef,
-    EventEmitter,
     forwardRef,
     Input,
     input,
     OnDestroy,
     OnInit,
     Optional,
-    Output,
+    output,
     QueryList,
     ViewChild,
     ViewEncapsulation
@@ -139,10 +138,10 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
      * Used to facilitate two-way data binding.
      * @docs-private
      */
-    @Output() readonly valueChange = new EventEmitter<any>();
+    readonly valueChange = output<any>();
 
     /** Event emitted when the group's value changes. */
-    @Output() readonly change: EventEmitter<KbqButtonToggleChange> = new EventEmitter<KbqButtonToggleChange>();
+    readonly change = output<KbqButtonToggleChange>();
     private _vertical = false;
     private _multiple = false;
     private _disabled = false;
@@ -381,7 +380,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     /** Event emitted when the group value changes. */
-    @Output() readonly change: EventEmitter<KbqButtonToggleChange> = new EventEmitter<KbqButtonToggleChange>();
+    readonly change = output<KbqButtonToggleChange>();
 
     private isSingleSelector = false;
     private _checked = false;

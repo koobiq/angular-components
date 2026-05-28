@@ -67,7 +67,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
             this.stateChanges.next();
 
             if (!visible) {
-                this.filterBar?.onClosePipe.next(this.data);
+                this.filterBar?.onClosePipe.emit(this.data);
             }
         });
     }

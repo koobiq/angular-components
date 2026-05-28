@@ -1,15 +1,4 @@
-import {
-    booleanAttribute,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    inject,
-    Input,
-    input,
-    NgZone,
-    Output,
-    signal
-} from '@angular/core';
+import { booleanAttribute, Directive, ElementRef, inject, Input, input, NgZone, output, signal } from '@angular/core';
 import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from './utils';
 
 @Directive({
@@ -36,8 +25,8 @@ export class RdxRovingFocusGroupDirective {
     readonly loop = input<boolean, unknown>(true, { transform: booleanAttribute });
     readonly preventScrollOnEntryFocus = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Output() readonly entryFocus = new EventEmitter<Event>();
-    @Output() readonly currentTabStopIdChange = new EventEmitter<string | null>();
+    readonly entryFocus = output<Event>();
+    readonly currentTabStopIdChange = output<string | null>();
 
     /** @docs-private */
     readonly currentTabStopId = signal<string | null>(null);

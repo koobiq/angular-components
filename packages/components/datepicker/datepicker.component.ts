@@ -10,7 +10,6 @@ import {
     ChangeDetectorRef,
     Component,
     ComponentRef,
-    EventEmitter,
     inject,
     Inject,
     InjectionToken,
@@ -19,7 +18,7 @@ import {
     NgZone,
     OnDestroy,
     Optional,
-    Output,
+    output,
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation
@@ -231,13 +230,13 @@ export class KbqDatepicker<D> implements OnDestroy {
      * Emits selected year in multiyear view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly yearSelected = output<D>();
 
     /**
      * Emits selected month in year view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly monthSelected = output<D>();
 
     /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
     readonly panelClass = input<string | string[]>(undefined!);
@@ -248,10 +247,10 @@ export class KbqDatepicker<D> implements OnDestroy {
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Emits when the datepicker has been opened. */
-    @Output('opened') readonly openedStream: EventEmitter<void> = new EventEmitter<void>();
+    readonly openedStream = output<void>({ alias: 'opened' });
 
     /** Emits when the datepicker has been closed. */
-    @Output('closed') readonly closedStream: EventEmitter<void> = new EventEmitter<void>();
+    readonly closedStream = output<void>({ alias: 'closed' });
 
     readonly stateChanges: Subject<void> = new Subject<void>();
 
@@ -370,6 +369,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         this.openAsPopup();
 
         this._opened = true;
+        // TODO: The 'emit' function requires a mandatory void argument
         this.openedStream.emit();
     }
 
@@ -392,6 +392,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         }
 
         this._opened = false;
+        // TODO: The 'emit' function requires a mandatory void argument
         this.closedStream.emit();
         this.focusedElementBeforeOpen = null;
     }

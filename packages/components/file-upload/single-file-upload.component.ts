@@ -10,11 +10,10 @@ import {
     DoCheck,
     effect,
     ElementRef,
-    EventEmitter,
     inject,
     input,
     Input,
-    Output,
+    output,
     PLATFORM_ID,
     QueryList,
     ViewChild,
@@ -140,8 +139,7 @@ export class KbqSingleFileUploadComponent
 
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
-    @Output('fileQueueChange') readonly fileChange: EventEmitter<KbqFileItem | null> =
-        new EventEmitter<KbqFileItem | null>();
+    readonly fileChange = output<KbqFileItem | null>({ alias: 'fileQueueChange' });
 
     /** @docs-private */
     @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;

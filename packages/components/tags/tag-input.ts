@@ -9,7 +9,7 @@ import {
     input,
     OnChanges,
     Optional,
-    Output,
+    output,
     Self
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -94,8 +94,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     private _separators = this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
 
     /** Emitted when a tag is to be added. */
-    @Output('kbqTagInputTokenEnd') readonly tagEnd: EventEmitter<KbqTagInputEvent> =
-        new EventEmitter<KbqTagInputEvent>();
+    readonly tagEnd = output<KbqTagInputEvent>({ alias: 'kbqTagInputTokenEnd' });
 
     /** A value indicating whether allow/prevent tags duplication  */
     readonly distinct = input<boolean>(false);

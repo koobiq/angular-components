@@ -3,13 +3,12 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     Input,
     Optional,
-    Output,
     ViewChild,
     ViewEncapsulation,
-    input
+    input,
+    output
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
@@ -82,13 +81,13 @@ export class KbqMonthView<D> implements AfterContentInit {
     readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
     /** Emits when a new date is selected. */
-    @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
+    readonly selectedChange = output<D | null>();
 
     /** Emits when any date is selected. */
-    @Output() readonly userSelection: EventEmitter<void> = new EventEmitter<void>();
+    readonly userSelection = output<void>();
 
     /** Emits when any date is activated. */
-    @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
+    readonly activeDateChange = output<D>();
 
     /** The body of calendar table */
     @ViewChild(KbqCalendarBody, { static: false }) kbqCalendarBody: KbqCalendarBody;
@@ -147,6 +146,7 @@ export class KbqMonthView<D> implements AfterContentInit {
             this.selectedChange.emit(selectedDate);
         }
 
+        // TODO: The 'emit' function requires a mandatory void argument
         this.userSelection.emit();
     }
 

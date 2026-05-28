@@ -119,7 +119,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
         this.popover.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible) => {
             if (!visible) {
                 this.data.value = this.control.value;
-                this.filterBar?.onChangePipe.next(this.data);
+                this.filterBar?.onChangePipe.emit(this.data);
             }
 
             this.stateChanges.next();
