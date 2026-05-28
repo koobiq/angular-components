@@ -917,7 +917,7 @@ describe('KbqDropdown', () => {
 
             constructor(ctor: new () => T, inputs: { [key: string]: any } = {}) {
                 this.fixture = createComponent(ctor);
-                Object.keys(inputs).forEach((key) => ((this.fixture.componentInstance as any)[key] = inputs[key]));
+                Object.keys(inputs).forEach((key) => this.fixture.componentRef.setInput(key, inputs[key]));
                 this.fixture.detectChanges();
                 this.trigger = this.fixture.componentInstance.triggerEl.nativeElement;
             }

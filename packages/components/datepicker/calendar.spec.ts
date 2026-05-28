@@ -376,9 +376,7 @@ class CalendarWithDateFilter {
 
     constructor(public adapter: DateAdapter<DateTime>) {}
 
-    dateFilter(date: DateTime) {
-        return !(this.adapter.getDate(date) % 2) && this.adapter.getMonth(date) !== 10;
-    }
+    dateFilter = (date: DateTime): boolean => !(this.adapter.getDate(date) % 2) && this.adapter.getMonth(date) !== 10;
 }
 
 @Component({

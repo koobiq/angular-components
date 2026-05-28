@@ -36,7 +36,11 @@ import {
 
 @Directive()
 export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
-    readonly treeControl = input<TreeControl<T>>(undefined!);
+    // TODO: Skipped for migration because:
+    //  Subclass KbqTreeSelection overrides this input with a narrower type
+    //  (FlatTreeControl<any>) via `@Input() declare`, which is incompatible
+    //  with InputSignal<TreeControl<T>>. Migrate together as a follow-up.
+    @Input() treeControl: TreeControl<T>;
 
     /**
      * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -102,7 +106,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     ngOnInit() {
         this.dataDiffer = this.differs.find([]).create(this.trackBy());
 
-        if (!this.treeControl()) {
+        if (!this.treeControl) {
             throw getTreeControlMissingError();
         }
     }
@@ -197,7 +201,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         // If the tree is flat tree, then use the `getLevel` function in flat tree control
         // Otherwise, use the level of parent node.
-        const treeControl = this.treeControl();
+        const treeControl = this.treeControl;
 
         if (treeControl.getLevel) {
             context.level = treeControl.getLevel(nodeData);
@@ -297,11 +301,11 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     private _data: T;
 
     get isExpanded(): boolean {
-        return this.tree.treeControl().isExpanded(this.data);
+        return this.tree.treeControl.isExpanded(this.data);
     }
 
     get level(): number {
-        const treeControl = this.tree.treeControl();
+        const treeControl = this.tree.treeControl;
 
         return treeControl.getLevel ? treeControl.getLevel(this._data) : 0;
     }

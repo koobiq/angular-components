@@ -69,7 +69,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     }
 
     paddingIndent(): string | null {
-        const treeControl = this.tree.treeControl();
+        const treeControl = this.tree.treeControl;
         const nodeLevel = this.treeNode.data && treeControl.getLevel ? treeControl.getLevel(this.treeNode.data) : 0;
 
         const level = this.level || nodeLevel;

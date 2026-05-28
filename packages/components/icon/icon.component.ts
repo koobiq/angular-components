@@ -26,7 +26,7 @@ import { KbqIconRegistry } from './icon-registry';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon',
-        '[class]': 'svgIcon ? null : iconName()',
+        '[class]': 'svgIcon ? null : iconName',
         '[class.kbq-error]': 'color === "error" || hasError'
     }
 })
@@ -46,7 +46,11 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     hasError: boolean = false;
 
     /** Name of an icon within a @koobiq/icons. Accepts "namespace:name" syntax. */
-    readonly iconName = input<string>(undefined!, { alias: 'kbq-icon' });
+    // TODO: Skipped for migration because:
+    //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
+    //  using a plain string, which is incompatible with InputSignal<string>.
+    //  Migrate KbqIconButton.iconName together as a follow-up.
+    @Input({ alias: 'kbq-icon' }) iconName: string;
 
     protected name = 'KbqIcon';
 
@@ -140,7 +144,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     };
 
     private parseIconSize(): number {
-        const iconName = this.iconName();
+        const iconName = this.iconName;
         const baseName = iconName?.includes(':') ? iconName.split(':')[1] : iconName;
 
         return parseInt(baseName?.split('_').pop() ?? '');
