@@ -81,11 +81,8 @@ export class KbqListModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqListModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1.A11yModule, typeof i2.KbqPseudoCheckboxModule, typeof i2.KbqLine, typeof i2.KbqOptionModule, typeof i2.KbqActionContainer, typeof i3.KbqIconModule, typeof i4.KbqList, typeof i5.KbqListSelection, typeof i4.KbqListItem, typeof i5.KbqListOption, typeof i5.KbqListOptionCaption], [typeof i4.KbqList, typeof i5.KbqListSelection, typeof i4.KbqListItem, typeof i5.KbqListOption, typeof i5.KbqListOptionCaption, typeof i2.KbqOptionModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1.A11yModule, typeof i2.KbqPseudoCheckboxModule, typeof i2.KbqLine, typeof i2.KbqOptionModule, typeof i2.KbqActionContainer, typeof i3.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i2.KbqOptionModule]>;
 }
 
 // @public
@@ -96,7 +93,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     blur(): void;
     // (undocumented)
-    checkboxPosition: 'before' | 'after';
+    readonly checkboxPosition: i0.InputSignal<"before" | "after">;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -157,7 +154,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     get value(): any;
     set value(newValue: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "tooltipTrigger", "dropdownTrigger", "pseudoCheckbox"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "tooltipTrigger", "dropdownTrigger", "pseudoCheckbox"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption, [null, null, null, null, { optional: true; }]>;
 }
@@ -189,7 +186,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     blur(): void;
     // (undocumented)
     canDeselectLast(listOption: KbqListOption): boolean;
-    compareWith: (o1: any, o2: any) => boolean;
+    readonly compareWith: i0.InputSignal<(o1: any, o2: any) => boolean>;
     // (undocumented)
     deselectAll(): void;
     // (undocumented)
@@ -205,7 +202,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // (undocumented)
     getSelectedOptionValues(): string[];
     // (undocumented)
-    horizontal: boolean;
+    readonly horizontal: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     keyManager: FocusKeyManager<KbqListOption>;
     // (undocumented)
@@ -214,8 +211,6 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     multipleMode: MultipleMode | null;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_horizontal: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -278,7 +273,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // (undocumented)
     writeValue(values: string[]): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection, [null, null, { attribute: "multiple"; }, { optional: true; }]>;
 }

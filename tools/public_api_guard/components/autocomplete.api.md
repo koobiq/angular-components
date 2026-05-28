@@ -130,12 +130,8 @@ export class KbqAutocompleteModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof i4.KbqAutocomplete, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter], [typeof i4.KbqAutocomplete, typeof i1.KbqOptionModule, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
 }
 
 // @public
@@ -162,13 +158,13 @@ export class KbqAutocompleteSelectedEvent {
 export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
     constructor(elementRef: ElementRef<HTMLInputElement>, viewContainerRef: ViewContainerRef, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, zone: NgZone, scrollStrategy: any, dir: Directionality, formField: KbqFormField, viewportRuler?: ViewportRuler | undefined);
     get activeOption(): KbqOption | null;
-    autocomplete: KbqAutocomplete;
-    autocompleteAttribute: string;
+    readonly autocomplete: i0.InputSignal<KbqAutocomplete>;
+    readonly autocompleteAttribute: i0.InputSignal<string>;
     get autocompleteDisabled(): boolean;
     set autocompleteDisabled(value: boolean);
     // (undocumented)
     closePanel(): void;
-    connectedTo: KbqAutocompleteOrigin;
+    readonly connectedTo: i0.InputSignal<KbqAutocompleteOrigin>;
     // (undocumented)
     protected readonly document: Document;
     // (undocumented)
@@ -184,7 +180,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: any) => void;
-    onInputBlur: (event: FocusEvent) => boolean;
+    readonly onInputBlur: i0.InputSignal<(event: FocusEvent) => boolean>;
     onTouched: () => void;
     open(): void;
     // (undocumented)
@@ -204,7 +200,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, null]>;
 }

@@ -171,10 +171,8 @@ export class KbqSplitterModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitterModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof i2.KbqGutterDirective, typeof i2.KbqGutterGhostDirective, typeof i2.KbqSplitterAreaDirective, typeof i2.KbqSplitterComponent], [typeof i2.KbqGutterDirective, typeof i2.KbqSplitterAreaDirective, typeof i2.KbqSplitterComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof KbqGutterDirective, typeof KbqGutterGhostDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent], [typeof KbqGutterDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

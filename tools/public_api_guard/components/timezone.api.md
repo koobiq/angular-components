@@ -46,20 +46,17 @@ export class KbqTimezoneModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimezoneModule>;
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "UtcOffsetPipe" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "CitiesByFilterPipe" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqSelectModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqToolTipModule, typeof i2.KbqHighlightModule, typeof i7.NgClass, typeof i7.KeyValuePipe, typeof i8.A11yModule, typeof i9.UtcOffsetPipe, typeof i10.CitiesByFilterPipe, typeof i11.KbqTimezoneSelect, typeof i12.KbqTimezoneOption, typeof i13.KbqTimezoneOptionTooltip, typeof i11.KbqTimezoneSelectTrigger], [typeof i11.KbqTimezoneSelect, typeof i12.KbqTimezoneOption, typeof i13.KbqTimezoneOptionTooltip, typeof i11.KbqTimezoneSelectTrigger, typeof i14.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqSelectModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqToolTipModule, typeof i2.KbqHighlightModule, typeof i7.NgClass, typeof i7.KeyValuePipe, typeof i8.A11yModule, typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i14.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
 export class KbqTimezoneOption extends KbqOption {
     // (undocumented)
-    highlightText: string;
+    readonly highlightText: i0.InputSignal<string>;
     // (undocumented)
     get timezone(): KbqTimezoneZone;
     set timezone(zone: KbqTimezoneZone);
@@ -70,7 +67,7 @@ export class KbqTimezoneOption extends KbqOption {
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOption, never>;
 }

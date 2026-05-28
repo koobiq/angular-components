@@ -13,7 +13,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqFormFieldRef } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -22,7 +22,6 @@ import { ReplaySubject } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { SimpleChanges } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
@@ -41,7 +40,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     // (undocumented)
-    protected readonly formField: KbqFormFieldRef | null;
+    protected readonly formField: _koobiq_components_core.KbqFormFieldRef | null;
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -56,13 +55,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // (undocumented)
     protected readonly registry: KbqIconRegistry | null;
     // (undocumented)
-    small: boolean;
+    readonly small: i0.InputSignal<boolean>;
     protected svgIcon: boolean;
     protected readonly svgIconName: ReplaySubject<string | undefined>;
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "small": { "alias": "small"; "required": false; }; "autoColor": { "alias": "autoColor"; "required": false; }; "iconName": { "alias": "kbq-icon"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "autoColor": { "alias": "autoColor"; "required": false; }; "iconName": { "alias": "kbq-icon"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIcon, never>;
 }
@@ -72,7 +71,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     constructor();
     get disabled(): boolean;
     set disabled(value: boolean);
-    readonly disabledSignal: WritableSignal<boolean>;
+    readonly disabledSignal: i0.WritableSignal<boolean>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
@@ -85,12 +84,12 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    small: boolean;
+    readonly small: i0.InputSignal<boolean>;
     // (undocumented)
     get tabindex(): any;
     set tabindex(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "small": { "alias": "small"; "required": false; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, never>;
 }
@@ -98,14 +97,14 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon {
     // (undocumented)
-    big: boolean;
+    readonly big: i0.InputSignal<boolean>;
     // (undocumented)
-    fade: boolean;
+    readonly fade: i0.InputSignal<boolean>;
     iconName: string;
     // (undocumented)
     name: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "iconName": { "alias": "kbq-icon-item"; "required": false; }; "fade": { "alias": "fade"; "required": false; }; "big": { "alias": "big"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "iconName": { "alias": "kbq-icon-item"; "required": false; }; "fade": { "alias": "fade"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconItem, never>;
 }
@@ -116,12 +115,8 @@ export class KbqIconModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqIconModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem], [typeof i1.KbqIcon, typeof i2.KbqIconButton, typeof i3.KbqIconItem]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqIconModule, never, [typeof KbqIcon, typeof KbqIconButton, typeof KbqIconItem], [typeof KbqIcon, typeof KbqIconButton, typeof KbqIconItem]>;
 }
 
 // @public (undocumented)

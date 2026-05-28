@@ -21,7 +21,6 @@ import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -73,7 +72,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     protected readonly config: KbqActionsPanelConfig<any>;
     protected _contentAttached(): void;
     protected handleEscape(event: KeyboardEvent): void;
-    protected readonly localeConfiguration: Signal<KbqActionsPanelLocaleConfiguration | undefined>;
+    protected readonly localeConfiguration: i0.Signal<KbqActionsPanelLocaleConfiguration | undefined>;
     // (undocumented)
     ngOnDestroy(): void;
     protected onAnimationDone(event: AnimationEvent_2): void;
@@ -98,10 +97,8 @@ export class KbqActionsPanelModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanelModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqActionsPanelModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqActionsPanelModule, never, [typeof i1.KbqActionsPanelContainer], [typeof i1.KbqActionsPanelContainer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqActionsPanelModule, never, [typeof KbqActionsPanelContainer], [typeof KbqActionsPanelContainer]>;
 }
 
 // @public

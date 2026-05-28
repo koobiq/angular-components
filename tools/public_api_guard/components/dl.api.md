@@ -22,7 +22,7 @@ export class KbqDdComponent {
 // @public (undocumented)
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
     // (undocumented)
-    minWidth: number;
+    readonly minWidth: i0.InputSignal<number>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -32,9 +32,9 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     // (undocumented)
     vertical: boolean | null;
     // (undocumented)
-    wide: boolean;
+    readonly wide: i0.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "minWidth": { "alias": "minWidth"; "required": false; }; "wide": { "alias": "wide"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlComponent, never>;
 }
@@ -45,10 +45,8 @@ export class KbqDlModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDlModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqDlComponent, typeof i3.KbqDtComponent, typeof i3.KbqDdComponent], [typeof i3.KbqDlComponent, typeof i3.KbqDtComponent, typeof i3.KbqDdComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent], [typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent]>;
 }
 
 // @public (undocumented)

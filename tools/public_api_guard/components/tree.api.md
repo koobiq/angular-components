@@ -188,7 +188,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     // (undocumented)
     nodeOutlet: KbqTreeNodeOutlet;
     renderNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
-    trackBy: TrackByFunction<T>;
+    readonly trackBy: i0.InputSignal<TrackByFunction<T>>;
     // (undocumented)
     treeControl: TreeControl<T>;
     viewChange: BehaviorSubject<{
@@ -196,7 +196,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         end: number;
     }>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeBase<any>, never, never, { "treeControl": { "alias": "treeControl"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; }; "dataSource": { "alias": "dataSource"; "required": false; }; }, {}, ["nodeDefs"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeBase<any>, never, never, { "treeControl": { "alias": "treeControl"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; "isSignal": true; }; "dataSource": { "alias": "dataSource"; "required": false; }; }, {}, ["nodeDefs"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeBase<any>, never>;
 }
@@ -259,17 +259,8 @@ export class KbqTreeModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTreeModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof i2.KbqIconModule, typeof i1.KbqActionContainer, typeof i3.KbqTreeNodeOutlet, typeof i4.KbqTreeNodeDef, typeof i5.KbqTreeNode, typeof i6.KbqTreeNodePadding, typeof i7.KbqTree, typeof i8.KbqTreeSelection, typeof i9.KbqTreeOption, typeof i10.KbqTreeNodeToggleComponent, typeof i10.KbqTreeNodeToggleDirective], [typeof i3.KbqTreeNodeOutlet, typeof i4.KbqTreeNodeDef, typeof i5.KbqTreeNode, typeof i6.KbqTreeNodePadding, typeof i7.KbqTree, typeof i8.KbqTreeSelection, typeof i9.KbqTreeOption, typeof i10.KbqTreeNodeToggleComponent, typeof i10.KbqTreeNodeToggleDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof i2.KbqIconModule, typeof i1.KbqActionContainer, typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective], [typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective]>;
 }
 
 // @public (undocumented)
@@ -323,12 +314,12 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
 export class KbqTreeNodeDef<T> {
     constructor(template: TemplateRef<any>);
     // (undocumented)
-    data: T;
+    readonly data: i0.InputSignal<T>;
     // (undocumented)
     template: TemplateRef<any>;
     when: (index: number, nodeData: T) => boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeDef<any>, "[kbqTreeNodeDef]", never, { "when": { "alias": "kbqTreeNodeDefWhen"; "required": false; }; "data": { "alias": "kbqTreeNode"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeDef<any>, "[kbqTreeNodeDef]", never, { "when": { "alias": "kbqTreeNodeDefWhen"; "required": false; }; "data": { "alias": "kbqTreeNode"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeDef<any>, never>;
 }
@@ -398,14 +389,14 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    node: T;
+    readonly node: i0.InputSignal<T>;
     // (undocumented)
     get recursive(): boolean;
     set recursive(value: any);
     // (undocumented)
     toggle(event: Event): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeToggleBaseDirective<any>, never, never, { "node": { "alias": "node"; "required": false; }; "recursive": { "alias": "kbqTreeNodeToggleRecursive"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeToggleBaseDirective<any>, never, never, { "node": { "alias": "node"; "required": false; "isSignal": true; }; "recursive": { "alias": "kbqTreeNodeToggleRecursive"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleBaseDirective<any>, never>;
 }
@@ -436,7 +427,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     checkboxState: KbqPseudoCheckboxState;
     // (undocumented)
-    checkboxThirdState: boolean;
+    readonly checkboxThirdState: i0.InputSignal<boolean>;
     // (undocumented)
     descendantsAllSelected(): boolean;
     // (undocumented)
@@ -468,8 +459,6 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     markForCheck(): void;
     // (undocumented)
-    static ngAcceptInputType_selectable: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     readonly onBlur: Subject<KbqTreeOptionEvent>;
@@ -489,7 +478,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     select(setFocus?: boolean): void;
     // (undocumented)
-    selectable: boolean;
+    readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): boolean;
     set selected(value: boolean);
@@ -524,7 +513,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeOption, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTrigger", "dropdownTrigger"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeOption, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTrigger", "dropdownTrigger"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeOption, never>;
 }

@@ -92,7 +92,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     items: QueryList<KbqDropdownItem>;
     lazyContent: KbqDropdownContent;
     // (undocumented)
-    navigationWithWrap: boolean;
+    readonly navigationWithWrap: i0.InputSignal<boolean>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -121,7 +121,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     get yPosition(): KbqDropdownPositionY;
     set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -203,13 +203,8 @@ export class KbqDropdownModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDropdownModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent], [typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownStaticContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent]>;
 }
 
 // @public

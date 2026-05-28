@@ -23,7 +23,6 @@ import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqListSelection } from '@koobiq/components/list';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
@@ -33,6 +32,7 @@ import { KbqTreeFlatDataSource } from '@koobiq/components/tree';
 import { KbqTreeFlattener } from '@koobiq/components/tree';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -40,7 +40,6 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
@@ -183,9 +182,7 @@ export class KbqFilterBar {
     get isReadOnly(): boolean;
     get isSaved(): boolean;
     get isSavedAndChanged(): boolean;
-    protected readonly localeService: KbqLocaleService | null;
-    // (undocumented)
-    static ngAcceptInputType_selectedAllEqualsSelectedNothing: unknown;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     readonly onChangePipe: EventEmitter<KbqPipe>;
     readonly onClearPipe: EventEmitter<KbqPipe>;
     readonly onClosePipe: EventEmitter<KbqPipe>;
@@ -198,9 +195,9 @@ export class KbqFilterBar {
     resetFilterChangedState(): void;
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
-    selectedAllEqualsSelectedNothing: boolean;
+    readonly selectedAllEqualsSelectedNothing: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; }; "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -222,19 +219,8 @@ export class KbqFilterBarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFilterBarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqPipeTitleDirective, typeof i10.KbqPipeState], [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqPipeTitleDirective, typeof i10.KbqPipeState]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeTitleDirective, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeTitleDirective, typeof KbqPipeState]>;
 }
 
 // @public
@@ -277,7 +263,7 @@ export class KbqFilters implements OnInit {
     filteredOptions: Observable<KbqFilter[]>;
     filterName: FormControl<string | null>;
     // (undocumented)
-    filters: KbqFilter[];
+    readonly filters: i0.InputSignal<KbqFilter[]>;
     filterSavedSuccessfully(): void;
     filterSavedUnsuccessfully(error?: KbqSaveFilterError): void;
     // (undocumented)
@@ -334,7 +320,7 @@ export class KbqFilters implements OnInit {
     stopEventPropagation(event: Event): void;
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": false; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": false; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilters, never>;
 }
@@ -376,11 +362,11 @@ export class KbqPipeAdd {
     addPipeFromTemplate(option: KbqOption): void;
     compareWith(o1: KbqPipe, o2: string): boolean;
     protected readonly filterBar: KbqFilterBar;
-    filterTemplate: KbqFilter;
+    readonly filterTemplate: i0.InputSignal<KbqFilter>;
     readonly onAddPipe: EventEmitter<KbqPipeTemplate>;
     select: KbqSelect;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; "isSignal": true; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeAdd, never>;
 }
@@ -391,12 +377,10 @@ export class KbqPipeButton {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly filterBar: KbqFilterBar;
     get localeData(): any;
-    // (undocumented)
-    static ngAcceptInputType_readonly: unknown;
     protected readonly pipe: KbqBasePipe<any>;
-    readonly: boolean;
+    readonly readonly: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, { "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, { "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeButton, never>;
 }
@@ -420,7 +404,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: Signal<KbqListSelection>;
+    listSelection: i0.Signal<KbqListSelection>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -439,7 +423,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
     popover: KbqPopoverTrigger;
-    returnButton: Signal<KbqButton>;
+    returnButton: i0.Signal<KbqButton>;
     protected showEndCalendar: boolean;
     // (undocumented)
     showList(): void;
@@ -467,7 +451,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: Signal<KbqListSelection>;
+    listSelection: i0.Signal<KbqListSelection>;
     // (undocumented)
     ngAfterViewInit(): void;
     onApplyPeriod(): void;
@@ -485,7 +469,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
     popover: KbqPopoverTrigger;
-    returnButton: Signal<KbqButton>;
+    returnButton: i0.Signal<KbqButton>;
     protected showEndCalendar: boolean;
     // (undocumented)
     showList(): void;
@@ -505,9 +489,9 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    pipe: T;
+    readonly pipe: i0.InputSignal<T>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeDirective<any>, "[kbqPipe]", never, { "pipe": { "alias": "kbqPipe"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeDirective<any>, "[kbqPipe]", never, { "pipe": { "alias": "kbqPipe"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDirective<any>, never>;
 }
@@ -651,9 +635,9 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     // (undocumented)
     readonly resizeStream: Subject<Event>;
     // (undocumented)
-    viewValue: TemplateRef<any>;
+    readonly viewValue: i0.InputSignal<TemplateRef<any>>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeTitleDirective, "[kbqPipeTitle]", ["kbqPipeTitle"], { "viewValue": { "alias": "kbqPipeTitle"; "required": false; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeTitleDirective, "[kbqPipeTitle]", ["kbqPipeTitle"], { "viewValue": { "alias": "kbqPipeTitle"; "required": false; "isSignal": true; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTitleDirective, never>;
 }

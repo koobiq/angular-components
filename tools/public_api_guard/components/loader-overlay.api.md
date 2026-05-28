@@ -19,7 +19,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
     // (undocumented)
     caption: string;
-    card: boolean;
+    readonly card: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     externalCaption: KbqLoaderOverlayCaption | null;
     // (undocumented)
@@ -36,21 +36,19 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     get isExternalText(): boolean;
     protected get loaderSizeClass(): string;
     // (undocumented)
-    static ngAcceptInputType_card: unknown;
-    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    size: KbqDefaultSizes;
+    readonly size: i0.InputSignal<KbqDefaultSizes>;
     // (undocumented)
     get spinnerSize(): string;
     // (undocumented)
     text: string;
     // (undocumented)
-    transparent: boolean;
+    readonly transparent: i0.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; "card": { "alias": "card"; "required": false; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "card": { "alias": "card"; "required": false; "isSignal": true; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
 }
@@ -77,10 +75,8 @@ export class KbqLoaderOverlayModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlayModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqLoaderOverlayModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqLoaderOverlay, typeof i4.KbqLoaderOverlayIndicator, typeof i4.KbqLoaderOverlayText, typeof i4.KbqLoaderOverlayCaption], [typeof i4.KbqLoaderOverlay, typeof i4.KbqLoaderOverlayIndicator, typeof i4.KbqLoaderOverlayText, typeof i4.KbqLoaderOverlayCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLoaderOverlayModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqProgressSpinnerModule, typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption], [typeof KbqLoaderOverlay, typeof KbqLoaderOverlayIndicator, typeof KbqLoaderOverlayText, typeof KbqLoaderOverlayCaption]>;
 }
 
 // @public (undocumented)

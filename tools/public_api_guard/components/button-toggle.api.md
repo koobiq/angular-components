@@ -51,12 +51,12 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     // (undocumented)
     ngOnInit(): void;
     onToggleClick(): void;
-    tabIndex: number | null;
+    readonly tabIndex: i0.InputSignal<number | null>;
     // (undocumented)
     type: ToggleType;
     value: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggle, [{ optional: true; }, null, null, null]>;
 }
@@ -114,10 +114,8 @@ export class KbqButtonToggleModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonToggleModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle], [typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle]>;
 }
 
 // @public

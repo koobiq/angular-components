@@ -32,7 +32,7 @@ export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     constructor(changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
-    big: boolean;
+    readonly big: i0.InputSignal<boolean>;
     readonly change: EventEmitter<KbqCheckboxChange>;
     get checked(): boolean;
     set checked(value: boolean);
@@ -48,12 +48,10 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     readonly indeterminateChange: EventEmitter<boolean>;
     inputElement: ElementRef;
     get inputId(): string;
-    labelPosition: 'before' | 'after';
-    name: string | null;
+    readonly labelPosition: i0.InputSignal<"before" | "after">;
+    readonly name: i0.InputSignal<string | null>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_required: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
@@ -69,18 +67,18 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
     registerOnTouched(fn: any): void;
-    required: boolean | undefined;
+    readonly required: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     toggle(): void;
-    value: string;
+    readonly value: i0.InputSignal<string>;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "clickAction": { "alias": "clickAction"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckbox, never>;
 }
@@ -100,11 +98,8 @@ export class KbqCheckboxModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckboxModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCheckboxModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof i2.KbqCheckbox, typeof i3.KbqCheckboxRequiredValidator], [typeof i2.KbqCheckbox, typeof i3.KbqCheckboxRequiredValidator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator], [typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator]>;
 }
 
 // @public

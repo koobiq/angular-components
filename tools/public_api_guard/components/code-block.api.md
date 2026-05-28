@@ -5,18 +5,17 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { EventEmitter } from '@angular/core';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
-import type { HLJSApi } from 'highlight.js';
-import * as i0 from '@angular/core';
+import { HLJSApi } from 'highlight.js';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
-import type { LanguageFn } from 'highlight.js';
+import { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
-import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
@@ -46,11 +45,11 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly activeFileIndexChange: EventEmitter<number>;
     protected readonly buttonStyle: typeof KbqButtonStyles;
     protected get calculatedMaxHeight(): number | null;
-    canCopy: boolean;
+    readonly canCopy: _angular_core.InputSignalWithTransform<boolean, unknown>;
     canDownload: boolean;
     // @deprecated (undocumented)
     set canLoad(value: boolean);
-    canToggleSoftWrap: boolean;
+    readonly canToggleSoftWrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected get codeContentTabIndex(): number;
     // @deprecated (undocumented)
     set codeFiles(files: KbqCodeBlockFile[]);
@@ -61,40 +60,28 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly fallbackFileName: string;
     get files(): KbqCodeBlockFile[];
     set files(files: KbqCodeBlockFile[]);
-    filled: boolean;
+    readonly filled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get hideTabs(): boolean;
     set hideTabs(value: boolean);
     readonly hideTabsChange: EventEmitter<boolean>;
-    lineNumbers: boolean;
+    readonly lineNumbers: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
-    maxHeight: number;
+    readonly maxHeight: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
     static ngAcceptInputType_activeFileIndex: unknown;
-    // (undocumented)
-    static ngAcceptInputType_canCopy: unknown;
     // (undocumented)
     static ngAcceptInputType_canDownload: unknown;
     // (undocumented)
     static ngAcceptInputType_canLoad: unknown;
     // (undocumented)
-    static ngAcceptInputType_canToggleSoftWrap: unknown;
-    // (undocumented)
-    static ngAcceptInputType_filled: unknown;
-    // (undocumented)
     static ngAcceptInputType_hideTabs: unknown;
-    // (undocumented)
-    static ngAcceptInputType_lineNumbers: unknown;
-    // (undocumented)
-    static ngAcceptInputType_maxHeight: unknown;
-    // (undocumented)
-    static ngAcceptInputType_noBorder: unknown;
     // (undocumented)
     static ngAcceptInputType_softWrap: unknown;
     // (undocumented)
     static ngAcceptInputType_viewAll: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
-    noBorder: boolean;
+    readonly noBorder: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
@@ -109,9 +96,9 @@ export class KbqCodeBlock implements AfterViewInit {
     viewAll: boolean;
     readonly viewAllChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }
 
 // @public
@@ -131,17 +118,13 @@ export type KbqCodeBlockFile = {
 // @public
 export class KbqCodeBlockHighlight {
     set file(file: KbqCodeBlockFile);
+    readonly pending: _angular_core.Signal<boolean>;
+    readonly singleLine: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly startFrom: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    static ngAcceptInputType_singleLine: unknown;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", ["kbqCodeBlockHighlight"], { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; "isSignal": true; }; "singleLine": { "alias": "singleLine"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ngAcceptInputType_startFrom: unknown;
-    readonly pending: Signal<boolean>;
-    singleLine: boolean;
-    startFrom: number;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", ["kbqCodeBlockHighlight"], { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockHighlight, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlockHighlight, never>;
 }
 
 // @public
@@ -163,21 +146,19 @@ export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqCodeBlo
 // @public (undocumented)
 export class KbqCodeBlockModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlockModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqCodeBlockModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqCodeBlockModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent], [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent], [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent]>;
 }
 
 // @public
 export class KbqCodeBlockTabLinkContent {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockTabLinkContent, "ng-template[kbqCodeBlockTabLinkContent]", ["kbqCodeBlockTabLinkContent"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqCodeBlockTabLinkContent, "ng-template[kbqCodeBlockTabLinkContent]", ["kbqCodeBlockTabLinkContent"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkContent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkContent, never>;
 }
 
 // @public

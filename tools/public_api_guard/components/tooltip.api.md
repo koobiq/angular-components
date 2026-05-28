@@ -10,18 +10,17 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { InputSignal } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqParentPopup } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
-import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { Renderer2 } from '@angular/core';
+import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { TemplateRef } from '@angular/core';
@@ -74,10 +73,8 @@ export class KbqToolTipModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToolTipModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqToolTipModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToolTipModule, never, [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger], [typeof i1.KbqTooltipComponent, typeof i1.KbqTooltipTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToolTipModule, never, [typeof KbqTooltipComponent, typeof KbqTooltipTrigger], [typeof KbqTooltipComponent, typeof KbqTooltipTrigger]>;
 }
 
 // @public
@@ -91,7 +88,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     // (undocumented)
     arrow: boolean;
     // (undocumented)
-    closingActions(): Observable<void | MouseEvent>;
+    closingActions(): rxjs.Observable<void | MouseEvent>;
     // (undocumented)
     get color(): string;
     set color(value: KbqComponentColors | string);
@@ -111,12 +108,12 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     enterDelay: number;
     // (undocumented)
     protected focusMonitor: FocusMonitor;
-    readonly forDisabledComponent: InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
+    readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
     // (undocumented)
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     header: string | TemplateRef<any>;
     hideWithTimeout: boolean;
-    readonly ignoreTooltipPointerEvents: InputSignal<boolean>;
+    readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
     // (undocumented)
     leaveDelay: number;
     modifier: TooltipModifier | `${TooltipModifier}`;

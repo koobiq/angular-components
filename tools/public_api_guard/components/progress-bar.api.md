@@ -12,15 +12,15 @@ import { KbqColorDirective } from '@koobiq/components/core';
 export class KbqProgressBar extends KbqColorDirective {
     constructor();
     // (undocumented)
-    id: string;
+    readonly id: i0.InputSignal<string>;
     // (undocumented)
-    mode: ProgressBarMode;
+    readonly mode: i0.InputSignal<ProgressBarMode>;
     // (undocumented)
     get percentage(): number;
     // (undocumented)
-    value: number;
+    readonly value: i0.InputSignal<number>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBar, never>;
 }
@@ -39,10 +39,8 @@ export class KbqProgressBarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressBarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, never, [typeof i1.PlatformModule, typeof i2.KbqProgressBar, typeof i2.KbqProgressBarText, typeof i2.KbqProgressBarCaption], [typeof i2.KbqProgressBar, typeof i2.KbqProgressBarText, typeof i2.KbqProgressBarCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, never, [typeof i1.PlatformModule, typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption], [typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption]>;
 }
 
 // @public (undocumented)

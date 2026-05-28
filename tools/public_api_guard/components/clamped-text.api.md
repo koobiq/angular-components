@@ -5,17 +5,13 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
-import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { InputSignal } from '@angular/core';
-import { InputSignalWithTransform } from '@angular/core';
 import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
-import { ModelSignal } from '@angular/core';
-import { OutputEmitterRef } from '@angular/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfig>;
@@ -30,20 +26,20 @@ export interface KbqClamped {
 
 // @public (undocumented)
 export class KbqClampedList<T> implements KbqClamped {
-    readonly collapsedVisibleCount: InputSignalWithTransform<number, unknown>;
-    readonly exceededItemCount: Signal<number>;
-    readonly hasToggle: Signal<boolean>;
-    readonly hiddenThreshold: InputSignalWithTransform<number, unknown>;
-    readonly isCollapsed: ModelSignal<boolean>;
-    readonly items: InputSignal<T[]>;
-    readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
-    readonly showMoreCountText: Signal<string>;
+    readonly collapsedVisibleCount: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly exceededItemCount: _angular_core.Signal<number>;
+    readonly hasToggle: _angular_core.Signal<boolean>;
+    readonly hiddenThreshold: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly isCollapsed: _angular_core.ModelSignal<boolean>;
+    readonly items: _angular_core.InputSignal<T[]>;
+    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfig>;
+    readonly showMoreCountText: _angular_core.Signal<string>;
     toggle(event: Event): void;
-    readonly visibleItems: Signal<T[]>;
+    readonly visibleItems: _angular_core.Signal<T[]>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "items": { "alias": "items"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "items": { "alias": "items"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedList<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedList<any>, never>;
 }
 
 // @public
@@ -51,9 +47,9 @@ export class KbqClampedListTrigger {
     // (undocumented)
     protected readonly root: KbqClamped | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqClampedListTrigger, "[kbqClampedListTrigger]", ["kbqClampedListTrigger"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqClampedListTrigger, "[kbqClampedListTrigger]", ["kbqClampedListTrigger"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedListTrigger, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedListTrigger, never>;
 }
 
 // @public (undocumented)
@@ -62,24 +58,24 @@ export const KbqClampedRoot: InjectionToken<KbqClamped>;
 // @public (undocumented)
 export class KbqClampedText implements KbqClamped, AfterViewInit {
     constructor();
-    protected readonly collapsedState: WritableSignal<boolean | undefined>;
-    readonly debounceTime: InputSignalWithTransform<number, unknown>;
-    readonly hasToggle: WritableSignal<boolean>;
-    readonly isCollapsed: InputSignal<boolean | undefined>;
-    readonly isCollapsedChange: OutputEmitterRef<boolean>;
-    protected readonly isToggleCollapsed: WritableSignal<boolean | undefined>;
-    protected readonly lineClamp: WritableSignal<number | null>;
-    readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
+    protected readonly collapsedState: _angular_core.WritableSignal<boolean | undefined>;
+    readonly debounceTime: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly hasToggle: _angular_core.WritableSignal<boolean>;
+    readonly isCollapsed: _angular_core.InputSignal<boolean | undefined>;
+    readonly isCollapsedChange: _angular_core.OutputEmitterRef<boolean>;
+    protected readonly isToggleCollapsed: _angular_core.WritableSignal<boolean | undefined>;
+    protected readonly lineClamp: _angular_core.WritableSignal<number | null>;
+    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfig>;
     // (undocumented)
     ngAfterViewInit(): void;
-    readonly rows: InputSignal<number>;
-    readonly text: Signal<ElementRef<HTMLSpanElement>>;
-    readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
+    readonly rows: _angular_core.InputSignal<number>;
+    readonly text: _angular_core.Signal<ElementRef<HTMLSpanElement>>;
+    readonly textContainer: _angular_core.Signal<ElementRef<HTMLDivElement>>;
     toggle(event: Event): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedText, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedText, never>;
 }
 
 // @public
@@ -91,14 +87,11 @@ export const kbqClampedTextLocaleConfigurationProvider: (configuration: KbqClamp
 // @public (undocumented)
 export class KbqClampedTextModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedTextModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedTextModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqClampedTextModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqClampedTextModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqClampedTextModule, never, [typeof i1.KbqClampedText, typeof i2.KbqClampedList, typeof i2.KbqClampedListTrigger], [typeof i1.KbqClampedText, typeof i2.KbqClampedList, typeof i2.KbqClampedListTrigger]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqClampedTextModule, never, [typeof KbqClampedText, typeof KbqClampedList, typeof KbqClampedListTrigger], [typeof KbqClampedText, typeof KbqClampedList, typeof KbqClampedListTrigger]>;
 }
 
 // @public

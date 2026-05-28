@@ -27,13 +27,13 @@ export class KbqBadge {
     get badgeColor(): string;
     set badgeColor(value: string | KbqBadgeColors);
     // (undocumented)
-    compact: boolean;
+    readonly compact: i0.InputSignal<boolean>;
     // (undocumented)
     iconItem: KbqIconItem;
     // (undocumented)
-    outline: boolean;
+    readonly outline: i0.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBadge, "kbq-badge", never, { "compact": { "alias": "compact"; "required": false; }; "outline": { "alias": "outline"; "required": false; }; "badgeColor": { "alias": "badgeColor"; "required": false; }; }, {}, ["iconItem"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBadge, "kbq-badge", never, { "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "outline": { "alias": "outline"; "required": false; "isSignal": true; }; "badgeColor": { "alias": "badgeColor"; "required": false; }; }, {}, ["iconItem"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadge, never>;
 }
@@ -97,10 +97,8 @@ export class KbqBadgeModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadgeModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqBadgeModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqBadge, typeof i3.KbqBadgeCaption, typeof i3.KbqBadgeCssStyler], [typeof i3.KbqBadge, typeof i3.KbqBadgeCaption, typeof i3.KbqBadgeCssStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler], [typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler]>;
 }
 
 // @public (undocumented)
