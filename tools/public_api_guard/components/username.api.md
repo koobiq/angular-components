@@ -6,7 +6,10 @@
 
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { PipeTransform } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
 export const KBQ_PROFILE_MAPPING: InjectionToken<KbqFormatKeyToProfileMapping | KbqFormatKeyToProfileMappingExtended>;
@@ -41,14 +44,14 @@ export type KbqUserInfo = {
 
 // @public
 export class KbqUsername {
-    protected readonly class: i0.Signal<string>;
-    protected readonly customView: i0.Signal<KbqUsernameCustomView | undefined>;
-    readonly fullNameFormat: i0.InputSignal<string>;
-    protected readonly hasFullName: i0.Signal<string | false | undefined>;
-    readonly isCompact: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly mode: i0.InputSignal<KbqUsernameMode>;
-    readonly type: i0.InputSignal<KbqUsernameStyle>;
-    readonly userInfo: i0.InputSignal<KbqUserInfo | undefined>;
+    protected readonly class: Signal<string>;
+    protected readonly customView: Signal<KbqUsernameCustomView | undefined>;
+    readonly fullNameFormat: InputSignal<string>;
+    protected readonly hasFullName: Signal<string | false | undefined>;
+    readonly isCompact: InputSignalWithTransform<boolean, unknown>;
+    readonly mode: InputSignal<KbqUsernameMode>;
+    readonly type: InputSignal<KbqUsernameStyle>;
+    readonly userInfo: InputSignal<KbqUserInfo | undefined>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqUsername, "kbq-username", ["kbqUsername"], { "userInfo": { "alias": "userInfo"; "required": false; "isSignal": true; }; "isCompact": { "alias": "isCompact"; "required": false; "isSignal": true; }; "fullNameFormat": { "alias": "fullNameFormat"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; }, {}, ["customView"], ["kbq-username-custom-view,[kbq-username-custom-view]"], true, never>;
     // (undocumented)
@@ -95,8 +98,11 @@ export class KbqUsernameModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqUsernameModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqUsernameModule, never, [typeof KbqUsername, typeof KbqUsernameCustomView, typeof KbqUsernamePrimary, typeof KbqUsernameSecondary, typeof KbqUsernameCustomPipe, typeof KbqUsernamePipe], [typeof KbqUsername, typeof KbqUsernameCustomView, typeof KbqUsernamePrimary, typeof KbqUsernameSecondary, typeof KbqUsernameCustomPipe, typeof KbqUsernamePipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqUsernameModule, never, [typeof i1.KbqUsername, typeof i1.KbqUsernameCustomView, typeof i1.KbqUsernamePrimary, typeof i1.KbqUsernameSecondary, typeof i2.KbqUsernameCustomPipe, typeof i2.KbqUsernamePipe], [typeof i1.KbqUsername, typeof i1.KbqUsernameCustomView, typeof i1.KbqUsernamePrimary, typeof i1.KbqUsernameSecondary, typeof i2.KbqUsernameCustomPipe, typeof i2.KbqUsernamePipe]>;
 }
 
 // @public (undocumented)

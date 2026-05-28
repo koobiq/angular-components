@@ -54,8 +54,10 @@ export class KbqTitleModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTitleModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTitleModule>;
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTitleModule, never, [typeof i1.KbqToolTipModule, typeof KbqTitleDirective], [typeof KbqTitleDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTitleModule, never, [typeof i1.KbqToolTipModule, typeof i2.KbqTitleDirective], [typeof i2.KbqTitleDirective]>;
 }
 
 // (No @packageDocumentation comment for this package)

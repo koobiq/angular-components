@@ -15,6 +15,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const baseURLRegex: RegExp;
@@ -30,7 +31,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
-    readonly disabledSignal: i0.WritableSignal<boolean>;
+    readonly disabledSignal: WritableSignal<boolean>;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -95,8 +96,10 @@ export class KbqLinkModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLinkModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqLinkModule>;
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLinkModule, never, [typeof i1.A11yModule, typeof KbqLink], [typeof KbqLink]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLinkModule, never, [typeof i1.A11yModule, typeof i2.KbqLink], [typeof i2.KbqLink]>;
 }
 
 // (No @packageDocumentation comment for this package)

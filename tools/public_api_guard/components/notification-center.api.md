@@ -6,15 +6,16 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_cdk_scrolling_module_d from '@angular/cdk/scrolling-module.d';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
+import { C } from '@angular/cdk/scrolling-module.d-ud2XrbF8';
 import { ChangeDetectorRef } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
@@ -22,11 +23,9 @@ import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
 import { KbqToastData } from '@koobiq/components/toast';
 import { KbqToastStyle } from '@koobiq/components/toast';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -77,7 +76,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected isTopOverflow: boolean;
     isTrapFocus: boolean;
     get localeData(): any;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    protected readonly localeService: KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -103,8 +102,10 @@ export class KbqNotificationCenterModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNotificationCenterModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNotificationCenterModule, never, [typeof KbqNotificationCenterComponent, typeof KbqNotificationCenterTrigger], [typeof KbqNotificationCenterComponent, typeof KbqNotificationCenterTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNotificationCenterModule, never, [typeof i1.KbqNotificationCenterComponent, typeof i1.KbqNotificationCenterTrigger], [typeof i1.KbqNotificationCenterComponent, typeof i1.KbqNotificationCenterTrigger]>;
 }
 
 // @public
@@ -143,7 +144,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     constructor();
     arrow: boolean;
     backdropClass: string;
-    closingActions(): rxjs.Observable<void | _angular_cdk_scrolling_module_d.CdkScrollable | MouseEvent>;
+    closingActions(): Observable<void | C | MouseEvent>;
     container: HTMLElement;
     content: string | TemplateRef<any>;
     customClass: string;
@@ -176,7 +177,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     protected readonly service: KbqNotificationCenterService;
     stickToWindow: KbqStickToWindowPlacementValues;
     trigger: string;
-    get unreadItemsCounter(): rxjs.Observable<string>;
+    get unreadItemsCounter(): Observable<string>;
     updateClassMap(newPlacement?: string): void;
     updateData(): void;
     updatePosition(reapplyPosition?: boolean): void;

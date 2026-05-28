@@ -60,8 +60,10 @@ export class KbqSidebarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidebarModule>;
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof i1.CommonModule, typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar], [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof i1.CommonModule, typeof i2.KbqSidebarClosed, typeof i2.KbqSidebarOpened, typeof i2.KbqSidebar], [typeof i2.KbqSidebarClosed, typeof i2.KbqSidebarOpened, typeof i2.KbqSidebar]>;
 }
 
 // @public (undocumented)

@@ -1,6 +1,6 @@
 import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
@@ -10,10 +10,16 @@ import { Schema } from './schema';
 const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'icons-replacement';
 
-const getProjectContentPaths = (project: workspaces.ProjectDefinition) => {
+/**
+ * `@schematics/angular:application` changed file names across major versions
+ * (`app.component.{ts,html}` ↔ `app.{ts,html}`); pick whichever generator produced.
+ */
+const getProjectContentPaths = (project: workspaces.ProjectDefinition, tree: Tree | UnitTestTree) => {
+    const root = `/${project.root}/src/app`;
+
     return {
-        templatePath: `/${project.root}/src/app/app.html`,
-        tsPath: `/${project.root}/src/app/app.ts`,
+        templatePath: tree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`,
+        tsPath: tree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`,
         stylesPath: `/${project.root}/src/styles.scss`
     };
 };
@@ -43,7 +49,7 @@ describe(SCHEMATIC_NAME, () => {
 
     it('should run migration for external html', async () => {
         const [firstProjectKey] = projects.keys();
-        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!);
+        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
 
         const iconsDataSlice = iconReplacementData.slice(0, 10);
         const iconsToBeReplaced = iconsDataSlice.map(({ from }) => `<i kbq-icon="kbq-${from}"></i>`);
@@ -66,7 +72,7 @@ describe(SCHEMATIC_NAME, () => {
         const iconsToBeReplaced = iconsDataSlice.map(({ from }) => `<i kbq-icon="kbq-${from}"></i>`);
 
         projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.html`;
+            const { templatePath } = getProjectContentPaths(project, appTree);
 
             appTree.overwrite(
                 templatePath,

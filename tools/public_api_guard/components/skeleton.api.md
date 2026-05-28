@@ -5,12 +5,13 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 
 // @public
 export class KbqSkeleton implements OnDestroy {
     constructor();
-    readonly enabled: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly enabled: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -25,8 +26,10 @@ export class KbqSkeletonModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSkeletonModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSkeletonModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSkeletonModule, never, [typeof KbqSkeleton], [typeof KbqSkeleton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSkeletonModule, never, [typeof i1.KbqSkeleton], [typeof i1.KbqSkeleton]>;
 }
 
 // (No @packageDocumentation comment for this package)

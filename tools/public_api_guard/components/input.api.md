@@ -133,8 +133,13 @@ export class KbqInputModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqInputModule>;
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator, typeof i8.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof i4.KbqInput, typeof i5.KbqNumberInput, typeof i6.KbqInputPassword, typeof i4.KbqInputMono, typeof i7.MinValidator, typeof i7.MaxValidator], [typeof i4.KbqInput, typeof i5.KbqNumberInput, typeof i6.KbqInputPassword, typeof i4.KbqInputMono, typeof i7.MinValidator, typeof i7.MaxValidator, typeof i8.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)

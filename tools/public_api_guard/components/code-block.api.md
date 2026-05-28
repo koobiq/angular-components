@@ -8,14 +8,15 @@ import { AfterViewInit } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { EventEmitter } from '@angular/core';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
-import { HLJSApi } from 'highlight.js';
+import type { HLJSApi } from 'highlight.js';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { LanguageFn } from 'highlight.js';
+import type { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
@@ -134,7 +135,7 @@ export class KbqCodeBlockHighlight {
     static ngAcceptInputType_singleLine: unknown;
     // (undocumented)
     static ngAcceptInputType_startFrom: unknown;
-    readonly pending: i0.Signal<boolean>;
+    readonly pending: Signal<boolean>;
     singleLine: boolean;
     startFrom: number;
     // (undocumented)
@@ -165,8 +166,10 @@ export class KbqCodeBlockModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCodeBlockModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent], [typeof KbqCodeBlock, typeof KbqCodeBlockTabLinkContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent], [typeof i1.KbqCodeBlock, typeof i1.KbqCodeBlockTabLinkContent]>;
 }
 
 // @public

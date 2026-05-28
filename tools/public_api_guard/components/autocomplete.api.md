@@ -130,8 +130,12 @@ export class KbqAutocompleteModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
+    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof i3.NgClass, typeof i4.KbqAutocomplete, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter], [typeof i4.KbqAutocomplete, typeof i1.KbqOptionModule, typeof i5.KbqAutocompleteTrigger, typeof i6.KbqAutocompleteOrigin, typeof i4.KbqAutocompleteFooter]>;
 }
 
 // @public

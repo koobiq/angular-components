@@ -29,8 +29,8 @@ import { InjectionToken } from '@angular/core';
 import { KbqDateFormats } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { KbqLocaleService } from '@koobiq/components/core';
+import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -329,7 +329,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
     // (undocumented)
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    protected readonly localeService: KbqLocaleService | null;
     get max(): D | null;
     set max(value: D | null);
     get min(): D | null;
@@ -424,8 +424,16 @@ export class KbqDatepickerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDatepickerModule>;
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.NgClass, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof i7.KbqDatepickerToggleIconComponent, typeof i8.NgClass, typeof i8.TitleCasePipe, typeof i9.KbqCalendar, typeof i10.KbqCalendarBody, typeof i11.KbqDatepicker, typeof i11.KbqDatepickerContent, typeof i12.KbqDatepickerInput, typeof i7.KbqDatepickerToggleIcon, typeof i13.KbqMonthView, typeof i14.KbqCalendarHeader], [typeof i9.KbqCalendar, typeof i10.KbqCalendarBody, typeof i11.KbqDatepicker, typeof i11.KbqDatepickerContent, typeof i12.KbqDatepickerInput, typeof i7.KbqDatepickerToggleIcon, typeof i7.KbqDatepickerToggleIconComponent, typeof i13.KbqMonthView, typeof i14.KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
 }
 
 // @public

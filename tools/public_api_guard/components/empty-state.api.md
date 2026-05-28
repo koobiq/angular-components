@@ -55,8 +55,10 @@ export class KbqEmptyStateModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyStateModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqEmptyStateModule>;
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions], [typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqEmptyState, typeof i3.KbqEmptyStateIcon, typeof i3.KbqEmptyStateText, typeof i3.KbqEmptyStateTitle, typeof i3.KbqEmptyStateActions], [typeof i3.KbqEmptyState, typeof i3.KbqEmptyStateIcon, typeof i3.KbqEmptyStateText, typeof i3.KbqEmptyStateTitle, typeof i3.KbqEmptyStateActions]>;
 }
 
 // @public (undocumented)

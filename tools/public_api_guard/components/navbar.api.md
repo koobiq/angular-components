@@ -13,8 +13,8 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
-import * as i2$1 from '@angular/cdk/platform';
 import * as i2 from '@koobiq/components/tooltip';
+import * as i2_2 from '@angular/cdk/platform';
 import * as i3 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
@@ -23,12 +23,13 @@ import { KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
@@ -102,7 +103,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    readonly rectangleElements: i0.Signal<readonly any[]>;
+    readonly rectangleElements: Signal<readonly any[]>;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
     // (undocumented)
@@ -293,8 +294,14 @@ export class KbqNavbarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
+    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i2.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1.A11yModule, typeof i2_2.PlatformModule, typeof i3.KbqIconModule, typeof i2.KbqToolTipModule, typeof i5.KbqNavbar, typeof i5.KbqNavbarContainer, typeof i6.KbqNavbarTitle, typeof i6.KbqNavbarItem, typeof i7.KbqNavbarBrand, typeof i6.KbqNavbarLogo, typeof i8.KbqNavbarToggle, typeof i9.KbqVerticalNavbar, typeof i6.KbqNavbarDivider, typeof i6.KbqNavbarFocusableItem, typeof i6.KbqNavbarRectangleElement, typeof i6.KbqNavbarBento], [typeof i5.KbqNavbar, typeof i5.KbqNavbarContainer, typeof i6.KbqNavbarTitle, typeof i6.KbqNavbarItem, typeof i7.KbqNavbarBrand, typeof i6.KbqNavbarLogo, typeof i8.KbqNavbarToggle, typeof i9.KbqVerticalNavbar, typeof i6.KbqNavbarDivider, typeof i6.KbqNavbarFocusableItem, typeof i6.KbqNavbarRectangleElement, typeof i6.KbqNavbarBento]>;
 }
 
 // @public (undocumented)
@@ -384,7 +391,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     readonly externalConfiguration: unknown;
     // (undocumented)
     items: QueryList<KbqNavbarItem>;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    protected readonly localeService: KbqLocaleService | null;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -392,7 +399,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     openOver: boolean;
     // (undocumented)
-    rectangleElements: i0.Signal<readonly any[]>;
+    rectangleElements: Signal<readonly any[]>;
     // (undocumented)
     toggle(): void;
     // (undocumented)

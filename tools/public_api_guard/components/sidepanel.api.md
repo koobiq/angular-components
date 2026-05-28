@@ -33,6 +33,7 @@ import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_SIDEPANEL_DATA: InjectionToken<any>;
@@ -165,8 +166,11 @@ export class KbqSidepanelModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidepanelModule>;
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions], [typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof i7.KbqSidepanelContainerComponent, typeof i8.KbqSidepanelClose, typeof i8.KbqSidepanelHeader, typeof i8.KbqSidepanelBody, typeof i8.KbqSidepanelFooter, typeof i8.KbqSidepanelActions], [typeof i7.KbqSidepanelContainerComponent, typeof i8.KbqSidepanelClose, typeof i8.KbqSidepanelHeader, typeof i8.KbqSidepanelBody, typeof i8.KbqSidepanelFooter, typeof i8.KbqSidepanelActions]>;
 }
 
 // @public (undocumented)
@@ -187,9 +191,9 @@ export class KbqSidepanelRef<T = any, R = any> {
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
     beforeClosed(): Observable<void>;
-    bodyOverflow: i0.WritableSignal<{
-        top: boolean;
-        bottom: boolean;
+    bodyOverflow: WritableSignal<    {
+    top: boolean;
+    bottom: boolean;
     }>;
     // (undocumented)
     close(result?: R): void;

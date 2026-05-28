@@ -5,6 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { InputSignal } from '@angular/core';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
@@ -12,7 +13,7 @@ import { TemplateRef } from '@angular/core';
 export class KbqDynamicTranslation {
     // Warning: (ae-forgotten-export) The symbol "KbqDynamicTranslationParsedSlot" needs to be exported by the entry point index.d.ts
     protected readonly parsedSlots: Signal<KbqDynamicTranslationParsedSlot[]>;
-    readonly text: i0.InputSignal<string>;
+    readonly text: InputSignal<string>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqDynamicTranslation, "kbq-dynamic-translation", never, { "text": { "alias": "text"; "required": true; "isSignal": true; }; }, {}, ["slots"], never, true, never>;
     // (undocumented)
@@ -23,9 +24,9 @@ export class KbqDynamicTranslation {
 export class KbqDynamicTranslationHelper {
     constructor();
     // (undocumented)
-    readonly slots: i0.InputSignal<KbqDynamicTranslationHelperSlot[]>;
+    readonly slots: InputSignal<KbqDynamicTranslationHelperSlot[]>;
     // (undocumented)
-    readonly text: i0.InputSignal<string>;
+    readonly text: InputSignal<string>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqDynamicTranslationHelper, "kbq-dynamic-translation-with-dynamic-component-creation", never, { "text": { "alias": "text"; "required": true; "isSignal": true; }; "slots": { "alias": "slots"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -53,13 +54,15 @@ export class KbqDynamicTranslationModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDynamicTranslationModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDynamicTranslationModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDynamicTranslationModule, never, [typeof KbqDynamicTranslationSlot, typeof KbqDynamicTranslationHelper, typeof KbqDynamicTranslation], [typeof KbqDynamicTranslationSlot, typeof KbqDynamicTranslationHelper, typeof KbqDynamicTranslation]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDynamicTranslationModule, never, [typeof i1.KbqDynamicTranslationSlot, typeof i1.KbqDynamicTranslationHelper, typeof i1.KbqDynamicTranslation], [typeof i1.KbqDynamicTranslationSlot, typeof i1.KbqDynamicTranslationHelper, typeof i1.KbqDynamicTranslation]>;
 }
 
 // @public
 export class KbqDynamicTranslationSlot {
-    readonly name: i0.InputSignal<string>;
+    readonly name: InputSignal<string>;
     readonly templateRef: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDynamicTranslationSlot, "[kbqDynamicTranslationSlot]", never, { "name": { "alias": "kbqDynamicTranslationSlot"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;

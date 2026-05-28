@@ -1,6 +1,6 @@
 import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
@@ -8,6 +8,17 @@ import { newIconsPackData } from './data';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'new-icons-pack';
+
+/**
+ * `@schematics/angular:application` changed file names across major versions
+ * (`app.component.html` ↔ `app.html`). `createTestApp` pins to v17, so the
+ * default is `app.component.html` — but pick whichever the generator produced.
+ */
+const appHtml = (project: workspaces.ProjectDefinition, tree: Tree | UnitTestTree) => {
+    const root = `/${project.root}/src/app`;
+
+    return tree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`;
+};
 
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
@@ -30,7 +41,7 @@ describe(SCHEMATIC_NAME, () => {
 
         projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
         projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.html`;
+            const templatePath = appHtml(project, appTree);
             const stylesPath = `/${project.root}/src/styles.scss`;
 
             appTree.overwrite(
@@ -47,7 +58,7 @@ describe(SCHEMATIC_NAME, () => {
             const project = projects.get(projectKey)!;
 
             return [
-                tree.read(`/${project.root}/src/app/app.html`)?.toString() || '',
+                tree.read(appHtml(project, appTree))?.toString() || '',
                 tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
             ];
         };
@@ -73,7 +84,7 @@ describe(SCHEMATIC_NAME, () => {
         const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
 
         projects.forEach((project) => {
-            const templateContent = tree.read(`/${project.root}/src/app/app.html`)!.toString();
+            const templateContent = tree.read(appHtml(project, appTree))!.toString();
 
             expect(
                 elementsWithDeprecatedIconPrefixes.filter((item) => templateContent.indexOf(item) !== -1).length
@@ -89,7 +100,7 @@ describe(SCHEMATIC_NAME, () => {
         );
 
         projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.html`;
+            const templatePath = appHtml(project, appTree);
 
             appTree.overwrite(
                 templatePath,
@@ -100,7 +111,7 @@ describe(SCHEMATIC_NAME, () => {
         const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
 
         projects.forEach((project) => {
-            const templateContent = tree.read(`/${project.root}/src/app/app.html`)!.toString();
+            const templateContent = tree.read(appHtml(project, appTree))!.toString();
 
             expect(iconsToBeReplaced.filter((item) => templateContent.indexOf(item) !== -1).length).toBeFalsy();
             expect(iconsToBeReplacedWith.filter((item) => templateContent.indexOf(item) !== -1).length).toEqual(
@@ -114,7 +125,7 @@ describe(SCHEMATIC_NAME, () => {
         const iconsToBeReplaced = newIconsPackDataSlice.map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
 
         projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.html`;
+            const templatePath = appHtml(project, appTree);
 
             appTree.overwrite(
                 templatePath,

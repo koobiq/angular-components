@@ -32,6 +32,7 @@ import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/common';
 import * as i7 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -55,6 +56,7 @@ import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -98,7 +100,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
     constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef<HTMLElement>, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
     backdropClass: string;
-    readonly beforeOpened: i0.OutputEmitterRef<void>;
+    readonly beforeOpened: OutputEmitterRef<void>;
     calculateHiddenItems: () => void;
     get canShowCleaner(): boolean;
     cdkVirtualForOf?: CdkVirtualForOf<any>;
@@ -273,7 +275,7 @@ export class KbqSelectChange {
 
 // @public
 export class KbqSelectError {
-    paging: i0.InputSignalWithTransform<boolean, unknown>;
+    paging: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSelectError, "kbq-select-error, [kbq-select-error]", ["kbqSelectError"], { "paging": { "alias": "paging"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -302,8 +304,12 @@ export class KbqSelectModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSelectModule>;
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqSelect, typeof KbqOptionTooltip, typeof KbqSelectLoading, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText], [typeof KbqSelect, typeof KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i10.KbqSelectLoading, typeof i10.KbqSelectError, typeof i10.KbqSelectNoOptions, typeof i10.KbqSelectErrorText], [typeof i8.KbqSelect, typeof i9.KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i10.KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof i10.KbqSelectError, typeof i10.KbqSelectNoOptions, typeof i10.KbqSelectErrorText]>;
 }
 
 // @public

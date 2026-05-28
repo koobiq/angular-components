@@ -430,8 +430,17 @@ export class KbqTabsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabsModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTabsModule>;
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel, typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler], [typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof i7.KbqTabNavBar, typeof i7.KbqTabLink, typeof i7.KbqTabNavPanel, typeof i8.KbqTabGroup, typeof i9.KbqTabLabel, typeof i10.KbqTab, typeof i11.KbqTabLabelWrapper, typeof i12.KbqTabBody, typeof i12.KbqTabBodyPortal, typeof i13.KbqTabHeader, typeof i14.KbqTabContent, typeof i8.KbqAlignTabsCenterCssStyler, typeof i8.KbqAlignTabsEndCssStyler, typeof i8.KbqStretchTabsCssStyler, typeof i8.KbqVerticalTabsCssStyler], [typeof i8.KbqTabGroup, typeof i9.KbqTabLabel, typeof i10.KbqTab, typeof i11.KbqTabLabelWrapper, typeof i12.KbqTabBody, typeof i12.KbqTabBodyPortal, typeof i13.KbqTabHeader, typeof i14.KbqTabContent, typeof i8.KbqAlignTabsCenterCssStyler, typeof i8.KbqAlignTabsEndCssStyler, typeof i8.KbqStretchTabsCssStyler, typeof i8.KbqVerticalTabsCssStyler, typeof i7.KbqTabNavBar, typeof i7.KbqTabLink, typeof i7.KbqTabNavPanel]>;
 }
 
 // @public (undocumented)

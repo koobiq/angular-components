@@ -39,8 +39,10 @@ export class KbqProgressBarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressBarModule>;
+    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, never, [typeof i1.PlatformModule, typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption], [typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, never, [typeof i1.PlatformModule, typeof i2.KbqProgressBar, typeof i2.KbqProgressBarText, typeof i2.KbqProgressBarCaption], [typeof i2.KbqProgressBar, typeof i2.KbqProgressBarText, typeof i2.KbqProgressBarCaption]>;
 }
 
 // @public (undocumented)

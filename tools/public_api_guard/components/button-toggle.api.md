@@ -114,8 +114,10 @@ export class KbqButtonToggleModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonToggleModule>;
+    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle], [typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle]>;
 }
 
 // @public

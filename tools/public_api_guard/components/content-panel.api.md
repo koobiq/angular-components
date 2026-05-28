@@ -5,10 +5,14 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import { OutputEmitterRef } from '@angular/core';
+import { Signal } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export class KbqContentPanel {
@@ -29,7 +33,7 @@ export class KbqContentPanelAside {
 
 // @public (undocumented)
 export class KbqContentPanelBody {
-    readonly scrollbar: i0.Signal<KbqScrollbar>;
+    readonly scrollbar: Signal<KbqScrollbar>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -40,28 +44,28 @@ export class KbqContentPanelBody {
 export class KbqContentPanelContainer {
     constructor();
     close(): void;
-    protected readonly contentAnimationState: i0.Signal<{
-        value: boolean;
-        params: {
-            marginRight: number;
-        };
+    protected readonly contentAnimationState: Signal<    {
+    value: boolean;
+    params: {
+    marginRight: number;
+    };
     }>;
-    readonly disableClose: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly disableCloseByEscape: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly disableResizer: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly disableClose: InputSignalWithTransform<boolean, unknown>;
+    readonly disableCloseByEscape: InputSignalWithTransform<boolean, unknown>;
+    readonly disableResizer: InputSignalWithTransform<boolean, unknown>;
     protected handleEscapeKeydown(event: KeyboardEvent): void;
     protected handleResizerDBLClick(event: MouseEvent): void;
     protected handleResizerSizeChange(input: KbqResizerSizeChangeEvent): void;
-    readonly isOpened: i0.Signal<boolean>;
-    readonly maxWidth: i0.InputSignalWithTransform<number, unknown>;
-    readonly minWidth: i0.InputSignalWithTransform<number, unknown>;
+    readonly isOpened: Signal<boolean>;
+    readonly maxWidth: InputSignalWithTransform<number, unknown>;
+    readonly minWidth: InputSignalWithTransform<number, unknown>;
     open(): void;
-    readonly opened: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly openedChange: i0.OutputEmitterRef<boolean>;
-    protected readonly openedState: i0.WritableSignal<boolean>;
+    readonly opened: InputSignalWithTransform<boolean, unknown>;
+    readonly openedChange: OutputEmitterRef<boolean>;
+    protected readonly openedState: WritableSignal<boolean>;
     toggle(): void;
-    readonly width: i0.InputSignalWithTransform<number, unknown>;
-    protected readonly widthState: i0.WritableSignal<number>;
+    readonly width: InputSignalWithTransform<number, unknown>;
+    protected readonly widthState: WritableSignal<number>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "disableResizer": { "alias": "disableResizer"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, never>;
     // (undocumented)
@@ -109,8 +113,10 @@ export class KbqContentPanelModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqContentPanelModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof KbqContentPanelContainer, typeof KbqContentPanel, typeof KbqContentPanelAside, typeof KbqContentPanelHeader, typeof KbqContentPanelHeaderTitle, typeof KbqContentPanelHeaderActions, typeof KbqContentPanelBody, typeof KbqContentPanelFooter], [typeof KbqContentPanelContainer, typeof KbqContentPanel, typeof KbqContentPanelAside, typeof KbqContentPanelHeader, typeof KbqContentPanelHeaderTitle, typeof KbqContentPanelHeaderActions, typeof KbqContentPanelBody, typeof KbqContentPanelFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof i1.KbqContentPanelContainer, typeof i1.KbqContentPanel, typeof i1.KbqContentPanelAside, typeof i1.KbqContentPanelHeader, typeof i1.KbqContentPanelHeaderTitle, typeof i1.KbqContentPanelHeaderActions, typeof i1.KbqContentPanelBody, typeof i1.KbqContentPanelFooter], [typeof i1.KbqContentPanelContainer, typeof i1.KbqContentPanel, typeof i1.KbqContentPanelAside, typeof i1.KbqContentPanelHeader, typeof i1.KbqContentPanelHeaderTitle, typeof i1.KbqContentPanelHeaderActions, typeof i1.KbqContentPanelBody, typeof i1.KbqContentPanelFooter]>;
 }
 
 // (No @packageDocumentation comment for this package)

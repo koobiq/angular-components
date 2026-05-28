@@ -275,10 +275,12 @@ export class KbqModalModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqModalModule>;
-    // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1.OverlayModule, typeof i2.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof i6.NgStyle, typeof i6.NgClass, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1.OverlayModule, typeof i2.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof i6.NgStyle, typeof i6.NgClass, typeof i7.KbqModalComponent, typeof i8.KbqModalTitle, typeof i8.KbqModalBody, typeof i8.KbqModalFooter, typeof i9.CssUnitPipe, typeof i8.KbqModalMainAction], [typeof i7.KbqModalComponent, typeof i8.KbqModalTitle, typeof i8.KbqModalBody, typeof i8.KbqModalFooter, typeof i8.KbqModalMainAction]>;
 }
 
 // @public

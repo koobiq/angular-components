@@ -20,16 +20,17 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@angular/cdk/observers';
 import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
+import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -149,8 +150,11 @@ export class KbqPopoverModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqPopoverModule>;
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, never, [typeof i1.OverlayModule, typeof i2.KbqButtonModule, typeof i3.A11yModule, typeof i4.KbqIconModule, typeof i5.CdkObserveContent, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof KbqPopoverComponent, typeof KbqPopoverTrigger, typeof KbqPopoverConfirmComponent, typeof KbqPopoverConfirmTrigger], [typeof KbqPopoverComponent, typeof KbqPopoverTrigger, typeof KbqPopoverConfirmComponent, typeof KbqPopoverConfirmTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, never, [typeof i1.OverlayModule, typeof i2.KbqButtonModule, typeof i3.A11yModule, typeof i4.KbqIconModule, typeof i5.CdkObserveContent, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.KbqPopoverComponent, typeof i7.KbqPopoverTrigger, typeof i8.KbqPopoverConfirmComponent, typeof i8.KbqPopoverConfirmTrigger], [typeof i7.KbqPopoverComponent, typeof i7.KbqPopoverTrigger, typeof i8.KbqPopoverConfirmComponent, typeof i8.KbqPopoverConfirmTrigger]>;
 }
 
 // @public
@@ -165,9 +169,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get closeOnScroll(): boolean | null;
     set closeOnScroll(value: boolean);
     // (undocumented)
-    closingActions(): rxjs.Observable<void | CdkScrollable | MouseEvent>;
+    closingActions(): Observable<void | CdkScrollable | MouseEvent>;
     // (undocumented)
-    closingActionsForClick(): rxjs.Observable<MouseEvent>[];
+    closingActionsForClick(): Observable<MouseEvent>[];
     container: HTMLElement;
     // (undocumented)
     get content(): string | TemplateRef<any>;
@@ -178,7 +182,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get customClass(): string;
     set customClass(value: string);
     // (undocumented)
-    defaultClosingActions(): rxjs.Observable<MouseEvent>[];
+    defaultClosingActions(): Observable<MouseEvent>[];
     defaultPaddings: boolean;
     // (undocumented)
     get disabled(): boolean;
@@ -201,7 +205,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set header(value: string | TemplateRef<any>);
     // (undocumented)
     hide(delay?: number): void;
-    readonly hideIfNotInViewPort: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly hideIfNotInViewPort: InputSignalWithTransform<boolean, unknown>;
     get instanceDestroyRef(): DestroyRef;
     leaveDelay: number;
     // (undocumented)
