@@ -13,7 +13,7 @@ import {
     Optional,
     Provider,
     signal,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -45,8 +45,8 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
     }
 })
 export class KbqMarkdown implements OnDestroy {
-    @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef<HTMLPreElement>;
-    @ViewChild('outputWrapper', { static: true }) private readonly outputWrapper: ElementRef<HTMLDivElement>;
+    private readonly contentWrapper = viewChild.required<ElementRef<HTMLPreElement>>('contentWrapper');
+    private readonly outputWrapper = viewChild.required<ElementRef<HTMLDivElement>>('outputWrapper');
 
     protected resultHtml = signal<SafeHtml | null>(null);
 
@@ -76,8 +76,10 @@ export class KbqMarkdown implements OnDestroy {
         @Optional() @Inject(KBQ_MARKDOWN_MARKED_OPTIONS) private readonly markedOptions?: MarkedOptions | undefined
     ) {
         afterNextRender(() => {
-            if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
-                this.resultHtml.set(this.getResultHTML(this.contentWrapper?.nativeElement.textContent));
+            const contentWrapper = this.contentWrapper();
+
+            if (!this.markdownText && contentWrapper?.nativeElement.textContent) {
+                this.resultHtml.set(this.getResultHTML(contentWrapper?.nativeElement.textContent));
             }
         });
 
@@ -100,10 +102,12 @@ export class KbqMarkdown implements OnDestroy {
 
     private startMonitoringLinks(): void {
         this.stopMonitoringLinks();
-        this.outputWrapper.nativeElement.querySelectorAll<HTMLAnchorElement>('.kbq-markdown__a').forEach((link) => {
-            this.links.push(link);
-            this.focusMonitor.monitor(link, true);
-        });
+        this.outputWrapper()
+            .nativeElement.querySelectorAll<HTMLAnchorElement>('.kbq-markdown__a')
+            .forEach((link) => {
+                this.links.push(link);
+                this.focusMonitor.monitor(link, true);
+            });
     }
 
     private stopMonitoringLinks(): void {

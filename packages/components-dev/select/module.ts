@@ -1,7 +1,7 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 // import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
@@ -163,7 +163,7 @@ export class DevApp implements OnInit {
 
     selected = ['Almetyevsk', 'Yaroslavl'];
 
-    @ViewChild(CdkVirtualScrollViewport) cdkVirtualScrollViewport: CdkVirtualScrollViewport;
+    readonly cdkVirtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
     ngOnInit(): void {
         this.filteredOptions = merge(
@@ -183,8 +183,8 @@ export class DevApp implements OnInit {
         console.log('openedChange: ', opened);
 
         if (!opened) {
-            this.cdkVirtualScrollViewport.setRenderedContentOffset(0);
-            this.cdkVirtualScrollViewport.setRenderedRange(this.initialRange);
+            this.cdkVirtualScrollViewport().setRenderedContentOffset(0);
+            this.cdkVirtualScrollViewport().setRenderedRange(this.initialRange);
         }
     }
 

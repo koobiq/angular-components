@@ -1,5 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, ChangeDetectorRef, Component, ContentChild, inject, Input, input } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, contentChild, inject, Input, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -31,7 +31,7 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     protected readonly navbarFocusableItem = inject(KbqNavbarFocusableItem);
 
     /** @docs-private */
-    @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
+    readonly title = contentChild(KbqNavbarTitle);
 
     /** alternative display of the brand name in two lines */
     readonly longTitle = input<boolean>(false);
@@ -58,19 +58,19 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
 
     /** @docs-private */
     get croppedText(): string {
-        const croppedTitleText = this.title?.isOverflown ? this.titleText : '';
+        const croppedTitleText = this.title()?.isOverflown ? this.titleText : '';
 
         return `${croppedTitleText}`;
     }
 
     /** @docs-private */
     get hasCroppedText(): boolean {
-        return !!this.title?.isOverflown;
+        return !!this.title()?.isOverflown;
     }
 
     /** @docs-private */
     get titleText(): string | null {
-        return this.collapsedText || this.title?.text || null;
+        return this.collapsedText || this.title()?.text || null;
     }
 
     /** @docs-private */

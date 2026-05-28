@@ -15,7 +15,7 @@ import {
     OnDestroy,
     output,
     QueryList,
-    ViewChild,
+    viewChild,
     ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
@@ -75,7 +75,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     @ViewChildren(KbqInput) private input: QueryList<KbqInput>;
     @ViewChildren(KbqButton) private button: QueryList<KbqButton>;
-    @ViewChild(KbqTooltipTrigger) private tooltip: KbqTooltipTrigger;
+    private readonly tooltip = viewChild(KbqTooltipTrigger);
 
     configuration;
 
@@ -199,11 +199,17 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((button: KbqButton) => {
-                this.tooltip.disabled = true;
+                const tooltip = this.tooltip();
+
+                if (tooltip) {
+                    tooltip.disabled = true;
+                }
 
                 this.focusMonitor.focusVia(button.elementRef.nativeElement, this.lastFocusOrigin);
 
-                this.tooltip.disabled = false;
+                if (tooltip) {
+                    tooltip.disabled = false;
+                }
             });
 
         this.input.changes
@@ -258,7 +264,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
             }
         }
 
-        this.tooltip?.hide();
+        this.tooltip()?.hide();
 
         this.isOpenedChange.emit(this.isOpened);
     }

@@ -7,7 +7,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     Directive,
     ElementRef,
     Input,
@@ -16,6 +15,7 @@ import {
     Optional,
     ViewEncapsulation,
     booleanAttribute,
+    contentChild,
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -128,14 +128,14 @@ export class KbqNavbarDivider {}
     }
 })
 export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
-    @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
+    readonly title = contentChild(KbqNavbarTitle);
 
-    @ContentChild(KbqButton) button: KbqButton;
+    readonly button = contentChild(KbqButton);
 
-    @ContentChild(KbqFormField) formField: KbqFormField;
+    readonly formField = contentChild(KbqFormField);
 
-    get nestedElement(): KbqButton | KbqFormField {
-        return this.button || this.formField;
+    get nestedElement(): KbqButton | KbqFormField | undefined {
+        return this.button() || this.formField();
     }
 
     get tooltip(): KbqTooltipTrigger {
@@ -191,8 +191,10 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     }
 
     ngAfterContentInit(): void {
-        if (this.button) {
-            this.button.tabIndex = -1;
+        const button = this.button();
+
+        if (button) {
+            button.tabIndex = -1;
         }
     }
 
@@ -262,7 +264,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
                     this.tooltip?.hide();
 
-                    if (this.button?.hasFocus) {
+                    if (this.button()?.hasFocus) {
                         return;
                     }
 
@@ -272,7 +274,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     }
 
     getLabel(): string {
-        return this.title?.text || '';
+        return this.title()?.text || '';
     }
 }
 
@@ -338,7 +340,7 @@ export class KbqNavbarRectangleElement {
 
     private _collapsed: boolean;
 
-    @ContentChild(KbqButtonCssStyler) button: KbqButtonCssStyler;
+    readonly button = contentChild(KbqButtonCssStyler);
 
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
@@ -360,16 +362,16 @@ export class KbqNavbarRectangleElement {
     host: {
         class: 'kbq-navbar-item',
         '[class.kbq-navbar-item_collapsed]': 'isCollapsed',
-        '[class.kbq-navbar-item_with-title]': '!!title',
+        '[class.kbq-navbar-item_with-title]': '!!title()',
 
         '(keydown)': 'onKeyDown($event)'
     },
     exportAs: 'kbqNavbarItem'
 })
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
-    @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
+    readonly title = contentChild(KbqNavbarTitle);
 
-    @ContentChild(KbqIcon) icon: KbqIcon;
+    readonly icon = contentChild(KbqIcon);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -417,7 +419,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     private _collapsed = false;
 
     get croppedText(): string {
-        const croppedTitleText = this.title?.isOverflown ? this.titleText : '';
+        const croppedTitleText = this.title()?.isOverflown ? this.titleText : '';
 
         return `${croppedTitleText}`;
     }
@@ -436,7 +438,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     private _collapsable: boolean = true;
 
     get titleText(): string | null {
-        return this._collapsedText || this.title?.text || null;
+        return this._collapsedText || this.title()?.text || null;
     }
 
     get disabled(): boolean {
@@ -464,7 +466,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     }
 
     get hasCroppedText(): boolean {
-        return !!this.title?.isOverflown;
+        return !!this.title()?.isOverflown;
     }
 
     constructor(
@@ -531,7 +533,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     }
 
     getTitleWidth(): number {
-        return this.title.outerElementWidth;
+        return this.title()?.outerElementWidth ?? 0;
     }
 
     onKeyDown($event: KeyboardEvent) {

@@ -8,7 +8,7 @@
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    @if (!!customMatcher) {
+    @if (!!customMatcher()) {
         <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
     } @else {
         <div class="kbq-select__matcher">
@@ -17,7 +17,7 @@
                     {{ placeholder || '\u00A0' }}
                 </span>
             } @else {
-                @if (!!customTrigger) {
+                @if (!!customTrigger()) {
                     <ng-content select="kbq-select-trigger, [kbq-select-trigger]" />
                 } @else {
                     <div class="kbq-select__match-container">
@@ -26,7 +26,7 @@
                                 [class.kbq-select__match-list]="!multiline()"
                                 [class.kbq-select__multiline-match-list]="multiline()"
                             >
-                                @if (!customTagTemplateRef) {
+                                @if (!customTagTemplateRef()) {
                                     @for (option of triggerValues; track option) {
                                         <kbq-tag
                                             [color]="colorForState"
@@ -46,7 +46,7 @@
                                 } @else {
                                     @for (option of triggerValues; track option) {
                                         <ng-container
-                                            [ngTemplateOutlet]="$any(customTagTemplateRef)"
+                                            [ngTemplateOutlet]="$any(customTagTemplateRef())"
                                             [ngTemplateOutletContext]="{ $implicit: option, select: this }"
                                         />
                                     }
@@ -115,7 +115,7 @@
         (click)="handleClick($event)"
         (keydown)="handleKeydown($event)"
     >
-        @if (search && shouldShowSearch()) {
+        @if (search() && shouldShowSearch()) {
             <div class="kbq-select__search-container">
                 <ng-content select="[kbqSelectSearch]" />
             </div>

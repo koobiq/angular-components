@@ -12,7 +12,7 @@ import {
     numberAttribute,
     OnDestroy,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF, kbqInjectNativeElement, PopUpTriggers } from '@koobiq/components/core';
@@ -73,7 +73,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     /**
      * @docs-private
      */
-    @ViewChild(KbqIconButton) readonly icon: KbqIconButton;
+    readonly icon = viewChild.required(KbqIconButton);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -94,7 +94,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
 
     /** Form field password control. */
     private get control(): KbqInputPassword {
-        const control = this.formField?.control;
+        const control = this.formField?.control();
 
         if (!control || !isInputPassword(control)) {
             throw getKbqPasswordToggleMissingControlError();
@@ -134,7 +134,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private
      */
     ngAfterContentInit(): void {
-        this.formField?.control?.stateChanges.subscribe(this.updateState);
+        this.formField?.control()?.stateChanges.subscribe(this.updateState);
 
         this.updateState();
     }
@@ -169,7 +169,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     }
 
     private updateState = () => {
-        this.hasError = !!this.formField?.control?.errorState;
+        this.hasError = !!this.formField?.control()?.errorState;
 
         this.changeDetectorRef.markForCheck();
     };

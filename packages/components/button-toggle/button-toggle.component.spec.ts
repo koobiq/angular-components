@@ -1,4 +1,4 @@
-import { Component, DebugElement, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DebugElement, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -577,8 +577,8 @@ describe('KbqButtonToggle without forms', () => {
         const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
 
         expect(() => fixture.detectChanges()).not.toThrow();
-        expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
-        expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+        expect(fixture.componentInstance.toggleGroup().value).toBe('Two');
+        expect(fixture.componentInstance.toggles()[1].checked).toBe(true);
     });
 
     it('should maintain the selected state when the value and toggles are swapped out at the same time', () => {
@@ -586,15 +586,15 @@ describe('KbqButtonToggle without forms', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
-        expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+        expect(fixture.componentInstance.toggleGroup().value).toBe('Two');
+        expect(fixture.componentInstance.toggles()[1].checked).toBe(true);
 
         fixture.componentInstance.possibleValues = ['Five', 'Six', 'Seven'];
         fixture.componentInstance.value = 'Seven';
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.toggleGroup.value).toBe('Seven');
-        expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
+        expect(fixture.componentInstance.toggleGroup().value).toBe('Seven');
+        expect(fixture.componentInstance.toggles()[2].checked).toBe(true);
     });
 
     it('should select falsy button toggle value in multiple selection', () => {
@@ -602,16 +602,16 @@ describe('KbqButtonToggle without forms', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);
-        expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(false);
-        expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(false);
+        expect(fixture.componentInstance.toggles()[0].checked).toBe(true);
+        expect(fixture.componentInstance.toggles()[1].checked).toBe(false);
+        expect(fixture.componentInstance.toggles()[2].checked).toBe(false);
 
         fixture.componentInstance.value = [0, false];
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);
-        expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(false);
-        expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
+        expect(fixture.componentInstance.toggles()[0].checked).toBe(true);
+        expect(fixture.componentInstance.toggles()[1].checked).toBe(false);
+        expect(fixture.componentInstance.toggles()[2].checked).toBe(true);
     });
 });
 
@@ -685,7 +685,7 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
     value: ('' | number | null | undefined | boolean)[] = [0];
-    @ViewChildren(KbqButtonToggle) toggles: QueryList<KbqButtonToggle>;
+    readonly toggles = viewChildren(KbqButtonToggle);
 }
 
 @Component({
@@ -736,8 +736,8 @@ class ButtonToggleGroupWithFormControl {
     `
 })
 class RepeatedButtonTogglesWithPreselectedValue {
-    @ViewChild(KbqButtonToggleGroup, { static: false }) toggleGroup: KbqButtonToggleGroup;
-    @ViewChildren(KbqButtonToggle) toggles: QueryList<KbqButtonToggle>;
+    readonly toggleGroup = viewChild.required(KbqButtonToggleGroup);
+    readonly toggles = viewChildren(KbqButtonToggle);
 
     possibleValues = ['One', 'Two', 'Three'];
     value = 'Two';

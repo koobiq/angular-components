@@ -10,7 +10,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     ContentChildren,
     DestroyRef,
     DoCheck,
@@ -184,7 +184,7 @@ export class KbqTagList
 
     /** @docs-private */
     get canShowCleaner(): boolean {
-        return this.cleaner && this.tags.length > 0;
+        return !!this.cleaner() && this.tags.length > 0;
     }
 
     /**
@@ -381,7 +381,7 @@ export class KbqTagList
     readonly change = output<KbqTagListChange>();
 
     /** @docs-private */
-    @ContentChild('kbqTagListCleaner', { static: true }) cleaner: KbqCleaner;
+    readonly cleaner = contentChild<KbqCleaner>('kbqTagListCleaner');
 
     /**
      * The tag components contained within this tag list.

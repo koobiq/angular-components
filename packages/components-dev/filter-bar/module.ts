@@ -6,7 +6,7 @@ import {
     DestroyRef,
     inject,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -126,8 +126,8 @@ export class DevApp implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
     private readonly destroyRef = inject(DestroyRef);
 
-    @ViewChild('filterBar') filterBar: KbqFilterBar;
-    @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
+    readonly filterBar = viewChild.required<KbqFilterBar>('filterBar');
+    readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     readonly searchControl = new FormControl('');
 
@@ -776,7 +776,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 9', id: '9', type: 'success' },
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: false,
@@ -798,7 +798,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 9', id: '9', type: 'success' },
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: true,
@@ -833,7 +833,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 4', id: '4', type: 'error' },
                     { name: 'Option 5', id: '5', type: 'warning' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: false,
@@ -850,7 +850,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 4', id: '4', type: 'error' },
                     { name: 'Option 5', id: '5', type: 'warning' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: true,
@@ -969,7 +969,7 @@ export class DevApp implements AfterViewInit {
             );
         }
 
-        filterBar.filters.filterSavedSuccessfully();
+        filterBar.filters().filterSavedSuccessfully();
         // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
     }
 
@@ -982,7 +982,7 @@ export class DevApp implements AfterViewInit {
             filter
         );
 
-        filterBar.filters.filterSavedSuccessfully();
+        filterBar.filters().filterSavedSuccessfully();
     }
 
     onResetFilter(filter: KbqFilter | null) {

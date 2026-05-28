@@ -15,12 +15,12 @@ import {
     OnInit,
     QueryList,
     Renderer2,
-    ViewChild,
-    ViewChildren,
     ViewEncapsulation,
     forwardRef,
     inject,
-    output
+    output,
+    viewChild,
+    viewChildren
 } from '@angular/core';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subscription } from 'rxjs';
@@ -250,8 +250,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     areas: IArea[] = [];
 
-    @ViewChildren(KbqGutterDirective) gutters: QueryList<KbqGutterDirective>;
-    @ViewChild(KbqGutterGhostDirective) ghost: KbqGutterGhostDirective;
+    readonly gutters = viewChildren(KbqGutterDirective);
+    readonly ghost = viewChild.required(KbqGutterGhostDirective);
 
     @ContentChildren(forwardRef(() => KbqSplitterAreaDirective)) areaRefs: QueryList<KbqSplitterAreaDirective>;
 
@@ -392,17 +392,18 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         if (this.useGhost) {
             const gutterOrder = leftAreaIndex * 2 + 1;
 
-            currentGutter = this.gutters.find((gutter: KbqGutterDirective) => gutter.order === gutterOrder);
+            currentGutter = this.gutters().find((gutter: KbqGutterDirective) => gutter.order === gutterOrder);
 
             if (currentGutter) {
                 const gutterPosition = currentGutter.getPosition();
+                const ghost = this.ghost();
 
-                this.ghost.direction = currentGutter.direction;
-                this.ghost.size = currentGutter.size;
-                this.ghost.x = gutterPosition.x;
-                this.ghost.y = gutterPosition.y;
+                ghost.direction = currentGutter.direction;
+                ghost.size = currentGutter.size;
+                ghost.x = gutterPosition.x;
+                ghost.y = gutterPosition.y;
 
-                this.ghost.visible = true;
+                ghost.visible = true;
                 this.setStyle(
                     StyleProperty.Cursor,
                     currentGutter.direction === Direction.Vertical ? 'row-resize' : 'col-resize'
@@ -470,7 +471,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     };
 
     private updateGutter(): void {
-        this.gutters.forEach((gutter) => {
+        this.gutters().forEach((gutter) => {
             if (gutter.dragged) {
                 gutter.dragged = false;
 
@@ -510,7 +511,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
             const maxPos = rightPos[key] + (rightArea.area.getSize() || 0) - rightMin - currentGutter.size;
             const newPos = gutterPosition[key] - offset;
 
-            this.ghost[key] = newPos < minPos ? minPos : Math.min(newPos, maxPos);
+            this.ghost()[key] = newPos < minPos ? minPos : Math.min(newPos, maxPos);
         } else {
             this.resizeAreas(leftArea, rightArea, offset);
         }
@@ -548,13 +549,12 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         if (this.useGhost && currentGutter) {
             const gutterPosition = currentGutter.getPosition();
+            const ghost = this.ghost();
             const offset =
-                this.ghost.direction === Direction.Vertical
-                    ? gutterPosition.y - this.ghost.y
-                    : gutterPosition.x - this.ghost.x;
+                ghost.direction === Direction.Vertical ? gutterPosition.y - ghost.y : gutterPosition.x - ghost.x;
 
             this.resizeAreas(leftArea, rightArea, offset);
-            this.ghost.visible = false;
+            this.ghost().visible = false;
             this.setStyle(StyleProperty.Cursor, 'unset');
         }
 

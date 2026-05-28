@@ -1,5 +1,5 @@
 import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -52,7 +52,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     filteredOptions: Observable<any[]>;
 
     /** @docs-private */
-    @ViewChild(KbqSelect) select: KbqSelect;
+    readonly select = viewChild.required(KbqSelect);
 
     /** selected value */
     get selected() {
@@ -75,8 +75,8 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        this.select()
+            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
@@ -91,7 +91,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
 
     /** opens select */
     override open() {
-        this.select.open();
+        this.select().open();
     }
 
     private getFilteredOptions(value: string): KbqSelectValue[] {

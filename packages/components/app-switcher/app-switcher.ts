@@ -20,12 +20,12 @@ import {
     Output,
     TemplateRef,
     Type,
-    ViewChild,
     ViewEncapsulation,
     booleanAttribute,
     inject,
     numberAttribute,
-    output
+    output,
+    viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -198,9 +198,9 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     protected activeApp: KbqAppSwitcherApp;
 
     /** @docs-private */
-    @ViewChild(KbqInput) input: KbqInput;
+    readonly input = viewChild(KbqInput);
     /** @docs-private */
-    @ViewChild('otherSites') otherSites: KbqDropdownTrigger;
+    readonly otherSites = viewChild.required<KbqDropdownTrigger>('otherSites');
 
     constructor() {
         super();
@@ -213,8 +213,10 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.input) {
-            this.input.focus();
+        const input = this.input();
+
+        if (input) {
+            input.focus();
         }
 
         this.visibleChange.subscribe((state) => {

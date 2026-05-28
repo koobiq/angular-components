@@ -1,6 +1,6 @@
 ﻿import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, Provider, Type, ViewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -73,7 +73,7 @@ describe('KbqPopover', () => {
 
         it('kbqTrigger = hover', fakeAsync(() => {
             const expectedValue = '_TEST1';
-            const triggerElement = componentInstance.test1.nativeElement;
+            const triggerElement = componentInstance.test1().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
 
@@ -98,7 +98,7 @@ describe('KbqPopover', () => {
 
         it('kbqTrigger = manual', fakeAsync(() => {
             const expectedValue = '_TEST2';
-            const triggerElement = componentInstance.test1.nativeElement;
+            const triggerElement = componentInstance.test1().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
 
@@ -118,7 +118,7 @@ describe('KbqPopover', () => {
 
         it('kbqTrigger = focus', fakeAsync(() => {
             const featureKey = '_TEST3';
-            const triggerElement = componentInstance.test3.nativeElement;
+            const triggerElement = componentInstance.test3().nativeElement;
 
             dispatchFakeEvent(triggerElement, 'focus');
             fixture.detectChanges();
@@ -135,7 +135,7 @@ describe('KbqPopover', () => {
 
         it('Can set kbqPopoverHeader', fakeAsync(() => {
             const expectedValue = '_TEST4';
-            const triggerElement = componentInstance.test4.nativeElement;
+            const triggerElement = componentInstance.test4().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
             tick();
@@ -148,7 +148,7 @@ describe('KbqPopover', () => {
 
         it('Can set kbqPopoverContent', fakeAsync(() => {
             const expectedValue = '_TEST5';
-            const triggerElement = componentInstance.test5.nativeElement;
+            const triggerElement = componentInstance.test5().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
             tick();
@@ -161,7 +161,7 @@ describe('KbqPopover', () => {
 
         it('Can set kbqPopoverFooter', fakeAsync(() => {
             const expectedValue = '_TEST6';
-            const triggerElement = componentInstance.test6.nativeElement;
+            const triggerElement = componentInstance.test6().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
             tick();
@@ -174,7 +174,7 @@ describe('KbqPopover', () => {
 
         it('Can set kbqPopoverClass', fakeAsync(() => {
             const expectedValue = '_TEST7';
-            const triggerElement = componentInstance.test7.nativeElement;
+            const triggerElement = componentInstance.test7().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
             tick();
@@ -187,7 +187,7 @@ describe('KbqPopover', () => {
         }));
 
         it('should open popover with keyboard when kbqTrigger = default', fakeAsync(() => {
-            const triggerElement = componentInstance.test7.nativeElement;
+            const triggerElement = componentInstance.test7().nativeElement;
 
             [ENTER, SPACE].forEach((keyCode) => {
                 dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
@@ -209,7 +209,7 @@ describe('KbqPopover', () => {
         }));
 
         it('should open popover with keyboard when kbqTrigger = default for elements other than button', fakeAsync(() => {
-            const triggerElement = componentInstance.test8.nativeElement;
+            const triggerElement = componentInstance.test8().nativeElement;
 
             [ENTER, SPACE].forEach((keyCode) => {
                 dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
@@ -235,7 +235,7 @@ describe('KbqPopover', () => {
         it('Default text is correct', fakeAsync(() => {
             const fixture = createComponent(KbqPopoverConfirmTestComponent);
             const { componentInstance, debugElement } = fixture;
-            const triggerElement = componentInstance.test8.nativeElement;
+            const triggerElement = componentInstance.test8().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
             tick();
@@ -255,7 +255,7 @@ describe('KbqPopover', () => {
             const { componentInstance, debugElement } = fixture;
             const expectedValue = 'new confirm text';
 
-            const triggerElement = componentInstance.test9.nativeElement;
+            const triggerElement = componentInstance.test9().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
             tick();
@@ -271,7 +271,7 @@ describe('KbqPopover', () => {
             const { componentInstance, debugElement } = fixture;
             const expectedValue = 'new button text';
 
-            const triggerElement = componentInstance.test10.nativeElement;
+            const triggerElement = componentInstance.test10().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
             tick();
@@ -287,7 +287,7 @@ describe('KbqPopover', () => {
             const { componentInstance, debugElement } = fixture;
             const onConfirmSpyFn = jest.spyOn(componentInstance, 'onConfirm');
 
-            const triggerElement = componentInstance.test11.nativeElement;
+            const triggerElement = componentInstance.test11().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
             tick();
@@ -306,7 +306,7 @@ describe('KbqPopover', () => {
         it('Provided text is correct', fakeAsync(() => {
             const fixture = createComponent(KbqPopoverConfirmWithProvidersTestComponent);
             const { componentInstance, debugElement } = fixture;
-            const triggerElement = componentInstance.test12.nativeElement;
+            const triggerElement = componentInstance.test12().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
             tick();
@@ -329,15 +329,16 @@ describe('KbqPopover', () => {
 
             const rect = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT * 2 - 1;
 
-            componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
+            componentInstance.triggerElementRef().nativeElement.getBoundingClientRect = () => ({
                 width: rect,
                 height: rect
             });
             fixture.detectChanges();
 
-            openAndAssertPopover(fixture, componentInstance.triggerElementRef);
+            openAndAssertPopover(fixture, componentInstance.triggerElementRef());
 
-            const strategy: FlexibleConnectedPositionStrategy = componentInstance.popoverTrigger
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance
+                .popoverTrigger()
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
@@ -348,15 +349,16 @@ describe('KbqPopover', () => {
             const fixture = createComponent(PopoverSimple);
             const { componentInstance } = fixture;
 
-            componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
+            componentInstance.triggerElementRef().nativeElement.getBoundingClientRect = () => ({
                 width: 100,
                 height: 100
             });
             fixture.detectChanges();
 
-            openAndAssertPopover(fixture, componentInstance.triggerElementRef);
+            openAndAssertPopover(fixture, componentInstance.triggerElementRef());
 
-            const strategy: FlexibleConnectedPositionStrategy = componentInstance.popoverTrigger
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance
+                .popoverTrigger()
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
@@ -385,7 +387,7 @@ describe('KbqPopover', () => {
         });
 
         it('context for template', fakeAsync(() => {
-            const triggerElement = componentInstance.trigger.nativeElement;
+            const triggerElement = componentInstance.trigger().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
             tick();
@@ -412,8 +414,8 @@ describe('KbqPopover', () => {
     `
 })
 export class PopoverSimple {
-    @ViewChild(KbqPopoverTrigger) popoverTrigger: KbqPopoverTrigger;
-    @ViewChild(KbqPopoverTrigger, { read: ElementRef }) triggerElementRef: ElementRef;
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+    readonly triggerElementRef = viewChild.required(KbqPopoverTrigger, { read: ElementRef });
     constructor(public elementRef: ElementRef) {}
 }
 
@@ -444,14 +446,14 @@ export class PopoverSimple {
 class KbqPopoverTestComponent {
     popoverVisibility: boolean = false;
 
-    @ViewChild('test1', { static: false }) test1: ElementRef;
-    @ViewChild('test2', { static: false }) test2: ElementRef;
-    @ViewChild('test3', { static: false }) test3: ElementRef;
-    @ViewChild('test4', { static: false }) test4: ElementRef;
-    @ViewChild('test5', { static: false }) test5: ElementRef;
-    @ViewChild('test6', { static: false }) test6: ElementRef;
-    @ViewChild('test7', { static: false }) test7: ElementRef;
-    @ViewChild('test7', { static: false }) test8: ElementRef;
+    readonly test1 = viewChild.required<ElementRef>('test1');
+    readonly test2 = viewChild.required<ElementRef>('test2');
+    readonly test3 = viewChild.required<ElementRef>('test3');
+    readonly test4 = viewChild.required<ElementRef>('test4');
+    readonly test5 = viewChild.required<ElementRef>('test5');
+    readonly test6 = viewChild.required<ElementRef>('test6');
+    readonly test7 = viewChild.required<ElementRef>('test7');
+    readonly test8 = viewChild.required<ElementRef>('test7');
 }
 
 @Component({
@@ -465,10 +467,10 @@ class KbqPopoverTestComponent {
     `
 })
 class KbqPopoverConfirmTestComponent {
-    @ViewChild('test8', { static: false }) test8: ElementRef;
-    @ViewChild('test9', { static: false }) test9: ElementRef;
-    @ViewChild('test10', { static: false }) test10: ElementRef;
-    @ViewChild('test11', { static: false }) test11: ElementRef;
+    readonly test8 = viewChild.required<ElementRef>('test8');
+    readonly test9 = viewChild.required<ElementRef>('test9');
+    readonly test10 = viewChild.required<ElementRef>('test10');
+    readonly test11 = viewChild.required<ElementRef>('test11');
 
     onConfirm() {
         return;
@@ -487,7 +489,7 @@ class KbqPopoverConfirmTestComponent {
     ]
 })
 class KbqPopoverConfirmWithProvidersTestComponent {
-    @ViewChild('test12', { static: false }) test12: ElementRef;
+    readonly test12 = viewChild.required<ElementRef>('test12');
 }
 
 @Component({
@@ -511,6 +513,6 @@ class KbqPopoverConfirmWithProvidersTestComponent {
     `
 })
 class KbqPopoverWithTemplateRef {
-    @ViewChild('trigger', { static: false }) trigger: ElementRef;
+    readonly trigger = viewChild.required<ElementRef>('trigger');
     context = { header: 'header', content: 'content', footer: 'footer' };
 }

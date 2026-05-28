@@ -14,11 +14,11 @@ import {
     Output,
     TemplateRef,
     Type,
-    ViewChild,
     ViewEncapsulation,
     booleanAttribute,
     inject,
-    numberAttribute
+    numberAttribute,
+    viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -111,7 +111,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
 
-    @ViewChild(KbqScrollbar) private scrollContainer: KbqScrollbar;
+    private readonly scrollContainer = viewChild.required(KbqScrollbar);
 
     readonly externalConfiguration = inject(KBQ_NOTIFICATION_CENTER_CONFIGURATION, { optional: true });
 
@@ -138,7 +138,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     isTrapFocus: boolean = false;
 
-    @ViewChild('notificationSwitcher') switcher: KbqButton;
+    readonly switcher = viewChild.required<KbqButton>('notificationSwitcher');
 
     get popoverHeight(): string {
         return this._popoverHeight;
@@ -178,7 +178,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
         this.service.changes.subscribe(() => this.changeDetectorRef.markForCheck());
 
-        this.switcher.focus();
+        this.switcher().focus();
 
         setTimeout(this.checkOverflow);
     }
@@ -199,7 +199,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 
     protected checkOverflow = () => {
-        const nativeElement = this.scrollContainer.contentElement.nativeElement;
+        const nativeElement = this.scrollContainer().contentElement().nativeElement;
 
         const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
 

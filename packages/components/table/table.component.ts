@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, ViewEncapsulation, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, ViewEncapsulation, contentChild, input } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 
 @Component({
@@ -20,9 +20,9 @@ export class KbqTable {
 @Directive({
     selector: 'kbq-table td',
     host: {
-        '[class.kbq-table-cell_has-button]': '!!button'
+        '[class.kbq-table-cell_has-button]': '!!button()'
     }
 })
 export class KbqTableCellContent {
-    @ContentChild(KbqButton) button: KbqButton;
+    readonly button = contentChild(KbqButton);
 }

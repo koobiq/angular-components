@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ContentChild,
+    contentChild,
     Input,
     input,
     OnChanges,
@@ -11,7 +12,7 @@ import {
     OnInit,
     SimpleChanges,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -61,10 +62,10 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /**
      * Template provided in the tab content that will be used if present, used to enable lazy-loading
      */
-    @ContentChild(KbqTabContent, { read: TemplateRef, static: true }) explicitContent: TemplateRef<any>;
+    readonly explicitContent = contentChild(KbqTabContent, { read: TemplateRef });
 
     /** Template inside the KbqTab view that contains an `<ng-content>`. */
-    @ViewChild(TemplateRef, { static: true }) implicitContent: TemplateRef<any>;
+    readonly implicitContent = viewChild.required(TemplateRef);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -153,7 +154,10 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.contentPortal = new TemplatePortal(this.explicitContent || this.implicitContent, this.viewContainerRef);
+        this.contentPortal = new TemplatePortal(
+            this.explicitContent() || this.implicitContent(),
+            this.viewContainerRef
+        );
     }
 
     ngOnDestroy(): void {

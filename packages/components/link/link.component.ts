@@ -3,7 +3,7 @@ import {
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
-    ContentChild,
+    contentChild,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -99,7 +99,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     readonly useVisited = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     get hasIcon(): boolean {
-        return !!this.icon;
+        return !!this.icon();
     }
 
     // TODO: Skipped for migration because:
@@ -122,7 +122,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // @todo 20 In the next major release this line will be deleted.
     private _disabled: boolean;
 
-    @ContentChild(KbqIcon) icon: KbqIcon;
+    readonly icon = contentChild(KbqIcon);
 
     constructor(
         private elementRef: ElementRef<HTMLAnchorElement>,

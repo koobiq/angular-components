@@ -1,5 +1,5 @@
 ﻿import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -108,7 +108,7 @@ describe('KbqTreeSelection', () => {
 
                 const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
 
-                const manager = component.tree.keyManager;
+                const manager = component.tree().keyManager;
 
                 manager.setActiveItem(2);
                 expect(manager.activeItemIndex).toBe(2);
@@ -117,7 +117,7 @@ describe('KbqTreeSelection', () => {
 
                 Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
 
-                component.tree.onKeyDown(copyKeyEvent);
+                component.tree().onKeyDown(copyKeyEvent);
                 fixture.detectChanges();
 
                 expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
@@ -140,12 +140,12 @@ describe('KbqTreeSelection', () => {
 
                 expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
 
-                component.tree.keyManager.setActiveItem(2);
+                component.tree().keyManager.setActiveItem(2);
 
                 const copyKeyEvent = createKeyboardEvent('keydown', C);
 
                 Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
-                component.tree.onKeyDown(copyKeyEvent);
+                component.tree().onKeyDown(copyKeyEvent);
                 fixture.detectChanges();
 
                 expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
@@ -944,7 +944,7 @@ class SimpleKbqTreeApp {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
@@ -1156,7 +1156,7 @@ class KbqTreeAppWithToggle {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
@@ -1226,7 +1226,7 @@ class WhenNodeKbqTreeApp {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getValue);
@@ -1290,7 +1290,7 @@ class FiltrationKbqTreeApp {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(

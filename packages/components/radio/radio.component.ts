@@ -19,7 +19,7 @@ import {
     Optional,
     output,
     QueryList,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -429,7 +429,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     @Input() name: string;
 
     /** The native `<input type=radio>` element */
-    @ViewChild('input', { static: false }) inputElement: ElementRef;
+    readonly inputElement = viewChild.required<ElementRef>('input');
 
     /**
      * Event emitted when the checked state of this radio button changes.
@@ -507,7 +507,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
 
     /** Focuses the radio button. */
     focus(): void {
-        this.inputElement.nativeElement.focus();
+        this.inputElement().nativeElement.focus();
     }
 
     /**

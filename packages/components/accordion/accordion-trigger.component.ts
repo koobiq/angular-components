@@ -4,7 +4,7 @@ import {
     AfterViewInit,
     Component,
     inject,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
@@ -40,7 +40,7 @@ export class KbqAccordionTrigger implements AfterViewInit {
     protected readonly accordion: KbqAccordion = inject(KbqAccordion);
 
     /** @docs-private */
-    @ViewChild(KbqIcon) icon: KbqIcon;
+    readonly icon = viewChild.required(KbqIcon);
 
     private savedTransition: string;
     private readonly afterRenderRef?: AfterRenderRef;
@@ -70,12 +70,12 @@ export class KbqAccordionTrigger implements AfterViewInit {
     }
 
     disableAnimation() {
-        this.savedTransition = this.icon.elementRef.nativeElement.style.transition;
+        this.savedTransition = this.icon().elementRef.nativeElement.style.transition;
 
-        this.icon.getHostElement().style.transition = 'none';
+        this.icon().getHostElement().style.transition = 'none';
     }
 
     enableAnimation() {
-        this.icon.getHostElement().style.transition = this.savedTransition;
+        this.icon().getHostElement().style.transition = this.savedTransition;
     }
 }

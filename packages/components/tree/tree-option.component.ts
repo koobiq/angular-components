@@ -6,7 +6,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     ElementRef,
     EventEmitter,
     Inject,
@@ -83,7 +83,7 @@ let uniqueIdCounter: number = 0;
         '[class.kbq-selected]': 'selected',
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-action-button-focused]': 'actionButton?.active',
+        '[class.kbq-action-button-focused]': 'actionButton()?.active',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
         '[attr.disabled]': 'disabled || null',
@@ -103,17 +103,17 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     preventBlur: boolean = false;
 
     @ViewChild('kbqTitleContainer') parentTextElement: ElementRef;
-    @ContentChild(KbqTreeNodeToggleDirective) toggleElementDirective: KbqTreeNodeToggleBaseDirective<KbqTreeOption>;
-    @ContentChild(KbqTreeNodeToggleComponent) toggleElementComponent: KbqTreeNodeToggleBaseDirective<KbqTreeOption>;
-    @ContentChild(KbqPseudoCheckbox) pseudoCheckbox: KbqPseudoCheckbox;
-    @ContentChild(KbqOptionActionComponent) actionButton: KbqOptionActionComponent;
-    @ContentChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
-    @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
+    readonly toggleElementDirective = contentChild(KbqTreeNodeToggleDirective);
+    readonly toggleElementComponent = contentChild(KbqTreeNodeToggleComponent);
+    readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
+    readonly actionButton = contentChild(KbqOptionActionComponent);
+    readonly tooltipTrigger = contentChild(KbqTooltipTrigger);
+    readonly dropdownTrigger = contentChild(KbqDropdownTrigger);
 
     readonly checkboxThirdState = input<boolean>(false);
 
     get externalPseudoCheckbox(): boolean {
-        return !!this.pseudoCheckbox;
+        return !!this.pseudoCheckbox();
     }
 
     get value(): any {
@@ -192,12 +192,12 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         return !this.toggleElement?.disabled && this.tree.treeControl.isExpandable(this.data);
     }
 
-    get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption> {
-        return this.toggleElementComponent || this.toggleElementDirective;
+    get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption> | undefined {
+        return this.toggleElementComponent() || this.toggleElementDirective();
     }
 
     get isToggleInDefaultPlace(): boolean {
-        return !!(this.toggleElementDirective || this.toggleElementComponent);
+        return !!(this.toggleElementDirective() || this.toggleElementComponent());
     }
 
     checkboxState: KbqPseudoCheckboxState;
@@ -278,7 +278,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     focus(focusOrigin?: FocusOrigin) {
-        if (focusOrigin === 'program' || this.disabled || this.actionButton?.hasFocus) return;
+        if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
 
         this.elementRef.nativeElement.focus({ preventScroll: focusOrigin === 'mouse' });
 
@@ -307,7 +307,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
             .pipe(take(1))
             .subscribe(() => {
                 this.ngZone.run(() => {
-                    if (this.actionButton?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) {
+                    if (this.actionButton()?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) {
                         return;
                     }
 
@@ -358,12 +358,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     onKeydown($event) {
-        if (!this.actionButton) {
+        const actionButton = this.actionButton();
+
+        if (!actionButton) {
             return;
         }
 
-        if ($event.keyCode === TAB && !$event.shiftKey && !this.actionButton.hasFocus) {
-            this.actionButton.focus();
+        if ($event.keyCode === TAB && !$event.shiftKey && !actionButton.hasFocus) {
+            actionButton.focus();
 
             $event.preventDefault();
         }

@@ -16,12 +16,12 @@ import {
     OnInit,
     Optional,
     Output,
-    ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
     forwardRef,
     input,
-    output
+    output,
+    viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -89,7 +89,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     readonly onCentered = output<void>();
 
     /** The portal host inside of this container into which the tab body content will be loaded. */
-    @ViewChild(CdkPortalOutlet, { static: false }) portalHost: CdkPortalOutlet;
+    readonly portalHost = viewChild.required(CdkPortalOutlet);
 
     /** The tab body content to display. */
     readonly content = input<TemplatePortal>(undefined!);

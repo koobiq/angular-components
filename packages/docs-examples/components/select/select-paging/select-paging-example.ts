@@ -283,7 +283,7 @@ export class SelectPagingExample implements OnDestroy {
     private scrollSub: Subscription | null = null;
 
     protected onSelectOpened(select: KbqSelect) {
-        const scrollContainer = select.optionsContainer?.nativeElement;
+        const scrollContainer = select.optionsContainer()?.nativeElement;
 
         if (!scrollContainer) return;
 

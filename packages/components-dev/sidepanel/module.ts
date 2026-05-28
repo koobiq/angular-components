@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, TemplateRef, ViewEncapsulation, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
@@ -118,7 +118,7 @@ export class DevApp {
 
     modalState: boolean = false;
 
-    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
+    readonly template = viewChild.required(TemplateRef);
 
     array = new Array(40);
     constructor(private sidepanelService: KbqSidepanelService) {}
@@ -137,7 +137,7 @@ export class DevApp {
     }
 
     openTemplateSidepanel() {
-        this.sidepanelService.open(this.template, {
+        this.sidepanelService.open(this.template(), {
             position: this.position,
             size: this.size,
             hasBackdrop: this.modalState

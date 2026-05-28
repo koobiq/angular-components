@@ -45,7 +45,7 @@ describe('KbqNavbar', () => {
         const collapsableItems = fixture.debugElement
             .queryAll(By.directive(KbqNavbarItem))
             .map((item) => item.componentInstance as KbqNavbarItem)
-            .filter((item) => item.title && item.collapsable);
+            .filter((item) => item.title() && item.collapsable);
 
         collapsableItems.forEach((item) => (item.collapsed = true));
 

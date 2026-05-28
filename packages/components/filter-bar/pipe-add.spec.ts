@@ -117,16 +117,16 @@ describe('KbqPipeAdd', () => {
             const pipeAdd = getPipeAdd();
             const pipeAddDebug = fixture.debugElement.query(By.directive(KbqPipeAdd));
 
-            expect(pipeAdd.select.panelOpen).toBe(false);
+            expect(pipeAdd.select().panelOpen).toBe(false);
 
             pipeAddDebug.query(By.css('.kbq-select')).nativeElement.click();
             fixture.detectChanges();
 
-            expect(pipeAdd.select.panelOpen).toBe(true);
+            expect(pipeAdd.select().panelOpen).toBe(true);
         });
 
         it('should render one option per pipeTemplate', fakeAsync(() => {
-            getPipeAdd().select.open();
+            getPipeAdd().select().open();
             flush();
             fixture.detectChanges();
 
@@ -186,7 +186,7 @@ describe('KbqPipeAdd', () => {
 
             expect(filterBar.filter).toBeNull();
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -204,7 +204,7 @@ describe('KbqPipeAdd', () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -222,7 +222,7 @@ describe('KbqPipeAdd', () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -239,7 +239,7 @@ describe('KbqPipeAdd', () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -259,7 +259,7 @@ describe('KbqPipeAdd', () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -278,7 +278,7 @@ describe('KbqPipeAdd', () => {
 
             pipeAdd.onAddPipe.subscribe(spy);
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -298,7 +298,7 @@ describe('KbqPipeAdd', () => {
 
             filterBar.filterChange.subscribe(spy);
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -313,9 +313,9 @@ describe('KbqPipeAdd', () => {
 
         it('should close the select after adding a pipe', fakeAsync(() => {
             const pipeAdd = getPipeAdd();
-            const closeSpy = jest.spyOn(pipeAdd.select, 'close');
+            const closeSpy = jest.spyOn(pipeAdd.select(), 'close');
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -336,7 +336,7 @@ describe('KbqPipeAdd', () => {
             filterBar.filter = existingFilter;
             fixture.detectChanges();
 
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -356,7 +356,7 @@ describe('KbqPipeAdd', () => {
             const openPipeSpy = jest.spyOn(filterBar.openPipe, 'next');
 
             // First click — add the pipe
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -367,7 +367,7 @@ describe('KbqPipeAdd', () => {
             fixture.detectChanges();
 
             // Second click — option is now selected, should trigger openPipe
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -386,7 +386,7 @@ describe('KbqPipeAdd', () => {
             const pipeAdd = getPipeAdd();
 
             // First click — add the pipe
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 
@@ -399,7 +399,7 @@ describe('KbqPipeAdd', () => {
             expect(filterBar.filter!.pipes.length).toBe(1);
 
             // Second click — should NOT add another pipe
-            pipeAdd.select.open();
+            pipeAdd.select().open();
             flush();
             fixture.detectChanges();
 

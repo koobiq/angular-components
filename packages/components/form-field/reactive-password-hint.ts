@@ -64,7 +64,7 @@ export class KbqReactivePasswordHint extends KbqHint {
         this.color = KbqComponentColors.ContrastFade;
 
         afterNextRender(() => {
-            (this.formField?.control?.stateChanges || EMPTY)
+            (this.formField?.control()?.stateChanges || EMPTY)
                 .pipe(delay(0), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => {
                     this.color = this.makeColor();
@@ -75,7 +75,9 @@ export class KbqReactivePasswordHint extends KbqHint {
     }
 
     private makeColor(): KbqComponentColors {
-        if (this.formField?.control.ngControl?.untouched && this.formField.control.ngControl.pristine) {
+        const control = this.formField?.control();
+
+        if (control?.ngControl?.untouched && control.ngControl.pristine) {
             return KbqComponentColors.ContrastFade;
         }
 

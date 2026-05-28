@@ -1,7 +1,7 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import { DASH } from '@angular/cdk/keycodes';
 import { PlatformModule } from '@angular/cdk/platform';
-import { Component, DebugElement, Provider, signal, Type, viewChild, ViewChild } from '@angular/core';
+import { Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -618,7 +618,7 @@ describe('KbqTagInput', () => {
     `
 })
 class TestTagInput {
-    @ViewChild(KbqTagList, { static: false }) tagListInstance: KbqTagList;
+    readonly tagListInstance = viewChild.required(KbqTagList);
 
     inputValue = 'inputValue';
     addOnBlur: boolean = false;

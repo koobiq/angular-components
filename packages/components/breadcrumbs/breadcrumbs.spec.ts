@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
+﻿import { Component, DebugElement, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -220,7 +220,7 @@ describe(KbqBreadcrumbs.name, () => {
     `
 })
 class SimpleBreadcrumbs {
-    @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
+    readonly breadcrumbs = viewChild.required(KbqBreadcrumbs);
 
     max: number | null = null;
     size: KbqDefaultSizes = 'normal';
@@ -250,8 +250,8 @@ class SimpleBreadcrumbs {
     `
 })
 class BreadcrumbsCustomization {
-    @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
-    @ViewChildren(KbqBreadcrumbItem) breadcrumbItems: QueryList<KbqBreadcrumbItem>;
+    readonly breadcrumbs = viewChild.required(KbqBreadcrumbs);
+    readonly breadcrumbItems = viewChildren(KbqBreadcrumbItem);
 
     max: number | null = null;
     size: KbqDefaultSizes = 'normal';

@@ -54,7 +54,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     isSearchChanged: boolean = false;
 
     get ngControl() {
-        return this.formField.control.ngControl;
+        return this.formField.control().ngControl;
     }
 
     private searchChangesSubscription: Subscription = new Subscription();
@@ -65,7 +65,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     setPlaceholder(value: string): void {
-        this.formField.control.placeholder = value;
+        this.formField.control().placeholder = value;
     }
 
     hasPlaceholder(): boolean {
@@ -81,11 +81,11 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     value() {
-        return this.formField.control.value;
+        return this.formField.control().value;
     }
 
     ngAfterContentInit(): void {
-        if (this.formField.control.controlType !== 'input') {
+        if (this.formField.control().controlType !== 'input') {
             throw Error('KbqSelectSearch does not work without kbqInput');
         }
 

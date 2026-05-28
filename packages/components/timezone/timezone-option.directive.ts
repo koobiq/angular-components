@@ -36,17 +36,19 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     ngAfterViewInit(): void {
         super.ngAfterViewInit();
 
+        const tooltipContentWrapper = this.option.tooltipContentWrapper();
+
         this.content = this.option.viewValue;
-        this.option.tooltipContentWrapper.nativeElement.style.webkitLineClamp = TOOLTIP_VISIBLE_ROWS_COUNT.toString();
+        tooltipContentWrapper.nativeElement.style.webkitLineClamp = TOOLTIP_VISIBLE_ROWS_COUNT.toString();
         this.checkTooltipDisabled();
 
         this.resizeSubscription = this.resizeObserver
-            .observe(this.option.tooltipContentWrapper.nativeElement)
+            .observe(tooltipContentWrapper.nativeElement)
             .pipe(debounceTime(this.debounceInterval))
             .subscribe(this.checkTooltipDisabled);
 
         this.contentObserverSubscription = this.contentObserver
-            .observe(this.option.tooltipContent.nativeElement)
+            .observe(this.option.tooltipContent().nativeElement)
             .pipe(throttleTime(this.debounceInterval))
             .subscribe(() => {
                 this.content = this.option.viewValue;
@@ -75,7 +77,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     private checkTooltipDisabled = () => {
-        const count: number = this.option.tooltipContent.nativeElement.getClientRects().length;
+        const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
         this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
 

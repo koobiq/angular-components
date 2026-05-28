@@ -62,21 +62,21 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
 }
 
 <ng-template #breadcrumbTemplate let-item let-last="last">
-    @if (item.customTemplateRef) {
-        <ng-container [ngTemplateOutlet]="item.customTemplateRef" />
+    @if (item.customTemplateRef()) {
+        <ng-container [ngTemplateOutlet]="item.customTemplateRef()!" />
     } @else {
         <a
             kbq-button
             kbq-title
             kbqBreadcrumb
-            [focusable]="!item.disabled && !last"
+            [focusable]="!item.disabled() && !last"
             [routerLink]="item.routerLink?.urlTree"
             [attr.aria-current]="last ? 'page' : null"
-            [disabled]="item.disabled || last"
+            [disabled]="item.disabled() || last"
             [kbqPlacementPriority]="PopUpPlacements.Bottom"
             [kbqTooltipArrow]="false"
         >
-            {{ item.text }}
+            {{ item.text() }}
         </a>
     }
 </ng-template>

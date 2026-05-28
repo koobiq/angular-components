@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -552,8 +552,8 @@ export class E2eVirtualScrollMultiSelectNarrow {
         'Biysk'
     ];
 
-    @ViewChild(KbqSelect, { static: true }) select!: KbqSelect;
-    @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+    readonly select = viewChild.required(KbqSelect);
+    readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 }
 
 @Component({

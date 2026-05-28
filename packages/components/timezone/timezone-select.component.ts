@@ -5,9 +5,9 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     Directive,
-    ViewEncapsulation
+    ViewEncapsulation,
+    contentChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_OPTION_PARENT_COMPONENT, ruRULocaleData } from '@koobiq/components/core';
@@ -47,7 +47,7 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
     exportAs: 'kbqTimezoneSelect'
 })
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
-    @ContentChild(KbqTimezoneSelectTrigger, { static: false }) customTrigger: KbqTimezoneSelectTrigger;
+    readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     override panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || 'auto';
     override panelMinWidth: number = 640;
@@ -65,8 +65,10 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     private updateLocaleParamsForSearch = () => {
         const placeholder = this.localeService?.getParams('timezone').searchPlaceholder || defaultSearchPlaceholder;
 
-        if (this.search && !this.search.hasPlaceholder()) {
-            this.search.setPlaceholder(placeholder);
+        const search = this.search();
+
+        if (search && !search.hasPlaceholder()) {
+            search.setPlaceholder(placeholder);
         }
     };
 }

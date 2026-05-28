@@ -19,7 +19,7 @@ import {
     OnDestroy,
     Optional,
     output,
-    ViewChild,
+    viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -92,7 +92,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     animationState: 'enter' | 'void';
 
     /** Reference to the internal calendar component. */
-    @ViewChild(KbqCalendar) calendar: KbqCalendar<D>;
+    readonly calendar = viewChild.required(KbqCalendar);
 
     private subscriptions = new Subscription();
 
@@ -346,8 +346,10 @@ export class KbqDatepicker<D> implements OnDestroy {
             this.selected = value;
 
             if (this.popupComponentRef) {
-                this.popupComponentRef.instance.calendar.monthView?.init();
-                this.popupComponentRef.instance.calendar.activeDate = value as D;
+                const calendar = this.popupComponentRef.instance.calendar();
+
+                calendar.monthView()?.init();
+                calendar.activeDate = value as D;
             }
         });
     }

@@ -31,7 +31,8 @@ import {
     booleanAttribute,
     inject,
     input,
-    numberAttribute
+    numberAttribute,
+    viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -85,26 +86,28 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
-    @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
+    readonly popoverContent = viewChild<ElementRef<HTMLDivElement>>('popoverContent');
     @ViewChild('popover') elementRef: ElementRef;
-    @ViewChild(CdkTrapFocus) cdkTrapFocus: CdkTrapFocus;
+    readonly cdkTrapFocus = viewChild.required(CdkTrapFocus);
 
     private debounceTime = 15;
     isContentTopOverflow: boolean = false;
     isContentBottomOverflow: boolean = false;
 
     ngAfterViewInit() {
-        if (!this.popoverContent) return;
+        const popoverContent = this.popoverContent();
 
-        this.checkContentOverflow(this.popoverContent.nativeElement);
+        if (!popoverContent) return;
 
-        fromEvent(this.popoverContent.nativeElement, 'scroll')
+        this.checkContentOverflow(popoverContent.nativeElement);
+
+        fromEvent(popoverContent.nativeElement, 'scroll')
             .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
                 this.checkContentOverflow(event.target as HTMLElement);
             });
 
-        this.cdkTrapFocus.focusTrap.focusFirstTabbableElement();
+        this.cdkTrapFocus().focusTrap.focusFirstTabbableElement();
         this.visibleChange.subscribe((state) => {
             if (this.offset !== null && state) {
                 applyPopupMargins(
@@ -120,7 +123,11 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     }
 
     onContentChange() {
-        this.checkContentOverflow(this.popoverContent.nativeElement);
+        const popoverContent = this.popoverContent();
+
+        if (popoverContent) {
+            this.checkContentOverflow(popoverContent.nativeElement);
+        }
     }
 
     checkContentOverflow(contentElement: HTMLElement) {

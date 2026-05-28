@@ -1091,7 +1091,7 @@ describe(KbqTagList.name, () => {
         }));
 
         it('should display an error message when the parent form is submitted', fakeAsync(() => {
-            expect(errorTestComponent.form.submitted).toBe(false);
+            expect(errorTestComponent.form().submitted).toBe(false);
             expect(errorTestComponent.formControl.invalid).toBe(true);
             expect(containerEl.querySelectorAll('kbq-error').length).toBe(0);
 
@@ -1099,7 +1099,7 @@ describe(KbqTagList.name, () => {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                expect(errorTestComponent.form.submitted).toBe(true);
+                expect(errorTestComponent.form().submitted).toBe(true);
                 expect(containerEl.classList).toContain('kbq-form-field-invalid');
                 expect(containerEl.querySelectorAll('kbq-error').length).toBe(1);
                 expect(tagListEl.getAttribute('aria-invalid')).toBe('true');
@@ -1925,8 +1925,8 @@ class BasicTagList {
     tabIndexOverride: number;
     selectable: boolean = true;
 
-    @ViewChild(KbqFormField, { static: false }) formField: KbqFormField;
-    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
+    @ViewChild(KbqFormField) formField: KbqFormField;
+    @ViewChild(KbqTagList) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 }
 
@@ -1973,7 +1973,7 @@ class InputTagList {
     addOnBlur: boolean = true;
     isRequired: boolean;
 
-    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
+    @ViewChild(KbqTagList) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
     add(event: KbqTagInputEvent): void {
@@ -2059,7 +2059,7 @@ class TagListWithFormErrorMessages {
 
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
-    @ViewChild('form', { static: false }) form: NgForm;
+    readonly form = viewChild.required<NgForm>('form');
 }
 
 @Component({

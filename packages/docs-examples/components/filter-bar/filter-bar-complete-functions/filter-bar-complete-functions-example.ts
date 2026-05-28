@@ -635,7 +635,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
         }
 
         this.activeFilter = filter;
-        filterBar.filters.filterSavedSuccessfully();
+        filterBar.filters().filterSavedSuccessfully();
     }
 
     onChangeFilter(filter: KbqFilter | null) {

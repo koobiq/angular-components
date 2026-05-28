@@ -114,7 +114,7 @@ describe('KbqPipeMultiSelectComponent', () => {
     const openSelect = (index: number = 0) => {
         const pipe = getPipeComponent(index);
 
-        pipe.select.open();
+        pipe.select().open();
         fixture.detectChanges();
     };
 
@@ -327,7 +327,7 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(component.select.selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
             expect(component.allOptionsSelected).toBe(false);
             expect(component.checkboxState).toBe('indeterminate');
         }));
@@ -408,7 +408,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            expect(component.select.selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
         }));
 
         it('should deselect all options when all selected', fakeAsync(() => {
@@ -428,7 +428,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            expect(component.select.selectionModel.selected.length).toBe(0);
+            expect(component.select().selectionModel.selected.length).toBe(0);
         }));
 
         it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', fakeAsync(() => {
@@ -473,7 +473,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             const component = getPipeComponent();
             const toggleSpy = jest.spyOn(component, 'toggleSelectionAll');
 
-            component.select.keyManager.setActiveItem(0);
+            component.select().keyManager.setActiveItem(0);
 
             component.toggleSelectionAllByEnterKey();
 
@@ -589,7 +589,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const openSpy = jest.spyOn(component.select, 'open');
+            const openSpy = jest.spyOn(component.select(), 'open');
 
             component.open();
 

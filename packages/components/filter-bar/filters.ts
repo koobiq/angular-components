@@ -10,7 +10,7 @@ import {
     input,
     OnInit,
     output,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -80,22 +80,22 @@ export class KbqFilters implements OnInit {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /** @docs-private */
-    @ViewChild('mainButton') protected mainButton: KbqButton;
+    protected readonly mainButton = viewChild.required<KbqButton>('mainButton');
     /** @docs-private */
-    @ViewChild('saveNewFilterButton') protected saveNewFilterButton: KbqButton;
+    protected readonly saveNewFilterButton = viewChild.required<KbqButton>('saveNewFilterButton');
     /** @docs-private */
-    @ViewChild('filterActionsButton') protected filterActionsButton: KbqButton;
+    protected readonly filterActionsButton = viewChild.required<KbqButton>('filterActionsButton');
 
     /** @docs-private */
-    @ViewChild(KbqPopoverTrigger) protected popover: KbqPopoverTrigger;
+    protected readonly popover = viewChild.required(KbqPopoverTrigger);
     /** @docs-private */
-    @ViewChild(KbqDropdownTrigger) protected dropdown: KbqDropdownTrigger;
+    protected readonly dropdown = viewChild.required(KbqDropdownTrigger);
     /** @docs-private */
-    @ViewChild('filterActionsButton') protected filterActionsDropdown: KbqDropdownTrigger;
+    protected readonly filterActionsDropdown = viewChild<KbqDropdownTrigger>('filterActionsButton');
 
-    @ViewChild('search') private search: ElementRef;
-    @ViewChild('newFilterName') private newFilterName: ElementRef;
-    @ViewChild('saveFilterButton') private saveFilterButton: KbqButton;
+    private readonly search = viewChild.required<ElementRef>('search');
+    private readonly newFilterName = viewChild.required<ElementRef>('newFilterName');
+    private readonly saveFilterButton = viewChild.required<KbqButton>('saveFilterButton');
 
     /** control for search filter */
     searchControl: UntypedFormControl = new UntypedFormControl();
@@ -138,12 +138,12 @@ export class KbqFilters implements OnInit {
 
     /** Component state. true if opened dropdown or popup */
     get opened(): boolean {
-        return this.popover?.isOpen || this.dropdown?.opened;
+        return this.popover()?.isOpen || this.dropdown()?.opened;
     }
 
     /** Component state. true if opened dropdown or popup of filterActions */
     get filterActionsOpened(): boolean {
-        return this.popover?.isOpen || this.filterActionsDropdown?.opened;
+        return !!(this.popover()?.isOpen || this.filterActionsDropdown()?.opened);
     }
 
     /** Selected filter */
@@ -230,7 +230,7 @@ export class KbqFilters implements OnInit {
         filter.changed = false;
 
         this.isSaving = true;
-        this.popover.preventClose = true;
+        this.popover().preventClose = true;
         this.filterName.disable();
 
         if (this.saveNewFilter) {
@@ -264,24 +264,24 @@ export class KbqFilters implements OnInit {
 
         this.filterName.valueChanges.pipe(distinctUntilChanged()).subscribe(() => (this.showFilterSavingError = false));
 
-        this.popover.show();
+        this.popover().show();
 
-        merge(...this.popover.defaultClosingActions())
+        merge(...this.popover().defaultClosingActions())
             .pipe(
                 filter(() => !this.isSaving),
-                takeUntilDestroyed(this.popover.instanceDestroyRef)
+                takeUntilDestroyed(this.popover().instanceDestroyRef)
             )
             .subscribe(() => this.closePopover(false));
 
-        this.popover.visibleChange
-            .pipe(
+        this.popover()
+            .visibleChange.pipe(
                 filter((state) => !state),
-                takeUntilDestroyed(this.popover.instanceDestroyRef)
+                takeUntilDestroyed(this.popover().instanceDestroyRef)
             )
             .subscribe(this.closePopover);
 
         setTimeout(() => {
-            this.newFilterName.nativeElement.focus();
+            this.newFilterName().nativeElement.focus();
             this.filterName.setErrors(null);
         });
     }
@@ -304,7 +304,7 @@ export class KbqFilters implements OnInit {
     }
 
     closePopover = (restoreFocus: boolean = true) => {
-        this.popover.hide();
+        this.popover().hide();
 
         if (restoreFocus) this.restoreFocus();
 
@@ -330,7 +330,7 @@ export class KbqFilters implements OnInit {
     /** @docs-private */
     onDropdownOpen() {
         this.searchControl.setValue(null);
-        setTimeout(() => this.search.nativeElement.focus());
+        setTimeout(() => this.search().nativeElement.focus());
     }
 
     resetFilterChanges() {
@@ -342,16 +342,18 @@ export class KbqFilters implements OnInit {
     removeFilter() {
         this.onRemoveFilter.emit(this.filter!);
 
-        setTimeout(() => this.focusMonitor.focusVia(this.mainButton.elementRef, this.focusOrigin), 0);
+        setTimeout(() => this.focusMonitor.focusVia(this.mainButton().elementRef, this.focusOrigin), 0);
     }
 
     /** Hide the popup and restore focus.
      * Use this method in the onSave or onChangeFilter events after the data has been successfully saved. */
     filterSavedSuccessfully() {
-        this.isSaving = false;
-        this.popover.preventClose = false;
+        const popover = this.popover();
 
-        this.popover.hide();
+        this.isSaving = false;
+        popover.preventClose = false;
+
+        popover.hide();
         setTimeout(() => this.restoreFocus(), 0);
 
         this.changeDetectorRef.markForCheck();
@@ -360,11 +362,11 @@ export class KbqFilters implements OnInit {
     /** Shows an error. Use this method in the onSave or onChangeFilter events if saving data failed. */
     filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
         this.isSaving = false;
-        this.popover.preventClose = false;
+        this.popover().preventClose = false;
 
         this.showError(error);
         this.filterName.enable();
-        setTimeout(() => this.saveFilterButton.focus());
+        setTimeout(() => this.saveFilterButton().focus());
 
         this.changeDetectorRef.markForCheck();
     }

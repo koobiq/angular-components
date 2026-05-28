@@ -87,7 +87,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     ngAfterContentInit(): void {
         if (this.autoColor) {
-            this.formField?.control?.stateChanges.subscribe(this.updateState);
+            this.formField?.control()?.stateChanges.subscribe(this.updateState);
             this.updateState();
         }
 

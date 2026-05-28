@@ -284,7 +284,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const hideSpy = jest.spyOn(component.popover, 'hide');
+            const hideSpy = jest.spyOn(component.popover(), 'hide');
 
             component.onApply();
 
@@ -446,7 +446,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const showSpy = jest.spyOn(component.popover, 'show');
+            const showSpy = jest.spyOn(component.popover(), 'show');
 
             component.open();
 
@@ -469,7 +469,7 @@ describe('KbqPipeTextComponent', () => {
 
             filterBar.onClosePipe.subscribe(spy);
 
-            getPipeComponent().popover.visibleChange.emit(false);
+            getPipeComponent().popover().visibleChange.emit(false);
 
             expect(spy).toHaveBeenCalledWith(expect.objectContaining({ name: 'test' }));
         });
@@ -483,7 +483,7 @@ describe('KbqPipeTextComponent', () => {
 
             filterBar.onClosePipe.subscribe(spy);
 
-            getPipeComponent().popover.visibleChange.emit(true);
+            getPipeComponent().popover().visibleChange.emit(true);
 
             expect(spy).not.toHaveBeenCalled();
         });

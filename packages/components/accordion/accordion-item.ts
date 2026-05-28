@@ -2,7 +2,7 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import {
     booleanAttribute,
     ChangeDetectorRef,
-    ContentChild,
+    contentChild,
     Directive,
     EventEmitter,
     forwardRef,
@@ -39,13 +39,12 @@ export class KbqAccordionItem implements OnDestroy {
     protected readonly expansionDispatcher = inject(UniqueSelectionDispatcher);
 
     /** @docs-private */
-    @ContentChild(KbqAccordionTriggerDirective, { descendants: true }) trigger: KbqAccordionTriggerDirective;
+    readonly trigger = contentChild(KbqAccordionTriggerDirective);
     /** @docs-private */
-    @ContentChild(KbqAccordionTrigger, { descendants: true }) triggerComponent: KbqAccordionTrigger;
+    readonly triggerComponent = contentChild(KbqAccordionTrigger);
 
     /** @docs-private */
-    @ContentChild(forwardRef(() => KbqAccordionContentDirective), { descendants: true })
-    content: KbqAccordionContentDirective;
+    readonly content = contentChild(forwardRef(() => KbqAccordionContentDirective));
 
     /** The unique AccordionItem id. */
     get id(): string {
@@ -91,7 +90,7 @@ export class KbqAccordionItem implements OnDestroy {
                 this.closed.emit();
             }
 
-            this.content.toggle();
+            this.content().toggle();
 
             this.accordion.saveItemState(this);
 
@@ -182,7 +181,7 @@ export class KbqAccordionItem implements OnDestroy {
     }
 
     focus(): void {
-        this.trigger.focus();
+        this.trigger()?.focus();
     }
 
     /** Toggles the expanded state of the accordion item. */
@@ -214,13 +213,13 @@ export class KbqAccordionItem implements OnDestroy {
     }
 
     disableAnimation() {
-        this.content.disableAnimation();
-        this.triggerComponent.disableAnimation();
+        this.content()?.disableAnimation();
+        this.triggerComponent()?.disableAnimation();
     }
 
     enableAnimation() {
-        this.content.enableAnimation();
-        this.triggerComponent.enableAnimation();
+        this.content()?.enableAnimation();
+        this.triggerComponent()?.enableAnimation();
     }
 
     private subscribeToOpenCloseAllActions(): Subscription {

@@ -3,14 +3,13 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
-    ContentChildren,
+    contentChild,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
     Input,
     input,
-    QueryList,
     Renderer2,
     SkipSelf,
     ViewEncapsulation
@@ -51,7 +50,7 @@ export const badgeRightIconClassName = 'kbq-badge-icon_right';
     selector: 'kbq-badge'
 })
 export class KbqBadgeCssStyler implements AfterContentInit {
-    @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
+    readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
     nativeElement: HTMLElement;
 
@@ -76,18 +75,19 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         const twoIcons = 2;
         const filteredNodesWithoutComments = getNodesWithoutComments(this.nativeElement.childNodes as NodeList);
 
+        const icons = this.icons();
         const currentIsIconButtonValue =
-            !!this.icons.length &&
-            this.icons.length === filteredNodesWithoutComments.length &&
-            this.icons.length <= twoIcons;
+            !!icons.length && icons.length === filteredNodesWithoutComments.length && icons.length <= twoIcons;
 
         if (currentIsIconButtonValue !== this.isIconButton) {
             this.isIconButton = currentIsIconButtonValue;
             this.cdr.detectChanges();
         }
 
-        if (this.icons.length && filteredNodesWithoutComments.length > 1) {
-            this.icons
+        const iconsValue = this.icons();
+
+        if (iconsValue.length && filteredNodesWithoutComments.length > 1) {
+            iconsValue
                 .map((item) => item.getHostElement())
                 .forEach((iconHostElement) => {
                     this.renderer.removeClass(iconHostElement, leftIconClassName);
@@ -124,7 +124,7 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     }
 })
 export class KbqBadge {
-    @ContentChild(KbqIconItem) iconItem: KbqIconItem;
+    readonly iconItem = contentChild(KbqIconItem);
 
     readonly compact = input<boolean>(false);
     readonly outline = input<boolean>(false);

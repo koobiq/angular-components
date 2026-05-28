@@ -6,8 +6,8 @@ import {
     Injector,
     NgModule,
     TemplateRef,
-    ViewChild,
-    inject as injectCore
+    inject as injectCore,
+    viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -64,7 +64,7 @@ describe('KbqSidepanelService', () => {
 
         const data = { value: 'World!' };
 
-        const sidepanelRef = sidepanelService.open(templateRefFixture.componentInstance.templateRef, { data });
+        const sidepanelRef = sidepanelService.open(templateRefFixture.componentInstance.templateRef(), { data });
 
         expect(overlayContainerElement.textContent).toContain('Hello World!');
         expect(templateRefFixture.componentInstance.sidepanelRef).toBe(sidepanelRef);
@@ -385,7 +385,7 @@ describe('KbqSidepanelService', () => {
 
         expect(document.activeElement).not.toBe(buttonElement);
 
-        fixtureComponent.componentInstance.trigger.open();
+        fixtureComponent.componentInstance.trigger().open();
         fixtureComponent.detectChanges();
         flush();
 
@@ -457,7 +457,7 @@ class SidepanelWithFormComponent {
     providers: [KbqSidepanelService]
 })
 class SidepanelFromDropdownComponent {
-    @ViewChild('trigger') trigger: KbqDropdownTrigger;
+    readonly trigger = viewChild.required<KbqDropdownTrigger>('trigger');
 
     constructor(public ss: KbqSidepanelService) {}
 
@@ -496,7 +496,7 @@ class ComponentWithTemplateForSidepanel {
     localValue: string;
     sidepanelRef: KbqSidepanelRef;
 
-    @ViewChild(TemplateRef, { static: true }) templateRef: TemplateRef<any>;
+    readonly templateRef = viewChild.required(TemplateRef);
 
     setSidepanelRef(sidepanelRef: KbqSidepanelRef): string {
         this.sidepanelRef = sidepanelRef;

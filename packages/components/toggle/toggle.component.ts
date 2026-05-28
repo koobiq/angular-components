@@ -15,7 +15,7 @@ import {
     numberAttribute,
     OnDestroy,
     output,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -81,7 +81,7 @@ export class KbqToggleChange {
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     readonly big = input<boolean>(false);
 
-    @ViewChild('input', { static: false }) inputElement: ElementRef<HTMLInputElement>;
+    readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
     readonly labelPosition = input<ToggleLabelPositionType>('right');
 
@@ -209,7 +209,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     focus(): void {
-        this.focusMonitor.focusVia(this.inputElement.nativeElement, 'keyboard');
+        this.focusMonitor.focusVia(this.inputElement().nativeElement, 'keyboard');
     }
 
     getAriaChecked(): KbqCheckedState {
@@ -254,8 +254,10 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         } else if (!this.disabled && this.clickAction === 'noop') {
             // Reset native input when clicked with noop. The native checkbox becomes checked after
             // click, reset it to be align with `checked` value of `kbq-toggle`.
-            this.inputElement.nativeElement.checked = this.checked;
-            this.inputElement.nativeElement.indeterminate = this.indeterminate;
+            const inputElement = this.inputElement();
+
+            inputElement.nativeElement.checked = this.checked;
+            inputElement.nativeElement.indeterminate = this.indeterminate;
         }
     }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
@@ -71,8 +71,8 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements OnInit {
-    @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
-    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+    readonly select = viewChild.required(KbqTreeSelect);
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     disabledState: boolean = false;
 
@@ -123,7 +123,7 @@ export class DevApp implements OnInit {
         console.log(`onSelectionChange: ${$event.value}`);
 
         if (option.isExpandable) {
-            this.tree.setStateChildren(option, !option.selected);
+            this.tree().setStateChildren(option, !option.selected);
         }
 
         this.toggleParents($event.value.data.parent);
@@ -151,13 +151,13 @@ export class DevApp implements OnInit {
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select.selectionModel.selected.includes(parent);
+        const isParentSelected = this.select().selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select.selectionModel.selected.includes(d))) {
-            this.select.selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
+            this.select().selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select.selectionModel.deselect(parent);
+            this.select().selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }

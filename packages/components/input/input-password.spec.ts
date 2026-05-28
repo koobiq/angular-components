@@ -1,4 +1,4 @@
-﻿import { Component, Provider, Type, ViewChild } from '@angular/core';
+﻿import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -106,7 +106,7 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
     `
 })
 class KbqPasswordInputCustomPasswordRule {
-    @ViewChild(KbqPasswordHint) passwordHint: KbqPasswordHint;
+    readonly passwordHint = viewChild.required(KbqPasswordHint);
 
     disabled = false;
 
@@ -242,9 +242,9 @@ describe('KbqPasswordInput', () => {
         fixture.componentInstance.value = valueToTest;
         dispatchFakeEvent(input, 'input');
 
-        expect(fixture.componentInstance.passwordHint.customCheckRule()).toBeTruthy();
-        expect(fixture.componentInstance.passwordHint.hasError).toEqual(
-            fixture.componentInstance.passwordHint.customCheckRule()(valueToTest)
+        expect(fixture.componentInstance.passwordHint().customCheckRule()).toBeTruthy();
+        expect(fixture.componentInstance.passwordHint().hasError).toEqual(
+            fixture.componentInstance.passwordHint().customCheckRule()(valueToTest)
         );
     }));
 

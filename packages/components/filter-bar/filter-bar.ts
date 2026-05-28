@@ -3,7 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     EventEmitter,
     inject,
     Input,
@@ -64,9 +64,9 @@ export class KbqFilterBar {
     configuration;
 
     /** @docs-private */
-    @ContentChild(KbqFilters) filters: KbqFilters;
+    readonly filters = contentChild(KbqFilters);
     /** @docs-private */
-    @ContentChild(KbqFilterReset) filterReset: KbqFilterReset;
+    readonly filterReset = contentChild(KbqFilterReset);
 
     /**
      * This is special logic that unselect all items when all selected because "all selected = nothing selected".

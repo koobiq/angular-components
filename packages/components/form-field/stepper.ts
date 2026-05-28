@@ -102,8 +102,8 @@ export class KbqStepper {
      * @docs-private
      */
     protected get control(): KbqNumberInput {
-        const control = this.formField?.control;
-        const input = control.numberInput;
+        const control = this.formField?.control();
+        const input = (control as any)?.numberInput;
 
         if (!isNumberInput(input)) {
             throw getKbqStepperToggleMissingControlError();

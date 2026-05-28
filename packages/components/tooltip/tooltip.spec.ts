@@ -1,6 +1,6 @@
 ﻿import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
-import { Component, ElementRef, viewChild, ViewChild } from '@angular/core';
+import { Component, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -77,7 +77,7 @@ describe('KbqTooltip', () => {
 
         it('should show/hide most simple tooltip with moving through all around', fakeAsync(() => {
             const featureKey = 'MOST-SIMPLE';
-            const triggerElement = component.mostSimpleTrigger.nativeElement;
+            const triggerElement = component.mostSimpleTrigger().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
 
@@ -89,7 +89,7 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
-            const overlayElement = component.mostSimpleDirective['overlayRef']!.overlayElement;
+            const overlayElement = component.mostSimpleDirective()['overlayRef']!.overlayElement;
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
             fixture.detectChanges();
@@ -106,7 +106,7 @@ describe('KbqTooltip', () => {
 
         it('should show/hide normal tooltip', fakeAsync(() => {
             const featureKey = 'NORMAL';
-            const triggerElement = component.normalTrigger.nativeElement;
+            const triggerElement = component.normalTrigger().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
 
@@ -127,7 +127,7 @@ describe('KbqTooltip', () => {
 
         it('should show/hide tooltip by focus', fakeAsync(() => {
             const featureKey = 'FOCUS';
-            const triggerElement = component.focusTrigger.nativeElement;
+            const triggerElement = component.focusTrigger().nativeElement;
 
             dispatchKeyboardEvent(document, 'keydown', TAB);
             dispatchFakeEvent(triggerElement, 'focus');
@@ -143,18 +143,20 @@ describe('KbqTooltip', () => {
         }));
 
         it('should not render arrow when kbqTooltipArrow is false', fakeAsync(() => {
-            let tooltip = getTooltip(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+            let tooltip = getTooltip(component.dynamicArrowAndOffsetTrigger(), '.kbq-tooltip_arrowless');
 
             expect(tooltip).toBeFalsy();
 
-            dispatchMouseEvent(component.dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
+            const dynamicArrowAndOffsetTrigger = component.dynamicArrowAndOffsetTrigger();
+
+            dispatchMouseEvent(dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
             fixture.detectChanges();
             tick(defaultLeaveDelay);
 
             component.arrow = false;
             fixture.detectChanges();
 
-            tooltip = getTooltip(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+            tooltip = getTooltip(dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
 
             expect(tooltip).toBeTruthy();
             expect(tooltip?.querySelector('.kbq-tooltip__arrow')).toBeFalsy();
@@ -173,7 +175,7 @@ describe('KbqTooltip', () => {
 
         it('should not show tooltip when disabled', fakeAsync(() => {
             const featureKey = 'DISABLED';
-            const tooltipDirective = component.disabledDirective;
+            const tooltipDirective = component.disabledDirective();
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.show();
@@ -185,7 +187,7 @@ describe('KbqTooltip', () => {
 
         it('should show tooltip after kbqTooltipDisabled is set to false', fakeAsync(() => {
             const featureKey = 'DISABLED';
-            const tooltipDirective = component.disabledDirective;
+            const tooltipDirective = component.disabledDirective();
 
             tooltipDirective.disabled = false;
             tooltipDirective.show();
@@ -209,7 +211,7 @@ describe('KbqTooltip', () => {
         });
 
         it('should pass kbqTooltipContext into TemplateRef content', fakeAsync(() => {
-            const trigger = component.trigger.nativeElement;
+            const trigger = component.trigger().nativeElement;
 
             trigger.click();
             tick(tooltipDefaultEnterDelayWithDefer);
@@ -232,15 +234,16 @@ describe('KbqTooltip', () => {
         it('should add offset for position config if element is less than arrow margin', fakeAsync(() => {
             const rect = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT * 2 - 1;
 
-            componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
+            componentInstance.triggerElementRef().nativeElement.getBoundingClientRect = () => ({
                 width: rect,
                 height: rect
             });
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, componentInstance.triggerElementRef);
+            openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
 
-            const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance
+                .tooltipTrigger()
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
@@ -248,15 +251,16 @@ describe('KbqTooltip', () => {
         }));
 
         it('should not add offset to tooltip position config if element is large', fakeAsync(() => {
-            componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
+            componentInstance.triggerElementRef().nativeElement.getBoundingClientRect = () => ({
                 width: 100,
                 height: 100
             });
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, componentInstance.triggerElementRef);
+            openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
 
-            const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance
+                .tooltipTrigger()
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
@@ -264,12 +268,13 @@ describe('KbqTooltip', () => {
         }));
 
         it('should not apply adjusted positions if tooltip initialized without arrow', fakeAsync(() => {
-            componentInstance.tooltipTrigger.arrow = false;
+            componentInstance.tooltipTrigger().arrow = false;
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, componentInstance.triggerElementRef);
+            openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
 
-            const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance
+                .tooltipTrigger()
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
@@ -347,7 +352,7 @@ describe('KbqTooltip', () => {
         });
 
         it('should refresh the tooltip class map when [kbqTooltipModifier] changes while open', fakeAsync(() => {
-            openAndAssertTooltip(fixture, component.triggerElementRef);
+            openAndAssertTooltip(fixture, component.triggerElementRef());
 
             tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
@@ -361,7 +366,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.querySelector('.kbq-tooltip_warning')).toBeTruthy();
 
             // Cleanup the open overlay so trailing timers don't leak into other tests.
-            component.tooltipTrigger.hide();
+            component.tooltipTrigger().hide();
             tick(defaultLeaveDelay);
             flush();
         }));
@@ -371,7 +376,7 @@ describe('KbqTooltip', () => {
             component.header = 'initial header';
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, component.triggerElementRef);
+            openAndAssertTooltip(fixture, component.triggerElementRef());
 
             tick(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
@@ -386,7 +391,7 @@ describe('KbqTooltip', () => {
 
             expect(headerEl()?.textContent?.trim()).toBe('updated header');
 
-            component.tooltipTrigger.hide();
+            component.tooltipTrigger().hide();
             tick(defaultLeaveDelay);
             flush();
         }));
@@ -401,8 +406,8 @@ describe('KbqTooltip', () => {
     `
 })
 export class KbqTooltipReactiveInputsComponent {
-    @ViewChild('trigger', { static: false }) triggerElementRef: ElementRef;
-    @ViewChild('trigger', { read: KbqTooltipTrigger, static: false }) tooltipTrigger: KbqTooltipTrigger;
+    readonly triggerElementRef = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
 
     modifier: 'default' | 'warning' | 'extended' = 'default';
     header: string = '';
@@ -416,8 +421,8 @@ export class KbqTooltipReactiveInputsComponent {
     `
 })
 export class TooltipSimple {
-    @ViewChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
-    @ViewChild(KbqTooltipTrigger, { read: ElementRef }) triggerElementRef: ElementRef;
+    readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
+    readonly triggerElementRef = viewChild.required(KbqTooltipTrigger, { read: ElementRef });
 }
 
 @Component({
@@ -433,12 +438,11 @@ export class TooltipSimple {
     `
 })
 class KbqTooltipTestWrapperComponent {
-    @ViewChild('normalTrigger', { static: false }) normalTrigger: ElementRef;
-    @ViewChild('focusTrigger', { static: false }) focusTrigger: ElementRef;
-    @ViewChild('mostSimpleTrigger', { static: false }) mostSimpleTrigger: ElementRef;
-    @ViewChild('mostSimpleTrigger', { read: KbqTooltipTrigger, static: false }) mostSimpleDirective: KbqTooltipTrigger;
-    @ViewChild('dynamicArrowAndOffsetTrigger', { static: false })
-    dynamicArrowAndOffsetTrigger: ElementRef;
+    readonly normalTrigger = viewChild.required<ElementRef>('normalTrigger');
+    readonly focusTrigger = viewChild.required<ElementRef>('focusTrigger');
+    readonly mostSimpleTrigger = viewChild.required<ElementRef>('mostSimpleTrigger');
+    readonly mostSimpleDirective = viewChild.required('mostSimpleTrigger', { read: KbqTooltipTrigger });
+    readonly dynamicArrowAndOffsetTrigger = viewChild.required<ElementRef>('dynamicArrowAndOffsetTrigger');
 
     arrow: boolean = true;
 }
@@ -453,7 +457,7 @@ class KbqTooltipTestWrapperComponent {
     `
 })
 class KbqTooltipDisabledComponent {
-    @ViewChild('disabledAttribute', { read: KbqTooltipTrigger, static: false }) disabledDirective: KbqTooltipTrigger;
+    readonly disabledDirective = viewChild.required('disabledAttribute', { read: KbqTooltipTrigger });
 }
 
 @Component({
@@ -469,7 +473,7 @@ class KbqTooltipDisabledComponent {
     `
 })
 class KbqTooltipWithTemplateRefContent {
-    @ViewChild('trigger', { static: false }) trigger: ElementRef;
+    readonly trigger = viewChild.required<ElementRef>('trigger');
     tooltipContext = { content: 'TestContent' };
 }
 

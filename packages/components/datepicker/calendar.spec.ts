@@ -215,7 +215,7 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the minDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView, 'init');
+            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.minDate = adapter.createDate(2017, 10, 1);
             fixture.detectChanges();
@@ -225,7 +225,7 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the maxDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView, 'init');
+            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.maxDate = adapter.createDate(2017, 11, 1);
             fixture.detectChanges();

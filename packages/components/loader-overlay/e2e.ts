@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
@@ -107,14 +107,14 @@ export class E2eLoaderOverlayStates {}
     }
 })
 export class E2eLoaderOverlayCard {
-    @ViewChild('modalContent') private readonly modalContent: TemplateRef<any>;
+    private readonly modalContent = viewChild.required<TemplateRef<any>>('modalContent');
 
     private readonly modal = inject(KbqModalService);
 
     protected open(): void {
         this.modal.create({
             kbqTitle: 'Loading data',
-            kbqContent: this.modalContent,
+            kbqContent: this.modalContent(),
             kbqOkText: 'Close',
             kbqSize: ModalSize.Small
         });

@@ -5,10 +5,10 @@ import {
     Component,
     Input,
     Optional,
-    ViewChild,
     ViewEncapsulation,
     input,
-    output
+    output,
+    viewChild
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
@@ -90,7 +90,7 @@ export class KbqMonthView<D> implements AfterContentInit {
     readonly activeDateChange = output<D>();
 
     /** The body of calendar table */
-    @ViewChild(KbqCalendarBody, { static: false }) kbqCalendarBody: KbqCalendarBody;
+    readonly kbqCalendarBody = viewChild.required(KbqCalendarBody);
 
     /** Grid of calendar cells representing the dates of the month. */
     weeks: KbqCalendarCell[][];

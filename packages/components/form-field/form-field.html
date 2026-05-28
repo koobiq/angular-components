@@ -1,5 +1,5 @@
 @if (hasLabel) {
-    <label class="kbq-form-field__label" [ngClass]="labelClass()" [attr.for]="control.id">
+    <label class="kbq-form-field__label" [ngClass]="labelClass()" [attr.for]="control().id">
         <ng-content select="kbq-label" />
     </label>
 }

@@ -7,7 +7,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
@@ -17,8 +17,7 @@ import {
     OnInit,
     Optional,
     output,
-    QueryList,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -113,7 +112,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     /** Child button toggle buttons. */
-    @ContentChildren(forwardRef(() => KbqButtonToggle)) buttonToggles: QueryList<KbqButtonToggle>;
+    readonly buttonToggles = contentChildren(forwardRef(() => KbqButtonToggle));
 
     /** Whether multiple button toggle group is disabled. */
     // TODO: Skipped for migration because:
@@ -126,11 +125,13 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
 
-        if (!this.buttonToggles) {
+        const buttonToggles = this.buttonToggles();
+
+        if (!buttonToggles) {
             return;
         }
 
-        this.buttonToggles.forEach((toggle) => toggle.markForCheck());
+        buttonToggles.forEach((toggle) => toggle.markForCheck());
     }
 
     /**
@@ -171,7 +172,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     ngAfterContentInit() {
-        this.selectionModel.select(...this.buttonToggles.filter((toggle) => toggle.checked));
+        this.selectionModel.select(...this.buttonToggles().filter((toggle) => toggle.checked));
         this.disabled = this._disabled;
     }
 
@@ -260,7 +261,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     private setSelectionByValue(value: any | any[]) {
         this.rawValue = value;
 
-        if (!this.buttonToggles) {
+        if (!this.selectionModel) {
             return;
         }
 
@@ -280,12 +281,12 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     /** Clears the selected toggles. */
     private clearSelection() {
         this.selectionModel.clear();
-        this.buttonToggles.forEach((toggle) => (toggle.checked = false));
+        this.buttonToggles().forEach((toggle) => (toggle.checked = false));
     }
 
     /** Selects a value if there's a toggle that corresponds to it. */
     private selectValue(value: any) {
-        const correspondingOption = this.buttonToggles.find((toggle) => {
+        const correspondingOption = this.buttonToggles().find((toggle) => {
             return toggle.value != null && toggle.value === value;
         });
 
@@ -331,7 +332,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     exportAs: 'kbqButtonToggle'
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
-    @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;
+    readonly icons = contentChildren(KbqIcon, { descendants: true });
 
     /** Whether the button is checked. */
     // TODO: Skipped for migration because:
@@ -358,7 +359,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     type: ToggleType;
     iconType: string = '';
 
-    @ViewChild(KbqButton, { static: false }) mcButton: KbqButton;
+    readonly mcButton = viewChild.required(KbqButton);
 
     /** KbqButtonToggleGroup reads this to assign its own value. */
     // TODO: Skipped for migration because:
@@ -403,12 +404,14 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     ngAfterContentInit(): void {
-        if (this.icons.length) {
+        const icons = this.icons();
+
+        if (icons.length) {
             const nodesWithoutComments = getNodesWithoutComments(
                 this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList
             ).length;
 
-            this.iconType = nodesWithoutComments === this.icons.length ? '-icon' : '-icon-text';
+            this.iconType = nodesWithoutComments === icons.length ? '-icon' : '-icon-text';
         }
     }
 

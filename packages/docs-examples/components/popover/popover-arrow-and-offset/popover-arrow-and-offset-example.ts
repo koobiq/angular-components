@@ -82,16 +82,16 @@ export class PopoverArrowAndOffsetExample implements AfterViewInit {
 
     ngAfterViewInit() {
         Promise.resolve().then(() => {
-            this.toggleGroup.buttonToggles.get(3)!.checked = true;
+            this.toggleGroup.buttonToggles().at(3)!.checked = true;
         });
     }
 
     onArrowChange({ checked }: KbqToggleChange) {
         if (!this.offsetChanged) {
             if (checked) {
-                this.toggleGroup.buttonToggles.get(3)!.checked = true;
+                this.toggleGroup.buttonToggles().at(3)!.checked = true;
             } else {
-                this.toggleGroup.buttonToggles.get(2)!.checked = true;
+                this.toggleGroup.buttonToggles().at(2)!.checked = true;
             }
         }
 

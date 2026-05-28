@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, Inject, Optional, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     FormsModule,
@@ -219,7 +219,7 @@ class KbqNumberInputWithMask {
     bigStep: number = 5;
     withMask = true;
 
-    @ViewChild(KbqNumberInput) inputNumberDirective: KbqNumberInput;
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 
     constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
@@ -241,7 +241,7 @@ class KbqNumberInputWithInteger {
     step: number = 1;
     bigStep: number = 5;
 
-    @ViewChild(KbqNumberInput) inputNumberDirective: KbqNumberInput;
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 
     constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
@@ -1427,7 +1427,7 @@ describe('KbqNumberInput', () => {
                     }
                 });
                 fixture.detectChanges();
-                fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+                fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
                 fixture.detectChanges();
                 flush();
 
@@ -1449,7 +1449,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 
@@ -1463,7 +1463,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 
@@ -1487,7 +1487,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 
@@ -1526,7 +1526,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 

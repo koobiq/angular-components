@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
@@ -54,19 +54,19 @@ import { KbqToastStyle } from './toast.type';
     }
 })
 export class E2eToastStates implements AfterViewInit {
-    @ViewChild('toastContainer') toastContainer: KbqToastContainerComponent;
-    @ViewChild('toastContainer2') toastContainer2: KbqToastContainerComponent;
+    readonly toastContainer = viewChild.required<KbqToastContainerComponent>('toastContainer');
+    readonly toastContainer2 = viewChild.required<KbqToastContainerComponent>('toastContainer2');
 
-    @ViewChild('toastIconTemplate') toastIconTemplate: TemplateRef<any>;
-    @ViewChild('toastTitleTemplate') toastTitleTemplate: TemplateRef<any>;
-    @ViewChild('toastCaptionTemplate') toastCaptionTemplate: TemplateRef<any>;
-    @ViewChild('toastContentTemplate') toastContentTemplate: TemplateRef<any>;
-    @ViewChild('toastActionsTemplate') toastActionsTemplate: TemplateRef<any>;
+    readonly toastIconTemplate = viewChild.required<TemplateRef<any>>('toastIconTemplate');
+    readonly toastTitleTemplate = viewChild.required<TemplateRef<any>>('toastTitleTemplate');
+    readonly toastCaptionTemplate = viewChild.required<TemplateRef<any>>('toastCaptionTemplate');
+    readonly toastContentTemplate = viewChild.required<TemplateRef<any>>('toastContentTemplate');
+    readonly toastActionsTemplate = viewChild.required<TemplateRef<any>>('toastActionsTemplate');
 
     toastFactory = inject(KBQ_TOAST_FACTORY);
 
     ngAfterViewInit(): void {
-        this.toastContainer.createToast(
+        this.toastContainer().createToast(
             {
                 title: 'Contrast title',
                 style: KbqToastStyle.Contrast,
@@ -79,7 +79,7 @@ export class E2eToastStates implements AfterViewInit {
             false
         );
 
-        this.toastContainer.createToast(
+        this.toastContainer().createToast(
             {
                 title: 'Success title',
                 style: KbqToastStyle.Success,
@@ -92,7 +92,7 @@ export class E2eToastStates implements AfterViewInit {
             false
         );
 
-        this.toastContainer.createToast(
+        this.toastContainer().createToast(
             {
                 title: 'Warning title',
                 style: KbqToastStyle.Warning,
@@ -105,7 +105,7 @@ export class E2eToastStates implements AfterViewInit {
             false
         );
 
-        this.toastContainer.createToast(
+        this.toastContainer().createToast(
             {
                 title: 'Error title',
                 style: KbqToastStyle.Error,
@@ -118,7 +118,7 @@ export class E2eToastStates implements AfterViewInit {
             false
         );
 
-        this.toastContainer2.createToast(
+        this.toastContainer2().createToast(
             {
                 style: KbqToastStyle.Contrast,
                 title: 'Long title Long title Long title Long title Long title Long title Long title Long title',
@@ -131,16 +131,16 @@ export class E2eToastStates implements AfterViewInit {
             false
         );
 
-        this.toastContainer2.createToast(
+        this.toastContainer2().createToast(
             {
                 style: KbqToastStyle.Contrast,
-                icon: this.toastIconTemplate,
-                title: this.toastTitleTemplate,
+                icon: this.toastIconTemplate(),
+                title: this.toastTitleTemplate(),
 
-                caption: this.toastCaptionTemplate,
+                caption: this.toastCaptionTemplate(),
 
-                content: this.toastContentTemplate,
-                actions: this.toastActionsTemplate
+                content: this.toastContentTemplate(),
+                actions: this.toastActionsTemplate()
             },
             this.toastFactory,
             false

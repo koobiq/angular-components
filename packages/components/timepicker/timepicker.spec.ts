@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, Inject, Type, viewChild, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, Inject, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -136,7 +136,7 @@ class TimepickerControlWithAsyncValidators {
     `
 })
 class TestApp {
-    @ViewChild('ngModel') ngModel: NgModel;
+    readonly ngModel = viewChild.required<NgModel>('ngModel');
 
     timeFormat: TimeFormats;
     minTime: string;
@@ -530,17 +530,17 @@ describe('KbqTimepicker', () => {
         it('Should not change model on blur', () => {
             const date = testComponent.adapter.toIso8601(testComponent.timeValue);
 
-            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value)).toBe(date);
+            expect(testComponent.adapter.toIso8601(testComponent.ngModel().value)).toBe(date);
 
             inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
 
             fixture.detectChanges();
 
-            expect(testComponent.adapter.toIso8601(testComponent.ngModel.value)).toBe(date);
+            expect(testComponent.adapter.toIso8601(testComponent.ngModel().value)).toBe(date);
         });
 
         it('Add lead zeros on blur', () => {
-            expect(testComponent.ngModel.valid).toBeTruthy();
+            expect(testComponent.ngModel().valid).toBeTruthy();
             inputElementDebug.nativeElement.value = '1';
 
             inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });

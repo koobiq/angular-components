@@ -23,6 +23,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewEncapsulation,
+    contentChild,
     input
 } from '@angular/core';
 import { ESCAPE, FocusKeyManager, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
@@ -67,7 +68,7 @@ export class KbqDropdownStaticContent {}
     exportAs: 'kbqDropdown'
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
-    @ContentChild(KbqFormField) private search?: KbqFormField;
+    private readonly search = contentChild(KbqFormField);
 
     readonly navigationWithWrap = input<boolean>(false);
 
@@ -255,7 +256,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
             )
             .subscribe((focusedItem) => this.keyManager.updateActiveItem(focusedItem as KbqDropdownItem));
 
-        this.search?.inOverlay.set(true);
+        this.search()?.inOverlay.set(true);
     }
 
     ngOnDestroy() {

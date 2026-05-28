@@ -6,7 +6,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    ContentChildren,
+    contentChildren,
     DoCheck,
     effect,
     ElementRef,
@@ -15,8 +15,7 @@ import {
     Input,
     output,
     PLATFORM_ID,
-    QueryList,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -142,10 +141,10 @@ export class KbqSingleFileUploadComponent
     readonly fileChange = output<KbqFileItem | null>({ alias: 'fileQueueChange' });
 
     /** @docs-private */
-    @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
+    protected readonly fileLoader = viewChild.required(KbqFileLoader);
 
     /** @docs-private */
-    @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
+    private readonly hint = contentChildren(KbqHint);
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -159,7 +158,7 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     get input(): ElementRef<HTMLInputElement> | undefined {
-        return this.fileLoader?.input();
+        return this.fileLoader()?.input();
     }
 
     /** @docs-private */
@@ -169,7 +168,7 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     get hasHint(): boolean {
-        return this.hint.length > 0;
+        return this.hint().length > 0;
     }
 
     /**

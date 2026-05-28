@@ -211,7 +211,10 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         { descendants: true }
     );
 
-    @ContentChildren(forwardRef(() => KbqNavbarItem), { descendants: true }) navbarItems: QueryList<KbqNavbarItem>;
+    readonly navbarItems = contentChildren(
+        forwardRef(() => KbqNavbarItem),
+        { descendants: true }
+    );
 
     readonly resizeStream = new Subject<Event>();
 
@@ -231,9 +234,8 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     private get collapsableItems(): KbqNavbarItem[] {
-        return this.navbarItems
-            .toArray()
-            .filter((item) => item.icon && item.title && item.collapsable)
+        return this.navbarItems()
+            .filter((item) => item.icon() && item.title() && item.collapsable)
             .reverse();
     }
 

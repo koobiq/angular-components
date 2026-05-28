@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -72,10 +72,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     template: any;
 
     /** @docs-private */
-    @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
+    readonly select = viewChild.required(KbqTreeSelect);
 
     /** @docs-private */
-    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     /** selected value */
     get selected() {
@@ -96,11 +96,13 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     get selectAllCheckboxState(): KbqPseudoCheckboxState {
-        if (!this.select) return 'unchecked';
+        const select = this.select();
+
+        if (!select) return 'unchecked';
 
         if (this.allOptionsSelected) {
             return 'checked';
-        } else if (this.select.selected.length > 0) {
+        } else if (select.selected?.length > 0) {
             return 'indeterminate';
         }
 
@@ -108,7 +110,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     get numberOfSelectedLeaves(): number {
-        return this.select.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
+        return this.select().selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
     }
 
     /** true if all options selected */
@@ -116,7 +118,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         const dataNodesLength = this.treeControl?.dataNodes?.length;
         const dataNodesForSelect = this.data.selectAll ? dataNodesLength - 1 : dataNodesLength;
 
-        return this.select?.triggerValues?.length === dataNodesForSelect;
+        return this.select()?.triggerValues?.length === dataNodesForSelect;
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
@@ -125,8 +127,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
     /** true if all visible options selected */
     get allVisibleOptionsSelected(): boolean {
-        return this.tree.renderedOptions
-            .filter((option) => option.value !== kbqTreeSelectAllValue)
+        return this.tree()
+            .renderedOptions.filter((option) => option.value !== kbqTreeSelectAllValue)
             .every((option) => option.selected);
     }
 
@@ -158,8 +160,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        this.select()
+            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
@@ -174,8 +176,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     onSelect({ value: option }) {
         if (!option) return;
 
-        if (this.tree.treeControl.isExpandable(option.data)) {
-            this.tree.setStateChildren(option, !option.selected);
+        const tree = this.tree();
+
+        if (tree.treeControl.isExpandable(option.data)) {
+            tree.setStateChildren(option, !option.selected);
         }
 
         this.toggleParents(option.data.parent);
@@ -184,7 +188,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
             } else {
-                this.data.value = this.select.selectedValues;
+                this.data.value = this.select().selectedValues;
             }
 
             this.emitChangePipeEvent();
@@ -194,14 +198,14 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     searchKeydownHandler() {
-        if (this.data.selectAll && this.tree.keyManager.activeItemIndex === 0) {
+        if (this.data.selectAll && this.tree().keyManager.activeItemIndex === 0) {
             this.toggleSelectAllNode();
         }
     }
 
     toggleSelectAllNode(emitEvent: boolean = true) {
-        if (this.select.search?.ngControl.value) {
-            const renderedOptions = this.tree.renderedOptions.filter(({ value }) => value !== kbqTreeSelectAllValue);
+        if (this.select().search()?.ngControl.value) {
+            const renderedOptions = this.tree().renderedOptions.filter(({ value }) => value !== kbqTreeSelectAllValue);
 
             if (this.allVisibleOptionsSelected) {
                 renderedOptions.forEach((option) => option.setSelected(false));
@@ -210,12 +214,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             }
         } else {
             if (this.allOptionsSelected) {
-                this.tree.selectionModel.clear();
+                this.tree().selectionModel.clear();
             } else {
                 const [, ...dataNodesForSelect] = this.treeControl.dataNodes;
 
                 // @todo DS-3827
-                this.tree.selectionModel.select(...(dataNodesForSelect as any));
+                this.tree().selectionModel.select(...(dataNodesForSelect as any));
             }
         }
 
@@ -223,7 +227,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
             } else {
-                this.data.value = [...this.select.selectedValues];
+                this.data.value = [...this.select().selectedValues];
             }
 
             if (emitEvent) {
@@ -258,7 +262,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
     /** opens select */
     override open() {
-        setTimeout(() => this.select.open());
+        setTimeout(() => this.select().open());
     }
 
     override onClear() {
@@ -306,13 +310,13 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select.selectionModel.selected.includes(parent);
+        const isParentSelected = this.select().selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select.selectionModel.selected.includes(d))) {
-            this.select.selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
+            this.select().selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select.selectionModel.deselect(parent);
+            this.select().selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }

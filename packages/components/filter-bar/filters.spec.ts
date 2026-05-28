@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DebugElement, inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -61,7 +61,7 @@ const createFilter = (pipes: KbqPipe[], overrides: Partial<KbqFilter> = {}): Kbq
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    @ViewChild(KbqFilters) filtersComponent: KbqFilters;
+    readonly filtersComponent = viewChild.required(KbqFilters);
 
     activeFilter: KbqFilter | null = null;
 
@@ -523,10 +523,10 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            (component as any).popover.preventClose = true;
+            (component as any).popover().preventClose = true;
             component.filterSavedSuccessfully();
 
-            expect((component as any).popover.preventClose).toBe(false);
+            expect((component as any).popover().preventClose).toBe(false);
         }));
     });
 
@@ -559,10 +559,10 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            (component as any).popover.preventClose = true;
+            (component as any).popover().preventClose = true;
             component.filterSavedUnsuccessfully();
 
-            expect((component as any).popover.preventClose).toBe(false);
+            expect((component as any).popover().preventClose).toBe(false);
         }));
 
         it('should show error with provided error', fakeAsync(() => {
@@ -746,7 +746,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const hideSpy = jest.spyOn((component as any).popover, 'hide');
+            const hideSpy = jest.spyOn((component as any).popover(), 'hide');
 
             component.closePopover(false);
             flush();
@@ -891,7 +891,7 @@ describe('KbqFilters', () => {
             initFixture(filter);
 
             const component = getFiltersComponent();
-            const showSpy = jest.spyOn((component as any).popover, 'show');
+            const showSpy = jest.spyOn((component as any).popover(), 'show');
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();

@@ -2,10 +2,10 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     Directive,
     Input,
     ViewEncapsulation,
+    contentChild,
     input
 } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
@@ -61,16 +61,16 @@ export class KbqAlertControl {}
         '[class.kbq-alert_compact]': 'compact()',
         '[class.kbq-alert_default]': '!isColored',
         '[class.kbq-alert_colored]': 'isColored',
-        '[class.kbq-alert_dismissible]': 'closeButton'
+        '[class.kbq-alert_dismissible]': 'closeButton()'
     }
 })
 export class KbqAlert implements AfterContentInit {
-    @ContentChild(KbqIconItem) iconItem: KbqIconItem;
-    @ContentChild(KbqIcon) icon: KbqIcon;
-    @ContentChild(KbqButton) button: KbqButton;
-    @ContentChild(KbqAlertTitle) title: KbqAlertTitle;
-    @ContentChild(KbqAlertControl) control: KbqAlertControl;
-    @ContentChild(KbqAlertCloseButton) closeButton: KbqAlertCloseButton;
+    readonly iconItem = contentChild(KbqIconItem);
+    readonly icon = contentChild(KbqIcon);
+    readonly button = contentChild(KbqButton);
+    readonly title = contentChild(KbqAlertTitle);
+    readonly control = contentChild(KbqAlertControl);
+    readonly closeButton = contentChild(KbqAlertCloseButton);
 
     readonly compact = input<boolean>(false);
     readonly alertStyle = input<KbqAlertStyles | string>(KbqAlertStyles.Default);
@@ -93,7 +93,7 @@ export class KbqAlert implements AfterContentInit {
     }
 
     ngAfterContentInit(): void {
-        const icon = this.icon || this.iconItem;
+        const icon = this.icon() || this.iconItem();
 
         if (icon?.color === KbqComponentColors.Empty) {
             icon.color = this._alertColor === KbqAlertColors.Info ? KbqComponentColors.Contrast : this._alertColor;

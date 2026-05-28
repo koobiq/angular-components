@@ -37,7 +37,7 @@
                                 @if ({ loading: file.loading | async, progress: file.progress | async }; as asyncData) {
                                     @if (!asyncData.loading) {
                                         <ng-container
-                                            [ngTemplateOutlet]="$any(customFileIcon)"
+                                            [ngTemplateOutlet]="$any(customFileIcon())"
                                             [ngTemplateOutletContext]="{ $implicit: file }"
                                         />
                                     } @else {

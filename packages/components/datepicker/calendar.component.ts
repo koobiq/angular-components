@@ -8,10 +8,10 @@ import {
     OnDestroy,
     Optional,
     SimpleChanges,
-    ViewChild,
     ViewEncapsulation,
     input,
-    output
+    output,
+    viewChild
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
@@ -145,7 +145,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     readonly userSelection = output<void>();
 
     /** Reference to the current month view component. */
-    @ViewChild(KbqMonthView, { static: false }) monthView: KbqMonthView<D>;
+    readonly monthView = viewChild.required(KbqMonthView);
 
     /**
      * Emits whenever there is a state change that the header may need to respond to.
@@ -179,11 +179,13 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         const change = changes.minDate || changes.maxDate || changes.dateFilter;
 
         if (change && !change.firstChange) {
-            if (this.monthView) {
+            const monthView = this.monthView();
+
+            if (monthView) {
                 // We need to `detectChanges` manually here, because the `minDate`, `maxDate` etc. are
                 // passed down to the view via data bindings which won't be up-to-date when we call `init`.
                 this.changeDetectorRef.detectChanges();
-                this.monthView.init();
+                monthView.init();
             }
         }
 
@@ -213,7 +215,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.inputSubscription = this.datepickerInput.valueChange.subscribe((value: D | null) => {
             this.selected = value;
 
-            this.monthView?.init();
+            this.monthView()?.init();
             this.activeDate = value as D;
         });
     }
@@ -221,7 +223,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** Updates today's date after an update of the active date */
     updateTodaysDate() {
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
-        this.monthView.ngAfterContentInit();
+        this.monthView().ngAfterContentInit();
     }
 
     /** Handles date selection in the month view. */

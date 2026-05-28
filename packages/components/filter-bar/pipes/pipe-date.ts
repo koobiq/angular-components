@@ -1,12 +1,4 @@
-﻿import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    viewChild,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+﻿import { AfterViewInit, ChangeDetectionStrategy, Component, inject, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -141,7 +133,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     }
 
     /** @docs-private */
-    @ViewChild('popover') popover: KbqPopoverTrigger;
+    readonly popover = viewChild.required<KbqPopoverTrigger>('popover');
     /** @docs-private */
     listSelection = viewChild.required('listSelection', { read: KbqListSelection });
     /** @docs-private */
@@ -150,8 +142,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.popover.visibleChange
-            .pipe(
+        this.popover()
+            .visibleChange.pipe(
                 filter((visible) => !visible),
                 takeUntilDestroyed(this.destroyRef)
             )
@@ -179,7 +171,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
 
         this.filterBar?.onChangePipe.next(this.data);
 
-        this.popover.hide();
+        this.popover().hide();
     }
 
     onSelect(item: KbqDateTimeValue) {
@@ -188,7 +180,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
 
         this.filterBar?.onChangePipe.next(this.data);
 
-        this.popover.hide();
+        this.popover().hide();
     }
 
     showPeriod() {
@@ -199,7 +191,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
         this.initFormGroup();
 
         setTimeout(() => {
-            this.popover.updatePosition(true);
+            this.popover().updatePosition(true);
             this.returnButton().focus();
         });
     }
@@ -208,12 +200,12 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
         this.isListMode = true;
 
         setTimeout(() => this.listSelection().focus());
-        this.popover.updatePosition(true);
+        this.popover().updatePosition(true);
     }
 
     /** opens popover */
     override open() {
-        this.popover.show();
+        this.popover().show();
     }
 
     onSelectStartDate(value: D) {
@@ -228,7 +220,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
         this.showStartCalendar = true;
         this.showEndCalendar = false;
 
-        this.popover.updatePosition(true);
+        this.popover().updatePosition(true);
     }
 
     onFocusEndInput() {

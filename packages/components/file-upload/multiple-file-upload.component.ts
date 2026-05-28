@@ -5,8 +5,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    ContentChild,
-    ContentChildren,
+    contentChild,
+    contentChildren,
     DoCheck,
     effect,
     ElementRef,
@@ -15,9 +15,8 @@ import {
     Input,
     output,
     PLATFORM_ID,
-    QueryList,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -155,13 +154,12 @@ export class KbqMultipleFileUploadComponent
         ]>();
 
     /** File Icon Template */
-    @ContentChild('kbqFileIcon', { static: false, read: TemplateRef })
-    protected readonly customFileIcon: TemplateRef<HTMLElement>;
+    protected readonly customFileIcon = contentChild('kbqFileIcon', { read: TemplateRef });
 
-    @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
+    protected readonly fileLoader = viewChild(KbqFileLoader);
 
     /** @docs-private */
-    @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
+    protected readonly hint = contentChildren(KbqHint);
 
     /** @docs-private */
     hasFocus = false;
@@ -224,7 +222,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     get input(): ElementRef<HTMLInputElement> | undefined {
-        return this.fileLoader?.input();
+        return this.fileLoader()?.input();
     }
 
     /** @docs-private */
@@ -234,7 +232,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     get hasHint(): boolean {
-        return this.hint.length > 0;
+        return this.hint().length > 0;
     }
 
     /**

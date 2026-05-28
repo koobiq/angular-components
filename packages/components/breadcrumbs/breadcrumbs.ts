@@ -6,6 +6,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    contentChild,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -18,8 +19,8 @@ import {
     Provider,
     QueryList,
     TemplateRef,
-    ViewChild,
-    ViewChildren,
+    viewChild,
+    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -132,7 +133,7 @@ export class KbqBreadcrumbItem {
      * A reference to a custom template provided for the breadcrumb item content.
      * The template can be used to override the default appearance of the breadcrumb.
      */
-    @ContentChild(KbqBreadcrumbView, { read: TemplateRef }) customTemplateRef: TemplateRef<any>;
+    readonly customTemplateRef = contentChild(KbqBreadcrumbView, { read: TemplateRef });
     /**
      * An optional `RouterLink` instance for navigating to a specific route.
      * Injected from the host element, if available and projecting to the hidden breadcrumb item in dropdown.
@@ -204,11 +205,9 @@ export class KbqBreadcrumbs implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
     protected readonly items: QueryList<KbqBreadcrumbItem>;
 
-    @ViewChild(KbqOverflowItemsResult, { read: ElementRef })
-    private readonly result: ElementRef;
+    private readonly result = viewChild.required(KbqOverflowItemsResult, { read: ElementRef });
 
-    @ViewChildren(KbqOverflowItem, { read: ElementRef })
-    private readonly overflowItems: QueryList<ElementRef>;
+    private readonly overflowItems = viewChildren(KbqOverflowItem, { read: ElementRef });
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
@@ -233,9 +232,11 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected get maxWidth(): number | null {
         const max = this.max();
 
+        const overflowItems = this.overflowItems();
+
         if (
-            !this.overflowItems ||
-            !this.overflowItems.length ||
+            !overflowItems ||
+            !overflowItems.length ||
             max === null ||
             max >= this.items.length ||
             max < this.minVisibleItems
@@ -243,12 +244,12 @@ export class KbqBreadcrumbs implements AfterContentInit {
             return null;
         }
 
-        let visibleItemsWidth = this.getItemWidth(this.result);
+        let visibleItemsWidth = this.getItemWidth(this.result());
         // Reorders overflow items to prioritize the first and last elements
         const sortedItems = [
-            ...this.overflowItems.toArray().slice(1, -1),
-            this.overflowItems.first,
-            this.overflowItems.last
+            ...overflowItems.slice(1, -1),
+            overflowItems.at(0)!,
+            overflowItems.at(-1)!
         ];
 
         for (let i = 0; i < max - 1; i++) {

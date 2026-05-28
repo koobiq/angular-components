@@ -102,7 +102,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     private checkRule: (value: string) => boolean;
 
     private get control() {
-        return this.formField.control;
+        return this.formField.control();
     }
 
     private lastControlValue: string;
@@ -146,9 +146,9 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
         // prevent error when formField.control is undefined
         setTimeout(() => {
-            this.formField.control.stateChanges.subscribe(this.checkValue);
+            this.formField.control().stateChanges.subscribe(this.checkValue);
 
-            (this.formField.control as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
+            (this.formField.control() as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
                 this.checked = this.checkRule(this.control.value);
                 this.hasError = !this.checkRule(this.control.value);
             });
@@ -185,6 +185,6 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     }
 
     private isValueChanged(): boolean {
-        return this.lastControlValue !== this.formField.control.value;
+        return this.lastControlValue !== this.formField.control().value;
     }
 }

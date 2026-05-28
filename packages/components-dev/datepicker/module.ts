@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
@@ -64,7 +64,7 @@ export class DevApp implements AfterViewInit {
     maxDate;
     startAt;
 
-    @ViewChild(KbqDatepicker) datepicker: KbqDatepicker<any>;
+    readonly datepicker = viewChild.required(KbqDatepicker);
 
     constructor(private adapter: DateAdapter<DateTime>) {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
@@ -82,7 +82,7 @@ export class DevApp implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.datepicker.selectedChanged.subscribe(() => {
+        this.datepicker().selectedChanged.subscribe(() => {
             console.log('this.datepicker.selectedChanged');
         });
     }

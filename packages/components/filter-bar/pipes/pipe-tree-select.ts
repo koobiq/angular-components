@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -68,7 +68,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     template: any;
 
     /** @docs-private */
-    @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
+    readonly select = viewChild.required(KbqTreeSelect);
 
     /** selected value */
     get selected() {
@@ -104,8 +104,8 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        this.select()
+            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
@@ -116,8 +116,8 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     onSelect(item: KbqTreeOption) {
         this.data.value = item.value;
         this.filterBar?.onChangePipe.emit(this.data);
-        this.select.close();
-        setTimeout(() => this.select.focus());
+        this.select().close();
+        setTimeout(() => this.select().focus());
         this.stateChanges.next();
     }
 
@@ -135,7 +135,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
 
     /** opens select */
     override open() {
-        setTimeout(() => this.select.open());
+        setTimeout(() => this.select().open());
     }
 
     onOpen() {

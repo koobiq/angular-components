@@ -5,9 +5,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     contentChildren,
-    ContentChildren,
     effect,
     ElementRef,
     forwardRef,
@@ -15,7 +14,6 @@ import {
     InjectionToken,
     Input,
     input,
-    QueryList,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -84,9 +82,12 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         { descendants: true }
     );
 
-    @ContentChildren(forwardRef(() => KbqNavbarItem), { descendants: true }) items: QueryList<KbqNavbarItem>;
+    readonly items = contentChildren(
+        forwardRef(() => KbqNavbarItem),
+        { descendants: true }
+    );
 
-    @ContentChild(forwardRef(() => KbqNavbarBento)) bento: KbqNavbarBento;
+    readonly bento = contentChild(forwardRef(() => KbqNavbarBento));
 
     readonly animationDone: Subject<void> = new Subject();
 
@@ -164,7 +165,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
 
-    private updateTooltipForItems = () => this.items.forEach((item) => item.updateTooltip());
+    private updateTooltipForItems = () => this.items().forEach((item) => item.updateTooltip());
 
     private setItemsVerticalStateAndUpdateExpandedState = (rectangleElements: Readonly<KbqNavbarRectangleElement[]>) =>
         rectangleElements.forEach(this.setItemVerticalStateAndUpdateExpandedState);
@@ -180,7 +181,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private updateItemExpandedState = (item: KbqNavbarRectangleElement): void => {
         item.collapsed = !this.expanded;
-        setTimeout(() => item.button?.updateClassModifierForIcons());
+        setTimeout(() => item.button()?.updateClassModifierForIcons());
     };
 
     private updateLocaleParams = () => {

@@ -12,7 +12,7 @@ import {
     Inject,
     InjectionToken,
     OnDestroy,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
@@ -55,7 +55,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     id: string;
 
     /** The portal outlet inside of this container into which the content will be loaded. */
-    @ViewChild(CdkPortalOutlet, { static: true }) portalOutlet: CdkPortalOutlet;
+    readonly portalOutlet = viewChild.required(CdkPortalOutlet);
 
     /** The state of the sidepanel animations. */
     animationState: KbqSidepanelAnimationState = KbqSidepanelAnimationState.Void;
@@ -121,7 +121,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.setAnimation();
         this.setPanelClass();
 
-        return this.portalOutlet.attachComponentPortal(portal);
+        return this.portalOutlet().attachComponentPortal(portal);
     }
 
     /** Attach a template portal as content to this sidepanel container. */
@@ -130,7 +130,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.setAnimation();
         this.setPanelClass();
 
-        return this.portalOutlet.attachTemplatePortal(portal);
+        return this.portalOutlet().attachTemplatePortal(portal);
     }
 
     /** Begin animation of the sidepanel entrance into view. */
@@ -179,7 +179,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     }
 
     private validatePortalAttached() {
-        if (this.portalOutlet.hasAttached()) {
+        if (this.portalOutlet().hasAttached()) {
             throw Error('Attempting to attach sidepanel content after content is already attached');
         }
     }

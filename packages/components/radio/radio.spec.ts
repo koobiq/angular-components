@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -343,9 +343,9 @@ class RadiosInsideRadioGroup {
     `
 })
 class DisableableRadioButton {
-    @ViewChild(KbqRadioButton, { static: false }) kbqRadioButton;
+    readonly kbqRadioButton = viewChild.required(KbqRadioButton);
 
     set disabled(value: boolean) {
-        this.kbqRadioButton.disabled = value;
+        this.kbqRadioButton().disabled = value;
     }
 }

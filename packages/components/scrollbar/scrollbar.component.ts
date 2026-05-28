@@ -11,7 +11,7 @@ import {
     NgZone,
     OnDestroy,
     Output,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqScrollbarDirective } from './scrollbar.directive';
@@ -68,8 +68,8 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
 })
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Element that is being overflowed */
-    @ViewChild('content') contentElement: ElementRef<HTMLDivElement>;
-    @ViewChild('content', { read: KbqScrollbarDirective }) private kbqScrollbarDirective?: KbqScrollbarDirective;
+    readonly contentElement = viewChild.required<ElementRef<HTMLDivElement>>('content');
+    private readonly kbqScrollbarDirective = viewChild.required('content', { read: KbqScrollbarDirective });
 
     /** Elements scrollbar applied on */
     readonly initializationTarget = input<KbqScrollbarTarget>();
@@ -100,13 +100,15 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     ngAfterViewInit() {
         afterNextRender(
             () => {
-                if (this.element && this.contentElement.nativeElement) {
-                    this.kbqScrollbarDirective?.initialize(
+                const contentElement = this.contentElement();
+
+                if (this.element && contentElement?.nativeElement) {
+                    this.kbqScrollbarDirective()?.initialize(
                         this.initializationTarget() || {
                             target: this.targetElement.nativeElement,
                             elements: {
-                                viewport: this.contentElement.nativeElement,
-                                content: this.contentElement.nativeElement
+                                viewport: contentElement.nativeElement,
+                                content: contentElement.nativeElement
                             }
                         }
                     );
@@ -117,12 +119,12 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.kbqScrollbarDirective?.scrollbarInstance?.destroy();
+        this.kbqScrollbarDirective()?.scrollbarInstance?.destroy();
     }
 
     /** Wrapper function for native scroll */
     scrollTo(options?: ScrollToOptions): void {
-        this.contentElement.nativeElement.scroll(options);
+        this.contentElement()?.nativeElement.scroll(options);
     }
 
     mergeEvents(): KbqScrollbarEvents {

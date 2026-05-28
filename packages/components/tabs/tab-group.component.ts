@@ -21,7 +21,7 @@ import {
     Optional,
     output,
     QueryList,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
@@ -112,9 +112,9 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
 
-    @ViewChild('tabBodyWrapper', { static: false }) tabBodyWrapper: ElementRef;
+    readonly tabBodyWrapper = viewChild.required<ElementRef>('tabBodyWrapper');
 
-    @ViewChild('tabHeader', { static: false }) tabHeader: KbqTabHeader;
+    readonly tabHeader = viewChild.required<KbqTabHeader>('tabHeader');
 
     readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
     readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -351,21 +351,21 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             return;
         }
 
-        const wrapper: HTMLElement = this.tabBodyWrapper.nativeElement;
+        const wrapper: HTMLElement = this.tabBodyWrapper().nativeElement;
 
         wrapper.style.height = `${this.tabBodyWrapperHeight}px`;
 
         // This conditional forces the browser to paint the height so that
         // the animation to the new height can have an origin.
-        if (this.tabBodyWrapper.nativeElement.offsetHeight) {
+        if (this.tabBodyWrapper().nativeElement.offsetHeight) {
             wrapper.style.height = `${tabHeight}px`;
         }
     }
 
     /** Removes the height of the tab body wrapper. */
     removeTabBodyWrapperHeight(): void {
-        this.tabBodyWrapperHeight = this.tabBodyWrapper.nativeElement.clientHeight;
-        this.tabBodyWrapper.nativeElement.style.height = '';
+        this.tabBodyWrapperHeight = this.tabBodyWrapper().nativeElement.clientHeight;
+        this.tabBodyWrapper().nativeElement.style.height = '';
         // TODO: The 'emit' function requires a mandatory void argument
         this.animationDone.emit();
     }
@@ -400,7 +400,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     private checkOverflow = () => {
-        this.tabHeader.items.forEach((headerTab) => headerTab.checkOverflow());
+        this.tabHeader().items.forEach((headerTab) => headerTab.checkOverflow());
     };
 
     private createChangeEvent(index: number): KbqTabChangeEvent {

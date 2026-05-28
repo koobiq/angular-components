@@ -7,8 +7,8 @@ import {
     Component,
     ElementRef,
     TemplateRef,
-    ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    viewChild
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
@@ -80,7 +80,7 @@ export class DevApp {
     modalState: boolean = false;
 
     array = new Array(40);
-    @ViewChild('sipanelTemplate', { static: false }) template: TemplateRef<any>;
+    readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
 
     constructor(
         private toastService: KbqToastService,
@@ -95,7 +95,7 @@ export class DevApp {
     }
 
     openTemplateSidepanel() {
-        this.sidepanelService.open(this.template, {
+        this.sidepanelService.open(this.template(), {
             position: this.position,
             hasBackdrop: this.modalState
         });

@@ -8,8 +8,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
-    ContentChildren,
+    contentChild,
+    contentChildren as contentChildren_1,
     DestroyRef,
     Directive,
     ElementRef,
@@ -20,7 +20,6 @@ import {
     input,
     OnDestroy,
     output,
-    QueryList,
     signal,
     ViewChild,
     ViewEncapsulation
@@ -204,9 +203,9 @@ export class KbqTagEditInput {
         '[attr.tabindex]': 'tabindex',
         '[attr.disabled]': 'disabled || null',
         '[class.kbq-selected]': 'selected',
-        '[class.kbq-tag-with-avatar]': 'avatar',
-        '[class.kbq-tag-with-icon]': 'contentChildren',
-        '[class.kbq-tag-with-trailing-icon]': 'trailingIcon || removeIcon',
+        '[class.kbq-tag-with-avatar]': 'avatar()',
+        '[class.kbq-tag-with-icon]': 'contentChildren()',
+        '[class.kbq-tag-with-trailing-icon]': 'trailingIcon() || removeIcon()',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-tag_editable]': 'editable',
         '[class.kbq-tag_editing]': 'editing()',
@@ -273,8 +272,7 @@ export class KbqTag
     /** Whether the tag edits can't be submitted. */
     readonly preventEditSubmit = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @ContentChild(KbqTagEditInput, { read: ElementRef })
-    private readonly editInputElementRef: ElementRef<HTMLInputElement>;
+    private readonly editInputElementRef = contentChild(KbqTagEditInput, { read: ElementRef });
 
     /**
      * Emits event when the tag is edited.
@@ -291,16 +289,16 @@ export class KbqTag
      */
     @ViewChild('kbqTitleText') readonly textElement: ElementRef<HTMLSpanElement>;
 
-    @ContentChildren(KbqIcon) contentChildren: QueryList<KbqIcon>;
+    readonly contentChildren = contentChildren_1(KbqIcon);
 
     /** The tag avatar */
-    @ContentChild(KbqTagAvatar, { static: false }) avatar: KbqTagAvatar;
+    readonly avatar = contentChild(KbqTagAvatar);
 
     /** The tag's trailing icon. */
-    @ContentChild(KbqTagTrailingIcon, { static: false }) trailingIcon: KbqTagTrailingIcon;
+    readonly trailingIcon = contentChild(KbqTagTrailingIcon);
 
     /** The tag's remove toggler. */
-    @ContentChild(forwardRef(() => KbqTagRemove), { static: false }) removeIcon: KbqTagRemove;
+    readonly removeIcon = contentChild(forwardRef(() => KbqTagRemove));
 
     /** Emitted when the tag is selected or deselected. */
     readonly selectionChange = output<KbqTagSelectionChange>();
@@ -442,7 +440,7 @@ export class KbqTag
 
     /** @docs-private */
     addClassModificatorForIcons() {
-        const icons = this.contentChildren.map((item) => item.elementRef.nativeElement);
+        const icons = this.contentChildren().map((item) => item.elementRef.nativeElement);
 
         if (icons.length === 1) {
             const iconElement = icons[0];
@@ -621,7 +619,7 @@ export class KbqTag
         this.editChange.emit({ tag: this, type: 'start', reason });
 
         setTimeout(() => {
-            const input = this.editInputElementRef?.nativeElement;
+            const input = this.editInputElementRef()?.nativeElement;
 
             if (!input) throw getTagEditInputMissingError();
 

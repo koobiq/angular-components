@@ -26,7 +26,7 @@ import {
     SecurityContext,
     signal,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -108,7 +108,7 @@ export class KbqCodeBlockTabLinkContent {}
     exportAs: 'kbqCodeBlock'
 })
 export class KbqCodeBlock implements AfterViewInit {
-    @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;
+    private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
     /**
      * Reference to the scrollable code content.
      *
@@ -116,11 +116,13 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
+    readonly scrollableCodeContent = viewChild.required(CdkScrollable);
 
-    @ViewChild(KbqCodeBlockHighlight) private readonly highlight!: KbqCodeBlockHighlight;
+    /** @docs-private */
+    private readonly highlight = viewChild.required(KbqCodeBlockHighlight);
 
-    @ViewChild('codeBlockPre') private readonly preElementRef!: ElementRef<HTMLElement>;
+    /** @docs-private */
+    private readonly preElementRef = viewChild.required<ElementRef<HTMLElement>>('codeBlockPre');
 
     /** @docs-private */
     protected readonly contentExceedsMaxHeight = signal(false);
@@ -295,7 +297,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * has a scroll, and the calculated maximum height is not set.
      */
     private get canCodeContentBeFocused(): boolean {
-        const element = this.scrollableCodeContent?.getElementRef().nativeElement;
+        const element = this.scrollableCodeContent()?.getElementRef().nativeElement;
 
         return element && this.hasScroll(element) && !this.calculatedMaxHeight;
     }
@@ -339,11 +341,13 @@ export class KbqCodeBlock implements AfterViewInit {
         // Setup initial actionbar display state
         this.setupActionbarDisplay();
 
-        this.copyButtonTooltip?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isVisible) => {
-            if (isVisible) {
-                this.copyButtonTooltip!.content = this.localeConfiguration.copyTooltip;
-            }
-        });
+        this.copyButtonTooltip()
+            ?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((isVisible) => {
+                if (isVisible) {
+                    this.copyButtonTooltip()!.content = this.localeConfiguration.copyTooltip;
+                }
+            });
 
         // Should call `markForCheck` to ensure the `codeContentTabIndex` is updated after the view is initialized,
         // for correct focus behavior.
@@ -371,10 +375,12 @@ export class KbqCodeBlock implements AfterViewInit {
 
     /** Scrolls the code content to the specified position. */
     scrollTo(options: ExtendedScrollToOptions): void {
-        const scroll = () => this.scrollableCodeContent.scrollTo(options);
+        const scroll = () => this.scrollableCodeContent().scrollTo(options);
 
-        if (this.highlight?.pending()) {
-            toObservable(this.highlight.pending, { injector: this.injector })
+        const highlight = this.highlight();
+
+        if (highlight?.pending()) {
+            toObservable(highlight.pending, { injector: this.injector })
                 .pipe(
                     filter((pending) => !pending),
                     take(1)
@@ -440,13 +446,15 @@ export class KbqCodeBlock implements AfterViewInit {
         if (!this.maxHeight()) return;
 
         const checkOverflow = () => {
-            this.contentExceedsMaxHeight.set(this.preElementRef.nativeElement.offsetHeight > this.maxHeight());
+            this.contentExceedsMaxHeight.set(this.preElementRef().nativeElement.offsetHeight > this.maxHeight());
         };
 
         checkOverflow();
 
-        if (this.highlight?.pending()) {
-            toObservable(this.highlight.pending, { injector: this.injector })
+        const highlight = this.highlight();
+
+        if (highlight?.pending()) {
+            toObservable(highlight.pending, { injector: this.injector })
                 .pipe(
                     filter((pending) => !pending),
                     take(1)
@@ -455,7 +463,7 @@ export class KbqCodeBlock implements AfterViewInit {
         }
 
         this.sharedResizeObserver
-            .observe(this.preElementRef.nativeElement)
+            .observe(this.preElementRef().nativeElement)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(checkOverflow);
     }
@@ -464,11 +472,11 @@ export class KbqCodeBlock implements AfterViewInit {
      * Handles the scroll event on the scrollable code content element and updates the header shadow accordingly.
      */
     private handleScroll(): void {
-        this.scrollableCodeContent
+        this.scrollableCodeContent()
             .elementScrolled()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.setupHeaderShadow(this.scrollableCodeContent.measureScrollOffset('top') > 0);
+                this.setupHeaderShadow(this.scrollableCodeContent().measureScrollOffset('top') > 0);
             });
     }
 
@@ -539,7 +547,7 @@ export class KbqCodeBlock implements AfterViewInit {
         this.toggleViewAll();
 
         if (this.canCodeContentBeFocused) {
-            this.focusMonitor.focusVia(this.scrollableCodeContent.getElementRef().nativeElement, 'keyboard');
+            this.focusMonitor.focusVia(this.scrollableCodeContent().getElementRef().nativeElement, 'keyboard');
         }
     }
 
@@ -560,8 +568,10 @@ export class KbqCodeBlock implements AfterViewInit {
     protected copyCode(): void {
         const file = this.files[this.activeFileIndex];
 
-        if (this.clipboard.copy(file.content) && this.copyButtonTooltip) {
-            this.copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
+        const copyButtonTooltip = this.copyButtonTooltip();
+
+        if (this.clipboard.copy(file.content) && copyButtonTooltip) {
+            copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
         }
     }
 

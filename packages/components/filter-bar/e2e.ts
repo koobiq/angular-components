@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -118,7 +118,7 @@ const DEV_DATA_OBJECT = {
 export class E2eFilterBarStates implements AfterViewInit {
     readonly adapter = inject(DateAdapter<DateTime>);
 
-    @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
+    readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     pipeTemplates: KbqPipeTemplate[];
 
@@ -729,7 +729,7 @@ export class E2eFilterBarStates implements AfterViewInit {
                     { name: 'Option 9', id: '9', type: 'success' },
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: false,
@@ -751,7 +751,7 @@ export class E2eFilterBarStates implements AfterViewInit {
                     { name: 'Option 9', id: '9', type: 'success' },
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: true,

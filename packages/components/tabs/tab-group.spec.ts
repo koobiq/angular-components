@@ -1,5 +1,5 @@
 ﻿import { AsyncPipe } from '@angular/common';
-import { Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DebugElement, OnInit, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -164,7 +164,7 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
             tick();
 
-            const tabs = fixture.componentInstance.tabs.toArray();
+            const tabs = fixture.componentInstance.tabs();
 
             expect(tabs[0].isActive).toBe(false);
             expect(tabs[1].isActive).toBe(true);
@@ -252,7 +252,7 @@ describe('KbqTabGroup', () => {
         it('should set the disabled flag on tab', () => {
             fixture.detectChanges();
 
-            const tabs = fixture.componentInstance.tabs.toArray();
+            const tabs = fixture.componentInstance.tabs();
             let labels = headerList.queryAll(By.css('[disabled]'));
 
             expect(tabs[2].disabled).toBe(false);
@@ -428,7 +428,7 @@ describe('KbqTabGroup', () => {
         }));
 
         it('should support @ViewChild in the tab content', () => {
-            expect(fixture.componentInstance.legumes).toBeTruthy();
+            expect(fixture.componentInstance.legumes()).toBeTruthy();
         });
 
         it('should only have the active tab in the DOM', fakeAsync(() => {
@@ -500,7 +500,7 @@ describe('KbqTabGroup', () => {
         });
 
         it('should select by number and assign number to binded property', () => {
-            const indexToSelect: number = instance.tabs.length - 1;
+            const indexToSelect: number = instance.tabs().length - 1;
 
             expect(instance.selectBy).toEqual(1);
             checkSelectedIndex(instance.selectBy as number, fixture);
@@ -514,7 +514,7 @@ describe('KbqTabGroup', () => {
         it('should select by string and assign string type to binded property', fakeAsync(() => {
             const indexToSelect = 0;
 
-            instance.selectBy = instance.tabs.get(indexToSelect)!.tabId();
+            instance.selectBy = instance.tabs().at(indexToSelect)!.tabId();
             expect(instance.selectBy).toEqual('first');
             fixture.detectChanges();
             checkSelectedIndex(indexToSelect, fixture);
@@ -611,7 +611,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
     `
 })
 class SimpleTabsTestApp {
-    @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
+    readonly tabs = viewChildren(KbqTab);
     selectedIndex: number = 1;
     selectEvent: any;
     headerPosition: KbqTabHeaderPosition = 'above';
@@ -677,7 +677,7 @@ class SimpleDynamicTabsTestApp {
     `
 })
 class DisabledTabsTestApp {
-    @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
+    readonly tabs = viewChildren(KbqTab);
     isDisabled = false;
 }
 
@@ -723,7 +723,7 @@ class AsyncTabsTestApp implements OnInit {
 class TabGroupWithSimpleApi {
     otherLabel = 'Fruit';
     otherContent = 'Apples, grapes';
-    @ViewChild('legumes', { static: false }) legumes: any;
+    readonly legumes = viewChild.required<any>('legumes');
 }
 
 @Component({
@@ -797,6 +797,6 @@ class TabGroupWithIsActiveBinding {}
     `
 })
 class TestSelectionByIndexOrTabIdApp {
-    @ViewChildren(KbqTab) tabs: QueryList<KbqTab>;
+    readonly tabs = viewChildren(KbqTab);
     selectBy: KbqTabSelectBy = 1;
 }

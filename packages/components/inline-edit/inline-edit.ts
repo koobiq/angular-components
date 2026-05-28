@@ -216,11 +216,11 @@ export class KbqInlineEdit {
     /** @docs-private */
     protected overlayOrigin: HTMLElement = this.elementRef.nativeElement;
     /** @docs-private */
-    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
+    protected readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
     /** @docs-private */
     protected readonly viewContainer = viewChild.required<ElementRef<HTMLElement>>('viewContainer');
     /** @docs-private */
-    protected readonly overlayDir = viewChild(CdkConnectedOverlay);
+    protected readonly overlayDir = viewChild.required(CdkConnectedOverlay);
     /** @docs-private */
     protected readonly regionItems = viewChildren(KbqFocusRegionItem);
 
@@ -280,7 +280,7 @@ export class KbqInlineEdit {
 
         const formFieldRefList = this.formFieldRefList();
 
-        merge(formFieldRefList.map((ref) => ref.control.stateChanges))
+        merge(formFieldRefList.map((ref) => ref.control().stateChanges))
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
@@ -470,11 +470,13 @@ export class KbqInlineEdit {
     }
 
     private coerceControl(formFieldRef: KbqFormField) {
-        if (formFieldRef.control.ngControl instanceof NgControl) {
-            return formFieldRef.control.ngControl.control;
+        const control = formFieldRef.control();
+
+        if (control.ngControl instanceof NgControl) {
+            return control.ngControl.control;
         }
 
-        return formFieldRef.control;
+        return control;
     }
 
     private setOverlayWidth(): void {
@@ -503,7 +505,7 @@ export class KbqInlineEdit {
     }
 
     private openPanel(formFieldRef: KbqFormField) {
-        const control = formFieldRef.control;
+        const control = formFieldRef.control();
 
         control?.open?.();
     }
@@ -513,6 +515,6 @@ export class KbqInlineEdit {
     }
 
     private markAllAsTouched(): void {
-        this.formFieldRefList().forEach((formField) => formField.control.ngControl?.control?.markAsTouched());
+        this.formFieldRefList().forEach((formField) => formField.control().ngControl?.control?.markAsTouched());
     }
 }

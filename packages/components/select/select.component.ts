@@ -11,7 +11,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ContentChildren,
     DestroyRef,
     DoCheck,
@@ -36,11 +35,14 @@ import {
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
+    contentChild,
+    contentChildren,
     inject,
     input,
     isDevMode,
     numberAttribute,
-    output
+    output,
+    viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -288,52 +290,52 @@ export class KbqSelect
     /**
      * Trigger - is a clickable field to open select dropdown panel
      */
-    @ViewChild('trigger', { static: false }) trigger: ElementRef;
+    readonly trigger = viewChild<ElementRef>('trigger');
 
     /** Reference to the overlay panel element. */
-    @ViewChild('panel', { static: false }) panel: ElementRef;
+    readonly panel = viewChild<ElementRef>('panel');
 
     /** Reference to the container element that holds the options. */
-    @ViewChild('optionsContainer', { static: false }) optionsContainer: ElementRef;
+    readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
 
     /** Reference to the CDK connected overlay directive. */
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
     /** Reference to the optional footer element in the panel. */
-    @ContentChild(KbqSelectFooter, { static: false, read: ElementRef }) footer?: ElementRef;
+    readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
 
     /** Reference to the CDK virtual scroll directive for virtual scrolling support. */
-    @ContentChild(CdkVirtualForOf, { static: false }) cdkVirtualForOf?: CdkVirtualForOf<any>;
+    readonly cdkVirtualForOf = contentChild(CdkVirtualForOf);
 
     /** Reference to the CDK virtual scroll viewport for tracking scroll position in virtual mode. */
-    @ContentChild(CdkVirtualScrollViewport, { static: false }) virtualScrollViewport?: CdkVirtualScrollViewport;
+    readonly virtualScrollViewport = contentChild(CdkVirtualScrollViewport);
 
     /** Query list of tags displayed in multiple selection mode. */
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
     /** User-supplied override of the trigger element for custom rendering. */
-    @ContentChild(KbqSelectTrigger, { static: false }) customTrigger: KbqSelectTrigger;
+    readonly customTrigger = contentChild(KbqSelectTrigger);
 
     /** User-supplied matcher component for custom value matching logic. */
-    @ContentChild(KbqSelectMatcher, { static: false }) customMatcher: KbqSelectMatcher;
+    readonly customMatcher = contentChild(KbqSelectMatcher);
 
     /** Custom template reference for rendering tag content. */
-    @ContentChild('kbqSelectTagContent', { static: false, read: TemplateRef }) customTagTemplateRef: TemplateRef<any>;
+    readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
 
     /** Reference to the optional cleaner element for clearing selection. */
-    @ContentChild('kbqSelectCleaner', { static: true }) cleaner: KbqCleaner;
+    readonly cleaner = contentChild<KbqCleaner>('kbqSelectCleaner');
 
     /** All of the defined select options. */
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
     /** All of the defined groups of options. */
-    @ContentChildren(KbqOptgroup) optionGroups: QueryList<KbqOptgroup>;
+    readonly optionGroups = contentChildren(KbqOptgroup);
 
     /** Reference to the optional search component. */
-    @ContentChild(KbqSelectSearch, { static: false }) search: KbqSelectSearch;
+    readonly search = contentChild(KbqSelectSearch);
 
     /** Reference to the optional empty search result component. */
-    @ContentChild(KbqSelectSearchEmptyResult, { static: false }) searchEmpty: KbqSelectSearchEmptyResult;
+    readonly searchEmpty = contentChild(KbqSelectSearchEmptyResult);
 
     /** Template string for hidden items text. Supports {{ number }} placeholder. */
     // TODO: Skipped for migration because:
@@ -733,14 +735,14 @@ export class KbqSelect
 
     /** Whether the search returned no results. */
     get isEmptySearchResult(): boolean {
-        return (
-            this.search && this.options.filter((option) => option.selectable()).length === 0 && !!this.search.value()
-        );
+        const search = this.search();
+
+        return !!search && this.options?.filter((option) => option.selectable()).length === 0 && !!search.value();
     }
 
     /** Whether the cleaner (clear button) should be shown. */
     get canShowCleaner(): boolean {
-        return !this.disabled && this.cleaner && this.selectionModel.hasValue();
+        return !this.disabled && !!this.cleaner() && this.selectionModel.hasValue();
     }
 
     /** Returns the currently selected option(s). Single value or array for multiple selection. */
@@ -888,8 +890,10 @@ export class KbqSelect
                 if (this.panelOpen) {
                     this.scrollTop = 0;
 
-                    if (this.search) {
-                        this.search.focus();
+                    const search = this.search();
+
+                    if (search) {
+                        search.focus();
                     }
 
                     this.openedChange.emit(true);
@@ -923,7 +927,7 @@ export class KbqSelect
 
     /** Lifecycle hook after content initialization. Sets up key manager and option subscriptions. */
     ngAfterContentInit() {
-        this.withVirtualScroll = !!this.cdkVirtualForOf;
+        this.withVirtualScroll = !!this.cdkVirtualForOf();
         this.initKeyManager();
 
         this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
@@ -936,8 +940,8 @@ export class KbqSelect
             this.initializeSelection();
         });
 
-        this.search?.changes
-            .pipe(
+        this.search()
+            ?.changes.pipe(
                 takeUntilDestroyed(this.destroyRef),
                 delay(0),
                 filter(() => {
@@ -1008,17 +1012,19 @@ export class KbqSelect
 
     /** Resets the search component if present. */
     resetSearch(): void {
-        if (!this.search) {
+        const search = this.search();
+
+        if (!search) {
             return;
         }
 
-        this.search.reset();
+        search.reset();
         /*
         todo the incorrect behaviour of keyManager is possible here
         to avoid first item selection (to provide correct options flipping on closed select)
         we should process options update like it is the first options appearance
         */
-        this.search.isSearchChanged = false;
+        search.isSearchChanged = false;
     }
 
     /** Toggles the overlay panel open or closed. */
@@ -1056,16 +1062,18 @@ export class KbqSelect
      * Sets up the overlay dimensions based on trigger size and configured options.
      */
     openPanel() {
-        if (!this.trigger) return;
+        const trigger = this.trigger();
+
+        if (!trigger || !this.keyManager) return;
 
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
-            this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
+            this.parentFormField?.getConnectedOverlayOrigin().nativeElement || trigger.nativeElement
         ).getBoundingClientRect();
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
-        this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger.nativeElement)['font-size']);
+        this.triggerFontSize = parseInt(this.window.getComputedStyle(trigger.nativeElement)['font-size']);
 
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may
@@ -1103,8 +1111,8 @@ export class KbqSelect
 
                 this.addClassToOverlayContainer();
 
-                if (this.search && !this.overlayWidth) {
-                    const measuredPanelWidth = this.panel?.nativeElement.getBoundingClientRect().width;
+                if (this.search() && !this.overlayWidth) {
+                    const measuredPanelWidth = this.panel()?.nativeElement.getBoundingClientRect().width;
 
                     if (measuredPanelWidth) {
                         this.overlayWidth = measuredPanelWidth;
@@ -1229,7 +1237,7 @@ export class KbqSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            this.optionsContainer.nativeElement.scrollTop = this.scrollTop;
+            this.optionsContainer().nativeElement.scrollTop = this.scrollTop;
 
             this.updateScrollSize();
             this.subscribeToScrolledToBottom();
@@ -1276,8 +1284,8 @@ export class KbqSelect
     calculateHiddenItems = () => {
         if (
             !this.isBrowser ||
-            this.customTrigger ||
-            this.customMatcher ||
+            this.customTrigger() ||
+            this.customMatcher() ||
             this.empty ||
             !this.multiple ||
             this.multiline()
@@ -1291,8 +1299,8 @@ export class KbqSelect
         this._changeDetectorRef.detectChanges();
 
         if (this.hiddenItems) {
-            const itemsCounter = this.trigger.nativeElement.querySelector('.kbq-select__match-hidden-text');
-            const matcherList = this.trigger.nativeElement.querySelector('.kbq-select__match-list');
+            const itemsCounter = this.trigger()!.nativeElement.querySelector('.kbq-select__match-hidden-text');
+            const matcherList = this.trigger()!.nativeElement.querySelector('.kbq-select__match-list');
 
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
@@ -1332,7 +1340,7 @@ export class KbqSelect
      * @param $event The mouse event to handle.
      */
     handleClick($event: MouseEvent) {
-        if (this.footer?.nativeElement.contains($event.target)) {
+        if (this.footer()?.nativeElement.contains($event.target)) {
             this.close();
         }
     }
@@ -1376,7 +1384,7 @@ export class KbqSelect
     protected shouldShowSearch(): boolean {
         return (
             isUndefined(this.searchMinOptionsThreshold) ||
-            !!this.search.value() ||
+            !!this.search()?.value() ||
             this.options.length >= this.searchMinOptionsThreshold
         );
     }
@@ -1433,7 +1441,7 @@ export class KbqSelect
 
     /** Gets the height of the options container element. */
     private getHeightOfOptionsContainer(): number {
-        return this.optionsContainer.nativeElement.getClientRects()[0]?.height;
+        return this.optionsContainer().nativeElement.getClientRects()[0]?.height;
     }
 
     /** Updates the keyboard manager scroll size based on options container height. */
@@ -1454,14 +1462,15 @@ export class KbqSelect
     private subscribeToScrolledToBottom(): void {
         this.scrollSubscription.unsubscribe();
 
+        const virtualScrollViewport = this.virtualScrollViewport();
         const distance =
-            this.withVirtualScroll && this.virtualScrollViewport
-                ? this.virtualScrollViewport
+            this.withVirtualScroll && virtualScrollViewport
+                ? virtualScrollViewport
                       .elementScrolled()
-                      .pipe(map(() => this.virtualScrollViewport!.measureScrollOffset('bottom')))
-                : fromEvent(this.optionsContainer.nativeElement, 'scroll').pipe(
+                      .pipe(map(() => this.virtualScrollViewport()!.measureScrollOffset('bottom')))
+                : fromEvent(this.optionsContainer().nativeElement, 'scroll').pipe(
                       map(() => {
-                          const element = this.optionsContainer.nativeElement;
+                          const element = this.optionsContainer().nativeElement;
 
                           return element.scrollHeight - element.scrollTop - element.clientHeight;
                       })
@@ -1486,7 +1495,7 @@ export class KbqSelect
         const triggerClone = this.buildTriggerClone();
 
         triggerClone.querySelector('.kbq-select__match-hidden-text')?.remove();
-        this._renderer.appendChild(this.trigger.nativeElement, triggerClone);
+        this._renderer.appendChild(this.trigger()!.nativeElement, triggerClone);
 
         let totalItemsWidth: number = 0;
         const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
@@ -1581,11 +1590,13 @@ export class KbqSelect
                 this.keyManager.activeItem?.focus();
             }
 
-            if (this.search && this.shouldShowSearch()) {
-                this.search.focus();
+            const search = this.search();
+
+            if (search && this.shouldShowSearch()) {
+                search.focus();
             }
 
-            if (this.search && (this.keyManager.isTyping() || [BACKSPACE, DELETE].includes(keyCode))) {
+            if (search && (this.keyManager.isTyping() || [BACKSPACE, DELETE].includes(keyCode))) {
                 setTimeout(() => this.highlightCorrectOption());
             }
         }
@@ -1669,7 +1680,7 @@ export class KbqSelect
         if (correspondingOption) {
             this.selectionModel.select(correspondingOption);
         } else if (this.withVirtualScroll) {
-            const source = this.cdkVirtualForOf?.cdkVirtualForOf;
+            const source = this.cdkVirtualForOf()?.cdkVirtualForOf;
             const correspondingOptionVirtual =
                 source instanceof Array ? source.find((item) => this.compareWith(item, value)) : undefined;
 
@@ -1699,15 +1710,15 @@ export class KbqSelect
         const typeAheadDebounce = 200;
 
         this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.options)
-            .withTypeAhead(typeAheadDebounce, this.search ? -1 : 0)
+            .withTypeAhead(typeAheadDebounce, this.search() ? -1 : 0)
             .withVerticalOrientation()
             .withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
 
         this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            if (this.panelOpen && this.panel) {
+            if (this.panelOpen && this.panel()) {
                 this.scrollActiveOptionIntoView();
 
-                this.search?.focus();
+                this.search()?.focus();
             } else if (!this.panelOpen && !this.multiSelection && this.keyManager.activeItem) {
                 this.keyManager.activeItem.selectViaInteraction();
             }
@@ -1855,7 +1866,7 @@ export class KbqSelect
         const triggerClone = this.buildTriggerClone();
 
         this._renderer.setStyle(triggerClone.querySelector('.kbq-select__match-hidden-text'), 'display', 'block');
-        this._renderer.appendChild(this.trigger.nativeElement, triggerClone);
+        this._renderer.appendChild(this.trigger()!.nativeElement, triggerClone);
 
         let visibleItemsCount: number = 0;
         let totalVisibleItemsWidth: number = 0;
@@ -1877,7 +1888,7 @@ export class KbqSelect
      * @returns Clone of the trigger element positioned off-screen.
      */
     private buildTriggerClone(): HTMLDivElement {
-        const triggerClone = this.trigger.nativeElement.cloneNode(true);
+        const triggerClone = this.trigger()!.nativeElement.cloneNode(true);
 
         this._renderer.setStyle(triggerClone, 'position', 'absolute');
         this._renderer.setStyle(triggerClone, 'visibility', 'hidden');

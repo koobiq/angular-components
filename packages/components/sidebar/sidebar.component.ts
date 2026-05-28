@@ -5,7 +5,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     Directive,
     ElementRef,
     inject,
@@ -118,12 +118,12 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     /**
      * @docs-private
      */
-    @ContentChild(KbqSidebarOpened, { static: false }) openedContent: KbqSidebarOpened;
+    readonly openedContent = contentChild(KbqSidebarOpened);
 
     /**
      * @docs-private
      */
-    @ContentChild(KbqSidebarClosed, { static: false }) closedContent: KbqSidebarClosed;
+    readonly closedContent = contentChild(KbqSidebarClosed);
 
     /**
      * @docs-private
@@ -147,12 +147,15 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     }
 
     ngAfterContentInit(): void {
-        this.params = {
-            openedStateWidth: this.openedContent.width() || 'inherit',
-            openedStateMinWidth: this.openedContent.minWidth() || 'inherit',
-            openedStateMaxWidth: this.openedContent.maxWidth() || 'inherit',
+        const openedContent = this.openedContent();
+        const closedContent = this.closedContent();
 
-            closedStateWidth: this.closedContent.width() || '32px'
+        this.params = {
+            openedStateWidth: openedContent?.width() || 'inherit',
+            openedStateMinWidth: openedContent?.minWidth() || 'inherit',
+            openedStateMaxWidth: openedContent?.maxWidth() || 'inherit',
+
+            closedStateWidth: closedContent?.width() || '32px'
         };
     }
 

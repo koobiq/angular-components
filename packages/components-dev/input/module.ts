@@ -4,9 +4,8 @@ import {
     Component,
     Inject,
     model,
-    QueryList,
-    ViewChild,
-    ViewChildren,
+    viewChild,
+    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -94,19 +93,22 @@ export class DevApp implements AfterViewInit {
 
     locales: string[];
 
-    @ViewChildren(KbqPasswordHint) passwordHints: QueryList<KbqPasswordHint>;
-    @ViewChild('formField') formField: KbqFormField;
+    readonly passwordHints = viewChildren(KbqPasswordHint);
+    readonly formField = viewChild.required<KbqFormField>('formField');
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
         this.locales = Object.keys(this.localeService.locales).filter((key) => key !== 'items');
     }
 
     ngAfterViewInit() {
-        this.formField.control.stateChanges.pipe(startWith()).subscribe((state: any) => {
-            if (!state?.focused && hasPasswordStrengthError(this.passwordHints)) {
-                this.formField.control.ngControl?.control?.setErrors({ passwordStrength: true });
-            }
-        });
+        this.formField()
+            .control()
+            .stateChanges.pipe(startWith())
+            .subscribe((state: any) => {
+                if (!state?.focused && hasPasswordStrengthError(this.passwordHints())) {
+                    this.formField().control().ngControl?.control?.setErrors({ passwordStrength: true });
+                }
+            });
     }
 
     atLeastNCapitalLetters = (n: number): ((value: string) => boolean) => {

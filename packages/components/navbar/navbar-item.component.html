@@ -1,6 +1,6 @@
 <ng-content select="[kbq-icon]" />
 
-@if (title) {
+@if (title()) {
     <div class="kbq-navbar-item__container">
         <div class="kbq-navbar-item__title">
             <ng-content select="kbq-navbar-title, [kbq-navbar-title]" />

@@ -19,13 +19,12 @@ import {
     OnInit,
     Output,
     output,
-    QueryList,
     Renderer2,
     SimpleChanges,
     TemplateRef,
     Type,
-    ViewChild,
-    ViewChildren,
+    viewChild,
+    viewChildren,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -246,12 +245,12 @@ export class KbqModalComponent<T = any, R = any>
     //  is not migrated.
     @Input() @Output() readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
 
-    @ViewChild('modalContainer', { static: true }) modalContainer: ElementRef;
-    @ViewChild('bodyContainer', { read: ViewContainerRef, static: false }) bodyContainer: ViewContainerRef;
+    readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
+    readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
     // Only aim to focus the ok button that needs to be auto focused
-    @ViewChildren('autoFocusedButton', { read: ElementRef }) autoFocusedButtons: QueryList<ElementRef>;
+    readonly autoFocusedButtons = viewChildren('autoFocusedButton', { read: ElementRef });
 
-    @ViewChild('modalBody') modalBody: ElementRef;
+    readonly modalBody = viewChild<ElementRef>('modalBody');
 
     isTopOverflow: boolean = false;
     isBottomOverflow: boolean = false;
@@ -361,7 +360,7 @@ export class KbqModalComponent<T = any, R = any>
     ngAfterViewInit() {
         // If using Component, it is the time to attach View while bodyContainer is ready
         if (this.contentComponentRef) {
-            this.bodyContainer.insert(this.contentComponentRef.hostView);
+            this.bodyContainer().insert(this.contentComponentRef.hostView);
         }
 
         this.getElement().getElementsByTagName('button')[0]?.focus();
@@ -378,7 +377,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     checkOverflow(): void {
-        const nativeElement: HTMLElement = this.modalBody?.nativeElement;
+        const nativeElement: HTMLElement = this.modalBody()?.nativeElement;
 
         if (!nativeElement) {
             return;
@@ -396,9 +395,9 @@ export class KbqModalComponent<T = any, R = any>
         this.previouslyFocusedElementOrigin = this.focusMonitor['_lastFocusOrigin'];
 
         this.focusMonitor
-            .monitor(this.modalContainer, true)
+            .monitor(this.modalContainer(), true)
             .pipe(take(1))
-            .subscribe(() => this.focusMonitor.stopMonitoring(this.modalContainer));
+            .subscribe(() => this.focusMonitor.stopMonitoring(this.modalContainer()));
 
         this.changeVisibleFromInside(true);
     }
@@ -703,7 +702,7 @@ export class KbqModalComponent<T = any, R = any>
 
     // Update transform-origin to the last click position on document
     private updateTransformOrigin() {
-        const modalElement = this.modalContainer.nativeElement as HTMLElement;
+        const modalElement = this.modalContainer().nativeElement as HTMLElement;
         const lastPosition = ModalUtil.getLastClickPosition();
 
         if (lastPosition) {

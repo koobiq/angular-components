@@ -6,7 +6,7 @@ import {
     forwardRef,
     Input,
     input,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqHighlightPipe, KbqOption } from '@koobiq/components/core';
@@ -39,8 +39,8 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
     exportAs: 'kbqTimezoneOption'
 })
 export class KbqTimezoneOption extends KbqOption {
-    @ViewChild('tooltipContentWrapper', { static: false }) tooltipContentWrapper: ElementRef<HTMLElement>;
-    @ViewChild('tooltipContent', { static: false }) tooltipContent: ElementRef<HTMLElement>;
+    readonly tooltipContentWrapper = viewChild.required<ElementRef<HTMLElement>>('tooltipContentWrapper');
+    readonly tooltipContent = viewChild.required<ElementRef<HTMLElement>>('tooltipContent');
 
     readonly highlightText = input<string>(undefined!);
 

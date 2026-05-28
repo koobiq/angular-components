@@ -1,16 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DebugElement,
-    model,
-    Provider,
-    Type,
-    viewChild,
-    ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1072,7 +1063,7 @@ class SingleTag {
     removable: boolean = true;
     shouldShow: boolean = true;
 
-    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
+    readonly tagList = viewChild.required(KbqTagList);
 
     tagFocus: (event?: KbqTagEvent) => void = () => {};
     tagDestroy: (event?: KbqTagEvent) => void = () => {};

@@ -3,7 +3,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
+    contentChild,
     ContentChildren,
     Input,
     input,
@@ -39,7 +39,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     /** @docs-private */
     @ContentChildren(KbqButton) protected buttons: QueryList<KbqButton>;
     /** @docs-private */
-    @ContentChild(KbqDropdownTrigger) protected dropdownTrigger: KbqDropdownTrigger;
+    protected readonly dropdownTrigger = contentChild(KbqDropdownTrigger);
 
     /** Sets the width of the dropdown to the width of the trigger. Default is false */
     readonly panelAutoWidth = input<boolean>(false);
@@ -152,16 +152,22 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     }
 
     private updateDropdownParams = () => {
-        if (!this.dropdownTrigger) return;
+        const dropdownTrigger = this.dropdownTrigger();
 
-        this.dropdownTrigger.dropdown.xPosition = 'before';
+        if (!dropdownTrigger) return;
+
+        dropdownTrigger.dropdown.xPosition = 'before';
 
         if (this.panelAutoWidth()) {
             // we need to use a timeout of about 50ms to wait for the styles to apply
             setTimeout(() => {
                 const { width } = this.nativeElement.getClientRects()[0];
 
-                this.dropdownTrigger.dropdown.triggerWidth = `${Math.round(width)}px`;
+                const dropdownTrigger = this.dropdownTrigger();
+
+                if (dropdownTrigger) {
+                    dropdownTrigger.dropdown.triggerWidth = `${Math.round(width)}px`;
+                }
             }, 50);
         }
     };

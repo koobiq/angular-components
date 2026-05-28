@@ -10,7 +10,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -29,6 +29,7 @@ import {
     output,
     QueryList,
     ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -693,7 +694,7 @@ export class KbqListOptionCaption {}
         '[class.kbq-list-option_multiple]': 'listSelection.multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
-        '[class.kbq-action-button-focused]': 'actionButton?.active',
+        '[class.kbq-action-button-focused]': 'actionButton()?.active',
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
         '(focusin)': 'focus()',
@@ -712,12 +713,12 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     readonly onBlur = new Subject<KbqOptionEvent>();
 
-    @ContentChild(KbqOptionActionComponent) actionButton: KbqOptionActionComponent;
-    @ContentChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
-    @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
-    @ContentChild(KbqPseudoCheckbox) pseudoCheckbox: KbqPseudoCheckbox;
+    readonly actionButton = contentChild(KbqOptionActionComponent);
+    readonly tooltipTrigger = contentChild(KbqTooltipTrigger);
+    readonly dropdownTrigger = contentChild(KbqDropdownTrigger);
+    readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
 
-    @ViewChild('text', { static: false }) text: ElementRef;
+    readonly text = viewChild.required<ElementRef>('text');
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     // Whether the label should appear before or after the checkbox. Defaults to 'after'
@@ -797,7 +798,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     get externalPseudoCheckbox(): boolean {
-        return !!this.pseudoCheckbox;
+        return !!this.pseudoCheckbox();
     }
 
     constructor(
@@ -847,7 +848,9 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     getLabel() {
-        return this.text ? this.text.nativeElement.textContent : '';
+        const text = this.text();
+
+        return text ? text.nativeElement.textContent : '';
     }
 
     setSelected(selected: boolean) {
@@ -891,19 +894,21 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     onKeydown($event) {
-        if (!this.actionButton) {
+        const actionButton = this.actionButton();
+
+        if (!actionButton) {
             return;
         }
 
-        if ($event.keyCode === TAB && !$event.shiftKey && !this.actionButton.hasFocus) {
-            this.actionButton.focus();
+        if ($event.keyCode === TAB && !$event.shiftKey && !actionButton.hasFocus) {
+            actionButton.focus();
 
             $event.preventDefault();
         }
     }
 
     focus() {
-        if (this.disabled || this.hasFocus || this.actionButton?.hasFocus) {
+        if (this.disabled || this.hasFocus || this.actionButton()?.hasFocus) {
             return;
         }
 
@@ -934,7 +939,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
                 this.ngZone.run(() => {
                     this.hasFocus = false;
 
-                    if (this.actionButton?.hasFocus) {
+                    if (this.actionButton()?.hasFocus) {
                         return;
                     }
 

@@ -20,7 +20,7 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
         </kbq-scrollbar>
         <button
             kbq-button
-            [disabled]="!(scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0)"
+            [disabled]="!(scrollbarRef?.contentElement()?.nativeElement?.scrollTop || 0 > 0)"
             (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
         >
             Scroll To Top

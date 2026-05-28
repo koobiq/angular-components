@@ -305,7 +305,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const closeSpy = jest.spyOn(component.select, 'close');
+            const closeSpy = jest.spyOn(component.select(), 'close');
             const mockItem = { value: SINGLE_VALUE } as KbqTreeOption;
 
             component.onSelect(mockItem);

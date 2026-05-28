@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild } from '@angular/core';
+﻿import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqScrollbar } from './scrollbar.component';
@@ -49,11 +49,11 @@ describe(KbqScrollbarModule.name, () => {
             component.ngAfterViewInit();
             fixture.detectChanges();
             expect(runOutsideAngularSpyFn).toHaveBeenCalled();
-            expect(component['kbqScrollbarDirective']!.scrollbarInstance).toBeDefined();
+            expect(component['kbqScrollbarDirective']()!.scrollbarInstance).toBeDefined();
         });
 
         it('should destroy scrollbar instance on component destroy', () => {
-            const instance = component['kbqScrollbarDirective']!.scrollbarInstance;
+            const instance = component['kbqScrollbarDirective']()!.scrollbarInstance;
 
             expect(instance?.state().destroyed).toBeFalsy();
 
@@ -207,7 +207,7 @@ class ScrollEventListener {
     options: KbqScrollbarOptions;
     events: KbqScrollbarEvents;
 
-    @ViewChild(KbqScrollbar) scrollbar: KbqScrollbar;
+    readonly scrollbar = viewChild.required(KbqScrollbar);
 
     scroll = jest.fn();
     initialize = jest.fn();

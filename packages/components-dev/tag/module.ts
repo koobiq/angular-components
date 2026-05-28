@@ -4,7 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
@@ -176,16 +176,16 @@ export class DevApp implements AfterViewInit {
 
     readonly separatorKeysCodes: number[] = [ENTER, SPACE, TAB, COMMA];
 
-    @ViewChild('inputTagInput', { static: false }) inputTagInput: ElementRef<HTMLInputElement>;
-    @ViewChild('inputTagList', { static: false }) inputTagList: KbqTagList;
+    readonly inputTagInput = viewChild.required<ElementRef<HTMLInputElement>>('inputTagInput');
+    readonly inputTagList = viewChild.required<KbqTagList>('inputTagList');
 
-    @ViewChild('autocompleteTagInput', { static: false }) autocompleteTagInput: ElementRef<HTMLInputElement>;
-    @ViewChild('autocompleteTagInput', { read: KbqTagInput, static: false }) autoCompleteTagInputRef: KbqTagInput;
-    @ViewChild('autocompleteTagList', { static: false }) autocompleteTagList: KbqTagList;
-    @ViewChild('autocomplete', { static: false }) autocomplete: KbqAutocomplete;
+    readonly autocompleteTagInput = viewChild.required<ElementRef<HTMLInputElement>>('autocompleteTagInput');
+    readonly autoCompleteTagInputRef = viewChild.required('autocompleteTagInput', { read: KbqTagInput });
+    readonly autocompleteTagList = viewChild.required<KbqTagList>('autocompleteTagList');
+    readonly autocomplete = viewChild.required<KbqAutocomplete>('autocomplete');
 
-    @ViewChild('enterTagInput', { static: false }) enterTagInput: ElementRef<HTMLInputElement>;
-    @ViewChild('enterInputTagList', { static: false }) enterInputTagList: KbqTagList;
+    readonly enterTagInput = viewChild.required<ElementRef<HTMLInputElement>>('enterTagInput');
+    readonly enterInputTagList = viewChild.required<KbqTagList>('enterInputTagList');
     hasDuplicates: boolean;
 
     get canCreate(): boolean {
@@ -201,13 +201,15 @@ export class DevApp implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.autocompleteFilteredTags = merge(
-            this.autocompleteTagList.tagChanges.asObservable().pipe(
-                map((selectedTags: KbqTag[]) => {
-                    const values = selectedTags.map((tag) => tag.value);
+            this.autocompleteTagList()
+                .tagChanges.asObservable()
+                .pipe(
+                    map((selectedTags: KbqTag[]) => {
+                        const values = selectedTags.map((tag) => tag.value);
 
-                    return this.autocompleteAllTags.filter((tag) => !values.includes(tag));
-                })
-            ),
+                        return this.autocompleteAllTags.filter((tag) => !values.includes(tag));
+                    })
+                ),
             this.tagCtrl.valueChanges.pipe(
                 map((value: any) => {
                     const typedText = (value?.new ? value.value : value)?.trim();
@@ -222,7 +224,7 @@ export class DevApp implements AfterViewInit {
 
                     // check for scenario where duplicate exists but also can create/select other tags
                     this.hasDuplicates =
-                        !inputAndSelectionTagsDiff.length && this.autoCompleteTagInputRef.hasDuplicates;
+                        !inputAndSelectionTagsDiff.length && this.autoCompleteTagInputRef().hasDuplicates;
 
                     return inputAndSelectionTagsDiff;
                 })
@@ -259,7 +261,7 @@ export class DevApp implements AfterViewInit {
         const cleanedValue = (value || '').trim();
 
         if (cleanedValue) {
-            const isOptionSelected = this.autocomplete.options.some((option) => option.selected);
+            const isOptionSelected = this.autocomplete().options.some((option) => option.selected);
 
             if (!isOptionSelected && this.canCreate) {
                 this.autocompleteSelectedTags.push(cleanedValue);
@@ -286,8 +288,8 @@ export class DevApp implements AfterViewInit {
 
         if (!target || target.tagName !== this.optionTagName) {
             const kbqTagEvent: KbqTagInputEvent = {
-                input: this.autocompleteTagInput.nativeElement,
-                value: this.autocompleteTagInput.nativeElement.value
+                input: this.autocompleteTagInput().nativeElement,
+                value: this.autocompleteTagInput().nativeElement.value
             };
 
             this.autocompleteOnCreate(kbqTagEvent);
@@ -305,7 +307,7 @@ export class DevApp implements AfterViewInit {
             this.autocompleteSelectedTags.push(value);
         }
 
-        this.autocompleteTagInput.nativeElement.value = '';
+        this.autocompleteTagInput().nativeElement.value = '';
         this.tagCtrl.setValue(null);
     }
 

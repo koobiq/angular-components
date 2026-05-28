@@ -14,7 +14,7 @@ import {
     numberAttribute,
     OnDestroy,
     output,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -117,7 +117,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     @Input() clickAction: KbqCheckboxClickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) || undefined;
 
     /** The native `<input type="checkbox">` element */
-    @ViewChild('input', { static: false }) inputElement: ElementRef;
+    readonly inputElement = viewChild.required<ElementRef>('input');
 
     /** Returns the unique id for the visual hidden input. */
     get inputId(): string {
@@ -230,12 +230,12 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     ngAfterViewInit() {
         this.focusMonitor
-            .monitor(this.inputElement.nativeElement)
+            .monitor(this.inputElement().nativeElement)
             .subscribe((focusOrigin) => this.onInputFocusChange(focusOrigin));
     }
 
     ngOnDestroy() {
-        this.focusMonitor.stopMonitoring(this.inputElement.nativeElement);
+        this.focusMonitor.stopMonitoring(this.inputElement().nativeElement);
     }
 
     /** Method being called whenever the label text changes. */
@@ -312,14 +312,16 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         } else if (!this.disabled && this.clickAction === 'noop') {
             // Reset native input when clicked with noop. The native checkbox becomes checked after
             // click, reset it to be align with `checked` value of `kbq-checkbox`.
-            this.inputElement.nativeElement.checked = this.checked;
-            this.inputElement.nativeElement.indeterminate = this.indeterminate;
+            const inputElement = this.inputElement();
+
+            inputElement.nativeElement.checked = this.checked;
+            inputElement.nativeElement.indeterminate = this.indeterminate;
         }
     }
 
     /** Focuses the checkbox. */
     focus(): void {
-        this.focusMonitor.focusVia(this.inputElement.nativeElement, 'keyboard');
+        this.focusMonitor.focusVia(this.inputElement().nativeElement, 'keyboard');
     }
 
     onInteractionEvent(event: Event) {

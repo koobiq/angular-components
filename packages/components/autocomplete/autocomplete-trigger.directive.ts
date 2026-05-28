@@ -536,7 +536,7 @@ export class KbqAutocompleteTrigger
         // If it's used within a `MatFormField`, we should set it through the property so it can go
         // through change detection.
         if (this.formField) {
-            this.formField.control.value = inputValue;
+            this.formField.control().value = inputValue;
         } else {
             this.elementRef.nativeElement.value = inputValue;
         }
@@ -580,7 +580,7 @@ export class KbqAutocompleteTrigger
         let overlayRef = this.overlayRef;
 
         if (!overlayRef) {
-            this.portal = new TemplatePortal(autocomplete.template, this.viewContainerRef);
+            this.portal = new TemplatePortal(autocomplete.template(), this.viewContainerRef);
             overlayRef = this.overlay.create(this.getOverlayConfig());
             this.overlayRef = overlayRef;
 

@@ -1,7 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, viewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
@@ -73,7 +73,7 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    @ViewChildren(KbqPopoverTrigger) popovers: QueryList<KbqPopoverTrigger>;
+    readonly popovers = viewChildren(KbqPopoverTrigger);
 
     themePalette = ThemePalette;
     popUpPlacements = PopUpPlacements;
@@ -126,11 +126,11 @@ export class DevApp {
     }
 
     openPopover() {
-        this.popovers.forEach((popover) => popover.show());
+        this.popovers().forEach((popover) => popover.show());
     }
 
     closePopover() {
-        this.popovers.forEach((popover) => popover.hide());
+        this.popovers().forEach((popover) => popover.hide());
     }
 
     changeStep(direction: number) {

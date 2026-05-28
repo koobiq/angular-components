@@ -382,7 +382,7 @@ export class FilterBarSavedFiltersExample {
 
         setTimeout(() => {
             if (filter.id === 2) {
-                filterBar.filters.filterSavedUnsuccessfully({ text: `Не удалось сохранить фильтр: ${filter.name}` });
+                filterBar.filters().filterSavedUnsuccessfully({ text: `Не удалось сохранить фильтр: ${filter.name}` });
             } else if (status === KbqSaveFilterStatuses.NewFilter) {
                 this.saveNewFilter(filter, filterBar);
             } else if (status === KbqSaveFilterStatuses.NewName) {
@@ -400,9 +400,9 @@ export class FilterBarSavedFiltersExample {
 
             this.activeFilter = filter;
 
-            filterBar.filters.filterSavedSuccessfully();
+            filterBar.filters().filterSavedSuccessfully();
         } else {
-            filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+            filterBar.filters().filterSavedUnsuccessfully({ nameAlreadyExists: true });
         }
     }
 
@@ -417,9 +417,9 @@ export class FilterBarSavedFiltersExample {
 
             this.activeFilter = filter;
 
-            filterBar.filters.filterSavedSuccessfully();
+            filterBar.filters().filterSavedSuccessfully();
         } else {
-            filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+            filterBar.filters().filterSavedUnsuccessfully({ nameAlreadyExists: true });
         }
     }
 
@@ -433,7 +433,7 @@ export class FilterBarSavedFiltersExample {
 
         this.activeFilter = filter;
 
-        filterBar.filters.filterSavedSuccessfully();
+        filterBar.filters().filterSavedSuccessfully();
     }
 
     getSavedFilter(filter: KbqFilter | null): KbqFilter {

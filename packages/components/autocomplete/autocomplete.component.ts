@@ -6,6 +6,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    contentChildren,
     DestroyRef,
     Directive,
     ElementRef,
@@ -19,7 +20,7 @@ import {
     output,
     QueryList,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -102,13 +103,13 @@ export class KbqAutocomplete implements AfterContentInit {
     /** Whether the autocomplete panel should be visible, depending on option length. */
     showPanel: boolean = false;
 
-    @ViewChild(TemplateRef, { static: true }) template: TemplateRef<any>;
+    readonly template = viewChild.required(TemplateRef);
 
-    @ViewChild('panel', { static: false }) panel: ElementRef;
+    readonly panel = viewChild.required<ElementRef>('panel');
 
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
-    @ContentChildren(KbqOptgroup) optionGroups: QueryList<KbqOptgroup>;
+    readonly optionGroups = contentChildren(KbqOptgroup);
 
     /** Function that maps an option's control value to its display value in the trigger. */
     // TODO: Skipped for migration because:
@@ -214,8 +215,9 @@ export class KbqAutocomplete implements AfterContentInit {
         this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.options);
         this.setVisibility();
 
-        this.parentFormField?.control.ngControl?.valueChanges
-            ?.pipe(
+        this.parentFormField
+            ?.control()
+            .ngControl?.valueChanges?.pipe(
                 delay(0),
                 filter((value) => value === null || value === undefined || value === ''),
                 takeUntilDestroyed(this.destroyRef)
@@ -226,13 +228,17 @@ export class KbqAutocomplete implements AfterContentInit {
     }
 
     setScrollTop(scrollTop: number): void {
-        if (this.panel) {
-            this.panel.nativeElement.scrollTop = scrollTop;
+        const panel = this.panel();
+
+        if (panel) {
+            panel.nativeElement.scrollTop = scrollTop;
         }
     }
 
     getScrollTop(): number {
-        return this.panel ? this.panel.nativeElement.scrollTop : 0;
+        const panel = this.panel();
+
+        return panel ? panel.nativeElement.scrollTop : 0;
     }
 
     setVisibility() {

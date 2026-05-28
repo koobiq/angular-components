@@ -10,7 +10,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
+    contentChildren,
     ElementRef,
     forwardRef,
     HostAttributeToken,
@@ -19,7 +19,6 @@ import {
     input,
     OnDestroy,
     output,
-    QueryList,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
@@ -79,8 +78,10 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     readonly openCloseAllActions = new Subject<boolean>();
 
     /**  @docs-private */
-    @ContentChildren(forwardRef(() => KbqAccordionItem), { descendants: true })
-    items: QueryList<KbqAccordionItem>;
+    readonly items = contentChildren(
+        forwardRef(() => KbqAccordionItem),
+        { descendants: true }
+    );
 
     /** Specifies whether the accordion saves its states. Default is false */
     useStateSaving: boolean = inject(new HostAttributeToken('useStateSaving'), { optional: true }) !== null;
@@ -176,7 +177,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
             this.selectionDispatcher.notify(this._defaultValue as string, this.id);
         }
 
-        this.keyManager = new FocusKeyManager(this.items).withHomeAndEnd();
+        this.keyManager = new FocusKeyManager(this.items()).withHomeAndEnd();
 
         if (this.orientation() === 'horizontal') {
             this.keyManager.withHorizontalOrientation(this.dir?.value || 'ltr');
@@ -185,7 +186,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         }
 
         this.onValueChangeSubscription = merge(
-            ...this.items.map((item) => outputToObservable(item.expandedChange))
+            ...this.items().map((item) => outputToObservable(item.expandedChange))
         ).subscribe(() => this.onValueChange.emit());
     }
 
@@ -221,7 +222,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
             this.keyManager.setPreviousItemActive();
             event.preventDefault();
         } else if (event.keyCode === TAB) {
-            if (this.keyManager.activeItemIndex === this.items.length - 1) return;
+            if (this.keyManager.activeItemIndex === this.items().length - 1) return;
 
             this.keyManager.setNextItemActive();
             event.preventDefault();
