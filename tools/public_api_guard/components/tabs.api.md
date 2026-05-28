@@ -127,8 +127,8 @@ export class KbqTabBody implements OnInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     ngOnInit(): void;
-    readonly onCentered: EventEmitter<void>;
-    readonly onCentering: EventEmitter<number>;
+    readonly onCentered: i0.OutputEmitterRef<void>;
+    readonly onCentering: i0.OutputEmitterRef<number>;
     // (undocumented)
     onTranslateTabComplete(e: AnimationEvent_2): void;
     // (undocumented)
@@ -182,14 +182,14 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     // (undocumented)
     get activeTab(): KbqTab | null;
     set activeTab(value: KbqTabSelectBy | null);
-    readonly activeTabChange: EventEmitter<string | number | KbqTab>;
-    readonly animationDone: EventEmitter<void>;
+    readonly activeTabChange: i0.OutputEmitterRef<string | number | KbqTab>;
+    readonly animationDone: i0.OutputEmitterRef<void>;
     animationDuration: string;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly dynamicHeight: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly focusChange: EventEmitter<KbqTabChangeEvent>;
+    readonly focusChange: i0.OutputEmitterRef<KbqTabChangeEvent>;
     // (undocumented)
     focusChanged(index: number): void;
     getTabContentId(i: number): string;
@@ -217,8 +217,8 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     readonly resizeStream: Subject<Event>;
     get selectedIndex(): number;
     set selectedIndex(value: number);
-    readonly selectedIndexChange: EventEmitter<number>;
-    readonly selectedTabChange: EventEmitter<KbqTabChangeEvent>;
+    readonly selectedIndexChange: i0.OutputEmitterRef<number>;
+    readonly selectedTabChange: i0.OutputEmitterRef<KbqTabChangeEvent>;
     setTabBodyWrapperHeight(tabHeight: number): void;
     // (undocumented)
     tabBodyWrapper: ElementRef;

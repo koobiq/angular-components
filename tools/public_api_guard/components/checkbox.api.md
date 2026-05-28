@@ -5,13 +5,12 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i0 from '@angular/core';
 import * as i1 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqCheckedState } from '@koobiq/components/core';
@@ -32,8 +31,8 @@ export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     constructor(changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
-    readonly big: i0.InputSignal<boolean>;
-    readonly change: EventEmitter<KbqCheckboxChange>;
+    readonly big: _angular_core.InputSignal<boolean>;
+    readonly change: _angular_core.OutputEmitterRef<KbqCheckboxChange>;
     get checked(): boolean;
     set checked(value: boolean);
     clickAction: KbqCheckboxClickAction;
@@ -45,11 +44,11 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     id: string;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
-    readonly indeterminateChange: EventEmitter<boolean>;
+    readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
     inputElement: ElementRef;
     get inputId(): string;
-    readonly labelPosition: i0.InputSignal<"before" | "after">;
-    readonly name: i0.InputSignal<string | null>;
+    readonly labelPosition: _angular_core.InputSignal<"before" | "after">;
+    readonly name: _angular_core.InputSignal<string | null>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -67,20 +66,20 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
     registerOnTouched(fn: any): void;
-    readonly required: i0.InputSignalWithTransform<boolean | undefined, unknown>;
+    readonly required: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     toggle(): void;
-    readonly value: i0.InputSignal<string>;
+    readonly value: _angular_core.InputSignal<string>;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckbox, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCheckbox, never>;
 }
 
 // @public
@@ -95,19 +94,19 @@ export type KbqCheckboxClickAction = 'noop' | 'check' | 'check-indeterminate' | 
 // @public (undocumented)
 export class KbqCheckboxModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckboxModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCheckboxModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqCheckboxModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator], [typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator], [typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator]>;
 }
 
 // @public
 export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCheckboxRequiredValidator, "kbq-checkbox[required][formControlName],             kbq-checkbox[required][formControl], kbq-checkbox[required][ngModel]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqCheckboxRequiredValidator, "kbq-checkbox[required][formControlName],             kbq-checkbox[required][formControl], kbq-checkbox[required][ngModel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckboxRequiredValidator, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCheckboxRequiredValidator, never>;
 }
 
 // @public

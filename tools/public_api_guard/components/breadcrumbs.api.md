@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -124,14 +123,14 @@ export class KbqBreadcrumbView {
 export class RdxRovingFocusGroupDirective {
     readonly currentTabStopId: _angular_core.WritableSignal<string | null>;
     // (undocumented)
-    readonly currentTabStopIdChange: EventEmitter<string | null>;
+    readonly currentTabStopIdChange: _angular_core.OutputEmitterRef<string | null>;
     get dataOrientation(): Orientation;
     // Warning: (ae-forgotten-export) The symbol "Direction" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
     readonly dir: _angular_core.InputSignal<Direction>;
     // (undocumented)
-    readonly entryFocus: EventEmitter<Event>;
+    readonly entryFocus: _angular_core.OutputEmitterRef<Event>;
     readonly focusableItems: _angular_core.WritableSignal<HTMLElement[]>;
     getFocusableItemsCount(): number;
     handleBlur(): void;

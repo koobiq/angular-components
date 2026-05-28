@@ -172,7 +172,7 @@ export class KbqFilterBar {
     readonly externalConfiguration: unknown;
     get filter(): KbqFilter | null;
     set filter(value: KbqFilter | null);
-    readonly filterChange: EventEmitter<KbqFilter | null>;
+    readonly filterChange: i0.OutputEmitterRef<KbqFilter | null>;
     filterReset: KbqFilterReset;
     filters: KbqFilters;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
@@ -184,9 +184,9 @@ export class KbqFilterBar {
     get isSavedAndChanged(): boolean;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     readonly onChangePipe: EventEmitter<KbqPipe>;
-    readonly onClearPipe: EventEmitter<KbqPipe>;
-    readonly onClosePipe: EventEmitter<KbqPipe>;
-    readonly onRemovePipe: EventEmitter<KbqPipe>;
+    readonly onClearPipe: i0.OutputEmitterRef<KbqPipe>;
+    readonly onClosePipe: i0.OutputEmitterRef<KbqPipe>;
+    readonly onRemovePipe: i0.OutputEmitterRef<KbqPipe>;
     readonly onResetFilter: BehaviorSubject<boolean>;
     readonly openPipe: BehaviorSubject<string | number | null>;
     get pipeTemplates(): KbqPipeTemplate[];
@@ -237,7 +237,7 @@ export class KbqFilterBarRefresher {
 // @public (undocumented)
 export class KbqFilterReset {
     get localeData(): any;
-    readonly onResetFilter: EventEmitter<KbqFilter | null>;
+    readonly onResetFilter: i0.OutputEmitterRef<KbqFilter | null>;
     // (undocumented)
     protected resetFilter(): void;
     // (undocumented)
@@ -278,12 +278,12 @@ export class KbqFilters implements OnInit {
     protected mainButton: KbqButton;
     // (undocumented)
     ngOnInit(): void;
-    readonly onChangeFilter: EventEmitter<KbqSaveFilterEvent>;
+    readonly onChangeFilter: i0.OutputEmitterRef<KbqSaveFilterEvent>;
     onDropdownOpen(): void;
-    readonly onRemoveFilter: EventEmitter<KbqFilter>;
-    readonly onResetFilterChanges: EventEmitter<KbqFilter | null>;
-    readonly onSave: EventEmitter<KbqSaveFilterEvent>;
-    readonly onSelectFilter: EventEmitter<KbqFilter>;
+    readonly onRemoveFilter: i0.OutputEmitterRef<KbqFilter>;
+    readonly onResetFilterChanges: i0.OutputEmitterRef<KbqFilter | null>;
+    readonly onSave: i0.OutputEmitterRef<KbqSaveFilterEvent>;
+    readonly onSelectFilter: i0.OutputEmitterRef<KbqFilter>;
     // (undocumented)
     openChangeFilterNamePopover(): void;
     get opened(): boolean;
@@ -363,7 +363,7 @@ export class KbqPipeAdd {
     compareWith(o1: KbqPipe, o2: string): boolean;
     protected readonly filterBar: KbqFilterBar;
     readonly filterTemplate: i0.InputSignal<KbqFilter>;
-    readonly onAddPipe: EventEmitter<KbqPipeTemplate>;
+    readonly onAddPipe: i0.OutputEmitterRef<KbqPipeTemplate>;
     select: KbqSelect;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; "isSignal": true; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;

@@ -14,7 +14,6 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
@@ -55,13 +54,13 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     // (undocumented)
     contentChildren: QueryList<KbqIcon>;
     deselect(): void;
-    readonly destroyed: EventEmitter<KbqTagEvent>;
+    readonly destroyed: i0.OutputEmitterRef<KbqTagEvent>;
     get disabled(): boolean;
     set disabled(value: boolean);
     protected get draggable(): boolean;
     get editable(): boolean;
     set editable(value: boolean);
-    readonly editChange: EventEmitter<KbqTagEditChange>;
+    readonly editChange: i0.OutputEmitterRef<KbqTagEditChange>;
     protected readonly editing: i0.WritableSignal<boolean>;
     readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
@@ -92,14 +91,14 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     get removable(): boolean;
     set removable(value: boolean);
     remove(): void;
-    readonly removed: EventEmitter<KbqTagEvent>;
+    readonly removed: i0.OutputEmitterRef<KbqTagEvent>;
     removeIcon: KbqTagRemove;
     select(): void;
     get selectable(): boolean;
     set selectable(value: boolean);
     get selected(): boolean;
     set selected(value: boolean);
-    readonly selectionChange: EventEmitter<KbqTagSelectionChange>;
+    readonly selectionChange: i0.OutputEmitterRef<KbqTagSelectionChange>;
     selectViaInteraction(): void;
     setSelectedState(selected: boolean, options?: Partial<{
         isUserInput: boolean;
@@ -205,7 +204,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     placeholder: string;
     set separatorKeyCodes(value: number[]);
     get separators(): KbqTagSeparator[];
-    readonly tagEnd: EventEmitter<KbqTagInputEvent>;
+    readonly tagEnd: i0.OutputEmitterRef<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
     // (undocumented)
     triggerValidation(): void;
@@ -226,7 +225,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, defaultErrorStateMatcher: ErrorStateMatcher, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
     blur(): void;
     get canShowCleaner(): boolean;
-    readonly change: EventEmitter<KbqTagListChange>;
+    readonly change: i0.OutputEmitterRef<KbqTagListChange>;
     cleaner: KbqCleaner;
     readonly controlType: string;
     // (undocumented)
@@ -236,7 +235,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     // (undocumented)
     get draggable(): boolean;
     set draggable(value: boolean);
-    readonly dropped: EventEmitter<KbqTagListDroppedEvent>;
+    readonly dropped: i0.OutputEmitterRef<KbqTagListDroppedEvent>;
     readonly editable: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
@@ -306,7 +305,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     userTabIndex: number | null;
     get value(): any;
     set value(value: any);
-    readonly valueChange: EventEmitter<any>;
+    readonly valueChange: i0.OutputEmitterRef<any>;
     writeValue(value: any): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "editable": { "alias": "editable"; "required": false; "isSignal": true; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i2.CdkDropList; inputs: {}; outputs: {}; }]>;

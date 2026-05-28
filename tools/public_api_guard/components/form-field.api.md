@@ -9,7 +9,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
@@ -21,6 +20,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -308,8 +308,8 @@ export class KbqStepper {
     protected readonly mouseUp: Subject<void>;
     onStepDown($event: MouseEvent): void;
     onStepUp($event: MouseEvent): void;
-    readonly stepDown: EventEmitter<void>;
-    readonly stepUp: EventEmitter<void>;
+    readonly stepDown: OutputEmitterRef<void>;
+    readonly stepUp: OutputEmitterRef<void>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqStepper, "kbq-stepper", ["kbqStepper"], {}, { "stepUp": "stepUp"; "stepDown": "stepDown"; }, never, never, true, never>;
     // (undocumented)

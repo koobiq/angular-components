@@ -9,7 +9,6 @@ import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
@@ -25,7 +24,7 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 // @public (undocumented)
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
     constructor(radioGroup: KbqRadioGroup, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, radioDispatcher: UniqueSelectionDispatcher);
-    readonly change: EventEmitter<KbqRadioChange>;
+    readonly change: i0.OutputEmitterRef<KbqRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);
     get disabled(): boolean;
@@ -86,7 +85,7 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     constructor(changeDetector: ChangeDetectorRef);
     // (undocumented)
     readonly big: i0.InputSignal<boolean>;
-    readonly change: EventEmitter<KbqRadioChange>;
+    readonly change: i0.OutputEmitterRef<KbqRadioChange>;
     // (undocumented)
     checkSelectedRadioButton(): void;
     controlValueAccessorChangeFn: (value: any) => void;

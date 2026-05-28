@@ -9,7 +9,6 @@ import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/button';
@@ -28,7 +27,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     constructor(buttonToggleGroup: KbqButtonToggleGroup, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor, element: ElementRef);
     // (undocumented)
     buttonToggleGroup: KbqButtonToggleGroup;
-    readonly change: EventEmitter<KbqButtonToggleChange>;
+    readonly change: i0.OutputEmitterRef<KbqButtonToggleChange>;
     get checked(): boolean;
     set checked(value: boolean);
     // (undocumented)
@@ -74,7 +73,7 @@ export class KbqButtonToggleChange {
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
     constructor(_changeDetector: ChangeDetectorRef);
     buttonToggles: QueryList<KbqButtonToggle>;
-    readonly change: EventEmitter<KbqButtonToggleChange>;
+    readonly change: i0.OutputEmitterRef<KbqButtonToggleChange>;
     controlValueAccessorChangeFn: (value: any) => void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -98,7 +97,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput?: boolean): void;
     get value(): any;
     set value(newValue: any);
-    readonly valueChange: EventEmitter<any>;
+    readonly valueChange: i0.OutputEmitterRef<any>;
     get vertical(): boolean;
     set vertical(value: boolean);
     writeValue(value: any): void;

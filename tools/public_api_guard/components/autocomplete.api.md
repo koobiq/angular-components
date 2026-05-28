@@ -11,7 +11,6 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/overlay';
@@ -68,7 +67,7 @@ export class KbqAutocomplete implements AfterContentInit {
     set autoActiveFirstOption(value: boolean);
     get classList(): string;
     set classList(value: string);
-    readonly closed: EventEmitter<void>;
+    readonly closed: i0.OutputEmitterRef<void>;
     displayWith: ((value: any) => string) | null;
     // (undocumented)
     emitSelectEvent(option: KbqOption): void;
@@ -85,7 +84,7 @@ export class KbqAutocomplete implements AfterContentInit {
     ngAfterContentInit(): void;
     // (undocumented)
     onKeydown(event: KeyboardEvent): any;
-    readonly opened: EventEmitter<void>;
+    readonly opened: i0.OutputEmitterRef<void>;
     // (undocumented)
     get openOnFocus(): boolean;
     set openOnFocus(value: boolean);
@@ -93,7 +92,7 @@ export class KbqAutocomplete implements AfterContentInit {
     optionGroups: QueryList<KbqOptgroup>;
     // (undocumented)
     options: QueryList<KbqOption>;
-    readonly optionSelected: EventEmitter<KbqAutocompleteSelectedEvent>;
+    readonly optionSelected: i0.OutputEmitterRef<KbqAutocompleteSelectedEvent>;
     // (undocumented)
     panel: ElementRef;
     panelMinWidth: number;

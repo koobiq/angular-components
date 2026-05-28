@@ -7,7 +7,6 @@
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { EventEmitter } from '@angular/core';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { HLJSApi } from 'highlight.js';
 import { InjectionToken } from '@angular/core';
@@ -42,7 +41,7 @@ export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLoc
 export class KbqCodeBlock implements AfterViewInit {
     constructor();
     activeFileIndex: number;
-    readonly activeFileIndexChange: EventEmitter<number>;
+    readonly activeFileIndexChange: _angular_core.OutputEmitterRef<number>;
     protected readonly buttonStyle: typeof KbqButtonStyles;
     protected get calculatedMaxHeight(): number | null;
     readonly canCopy: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -63,7 +62,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly filled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get hideTabs(): boolean;
     set hideTabs(value: boolean);
-    readonly hideTabsChange: EventEmitter<boolean>;
+    readonly hideTabsChange: _angular_core.OutputEmitterRef<boolean>;
     readonly lineNumbers: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
     readonly maxHeight: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -89,12 +88,12 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly scrollableCodeContent: CdkScrollable;
     scrollTo(options: ExtendedScrollToOptions): void;
     softWrap: boolean;
-    readonly softWrapChange: EventEmitter<boolean>;
+    readonly softWrapChange: _angular_core.OutputEmitterRef<boolean>;
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
     toggleSoftWrap(): void;
     toggleViewAll(): void;
     viewAll: boolean;
-    readonly viewAllChange: EventEmitter<boolean>;
+    readonly viewAllChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
     // (undocumented)

@@ -49,7 +49,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    readonly onValueChange: EventEmitter<void>;
+    readonly onValueChange: i0.OutputEmitterRef<void>;
     openAll(): void;
     readonly openCloseAllActions: Subject<boolean>;
     readonly orientation: i0.InputSignal<KbqAccordionOrientation>;
@@ -124,7 +124,7 @@ export class KbqAccordionItem implements OnDestroy {
     protected readonly accordion: KbqAccordion;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     close(): void;
-    readonly closed: EventEmitter<void>;
+    readonly closed: i0.OutputEmitterRef<void>;
     content: KbqAccordionContentDirective;
     // (undocumented)
     get dataState(): KbqAccordionItemState;
@@ -137,7 +137,7 @@ export class KbqAccordionItem implements OnDestroy {
     enableAnimation(): void;
     get expanded(): boolean;
     set expanded(expanded: boolean);
-    readonly expandedChange: EventEmitter<boolean>;
+    readonly expandedChange: i0.OutputEmitterRef<boolean>;
     protected readonly expansionDispatcher: UniqueSelectionDispatcher;
     // (undocumented)
     focus(): void;
@@ -150,7 +150,7 @@ export class KbqAccordionItem implements OnDestroy {
     static ngAcceptInputType_expanded: unknown;
     ngOnDestroy(): void;
     open(): void;
-    readonly opened: EventEmitter<void>;
+    readonly opened: i0.OutputEmitterRef<void>;
     // (undocumented)
     get orientation(): KbqAccordionOrientation;
     toggle(): void;

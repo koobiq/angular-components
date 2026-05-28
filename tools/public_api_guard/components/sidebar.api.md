@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/common';
 import { NgZone } from '@angular/core';
@@ -35,7 +34,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     // (undocumented)
     readonly position: i0.InputSignal<SidebarPositions>;
     // (undocumented)
-    readonly stateChanged: EventEmitter<boolean>;
+    readonly stateChanged: i0.OutputEmitterRef<boolean>;
     // (undocumented)
     toggle(): void;
     // (undocumented)

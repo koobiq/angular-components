@@ -215,10 +215,10 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
     selectedApp: KbqAppSwitcherApp;
-    readonly selectedAppChange: EventEmitter<KbqAppSwitcherApp>;
+    readonly selectedAppChange: i0.OutputEmitterRef<KbqAppSwitcherApp>;
     get selectedSite(): KbqAppSwitcherSite;
     set selectedSite(value: KbqAppSwitcherSite);
-    readonly selectedSiteChange: EventEmitter<KbqAppSwitcherSite>;
+    readonly selectedSiteChange: i0.OutputEmitterRef<KbqAppSwitcherSite>;
     get sites(): KbqAppSwitcherSite[];
     set sites(value: KbqAppSwitcherSite[]);
     get sitesMode(): boolean;

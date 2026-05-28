@@ -124,7 +124,7 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     constructor(confirmText: string, confirmButtonText: string);
     // (undocumented)
-    readonly confirm: EventEmitter<void>;
+    readonly confirm: i0.OutputEmitterRef<void>;
     // (undocumented)
     get confirmButtonText(): string;
     set confirmButtonText(value: string);

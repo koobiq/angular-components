@@ -14,7 +14,6 @@ import { DestroyRef } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i1$1 from '@angular/forms';
@@ -311,12 +310,12 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     protected readonly fileLoader: KbqFileLoader | undefined;
-    readonly fileRemoved: EventEmitter<[KbqFileItem, number]>;
+    readonly fileRemoved: _angular_core.OutputEmitterRef<[KbqFileItem, number]>;
     // (undocumented)
     get files(): KbqFileItem[];
     set files(currentFileList: KbqFileItem[]);
-    readonly filesAdded: EventEmitter<KbqFileItem[]>;
-    readonly filesChange: EventEmitter<KbqFileItem[]>;
+    readonly filesAdded: _angular_core.OutputEmitterRef<KbqFileItem[]>;
+    readonly filesChange: _angular_core.OutputEmitterRef<KbqFileItem[]>;
     fullScreenDropZone: _angular_core.InputSignal<boolean | Partial<{
         caption: string;
         size: _koobiq_components_core.KbqDefaultSizes;
@@ -365,7 +364,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     // (undocumented)
     get file(): KbqFileItem | null;
     set file(currentFile: KbqFileItem | null);
-    readonly fileChange: EventEmitter<KbqFileItem | null>;
+    readonly fileChange: _angular_core.OutputEmitterRef<KbqFileItem | null>;
     protected readonly fileLoader: KbqFileLoader | undefined;
     fullScreenDropZone: _angular_core.InputSignal<boolean | Partial<{
         caption: string;

@@ -8,7 +8,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/icon';
 import { NgZone } from '@angular/core';
@@ -100,7 +99,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     // (undocumented)
     setSize(size: number): void;
     // (undocumented)
-    readonly sizeChange: EventEmitter<number>;
+    readonly sizeChange: i0.OutputEmitterRef<number>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, true, never>;
     // (undocumented)
@@ -131,7 +130,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     // (undocumented)
     ghost: KbqGutterGhostDirective;
     // (undocumented)
-    readonly gutterPositionChange: EventEmitter<void>;
+    readonly gutterPositionChange: i0.OutputEmitterRef<void>;
     // (undocumented)
     gutters: QueryList<KbqGutterDirective>;
     // (undocumented)

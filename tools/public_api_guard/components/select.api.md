@@ -214,7 +214,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get required(): boolean;
     set required(value: boolean);
     resetSearch(): void;
-    readonly scrolledToBottom: EventEmitter<void>;
+    readonly scrolledToBottom: i0.OutputEmitterRef<void>;
     readonly scrolledToBottomOffset: i0.InputSignalWithTransform<number, unknown>;
     scrollStrategy: any;
     search: KbqSelectSearch;
@@ -225,7 +225,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void);
     get selected(): KbqOptionBase | KbqOptionBase[];
-    readonly selectionChange: EventEmitter<KbqSelectChange>;
+    readonly selectionChange: i0.OutputEmitterRef<KbqSelectChange>;
     selectionModel: SelectionModel<KbqOptionBase>;
     setDisabledState(isDisabled: boolean): void;
     setSelectedOptionsByClick(option: KbqOption): void;
@@ -247,7 +247,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     updateErrorState(): void;
     get value(): any;
     set value(newValue: any);
-    readonly valueChange: EventEmitter<any>;
+    readonly valueChange: i0.OutputEmitterRef<any>;
     readonly virtualOptionFactory: i0.InputSignal<((value: any) => KbqVirtualOption) | undefined>;
     virtualScrollViewport?: CdkVirtualScrollViewport;
     withVirtualScroll: boolean;

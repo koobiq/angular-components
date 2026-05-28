@@ -9,7 +9,6 @@ import * as _angular_core from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqCheckboxClickAction } from '@koobiq/components/checkbox';
@@ -36,7 +35,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     readonly big: _angular_core.InputSignal<boolean>;
     // (undocumented)
-    readonly change: EventEmitter<KbqToggleChange>;
+    readonly change: _angular_core.OutputEmitterRef<KbqToggleChange>;
     // (undocumented)
     get checked(): boolean;
     set checked(value: boolean);
@@ -53,7 +52,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     id: string;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
-    readonly indeterminateChange: EventEmitter<boolean>;
+    readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
     inputElement: ElementRef<HTMLInputElement>;
     // (undocumented)

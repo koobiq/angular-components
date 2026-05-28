@@ -11,7 +11,6 @@ import { DateAdapter } from '@koobiq/components/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
@@ -78,7 +77,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get id(): string;
     set id(value: string);
     // (undocumented)
-    readonly incorrectInput: EventEmitter<void>;
+    readonly incorrectInput: i0.OutputEmitterRef<void>;
     // (undocumented)
     get isFullFormat(): boolean;
     // (undocumented)

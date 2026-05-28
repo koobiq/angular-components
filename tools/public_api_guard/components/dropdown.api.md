@@ -266,8 +266,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     get dir(): Direction;
     get dropdown(): KbqDropdownPanel;
     set dropdown(dropdown: KbqDropdownPanel);
-    readonly dropdownClosed: EventEmitter<void>;
-    readonly dropdownOpened: EventEmitter<void>;
+    readonly dropdownClosed: i0.OutputEmitterRef<void>;
+    readonly dropdownOpened: i0.OutputEmitterRef<void>;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;

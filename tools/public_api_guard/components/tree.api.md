@@ -468,7 +468,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     onKeydown($event: any): void;
     protected onMouseenter(): void;
     // (undocumented)
-    readonly onSelectionChange: EventEmitter<KbqTreeOptionChange>;
+    readonly onSelectionChange: i0.OutputEmitterRef<KbqTreeOptionChange>;
     // (undocumented)
     parentTextElement: ElementRef;
     // (undocumented)
@@ -582,7 +582,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     multipleMode: MultipleMode | null;
     // (undocumented)
-    readonly navigationChange: EventEmitter<KbqTreeNavigationChange<KbqTreeOption>>;
+    readonly navigationChange: i0.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption>>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -600,7 +600,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    readonly onSelectAll: EventEmitter<KbqTreeSelectAllEvent<KbqTreeOption>>;
+    readonly onSelectAll: i0.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption>>;
     onTouched: () => void;
     // (undocumented)
     get optionBlurChanges(): Observable<KbqTreeOptionEvent>;

@@ -224,7 +224,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     readonly onCopy: EventEmitter<KbqListCopyEvent<KbqListOption>>;
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    readonly onSelectAll: EventEmitter<KbqListSelectAllEvent<KbqListOption>>;
+    readonly onSelectAll: i0.OutputEmitterRef<KbqListSelectAllEvent<KbqListOption>>;
     // (undocumented)
     onTouched: () => void;
     // (undocumented)
@@ -246,7 +246,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // (undocumented)
     selectAll(): void;
     // (undocumented)
-    readonly selectionChange: EventEmitter<KbqListSelectionChange>;
+    readonly selectionChange: i0.OutputEmitterRef<KbqListSelectionChange>;
     // (undocumented)
     selectionModel: SelectionModel<KbqListOption>;
     // (undocumented)

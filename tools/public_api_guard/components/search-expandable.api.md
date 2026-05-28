@@ -9,7 +9,6 @@ import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -48,7 +47,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly focusMonitor: FocusMonitor;
     readonly isEmitValueByEnterEnabled: i0.InputSignal<boolean>;
     isOpened: boolean;
-    readonly isOpenedChange: EventEmitter<boolean>;
+    readonly isOpenedChange: i0.OutputEmitterRef<boolean>;
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
     get localeData(): any;

@@ -204,7 +204,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get kbqVisible(): boolean;
     set kbqVisible(value: boolean);
     // (undocumented)
-    readonly kbqVisibleChange: EventEmitter<boolean>;
+    readonly kbqVisibleChange: i0.OutputEmitterRef<boolean>;
     // (undocumented)
     kbqWidth: number | string;
     // (undocumented)
