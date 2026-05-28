@@ -9,8 +9,7 @@ import {
     KbqFileUploadAllowedTypeValues,
     KbqFileUploadModule,
     KbqFullScreenDropzoneService,
-    KbqLocalDropzone,
-    KbqMultipleFileUploadComponent
+    KbqLocalDropzone
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -32,7 +31,7 @@ type MultipleUploadState = {
     dragover?: boolean;
     icon?: string;
     className?: string;
-    size?: KbqMultipleFileUploadComponent['size'];
+    size?: 'compact' | 'default';
     type?: 'error';
     allowed?: KbqFileUploadAllowedTypeValues;
 };
