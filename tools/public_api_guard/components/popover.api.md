@@ -65,7 +65,7 @@ export const kbqPopoverAnimations: {
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
-    cdkTrapFocus: CdkTrapFocus;
+    readonly cdkTrapFocus: i0.Signal<CdkTrapFocus>;
     // (undocumented)
     checkContentOverflow(contentElement: HTMLElement): void;
     // (undocumented)
@@ -91,7 +91,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     onEscape(): void;
     // (undocumented)
-    popoverContent: ElementRef<HTMLDivElement>;
+    readonly popoverContent: i0.Signal<ElementRef<HTMLDivElement> | undefined>;
     // (undocumented)
     prefix: string;
     // (undocumented)

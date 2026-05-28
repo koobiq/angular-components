@@ -2382,9 +2382,9 @@ export type KbqFlexWrap = 'nowrap' | 'wrap';
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
-    elements: QueryList<KbqFormElement>;
+    readonly elements: i0.Signal<readonly KbqFormElement[]>;
     // (undocumented)
-    handleElements(elements: QueryList<KbqFormElement>): void;
+    handleElements(elements: readonly KbqFormElement[]): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -2407,7 +2407,7 @@ export class KbqFormattersModule {
 export class KbqFormElement implements AfterContentInit {
     constructor(element: ElementRef<HTMLElement>);
     // (undocumented)
-    elements: QueryList<KbqFormElement>;
+    readonly elements: i0.Signal<readonly KbqFormElement[]>;
     // (undocumented)
     hasLegend: boolean;
     // (undocumented)

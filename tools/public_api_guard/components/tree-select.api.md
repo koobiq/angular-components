@@ -75,7 +75,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    cleaner: KbqCleaner;
+    readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     // (undocumented)
     clearValue($event: any): void;
     close(): void;
@@ -83,10 +83,10 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get colorForState(): KbqComponentColors;
     controlType: string;
     // (undocumented)
-    customMatcher: KbqSelectMatcher;
+    readonly customMatcher: _angular_core.Signal<KbqSelectMatcher | undefined>;
     // (undocumented)
-    customTagTemplateRef: TemplateRef<any>;
-    customTrigger: KbqSelectTrigger;
+    readonly customTagTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
+    readonly customTrigger: _angular_core.Signal<KbqSelectTrigger | undefined>;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
     // (undocumented)
@@ -170,7 +170,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
     protected overlayWidth: string | number;
     // (undocumented)
-    panel: ElementRef;
+    readonly panel: _angular_core.Signal<ElementRef<any>>;
     readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
         [key: string]: any;
     }>;
@@ -196,7 +196,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     set required(value: boolean);
     scrollStrategy: any;
     // (undocumented)
-    search: KbqSelectSearch;
+    readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);
     // (undocumented)
     get searchMinOptionsThreshold(): number | undefined;
@@ -221,8 +221,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     toggle(): void;
     transformOrigin: string;
     // (undocumented)
-    tree: KbqTreeSelection;
-    trigger: ElementRef;
+    readonly tree: _angular_core.Signal<KbqTreeSelection | undefined>;
+    readonly trigger: _angular_core.Signal<ElementRef<any>>;
     triggerFontSize: number;
     // (undocumented)
     triggerKeydownHandler(event: KeyboardEvent): void;

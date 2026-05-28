@@ -45,7 +45,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
     readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
-    inputElement: ElementRef;
+    readonly inputElement: _angular_core.Signal<ElementRef<any>>;
     get inputId(): string;
     readonly labelPosition: _angular_core.InputSignal<"before" | "after">;
     readonly name: _angular_core.InputSignal<string | null>;

@@ -86,7 +86,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     get minDate(): D | null;
     set minDate(value: D | null);
     readonly monthSelected: _angular_core.OutputEmitterRef<D>;
-    monthView: KbqMonthView<D>;
+    readonly monthView: _angular_core.Signal<KbqMonthView<any>>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -263,7 +263,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef);
     readonly animationDone: Subject<void>;
     animationState: 'enter' | 'void';
-    calendar: KbqCalendar<D>;
+    readonly calendar: _angular_core.Signal<KbqCalendar<any>>;
     datepicker: KbqDatepicker<D>;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -467,7 +467,7 @@ export class KbqMonthView<D> implements AfterContentInit {
     dateSelected(date: number): void;
     firstWeekOffset: number;
     init(): void;
-    kbqCalendarBody: KbqCalendarBody;
+    readonly kbqCalendarBody: _angular_core.Signal<KbqCalendarBody>;
     readonly maxDate: _angular_core.InputSignal<D | null>;
     readonly minDate: _angular_core.InputSignal<D | null>;
     // (undocumented)

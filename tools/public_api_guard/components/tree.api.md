@@ -421,7 +421,7 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, tree: any);
     // (undocumented)
-    actionButton: KbqOptionActionComponent;
+    readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -438,7 +438,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     get disabled(): any;
     set disabled(value: any);
     // (undocumented)
-    dropdownTrigger: KbqDropdownTrigger;
+    readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
     // (undocumented)
     emitSelectionChangeEvent(): void;
     // (undocumented)
@@ -474,7 +474,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     preventBlur: boolean;
     // (undocumented)
-    pseudoCheckbox: KbqPseudoCheckbox;
+    readonly pseudoCheckbox: i0.Signal<KbqPseudoCheckbox | undefined>;
     // (undocumented)
     select(setFocus?: boolean): void;
     // (undocumented)
@@ -492,13 +492,13 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption>;
+    get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption> | undefined;
     // (undocumented)
-    toggleElementComponent: KbqTreeNodeToggleBaseDirective<KbqTreeOption>;
+    readonly toggleElementComponent: i0.Signal<KbqTreeNodeToggleComponent<any> | undefined>;
     // (undocumented)
-    toggleElementDirective: KbqTreeNodeToggleBaseDirective<KbqTreeOption>;
+    readonly toggleElementDirective: i0.Signal<KbqTreeNodeToggleDirective<any> | undefined>;
     // (undocumented)
-    tooltipTrigger: KbqTooltipTrigger;
+    readonly tooltipTrigger: i0.Signal<KbqTooltipTrigger | undefined>;
     // (undocumented)
     tree: any;
     // (undocumented)

@@ -92,7 +92,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     // (undocumented)
-    navbarItems: QueryList<KbqNavbarItem>;
+    readonly navbarItems: i0.Signal<readonly any[]>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -141,7 +141,7 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     // (undocumented)
     ngAfterContentInit(): void;
     protected readonly rectangleElement: KbqNavbarRectangleElement;
-    title: KbqNavbarTitle;
+    readonly title: i0.Signal<KbqNavbarTitle | undefined>;
     get titleText(): string | null;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; "isSignal": true; }; "collapsedText": { "alias": "collapsedText"; "required": false; }; }, {}, ["title"], ["*"], true, never>;
@@ -174,20 +174,20 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     // (undocumented)
     blur(): void;
     // (undocumented)
-    button: KbqButton;
+    readonly button: i0.Signal<KbqButton | undefined>;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     focus(origin?: FocusOrigin): void;
     // (undocumented)
-    formField: KbqFormField;
+    readonly formField: i0.Signal<KbqFormField | undefined>;
     // (undocumented)
     getLabel(): string;
     // (undocumented)
     get hasFocus(): boolean;
     set hasFocus(value: boolean);
     // (undocumented)
-    get nestedElement(): KbqButton | KbqFormField;
+    get nestedElement(): KbqButton | KbqFormField | undefined;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -207,7 +207,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     // (undocumented)
     get tabIndex(): number;
     // (undocumented)
-    title: KbqNavbarTitle;
+    readonly title: i0.Signal<KbqNavbarTitle | undefined>;
     // (undocumented)
     get tooltip(): KbqTooltipTrigger;
     // (undocumented)
@@ -245,7 +245,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     get hasDropDownTrigger(): boolean;
     // (undocumented)
-    icon: KbqIcon;
+    readonly icon: i0.Signal<KbqIcon | undefined>;
     // (undocumented)
     get isCollapsed(): boolean;
     // (undocumented)
@@ -261,7 +261,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     get showVerticalDropDownAngle(): boolean;
     // (undocumented)
-    title: KbqNavbarTitle;
+    readonly title: i0.Signal<KbqNavbarTitle | undefined>;
     // (undocumented)
     get titleText(): string | null;
     // (undocumented)
@@ -300,7 +300,7 @@ export class KbqNavbarModule {
 // @public (undocumented)
 export class KbqNavbarRectangleElement {
     // (undocumented)
-    button: KbqButtonCssStyler;
+    readonly button: i0.Signal<KbqButtonCssStyler | undefined>;
     // (undocumented)
     get collapsed(): boolean;
     set collapsed(value: boolean);
@@ -372,7 +372,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     readonly animationDone: Subject<void>;
     // (undocumented)
-    bento: KbqNavbarBento;
+    readonly bento: i0.Signal<any>;
     // (undocumented)
     configuration: any;
     // (undocumented)
@@ -383,7 +383,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     readonly externalConfiguration: unknown;
     // (undocumented)
-    items: QueryList<KbqNavbarItem>;
+    readonly items: i0.Signal<readonly any[]>;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -396,7 +396,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "bento", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }

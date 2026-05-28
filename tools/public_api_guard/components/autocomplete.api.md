@@ -89,12 +89,12 @@ export class KbqAutocomplete implements AfterContentInit {
     get openOnFocus(): boolean;
     set openOnFocus(value: boolean);
     // (undocumented)
-    optionGroups: QueryList<KbqOptgroup>;
+    readonly optionGroups: i0.Signal<readonly KbqOptgroup[]>;
     // (undocumented)
     options: QueryList<KbqOption>;
     readonly optionSelected: i0.OutputEmitterRef<KbqAutocompleteSelectedEvent>;
     // (undocumented)
-    panel: ElementRef;
+    readonly panel: i0.Signal<ElementRef<any>>;
     panelMinWidth: number;
     panelWidth: string | number;
     // (undocumented)
@@ -103,9 +103,9 @@ export class KbqAutocomplete implements AfterContentInit {
     setVisibility(): void;
     showPanel: boolean;
     // (undocumented)
-    template: TemplateRef<any>;
+    readonly template: i0.Signal<TemplateRef<any>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
 }

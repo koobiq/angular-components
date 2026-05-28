@@ -87,7 +87,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     prefix: string;
     protected readonly service: KbqNotificationCenterService;
     // (undocumented)
-    switcher: KbqButton;
+    readonly switcher: i0.Signal<KbqButton>;
     trigger: KbqNotificationCenterTrigger;
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;

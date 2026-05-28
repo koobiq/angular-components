@@ -16,11 +16,9 @@ import * as i3 from '@angular/cdk/observers';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
@@ -78,7 +76,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 export class KbqButtonCssStyler implements AfterContentInit {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
     // (undocumented)
-    icons: QueryList<KbqIcon>;
+    readonly icons: i0.Signal<readonly any[]>;
     // (undocumented)
     isIconButton: boolean;
     // (undocumented)

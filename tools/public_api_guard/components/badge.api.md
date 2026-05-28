@@ -10,9 +10,7 @@ import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqIconItem } from '@koobiq/components/icon';
-import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 
 // @public (undocumented)
@@ -29,7 +27,7 @@ export class KbqBadge {
     // (undocumented)
     readonly compact: i0.InputSignal<boolean>;
     // (undocumented)
-    iconItem: KbqIconItem;
+    readonly iconItem: i0.Signal<KbqIconItem | undefined>;
     // (undocumented)
     readonly outline: i0.InputSignal<boolean>;
     // (undocumented)
@@ -76,7 +74,7 @@ export enum KbqBadgeColors {
 export class KbqBadgeCssStyler implements AfterContentInit {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
     // (undocumented)
-    icons: QueryList<KbqIcon>;
+    readonly icons: i0.Signal<readonly any[]>;
     // (undocumented)
     isIconButton: boolean;
     // (undocumented)

@@ -57,7 +57,7 @@ export class KbqInlineEdit {
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
     protected onOverlayOutsideClick($event: Event): void;
-    protected readonly overlayDir: _angular_core.Signal<CdkConnectedOverlay | undefined>;
+    protected readonly overlayDir: _angular_core.Signal<CdkConnectedOverlay>;
     protected overlayOrigin: HTMLElement;
     readonly overlayPanelClass: _angular_core.InputSignal<string | string[]>;
     protected readonly overlayWidth: _angular_core.WritableSignal<string | number>;
@@ -72,7 +72,7 @@ export class KbqInlineEdit {
     protected readonly tabIndex: _angular_core.Signal<0 | -1>;
     toggleMode(): void;
     readonly tooltipPlacement: _angular_core.InputSignal<PopUpPlacements | undefined>;
-    protected readonly tooltipTrigger: _angular_core.Signal<KbqTooltipTrigger | undefined>;
+    protected readonly tooltipTrigger: _angular_core.Signal<KbqTooltipTrigger>;
     readonly validationTooltip: _angular_core.InputSignal<string | TemplateRef<any> | undefined>;
     protected readonly viewContainer: _angular_core.Signal<ElementRef<HTMLElement>>;
     // (undocumented)

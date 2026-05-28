@@ -89,7 +89,7 @@ export class KbqListModule {
 export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetector: ChangeDetectorRef, ngZone: NgZone, listSelection: KbqListSelection, group: KbqOptgroup);
     // (undocumented)
-    actionButton: KbqOptionActionComponent;
+    readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -97,7 +97,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    dropdownTrigger: KbqDropdownTrigger;
+    readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
     // (undocumented)
     get externalPseudoCheckbox(): boolean;
     // (undocumented)
@@ -131,7 +131,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     preventBlur: boolean;
     // (undocumented)
-    pseudoCheckbox: KbqPseudoCheckbox;
+    readonly pseudoCheckbox: i0.Signal<KbqPseudoCheckbox | undefined>;
     // (undocumented)
     get selected(): boolean;
     set selected(value: boolean);
@@ -143,13 +143,13 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     get tabIndex(): any;
     // (undocumented)
-    text: ElementRef;
+    readonly text: i0.Signal<ElementRef<any>>;
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    tooltipTrigger: KbqTooltipTrigger;
+    readonly tooltipTrigger: i0.Signal<KbqTooltipTrigger | undefined>;
     // (undocumented)
     get value(): any;
     set value(newValue: any);

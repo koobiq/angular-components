@@ -16,7 +16,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     constructor(ngZone: NgZone, elementRef: ElementRef);
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
     get animationState(): KbqSidebarAnimationState;
-    closedContent: KbqSidebarClosed;
+    readonly closedContent: i0.Signal<KbqSidebarClosed | undefined>;
     protected readonly document: Document;
     internalState: boolean;
     // (undocumented)
@@ -28,7 +28,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     // (undocumented)
     get opened(): boolean;
     set opened(value: boolean);
-    openedContent: KbqSidebarOpened;
+    readonly openedContent: i0.Signal<KbqSidebarOpened | undefined>;
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point index.d.ts
     params: KbqSidebarParams;
     // (undocumented)

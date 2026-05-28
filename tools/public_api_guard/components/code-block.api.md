@@ -85,7 +85,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
     // @deprecated
-    readonly scrollableCodeContent: CdkScrollable;
+    readonly scrollableCodeContent: _angular_core.Signal<CdkScrollable>;
     scrollTo(options: ExtendedScrollToOptions): void;
     softWrap: boolean;
     readonly softWrapChange: _angular_core.OutputEmitterRef<boolean>;

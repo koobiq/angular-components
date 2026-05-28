@@ -34,7 +34,7 @@ export class KbqBreadcrumbButton implements OnInit {
 // @public
 export class KbqBreadcrumbItem {
     readonly current: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    customTemplateRef: TemplateRef<any>;
+    readonly customTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly routerLink: RouterLink | null;
     readonly text: _angular_core.InputSignal<string>;

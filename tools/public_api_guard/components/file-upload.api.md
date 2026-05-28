@@ -34,6 +34,7 @@ import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqEmptyState } from '@koobiq/components/empty-state';
 import { KbqEnumValues } from '@koobiq/components/core';
 import { KbqFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqHint } from '@koobiq/components/form-field';
 import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
@@ -41,7 +42,6 @@ import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -304,12 +304,12 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     protected readonly captionContext: _angular_core.Signal<KbqFileUploadCaptionContext>;
     protected get captionTextWhenSelected(): string;
     readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
-    protected readonly customFileIcon: TemplateRef<HTMLElement>;
+    protected readonly customFileIcon: _angular_core.Signal<TemplateRef<any> | undefined>;
     cvaOnChange: (_: KbqFileItem[]) => void;
     deleteFile(index: number, event?: MouseEvent, origin?: FocusOrigin): void;
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
-    protected readonly fileLoader: KbqFileLoader | undefined;
+    protected readonly fileLoader: _angular_core.Signal<KbqFileLoader | undefined>;
     readonly fileRemoved: _angular_core.OutputEmitterRef<[KbqFileItem, number]>;
     // (undocumented)
     get files(): KbqFileItem[];
@@ -324,7 +324,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     }> | undefined>;
     hasFocus: boolean;
     get hasHint(): boolean;
-    protected readonly hint: QueryList<TemplateRef<any>>;
+    protected readonly hint: _angular_core.Signal<readonly KbqHint[]>;
     get input(): ElementRef<HTMLInputElement> | undefined;
     readonly inputId: _angular_core.InputSignal<string>;
     get invalid(): boolean;
@@ -365,7 +365,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     get file(): KbqFileItem | null;
     set file(currentFile: KbqFileItem | null);
     readonly fileChange: _angular_core.OutputEmitterRef<KbqFileItem | null>;
-    protected readonly fileLoader: KbqFileLoader | undefined;
+    protected readonly fileLoader: _angular_core.Signal<KbqFileLoader>;
     fullScreenDropZone: _angular_core.InputSignal<boolean | Partial<{
         caption: string;
         size: _koobiq_components_core.KbqDefaultSizes;

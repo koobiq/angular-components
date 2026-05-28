@@ -77,8 +77,8 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     set disabled(value: boolean);
     // (undocumented)
     readonly empty: i0.InputSignalWithTransform<boolean, unknown>;
-    explicitContent: TemplateRef<any>;
-    implicitContent: TemplateRef<any>;
+    readonly explicitContent: i0.Signal<TemplateRef<any> | undefined>;
+    readonly implicitContent: i0.Signal<TemplateRef<any>>;
     isActive: boolean;
     // (undocumented)
     get isOverflown(): boolean;
@@ -109,7 +109,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     get tooltipTitle(): string;
     set tooltipTitle(value: string);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "tooltipTitle": { "alias": "tooltipTitle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "textLabel": { "alias": "label"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "tabId": { "alias": "tabId"; "required": false; "isSignal": true; }; }, {}, ["templateLabel", "explicitContent"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "tooltipTitle": { "alias": "tooltipTitle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "textLabel": { "alias": "label"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "tabId": { "alias": "tabId"; "required": false; "isSignal": true; }; }, {}, ["explicitContent", "templateLabel"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTab, never>;
 }
@@ -134,7 +134,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     // (undocumented)
     onTranslateTabStarted(e: AnimationEvent_2): void;
     origin: number;
-    portalHost: CdkPortalOutlet;
+    readonly portalHost: i0.Signal<CdkPortalOutlet>;
     set position(position: number);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabBody, "kbq-tab-body", never, { "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; "isSignal": true; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; "isSignal": true; }; }, { "onCentering": "onCentering"; "beforeCentering": "beforeCentering"; "afterLeavingCenter": "afterLeavingCenter"; "onCentered": "onCentered"; }, never, never, true, never>;
@@ -221,9 +221,9 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     readonly selectedTabChange: i0.OutputEmitterRef<KbqTabChangeEvent>;
     setTabBodyWrapperHeight(tabHeight: number): void;
     // (undocumented)
-    tabBodyWrapper: ElementRef;
+    readonly tabBodyWrapper: i0.Signal<ElementRef<any>>;
     // (undocumented)
-    tabHeader: KbqTabHeader;
+    readonly tabHeader: i0.Signal<KbqTabHeader>;
     // (undocumented)
     tabs: QueryList<KbqTab>;
     // (undocumented)

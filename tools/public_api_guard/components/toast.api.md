@@ -128,7 +128,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     // (undocumented)
     readonly service: KbqToastService;
     // (undocumented)
-    viewContainer: ViewContainerRef;
+    readonly viewContainer: i0.Signal<ViewContainerRef>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastContainerComponent, "kbq-toast-container", never, {}, {}, never, never, true, never>;
     // (undocumented)

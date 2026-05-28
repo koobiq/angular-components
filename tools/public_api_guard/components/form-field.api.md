@@ -92,9 +92,9 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     get canShowCleaner(): boolean;
     cleaner: KbqCleaner | null;
     clearValue(event: Event): void;
-    connectionContainerRef: ElementRef;
+    readonly connectionContainerRef: i0.Signal<ElementRef<any>>;
     readonly contentClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
-    control: KbqFormFieldControl<unknown>;
+    readonly control: i0.Signal<KbqFormFieldControl<any>>;
     get disabled(): boolean;
     readonly elementRef: ElementRef<HTMLElement>;
     focus(options?: FocusOptions): void;
@@ -134,7 +134,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     prefix: QueryList<KbqPrefix>;
     runFocusMonitor: () => void;
     shouldForward(prop: keyof NgControl): boolean;
-    readonly stepper: KbqStepper;
+    readonly stepper: i0.Signal<KbqStepper | undefined>;
     stopFocusMonitor(): void;
     suffix: QueryList<KbqSuffix>;
     protected validateControlChild(): void;
@@ -262,7 +262,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     // (undocumented)
     protected hasError: boolean;
     get hidden(): boolean;
-    readonly icon: KbqIconButton;
+    readonly icon: i0.Signal<KbqIconButton>;
     get iconClass(): string;
     // (undocumented)
     readonly kbqTooltipHidden: i0.InputSignal<string | TemplateRef<any>>;

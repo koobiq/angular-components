@@ -120,7 +120,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     // (undocumented)
     ngOnDestroy(): void;
     onAnimation(event: AnimationEvent_2): void;
-    portalOutlet: CdkPortalOutlet;
+    readonly portalOutlet: i0.Signal<CdkPortalOutlet>;
     setAnimationState(state: KbqSidepanelAnimationState): void;
     // (undocumented)
     sidepanelConfig: KbqSidepanelConfig;

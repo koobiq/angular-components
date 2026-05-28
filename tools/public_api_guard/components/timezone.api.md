@@ -61,9 +61,9 @@ export class KbqTimezoneOption extends KbqOption {
     get timezone(): KbqTimezoneZone;
     set timezone(zone: KbqTimezoneZone);
     // (undocumented)
-    tooltipContent: ElementRef<HTMLElement>;
+    readonly tooltipContent: i0.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
-    tooltipContentWrapper: ElementRef<HTMLElement>;
+    readonly tooltipContentWrapper: i0.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
@@ -98,7 +98,7 @@ export interface KbqTimezonesByCountry {
 // @public (undocumented)
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     // (undocumented)
-    customTrigger: KbqTimezoneSelectTrigger;
+    readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)

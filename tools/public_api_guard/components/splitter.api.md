@@ -128,11 +128,11 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
-    ghost: KbqGutterGhostDirective;
+    readonly ghost: i0.Signal<KbqGutterGhostDirective>;
     // (undocumented)
     readonly gutterPositionChange: i0.OutputEmitterRef<void>;
     // (undocumented)
-    gutters: QueryList<KbqGutterDirective>;
+    readonly gutters: i0.Signal<readonly KbqGutterDirective[]>;
     // (undocumented)
     get gutterSize(): number;
     set gutterSize(gutterSize: number);

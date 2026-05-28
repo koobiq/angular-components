@@ -55,7 +55,7 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 // @public
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
     constructor(ngZone: NgZone, targetElement: ElementRef<HTMLElement>);
-    contentElement: ElementRef<HTMLDivElement>;
+    readonly contentElement: i0.Signal<ElementRef<HTMLDivElement>>;
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
     // (undocumented)
     get element(): HTMLElement;

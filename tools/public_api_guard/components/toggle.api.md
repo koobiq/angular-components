@@ -54,7 +54,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     set indeterminate(value: boolean);
     readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
-    inputElement: ElementRef<HTMLInputElement>;
+    readonly inputElement: _angular_core.Signal<ElementRef<HTMLInputElement>>;
     // (undocumented)
     get inputId(): string;
     // Warning: (ae-forgotten-export) The symbol "ToggleLabelPositionType" needs to be exported by the entry point index.d.ts

@@ -28,7 +28,6 @@ import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -98,10 +97,10 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // Warning: (ae-forgotten-export) The symbol "AnimationState" needs to be exported by the entry point index.d.ts
     animateMaskTo(state: AnimationState): void;
     // (undocumented)
-    autoFocusedButtons: QueryList<ElementRef>;
+    readonly autoFocusedButtons: i0.Signal<readonly ElementRef<any>[]>;
     get beforeClose(): Observable<R | undefined>;
     // (undocumented)
-    bodyContainer: ViewContainerRef;
+    readonly bodyContainer: i0.Signal<ViewContainerRef>;
     // (undocumented)
     get cancelText(): string;
     // (undocumented)
@@ -216,9 +215,9 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     modalAnimationClassMap: object | null;
     // (undocumented)
-    modalBody: ElementRef;
+    readonly modalBody: i0.Signal<ElementRef<any> | undefined>;
     // (undocumented)
-    modalContainer: ElementRef;
+    readonly modalContainer: i0.Signal<ElementRef<any>>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

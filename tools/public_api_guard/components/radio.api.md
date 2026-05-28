@@ -31,7 +31,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     set disabled(value: boolean);
     focus(): void;
     id: string;
-    inputElement: ElementRef;
+    readonly inputElement: i0.Signal<ElementRef<any>>;
     get inputId(): string;
     // (undocumented)
     readonly isFocused: i0.InputSignal<boolean>;

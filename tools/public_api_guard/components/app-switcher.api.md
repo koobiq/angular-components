@@ -93,13 +93,13 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     readonly externalConfiguration: unknown;
     filteredSites: KbqAppSwitcherSite[];
-    input: KbqInput;
+    readonly input: i0.Signal<KbqInput | undefined>;
     isTrapFocus: boolean;
     get localeData(): any;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;
-    otherSites: KbqDropdownTrigger;
+    readonly otherSites: i0.Signal<KbqDropdownTrigger>;
     prefix: string;
     readonly searchControl: FormControl<string | null>;
     selectAppInSite(site: KbqAppSwitcherSite, app: KbqAppSwitcherApp): void;

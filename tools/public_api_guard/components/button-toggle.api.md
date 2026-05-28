@@ -6,18 +6,17 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/button';
 import * as i2 from '@koobiq/components/title';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { QueryList } from '@angular/core';
 
 // @public
 export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
@@ -27,7 +26,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     constructor(buttonToggleGroup: KbqButtonToggleGroup, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor, element: ElementRef);
     // (undocumented)
     buttonToggleGroup: KbqButtonToggleGroup;
-    readonly change: i0.OutputEmitterRef<KbqButtonToggleChange>;
+    readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     get checked(): boolean;
     set checked(value: boolean);
     // (undocumented)
@@ -35,12 +34,12 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     set disabled(value: boolean);
     focus(): void;
     // (undocumented)
-    icons: QueryList<KbqIcon>;
+    readonly icons: _angular_core.Signal<readonly KbqIcon[]>;
     // (undocumented)
     iconType: string;
     markForCheck(): void;
     // (undocumented)
-    mcButton: KbqButton;
+    readonly mcButton: _angular_core.Signal<KbqButton>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -50,14 +49,14 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     // (undocumented)
     ngOnInit(): void;
     onToggleClick(): void;
-    readonly tabIndex: i0.InputSignal<number | null>;
+    readonly tabIndex: _angular_core.InputSignal<number | null>;
     // (undocumented)
     type: ToggleType;
     value: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggle, [{ optional: true; }, null, null, null]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggle, [{ optional: true; }, null, null, null]>;
 }
 
 // @public
@@ -72,8 +71,8 @@ export class KbqButtonToggleChange {
 // @public
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
     constructor(_changeDetector: ChangeDetectorRef);
-    buttonToggles: QueryList<KbqButtonToggle>;
-    readonly change: i0.OutputEmitterRef<KbqButtonToggleChange>;
+    readonly buttonToggles: _angular_core.Signal<readonly any[]>;
+    readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     controlValueAccessorChangeFn: (value: any) => void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -97,24 +96,24 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput?: boolean): void;
     get value(): any;
     set value(newValue: any);
-    readonly valueChange: i0.OutputEmitterRef<any>;
+    readonly valueChange: _angular_core.OutputEmitterRef<any>;
     get vertical(): boolean;
     set vertical(value: boolean);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }
 
 // @public (undocumented)
 export class KbqButtonToggleModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonToggleModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqButtonToggleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle]>;
 }
 
 // @public

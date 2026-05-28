@@ -16,7 +16,6 @@ import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/icon';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
@@ -39,7 +38,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     get id(): string;
     // (undocumented)
     get isMultiple(): boolean;
-    items: QueryList<KbqAccordionItem>;
+    readonly items: i0.Signal<readonly any[]>;
     keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqAccordionItem>;
     // (undocumented)
@@ -125,7 +124,7 @@ export class KbqAccordionItem implements OnDestroy {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     close(): void;
     readonly closed: i0.OutputEmitterRef<void>;
-    content: KbqAccordionContentDirective;
+    readonly content: i0.Signal<any>;
     // (undocumented)
     get dataState(): KbqAccordionItemState;
     readonly destroyed: EventEmitter<void>;
@@ -154,8 +153,8 @@ export class KbqAccordionItem implements OnDestroy {
     // (undocumented)
     get orientation(): KbqAccordionOrientation;
     toggle(): void;
-    trigger: KbqAccordionTriggerDirective;
-    triggerComponent: KbqAccordionTrigger;
+    readonly trigger: i0.Signal<KbqAccordionTriggerDirective | undefined>;
+    readonly triggerComponent: i0.Signal<KbqAccordionTrigger | undefined>;
     set value(value: string);
     // (undocumented)
     get value(): string;
@@ -189,7 +188,7 @@ export class KbqAccordionTrigger implements AfterViewInit {
     disableAnimation(): void;
     // (undocumented)
     enableAnimation(): void;
-    icon: KbqIcon;
+    readonly icon: i0.Signal<KbqIcon>;
     // (undocumented)
     get isFill(): boolean;
     // (undocumented)

@@ -38,7 +38,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     get hasIcon(): boolean;
     // (undocumented)
-    icon: KbqIcon;
+    readonly icon: _angular_core.Signal<KbqIcon | undefined>;
     // (undocumented)
     icons: QueryList<ElementRef>;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;

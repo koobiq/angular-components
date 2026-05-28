@@ -22,7 +22,7 @@ export class KbqTable {
 // @public (undocumented)
 export class KbqTableCellContent {
     // (undocumented)
-    button: KbqButton;
+    readonly button: i0.Signal<KbqButton | undefined>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTableCellContent, "kbq-table td", never, {}, {}, ["button"], never, true, never>;
     // (undocumented)

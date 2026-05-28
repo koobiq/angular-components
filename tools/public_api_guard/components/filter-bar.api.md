@@ -39,7 +39,6 @@ import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
@@ -173,8 +172,8 @@ export class KbqFilterBar {
     get filter(): KbqFilter | null;
     set filter(value: KbqFilter | null);
     readonly filterChange: i0.OutputEmitterRef<KbqFilter | null>;
-    filterReset: KbqFilterReset;
-    filters: KbqFilters;
+    readonly filterReset: i0.Signal<KbqFilterReset | undefined>;
+    readonly filters: i0.Signal<KbqFilters | undefined>;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
     get isChanged(): boolean;
@@ -253,11 +252,11 @@ export class KbqFilters implements OnInit {
     closePopover: (restoreFocus?: boolean) => void;
     protected readonly colors: typeof KbqComponentColors;
     protected readonly destroyRef: DestroyRef;
-    protected dropdown: KbqDropdownTrigger;
+    protected readonly dropdown: i0.Signal<KbqDropdownTrigger>;
     protected readonly elementRef: ElementRef<any>;
     get filter(): KbqFilter | null;
-    protected filterActionsButton: KbqButton;
-    protected filterActionsDropdown: KbqDropdownTrigger;
+    protected readonly filterActionsButton: i0.Signal<KbqButton>;
+    protected readonly filterActionsDropdown: i0.Signal<KbqDropdownTrigger | undefined>;
     get filterActionsOpened(): boolean;
     protected readonly filterBar: KbqFilterBar;
     filteredOptions: Observable<KbqFilter[]>;
@@ -275,7 +274,7 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     isSaving: boolean;
     get localeData(): any;
-    protected mainButton: KbqButton;
+    protected readonly mainButton: i0.Signal<KbqButton>;
     // (undocumented)
     ngOnInit(): void;
     readonly onChangeFilter: i0.OutputEmitterRef<KbqSaveFilterEvent>;
@@ -290,7 +289,7 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     openSaveAsNewFilterPopover(): void;
     protected readonly placements: typeof PopUpPlacements;
-    protected popover: KbqPopoverTrigger;
+    protected readonly popover: i0.Signal<KbqPopoverTrigger>;
     get popoverHeader(): string;
     popoverOffset: number;
     popoverSize: PopUpSizes;
@@ -308,7 +307,7 @@ export class KbqFilters implements OnInit {
     saveChanges(): void;
     saveFocusedElement(button?: KbqButton): void;
     saveNewFilter: boolean;
-    protected saveNewFilterButton: KbqButton;
+    protected readonly saveNewFilterButton: i0.Signal<KbqButton>;
     searchControl: UntypedFormControl;
     searchKeydownHandler(event: KeyboardEvent): void;
     // (undocumented)
@@ -364,7 +363,7 @@ export class KbqPipeAdd {
     protected readonly filterBar: KbqFilterBar;
     readonly filterTemplate: i0.InputSignal<KbqFilter>;
     readonly onAddPipe: i0.OutputEmitterRef<KbqPipeTemplate>;
-    select: KbqSelect;
+    readonly select: i0.Signal<KbqSelect>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; "isSignal": true; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
     // (undocumented)
@@ -422,7 +421,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     onSelectStartDate(value: D): void;
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
-    popover: KbqPopoverTrigger;
+    readonly popover: i0.Signal<KbqPopoverTrigger>;
     returnButton: i0.Signal<KbqButton>;
     protected showEndCalendar: boolean;
     // (undocumented)
@@ -468,7 +467,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
     onSelectStartDate(value: D): void;
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
-    popover: KbqPopoverTrigger;
+    readonly popover: i0.Signal<KbqPopoverTrigger>;
     returnButton: i0.Signal<KbqButton>;
     protected showEndCalendar: boolean;
     // (undocumented)
@@ -528,9 +527,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onClose(): void;
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
-    options: QueryList<KbqOption>;
+    readonly options: i0.Signal<readonly KbqOption[]>;
     searchControl: UntypedFormControl;
-    select: KbqSelect;
+    readonly select: i0.Signal<KbqSelect>;
     selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
     // (undocumented)
@@ -565,7 +564,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     onSelect(item: KbqSelectValue): void;
     open(): void;
     searchControl: UntypedFormControl;
-    select: KbqSelect;
+    readonly select: i0.Signal<KbqSelect>;
     get selected(): KbqSelectValue | null;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeSelectComponent, "kbq-pipe-select", never, {}, {}, never, never, true, never>;
@@ -608,7 +607,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     open(): void;
     // (undocumented)
     readonly placements: typeof PopUpPlacements;
-    popover: KbqPopoverTrigger;
+    readonly popover: i0.Signal<KbqPopoverTrigger>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeTextComponent, "kbq-pipe-text", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -661,7 +660,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     onSelect(item: KbqTreeOption): void;
     open(): void;
     searchControl: UntypedFormControl;
-    select: KbqTreeSelect;
+    readonly select: i0.Signal<KbqTreeSelect>;
     get selected(): KbqSelectValue | null;
     // (undocumented)
     template: any;
