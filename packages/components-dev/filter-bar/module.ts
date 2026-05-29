@@ -969,7 +969,7 @@ export class DevApp implements AfterViewInit {
             );
         }
 
-        filterBar.filters().filterSavedSuccessfully();
+        filterBar.filters()?.filterSavedSuccessfully();
         // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
     }
 
@@ -982,7 +982,7 @@ export class DevApp implements AfterViewInit {
             filter
         );
 
-        filterBar.filters().filterSavedSuccessfully();
+        filterBar.filters()?.filterSavedSuccessfully();
     }
 
     onResetFilter(filter: KbqFilter | null) {

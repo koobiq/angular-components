@@ -16,7 +16,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE: InjectionToken<string>;
@@ -53,7 +52,7 @@ export class KbqCodeBlock implements AfterViewInit {
     // @deprecated (undocumented)
     set codeFiles(files: KbqCodeBlockFile[]);
     protected readonly componentColor: typeof KbqComponentColors;
-    protected readonly contentExceedsMaxHeight: WritableSignal<boolean>;
+    protected readonly contentExceedsMaxHeight: _angular_core.WritableSignal<boolean>;
     protected copyCode(): void;
     protected downloadCode(): void;
     protected readonly fallbackFileName: string;
