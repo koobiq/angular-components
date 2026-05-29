@@ -8,7 +8,7 @@
         <div
             class="kbq-modal-mask"
             [class.kbq-modal-mask-hidden]="hidden"
-            [ngClass]="maskAnimationClassMap"
+            [class]="maskAnimationClassMap"
             [ngStyle]="kbqMaskStyle"
         ></div>
     }
@@ -21,9 +21,8 @@
     >
         <div
             #modalContainer
-            class="kbq-modal-container {{ kbqClassName }} kbq-modal_{{ kbqSize }}"
+            [class]="getContainerClasses()"
             [class.kbq-modal_no-footer]="!kbqFooter"
-            [ngClass]="modalAnimationClassMap"
             [ngStyle]="kbqStyle"
             [style.transform-origin]="transformOrigin"
             [style.width]="kbqWidth | toCssUnit"

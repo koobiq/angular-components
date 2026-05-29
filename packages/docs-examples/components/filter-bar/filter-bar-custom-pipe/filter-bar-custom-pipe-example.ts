@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,7 +32,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqDividerModule,
         FormsModule,
         KbqTextareaModule,
-        NgClass,
         ReactiveFormsModule,
         KbqTitleModule,
         KbqPipeState,
@@ -53,7 +51,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             [kbqPopoverContent]="content"
             [kbqPopoverOffset]="4"
             [kbqPopoverPlacement]="placements.BottomLeft"
-            [ngClass]="{ 'kbq-active': popover?.isOpen }"
+            [class]="{ 'kbq-active': popover?.isOpen }"
         >
             <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
             <span #kbqTitleText class="kbq-pipe__value" kbqPipeMinWidth [class.kbq-pipe__value_empty]="!data.value">

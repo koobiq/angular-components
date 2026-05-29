@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -25,7 +24,6 @@ export class DevDocsExamples {}
         KbqTabsModule,
         KbqPopoverModule,
         KbqButtonModule,
-        NgClass,
         DevDocsExamples,
         DevThemeToggle
     ],

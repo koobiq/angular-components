@@ -1,6 +1,6 @@
 import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -38,7 +38,6 @@ let id = 0;
     imports: [
         NgTemplateOutlet,
         KbqIconModule,
-        NgClass,
         KbqTitleModule,
         KbqToastCloseButton
     ],

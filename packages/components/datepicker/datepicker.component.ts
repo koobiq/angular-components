@@ -3,7 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DOCUMENT, NgClass } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -63,8 +63,7 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 @Component({
     selector: 'kbq-datepicker__content',
     imports: [
-        KbqCalendar,
-        NgClass
+        KbqCalendar
     ],
     templateUrl: 'datepicker-content.html',
     styleUrls: ['datepicker-content.scss', 'datepicker-tokens.scss'],
@@ -238,7 +237,7 @@ export class KbqDatepicker<D> implements OnDestroy {
      */
     readonly monthSelected = output<D>();
 
-    /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
+    /** Classes to be passed to the date picker panel. Supports the same syntax as the `[class]` binding. */
     readonly panelClass = input<string | string[]>(undefined!);
 
     /** Function that can be used to add custom CSS classes to dates. */

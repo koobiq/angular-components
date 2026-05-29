@@ -1,5 +1,4 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -23,7 +22,6 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
 @Component({
     selector: 'kbq-popover-confirm-component',
     imports: [
-        NgClass,
         CdkTrapFocus,
         KbqButtonModule
     ],

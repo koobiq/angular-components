@@ -1,5 +1,4 @@
-﻿import { NgClass } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, viewChild } from '@angular/core';
+﻿import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -23,7 +22,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqDividerModule,
         FormsModule,
         KbqTextareaModule,
-        NgClass,
         KbqPipeButton,
         ReactiveFormsModule,
         KbqTitleModule,

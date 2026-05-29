@@ -105,9 +105,8 @@
 >
     <div
         #panel
-        class="kbq-tree-select__panel {{ getPanelTheme() }}"
         cdkMonitorSubtreeFocus
-        [ngClass]="panelClass()"
+        [class]="getPanelClasses()"
         [style.font-size.px]="triggerFontSize"
         [style.transformOrigin]="transformOrigin"
         (keydown)="panelKeydownHandler($event)"

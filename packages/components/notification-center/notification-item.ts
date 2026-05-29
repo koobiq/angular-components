@@ -1,4 +1,4 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -18,7 +18,6 @@ let id = 0;
     imports: [
         NgTemplateOutlet,
         KbqIconModule,
-        NgClass,
         KbqTitleModule,
         KbqButtonModule,
         KbqTooltipTrigger

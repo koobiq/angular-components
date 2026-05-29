@@ -1,6 +1,5 @@
 ﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NgClass } from '@angular/common';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -88,7 +87,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    imports: [NgClass],
+    imports: [],
     templateUrl: 'form-field.html',
     styleUrls: [
         'form-field.scss',

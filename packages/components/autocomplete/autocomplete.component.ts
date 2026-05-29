@@ -1,5 +1,4 @@
 ﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -74,9 +73,7 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 
 @Component({
     selector: 'kbq-autocomplete',
-    imports: [
-        NgClass
-    ],
+    imports: [],
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
     providers: [
@@ -154,7 +151,11 @@ export class KbqAutocomplete implements AfterContentInit {
 
     set classList(value: string) {
         if (value && value.length) {
-            value.split(' ').forEach((className) => (this._classList[className.trim()] = true));
+            const classList = { ...this._classList };
+
+            value.split(' ').forEach((className) => (classList[className.trim()] = true));
+            // Reassign a new object reference so the native `[class]` binding picks up the change.
+            this._classList = classList;
 
             this.elementRef.nativeElement.className = '';
         }
@@ -243,8 +244,11 @@ export class KbqAutocomplete implements AfterContentInit {
 
     setVisibility() {
         this.showPanel = !!this.options.length;
-        this._classList['kbq-autocomplete_visible'] = this.showPanel;
-        this._classList['kbq-autocomplete_hidden'] = !this.showPanel;
+        this._classList = {
+            ...this._classList,
+            'kbq-autocomplete_visible': this.showPanel,
+            'kbq-autocomplete_hidden': !this.showPanel
+        };
 
         this.updateFocusClass();
 
@@ -264,6 +268,9 @@ export class KbqAutocomplete implements AfterContentInit {
     }
 
     private updateFocusClass() {
-        this._classList['cdk-keyboard-focused'] = this.parentFormField?.focusOrigin === 'keyboard';
+        this._classList = {
+            ...this._classList,
+            'cdk-keyboard-focused': this.parentFormField?.focusOrigin === 'keyboard'
+        };
     }
 }

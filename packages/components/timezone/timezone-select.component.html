@@ -54,9 +54,9 @@
 >
     <div
         #panel
-        class="kbq-select__panel kbq-timezone-select__panel {{ getPanelTheme() }}"
+        class="kbq-timezone-select__panel"
         cdkMonitorSubtreeFocus
-        [ngClass]="panelClass()"
+        [class]="getPanelClasses()"
         [style.font-size.px]="triggerFontSize"
         [style.transformOrigin]="transformOrigin"
         (keydown)="handleKeydown($event)"

@@ -3,7 +3,7 @@
     [compareWith]="compareByValue"
     [disabled]="data.disabled"
     [kbqPipeTitle]="pipeTooltip"
-    [ngClass]="{ 'kbq-active': select.panelOpen }"
+    [class]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-select__panel'"
     [tabIndex]="-1"
     [value]="selected"
@@ -14,7 +14,7 @@
         kbq-select-matcher
         [disabled]="data.disabled"
         [kbqPipeState]="data"
-        [ngClass]="{ 'kbq-active': select.panelOpen }"
+        [class]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
         <span

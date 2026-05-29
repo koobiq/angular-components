@@ -1,5 +1,4 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
@@ -77,7 +76,6 @@ export class DevDocsExamples {}
         KbqSelectModule,
         KbqIconModule,
         KbqToggleModule,
-        NgClass,
         DevThemeToggle,
         DevDocsExamples
     ],

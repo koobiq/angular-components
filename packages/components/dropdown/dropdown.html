@@ -3,7 +3,7 @@
         tabindex="-1"
         class="kbq-dropdown__panel"
         [class.kbq-dropdown__panel_nested]="parent"
-        [ngClass]="classList"
+        [class]="classList"
         [@transformDropdown]="panelAnimationState"
         (@transformDropdown.done)="onAnimationDone($event)"
         (@transformDropdown.start)="onAnimationStart($event)"

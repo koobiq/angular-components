@@ -1,7 +1,7 @@
 ﻿import { CdkTrapFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
-import { DOCUMENT, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -53,7 +53,6 @@ type AnimationState = 'enter' | 'leave' | null;
     imports: [
         CdkTrapFocus,
         NgStyle,
-        NgClass,
         KbqButtonModule,
         KbqIconModule,
         CssUnitPipe,
@@ -560,6 +559,19 @@ export class KbqModalComponent<T = any, R = any>
         }
 
         return typeof value === 'function' ? value.apply(options, args) : value;
+    }
+
+    /** Returns the full set of classes for the modal container: base, custom class name, size and animation classes. */
+    protected getContainerClasses(): string {
+        const classes = ['kbq-modal-container', this.kbqClassName, `kbq-modal_${this.kbqSize}`];
+
+        if (this.modalAnimationClassMap) {
+            const animationClasses = this.modalAnimationClassMap as { [key: string]: boolean };
+
+            classes.push(...Object.keys(animationClasses).filter((key) => animationClasses[key]));
+        }
+
+        return classes.filter(Boolean).join(' ');
     }
 
     // On kbqFooter's modal button click

@@ -1,5 +1,5 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -41,7 +41,6 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
         KbqIcon,
         KbqTitleModule,
         KbqInputModule,
-        NgClass,
         KbqFilterBarButton,
         AsyncPipe,
         KbqTooltipTrigger,

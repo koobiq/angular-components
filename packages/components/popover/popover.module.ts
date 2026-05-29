@@ -6,7 +6,7 @@ import {
 } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { EmptyFocusTrapStrategy } from '@koobiq/components/core';
@@ -25,7 +25,6 @@ import {
         A11yModule,
         KbqIconModule,
         CdkObserveContent,
-        NgClass,
         NgTemplateOutlet,
         KbqPopoverComponent,
         KbqPopoverTrigger,

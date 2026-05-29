@@ -1,5 +1,4 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
@@ -13,7 +12,6 @@ import { KbqAutocomplete, KbqAutocompleteFooter } from './autocomplete.component
     imports: [
         KbqOptionModule,
         OverlayModule,
-        NgClass,
         KbqAutocomplete,
         KbqAutocompleteTrigger,
         KbqAutocompleteOrigin,

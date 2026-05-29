@@ -1,6 +1,5 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, viewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -64,7 +63,6 @@ export class DevDocsExamples {}
         KbqRadioModule,
         KbqLinkModule,
         DevDocsExamples,
-        NgClass,
         DevThemeToggle
     ],
     templateUrl: './template.html',

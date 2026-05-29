@@ -9,7 +9,7 @@ import {
     OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -62,8 +62,7 @@ export const defaultOffsetYWithArrow = 8;
         CdkObserveContent,
         KbqButtonModule,
         KbqIconModule,
-        CdkTrapFocus,
-        NgClass
+        CdkTrapFocus
     ],
     templateUrl: './popover.component.html',
     styleUrls: ['./popover.scss', './popover-tokens.scss'],

@@ -3,7 +3,6 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DOWN_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
-import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -50,9 +49,7 @@ export class KbqDropdownStaticContent {}
 
 @Component({
     selector: 'kbq-dropdown',
-    imports: [
-        NgClass
-    ],
+    imports: [],
     templateUrl: 'dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
@@ -153,18 +150,22 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     @Input('class')
     set panelClass(classes: string) {
         const previousPanelClass = this.previousPanelClass;
+        const classList = { ...this.classList };
 
         if (previousPanelClass && previousPanelClass.length) {
-            previousPanelClass.split(' ').forEach((className: string) => (this.classList[className] = false));
+            previousPanelClass.split(' ').forEach((className: string) => (classList[className] = false));
         }
 
         this.previousPanelClass = classes;
 
         if (classes?.length) {
-            classes.split(' ').forEach((className: string) => (this.classList[className] = true));
+            classes.split(' ').forEach((className: string) => (classList[className] = true));
 
             this.elementRef.nativeElement.className = '';
         }
+
+        // Reassign a new object reference so the native `[class]` binding picks up the change.
+        this.classList = classList;
     }
 
     private _xPosition: KbqDropdownPositionX = this.defaultOptions.xPosition;
@@ -174,7 +175,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     private _hasBackdrop: boolean = this.defaultOptions.hasBackdrop;
 
     triggerWidth: string;
-    /** Config object to be passed into the dropdown's ngClass */
+    /** Config object to be passed into the dropdown panel's `[class]` binding */
     classList: { [key: string]: boolean } = {};
 
     /** Current state of the panel animation. */
@@ -342,13 +343,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * @docs-private
      */
     setPositionClasses(posX: KbqDropdownPositionX = this.xPosition, posY: KbqDropdownPositionY = this.yPosition) {
-        const classes = this.classList;
-
-        classes['kbq-dropdown-before'] = posX === 'before';
-        classes['kbq-dropdown-after'] = posX === 'after';
-        classes['kbq-dropdown-center'] = posX === 'center';
-        classes['kbq-dropdown-above'] = posY === 'above';
-        classes['kbq-dropdown-below'] = posY === 'below';
+        // Reassign a new object reference so the native `[class]` binding picks up the change.
+        this.classList = {
+            ...this.classList,
+            'kbq-dropdown-before': posX === 'before',
+            'kbq-dropdown-after': posX === 'after',
+            'kbq-dropdown-center': posX === 'center',
+            'kbq-dropdown-above': posY === 'above',
+            'kbq-dropdown-below': posY === 'below'
+        };
     }
 
     /** Starts the enter animation. */

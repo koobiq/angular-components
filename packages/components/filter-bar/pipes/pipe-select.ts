@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
@@ -22,7 +22,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqButtonModule,
         KbqDividerModule,
         KbqSelectModule,
-        NgClass,
         KbqPipeState,
         KbqPipeButton,
         KbqTitleModule,

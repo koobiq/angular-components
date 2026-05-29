@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, output, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -19,8 +18,7 @@ import { getId } from './pipes/base-pipe';
         KbqButtonModule,
         KbqIcon,
         KbqOptionModule,
-        KbqSelectModule,
-        NgClass
+        KbqSelectModule
     ],
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
@@ -30,7 +28,7 @@ import { getId } from './pipes/base-pipe';
                 kbq-select-matcher
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
-                [ngClass]="{ 'kbq-active': select.panelOpen }"
+                [class]="{ 'kbq-active': select.panelOpen }"
             >
                 <i kbq-icon="kbq-plus_16"></i>
             </button>

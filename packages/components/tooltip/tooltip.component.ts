@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Point } from '@angular/cdk/drag-drop';
 import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -64,7 +64,6 @@ export const MIN_TIME_FOR_DELAY = 2000;
 @Component({
     selector: 'kbq-tooltip-component',
     imports: [
-        NgClass,
         NgTemplateOutlet
     ],
     templateUrl: './tooltip.component.html',

@@ -242,7 +242,17 @@ const templateRules = {
         '@angular-eslint/template/no-interpolation-in-attributes': 0,
         '@angular-eslint/template/no-any': 0,
         '@angular-eslint/template/prefer-static-string-properties': 0,
-        '@angular-eslint/template/cyclomatic-complexity': 0
+        '@angular-eslint/template/cyclomatic-complexity': 0,
+        // Allow combining a static `class`/`style` attribute with its `[class]`/`[style]` binding.
+        // Angular merges them via styling precedence, so this is a valid pattern (e.g. after the
+        // NgClass -> [class] migration). Genuine duplicates (two static `class`, two `[class]`) are
+        // still reported.
+        '@angular-eslint/template/no-duplicate-attributes': [
+            2,
+            {
+                allowStylePrecedenceDuplicates: true
+            }
+        ]
     }
 };
 

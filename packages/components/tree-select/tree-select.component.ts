@@ -4,7 +4,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
 import { Platform, _getEventTarget } from '@angular/cdk/platform';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -147,7 +147,6 @@ export class KbqTreeSelectChange {
         KbqTagRemove,
         CdkConnectedOverlay,
         CdkMonitorFocus,
-        NgClass,
         KbqTag,
         NgTemplateOutlet
     ],
@@ -312,7 +311,7 @@ export class KbqTreeSelect
      */
     readonly valueChange = output<any>();
 
-    /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
+    /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
     readonly panelClass = input<
         | string
         | string[]
@@ -1057,6 +1056,22 @@ export class KbqTreeSelect
     /** Returns the theme to be used on the panel. */
     getPanelTheme(): string {
         return this.parentFormField ? `kbq-${this.parentFormField.color}` : '';
+    }
+
+    /** Returns the full set of classes for the panel: base class, theme and custom `panelClass`. */
+    protected getPanelClasses(): string {
+        const panelClass = this.panelClass();
+        const classes = ['kbq-tree-select__panel', this.getPanelTheme()];
+
+        if (typeof panelClass === 'string') {
+            classes.push(panelClass);
+        } else if (Array.isArray(panelClass) || panelClass instanceof Set) {
+            classes.push(...panelClass);
+        } else if (panelClass) {
+            classes.push(...Object.keys(panelClass).filter((key) => panelClass[key]));
+        }
+
+        return classes.filter(Boolean).join(' ');
     }
 
     focus() {

@@ -1,6 +1,5 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -28,8 +27,7 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
         CdkOverlayOrigin,
         CdkConnectedOverlay,
         CdkMonitorFocus,
-        KbqIconModule,
-        NgClass
+        KbqIconModule
     ],
     templateUrl: 'timezone-select.component.html',
     styleUrls: [

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -33,9 +32,7 @@ export class KbqCalendarCell {
  */
 @Component({
     selector: '[kbq-calendar-body]',
-    imports: [
-        NgClass
-    ],
+    imports: [],
     templateUrl: 'calendar-body.html',
     styleUrls: ['calendar-body.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

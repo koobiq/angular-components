@@ -4,7 +4,7 @@
     [disabled]="data.disabled"
     [kbqPipeTitle]="pipeTooltip"
     [multiple]="true"
-    [ngClass]="{ 'kbq-active': select.panelOpen }"
+    [class]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
     [panelClass]="'kbq-pipe-multi-tree-select__panel'"
     [selectAllHandler]="selectAllHandler"
@@ -36,7 +36,7 @@
         kbq-select-matcher
         [disabled]="data.disabled"
         [kbqPipeState]="data"
-        [ngClass]="{ 'kbq-active': select.panelOpen }"
+        [class]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
 

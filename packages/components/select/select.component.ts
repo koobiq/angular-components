@@ -5,7 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -168,7 +168,6 @@ export const minimumTimeToDisplayLoading = 300;
         NgTemplateOutlet,
         CdkMonitorFocus,
         CdkConnectedOverlay,
-        NgClass,
         KbqIconModule
     ],
     templateUrl: 'select.html',
@@ -353,7 +352,7 @@ export class KbqSelect
      */
     readonly triggerValuesLimit = input<number>(0);
 
-    /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
+    /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
     readonly panelClass = input<
         | string
         | string[]
@@ -1251,6 +1250,22 @@ export class KbqSelect
     /** Returns the theme to be used on the panel based on parent form field color. */
     getPanelTheme(): string {
         return this.parentFormField ? `kbq-${this.parentFormField.color}` : '';
+    }
+
+    /** Returns the full set of classes for the panel: base class, theme and custom `panelClass`. */
+    protected getPanelClasses(): string {
+        const panelClass = this.panelClass();
+        const classes = ['kbq-select__panel', this.getPanelTheme()];
+
+        if (typeof panelClass === 'string') {
+            classes.push(panelClass);
+        } else if (Array.isArray(panelClass) || panelClass instanceof Set) {
+            classes.push(...panelClass);
+        } else if (panelClass) {
+            classes.push(...Object.keys(panelClass).filter((key) => panelClass[key]));
+        }
+
+        return classes.filter(Boolean).join(' ');
     }
 
     /** Focuses the select element. */

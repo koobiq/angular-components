@@ -58,7 +58,7 @@
         [kbqDropdownTriggerFor]="filterActions"
         [disabled]="isSaving"
         [class.kbq-active]="focusedElementBeforeIs(filterActionsButton) && filterActionsOpened"
-        [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+        [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
     >
         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
     </button>
@@ -115,7 +115,7 @@
     @if (filterBar.isSavedAndChanged && !filterBar.isReadOnly) {
         <button
             kbq-dropdown-item
-            [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+            [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
             (click)="saveChanges()"
         >
             <i kbq-icon="kbq-floppy-disk_16"></i>

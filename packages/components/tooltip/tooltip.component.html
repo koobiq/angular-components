@@ -2,7 +2,7 @@
     #tooltip
     class="kbq-tooltip"
     [class.kbq-tooltip_arrowless]="!arrow"
-    [ngClass]="classMap"
+    [class]="classMap"
     [@state]="visibility"
     (@state.done)="animationDone($event)"
     (@state.start)="animationStart()"

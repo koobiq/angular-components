@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -33,7 +33,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqButtonModule,
         KbqDividerModule,
         KbqSelectModule,
-        NgClass,
         KbqPipeState,
         KbqBadgeModule,
         KbqPipeButton,

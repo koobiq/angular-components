@@ -1,7 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
-import { NgClass, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -29,7 +29,6 @@ import { KbqMonthView } from './month-view.component';
         KbqSelectModule,
         KbqIconModule,
         KbqDatepickerToggleIconComponent,
-        NgClass,
         TitleCasePipe,
         KbqCalendar,
         KbqCalendarBody,
