@@ -205,7 +205,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
     protected readonly items: QueryList<KbqBreadcrumbItem>;
 
-    private readonly result = viewChild.required(KbqOverflowItemsResult, { read: ElementRef });
+    private readonly result = viewChild(KbqOverflowItemsResult, { read: ElementRef });
 
     private readonly overflowItems = viewChildren(KbqOverflowItem, { read: ElementRef });
 
@@ -234,9 +234,12 @@ export class KbqBreadcrumbs implements AfterContentInit {
 
         const overflowItems = this.overflowItems();
 
+        const result = this.result();
+
         if (
             !overflowItems ||
             !overflowItems.length ||
+            !result ||
             max === null ||
             max >= this.items.length ||
             max < this.minVisibleItems
@@ -244,7 +247,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
             return null;
         }
 
-        let visibleItemsWidth = this.getItemWidth(this.result());
+        let visibleItemsWidth = this.getItemWidth(result);
         // Reorders overflow items to prioritize the first and last elements
         const sortedItems = [
             ...overflowItems.slice(1, -1),
